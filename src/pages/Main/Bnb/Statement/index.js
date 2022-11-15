@@ -1,0 +1,1 @@
+export {PAGE_NAME as StatementMainPageName, default as StatementMainPage} from './Main';

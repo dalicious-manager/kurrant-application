@@ -1,0 +1,74 @@
+import Config from 'react-native-config';
+
+import mSleep from '../../helpers/mSleep';
+
+const RESPONSE_SLEEP = 300;
+
+const apiHostUrl =
+  process.env.NODE_ENV === 'production'
+    ? Config.API_HOST_URL + '/' + Config.API_VERSION
+    : '';
+
+const buildQuery = queryObj => {
+  let ret;
+  const queryKeys = Object.keys(queryObj);
+  if (queryKeys.length > 0) {
+    ret =
+      '?' +
+      queryKeys
+        .filter(k => queryObj[k] !== null && queryObj[k] !== undefined)
+        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(queryObj[k])}`)
+        .join('&');
+  } else {
+    ret = '';
+  }
+  return ret;
+};
+
+async function json(url, method, options = {}) {
+  if (method === 'POST' || method === 'PATCH') {
+    if (options.body === undefined) {
+      throw new Error('body is empty');
+    }
+  }
+
+  let reqUrl = apiHostUrl + url;
+  if (options.querystring !== undefined) {
+    const params = Object.assign({}, options.querystring);
+    reqUrl += buildQuery(params);
+  }
+
+  let headers = {
+    'content-type': 'application/json',
+  };
+  if (options.accessToken !== undefined) {
+    headers.authorization = 'Bearer ' + options.accessToken;
+  }
+
+  console.log('fetching to:', reqUrl);
+  console.log('fetching option:', options);
+
+  let startTs = Date.now();
+
+  const res = await fetch(reqUrl, {
+    headers,
+    method,
+    body: options.body,
+  });
+  if (!res.ok) {
+    console.log(res);
+    throw new Error();
+  }
+
+  let endTs = Date.now();
+
+  const diff = RESPONSE_SLEEP - (endTs - startTs);
+  if (diff > 0) {
+    await mSleep(diff);
+  }
+
+  const ret = await res.json();
+  return ret.data;
+}
+
+export default json;
