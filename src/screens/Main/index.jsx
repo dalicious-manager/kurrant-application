@@ -5,6 +5,9 @@ import BackButton from '../../components/BackButton';
 import SelectUserTypePage, {
   PAGE_NAME as SelectUserTypePageName,
 } from '../../pages/Main/Bnb/SignUp/SelectUserType';
+import EmailLoginModal, {
+  PAGE_NAME as EmailLoginModalModalPageName,
+} from '../../pages/Main/Modal/EmailLogin';
 import LoginMainModal, {
   PAGE_NAME as LoginMainModalPageName,
 } from '../../pages/Main/Modal/Login';
@@ -46,8 +49,8 @@ const Screen = () => {
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
-            headerRight: () => <BackButton mode="modal" />,
-            headerShown: true,
+            headerLeft: () => <BackButton mode="modal" />,
+            headerShown: false,
             headerShadowVisible: false,
             title: '',
           }}
@@ -55,6 +58,16 @@ const Screen = () => {
         <MainRoot.Screen
           name={TermsOfServiceModalPageName}
           component={TermsOfServiceModal}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '',
+            headerLeft: () => <BackButton />,
+          }}
+        />
+         <MainRoot.Screen
+          name={EmailLoginModalModalPageName}
+          component={EmailLoginModal}
           options={{
             headerShown: true,
             headerShadowVisible: false,

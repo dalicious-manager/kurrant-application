@@ -9,7 +9,7 @@ import IconWrapper from '../component';
  * @param {number} props.scale
  * @returns
  */
-const Component = ({scale = 0.5}) => {
+const Component = ({scale = 1.4}) => {
   return (
     <IconWrapper>
       <Image imagePath={KaKaoImage} scale={scale} />

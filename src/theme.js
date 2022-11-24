@@ -48,7 +48,8 @@ export const purple = {
 };
 
 export const etc = {
-  kakao: '#fcec4e',
+  kakao: '#FFE812',
+  naver: '#4FA42B',
 };
 
 const colors = {

@@ -1,5 +1,4 @@
-import React, {useRef} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import React from 'react';
 import styled, {useTheme} from 'styled-components/native';
 
 import Typography from '../../../../../components/Typography';
@@ -10,7 +9,7 @@ const TabBar = ({state, descriptors, navigation, position}) => {
       {state.routes.map((route, index) => {
         const {options} = descriptors[route.key];
         const title = options?.title ?? '';
-
+        console.log(title)
         const isFocused = state.index === index;
 
         const handleTitlePress = () => {

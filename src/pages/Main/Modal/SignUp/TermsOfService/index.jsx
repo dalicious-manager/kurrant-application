@@ -101,10 +101,10 @@ const Pages = () => {
           onPress={signUpCheck.handleSubmit(handleSubmit, handleSubmitError)}
         />
       </Form>
-      <ModalWrapper
+      {/* <ModalWrapper
         title="안내"
         content="이벤트 알림을 받을 수 있는 광고성 알림 수신에 미동의하였습니다."
-      />
+      /> */}
     </Wrapper>
   );
 };

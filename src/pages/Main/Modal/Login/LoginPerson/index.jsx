@@ -1,21 +1,37 @@
+/* eslint-disable react-native/no-inline-styles */
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {FormProvider, useForm} from 'react-hook-form';
 import {View, StyleSheet} from 'react-native';
 
 import ButtonSns from '../../../../../components/ButtonSns';
-import Login from '../../../../../components/Login';
+import {PAGE_NAME as LoginPage} from '../../EmailLogin';
+import {PAGE_NAME as SignUpPage} from '../../SignUp/TermsOfService';
 export const PAGE_NAME = 'P_LOGIN__MODAL__PERSON_LOGIN';
 
 const Pages = () => {
-  const form = useForm();
+  const navigation = useNavigation();
+  const handleLoginPress = () => {
+    navigation.navigate(LoginPage ?? '');
+  };
+  const handleEmailPress = () => {
+    navigation.navigate(SignUpPage ?? '');
+  };
   return (
     <View style={styles.container}>
-      <FormProvider {...form}>
+      {/* <FormProvider {...form}>
         <Login />
-      </FormProvider>
-      <View style={styles.buttonContainer}>
+      </FormProvider> */}
+      <View style={styles.SNSContainer}>
         <ButtonSns type_sns="kakao" />
-        <ButtonSns type_sns="apple" />
+        <ButtonSns type_sns="naver" />
+        <View style={styles.buttonContainer}>
+          <View style={{...styles.buttonBox, marginRight:3.5}}>
+            <ButtonSns type_sns="email" onPressEvent={handleEmailPress} />
+          </View>
+          <View style={{...styles.buttonBox, marginLeft:3.5}}>
+            <ButtonSns type_sns="login" onPressEvent={handleLoginPress}/>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -23,14 +39,23 @@ const Pages = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: '90%',
+    width: '100%',
     alignSelf: 'center',
+    justifyContent: 'center',
     backgroundColor: '#fff',
   },
-  buttonContainer: {
+  SNSContainer: {
+    paddingLeft:48,
+    paddingRight:48,
     justifyContent: 'space-between',
-    height: 105,
+  },
+  buttonContainer: {
+    flexDirection:'row',
+    justifyContent: 'center',
+  },
+  buttonBox: {
+    flex:1,
+    justifyContent: 'center',
   },
 });
 

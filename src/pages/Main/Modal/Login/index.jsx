@@ -1,67 +1,112 @@
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Dimensions,TouchableOpacity,View,Text} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import styled from 'styled-components/native';
 
-import {LogoImage} from '../../../../assets';
+import {LogoImage , LogoBackground} from '../../../../assets';
+import ButtonRoundSns from '../../../../components/ButtonRoundSns';
+import HorizonLine from '../../../../components/HorizonLine';
 import Image from '../../../../components/Image';
 import Wrapper from '../../../../components/Wrapper';
-import TabBar from './_components/TabBar';
-import LoginCorperationModal, {
-  PAGE_NAME as LoginCorperationModalPageName,
-} from './LoginCorperation';
-import LoginPersonModal, {
-  PAGE_NAME as LoginPersonModalPageName,
-} from './LoginPerson';
+import LoginPersonModal from './LoginPerson';
+
 export const PAGE_NAME = 'P_LOGIN__MODAL__MAIN_LOGIN';
 
-const TabRoot = createMaterialTopTabNavigator();
+const screenHeight = Dimensions.get('screen').height;
 
-const Pages = ({navigation}) => {
-  const sceneStyles = {backgroundColor: '#fff'};
+const Pages = ({navigation}) => {  
   return (
-    <Wrapper styles={styles.container}>
-      <View style={styles.headerContainer}>
-        <Image imagePath={LogoImage} scale={0.5} />
-      </View>
-      <TabRoot.Navigator tabBar={TabBar} sceneContainerStyle={sceneStyles}>
-        <TabRoot.Screen
-          name={LoginPersonModalPageName}
-          component={LoginPersonModal}
-          options={{
-            title: '개인회원',
-          }}
+    <WrapperBox>
+      <BackgroundContainer>
+        <ImageGradient
+          colors={['rgba(255,255,255,0)','rgba(255,255,255,0)','white']}
+          start={{ x: 0, y: -0.5 }}
+          end={{ x: 0, y: 0.65 }}
         />
-        <TabRoot.Screen
-          name={LoginCorperationModalPageName}
-          component={LoginCorperationModal}
-          options={{
-            title: '법인회원',
-          }}
-        />
-      </TabRoot.Navigator>
-    </Wrapper>
+        <BackgroundImageBox source={LogoBackground} resizeMode="cover"/>
+      </BackgroundContainer>
+      <LoginBox>
+        <LogoBox>
+          <Image imagePath={LogoImage} scale={1.0}/>
+        </LogoBox>
+        <LoginPersonModal />
+        <TouchableOpacity onPress={()=>console.log("터치")}>
+          <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
+        </TouchableOpacity>
+        <EtcSNSContainer>
+
+         <HorizonLine text="그외 SNS로 로그인"/>
+          {/* <Text style={{flex:1 ,textAlign:'center'}} >───── 그외 SNS로 로그인 ─────</Text> */}
+          <EtcSNSBox >
+            <ButtonRoundSns type_sns='facebook' size={32}/>
+            <ButtonRoundSns type_sns='google' size={32}/>
+            <ButtonRoundSns type_sns='apple' size={32}/>
+          </EtcSNSBox>
+        </EtcSNSContainer>
+      </LoginBox>
+    </WrapperBox>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 16,
-    backgroundColor: '#fff',
-  },
-  headerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 28,
-  },
-  headerTitle: {
-    fontSize: 40,
-    fontWeight: 'bold',
-  },
-  tabTitleContainer: {
-    width: '100%',
-    maxWidth: 52,
-    height: 28,
-  },
-});
+const WrapperBox = styled(Wrapper)`
+  flex:1;
+  background-color: '#fff';
+`
+const BackgroundContainer = styled.View`
+  position: relative;
+  height: ${screenHeight/2}px;
+`
+const LoginBox = styled.View`
+  position:absolute;
+  width:100%;
+  top:${screenHeight/2-(317/2)}px;
+  align-items: center;
+  justify-content: flex-start;
+`
+
+const BackgroundImageBox = styled.Image` 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width:100%;
+    z-index: -1;
+`;
+
+const LogoBox = styled.View`
+  margin-bottom: 40px;
+`;
+const WindowShopping = styled.Text`
+/* 로그인 하지 않고 둘러보기 */
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 21px;
+  /* identical to box height, or 140% */
+  text-align: right;
+  text-decoration-line: underline;
+  margin-top: 40px;
+  /* grey 5 */
+  color: #BDBAC1;
+
+`
+const ImageGradient = styled(LinearGradient)`
+  position:absolute;
+  top:0;
+  left:0; 
+  width:100%;
+  z-index: 0;
+  height: 500px;
+`
+const EtcSNSContainer = styled.View`
+  margin: 65px 48px 0px 48px;
+  flex:1;
+`
+const EtcSNSBox = styled.View`
+  flex:1;
+  justify-content: center;
+  flex-direction: row;
+`
+
+
 
 export default Pages;

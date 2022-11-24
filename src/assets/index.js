@@ -3,5 +3,7 @@ export const EnvelopeImage = require('../assets/images/envelope.png');
 export const EyeImage = require('../assets/images/eye.png');
 export const EyeInvisibleImage = require('../assets/images/eyeinvis.png');
 export const KaKaoImage = require('../assets/images/kakao.png');
+export const NaverImage = require('../assets/images/naver.png');
 export const ArrowLeftImage = require('../assets/images/arrow-left.png');
 export const LogoImage = require('../assets/images/logo.png');
+export const LogoBackground = require('../assets/images/loginBackground.png');

@@ -1,5 +1,4 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 // TODO:
 // Padding
@@ -26,7 +25,7 @@ const Component = ({
       style={styles}
       paddingHorizontal={paddingHorizontal}
       paddingTop={paddingTop}>
-      <SafeAreaView>{children}</SafeAreaView>
+     {children}
     </Wrap>
   );
 };
