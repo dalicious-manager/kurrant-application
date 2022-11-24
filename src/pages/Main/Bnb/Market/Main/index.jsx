@@ -1,7 +1,7 @@
 import React from "react";
 import { SafeAreaView, Text, View } from "react-native";
 
-export const PAGE_NAME = 'P_MAIN__BNB__INFORMATION';
+export const PAGE_NAME = 'P_MAIN__BNB__MARKET';
 
 const Pages = () => {
   return (

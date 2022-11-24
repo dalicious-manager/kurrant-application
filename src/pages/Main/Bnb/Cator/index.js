@@ -1,0 +1,1 @@
+export {PAGE_NAME as CatorMainPageName, default as CatorMainPage} from './Main';

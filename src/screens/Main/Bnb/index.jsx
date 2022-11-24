@@ -1,121 +1,102 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-import Octicons from 'react-native-vector-icons/Octicons';
 import styled, { useTheme } from "styled-components/native";
 
-import ExchangeMainPage, { PAGE_NAME as ExchangeMainPageName } from '../../../pages/Main/Bnb/Exchange/Main';
-import IndexCardMainPage, { PAGE_NAME as IndexCardMainPageName } from '../../../pages/Main/Bnb/IndexCard/Main';
-import InformationMainPage, { PAGE_NAME as InformationMainPageName } from '../../../pages/Main/Bnb/Information/Main';
-import InvestmentMainPage, { PAGE_NAME as InvestmentMainPageName } from '../../../pages/Main/Bnb/Investment/Main';
-import StatementMainPage, { PAGE_NAME as StatementMainPageName } from '../../../pages/Main/Bnb/Statement/Main';
+import ActiveCator from '~assets/icons/TabBarIcon/activeCator.svg';
+import ActiveHome from '~assets/icons/TabBarIcon/activeHome.svg';
+import ActiveMarket from '~assets/icons/TabBarIcon/activeMarket.svg';
+import ActiveMeal from '~assets/icons/TabBarIcon/activeMeal.svg';
+import ActiveMore from '~assets/icons/TabBarIcon/activeMore.svg';
+import Cator from '~assets/icons/TabBarIcon/inactiveCator.svg';
+import Home from '~assets/icons/TabBarIcon/inactiveHome.svg';
+import Market from '~assets/icons/TabBarIcon/inactiveMarket.svg';
+import Meal from '~assets/icons/TabBarIcon/inactiveMeal.svg';
+import More from '~assets/icons/TabBarIcon/inactiveMore.svg';
+
+import CatorMainPage, { PAGE_NAME as CatorMainPageName } from '../../../pages/Main/Bnb/Cator/Main';
+import HomeMainPage, { PAGE_NAME as HomeMainPageName } from '../../../pages/Main/Bnb/Home/Main';
+import MarketMainPage, { PAGE_NAME as MarketMainPageName } from '../../../pages/Main/Bnb/Market/Main';
+import MealMainPage, { PAGE_NAME as MealMainPageName } from '../../../pages/Main/Bnb/Meal/Main';
+import MoreMainPage, { PAGE_NAME as MoreMainPageName } from '../../../pages/Main/Bnb/More/Main';
 
 export const SCREEN_NAME = 'S_MAIN__BNB';
 
 const BottomTab = createBottomTabNavigator();
-
-const ActiveExchangeIcon = require('../../../assets/images/TabBarIcon/activeExchange.png');
-const ActiveIndexIcon = require('../../../assets/images/TabBarIcon/activeIndex.png');
-const ActiveInformationIcon = require('../../../assets/images/TabBarIcon/activeInformation.png');
-const ActiveStatementIcon = require('../../../assets/images/TabBarIcon/activeStatement.png');
-const ExchangeIcon = require('../../../assets/images/TabBarIcon/inactiveExchange.png');
-const IndexIcon = require('../../../assets/images/TabBarIcon/inactiveIndex.png');
-const InformationIcon = require('../../../assets/images/TabBarIcon/inactiveInformation.png');
-const StatementIcon = require('../../../assets/images/TabBarIcon/inactiveStatement.png');
 
 const Screen = () => {
   const theme = useTheme();
 
   return (
     <BottomTab.Navigator
-      initialRouteName={ExchangeMainPageName}
+      initialRouteName={HomeMainPageName}
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.purple[500],
-        tabBarActiveBackgroundColor: theme.colors.neutral[0],
-        tabBarInactiveTintColor: theme.colors.neutral[300],
-        tabBarInactiveBackgroundColor: theme.colors.neutral[0],
+        tabBarActiveTintColor: theme.colors.grey[600],
+        //tabBarActiveBackgroundColor: theme.colors.neutral[0],
+        tabBarInactiveTintColor: theme.colors.neutral[400],
+        //tabBarInactiveBackgroundColor: theme.colors.neutral[0],
       }}
     >
       <BottomTab.Screen
-        name={ExchangeMainPageName}
-        component={ExchangeMainPage}
+        name={HomeMainPageName}
+        component={HomeMainPage}
         options={{
-          title: '거래소',
+          title: '홈',
           headerShown: false,
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIconWrap>
-              {color === theme.colors.purple[500] ? (
-                <TabBarIcon source={ActiveExchangeIcon} />
-              ) : (
-                <TabBarIcon source={ExchangeIcon} />
-              )}
+              {focused ? (<ActiveHome/>):(<Home/>)}
             </TabBarIconWrap>
           )
         }}
       />
       <BottomTab.Screen
-        name={InvestmentMainPageName}
-        component={InvestmentMainPage}
+        name={MealMainPageName}
+        component={MealMainPage}
         options={{
-          title: '투자내역',
+          title: '식사',
           headerShown: false,
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIconWrap>
-              {color === theme.colors.purple[500] ? (
-                <Octicons name={'stack'} size={20} color={theme.colors.purple[500]} />
-              ) : (
-                <Octicons name={'stack'} size={20} color={theme.colors.neutral[300]} />
-              )}
+              {focused ? (<ActiveMeal/>):(<Meal/>)}
             </TabBarIconWrap>
           )
         }}
       />
       <BottomTab.Screen
-        name={StatementMainPageName}
-        component={StatementMainPage}
+        name={CatorMainPageName}
+        component={CatorMainPage}
         options={{
-          title: '입출금',
+          title: '케이터링',
           headerShown: false,
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIconWrap>
-              {color === theme.colors.purple[500] ? (
-                <TabBarIcon source={ActiveStatementIcon} />
-              ) : (
-                <TabBarIcon source={StatementIcon} />
-              )}
+              {focused ? (<ActiveCator/>):(<Cator/>)}
             </TabBarIconWrap>
           )
         }}
       />
       <BottomTab.Screen
-        name={IndexCardMainPageName}
-        component={IndexCardMainPage}
+        name={MarketMainPageName}
+        component={MarketMainPage}
         options={{
-          title: '인덱스',
+          title: '마켓',
           headerShown: false,
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIconWrap>
-              {color === theme.colors.purple[500] ? (
-                <TabBarIcon source={ActiveIndexIcon} />
-              ) : (
-                <TabBarIcon source={IndexIcon} />
-              )}
-            </TabBarIconWrap>
+            {focused ? (<ActiveMarket/>):(<Market/>)}
+          </TabBarIconWrap>
           )
         }}
       />
       <BottomTab.Screen
-        name={InformationMainPageName}
-        component={InformationMainPage}
+        name={MoreMainPageName}
+        component={MoreMainPage}
         options={{
-          title: '내정보',
+          title: '더보기',
           headerShown: false,
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIconWrap>
-              {color === theme.colors.purple[500] ? (
-                <TabBarIcon source={ActiveInformationIcon} />
-              ) : (
-                <TabBarIcon source={InformationIcon} />
-              )}
+              {focused ? (<ActiveMore/>):(<More/>)}
             </TabBarIconWrap>
           )
         }}

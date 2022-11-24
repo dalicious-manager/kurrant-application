@@ -1,1 +1,0 @@
-export {PAGE_NAME as InformationMainPageName, default as InformationMainPage} from './Main';

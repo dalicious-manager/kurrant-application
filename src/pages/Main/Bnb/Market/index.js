@@ -1,0 +1,1 @@
+export {PAGE_NAME as MarketMainPageName, default as MarketMainPage} from './Main';
