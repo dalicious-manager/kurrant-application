@@ -2,6 +2,7 @@
 ; We fork some components by platform
 .*/*[.]android.js
 
+node_modules/*
 ; Ignore "BUCK" generated dirs
 <PROJECT_ROOT>/\.buckd/
 
@@ -63,4 +64,4 @@ untyped-import
 untyped-type-import
 
 [version]
-^0.182.0
+^0.193.0

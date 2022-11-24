@@ -1,1 +1,0 @@
-export {PAGE_NAME as InvestmentMainPageName, default as InvestmentMainPage} from './Main';

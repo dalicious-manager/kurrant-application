@@ -1,1 +1,0 @@
-export {PAGE_NAME as ExchangeMainPageName, default as ExchangeMainPage} from './Main';

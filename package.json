@@ -35,19 +35,11 @@
     "react-native-screens": "^3.17.0",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^13.6.0",
-<<<<<<< HEAD
-    "react-native-svg-transformer": "^1.0.0",
-    "react-native-tab-view": "^3.1.1",
-    "react-native-vector-icons": "^9.2.0",
-    "react-native-webview": "^11.23.1",
-    "styled-components": "^5.3.6"
-=======
     "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "^11.23.1",
     "react-native-weekly-calendar": "^0.2.0",
-    "styled-components": "^5.3.5"
->>>>>>> feature/KR-14
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
