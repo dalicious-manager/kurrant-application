@@ -10,6 +10,9 @@ export const weightStyles = {
   R: css`
     font-weight: 400;
   `,
+  N: css`
+    font-weight: 600;
+  `
 };
 
 export const optionStyles = {

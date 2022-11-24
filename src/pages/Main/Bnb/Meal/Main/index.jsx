@@ -1,7 +1,7 @@
 import React from "react";
 import { SafeAreaView, Text, View } from "react-native";
 
-export const PAGE_NAME = 'P_MAIN__BNB__INDEX_CARD';
+export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = () => {
   return (

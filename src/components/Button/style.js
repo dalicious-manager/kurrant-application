@@ -19,6 +19,7 @@ const btnSizeStyle = {
   `,
   xl: css`
     width: 100%;
+    height: 56px;
   `,
 };
 
@@ -48,9 +49,9 @@ const labelSizeStyle = {
     line-height: 18px;
   `,
   xl: css`
-    padding: 13px 0;
-    font-size: 14px;
-    line-height: 18px;
+    //padding: 13px 0;
+    font-size: 17px;
+    line-height: 22px;
   `,
 };
 
@@ -68,8 +69,11 @@ const buttonColor = {
   red: css`
     background-color: ${({theme}) => theme.colors.red[500]};
   `,
-  blue: css `
+  blue: css`
     background-color: ${({theme}) => theme.colors.blue[500]}; 
+  `,
+  yellow: css`
+    background-color: ${({theme}) => theme.colors.yellow[500]};
   `
   
 };
