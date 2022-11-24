@@ -43,9 +43,9 @@ const Component = () => {
 
   return (
    <PagerView style={{flex:1}}>
-    {dates.map((week, i) => {
+    {dates.map((week) => {
         return (
-            <View key={i} >
+            <View key={week} >
             <Wrap>
                 {week.map(day => {
                     const txt = format(day,'EEE',{locale:ko});
@@ -53,7 +53,7 @@ const Component = () => {
                     const lastWeek = (day.toLocaleDateString() < today.toLocaleDateString());
                     //console.log(lastWeek)
                     return (
-                    <DaysWrap>
+                    <DaysWrap key={day}>
                         <Day lastWeek={lastWeek}>{txt}</Day>
                         <Test now={now} >
                             <Day lastWeek={lastWeek}>{day.getDate()}</Day>

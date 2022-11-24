@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Text, View,Image } from 'react-native';
+import { SafeAreaView, Text, View ,ScrollView} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 
@@ -16,6 +16,13 @@ import Calendar from '../../../../../components/Calendar';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
+
+  const test = (e) => {
+    let updateScroll = e.nativeEvent.contentOffset.y;
+    //console.log("스크롤 움직임",updateScroll);
+  }
+
+
   return (
     <SafeAreaView>
       <Wrap>
@@ -29,23 +36,61 @@ const Pages = () => {
           <CsIcon/>
         </Icons>
         </BarWrap>
+
+        <ScrollView onScroll={test} scrollEventThrottle={0}>
         <Text>김달리님 안녕하세요!</Text>
 
       <MainWrap>
-        <MealInfo>
+        {/* <MealInfo>
           <Text>오늘은 배송되는 식사가 없어요</Text>
-        </MealInfo>
+        </MealInfo> */}
         <MealInfo>
-          <MealImage source={{url:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-          <MealText>
-            <Text>점심</Text>
-            <View>
-              <Text>훈제오리 애플시나몬 샐러드(L)</Text>
-            </View>
-          </MealText>
-          <MealCount>
-            <Text>2개</Text>
-          </MealCount>
+          <MealInfoWrap>
+            <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+            <MealText>
+              <View>
+                <Text>점심</Text>
+                <View>
+                  <Text>훈제오리 애플시나몬 샐러드(L)</Text>
+                </View>
+              </View>
+              <MealCount>
+                <Text>2개</Text>
+              </MealCount>
+            </MealText>
+         </MealInfoWrap>
+        </MealInfo>        
+        <MealInfo>
+          <MealInfoWrap>
+            <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+            <MealText>
+              <View>
+                <Text>점심</Text>
+                <View>
+                  <Text>훈제오리 애플시나몬 샐러드(L)</Text>
+                </View>
+              </View>
+              <MealCount>
+                <Text>2개</Text>
+              </MealCount>
+            </MealText>
+         </MealInfoWrap>
+        </MealInfo>    
+        <MealInfo>
+          <MealInfoWrap>
+            <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+            <MealText>
+              <View>
+                <Text>점심</Text>
+                <View>
+                  <Text>훈제오리 애플시나몬 샐러드(L)</Text>
+                </View>
+              </View>
+              <MealCount>
+                <Text>2개</Text>
+              </MealCount>
+            </MealText>
+         </MealInfoWrap>
         </MealInfo>
         <MealCalendar>
           <MealCalendarTitle>
@@ -71,6 +116,7 @@ const Pages = () => {
           <TitleText>마켓 상품</TitleText>
         </Market>
       </MainWrap>
+        </ScrollView>
         <ButtonWrap>
           <Button label={'식사 구매하기'} type={'yellow'} icon={'plus'}/>
         </ButtonWrap>
@@ -82,7 +128,7 @@ const Pages = () => {
 export default Pages;
 
 const BoxWrap = css`
-width:327px;
+width:100%;
 height:64px;
 border-radius:14px;
 background-color:${props => props.theme.colors.grey[0]};
@@ -131,7 +177,12 @@ ${BoxWrap};
 ${Display};
 justify-content:space-between;
 padding-left:0px;
+`;
 
+const MealInfoWrap = styled.View`
+flex-direction:row;
+justify-content:center;
+align-items:center;
 `;
 
 const MealImage = styled.Image`
@@ -142,11 +193,14 @@ border-bottom-left-radius: 14px;
 `;
 
 const MealText = styled.View`
-margin-left:-20px;
+  margin-left:16px;
+  flex-direction: row;
+  flex:1;
+  justify-content: space-between;
 `;
 
 const MealCount = styled.View`
-
+  align-self:flex-end;
 `;
 
 const MealCalendar = styled.View`
