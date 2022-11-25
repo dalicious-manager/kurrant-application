@@ -1,7 +1,10 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 
+
+import CartIcon from '../../assets/icons/BuyMeal/cart.svg';
 import BackButton from '../../components/BackButton';
+import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
 import SelectUserTypePage, {
   PAGE_NAME as SelectUserTypePageName,
 } from '../../pages/Main/Bnb/SignUp/SelectUserType';
@@ -34,6 +37,21 @@ const Screen = () => {
           options={{headerShown: false}}
         />
       </MainRoot.Group>
+      {/* 식사구매 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={BuyMealPageName}
+          component={BuyMeal}
+          options={{headerShown: true,
+            title:'식사 구매하기',
+            headerTitleAlign: 'center',
+            headerLeft: () => <BackButton />,
+            headerRight: () => <CartIcon/>
+          }}
+        />
+      </MainRoot.Group>
+      
+      
       {/* BNB > SIGN_UP  */}
       <MainRoot.Group>
         <MainRoot.Screen
@@ -45,7 +63,7 @@ const Screen = () => {
       {/* MODAL */}
       {/* MODAL > LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <MainRoot.Screen
+        {/* <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
@@ -54,7 +72,7 @@ const Screen = () => {
             headerShadowVisible: false,
             title: '',
           }}
-        />
+        /> */}
         <MainRoot.Screen
           name={TermsOfServiceModalPageName}
           component={TermsOfServiceModal}
