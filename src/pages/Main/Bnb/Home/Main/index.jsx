@@ -2,7 +2,6 @@ import React from 'react';
 import { SafeAreaView, Text, View ,ScrollView} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
-
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
@@ -12,10 +11,11 @@ import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
+import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
-const Pages = () => {
+const Pages = ({navigation}) => {
 
   const test = (e) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
@@ -37,7 +37,7 @@ const Pages = () => {
         </Icons>
         </BarWrap>
 
-        <ScrollView onScroll={test} scrollEventThrottle={0}>
+        <ScrollView onScroll={test} scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
         <Text>김달리님 안녕하세요!</Text>
 
       <MainWrap>
@@ -118,7 +118,7 @@ const Pages = () => {
       </MainWrap>
         </ScrollView>
         <ButtonWrap>
-          <Button label={'식사 구매하기'} type={'yellow'} icon={'plus'}/>
+          <Button label={'식사 구매하기'} type={'yellow'} icon={'plus'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
         </ButtonWrap>
       </Wrap>
     </SafeAreaView>
