@@ -9,7 +9,9 @@ export const PAGE_NAME = 'P_LOGIN__MODAL__MAIN_EMAIL_LOGIN';
 
 
 const Pages = ({navigation}) => {  
-  const form = useForm();
+  const form = useForm({
+    mode:'all'
+  });
   return (
     <WrapperBox>      
       <FormProvider {...form}>
