@@ -30,9 +30,9 @@ const Screen = () => {
     <BottomTab.Navigator
       initialRouteName={HomeMainPageName}
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.grey[600],
+        tabBarActiveTintColor: theme.colors.grey[3],
         //tabBarActiveBackgroundColor: theme.colors.neutral[0],
-        tabBarInactiveTintColor: theme.colors.neutral[400],
+        tabBarInactiveTintColor: theme.colors.grey[5],
         //tabBarInactiveBackgroundColor: theme.colors.neutral[0],
       }}
     >

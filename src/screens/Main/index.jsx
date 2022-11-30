@@ -1,10 +1,14 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
+import { Alert, Text } from 'react-native';
 
 
 import CartIcon from '../../assets/icons/BuyMeal/cart.svg';
 import BackButton from '../../components/BackButton';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
+import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
+import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
+import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import SelectUserTypePage, {
   PAGE_NAME as SelectUserTypePageName,
 } from '../../pages/Main/Bnb/SignUp/SelectUserType';
@@ -50,7 +54,63 @@ const Screen = () => {
           }}
         />
       </MainRoot.Group>
-      
+      {/* 상세페이지 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={MealDetailPageName}
+          component={MealDetail}
+          options={{headerShown: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => <BackButton />,
+            headerRight: () => <CartIcon/>
+          }}
+        />
+      </MainRoot.Group>
+      {/* 상세페이지-알레르기정보 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={MealInformationPageName}
+          component={MealDetailInformation}
+          options={{headerShown: true,
+            headerTitleAlign: 'center',
+            headerLeft: () => <BackButton />,
+            headerRight: () => <CartIcon/>
+          }}
+        />
+      </MainRoot.Group>
+      {/* 장바구니 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={MealCartPageName}
+          component={MealCart}
+          options={{
+            headerShown: true,
+            title:'장바구니',
+            headerTitleAlign: 'center',
+            headerStyle: {
+        
+              borderBottomWidth:0
+          },      
+            headerLeft: () => <BackButton />,
+            headerRight: () => <Text onPress={()=>{Alert.alert(
+              '전체 삭제',
+              '메뉴를 모두 삭제하시겠어요?',
+              [
+                {
+                  text:'아니요',
+                  onPress:() => console.log('cancel pressed'),
+                  style:'destructive'
+                },
+                {
+                  text:'삭제',
+                  onPress:() => console.log('ok pressed')
+                }
+              ]
+            )}}>전체삭제</Text>,
+          }}
+        />
+      </MainRoot.Group>
+
       
       {/* BNB > SIGN_UP  */}
       <MainRoot.Group>

@@ -1,0 +1,93 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/NotoSansKR/NotoSansKR-Black.otf",
+      "sha1": "8d522f8eb934cee51996c52ee95c7f3699fa5390"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansKR/NotoSansKR-Bold.otf",
+      "sha1": "d6def4b913065650908f4437d984edf728577837"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansKR/NotoSansKR-Light.otf",
+      "sha1": "29807a42bb4ce2c3fa4f20620f00c69995504c0a"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansKR/NotoSansKR-Medium.otf",
+      "sha1": "51ac07a2608323be3e32554ab582a336625dbb42"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansKR/NotoSansKR-Regular.otf",
+      "sha1": "71bc2936b6fd731db2eb2d179122ec0566a1fcc4"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansKR/NotoSansKR-Thin.otf",
+      "sha1": "6c54ce42c067b64f022d977d03573b81d86fd0e6"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansKR/OFL.txt",
+      "sha1": "43513d1f6a1329962106efc212457e1d6ef9e980"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-Black.otf",
+      "sha1": "3ca5ded1bd48eca62ce690d577599cc53a6af880"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-Bold.otf",
+      "sha1": "6a04b4fbeb9a1a5d96a5b25b7e7cfbdd123fbcd0"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-ExtraBold.otf",
+      "sha1": "bf07faadf23d76cf13863e4b21d0e476531021cc"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-ExtraLight.otf",
+      "sha1": "64b17d254828a18ac6d97f2ffd80d0388771d31e"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-Light.otf",
+      "sha1": "6e537b8f43e958790c4f2bd5b314262d575e5195"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-Medium.otf",
+      "sha1": "b05adb9ac89775d7f22733216ff7fa9fe0364853"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-Regular.otf",
+      "sha1": "49c62f4738334d812f4407dbdc27a2108c7c2756"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-SemiBold.otf",
+      "sha1": "9bab4642eae558c9c7f308c8d1be33f9f412a2d4"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard/Pretendard-Thin.otf",
+      "sha1": "d426753321357e1197c29a1c1da1a14de623ff04"
+    },
+    {
+      "path": "src/assets/fonts/SpoqaHanSansNeo/LICENSE",
+      "sha1": "f9aca03801f77884fe3ad18aa0e6b98ef4507364"
+    },
+    {
+      "path": "src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.otf",
+      "sha1": "db0b78289b39d9a737fa93a2347ca32f651a3139"
+    },
+    {
+      "path": "src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Light.otf",
+      "sha1": "cc7da00da7a5f96a2fe92981302ae2c59f6e4342"
+    },
+    {
+      "path": "src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.otf",
+      "sha1": "05aeff1c993bc3164ae82e46f340959db10cde43"
+    },
+    {
+      "path": "src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.otf",
+      "sha1": "28eb6f5e88a9c015ffd75c604b73da04170b6f40"
+    },
+    {
+      "path": "src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.otf",
+      "sha1": "0465dfee7f5f9dd36c12167078c3e1b877a1e22c"
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
+import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
@@ -27,35 +28,34 @@ const Pages = ({navigation}) => {
     <SafeAreaView>
       <Wrap>
         <BarWrap>
-        <SpotName>
-         <Text>팁스타운 1층</Text>
-         <ArrowIcon/>
-        </SpotName>
-        <Icons>
-          <BellIcon/>
-          <CsIcon/>
-        </Icons>
+          <SpotName>
+          <SpotNameText>팁스타운 1층</SpotNameText>
+          <ArrowIcon/>
+          </SpotName>
+          <Icons>
+            <BellIcon/>
+            <CsIcon/>
+          </Icons>
         </BarWrap>
 
         <ScrollView onScroll={test} scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
-        <Text>김달리님 안녕하세요!</Text>
-
+        <LargeTitle>김달리님 안녕하세요!</LargeTitle>
       <MainWrap>
-        {/* <MealInfo>
-          <Text>오늘은 배송되는 식사가 없어요</Text>
-        </MealInfo> */}
+        <NoMealInfo>
+          <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
+        </NoMealInfo>
         <MealInfo>
           <MealInfoWrap>
             <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
             <MealText>
               <View>
-                <Text>점심</Text>
+                <CaptionTitle>점심</CaptionTitle>
                 <View>
-                  <Text>훈제오리 애플시나몬 샐러드(L)</Text>
+                  <MealTxt>훈제오리 애플시나몬 샐러드(L)</MealTxt>
                 </View>
               </View>
               <MealCount>
-                <Text>2개</Text>
+                <GreyTxt>2개</GreyTxt>
               </MealCount>
             </MealText>
          </MealInfoWrap>
@@ -65,33 +65,33 @@ const Pages = ({navigation}) => {
             <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
             <MealText>
               <View>
-                <Text>점심</Text>
+                <CaptionTitle>점심</CaptionTitle>
                 <View>
-                  <Text>훈제오리 애플시나몬 샐러드(L)</Text>
+                  <MealTxt>훈제오리 애플시나몬 샐러드(L)</MealTxt>
                 </View>
               </View>
               <MealCount>
-                <Text>2개</Text>
+                <GreyTxt>2개</GreyTxt>
               </MealCount>
             </MealText>
          </MealInfoWrap>
-        </MealInfo>    
+        </MealInfo>  
         <MealInfo>
           <MealInfoWrap>
             <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
             <MealText>
               <View>
-                <Text>점심</Text>
+                <CaptionTitle>점심</CaptionTitle>
                 <View>
-                  <Text>훈제오리 애플시나몬 샐러드(L)</Text>
+                  <MealTxt>훈제오리 애플시나몬 샐러드(L)</MealTxt>
                 </View>
               </View>
               <MealCount>
-                <Text>2개</Text>
+                <GreyTxt>2개</GreyTxt>
               </MealCount>
             </MealText>
          </MealInfoWrap>
-        </MealInfo>
+        </MealInfo>  
         <MealCalendar>
           <MealCalendarTitle>
             <CalendarIcon/>
@@ -100,7 +100,7 @@ const Pages = ({navigation}) => {
           <Calendar/>
         </MealCalendar>
         <Membership>
-          <Text>멤버십 가입하고 <PointText>20%할인</PointText> 받기</Text>
+          <SemiBoldTxt>멤버십 가입하고 <PointText>20%할인</PointText> 받기</SemiBoldTxt>
         </Membership>
         <Cator>
           <CatorIcon/>
@@ -151,11 +151,12 @@ const Wrap = styled.View`
 position: relative;
 padding: 0px 24px;
 height:100%;
-background-color:${props => props.theme.colors.grey[100]};
+background-color:${props => props.theme.colors.grey[8]};
 `;
 
 const BarWrap = styled.View`
-${BarDisplay}
+${BarDisplay};
+margin:10px 0px;
 `;
 
 const SpotName = styled.View`
@@ -177,6 +178,11 @@ ${BoxWrap};
 ${Display};
 justify-content:space-between;
 padding-left:0px;
+`;
+const NoMealInfo = styled.View`
+${BoxWrap};
+${Display};
+justify-content:center;
 `;
 
 const MealInfoWrap = styled.View`
@@ -218,10 +224,6 @@ ${BoxWrap};
 ${Display};
 `;
 
-const PointText = styled.Text`
-color: ${props => props.theme.colors.green[500]};
-`;
-
 const Cator = styled.View`
 ${BoxWrap};
 ${Display};
@@ -232,8 +234,9 @@ ${BoxWrap};
 ${Display};
 `;
 
-const TitleText = styled.Text`
+const TitleText = styled(Typography).attrs({text:'Body05SB'})`
 margin-left:14px;
+color:${props => props.theme.colors.grey[2]};
 `;
 
 const ButtonWrap = styled.View`
@@ -241,4 +244,34 @@ position:absolute;
 bottom:17px;
 left:20px;
 right:20px;
+`;
+
+// text
+const LargeTitle = styled(Typography).attrs({text:'LargeTitle'})`
+color:${props => props.theme.colors.grey[1]};
+margin-top:40px;
+`;
+
+const SemiBoldTxt = styled(Typography).attrs({text:'Body05SB'})`
+color:${props => props.theme.colors.grey[2]};
+`;
+
+const MealTxt = styled(Typography).attrs({text:'Body06R'})`
+color:${props => props.theme.colors.grey[2]};
+`;
+
+const GreyTxt = styled(Typography).attrs({text:'Body06R'})`
+color:${props => props.theme.colors.grey[5]};
+`;
+
+const PointText = styled(Typography).attrs({text:'Body05SB'})`
+color: ${props => props.theme.colors.green[500]};
+`;
+
+const SpotNameText = styled(Typography).attrs({text:'BottomButtonSB'})`
+color:${props => props.theme.colors.grey[2]};
+`;
+
+const CaptionTitle = styled(Typography).attrs({text:'CaptionSB'})`
+color:${props => props.theme.colors.grey[2]};
 `;

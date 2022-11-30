@@ -69,3 +69,126 @@ export const variantStyles = {
     line-height: 12px;
   `,
 };
+
+export const textStyles = {
+  LargeTitle: css`
+    font-size: 26px;
+    line-height: 35px;
+    font-family: 'Pretendard-SemiBold';
+  `,
+  Title02R: css`
+    font-size: 22px;
+    line-height: 30px;
+    font-family: 'Pretendard-Regular';
+`,
+  Title02RB: css`
+    font-size: 22px;
+    line-height: 30px;
+    font-family: 'Pretendard-SemiBold';
+`,
+  Title03R: css`
+    font-size: 20px;
+    line-height: 28px;
+    font-family: 'Pretendard-Regular';
+  `,
+  Title03SB: css`
+    font-size: 20px;
+    line-height: 28px;
+    font-family: 'Pretendard-SemiBold';
+  `,
+  Title04R: css`
+    font-size: 18px;
+    line-height: 24px;
+    font-family: 'Pretendard-Regular';
+  `,
+  Title04SB: css`
+    font-size: 18px;
+    line-height: 24px;
+    font-family: 'Pretendard-SemiBold';
+  `,
+  Body05R: css`
+    font-size: 16px;
+    line-height: 22px;
+    font-family: 'Pretendard-Regular';
+  `,
+  Body05SB: css`
+    font-size: 16px;
+    line-height: 22px;
+    font-family: 'Pretendard-SemiBold';
+  `,
+  Body06R: css`
+    font-size: 14px;
+    line-height: 22px;
+    font-family: 'Pretendard-Regular';
+  `,
+  Body06SB: css`
+    font-size: 14px;
+    line-height: 22px;
+    font-family: 'Pretendard-SemiBold';
+  `,
+  CaptionR: css`
+    font-size: 13px;
+    line-height: 19px;
+    font-family: 'Pretendard-Regular';
+    letter-spacing:-0.3px;
+    `,
+  CaptionSB: css`
+    font-size: 13px;
+    line-height: 19px;
+    font-family: 'Pretendard-SemiBold';
+    letter-spacing:-0.3px;
+  `,
+  BottomButtonR: css`
+    font-size: 17px;
+    line-height: 22px;
+    font-family: 'Pretendard-Regular';
+  `,
+  BottomButtonSB: css`
+    font-size: 17px;
+    line-height: 22px;
+    font-family: 'Pretendard-SemiBold';
+  `,
+  Button09R: css`
+    font-size: 15px;
+    line-height: 21px;
+    font-family: 'Pretendard-Regular';
+  `,
+  Button09SB: css`
+    font-size: 15px;
+    line-height: 21px;
+    font-family: 'Pretendard-SemiBold';
+  `,
+  Button10R: css`
+    font-size: 13px;
+    line-height: 19px;
+    font-family: 'Pretendard-Regular';
+  `,
+  Button10SB: css`
+    font-size: 13px;
+    line-height: 19px;
+    font-family: 'Pretendard-SemiBold';
+  `,
+  MediumLabel: css`
+    font-size: 14px;
+    line-height: 22px;
+    font-family: 'Pretendard-Regular';
+  `,
+  SmallLabel: css`
+    font-size: 12px;
+    line-height: 14px;
+    font-family: 'Pretendard-Regular';
+    letter-spacing:-0.5px;
+  `,
+  InputText: css`
+    font-size: 20px;
+    line-height: 24px;
+    font-family: 'Pretendard-Regular';
+  `,
+  BoxInputText: css`
+    font-size: 16px;
+    line-height: 12px;
+    font-family: 'Pretendard-Regular';
+  `,
+  
+
+};
