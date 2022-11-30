@@ -1,9 +1,10 @@
 import React from "react";
-import { View ,Text, SafeAreaView, StatusBar, TouchableOpacity, Animated } from "react-native";
+import { View ,Text, SafeAreaView, StatusBar, TouchableOpacity, Animated,ScrollView} from "react-native";
 import styled from "styled-components";
 
 import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
 import StartIcon from '../../../../../assets/icons/star.svg';
+import Button from '../../../../../components/ButtonCart';
 import Typography from "../../../../../components/Typography";
 import useAnimatedHeaderTitle from "../../../../../hook/useAnimatedHeaderTitle";
 import { TagText, TagTextWrap } from "../../BuyMeal/Main";
@@ -13,7 +14,7 @@ export const PAGE_NAME = 'MEAL_DEATAIL_PAGE';
 
 const Pages = ({navigation}) =>{
 
-    const { scrollY } = useAnimatedHeaderTitle({ title: 'Home', triggerPoint: 30 });
+    const { scrollY } = useAnimatedHeaderTitle({ title: '이름', triggerPoint: 30 });
 
     const handleScroll = Animated.event(
         [ { nativeEvent: { contentOffset: { y: scrollY } } } ], 
@@ -21,8 +22,9 @@ const Pages = ({navigation}) =>{
     )
 
     return (
-
-            <Wrap
+        <Wrap>
+            <ScrollView
+            showsVerticalScrollIndicator={false}
              onScroll = { handleScroll }
              scrollEventThrottle={16}
             >
@@ -65,17 +67,62 @@ const Pages = ({navigation}) =>{
                     </View>
                 </Content>
                 <Content>
-                    <Text>할인 내역</Text>
-                    <Text>배송 정보</Text>
+                    <InfoWrap>
+                        <InfoTitleView>
+                            <InfoTitle>할인 내역</InfoTitle>
+                        </InfoTitleView>
+                        <InfoTextView>
+                            <InfoTextWrap>
+                                <Info>멤버십 할인</Info>
+                                <Info>10%</Info>
+                            </InfoTextWrap>
+                            <InfoTextWrap>
+                                <Info>판매자 할인</Info>
+                                <Info>20%</Info>
+                            </InfoTextWrap>
+                            <InfoTextWrap>
+                                <Info>기간 할인</Info>
+                                <Info>5%</Info>
+                            </InfoTextWrap>
+                        </InfoTextView>
+                    </InfoWrap>
+
+                    <InfoWrap>
+                        <InfoTitleView>
+                            <InfoTitle>배송 정보</InfoTitle>
+                        </InfoTitleView>
+                        <InfoTextView>
+                            <InfoTextWrap>
+                                <Info>단체 배송</Info>
+                                <Info>15,000(50개 마다 부과)</Info>
+                            </InfoTextWrap>
+                            <InfoTextWrap>
+                                <Info>개별 배송</Info>
+                                <Info>2,200원(5개 마다 부과)</Info>
+                            </InfoTextWrap>
+                            <InfoTextWrap>
+                                <Info>멤버십 회원</Info>
+                                <Info>무료 배송</Info>
+                            </InfoTextWrap>
+                        </InfoTextView>
+                    </InfoWrap>
                 </Content>
-            </Wrap>
+                <Content>
+                    <Text>리뷰자리</Text>
+                </Content>
+            </ScrollView>
+                <ButtonWrap>
+                    <Button/>
+                </ButtonWrap>
+        </Wrap>
          
     )
 }
 export default Pages;
 
-const Wrap = styled.ScrollView`
+const Wrap = styled.SafeAreaView`
 background-color:${props => props.theme.colors.grey[0]};
+position:relative;
 `;
 
 const Content = styled.View`
@@ -116,6 +163,29 @@ const PriceWrap = styled.View`
 flex-direction:row;
 align-items:center;
 text-align:center;
+`;
+
+const InfoWrap = styled.View`
+flex-direction:row;
+`;
+
+const InfoTitleView = styled.View`
+width:20%;
+`;
+const InfoTextView = styled.View`
+width:80%;
+`;
+
+const InfoTextWrap = styled.View`
+flex-direction:row;
+justify-content:space-between;
+`;
+
+const ButtonWrap = styled.View`
+position:absolute;
+bottom:35px;
+left:20px;
+right:20px;
 `;
 
 const MakersName = styled(Typography).attrs({text:'Body06SB'})`
@@ -163,4 +233,14 @@ const Price = styled(Typography).attrs({text:'Body06R'})`
 color:${props => props.theme.colors.grey[5]};
 text-decoration:line-through;
 text-decoration-color:${props => props.theme.colors.grey[5]};
+`;
+
+const InfoTitle = styled(Typography).attrs({text:'CaptionR'})`
+color:${props => props.theme.colors.grey[3]};
+
+`;
+
+const Info = styled(Typography).attrs({text:'CaptionR'})`
+color:${props => props.theme.colors.grey[4]};
+margin-bottom:4px;
 `;
