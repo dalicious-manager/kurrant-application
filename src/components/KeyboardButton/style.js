@@ -20,7 +20,7 @@ const btnSizeStyle = {
   xl: css`
     width: 100%;
     height: 56px;
-  `
+  `,
 };
 
 export const getButtonLabelStyles = sizeType => {
@@ -49,10 +49,10 @@ const labelSizeStyle = {
     line-height: 18px;
   `,
   xl: css`
-    padding: 13px 0;
+    //padding: 13px 0;
     font-size: 17px;
     line-height: 22px;
-  `
+  `,
 };
 
 export const getButtonColor = type => {
@@ -60,19 +60,17 @@ export const getButtonColor = type => {
 };
 
 const buttonColor = {
-
-  grey2: css`
-    background-color: ${({theme}) => theme.colors.grey[2]}; 
+  primary: css`
+    background-color: ${({ theme }) => theme.colors.purple[500]}; 
   `,
-  grey3: css`
-    background-color: ${({theme}) => theme.colors.grey[3]}; 
+  gray: css`
+    background-color: ${({ theme }) => theme.colors.neutral[30]}; 
   `,
-  grey7: css`
-    background-color: ${({theme}) => theme.colors.grey[7]};
+  red: css`
+    background-color: ${({ theme }) => theme.colors.red[500]};
   `,
-  white: css`
-    background-color: ${({theme}) => theme.colors.grey[0]}; 
-    border-color:${({theme}) => theme.colors.grey[5]};
+  blue: css`
+    background-color: ${({ theme }) => theme.colors.blue[500]}; 
   `,
   yellow: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
@@ -89,22 +87,20 @@ export const getDisabledColor = type => {
 };
 
 const disabledButtonColor = {
-\
-  grey2: css`
-    background-color: ${({theme}) => theme.colors.grey[8]}; 
+  primary: css`
+    background-color: ${({ theme }) => theme.colors.purple[100]}; 
   `,
-  grey3: css`
-    background-color: ${({theme}) => theme.colors.grey[8]}; 
+  gray: css`
+    background-color: ${({ theme }) => theme.colors.neutral[30]}; 
   `,
-  grey7: css`
-    background-color: ${({theme}) => theme.colors.grey[8]};
+  red: css`
+    background-color:${({ theme }) => theme.colors.red[100]}; 
   `,
-  white: css`
-    background-color: ${({theme}) => theme.colors.grey[0]}; 
-    border-color:${({theme}) => theme.colors.grey[7]};
+  blue: css`
+    background-color: ${({ theme }) => theme.colors.blue[100]}; 
   `,
   yellow: css`
-    background-color: ${({theme}) => theme.colors.yellow[100]};
+    background-color: ${({ theme }) => theme.colors.yellow[100]}; 
   `,
   login: css`
     background-color: ${({ theme }) => theme.colors.yellow[100]}; 
