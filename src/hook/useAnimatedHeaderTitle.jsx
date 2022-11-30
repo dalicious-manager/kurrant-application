@@ -3,7 +3,6 @@ import { useLayoutEffect, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
 
 
-
 const useAnimatedHeaderTitle = ({ title,  triggerPoint }) => {
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -19,6 +18,7 @@ const useAnimatedHeaderTitle = ({ title,  triggerPoint }) => {
 
   useEffect(() => {
     navigation.setOptions({
+      
       headerStyleInterpolator: () => {
         const opacity = scrollY.interpolate({
           inputRange: [triggerPoint, triggerPoint + 20],
@@ -26,7 +26,7 @@ const useAnimatedHeaderTitle = ({ title,  triggerPoint }) => {
         });
 
         return {
-          titleStyle: { opacity }
+          headerStyle: { opacity }
         }
       }
     })
