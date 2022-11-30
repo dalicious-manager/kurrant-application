@@ -59,7 +59,7 @@ const Screen = () => {
         <MainRoot.Screen
           name={MealDetailPageName}
           component={MealDetail}
-          options={{headerShown: false,
+          options={{headerShown: true,
             headerTitleAlign: 'center',
             headerLeft: () => <BackButton />,
             headerRight: () => <CartIcon/>
@@ -72,9 +72,10 @@ const Screen = () => {
           name={MealInformationPageName}
           component={MealDetailInformation}
           options={{headerShown: true,
+            title:'알레르기/원산지 정보',
+            headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerLeft: () => <BackButton />,
-            headerRight: () => <CartIcon/>
           }}
         />
       </MainRoot.Group>
