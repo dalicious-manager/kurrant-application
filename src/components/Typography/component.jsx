@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, {css} from 'styled-components/native';
 
-import {variantStyles, optionStyles, weightStyles} from './styles';
+import {variantStyles, optionStyles, weightStyles, textStyles} from './styles';
 
 /**
  * @param {object} props
@@ -41,6 +41,7 @@ const Typography = styled.Text`
   ${({variant}) => variant && variantStyles[variant]};
   ${({option}) => option && optionStyles[option]}
   ${({weight}) => weight && weightStyles[weight]};
+  ${({text}) => text && textStyles[text]};
 
   ${({align}) =>
     align &&

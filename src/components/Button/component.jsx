@@ -76,7 +76,7 @@ export const LabelWrap = styled.View`
 `;
 
 export const Label = styled(Typography).attrs({ weight: 'N' })`
-  color: ${({ theme }) => theme.colors.grey[800]};
+  color: ${({ theme }) => theme.colors.grey[1]};
   ${({ type, disabled }) => type === 'gray' && getLabelColor(disabled)};
   ${({ size }) => getButtonLabelStyles(size)};
 `;

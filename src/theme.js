@@ -1,14 +1,14 @@
 // Grey
 export const grey = {
   0: '#FFFFFF',  // white
-  100: '#F5F5F5', // grey 8
-  200: '#E4E3E7', // grey 7
-  300: '#D5D4D9', // grey 6
-  400: '#BDBAC1', // grey 5
-  500: '#88888E', // grey 4
-  600: '#5F5E62', // grey 3
-  700: '#343337', // grey 2
-  800: '#1D1C21'  // grey 1
+  8: '#F5F5F5', // grey 8
+  7: '#E4E3E7', // grey 7
+  6: '#D5D4D9', // grey 6
+  5: '#BDBAC1', // grey 5
+  4: '#88888E', // grey 4
+  3: '#5F5E62', // grey 3
+  2: '#343337', // grey 2
+  1: '#1D1C21'  // grey 1
 
 };
 
@@ -73,7 +73,7 @@ const colors = {
 
 const Theme = {
   font: {
-    fontFamily: 'NotoSansKR-Regular',
+    fontFamily: 'Pretendard-Regular',
   },
   colors,
   padding: {
