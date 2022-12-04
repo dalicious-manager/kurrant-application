@@ -21,7 +21,7 @@ const Component = ({
   
   return (
    <View>
-    {isKeyboardActivate ? <Button type='keyboard' label="로그인" disabled={disabled} onPressEvent={onPressEvent} /> : null}
+    {isKeyboardActivate ? <Button type='login' size='login' label="로그인" disabled={disabled} onPressEvent={onPressEvent} /> : null}
   </View>
   )
 };

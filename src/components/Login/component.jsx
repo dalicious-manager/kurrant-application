@@ -45,7 +45,7 @@ const Component = () => {
 
   const isValidation = dirtyFields.email && dirtyFields.password && !errors.email && !errors.password;
   useEffect(()=>{
-    Platform.OS == 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
+    Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
       }) : null
 }, []);
@@ -118,7 +118,7 @@ const Component = () => {
         </LableContainer>
         
       </Container>
-      <KeyboardButton type='keyboard' isKeyboardActivate={keyboardStatus.isKeyboardActivate} label="로그인" disabled={!isValidation} />
+      <KeyboardButton type='login' isKeyboardActivate={keyboardStatus.isKeyboardActivate} label="로그인" disabled={!isValidation} />
     </KeyContainer>
     </KeyDismiss>
     </SafeContainer>

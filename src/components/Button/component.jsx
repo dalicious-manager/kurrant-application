@@ -58,8 +58,8 @@ const Component = ({
 export default Component;
 
 const Wrap = styled.View`
-width:${({ size }) => size === 'full' && screenWidth}px ;
-align-items:center;
+  width:${({ size }) => size === 'full' ? screenWidth : size === 'login' && screenWidth}px ;
+  align-items:center;
 `;
 
 const Wrapper = styled.Pressable`
