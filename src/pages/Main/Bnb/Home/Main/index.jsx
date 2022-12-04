@@ -1,5 +1,5 @@
-import React from 'react';
-import { SafeAreaView, Text, View ,ScrollView} from 'react-native';
+ import React from 'react';
+import { SafeAreaView, Text, View ,ScrollView,Dimensions} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
@@ -109,7 +109,6 @@ const Pages = ({navigation}) => {
         <Membership>
           <MembershipIcon/>
           <TitleText>멤버십</TitleText>
-          
         </Membership>
         <Market>
           <MarketIcon/>
@@ -117,9 +116,11 @@ const Pages = ({navigation}) => {
         </Market>
       </MainWrap>
         </ScrollView>
-        <ButtonWrap>
+      <ButtonWrap>
           <Button label={'식사 구매하기'} type={'yellow'} icon={'plus'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
-        </ButtonWrap>
+      </ButtonWrap>
+        
+        
       </Wrap>
     </SafeAreaView>
   )
@@ -242,8 +243,7 @@ color:${props => props.theme.colors.grey[2]};
 const ButtonWrap = styled.View`
 position:absolute;
 bottom:17px;
-left:20px;
-right:20px;
+
 `;
 
 // text
