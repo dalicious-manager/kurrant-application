@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
-import React,{useState} from 'react';
-import {StyleSheet,  TouchableOpacity,Platform,Keyboard} from 'react-native';
+import React,{useState,useEffect} from 'react';
+import { useFormContext } from 'react-hook-form';
+import {StyleSheet,  TouchableOpacity,Platform,Keyboard,NativeModules} from 'react-native';
 import { useRef } from 'react/cjs/react.development';
 import styled, { useTheme } from 'styled-components/native';
 
@@ -9,6 +10,7 @@ import Button from '../Button';
 import KeyboardButton from '../KeyboardButton';
 import RefTextInput from '../RefTextInput';
 import Typography from '../Typography';
+const { StatusBarManager } = NativeModules;
 
 const Component = () => {
   const navigation = useNavigation();
@@ -17,12 +19,16 @@ const Component = () => {
     {label: '/', route: null},
     {label: '비밀번호 찾기', route: null},
   ];
-  const emailRef = useRef(null);
-  const [isEmailFocused, setEmailFocused] = useState(emailRef.current?.isFocused());
-  const passwordRef = useRef(null);
-  const [isPasswordFocused, setPasswordFocused] = useState(passwordRef.current?.isFocused());
   const themeApp= useTheme();
+
+  const emailRef = useRef(null);
+  const [isEmailFocused, setEmailFocused] = useState(false);
+  const passwordRef = useRef(null);
+  const [isPasswordFocused, setPasswordFocused] = useState(false);
+  const {formState:{errors,dirtyFields}} = useFormContext();
   const keyboardStatus = useKeyboardEvent();
+
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
   const renderLabels = labelItems.map((labelItem, index) => {
     const handleRoutePress = () => {
       navigation.navigate(labelItem.route ?? '');
@@ -36,10 +42,20 @@ const Component = () => {
       </TouchableOpacity>
     );
   });
- 
+
+  const isValidation = dirtyFields.email && dirtyFields.password && !errors.email && !errors.password;
+  useEffect(()=>{
+    Platform.OS == 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
+        setStatusBarHeight(statusBarFrameData.height)
+      }) : null
+}, []);
+  
   return (
+    <SafeContainer >
     <KeyDismiss onPress={()=>Keyboard.dismiss()}>
-    <KeyContainer behavior={Platform.OS === "ios" ? "padding" : "height"} >
+    <KeyContainer 
+      keyboardVerticalOffset={Platform.OS === "ios" && statusBarHeight+44 }
+      behavior={Platform.OS === "ios" ? "padding" : "height"} >
       <Container>
         <RefTextInput
           name="email" 
@@ -50,7 +66,7 @@ const Component = () => {
           focus={isEmailFocused}
           onFocus={()=>setEmailFocused(true)}
           setFocused={setEmailFocused}
-          onSubmitEditing={() => passwordRef.current.focus()}
+          onSubmitEditing={() => passwordRef.current?.focus()}
           blurOnSubmit={false}
           placeholder="가입한 이메일 주소" 
           rules={
@@ -94,7 +110,7 @@ const Component = () => {
           style={styles.input} 
         />
         {!keyboardStatus.isKeyboardActivate &&<ButtonContainer>
-          <Button type='yellow' label="로그인" />
+          <Button type='yellow' label="로그인" disabled={!isValidation}/>
         </ButtonContainer> }
        
         <LableContainer>
@@ -102,22 +118,24 @@ const Component = () => {
         </LableContainer>
         
       </Container>
-      {keyboardStatus.isKeyboardActivate && <SubmitContainer>
-          <KeyboardButton type='login' label="로그인" disabled={true} />
-        </SubmitContainer>}
+      <KeyboardButton type='keyboard' isKeyboardActivate={keyboardStatus.isKeyboardActivate} label="로그인" disabled={!isValidation} />
     </KeyContainer>
     </KeyDismiss>
+    </SafeContainer>
   );
 };
 const KeyDismiss = styled.Pressable`
   flex: 1;
+`
+const SafeContainer = styled.SafeAreaView`
+  flex:1;
 `
 const KeyContainer = styled.KeyboardAvoidingView`
   flex: 1;
   position: relative;
 `
 
-const Container = styled.View`
+const Container = styled.View` 
   flex: 1;
   position: relative;
   align-items: center;
@@ -138,10 +156,7 @@ const ButtonContainer = styled.View`
   position: absolute;
   bottom: 22px;
   margin-bottom: 24px;
-`
-const SubmitContainer = styled.View`
-
-`
+`;
 
 const styles = StyleSheet.create({
   container: {

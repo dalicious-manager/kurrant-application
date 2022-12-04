@@ -75,7 +75,7 @@ const buttonColor = {
   yellow: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
   `,
-  login: css`
+  keyboard: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
   `
 
@@ -102,7 +102,7 @@ const disabledButtonColor = {
   yellow: css`
     background-color: ${({ theme }) => theme.colors.yellow[100]}; 
   `,
-  login: css`
+  keyboard: css`
     background-color: ${({ theme }) => theme.colors.yellow[100]}; 
   `
 };

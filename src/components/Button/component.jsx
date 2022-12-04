@@ -57,7 +57,7 @@ const Wrapper = styled.Pressable`
   ${({ size }) => getButtonSizeStyles(size)};
   ${({ type }) => getButtonColor(type)};
   ${({ type, disabled }) => disabled && getDisabledColor(type)};
-  border-radius: ${({type}) => type ==='login' ? '0px' : '100px'};
+  border-radius: ${({type}) => type ==='keyboard' ? '0px' : '100px'};
   align-items:center;
   flex-direction:row;
   justify-content:center;
@@ -75,7 +75,7 @@ export const LabelWrap = styled.View`
   
 `;
 
-export const Label = styled(Typography).attrs({ text: 'N' })`
+export const Label = styled(Typography).attrs({ text: 'BottomButtonSB' })`
   color: ${({ theme }) => theme.colors.grey[1]};
   ${({ type, disabled }) => type === 'gray' && getLabelColor(disabled)};
   ${({ size }) => getButtonLabelStyles(size)};

@@ -62,22 +62,22 @@ export const getButtonColor = type => {
 const buttonColor = {
 
   grey2: css`
-    background-color: ${({theme}) => theme.colors.grey[2]}; 
+    background-color: ${({ theme }) => theme.colors.grey[2]}; 
   `,
   grey3: css`
-    background-color: ${({theme}) => theme.colors.grey[3]}; 
+    background-color: ${({ theme }) => theme.colors.grey[3]}; 
   `,
   grey7: css`
-    background-color: ${({theme}) => theme.colors.grey[7]};
+    background-color: ${({ theme }) => theme.colors.grey[7]};
   `,
   white: css`
-    background-color: ${({theme}) => theme.colors.grey[0]}; 
-    border-color:${({theme}) => theme.colors.grey[5]};
+    background-color: ${({ theme }) => theme.colors.grey[0]}; 
+    border-color:${({ theme }) => theme.colors.grey[5]};
   `,
   yellow: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
   `,
-  login: css`
+  keyboard: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
   `
 
@@ -89,24 +89,23 @@ export const getDisabledColor = type => {
 };
 
 const disabledButtonColor = {
-\
   grey2: css`
-    background-color: ${({theme}) => theme.colors.grey[8]}; 
+    background-color: ${({ theme }) => theme.colors.grey[8]}; 
   `,
   grey3: css`
-    background-color: ${({theme}) => theme.colors.grey[8]}; 
+    background-color: ${({ theme }) => theme.colors.grey[8]}; 
   `,
   grey7: css`
-    background-color: ${({theme}) => theme.colors.grey[8]};
+    background-color: ${({ theme }) => theme.colors.grey[8]};
   `,
   white: css`
-    background-color: ${({theme}) => theme.colors.grey[0]}; 
-    border-color:${({theme}) => theme.colors.grey[7]};
+    background-color: ${({ theme }) => theme.colors.grey[0]}; 
+    border-color:${({ theme }) => theme.colors.grey[7]};
   `,
   yellow: css`
-    background-color: ${({theme}) => theme.colors.yellow[100]};
+    background-color: ${({ theme }) => theme.colors.yellow[100]};
   `,
-  login: css`
+  keyboard: css`
     background-color: ${({ theme }) => theme.colors.yellow[100]}; 
   `
 };
