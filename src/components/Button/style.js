@@ -20,6 +20,34 @@ const btnSizeStyle = {
   xl: css`
     width: 100%;
     height: 56px;
+  `,
+  full: css`
+    width: 335px;
+    height: 56px;
+  `,
+  middle: css`
+    width: 279px;
+    height: 56px;
+  `,
+  half: css`
+    width: 162px;
+    height: 56px;
+  `,
+  modalFull: css`
+    width: 327px;
+    height: 50px;
+  `,
+  modalHalf: css`
+    width: 160px;
+    height: 50px;
+  `,
+  button38: css`
+    width: 81px;
+    height: 38px;
+  `,
+  button32: css`
+    width: 73px;
+    height: 32px;
   `
 };
 
@@ -71,8 +99,9 @@ const buttonColor = {
     background-color: ${({ theme }) => theme.colors.grey[7]};
   `,
   white: css`
-    background-color: ${({ theme }) => theme.colors.grey[0]}; 
-    border-color:${({ theme }) => theme.colors.grey[5]};
+    background-color: ${({theme}) => theme.colors.grey[0]}; 
+    border: ${({theme}) => `1px solid ${theme.colors.grey[5]}`};
+    box-sizing:border-box;
   `,
   yellow: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
@@ -99,8 +128,9 @@ const disabledButtonColor = {
     background-color: ${({ theme }) => theme.colors.grey[8]};
   `,
   white: css`
-    background-color: ${({ theme }) => theme.colors.grey[0]}; 
-    border-color:${({ theme }) => theme.colors.grey[7]};
+    background-color: ${({theme}) => theme.colors.grey[0]}; 
+    border: ${({theme}) => `1px solid ${theme.colors.grey[7]}`};
+    box-sizing:border-box;
   `,
   yellow: css`
     background-color: ${({ theme }) => theme.colors.yellow[100]};
@@ -113,11 +143,11 @@ const disabledButtonColor = {
 export const getLabelColor = disabled => {
   if (disabled === true) {
     return css`
-      color: ${({ theme }) => theme.colors.neutral[700]}; 
+      color: ${({ theme }) => theme.colors.grey[5]}; 
     `
   } else {
     return css`
-      color: ${({ theme }) => theme.colors.neutral[400]}; 
+      color: ${({ theme }) => theme.colors.grey[1]}; 
     `
   }
 }

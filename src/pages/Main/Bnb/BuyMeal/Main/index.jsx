@@ -168,8 +168,7 @@ color:${props => props.theme.colors.grey[4]};
 const ButtonWrap = styled.View`
 position:absolute;
 bottom:35px;
-left:20px;
-right:20px;
+
 `;
 
 const MakersName = styled(Typography).attrs({text:'Body05R'})`

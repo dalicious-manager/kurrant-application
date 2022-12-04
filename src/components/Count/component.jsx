@@ -1,8 +1,10 @@
 import React, { useState,useRef, useEffect } from 'react';
-import { View,Text, TouchableWithoutFeedback, TextInput ,KeyboardAvoidingView ,Platform} from 'react-native';
+import { View,Text, TouchableWithoutFeedback, TextInput ,KeyboardAvoidingView ,Platform, Dimensions} from 'react-native';
 import NativeStatusBarManager from 'react-native/Libraries/Components/StatusBar/NativeStatusBarManagerIOS';
 import styled from 'styled-components';
 
+const viewWidth = Dimensions.get('window').width
+console.log(viewWidth)
 /**
  * @param {} props
  * @param {} props.size
@@ -50,7 +52,7 @@ const Component = () => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'none'}
           keyboardVerticalOffset={statusBarHeight + 44}>
-            <Keypad show={show}>
+            <KeypadInput show={show}>
                 <Text onPress={minusPress}>-</Text>
                     <TextInput
                     ref={bodyRef}
@@ -59,7 +61,7 @@ const Component = () => {
                         {show && count}
                     </TextInput>
                 <Text onPress={addPress}>+</Text>
-            </Keypad>
+            </KeypadInput>
             </KeyboardAvoidingView>
             <CountWrap>
                     <Text onPress={minusPress}>-</Text>
@@ -91,11 +93,12 @@ height:38px;
 background-color:${props => props.theme.colors.grey[0]};
 `;   
 
-const Keypad = styled.View`
+const KeypadInput = styled.View`
 flex-direction:row;
 align-items:center;
 height: ${props => props.show ? '100px' : 0 };
-width: 100%;
+width: ${viewWidth}px;
+
 background-color: gold;
 position:absolute;
 `;

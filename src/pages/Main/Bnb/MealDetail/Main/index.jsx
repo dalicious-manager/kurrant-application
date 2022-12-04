@@ -1,16 +1,19 @@
-import React from "react";
-import { View ,Text, SafeAreaView, StatusBar, TouchableOpacity, Animated,ScrollView} from "react-native";
+import React, { useState } from "react";
+import { View ,Text, SafeAreaView, StatusBar, TouchableOpacity, Animated,ScrollView, TextInput} from "react-native";
 import styled from "styled-components";
+
 
 import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
 import StartIcon from '../../../../../assets/icons/star.svg';
-import Button from '../../../../../components/ButtonCart';
+import Button from '../../../../../components/ButtonExtendable';
+import MoreButton from '../../../../../components/ButtonMore';
 import Typography from "../../../../../components/Typography";
 import useAnimatedHeaderTitle from "../../../../../hook/useAnimatedHeaderTitle";
 import { TagText, TagTextWrap } from "../../BuyMeal/Main";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 
 export const PAGE_NAME = 'MEAL_DEATAIL_PAGE';
+
 
 const Pages = ({navigation}) =>{
 
@@ -21,12 +24,15 @@ const Pages = ({navigation}) =>{
         { useNativeDriver: false }
     )
 
+    const PRICE = 7500;
+    let result = PRICE.toLocaleString('ko-KR')
     return (
         <Wrap>
             <ScrollView
-            showsVerticalScrollIndicator={false}
+             showsVerticalScrollIndicator={false}
              onScroll = { handleScroll }
              scrollEventThrottle={16}
+             
             >
                     <StatusBar barStyle='light-content'/>
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
@@ -61,7 +67,7 @@ const Pages = ({navigation}) =>{
                         </PriceTitleWrap>
                         <PriceWrap>
                             <Percent>20%</Percent>
-                            <SalePrice>7,500원</SalePrice>
+                            <SalePrice>{result}원</SalePrice>
                             <Price>15,000원</Price>
                         </PriceWrap>
                     </View>
@@ -110,9 +116,11 @@ const Pages = ({navigation}) =>{
                 <Content>
                     <Text>리뷰자리</Text>
                 </Content>
+                <MoreButton/>
+                
             </ScrollView>
                 <ButtonWrap>
-                    <Button/>
+                    <Button price={PRICE}/>
                 </ButtonWrap>
         </Wrap>
          
@@ -123,6 +131,7 @@ export default Pages;
 const Wrap = styled.SafeAreaView`
 background-color:${props => props.theme.colors.grey[0]};
 position:relative;
+
 `;
 
 const Content = styled.View`
@@ -184,8 +193,8 @@ justify-content:space-between;
 const ButtonWrap = styled.View`
 position:absolute;
 bottom:35px;
-left:20px;
-right:20px;
+/* left:20px;
+right:20px; */
 `;
 
 const MakersName = styled(Typography).attrs({text:'Body06SB'})`

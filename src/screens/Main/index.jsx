@@ -2,9 +2,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import { Alert, Text } from 'react-native';
 
-
-import CartIcon from '../../assets/icons/BuyMeal/cart.svg';
 import BackButton from '../../components/BackButton';
+import ShoppingCart from '../../components/BasketButton';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
 import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
@@ -49,8 +48,9 @@ const Screen = () => {
           options={{headerShown: true,
             title:'식사 구매하기',
             headerTitleAlign: 'center',
+            headerShadowVisible: false,
             headerLeft: () => <BackButton />,
-            headerRight: () => <CartIcon/>
+            headerRight: () => <ShoppingCart/>
           }}
         />
       </MainRoot.Group>
@@ -62,7 +62,7 @@ const Screen = () => {
           options={{headerShown: true,
             headerTitleAlign: 'center',
             headerLeft: () => <BackButton />,
-            headerRight: () => <CartIcon/>
+            headerRight: () => <ShoppingCart/>
           }}
         />
       </MainRoot.Group>
@@ -88,10 +88,7 @@ const Screen = () => {
             headerShown: true,
             title:'장바구니',
             headerTitleAlign: 'center',
-            headerStyle: {
-        
-              borderBottomWidth:0
-          },      
+            headerShadowVisible: false,
             headerLeft: () => <BackButton />,
             headerRight: () => <Text onPress={()=>{Alert.alert(
               '전체 삭제',
@@ -124,7 +121,7 @@ const Screen = () => {
       {/* MODAL */}
       {/* MODAL > LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <MainRoot.Screen
+        {/* <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
@@ -133,7 +130,7 @@ const Screen = () => {
             headerShadowVisible: false,
             title: '',
           }}
-        />
+        /> */}
         <MainRoot.Screen
           name={TermsOfServiceModalPageName}
           component={TermsOfServiceModal}

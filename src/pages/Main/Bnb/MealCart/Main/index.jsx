@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Image, SafeAreaView, ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
 
@@ -8,7 +8,7 @@ import Count from "../../../../../components/Count";
 import Typography from "../../../../../components/Typography";
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
-
+    const bodyRef = useRef();
 
     return (
         <SafeView>
@@ -30,6 +30,7 @@ const Pages = () => {
                             <CountWrap>
                                 <Count/>
                             </CountWrap>
+                            
                     </ContentWrap>
                 </Wrap>
                 <Wrap>
@@ -148,8 +149,6 @@ bottom:0;
 const ButtonWrap = styled.View`
 position:absolute;
 bottom:35px;
-left:20px;
-right:20px;
 `;
 
 const PaymentWrap = styled.View`
