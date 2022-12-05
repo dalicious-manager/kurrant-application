@@ -1,7 +1,9 @@
 import React, { useCallback, useRef } from 'react';
-import { Animated, Button } from 'react-native';
+import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 
+import CheckIcon from '../../assets/icons/Toast/CheckIcon.svg';
+import ErrorIcon from '../../assets/icons/Toast/ErrorIcon.svg';
 import Typography from '../Typography';
 
 /** 예시 */
@@ -16,13 +18,14 @@ import Typography from '../Typography';
  * @param {object} props 
  * @param {string} props.ToastWrap 
  * @param {string} props.ToastWrap.message 
+ * @param {nomal | checked | error} props.ToastWrap.icon 
  * @param {function} props.toastEvent onPress 
  * @returns 
  */
 
 const Component = () => {
   const fadeToast = useRef(new Animated.Value(0)).current;
-
+ 
   const toastEvent = useCallback(() => {
     Animated.sequence([
       Animated.timing(fadeToast, {
@@ -45,11 +48,24 @@ const Component = () => {
   }, [fadeToast]);
 
   const ToastWrap = useCallback(
-    ({ message }) => (
-      <Wrapper style={{ opacity: fadeToast }}>
-        <ToastMessage>{message.trim()}</ToastMessage>
+    ({ message ,icon = 'nomal'}) => {
+      const renderIcon = () => {
+        switch(icon) {
+          case 'checked':
+            return <CheckIcon/>;
+          case 'error':
+            return <ErrorIcon/>;
+          case 'nomal':
+            return null;
+        }
+      }
+      return <Wrapper style={{ opacity: fadeToast }}>
+        <Container icon={icon}>
+          <IconWrap icon={icon}>{renderIcon(icon)}</IconWrap>
+          <ToastMessage>{message.trim()}</ToastMessage>
+        </Container>
       </Wrapper>
-    ), [fadeToast])
+  }, [fadeToast])
 
 
   return { toastEvent, ToastWrap };
@@ -62,11 +78,23 @@ const Wrapper = styled(Animated.View)`
   align-items: center;
   top: 50px;
   width: 100%;
+  border-radius: 100px;
 `;
-const ToastMessage = styled(Typography).attrs({ variant: 'h500', weight: 'B' })`
-  padding: 4px 16px;
-  border-radius: 6px;
-  overflow: hidden;
-  background-color: #313131; 
+const Container = styled.View`
+  flex:1;
+  flex-direction: row;
+  align-items: center;
+  padding: ${({icon})=> icon === 'nomal' ? '9px 20px' : '13px 16px 12px 17px'};
+  justify-content: center;
+  border-radius: ${({icon})=> icon === 'nomal' ? '14px' : '100px'};
+  background-color: ${({theme})=> theme.colors.grey[1]}; 
+  max-width: 339px;
+`
+const ToastMessage = styled(Typography).attrs({ text: 'Body05R'})`  
+  overflow: hidden;  
   color: ${({ theme }) => theme.colors.neutral[0]};
+`;
+
+const IconWrap = styled.View`
+  padding-right:${({icon})=> icon === 'nomal' ? '0px' : '13px'}
 `;

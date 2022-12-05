@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View ,Text, SafeAreaView, StatusBar, TouchableOpacity, Animated,ScrollView, TextInput} from "react-native";
+import React from "react";
+import { View ,Text,  StatusBar,  Animated,ScrollView} from "react-native";
 import styled from "styled-components";
 
 

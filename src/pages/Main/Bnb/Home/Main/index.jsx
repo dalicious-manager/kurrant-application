@@ -1,5 +1,5 @@
- import React from 'react';
-import { SafeAreaView, Text, View ,ScrollView,Dimensions} from 'react-native';
+ import React,{useEffect} from 'react';
+import { SafeAreaView, View ,ScrollView} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
@@ -9,6 +9,7 @@ import CatorIcon from '../../../../../assets/icons/Home/cator.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
+import Balloon from '../../../../../components/Balloon';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
@@ -17,12 +18,15 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = ({navigation}) => {
-
+  const tm = Balloon();
   const test = (e) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
-    //console.log("스크롤 움직임",updateScroll);
+    console.log("스크롤 움직임",updateScroll);
   }
 
+  useEffect(()=>{
+    tm.balloonEvent();
+  },[tm])
 
   return (
     <SafeAreaView>
@@ -122,6 +126,16 @@ const Pages = ({navigation}) => {
         
         
       </Wrap>
+      <tm.BalloonWrap 
+        message={"무엇이든 물어보세요"} 
+        vertical={'down'} 
+        horizontal={'center'}
+        size={'B'}
+        location={{
+          right:'100px',
+          top:'50px',
+          
+        }} />
     </SafeAreaView>
   )
 };
@@ -129,12 +143,12 @@ const Pages = ({navigation}) => {
 export default Pages;
 
 const BoxWrap = css`
-width:100%;
-height:64px;
-border-radius:14px;
-background-color:${props => props.theme.colors.grey[0]};
-margin-bottom:16px;
-padding: 16px;
+  width:100%;
+  height:64px;
+  border-radius:14px;
+  background-color:${props => props.theme.colors.grey[0]};
+  margin-bottom:16px;
+  padding: 16px;
 `;
 
 const BarDisplay = css`
