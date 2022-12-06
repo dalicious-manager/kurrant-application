@@ -40,13 +40,13 @@ const Pages = ({navigation}) => {
     console.log("스크롤 움직임",updateScroll);
   }
   const [ time, setTime ] = useState(new Date());
-  useEffect(()=>{
-    if(!modalVisible){      
-      tm.balloonEvent();
-      setModalVisible(true);
-    }
-    console.log("선택된 콘텐츠 : ",modalVisible);
-  },[tm,modalVisible])
+  // useEffect(()=>{
+  //   if(!modalVisible){      
+  //     tm.balloonEvent();
+  //     setModalVisible(true);
+  //   }
+  //   console.log("선택된 콘텐츠 : ",modalVisible);
+  // },[tm,modalVisible])
 
   return (
     <SafeAreaView>
