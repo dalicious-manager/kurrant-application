@@ -144,14 +144,18 @@ const disabledButtonColor = {
   `
 };
 
-export const getLabelColor = disabled => {
+export const getLabelColor = (disabled, type) => {
   if (disabled === true) {
     return css`
       color: ${({ theme }) => theme.colors.grey[5]}; 
     `
-  } else {
+  } else if (type !== 'grey2' && type !== 'grey3') {
     return css`
       color: ${({ theme }) => theme.colors.grey[1]}; 
+    `
+  } else {
+    return css`
+      color: ${({ theme }) => theme.colors.grey[0]}; 
     `
   }
 }

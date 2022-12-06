@@ -1,4 +1,4 @@
- import React,{useEffect} from 'react';
+ import React,{useEffect,useState} from 'react';
 import { SafeAreaView, View ,ScrollView} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
@@ -10,23 +10,43 @@ import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import Balloon from '../../../../../components/Balloon';
+import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 
+// const todos = [
+//   { id: 1, text: '샤워하기' },
+//   { id: 2, text: '기술 공부하기'},
+//   { id: 3, text: '독서하기' },
+//   { id: 4, text: '샤워하기' },
+//   { id: 5, text: '기술 공부하기' },
+//   { id: 6, text: '독서하기' },
+//   { id: 7, text: '샤워하기' },
+//   { id: 8, text: '기술 공부하기' },
+//   { id: 9, text: '독서하기' },
+//   { id: 10, text: '샤워하기'},
+//   { id: 11, text: '기술 공부하기' },
+//   { id: 12, text: '독서하기' },
+// ];
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = ({navigation}) => {
   const tm = Balloon();
+  const [ modalVisible, setModalVisible ] = useState(false);
   const test = (e) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
     console.log("스크롤 움직임",updateScroll);
   }
 
   useEffect(()=>{
-    tm.balloonEvent();
-  },[tm])
+    if(modalVisible){      
+      tm.balloonEvent();
+      setModalVisible(true);
+    }
+    console.log("선택된 콘텐츠 : ",modalVisible);
+  },[tm,modalVisible])
 
   return (
     <SafeAreaView>
@@ -127,15 +147,27 @@ const Pages = ({navigation}) => {
         
       </Wrap>
       <tm.BalloonWrap 
-        message={"무엇이든 물어보세요"} 
+        message={"한번만 물어보세요"} 
         vertical={'down'} 
         horizontal={'center'}
         size={'B'}
         location={{
           right:'100px',
           top:'50px',
-          
-        }} />
+        }} 
+      />
+      <BottomModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        description={'내요내요 내요 내요내요 내요 내요 내요내요 내요 내요 해당 상품을 삭제합니다.'}
+        title={"타이틀"}
+        buttonTitle1={"취소"}
+        buttonTitle2={"확인"}
+        buttonType1={"grey7"}
+        buttonType2={"yellow"}
+        onPressEvent1={()=>setModalVisible(false)}
+        onPressEvent2={()=>console.log("test2")}
+      />
     </SafeAreaView>
   )
 };
