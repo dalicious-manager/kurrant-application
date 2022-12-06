@@ -10,7 +10,7 @@ import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import Balloon from '../../../../../components/Balloon';
-import BottomModal from '../../../../../components/BottomModal';
+import BottomPicker from '../../../../../components/BottomPicker';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
@@ -39,9 +39,9 @@ const Pages = ({navigation}) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
     console.log("스크롤 움직임",updateScroll);
   }
-
+  const [ time, setTime ] = useState(new Date());
   useEffect(()=>{
-    if(modalVisible){      
+    if(!modalVisible){      
       tm.balloonEvent();
       setModalVisible(true);
     }
@@ -156,17 +156,11 @@ const Pages = ({navigation}) => {
           top:'50px',
         }} 
       />
-      <BottomModal
+      <BottomPicker
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        description={'내요내요 내요 내요내요 내요 내요 내요내요 내요 내요 해당 상품을 삭제합니다.'}
-        title={"타이틀"}
-        buttonTitle1={"취소"}
-        buttonTitle2={"확인"}
-        buttonType1={"grey7"}
-        buttonType2={"yellow"}
-        onPressEvent1={()=>setModalVisible(false)}
-        onPressEvent2={()=>console.log("test2")}
+        setTime={setTime}
+        time={time}
       />
     </SafeAreaView>
   )

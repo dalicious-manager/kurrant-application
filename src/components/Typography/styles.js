@@ -1,4 +1,4 @@
-import {css} from 'styled-components/native';
+import { css } from 'styled-components/native';
 
 export const weightStyles = {
   B: css`
@@ -189,6 +189,6 @@ export const textStyles = {
     line-height: 12px;
     font-family: 'Pretendard-Regular';
   `,
-  
+
 
 };
