@@ -1,4 +1,4 @@
- import React,{useEffect,useState} from 'react';
+ import React from 'react';
 import { SafeAreaView, View ,ScrollView} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
@@ -9,8 +9,6 @@ import CatorIcon from '../../../../../assets/icons/Home/cator.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
-import Balloon from '../../../../../components/Balloon';
-import BottomPicker from '../../../../../components/BottomPicker';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
@@ -33,20 +31,11 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = ({navigation}) => {
-  const tm = Balloon();
-  const [ modalVisible, setModalVisible ] = useState(false);
   const test = (e) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
     console.log("스크롤 움직임",updateScroll);
   }
-  const [ time, setTime ] = useState(new Date());
-  // useEffect(()=>{
-  //   if(!modalVisible){      
-  //     tm.balloonEvent();
-  //     setModalVisible(true);
-  //   }
-  //   console.log("선택된 콘텐츠 : ",modalVisible);
-  // },[tm,modalVisible])
+
 
   return (
     <SafeAreaView>
@@ -145,23 +134,7 @@ const Pages = ({navigation}) => {
       </ButtonWrap>
         
         
-      </Wrap>
-      <tm.BalloonWrap 
-        message={"한번만 물어보세요"} 
-        vertical={'down'} 
-        horizontal={'center'}
-        size={'B'}
-        location={{
-          right:'100px',
-          top:'50px',
-        }} 
-      />
-      <BottomPicker
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        setTime={setTime}
-        time={time}
-      />
+      </Wrap>     
     </SafeAreaView>
   )
 };

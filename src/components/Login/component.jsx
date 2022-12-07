@@ -68,6 +68,14 @@ const Component = () => {
           setFocused={setEmailFocused}
           onSubmitEditing={() => passwordRef.current?.focus()}
           blurOnSubmit={false}
+          suffix={
+            {
+              isNeedDelete : true,
+              // isButton:true,
+              // buttonText:'인증요청',
+              // timer:900,
+            }
+          }
           placeholder="가입한 이메일 주소" 
           rules={
             {
@@ -88,7 +96,6 @@ const Component = () => {
           focus={isPasswordFocused}
           onFocus={()=>setPasswordFocused(true)}
           setFocused={setPasswordFocused}
-          secureTextEntry={true}
           placeholder="비밀번호"
           rules={
             {
