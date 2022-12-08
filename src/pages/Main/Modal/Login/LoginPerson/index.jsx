@@ -5,7 +5,7 @@ import {View, StyleSheet} from 'react-native';
 
 import ButtonSns from '../../../../../components/ButtonSns';
 import {PAGE_NAME as LoginPage} from '../../EmailLogin';
-import {PAGE_NAME as SignUpPage} from '../../SignUp/TermsOfService';
+import {PAGE_NAME as SignUpPage} from '../../SignUp/SignUpForm';
 export const PAGE_NAME = 'P_LOGIN__MODAL__PERSON_LOGIN';
 
 const Pages = () => {

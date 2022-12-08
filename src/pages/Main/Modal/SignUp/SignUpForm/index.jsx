@@ -1,65 +1,88 @@
 import React,{useState,useEffect} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {Platform,Keyboard,NativeModules,View} from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useRef } from 'react/cjs/react.development';
 import styled from 'styled-components/native';
 
-import ProgressBar from '../../../../../components/ ProgressBar';
 import Button from '../../../../../components/Button';
 import KeyboardButton from '../../../../../components/KeyboardButton';
+import ProgressBar from '../../../../../components/ProgressBar';
 import RefTextInput from '../../../../../components/RefTextInput';
 import Typography from '../../../../../components/Typography';
 import Wrapper from '../../../../../components/Wrapper';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 
-export const PAGE_NAME = 'P_SIGN_UP__MODAL__TERMS_OF_SERVICE';
+export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP_FORM';
 const { StatusBarManager } = NativeModules;
 
 const Pages = () => {
 
   const emailRef = useRef(null);
-  const [isEmailFocused, setEmailFocused] = useState(false);
-
-  const authlRef = useRef(null);
-  const [isEAuthFocused, setAuthFocused] = useState(false);
-
+  const emailAuthlRef = useRef(null);
+  const phoneRef = useRef(null);
+  const phoneAuthlRef = useRef(null);
   const passwordRef = useRef(null);
-  const [isPasswordFocused, setPasswordFocused] = useState(false);
-
   const passwordCheckedRef = useRef(null);
-  const [isPasswordCheckedFocused, setPasswordCheckedFocused] = useState(false);
 
   const [statusBarHeight, setStatusBarHeight] = useState(0);
-
   const [progress, setProgress] = useState(1);
+  const [isPhoneAuth, setPhoneAuth] = useState(false);
+
   const form = useForm({
     mode:'all'
   });
+  const {formState:{errors},watch,handleSubmit} = form;
   const keyboardStatus = useKeyboardEvent();
-  
-  const passwordChecked = form.watch('passwordChecked');
+
+  const password = watch('password');
+  const passwordChecked = watch('passwordChecked');
+  const phoneNumber = watch('phone');
+  const emailAuth = watch('eauth');
+  const phoneAuth = watch('pauth');
+  const userName = watch('name');
+
+  const Infomation = ()=>{
+    if (progress === 1) return '커런트 계정으로 사용할\n이메일 주소를 입력해 주세요.'
+    if (progress === 2) return '이메일로 발송된 인증번호를\n입력해 주세요.'
+    if (progress === 3 && password && passwordChecked &&
+      password === passwordChecked) return '휴대폰 번호를 입력해 주세요.'
+    if (progress === 3) return '비밀번호를 입력해 주세요.'    
+    if (progress === 4) return 'SNS로 발송된 인증번호를\n입력해 주세요.'
+    if (progress === 5) return '이제 이름만 입력하면\n회원가입이 완료됩니다.'    
+    
+  }
+
+  const isValidation = 
+  (progress === 2 && emailAuth && !errors.eauth) || 
+  (progress === 4 && phoneAuth &&!errors.pauth) ||
+  (progress ===5 && userName && !errors.name);
+  // (progress === 3 && (password && passwordChecked) && (password === passwordChecked) && phoneNumber && !errors.phone);
 
   
-  const callAuth = ()=>{
-    console.log("인증요청");    
+  const callMailAuth = ()=>{
+    console.log("메일 인증요청");    
     setProgress(progress+1);
 
   }
-  
-  
-  const isValidation = 
-  (progress === 2 && form.watch('eauth') && !form.formState.errors.eauth) || 
-  (form.watch('pauth') &&!form.formState.errors.pauth) ||
-  (progress === 3 && (form.watch('password') && form.watch('passwordChecked')) && (form.watch('password') === form.watch('passwordChecked')));
+  const callPhoneAuth = ()=>{
+    console.log("핸드폰 인증요청");
+    
+    if(phoneNumber && !errors.phone ) {
+      setProgress(progress+1);
+      setPhoneAuth(true);
+    }
+    // setProgress(progress+1);
+
+  }
+  const onSubmit = data => console.log(data);
+
 
   const inputStyle = {
     marginBottom:16,
   }
 
-  useEffect(()=>{
-    console.log(passwordChecked);
-    console.log(form.formState.errors.passwordChecked)
-  },[passwordChecked,form])
+  
   useEffect(()=>{
     Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
@@ -74,16 +97,15 @@ const Pages = () => {
               keyboardVerticalOffset={Platform.OS === "ios" && statusBarHeight+44 }
               behavior={Platform.OS === "ios" ? "padding" : "height"} >
               <ProgressBar progress={progress}/>
+              <InfomationText>{Infomation()}</InfomationText>
               <Container>
-                <RefTextInput
+                <ScrollView>
+                {progress < 5 && <RefTextInput
                   name="email" 
                   label="이메일 주소" 
                   placeholder="이메일 주소" 
                   autoCapitalize = 'none'
                   ref={emailRef}
-                  focus={isEmailFocused}
-                  onFocus={()=>setEmailFocused(true)}
-                  setFocused={setEmailFocused}
                   blurOnSubmit={false}
                   isEditable={progress === 1}
                   suffix={
@@ -91,7 +113,7 @@ const Pages = () => {
                       isNeedDelete : true,
                       isAuth:true,
                       authText:'인증요청',
-                      authPressEvent:callAuth
+                      authPressEvent:callMailAuth
                       // timer:900,
                     }
                   }
@@ -105,7 +127,7 @@ const Pages = () => {
                     }
                   }
                   style={inputStyle}
-                />
+                />}
                 
                 {progress === 2 && 
                   <RefTextInput 
@@ -113,16 +135,13 @@ const Pages = () => {
                     label="인증번호" 
                     placeholder="인증번호" 
                     autoCapitalize = 'none'
-                    ref={authlRef}
-                    focus={isEAuthFocused}
-                    onFocus={()=>setAuthFocused(true)}
-                    setFocused={setAuthFocused}
+                    ref={emailAuthlRef}
                     blurOnSubmit={false}
                     suffix={
                       {
                         isAuth:true,
                         authText:'재발송',
-                        authPressEvent:callAuth,
+                        authPressEvent:callMailAuth,
                         timer:180,
                       }
                     }
@@ -142,15 +161,12 @@ const Pages = () => {
                     style={inputStyle}
                   />
                 }
-                {progress > 2 &&<PasswordBox>
+                {progress > 2 && progress < 5 &&<PasswordBox>
                  <RefTextInput 
                   name="password" 
                   ref={passwordRef} 
                   label="비밀번호"
                   autoCapitalize = 'none'
-                  focus={isPasswordFocused}
-                  onFocus={()=>setPasswordFocused(true)}
-                  setFocused={setPasswordFocused}
                   placeholder="비밀번호"
                   rules={
                     {
@@ -176,14 +192,11 @@ const Pages = () => {
                   ref={passwordCheckedRef} 
                   label="비밀번호 재입력"
                   autoCapitalize = 'none'
-                  focus={isPasswordCheckedFocused}
-                  onFocus={()=>setPasswordCheckedFocused(true)}
-                  setFocused={setPasswordCheckedFocused}
                   placeholder="비밀번호 재입력"
                   rules={
                     {
                       required: '필수 입력 항목 입니다.',
-                      validate: value => value === form.watch('password') || "비밀번호가 일치하지 않습니다.",
+                      validate: value => value === password || "비밀번호가 일치하지 않습니다.",
                       minLength:{
                         value: 8,
                         message: '8글자 이상 입력'
@@ -200,41 +213,127 @@ const Pages = () => {
                   }
                   style={inputStyle} 
                 />
-                {progress === 3 &&<View>
+                {progress === 3 && !(password === passwordChecked) && <View>
                 <CaptionBox>
-                  <Typography text={'CaptionR'}>
+                  <CaptionText>
                     {'\u2022   '}
-                  </Typography>
-                  <Typography text={'CaptionR'}>
+                  </CaptionText>
+                  <CaptionText>
                     {'비밀번호는 8~32자리의 영문자, 숫자, 특수문자를 조합하여 설정해주세요.'}
-                  </Typography>
+                  </CaptionText>
                 </CaptionBox>
                 <CaptionBox>
-                  <Typography text={'CaptionR'}>
+                  <CaptionText>
                     {'\u2022   '}
-                  </Typography>
-                  <Typography text={'CaptionR'}>
+                  </CaptionText>
+                  <CaptionText>
                     {'다른 사이트에서 사용하는 것과 동일하거나 쉬운 비밀번호는 사용하지 마세요.'}
-                  </Typography>
+                  </CaptionText>
                 </CaptionBox>
                 <CaptionBox>
-                  <Typography text={'CaptionR'}>
+                  <CaptionText>
                     {'\u2022   '}
-                  </Typography>
-                  <Typography text={'CaptionR'}>
+                  </CaptionText>
+                  <CaptionText>
                     {'안전한 계정 사용을 위해 비밀번호는 주기적으로 변경해 주세요.'}
-                  </Typography>
+                  </CaptionText>
                 </CaptionBox>
                 </View>}
                 </PasswordBox>}
+                {progress >= 3 && progress < 5 && password && passwordChecked &&
+                  password === passwordChecked && 
+                <View>
+                  <RefTextInput
+                  name="phone" 
+                  label="휴대폰 번호" 
+                  placeholder="휴대폰 번호" 
+                  autoCapitalize = 'none'
+                  ref={phoneRef}
+                  blurOnSubmit={false}
+                  isEditable={progress === 3 && !isPhoneAuth}
+                  suffix={
+                    {
+                      isNeedDelete : true,
+                      isAuth:true,
+                      authText:'인증요청',
+                      authPressEvent:callPhoneAuth
+                      // timer:900,
+                    }
+                  }
+                  rules={
+                    {
+                      required: '필수 입력 항목 입니다.',
+                      pattern: {                        
+                        value: /(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,
+                        message: '올바른 휴대폰 번호를 입력해주세요.',
+                      }
+                    }
+                  }
+                  style={inputStyle}
+                />
+                {progress ===4 && isPhoneAuth && <RefTextInput 
+                    name="pauth" 
+                    label="인증번호" 
+                    placeholder="인증번호" 
+                    autoCapitalize = 'none'
+                    ref={phoneAuthlRef}
+                    blurOnSubmit={false}
+                    suffix={
+                      {
+                        isAuth:true,
+                        authText:'재발송',
+                        authPressEvent:callMailAuth,
+                        timer:180,
+                      }
+                    }
+                    rules={
+                      {
+                        required: '필수 입력 항목 입니다.',                        
+                        minLength:{
+                          value: 8,
+                          message: '휴대폰으로 발송된 8자리 인증번호를 입력해주세요.'
+                        },
+                        maxLength:{
+                          value: 8,
+                          message: '휴대폰으로 발송된 8자리 인증번호를 입력해주세요.'
+                        },
+                      }
+                    }
+                    style={inputStyle}
+                  />}
+                  </View>
+                }
+                {progress === 5 && <RefTextInput 
+                    name="name" 
+                    label="이름" 
+                    placeholder="이름" 
+                    autoCapitalize = 'none'
+                    ref={phoneAuthlRef}
+                    blurOnSubmit={false}           
+                    rules={
+                      {
+                        required: '필수 입력 항목 입니다.',
+                        pattern: {                        
+                          value: /^[가-힣a-zA-Z]$/,
+                          message: '올바른 이름을 입력해 주세요.',
+                        }
+                      }
+                    }
+                    style={inputStyle}
+                  />}
+                </ScrollView>
                 {!keyboardStatus.isKeyboardActivate &&
                   <ButtonContainer>
                     <Button 
                       type='yellow' 
-                      label="다음" 
+                      label={progress >= 5 ? "가입완료": "다음"}
                       disabled={!isValidation}
-                      onPressEvent={()=>{
-                        setProgress(progress+1)
+                      onPressEvent={()=>{                        
+                        if(progress < 5){
+                          return setProgress(progress+1)
+                        }
+                        
+                        handleSubmit(onSubmit)();
                       }}
                     />
                   </ButtonContainer> 
@@ -242,11 +341,13 @@ const Pages = () => {
               </Container>
               <KeyboardButton 
                 isKeyboardActivate={keyboardStatus.isKeyboardActivate} 
-                label="다음" 
+                label={progress >= 5 ? "가입완료": "다음"}
                 disabled={!isValidation} 
                 onPressEvent={()=>{
-                  setProgress(progress+1)
-                  passwordRef.current?.focus();
+                  if(progress < 5){
+                    return setProgress(progress+1)
+                  }                  
+                  handleSubmit(onSubmit)();                  
                 }}
               />
             </KeyContainer>
@@ -270,11 +371,20 @@ const KeyContainer = styled.KeyboardAvoidingView`
   flex: 1;
   position: relative;
 `
+const InfomationText = styled(Typography).attrs({text:'Title04SB'})`
+  color:${({theme})=>theme.colors.grey[2]};
+  margin: 24px;
+  margin-top: 40px;
+
+`
 const PasswordBox = styled.View`
   
 `
 const CaptionBox = styled.View`
   flex-direction: row;
+`
+const CaptionText = styled(Typography).attrs({text :'CaptionR'})`
+  color:${({theme})=>theme.colors.grey[4]};
 `
 const Container = styled.View` 
   flex: 1;
@@ -282,7 +392,6 @@ const Container = styled.View`
   align-items: center;
   background-color: white;
   padding :0px 24px;
-  margin-top: 40px;
 `;
 
 const ButtonContainer = styled.View`

@@ -17,9 +17,9 @@ import EmailLoginModal, {
 import LoginMainModal, {
   PAGE_NAME as LoginMainModalPageName,
 } from '../../pages/Main/Modal/Login';
-import TermsOfServiceModal, {
-  PAGE_NAME as TermsOfServiceModalPageName,
-} from '../../pages/Main/Modal/SignUp/TermsOfService';
+import SignUpForm, {
+  PAGE_NAME as SignUpFormPageName,
+} from '../../pages/Main/Modal/SignUp/SignUpForm';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 // Pages > Exchange
 // Pages > IndexCard
@@ -132,8 +132,8 @@ const Screen = () => {
           }}
         />
         <MainRoot.Screen
-          name={TermsOfServiceModalPageName}
-          component={TermsOfServiceModal}
+          name={SignUpFormPageName}
+          component={SignUpForm}
           options={{
             headerShown: true,
             headerShadowVisible: false,
