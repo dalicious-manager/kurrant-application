@@ -22,8 +22,9 @@ import { textStyles } from './styles';
  * @param {object} props.suffix
  * @param {boolean} props.suffix.isNeedDelete
  * @param {number} props.suffix.timer
- * @param {number} props.suffix.isButton
- * @param {number} props.suffix.buttonText
+ * @param {number} props.suffix.isAuth
+ * @param {number} props.suffix.authText
+ * @param {function} props.suffix.authPressEvent
  * @param {string} props.label
  * @param {string} props.errMsg
  * @param {object} props.style
@@ -40,8 +41,9 @@ const Component = forwardRef(({
   suffix = {
     isNeedDelete: false,
     timer: 0,
-    isButton:false,
-    buttonText:''
+    isAuth:false,
+    authText:'',
+    authPressEvent:()=>{console.log('인증 요청')},
   },
   label = '',
   errMsg = '',
@@ -82,10 +84,9 @@ const Component = forwardRef(({
   }
 
   // Password Showing
-  if (name==='password' && data) {
+  if ((name==='password' || name==='passwordChecked') && data) {
     suffixContent = <TouchableOpacity onPress={()=>{
       setShowing(!isShowing)
-      console.log(data)
     }}>{isShowing ? <EyeOn />:<EyeOff />}</TouchableOpacity>;
   }
 
@@ -101,8 +102,8 @@ const Component = forwardRef(({
     setTimer(prev => ({...prev, isRunning: true}));
   }
   useEffect(()=>{
-    console.log(data)
-  },[data])
+    console.log(errors)
+  },[errors])
   useEffect(() => {
     if (timer.isRunning) {
       const timerId = setTimeout(() => {
@@ -139,6 +140,7 @@ const Component = forwardRef(({
             )}
             {/* TextInput */}
             <ControlContainer 
+              isEditable={isEditable}
               isError={errors[name]}
               {...containerProps}
               focus={focus}
@@ -153,27 +155,28 @@ const Component = forwardRef(({
                   suffix={!!suffixContent}
                   timer={timer.remainTime > 0}
                   value={value}
-                  secureTextEntry={name==='password'? !isShowing :false}
+                  secureTextEntry={name==='password' || name ==='passwordChecked' ? !isShowing :false}
                   {...rest}
                 />
               </InputContainer>
               {/* Suffix */}
-              <TimerContainer timer={timer.remainTime > 0} isButton={suffix.isButton}>
+              {isEditable && <><TimerContainer timer={timer.remainTime > 0} isAuth={suffix.isAuth}>
                 {timerContent}
-              </TimerContainer>
-              <SuffixContainer suffix={!!suffixContent} isButton={suffix.isButton}>
-                {suffixContent}
-              </SuffixContainer>
-              {suffix.isButton && <AuthenticationButton>
+              </TimerContainer><SuffixContainer suffix={!!suffixContent} isAuth={suffix.isAuth}>
+                  {suffixContent}
+                </SuffixContainer></>}
+              {isEditable && suffix.isAuth && <AuthenticationButton onPress={suffix.authPressEvent}>
                     <Typography 
                       text={'Button10SB'} 
-                      textColor={errors[name]
+                      textColor={suffix.authText ==='재발송'
+                      ? themeApp.colors.grey[3] 
+                      : errors[name]
                       ? themeApp.colors.grey[6] 
                       : watch(name) 
                       ? themeApp.colors.grey[3] 
                       : themeApp.colors.grey[6]}
                     >
-                      {suffix.buttonText}
+                      {suffix.authText}
                     </Typography>
                   </AuthenticationButton>}
             </ControlContainer>
@@ -213,20 +216,25 @@ const ControlContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   border-radius: 6px;
-  background-color: ${({theme})=>theme.colors.grey[0]};
-  border-bottom-color:${({theme ,isError,focus})=>isError ?theme.colors.red[500]: focus ? theme.colors.blue[500]:theme.colors.grey[8]};
-  border-bottom-width:2px;
+  ${({isEditable,theme,isError,focus})=> { 
+    if(isEditable){
+      return css`
+      background-color: ${theme.colors.grey[0]};
+      border-bottom-color:${isError ? theme.colors.red[500]: focus ? theme.colors.blue[500]:theme.colors.grey[8]};
+      border-bottom-width:2px;`
+      }
+    }
+  }
+ 
   border: none;
 
-  ${({editable}) => {
-    if (!editable) {
-      return css`
-        background-color: #f5f6f8;
-      `;
-    }
-  }}
+  
 `;
 const AuthenticationButton = styled.Pressable`
+  min-width: 77px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
   border-radius: 100px;
   border: ${({theme})=> `1px solid ${theme.colors.grey[7]}`};
   padding:7px 16px;
@@ -260,6 +268,14 @@ const StyledTextInput = styled.TextInput`
       `;
     }
   }}
+  ${({editable}) => {
+    if (!editable) {
+      return css`
+        color:black;
+        padding-right:0px;
+      `;
+    }
+  }}
 `;
 
 // Suffix
@@ -268,8 +284,8 @@ const SuffixContainer = styled.View`
   width: 0;
   right: 0;
   bottom: 8px;
-  ${({isButton}) => {
-    if (isButton) {
+  ${({isAuth}) => {
+    if (isAuth) {
       return css`     
         align-items: flex-end;
         justify-content: space-between;
@@ -282,9 +298,9 @@ const SuffixContainer = styled.View`
       `
     }
   }}
-  ${({suffix,isButton}) => {
+  ${({suffix,isAuth}) => {
     if (suffix) {
-      if(isButton){
+      if(isAuth){
         return css`
           width: 32%;
         `;
@@ -301,8 +317,8 @@ const TimerContainer = styled.View`
   width: 0;
   right: 0;
   bottom: 8px;
-  ${({isButton}) => {
-    if (isButton) {
+  ${({isAuth}) => {
+    if (isAuth) {
       return css`        
         align-items: center;
         justify-content: space-between;
@@ -315,9 +331,9 @@ const TimerContainer = styled.View`
       `
     }
   }}
-  ${({timer,isButton}) => {
+  ${({timer,isAuth}) => {
     if (timer) {
-      if(isButton){
+      if(isAuth){
         return css`
           width: 38%;
         `;
