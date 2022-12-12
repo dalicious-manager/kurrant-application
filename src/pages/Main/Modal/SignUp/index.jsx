@@ -5,17 +5,17 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useRef } from 'react/cjs/react.development';
 import styled from 'styled-components/native';
 
-import useAuth from '../../../../../biz/useAuth';
-import useJoinUser from '../../../../../biz/useJoinUser';
-import Button from '../../../../../components/Button';
-import KeyboardButton from '../../../../../components/KeyboardButton';
-import ProgressBar from '../../../../../components/ProgressBar';
-import RefTextInput from '../../../../../components/RefTextInput';
-import Typography from '../../../../../components/Typography';
-import Wrapper from '../../../../../components/Wrapper';
-import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import useAuth from '../../../../biz/useAuth';
+import useJoinUser from '../../../../biz/useJoinUser';
+import Button from '../../../../components/Button';
+import KeyboardButton from '../../../../components/KeyboardButton';
+import ProgressBar from '../../../../components/ProgressBar';
+import RefTextInput from '../../../../components/RefTextInput';
+import Typography from '../../../../components/Typography';
+import Wrapper from '../../../../components/Wrapper';
+import useKeyboardEvent from '../../../../hook/useKeyboardEvent';
 
-export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP_FORM';
+export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP';
 const { StatusBarManager } = NativeModules;
 
 const Pages = () => {

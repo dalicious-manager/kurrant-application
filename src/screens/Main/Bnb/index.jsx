@@ -110,8 +110,8 @@ const TabBarIconWrap = styled.View`
   align-items: center;
 `;
 
-const TabBarIcon = styled.Image`
-  transform: scale(0.85);
-`;
+// const TabBarIcon = styled.Image`
+//   transform: scale(0.85);
+// `;
 
 export default Screen;

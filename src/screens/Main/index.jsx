@@ -17,9 +17,9 @@ import EmailLoginModal, {
 import LoginMainModal, {
   PAGE_NAME as LoginMainModalPageName,
 } from '../../pages/Main/Modal/Login';
-import SignUpForm, {
-  PAGE_NAME as SignUpFormPageName,
-} from '../../pages/Main/Modal/SignUp/SignUpForm';
+import SignUp, {
+  PAGE_NAME as SignUpPageName,
+} from '../../pages/Main/Modal/SignUp';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 // Pages > Exchange
 // Pages > IndexCard
@@ -48,6 +48,11 @@ const Screen = () => {
           options={{headerShown: true,
             title:'식사 구매하기',
             headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
             headerShadowVisible: false,
             headerLeft: () => <BackButton />,
             headerRight: () => <ShoppingCart/>
@@ -61,6 +66,11 @@ const Screen = () => {
           component={MealDetail}
           options={{headerShown: true,
             headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
             headerLeft: () => <BackButton />,
             headerRight: () => <ShoppingCart/>
           }}
@@ -75,6 +85,11 @@ const Screen = () => {
             title:'알레르기/원산지 정보',
             headerShadowVisible: false,
             headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
             headerLeft: () => <BackButton />,
           }}
         />
@@ -88,7 +103,13 @@ const Screen = () => {
             headerShown: true,
             title:'장바구니',
             headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
             headerShadowVisible: false,
+            
             headerLeft: () => <BackButton />,
             headerRight: () => <Text onPress={()=>{Alert.alert(
               '전체 삭제',
@@ -132,15 +153,22 @@ const Screen = () => {
           }}
         />
         <MainRoot.Screen
-          name={SignUpFormPageName}
-          component={SignUpForm}
+          name={SignUpPageName}
+          component={SignUp}
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: '',
+            title: '회원가입',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
             headerLeft: () => <BackButton />,
           }}
         />
+         
          <MainRoot.Screen
           name={EmailLoginModalModalPageName}
           component={EmailLoginModal}
@@ -148,6 +176,12 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
             headerLeft: () => <BackButton />,
           }}
         />
