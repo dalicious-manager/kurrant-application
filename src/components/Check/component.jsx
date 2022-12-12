@@ -3,7 +3,9 @@ import { Controller, useFormContext } from 'react-hook-form';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import styled, { css } from 'styled-components/native';
 
+import Checkicon from '../../assets/icons/check.svg';
 import Typography from '../Typography';
+
 
 /** 예시 */
 // <Check 
@@ -15,6 +17,7 @@ import Typography from '../Typography';
 
 /**
  * @param {object} props
+ * @param {'yellow' | 'grey' | 'white'} props.type 버튼 색상
  * @param {string} props.name useFormContext의 name 지정
  * @param {string} props.label 간단 설명
  * @param {string} props.labelDetail 설명 상세
@@ -24,15 +27,15 @@ import Typography from '../Typography';
  */
 
 const Component = ({
+  type='grey',
   name,
   label,
   onPressEventViewDetail,
   labelDetail,
   value }) => {
   const { control } = useFormContext();
-
   const [checked, setChecked] = useState(value || false);
-
+  
   return (
     <React.Fragment>
       <Controller
@@ -41,19 +44,20 @@ const Component = ({
         defaultValue={value || false}
         render={({ field: { onChange } }) => {
           const onPressEvent = () => {
-            onChange(!checked),
+            onChange(!checked)
               setChecked(!checked)
           }
           return (
             <Wrap>
               <Wrapper>
                 <CheckboxWrap onPress={onPressEvent}>
-                  <Checkbox checked={checked}>
-                    <FeatherIcon
+                  <Checkbox checked={checked} type={type}>
+                    <CheckIcon  checked={checked} type={type} />
+                    {/* <FeatherIcon
                       name="check"
                       color={checked ? '#fff' : '#d4d8dd'}
                       size={16}
-                    />
+                    /> */}
                   </Checkbox>
                 </CheckboxWrap>
                 <LabelWrap>
@@ -94,32 +98,27 @@ const CheckboxWrap = styled.Pressable`
 const Checkbox = styled.View`
   width: 24px;
   height: 24px;
-  border-radius: 24px;
-  background-color: ${({ checked }) =>
+  border-radius: 7px;
+  background-color:
+        ${({ checked }) =>
     checked
       ? css`
-          ${({ theme }) => theme.colors.purple[500]};
+          ${({ type,theme }) => type === 'yellow' 
+          ? theme.colors.yellow[500] 
+          : type ==='grey' ? theme.colors.grey[2] 
+          : theme.colors.grey[0]};
         `
       : css`
-          ${({ theme }) => theme.colors.neutral[0]};
+          ${({ type,theme }) => type === 'white' ? theme.colors.grey[0] : theme.colors.grey[7]};
         `};
-  border: 1px solid
-    ${({ checked }) =>
-    checked
-      ? css`
-            ${({ theme }) => theme.colors.purple[500]};
-          `
-      : css`
-            ${({ theme }) => theme.colors.neutral[300]};
-          `};
   align-items: center;
   justify-content: center;
 `;
 const LabelWrap = styled.View`
   flex: 1;
 `;
-const Label = styled(Typography).attrs({ variant: 'h600', weight: 'R' })`
-  color: ${({ theme }) => theme.colors.neutral[900]};
+const Label = styled(Typography).attrs({ text:'Body06R' })`
+  color: ${({ theme }) => theme.colors.grey[4]};
 `;
 const DetailWrap = styled.Pressable`
   margin-left: auto;
@@ -136,3 +135,19 @@ const LabelDetailWrap = styled.View`
 const LabelDetail = styled(Typography).attrs({ variant: 'h500', weight: 'R' })`
   color: ${({ theme }) => theme.colors.neutral[900]};
 `;
+
+const CheckIcon = styled(Checkicon)`
+  color: ${({ checked }) =>
+      checked
+        ? css`
+             ${({ type,theme }) => type === 'yellow' 
+          ? theme.colors.grey[1] 
+          : type === 'grey' ? theme.colors.grey[0] 
+          : theme.colors.grey[2]};
+          `
+        : css`
+            ${({ type,theme }) => type === 'white' ? theme.colors.grey[7] : theme.colors.grey[0]};
+          `};
+         
+
+  `;

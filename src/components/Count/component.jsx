@@ -1,10 +1,10 @@
-import React, { useState,useRef, useEffect } from 'react';
-import { View,Text, TouchableWithoutFeedback, TextInput ,KeyboardAvoidingView ,Platform, Dimensions} from 'react-native';
-import NativeStatusBarManager from 'react-native/Libraries/Components/StatusBar/NativeStatusBarManagerIOS';
+import React, { useState,useRef, useEffect,  } from 'react';
+import { View, Text,TextInput, TouchableWithoutFeedback, Dimensions} from 'react-native';
 import styled from 'styled-components';
 
-const viewWidth = Dimensions.get('window').width
-console.log(viewWidth)
+import MinusIcon from '../../assets/icons/MealDetail/minus.svg';
+import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
+
 /**
  * @param {} props
  * @param {} props.size
@@ -12,93 +12,46 @@ console.log(viewWidth)
 
  * @returns
  */
+ const screenWidth = Dimensions.get('window').width;
 
-const Component = () => {
-    const bodyRef = useRef();
-    const [count, setCount] = useState(1);
-    const [show, setShow] = useState(false);
-    const [statusBarHeight, setStatusBarHeight] = useState(0);
-
-    // console.log(count)
-    const changeText = number => {
-        setCount(number);
-      };
-    const addPress = () => {
-        setCount(prev => Number(prev) + 1);
-      };
-      const minusPress = () => {
-        setCount(prev => (prev <= 1 ? 1 : prev - 1));
-      };
-
-      const showInput = () => {
-        setShow(true);
-      };
-
-      const blurPress = () => {
-        setShow(false);
-      };
-
-      useEffect(() => {
-        Platform.OS == 'ios'
-          ? NativeStatusBarManager.getHeight(statusBarFrameData => {
-              setStatusBarHeight(statusBarFrameData.height);
-            })
-          : null;
-      }, []);
+const Component = ({
+  increasePress,
+  decreasePress,
+  onPressEvent,
+  count
+}) => {
   
   return (
-    <TouchableWithoutFeedback onBlur={blurPress}>
-        <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'none'}
-          keyboardVerticalOffset={statusBarHeight + 44}>
-            <KeypadInput show={show}>
-                <Text onPress={minusPress}>-</Text>
-                    <TextInput
-                    ref={bodyRef}
-                    keyboardType='number-pad'
-                    onChangeText={changeText}>
-                        {show && count}
-                    </TextInput>
-                <Text onPress={addPress}>+</Text>
-            </KeypadInput>
-            </KeyboardAvoidingView>
-            <CountWrap>
-                    <Text onPress={minusPress}>-</Text>
-                    <Text onPress={() => {
-                          showInput();
-                          bodyRef.current.focus();
-                        }}>
-                        {count}
-                    </Text>
-                    <Text onPress={addPress}>+</Text>
-            </CountWrap>
-
-            
+    <View>
+      <InnerView>
+        <MinusIcon onPress={decreasePress}/>
+          <Text onPress={onPressEvent}>
+              {count}
+          </Text>
+          <PlusIcon onPress={increasePress}/>
+      </InnerView>
     </View>
-    </TouchableWithoutFeedback>
   )
-};
-
+}; 
+// onPress={() => {bodyRef.current.focus(); testPress()}}
 export default Component;
 
-const CountWrap = styled.View`
+const KeypadInput= styled.View`
+  height:50px;
+  flex-direction:row;
+  background-color:${props => props.theme.colors.yellow[500]};
+  justify-content:space-between;
+  align-items:center;
+  opacity: ${props => props.focus ? 1: 0 };  
+`;
+
+const InnerView = styled.View`
 flex-direction:row;
-justify-content:space-between;
 align-items:center;
-border: 1px solid ${props => props.theme.colors.grey[6]};
-border-radius:7px;
+justify-content:space-around;
 width:98px;
 height:38px;
 background-color:${props => props.theme.colors.grey[0]};
-`;   
-
-const KeypadInput = styled.View`
-flex-direction:row;
-align-items:center;
-height: ${props => props.show ? '100px' : 0 };
-width: ${viewWidth}px;
-
-background-color: gold;
-position:absolute;
+border:1px solid ${props => props.theme.colors.grey[6]};
+border-radius:7px;
 `;

@@ -8,6 +8,7 @@ import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMea
 import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
+import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
 import SelectUserTypePage, {
   PAGE_NAME as SelectUserTypePageName,
 } from '../../pages/Main/Bnb/SignUp/SelectUserType';
@@ -105,6 +106,19 @@ const Screen = () => {
                 }
               ]
             )}}>전체삭제</Text>,
+          }}
+        />
+      </MainRoot.Group>
+      {/* 결제페이지 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PaymentPageName}
+          component={Payment}
+          options={{headerShown: true,
+            title:'주문',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => <BackButton />,
           }}
         />
       </MainRoot.Group>

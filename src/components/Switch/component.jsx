@@ -24,29 +24,12 @@ const Component = ({ name, size = 'md', agree = true }) => {
 
   const { control, watch } = useFormContext();
   const [toggle, setToggle] = useState(agree);
-
+  console.log('toggle:',toggle)
   const watching = watch('toggleChecked');
-
+  
   const switchOnOff = () => {
     agree
       ? !toggle
-        ? (Animated.spring(translation, {
-          toValue: 0,
-          useNativeDriver: true,
-        }).start(),
-          setToggle(!toggle))
-        : size === 'sm'
-          ? (Animated.spring(translation, {
-            toValue: 11,
-            useNativeDriver: true,
-          }).start(),
-            setToggle(!toggle))
-          : (Animated.spring(translation, {
-            toValue: 20,
-            useNativeDriver: true,
-          }).start(),
-            setToggle(!toggle))
-      : toggle
         ? (Animated.spring(translation, {
           toValue: 0,
           useNativeDriver: true,
@@ -62,6 +45,23 @@ const Component = ({ name, size = 'md', agree = true }) => {
             toValue: -20,
             useNativeDriver: true,
           }).start(),
+            setToggle(!toggle))
+      : toggle
+        ? (Animated.spring(translation, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start(),
+          setToggle(!toggle))
+        : size === 'sm'
+          ? (Animated.spring(translation, {
+            toValue: 11,
+            useNativeDriver: true,
+          }).start(),
+            setToggle(!toggle))
+          : (Animated.spring(translation, {
+            toValue: 20,
+            useNativeDriver: true,
+          }).start(),
             setToggle(!toggle));
   };
 
@@ -73,7 +73,9 @@ const Component = ({ name, size = 'md', agree = true }) => {
         defaultValue={agree}
         render={({ field: { onChange, value } }) => {
           const pressEvent = value => {
-            onChange(!value), switchOnOff();
+            onChange(!value)
+            switchOnOff();
+            console.log('value:' ,value)
           };
           return (
             <ToggleWrap
@@ -106,7 +108,8 @@ const ToggleWrap = styled.Pressable`
 const Toggle = styled(Animated.View)`
   ${({ size }) => getToggleSize(size)};
   ${({ size, toggle }) => getToggleTop(size, toggle)};
-  background-color: ${({ theme }) => theme.colors.neutral[0]};
+  background-color: ${({ theme }) => theme.colors.grey[0]};
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
   border-radius: 20px;
   position: absolute;
 `;

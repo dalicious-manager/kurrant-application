@@ -72,6 +72,15 @@ export function formattedDateAndDay(data, delimiter = '.') {
   return `${[year, month, day].join(delimiter)} ${dayOfWeek}`;
 }
 
+// 식사구매 날짜 버튼
+export function formattedDateBtn(data) {
+  const dateTime = transDateType(data);
+  const year = dateTime.getFullYear();
+  const month = leftPad(dateTime.getMonth() + 1);
+  const day = leftPad(dateTime.getDate());
+  return month + '월' + day + '일'
+}
+
 // export function daysLeft(endDate) {
 //   const dayNow = new Date();
 

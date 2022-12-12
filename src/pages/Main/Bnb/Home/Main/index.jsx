@@ -1,4 +1,5 @@
  import React from 'react';
+import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
@@ -11,6 +12,8 @@ import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
+import Form from '../../../../../components/Form';
+import Switch from '../../../../../components/Switch';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 
@@ -23,6 +26,7 @@ const Pages = ({navigation}) => {
     //console.log("스크롤 움직임",updateScroll);
   }
 
+  const signUpCheck = useForm();
 
   return (
     <SafeAreaView>
@@ -37,7 +41,6 @@ const Pages = ({navigation}) => {
             <CsIcon/>
           </Icons>
         </BarWrap>
-
         <ScrollView onScroll={test} scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
         <LargeTitle>김달리님 안녕하세요!</LargeTitle>
       <MainWrap>
