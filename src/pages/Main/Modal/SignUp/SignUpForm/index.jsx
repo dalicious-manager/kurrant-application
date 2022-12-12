@@ -5,6 +5,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useRef } from 'react/cjs/react.development';
 import styled from 'styled-components/native';
 
+import useAuth from '../../../../../biz/useAuth';
+import useJoinUser from '../../../../../biz/useJoinUser';
 import Button from '../../../../../components/Button';
 import KeyboardButton from '../../../../../components/KeyboardButton';
 import ProgressBar from '../../../../../components/ProgressBar';
@@ -17,6 +19,8 @@ export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP_FORM';
 const { StatusBarManager } = NativeModules;
 
 const Pages = () => {
+
+  const auth = useAuth();
 
   const emailRef = useRef(null);
   const emailAuthlRef = useRef(null);
@@ -42,6 +46,8 @@ const Pages = () => {
   const phoneAuth = watch('pauth');
   const userName = watch('name');
 
+  const {joinUser} = useJoinUser();
+  
   const Infomation = ()=>{
     if (progress === 1) return '커런트 계정으로 사용할\n이메일 주소를 입력해 주세요.'
     if (progress === 2) return '이메일로 발송된 인증번호를\n입력해 주세요.'
@@ -60,22 +66,40 @@ const Pages = () => {
   // (progress === 3 && (password && passwordChecked) && (password === passwordChecked) && phoneNumber && !errors.phone);
 
   
-  const callMailAuth = ()=>{
+  const callMailAuth = async()=>{
     console.log("메일 인증요청");    
-    setProgress(progress+1);
-
-  }
-  const callPhoneAuth = ()=>{
-    console.log("핸드폰 인증요청");
-    
-    if(phoneNumber && !errors.phone ) {
+    try {
+      await auth.requestEmailAuth(emailAuth);
       setProgress(progress+1);
-      setPhoneAuth(true);
+    }catch(err){
+      console.log(err)
     }
-    // setProgress(progress+1);
-
   }
-  const onSubmit = data => console.log(data);
+  const callPhoneAuth = async()=>{
+    console.log("핸드폰 인증요청");    
+    if(phoneNumber && !errors.phone ) {
+      try {
+        await auth.requestPhoneAuth(phoneAuth);
+        setProgress(progress+1);
+        setPhoneAuth(true);
+      }catch(err){
+        console.log(err)
+      }
+      
+    }
+  }
+  const onSubmit = async(data) => {
+    const datas={
+      email: data.email,
+      name: data.name,
+      password : data.password,
+      passwordCheck:data.passwordChecked,
+      phone : data.phone
+    }
+    const joinresult = await joinUser(datas);
+    console.error(joinresult);
+    
+  };
 
 
   const inputStyle = {
@@ -84,6 +108,7 @@ const Pages = () => {
 
   
   useEffect(()=>{
+    
     Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
     }) : null
@@ -314,7 +339,7 @@ const Pages = () => {
                       {
                         required: '필수 입력 항목 입니다.',
                         pattern: {                        
-                          value: /^[가-힣a-zA-Z]$/,
+                          value: /^[가-힣a-zA-Z]+$/,
                           message: '올바른 이름을 입력해 주세요.',
                         }
                       }

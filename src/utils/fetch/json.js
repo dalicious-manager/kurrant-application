@@ -7,7 +7,7 @@ const RESPONSE_SLEEP = 300;
 const apiHostUrl =
   process.env.NODE_ENV === 'production'
     ? Config.API_HOST_URL + '/' + Config.API_VERSION
-    : '';
+    : Config.API_DEVELOP_URL + '/' + Config.API_VERSION;
 
 const buildQuery = queryObj => {
   let ret;
@@ -46,7 +46,8 @@ async function json(url, method, options = {}) {
   }
 
   console.log('fetching to:', reqUrl);
-  console.log('fetching option:', options);
+  console.log('fetching method:', method);
+  console.log('fetching option:', options.body);
 
   let startTs = Date.now();
 
@@ -55,9 +56,12 @@ async function json(url, method, options = {}) {
     method,
     body: options.body,
   });
-  if (!res.ok) {
-    console.log(res);
-    throw new Error();
+  const ret = await res.json();
+
+  if (ret.error) {
+    const errors = new Error(ret.message);
+    errors.name = "error";
+    throw errors;
   }
 
   let endTs = Date.now();
@@ -67,8 +71,7 @@ async function json(url, method, options = {}) {
     await mSleep(diff);
   }
 
-  const ret = await res.json();
-  return ret.data;
+  return ret;
 }
 
 export default json;
