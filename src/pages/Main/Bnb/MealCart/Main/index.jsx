@@ -1,14 +1,37 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import { Image, SafeAreaView, ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
 
 import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
 import Button from '../../../../../components/Button';
 import Count from "../../../../../components/Count";
+import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
 import Typography from "../../../../../components/Typography";
+import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
+
 export const PAGE_NAME = 'MEAL_CART_PAGE';
-const Pages = () => {
+const Pages = ({navigation}) => {
+    const [focus,setFocus] = useState(false);
+    const [count, setCount] = useState(1);
     const bodyRef = useRef();
+
+    const increasePress = () => {
+        setCount(prev => Number(prev) + 1);
+      };
+    const decreasePress = () => {
+        setCount(prev => (prev <= 1 ? 1 : prev - 1));
+      };
+
+    const focusPress = () => {
+        setFocus(true);
+      };
+    const blurPress = () => {
+        setFocus(false);
+      };
+
+    const changeText = number => {
+        setCount(number);
+      };
 
     return (
         <SafeView>
@@ -28,7 +51,12 @@ const Pages = () => {
                                 <SalePrice>8,500원</SalePrice>
                             </View>
                             <CountWrap>
-                                <Count/>
+                                <Count
+                                    onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
+                                    count={count} 
+                                    increasePress={increasePress}
+                                    decreasePress={decreasePress}
+                                />
                             </CountWrap>
                             
                     </ContentWrap>
@@ -48,7 +76,12 @@ const Pages = () => {
                                 <SalePrice>8,500원</SalePrice>
                             </View>
                             <CountWrap>
-                                <Count/>
+                            <Count
+                                onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
+                                count={count} 
+                                increasePress={increasePress}
+                                decreasePress={decreasePress}
+                                />
                             </CountWrap>
                     </ContentWrap>
                 </Wrap>
@@ -83,8 +116,18 @@ const Pages = () => {
                     </PaymentView>
                 </PaymentWrap>
             </ScrollViewWrap>
+            <KeyboardAvoiding
+                blurPress={blurPress}
+                focus={focus}
+                increasePress={increasePress}
+                decreasePress={decreasePress}
+                bodyRef={bodyRef}
+                changeText={changeText}
+                count={count}
+                value={count.toString()}
+            />
             <ButtonWrap>
-                <Button label={'총 21개 결제하기'} type={'yellow'} />
+                <Button label={'총 21개 결제하기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
             </ButtonWrap>
         </SafeView>
     )
@@ -98,16 +141,16 @@ background-color:${props => props.theme.colors.grey[0]};
 flex:1;
 `;
 const ScrollViewWrap = styled.ScrollView`
-  margin:0px 28px;
-  
-
+  //margin:0px 28px;
 `;
 
 const Wrap = styled.View`
+flex:1;
 padding:24px 0px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
 position:relative;
+margin:0px 28px;
 `;
 
 const MealImage = styled.Image`
@@ -124,6 +167,7 @@ padding-right:4px;
 
 const ContentWrap = styled.View`
 flex-direction:row;
+
 
 `;
 
@@ -157,9 +201,10 @@ border-top-width: 6px;
 padding-top:24px;
 
 `;
-const PaymentView = styled.View`
+export const PaymentView = styled.View`
 flex-direction:row;
 justify-content:space-between;
+margin:0px 28px;
 `;
 
 const DiningName = styled(Typography).attrs({text:'CaptionR'})`
@@ -170,18 +215,18 @@ const MealName = styled(Typography).attrs({text:'Body05SB'})`
 color:${props => props.theme.colors.grey[2]};
 `;
 
-const PaymentText = styled(Typography).attrs({text:'Body05R'})`
+export const PaymentText = styled(Typography).attrs({text:'Body05R'})`
 color:${props => props.theme.colors.grey[4]};
 padding-bottom:16px;
 `;
 
-const PointText = styled(Typography).attrs({text:'Body05R'})`
+export const PointText = styled(Typography).attrs({text:'Body05R'})`
 color: ${props => props.theme.colors.green[500]};
 `;
 
-const TotalPriceTitle = styled(Typography).attrs({text:'Title03SB'})`
+export const TotalPriceTitle = styled(Typography).attrs({text:'Title03SB'})`
 color: ${props => props.theme.colors.grey[4]};
 `;
-const TotalPrice = styled(Typography).attrs({text:'Title03SB'})`
+export const TotalPrice = styled(Typography).attrs({text:'Title03SB'})`
 color: ${props => props.theme.colors.grey[2]};
 `;

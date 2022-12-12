@@ -2,39 +2,38 @@ import { useLinkBuilder } from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Text,
-  View,
-  StyleSheet,
   Animated,
   Pressable,
-  Button,
-  TextInput,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Platform,
-  Dimensions,
-  
+  Dimensions
 } from 'react-native';
-import NativeStatusBarManager from 'react-native/Libraries/Components/StatusBar/NativeStatusBarManagerIOS';
 import styled from 'styled-components';
 
 import Arrow from '../../assets/icons/MealDetail/arrow.svg';
+import MinusIcon from '../../assets/icons/MealDetail/minus.svg';
+import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
 import Trapezoid from '../../assets/icons/MealDetail/trapezoid.svg';
+import Count from '../../components/Count';
 import Typography from "../Typography";
+
 
 const screenWidth = Dimensions.get('window').width;
 
-const HomeScreen = (props) => {
-  const { price } = props
+/** 
+* @param {function} props.onPressEvent
+*/
 
-  const bodyRef = useRef();
+const Component = ({
+  price,
+  count,
+  onPressEvent,
+  increasePress,
+  decreasePress
+}) => {
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const [fadeIn, setFadeIn] = useState(false);
   const [rotate, setRotate] = useState('0deg');
-  const [count, setCount] = useState(1);
-  const [focus, setFocus] = useState(false);
-  const [statusBarHeight, setStatusBarHeight] = useState(0);
 
   const PRICE = price * count
   const result = PRICE.toLocaleString('ko-KR')
@@ -52,21 +51,7 @@ const HomeScreen = (props) => {
       useNativeDriver: false,
     }).start();
   };
-  const changeText = number => {
-    setCount(number);
-  };
-  const addPress = () => {
-    setCount(prev => Number(prev) + 1);
-  };
-  const minusPress = () => {
-    setCount(prev => (prev <= 1 ? 1 : prev - 1));
-  };
-  const testPress = () => {
-    setFocus(true);
-  };
-  const blurPress = () => {
-    setFocus(false);
-  };
+
   useEffect(() => {
     
     setRotate(
@@ -77,39 +62,10 @@ const HomeScreen = (props) => {
     );
   }, [rotateAnim]);
 
-  useEffect(() => {
-    
-    Platform.OS === 'ios'
-      ? NativeStatusBarManager.getHeight(statusBarFrameData => {
-          setStatusBarHeight(statusBarFrameData.height);
-        })
-      : null;
-  }, []);
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} onBlur={blurPress}>
-
       <Container>
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={statusBarHeight}>
-          <KeypadInputWrap focus={focus}>
-          <KeypadInput>
-              <Text onPress={minusPress}>-</Text>
-              <TextInput
-                keyboardType="number-pad"
-                onPress={testPress}
-                ref={bodyRef}
-                onChangeText={changeText}
-                value={count.toString()}
-                />
-                  {/* {count}
-                  </TextInput> */}
-              <Text onPress={addPress}>+</Text>
-            </KeypadInput>
-          </KeypadInputWrap>
-          </KeyboardAvoidingView>
-
-        {!focus && <BtnContainer focus={focus}>
+        <BtnContainer>
           <PressView>
             <Pressable onPress={handlePress}>
               <Trapezoid />
@@ -130,20 +86,19 @@ const HomeScreen = (props) => {
               <AnimationView>
                 <Inner>
                     <PriceText>{result}원</PriceText>
-                  <View>
-                    <Text>
-                      <Text onPress={minusPress}>-</Text>
-                      <Text
-                        onPress={() => {
-                          testPress();
-                          bodyRef.current.focus();
-                        }}
-                        >
-                        {count}
+                  {/* <InnerView>
+                    <MinusIcon  onPress={decreasePress} />
+                      <Text onPress={onPressEvent}>
+                          {count}
                       </Text>
-                      <Text onPress={addPress}>+</Text>
-                    </Text>
-                  </View>
+                      <PlusIcon onPress={increasePress}/>
+                  </InnerView> */}
+                  <Count
+                  count={count}
+                  increasePress={increasePress}
+                  decreasePress={decreasePress}
+                  onPressEvent={onPressEvent}
+                  />
                 </Inner>
               </AnimationView>
             </Animated.View>
@@ -153,30 +108,15 @@ const HomeScreen = (props) => {
               </ButtonText>
             </PressButton>
           </InnerContainer>
-        </BtnContainer>}
-
-        
-
+        </BtnContainer>
       </Container> 
-    </TouchableWithoutFeedback>
+    
   );
 };
 
-export default HomeScreen;
+export default Component;
 
-const KeypadInputWrap = styled.View`
- height: ${props => props.focus ? '305px' : 0};
- overflow:hidden;
-`;
-const KeypadInput= styled.View`
-  height:50px;
-  width: ${screenWidth}px;
-  flex-direction:row;
-  background-color:${props => props.theme.colors.grey[3]};
-  justify-content:space-between;
-  align-items:center;
-  
-`;
+
 const Container = styled.SafeAreaView`
   //justify-content: flex-end;
   align-items: center;
@@ -216,6 +156,16 @@ const InnerContainer = styled.View`
 background-color:${props => props.theme.colors.yellow[500]};
 border-radius:29px;
 overflow:hidden;
+`;
+
+const InnerView = styled.View`
+flex-direction:row;
+align-items:center;
+justify-content:space-around;
+width:98px;
+height:38px;
+border:1px solid ${props => props.theme.colors.grey[6]};
+border-radius:7px;
 `;
 
 const Inner = styled.View`

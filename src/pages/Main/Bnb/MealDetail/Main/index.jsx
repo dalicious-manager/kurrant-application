@@ -1,12 +1,17 @@
-import React from "react";
-import { View ,Text,  StatusBar,  Animated,ScrollView} from "react-native";
+
+import React, { useState, useRef, useEffect } from "react";
+import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeModules, Animated,ScrollView, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView} from "react-native";
+
 import styled from "styled-components";
 
-
 import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
+import MinusIcon from '../../../../../assets/icons/MealDetail/minus.svg';
+import PlusIcon from '../../../../../assets/icons/MealDetail/plus.svg';
 import StartIcon from '../../../../../assets/icons/star.svg';
 import Button from '../../../../../components/ButtonExtendable';
 import MoreButton from '../../../../../components/ButtonMore';
+import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
+import Label from '../../../../../components/Label';
 import Typography from "../../../../../components/Typography";
 import useAnimatedHeaderTitle from "../../../../../hook/useAnimatedHeaderTitle";
 import { TagText, TagTextWrap } from "../../BuyMeal/Main";
@@ -14,8 +19,18 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 
 export const PAGE_NAME = 'MEAL_DEATAIL_PAGE';
 
-
 const Pages = ({navigation}) =>{
+
+    const [focus,setFocus] = useState(false);
+    const [count, setCount] = useState(1);
+    const bodyRef = useRef();
+
+    const increasePress = () => {
+        setCount(prev => Number(prev) + 1);
+      };
+    const decreasePress = () => {
+        setCount(prev => (prev <= 1 ? 1 : prev - 1));
+      };
 
     const { scrollY } = useAnimatedHeaderTitle({ title: '이름', triggerPoint: 30 });
 
@@ -24,16 +39,28 @@ const Pages = ({navigation}) =>{
         { useNativeDriver: false }
     )
 
+    const focusPress = () => {
+        setFocus(true);
+      };
+    const blurPress = () => {
+        setFocus(false);
+      };
+
+    const changeText = number => {
+        setCount(number);
+      };
+
     const PRICE = 7500;
     let result = PRICE.toLocaleString('ko-KR')
+
     return (
-        <Wrap>
+        <Wrap >
             <ScrollView
              showsVerticalScrollIndicator={false}
              onScroll = { handleScroll }
              scrollEventThrottle={16}
-             
             >
+                <View>
                     <StatusBar barStyle='light-content'/>
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                 <Content>
@@ -56,11 +83,7 @@ const Pages = ({navigation}) =>{
                         <MealDsc>
                             샤브육수, 샤브야채, 소고기, 소스4종, 칼국수, 그날의 서비수
                         </MealDsc>
-                        <TagTextWrap>
-                            <TagText>
-                                신라면 맵기
-                            </TagText>
-                        </TagTextWrap>
+                        <Label label='신라면 맵기'/>
                         <PriceTitleWrap>
                             <PriceTitle>최종 판매가</PriceTitle>
                             <QuestionIcon/>
@@ -117,13 +140,51 @@ const Pages = ({navigation}) =>{
                     <Text>리뷰자리</Text>
                 </Content>
                 <MoreButton/>
+                </View>
+                </ScrollView>
+
+                <KeyboardAvoiding
+                blurPress={blurPress}
+                focus={focus}
+                increasePress={increasePress}
+                decreasePress={decreasePress}
+                bodyRef={bodyRef}
+                changeText={changeText}
+                count={count}
+                value={count.toString()}
+                />
+                {/* <KeyboardAvoidingView 
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight+44 }
+                >
+                    <TouchableWithoutFeedback onBlur={blurPress}>
+                        <KeypadInput focus={focus}>
+                            <MinusIcon onPress={decreasePress}/>
+                            <TextInput
+                                keyboardType="number-pad"
+                                //onPress={focusPress}
+                                ref={bodyRef}
+                                onChangeText={changeText}
+                                value={count.toString()}
+                                />
+                            <PlusIcon onPress={increasePress}/>
+                        </KeypadInput>
+                    </TouchableWithoutFeedback> */}
+
+                {!focus && <ButtonWrap>
+                    <Button 
+                        price={PRICE} 
+                        onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
+                        count={count} 
+                        increasePress={increasePress}
+                        decreasePress={decreasePress}
+                    />
+                </ButtonWrap>}
+                {/* </KeyboardAvoidingView> */}
                 
-            </ScrollView>
-                <ButtonWrap>
-                    <Button price={PRICE}/>
-                </ButtonWrap>
         </Wrap>
-         
+               
+        
     )
 }
 export default Pages;
@@ -131,7 +192,7 @@ export default Pages;
 const Wrap = styled.SafeAreaView`
 background-color:${props => props.theme.colors.grey[0]};
 position:relative;
-
+flex:1;
 `;
 
 const Content = styled.View`
@@ -192,9 +253,21 @@ justify-content:space-between;
 
 const ButtonWrap = styled.View`
 position:absolute;
-bottom:35px;
-/* left:20px;
-right:20px; */
+bottom:25px;
+`;
+
+const countText = styled.TextInput`
+
+
+`;
+const KeypadInput= styled.View`
+  height:50px;
+  flex-direction:row;
+  background-color:${props => props.theme.colors.grey[0]};
+  justify-content:space-between;
+  align-items:center;
+  opacity: ${props => props.focus ? 1: 0 };
+  
 `;
 
 const MakersName = styled(Typography).attrs({text:'Body06SB'})`
