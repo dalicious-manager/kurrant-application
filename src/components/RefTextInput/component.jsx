@@ -36,8 +36,6 @@ const Component = forwardRef(({
   placeholder = '',
   isEditable = true,
   rules={},
-  focus = false,
-  setFocused = (focused)=> {},
   suffix = {
     isNeedDelete: false,
     timer: 0,
@@ -58,6 +56,7 @@ const Component = forwardRef(({
   });
   const data = watch(name);
   const [isShowing , setShowing] = useState(false);
+  const [focus,setFocused] = useState(false)
   
   const themeApp = useTheme();
 
@@ -151,6 +150,7 @@ const Component = forwardRef(({
                   {...textInputProps}
                   onChangeText={onChange}
                   onBlur={()=>setFocused(false)}
+                  onFocus={()=>setFocused(true)}
                   text={'InputText'}
                   suffix={!!suffixContent}
                   timer={timer.remainTime > 0}
@@ -216,6 +216,7 @@ const ControlContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   border-radius: 6px;
+  border: none;
   ${({isEditable,theme,isError,focus})=> { 
     if(isEditable){
       return css`
@@ -224,12 +225,8 @@ const ControlContainer = styled.View`
       border-bottom-width:2px;`
       }
     }
-  }
- 
-  border: none;
+  }`;
 
-  
-`;
 const AuthenticationButton = styled.Pressable`
   min-width: 77px;
   text-align: center;

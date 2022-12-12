@@ -117,14 +117,18 @@ const Component = () => {
           style={styles.input} 
         />
         {!keyboardStatus.isKeyboardActivate &&<ButtonContainer>
+          <LableContainer>
+          {renderLabels}
+        </LableContainer>
           <Button type='yellow' label="로그인" disabled={!isValidation}/>
         </ButtonContainer> }
        
-        <LableContainer>
-          {renderLabels}
-        </LableContainer>
+        
         
       </Container>
+      {keyboardStatus.isKeyboardActivate && <LableContainer>
+          {renderLabels}
+        </LableContainer>}
       <KeyboardButton type='login' isKeyboardActivate={keyboardStatus.isKeyboardActivate} label="로그인" disabled={!isValidation} />
     </KeyContainer>
     </KeyDismiss>
@@ -143,6 +147,7 @@ const KeyContainer = styled.KeyboardAvoidingView`
 `
 
 const Container = styled.View` 
+  background-color: gold;
   flex: 1;
   position: relative;
   align-items: center;
@@ -151,12 +156,12 @@ const Container = styled.View`
   margin-top: 40px;
 `;
 const LableContainer = styled.View`
-    flex-direction: row;
-    justify-self: center;
-    align-self: center;
-    margin-bottom: 64px;
-    border-bottom-width:1px;
-    border-bottom-color: ${({theme})=> theme.colors.grey[4]};
+  flex-direction: row;
+  justify-self: center;
+  align-self: center;
+  margin-bottom: 24px;
+  border-bottom-width:1px;
+  border-bottom-color: ${({theme})=> theme.colors.grey[4]};
 `;
 
 const ButtonContainer = styled.View`

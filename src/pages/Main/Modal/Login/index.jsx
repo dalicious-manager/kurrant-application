@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions,TouchableOpacity,View,Text} from 'react-native';
+import {Dimensions,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 
@@ -8,9 +8,9 @@ import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
 import Image from '../../../../components/Image';
 import Wrapper from '../../../../components/Wrapper';
-import LoginPersonModal from './LoginPerson';
+import LoginMain from './LoginMain';
 
-export const PAGE_NAME = 'P_LOGIN__MODAL__MAIN_LOGIN';
+export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -29,7 +29,7 @@ const Pages = ({navigation}) => {
         <LogoBox>
           <Image imagePath={LogoImage} scale={1.0}/>
         </LogoBox>
-        <LoginPersonModal />
+        <LoginMain />
         <TouchableOpacity onPress={()=>console.log("터치")}>
           <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
         </TouchableOpacity>

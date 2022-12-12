@@ -9,6 +9,27 @@ import Screen from './screens';
 import Theme from './theme';
 
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
+
+const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
+  return (
+    <Provider>
+      <ThemeProvider theme={Theme}>
+        <SafeAreaProvider>
+          <StatusBar />
+          <Screen />
+        </SafeAreaProvider>
+      </ThemeProvider>
+    </Provider>
+  );
+};
+
+export default App;
+
+
 //                   _ooOoo_
 //                  o8888888o
 //                  88" . "88
@@ -31,21 +52,3 @@ LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //          佛祖保佑           永无BUG
 //         God Bless        Never Crash
-const App = () => {
-  useEffect(() => {
-    SplashScreen.hide();
-  }, []);
-
-  return (
-    <Provider>
-      <ThemeProvider theme={Theme}>
-        <SafeAreaProvider>
-          <StatusBar />
-          <Screen />
-        </SafeAreaProvider>
-      </ThemeProvider>
-    </Provider>
-  );
-};
-
-export default App;
