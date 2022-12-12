@@ -1,5 +1,7 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeModules, Animated,ScrollView, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView} from "react-native";
+
 import styled from "styled-components";
 
 import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';

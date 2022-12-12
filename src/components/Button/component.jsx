@@ -5,7 +5,6 @@ import styled from 'styled-components/native';
 import PlusIcon from '../../assets/icons/Home/plus.svg';
 import Typography from '../Typography';
 import {
-  getButtonLabelStyles,
   getButtonSizeStyles,
   getButtonColor,
   getDisabledColor,
@@ -16,7 +15,7 @@ const screenWidth = Dimensions.get('window').width;
 
 /**
  * @param {object} props
- * @param {'full' | 'middle' |'half' | 'button38' | 'button32'} props.size
+ * @param {'full' | 'middle' |'half' | 'modalFull' | 'modalHalf' | 'button38' | 'button32'} props.size
  * @param {'grey1' | 'grey2' | 'grey3' | 'grey7' | 'white' | 'yellow' | 'login'} props.type
  * @param {boolean} props.disabled
  * @param {function} props.onPressEvent
@@ -30,6 +29,7 @@ const Component = ({
   type = 'yellow',
   disabled = false,
   icon = 'nomal',
+  text = 'BottomButtonSB',
   onPressEvent = () => { console.log('버튼을 누르셨습니다.') }
 }) => {
   
@@ -46,7 +46,7 @@ const Component = ({
       <Wrapper size={size} type={type} disabled={disabled} onPress={onPressEvent}>
         <LabelWrap>
           <IconWrap>{renderIcon(icon)}</IconWrap>
-          <Label size={size} type={type} disabled={disabled}>
+          <Label type={type} disabled={disabled} text={text}>
             {label}
           </Label>
         </LabelWrap>
@@ -58,8 +58,8 @@ const Component = ({
 export default Component;
 
 const Wrap = styled.View`
-width:${({ size }) => size === 'full' && screenWidth}px ;
-align-items:center;
+  ${({ size }) => size === 'full' ?`width: ${screenWidth}px` : size === 'login' && `width : ${screenWidth}px`};
+  align-items:center;
 `;
 
 const Wrapper = styled.Pressable`
@@ -84,8 +84,6 @@ export const LabelWrap = styled.View`
   
 `;
 
-export const Label = styled(Typography).attrs({ text: 'BottomButtonSB' })`
-  color: ${({ theme, type }) => (type === 'grey2') || (type === 'grey3') ? theme.colors.grey[0] : theme.colors.grey[1] };
-  ${({ disabled }) =>  getLabelColor(disabled)};
-  ${({ size }) => getButtonLabelStyles(size)};
+export const Label = styled(Typography)`
+  ${({ disabled, type }) =>  getLabelColor(disabled,type)};
 `;

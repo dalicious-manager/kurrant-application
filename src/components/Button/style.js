@@ -48,6 +48,10 @@ const btnSizeStyle = {
   button32: css`
     width: 73px;
     height: 32px;
+  `,
+  login: css`
+    width: 100%;
+    height: 56px;
   `
 };
 
@@ -99,14 +103,14 @@ const buttonColor = {
     background-color: ${({ theme }) => theme.colors.grey[7]};
   `,
   white: css`
-    background-color: ${({theme}) => theme.colors.grey[0]}; 
-    border: ${({theme}) => `1px solid ${theme.colors.grey[5]}`};
+    background-color: ${({ theme }) => theme.colors.grey[0]}; 
+    border: ${({ theme }) => `1px solid ${theme.colors.grey[5]}`};
     box-sizing:border-box;
   `,
   yellow: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
   `,
-  keyboard: css`
+  login: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
   `
 
@@ -128,26 +132,30 @@ const disabledButtonColor = {
     background-color: ${({ theme }) => theme.colors.grey[8]};
   `,
   white: css`
-    background-color: ${({theme}) => theme.colors.grey[0]}; 
-    border: ${({theme}) => `1px solid ${theme.colors.grey[7]}`};
+    background-color: ${({ theme }) => theme.colors.grey[0]}; 
+    border: ${({ theme }) => `1px solid ${theme.colors.grey[7]}`};
     box-sizing:border-box;
   `,
   yellow: css`
     background-color: ${({ theme }) => theme.colors.yellow[100]};
   `,
-  keyboard: css`
+  login: css`
     background-color: ${({ theme }) => theme.colors.yellow[100]}; 
   `
 };
 
-export const getLabelColor = disabled => {
+export const getLabelColor = (disabled, type) => {
   if (disabled === true) {
     return css`
       color: ${({ theme }) => theme.colors.grey[5]}; 
     `
-  } else {
+  } else if (type !== 'grey2' && type !== 'grey3') {
     return css`
       color: ${({ theme }) => theme.colors.grey[1]}; 
+    `
+  } else {
+    return css`
+      color: ${({ theme }) => theme.colors.grey[0]}; 
     `
   }
 }

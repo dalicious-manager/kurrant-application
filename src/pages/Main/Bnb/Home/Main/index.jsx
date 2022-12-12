@@ -1,4 +1,5 @@
- import React from 'react';
+import React from 'react';
+
 import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -17,13 +18,26 @@ import Switch from '../../../../../components/Switch';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 
+// const todos = [
+//   { id: 1, text: '샤워하기' },
+//   { id: 2, text: '기술 공부하기'},
+//   { id: 3, text: '독서하기' },
+//   { id: 4, text: '샤워하기' },
+//   { id: 5, text: '기술 공부하기' },
+//   { id: 6, text: '독서하기' },
+//   { id: 7, text: '샤워하기' },
+//   { id: 8, text: '기술 공부하기' },
+//   { id: 9, text: '독서하기' },
+//   { id: 10, text: '샤워하기'},
+//   { id: 11, text: '기술 공부하기' },
+//   { id: 12, text: '독서하기' },
+// ];
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = ({navigation}) => {
-
   const test = (e) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
-    //console.log("스크롤 움직임",updateScroll);
+    console.log("스크롤 움직임",updateScroll);
   }
 
   const signUpCheck = useForm();
@@ -124,7 +138,7 @@ const Pages = ({navigation}) => {
       </ButtonWrap>
         
         
-      </Wrap>
+      </Wrap>     
     </SafeAreaView>
   )
 };
@@ -132,12 +146,12 @@ const Pages = ({navigation}) => {
 export default Pages;
 
 const BoxWrap = css`
-width:100%;
-height:64px;
-border-radius:14px;
-background-color:${props => props.theme.colors.grey[0]};
-margin-bottom:16px;
-padding: 16px;
+  width:100%;
+  height:64px;
+  border-radius:14px;
+  background-color:${props => props.theme.colors.grey[0]};
+  margin-bottom:16px;
+  padding: 16px;
 `;
 
 const BarDisplay = css`

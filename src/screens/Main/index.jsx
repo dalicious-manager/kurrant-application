@@ -105,7 +105,7 @@ const Screen = () => {
                   onPress:() => console.log('ok pressed')
                 }
               ]
-            )}}>전체삭제</Text>,
+            )}}>전체삭제</Text>
           }}
         />
       </MainRoot.Group>
@@ -135,7 +135,7 @@ const Screen = () => {
       {/* MODAL */}
       {/* MODAL > LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        {/* <MainRoot.Screen
+        <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
@@ -144,7 +144,7 @@ const Screen = () => {
             headerShadowVisible: false,
             title: '',
           }}
-        /> */}
+        />
         <MainRoot.Screen
           name={TermsOfServiceModalPageName}
           component={TermsOfServiceModal}
