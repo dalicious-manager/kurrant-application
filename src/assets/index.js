@@ -7,3 +7,4 @@ export const NaverImage = require('../assets/images/naver.png');
 export const ArrowLeftImage = require('../assets/images/arrow-left.png');
 export const LogoImage = require('../assets/images/logo.png');
 export const LogoBackground = require('../assets/images/loginBackground.png');
+export const SignUpComplate = require('../assets/images/signupcomplate.png');

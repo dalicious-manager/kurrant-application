@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
+import {BackHandler, NativeModules, Platform} from 'react-native'
 import { useTheme } from 'styled-components';
 import styled from 'styled-components/native';
 
@@ -18,7 +19,13 @@ const Component = ({ mode = 'page', color, margin = [0, 0] }) => {
   const theme = useTheme();
 
   const handleBackPress = () => {
-    navigation.goBack();
+    if(navigation.canGoBack()){      
+      navigation.goBack();
+    }else{
+      if (Platform.OS === 'android') {
+        BackHandler.exitApp();
+      } 
+    }
   };
 
   const renderContents = {

@@ -1,5 +1,5 @@
-import React from 'react';
-import {Dimensions,TouchableOpacity} from 'react-native';
+import React, { useEffect } from 'react';
+import {BackHandler, Dimensions,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 
@@ -7,6 +7,7 @@ import {LogoImage , LogoBackground} from '../../../../assets';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
 import Image from '../../../../components/Image';
+import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
 import LoginMain from './LoginMain';
 
@@ -14,7 +15,34 @@ export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
 const screenHeight = Dimensions.get('screen').height;
 
-const Pages = ({navigation}) => {  
+const Pages = () => {  
+  const toast = Toast();
+
+  useEffect(()=>{
+    let timeout;
+    let exitApp = false;   
+     const handleBackButton = () => {
+        // 2000(2초) 안에 back 버튼을 한번 더 클릭 할 경우 앱 종료
+        if (exitApp == undefined || !exitApp) {
+            exitApp= true;
+            toast.toastEvent();
+            timeout = setTimeout(
+                () => {
+                  exitApp = false;
+                },
+                2000    // 2초
+            );
+        } else {
+            clearTimeout(timeout);
+            exitApp = false; 
+            BackHandler.exitApp();  // 앱 종료
+        }
+        return true;
+    }
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return ()=>BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+  },[toast])
+
   return (
     <WrapperBox>
       <BackgroundContainer>
@@ -44,6 +72,7 @@ const Pages = ({navigation}) => {
           </EtcSNSBox>
         </EtcSNSContainer>
       </LoginBox>
+      <toast.ToastWrap message={"뒤로버튼 한번 더 누르시면 종료됩니다."} />
     </WrapperBox>
   );
 };
