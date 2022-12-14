@@ -1,74 +1,82 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import styled from 'styled-components/native';
+import styled, { useTheme } from 'styled-components/native';
 
+import EmailIcon from '../../assets/icons/email.svg';
+import PasswordIcon from '../../assets/icons/password.svg';
+import  {
+  PAGE_NAME as FindIdPageName,
+} from '../../pages/Main/Modal/FindUser/FindId';
+import  {
+  PAGE_NAME as FindPasswordPageName,
+} from '../../pages/Main/Modal/FindUser/FindPassword';
 import Typography from '../Typography';
-
 
 /**
  *
  * @param {object} props
- * @param {'personal' | 'enterprise' | 'personalId' | 'enterpriseId'} props.type
  * @returns
  */
 
-const Component = ({ type = 'personal' }) => {
-  const labelHead = {
-    personal: '개인회원',
-    enterprise: '법인회원',
-    personalId: '개인회원',
-    enterpriseId: '법인회원',
-  };
-  const labelBody = {
-    personal: '개인 계정으로 가입을 진행합니다.',
-    enterprise: '법인 계정으로 가입을 진행합니다. \n법인 로그인 및 가입용으로 사용할 이메일을 준비해주세요.',
-    personalId: '개인 계정으로 가입된 아이디를 찾습니다.',
-    enterpriseId: '법인 계정으로 가입된 아이디를 찾습니다.',
-  };
-
+const Component = () => {
+  const navigation = useNavigation();
+  const themeApp= useTheme();
+  const labelItems = [
+    {label: '아이디(이메일)을 잊어버렸어요', route: FindIdPageName, icon:'email'},
+    {label: '비밀번호를 잊어버렸어요', route: FindPasswordPageName, icon:'password'},
+  ];
+  
+  const renderLabels = labelItems.map((labelItem, index) => {
+    const handleRoutePress = () => {
+      navigation.navigate(labelItem.route ?? '');
+    };
+    const Icon = ()=>{
+      switch(labelItem.icon){
+        case 'email':
+          return <EmailIcon />
+      
+        case 'password':
+          return <PasswordIcon />
+      }
+    }
+    return (
+      <Wrapper key={index} onPress={handleRoutePress}>
+        <IconWrap>
+          <Icon />
+        </IconWrap>
+        <Typography 
+        text={'Body05R'}
+        textColor={themeApp.colors.grey[2]}
+        >{labelItem.label}</Typography>
+        
+      </Wrapper>
+    );
+  });
   return (
-    <Wrapper>
       <RegisterLabel>
-        <HeaderWrap>
-          <RegisterHead>{labelHead[type]}</RegisterHead>
-        </HeaderWrap>
-        <BodyWrap>
-          <RegisterBody>{labelBody[type]}</RegisterBody>
-        </BodyWrap>
+        {renderLabels}
       </RegisterLabel>
-      <IconWrap>
-        <FeatherIcon name="chevron-right" color={'#000'} size={24} />
-      </IconWrap>
-    </Wrapper>
+      
   );
 };
 
 export default Component;
 
 const Wrapper = styled.TouchableOpacity`
-  width: 100%;
-  height: 128px;
   flex-direction: row;
-  padding: 24px;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.colors.neutral[30]};
+  padding-top: 17px;
+  padding-bottom: 17px;
+  border-radius: 14px;
+  border: ${({theme})=> `1px solid ${theme.colors.grey[7]}`};
   align-items: center;
+  margin: 8px 24px;
+  box-sizing:border-box;
 `;
 const RegisterLabel = styled.View`
-  flex: 5;
-  height: 100%;
-  justify-content: space-between;
 `;
-const HeaderWrap = styled.View``;
-const BodyWrap = styled.View``;
 
-const RegisterHead = styled(Typography).attrs({ variant: 'h800', weight: 'B' })`
-  color: ${({ theme }) => theme.colors.neutral[900]};
-`;
-const RegisterBody = styled(Typography).attrs({ variant: 'h500', option: 'longform' })`
-  color: ${({ theme }) => theme.colors.neutral[700]};
-`;
 const IconWrap = styled.View`
-  align-items: flex-end;
-  flex: 1;
+  align-items: flex-start;
+  margin-left:16px;
+  margin-right:16px;
 `;

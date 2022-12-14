@@ -26,6 +26,7 @@ const buildQuery = queryObj => {
 };
 
 async function json(url, method, options = {}) {
+  console.log(options);
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
       throw new Error('body is empty');

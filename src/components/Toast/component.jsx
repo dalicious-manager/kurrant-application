@@ -48,7 +48,7 @@ const Component = () => {
   }, [fadeToast]);
 
   const ToastWrap = useCallback(
-    ({ message ,icon = 'nomal'}) => {
+    ({ message="test" ,icon = 'nomal'}) => {
       const renderIcon = () => {
         switch(icon) {
           case 'checked':
