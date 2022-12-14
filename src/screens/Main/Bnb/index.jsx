@@ -13,6 +13,7 @@ import Market from '~assets/icons/TabBarIcon/inactiveMarket.svg';
 import Meal from '~assets/icons/TabBarIcon/inactiveMeal.svg';
 import More from '~assets/icons/TabBarIcon/inactiveMore.svg';
 
+import BackButton from "../../../components/BackButton";
 import CatorMainPage, { PAGE_NAME as CatorMainPageName } from '../../../pages/Main/Bnb/Cator/Main';
 import HomeMainPage, { PAGE_NAME as HomeMainPageName } from '../../../pages/Main/Bnb/Home/Main';
 import MarketMainPage, { PAGE_NAME as MarketMainPageName } from '../../../pages/Main/Bnb/Market/Main';
@@ -54,7 +55,16 @@ const Screen = () => {
         component={MealMainPage}
         options={{
           title: '식사',
-          headerShown: false,
+          headerTitle:'식사일정',
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+          headerLeft: () => <BackButton margin={[24,24]}/>,
           tabBarIcon: ({ focused }) => (
             <TabBarIconWrap>
               {focused ? (<ActiveMeal/>):(<Meal/>)}

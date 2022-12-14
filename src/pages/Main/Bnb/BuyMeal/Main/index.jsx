@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useRef, forwardRef,useState } from 'react';
 import {useForm} from 'react-hook-form';
 import { Image, SafeAreaView, ScrollView, Text, View, TouchableOpacity ,ImageBackground, Pressable,Dimensions} from "react-native";
@@ -17,10 +18,11 @@ export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
 
-const Pages = ({navigation}) => {
+const Pages = () => {
     
+    const navigation = useNavigation();
     const dinningRef = useRef();
-    const [press,setPress] = useState('focus');
+    
     
     return (
         <SafeView>
@@ -259,7 +261,7 @@ background-color:${props => props.theme.colors.grey[0]};
 flex:1;
 `;
 
-const CalendarWrap = styled.View`
+export const CalendarWrap = styled.View`
 margin:0px 28px;
 height:120px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
@@ -361,13 +363,13 @@ color:${props => props.theme.colors.grey[4]};
 const ButtonWrap = styled.View`
 position:absolute;
 bottom:35px;
-
+margin:0px 24px;
 `;
 
-const MakersName = styled(Typography).attrs({text:'Body05R'})`
+export const MakersName = styled(Typography).attrs({text:'Body05R'})`
 color:${props => props.theme.colors.grey[2]};
 `;
-const MealName = styled(Typography).attrs({text:'Body05SB'})`
+export const MealName = styled(Typography).attrs({text:'Body05SB'})`
 color:${props => props.theme.colors.grey[2]};
 `;
 

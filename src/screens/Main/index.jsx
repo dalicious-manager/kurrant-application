@@ -137,6 +137,11 @@ const Screen = () => {
           component={Payment}
           options={{headerShown: true,
             title:'주문',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerLeft: () => <BackButton />,
@@ -156,7 +161,7 @@ const Screen = () => {
       {/* MODAL */}
       {/* MODAL > LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <MainRoot.Screen
+        {/* <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
@@ -165,7 +170,7 @@ const Screen = () => {
             headerShadowVisible: false,
             title: '',
           }}
-        />
+        /> */}
         <MainRoot.Screen
           name={SignUpPageName}
           component={SignUp}

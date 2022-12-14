@@ -1,9 +1,10 @@
 import React ,{ useEffect,useState }from "react";
-import { KeyboardAvoidingView, NativeModules, Platform,TouchableWithoutFeedback,TextInput } from "react-native";
+import { KeyboardAvoidingView, NativeModules, Platform,TouchableWithoutFeedback,TextInput, Pressable } from "react-native";
 import styled from "styled-components";
 
 import MinusIcon from '../../assets/icons/MealDetail/minus.svg';
 import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
+import { PressableView } from "../Count/component";
 
 const { StatusBarManager } = NativeModules;
 
@@ -34,7 +35,9 @@ const Component = ({
         >
             <TouchableWithoutFeedback onBlur={blurPress}>
                 <KeypadInput focus={focus}>
-                    <MinusIcon onPress={decreasePress}/>
+                    <PressableView onPress={decreasePress}>
+                        <MinusIcon />
+                    </PressableView>
                     <TextInput
                         keyboardType="number-pad"
                         //onPress={focusPress}
@@ -42,7 +45,9 @@ const Component = ({
                         onChangeText={changeText}
                         value={count.toString()}
                         />
-                    <PlusIcon onPress={increasePress}/>
+                    <PressableView onPress={increasePress}>
+                        <PlusIcon />
+                    </PressableView>
                 </KeypadInput>
             </TouchableWithoutFeedback>
 
@@ -54,11 +59,14 @@ const Component = ({
 export default Component;
 
 const KeypadInput= styled.View`
-  height:50px;
+  height:56px;
   flex-direction:row;
   background-color:${props => props.theme.colors.grey[0]};
   justify-content:space-between;
   align-items:center;
   opacity: ${props => props.focus ? 1: 0 };
+  padding:0px 24px;
+  border-top-color:${props => props.theme.colors.grey[8]};
+  border-top-width:1px;
   
 `;

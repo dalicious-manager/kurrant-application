@@ -1,5 +1,5 @@
 import React, { useState,useRef, useEffect,  } from 'react';
-import { View, Text,TextInput, TouchableWithoutFeedback, Dimensions} from 'react-native';
+import { View, Text,TextInput, TouchableWithoutFeedback, Dimensions, Pressable} from 'react-native';
 import styled from 'styled-components';
 
 import MinusIcon from '../../assets/icons/MealDetail/minus.svg';
@@ -24,11 +24,15 @@ const Component = ({
   return (
     <View>
       <InnerView>
-        <MinusIcon onPress={decreasePress}/>
+        <PressableView onPress={decreasePress}>
+          <MinusIcon />
+        </PressableView>
           <Text onPress={onPressEvent}>
               {count}
           </Text>
-          <PlusIcon onPress={increasePress}/>
+          <PressableView onPress={increasePress}>
+            <PlusIcon />
+          </PressableView>
       </InnerView>
     </View>
   )
@@ -54,4 +58,11 @@ height:38px;
 background-color:${props => props.theme.colors.grey[0]};
 border:1px solid ${props => props.theme.colors.grey[6]};
 border-radius:7px;
+`;
+
+export const PressableView = styled.Pressable`
+padding:5px;
+height:100%;
+justify-content:center;
+
 `;

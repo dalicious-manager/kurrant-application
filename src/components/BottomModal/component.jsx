@@ -147,6 +147,7 @@ const BottomSheetDecs = styled(Typography).attrs({text : 'Body06R'})`
   margin-bottom: 22px;
   max-width:279px;
   text-align:center;
+  color:${props => props.theme.colors.grey[3]};
 `;
 const HalfBox = styled.View`
   width: 100%;
