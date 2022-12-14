@@ -1,25 +1,25 @@
 
+import { useNavigation } from "@react-navigation/native";
 import React, { useState, useRef, useEffect } from "react";
 import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeModules, Animated,ScrollView, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView} from "react-native";
-
 import styled from "styled-components";
 
-import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
-import MinusIcon from '../../../../../assets/icons/MealDetail/minus.svg';
-import PlusIcon from '../../../../../assets/icons/MealDetail/plus.svg';
 import StartIcon from '../../../../../assets/icons/star.svg';
 import Button from '../../../../../components/ButtonExtendable';
 import MoreButton from '../../../../../components/ButtonMore';
 import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
 import Label from '../../../../../components/Label';
+import Modal from '../../../../../components/Modal';
+import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from "../../../../../components/Typography";
 import useAnimatedHeaderTitle from "../../../../../hook/useAnimatedHeaderTitle";
-import { TagText, TagTextWrap } from "../../BuyMeal/Main";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 
 export const PAGE_NAME = 'MEAL_DEATAIL_PAGE';
 
-const Pages = ({navigation}) =>{
+const Pages = () =>{
+
+    const navigation = useNavigation();
 
     const [focus,setFocus] = useState(false);
     const [count, setCount] = useState(1);
@@ -86,7 +86,7 @@ const Pages = ({navigation}) =>{
                         <Label label='신라면 맵기'/>
                         <PriceTitleWrap>
                             <PriceTitle>최종 판매가</PriceTitle>
-                            <QuestionIcon/>
+                            <Modal/>
                         </PriceTitleWrap>
                         <PriceWrap>
                             <Percent>20%</Percent>
@@ -136,8 +136,15 @@ const Pages = ({navigation}) =>{
                         </InfoTextView>
                     </InfoWrap>
                 </Content>
-                <Content>
-                    <Text>리뷰자리</Text>
+                
+                {/* 리뷰자리 */}
+                <Content >
+                    <View>
+
+                 
+                    
+                    <ReviewPage/>
+                    </View>
                 </Content>
                 <MoreButton/>
                 </View>
@@ -301,7 +308,7 @@ const PriceTitle = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[2]};
 `;
 
-const Percent = styled(Typography).attrs({text:'Title03SB'})`
+export const Percent = styled(Typography).attrs({text:'Title03SB'})`
 color:${props => props.theme.colors.red[500]};
 margin-right:4px;
 `;
@@ -311,7 +318,7 @@ color:${props => props.theme.colors.grey[2]};
 margin-right:4px;
 `;
 
-const Price = styled(Typography).attrs({text:'Body06R'})`
+export const Price = styled(Typography).attrs({text:'Body06R'})`
 color:${props => props.theme.colors.grey[5]};
 text-decoration:line-through;
 text-decoration-color:${props => props.theme.colors.grey[5]};

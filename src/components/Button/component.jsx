@@ -16,7 +16,7 @@ const screenWidth = Dimensions.get('window').width;
 /**
  * @param {object} props
  * @param {'full' | 'middle' |'half' | 'modalFull' | 'modalHalf' | 'button38' | 'button32'} props.size
- * @param {'grey1' | 'grey2' | 'grey3' | 'grey7' | 'white' | 'yellow' | 'login'} props.type
+ * @param {'grey1' | 'grey2' | 'grey3' | 'grey7' | 'white' | 'yellow' | 'login' | 'purple'} props.type
  * @param {boolean} props.disabled
  * @param {function} props.onPressEvent
  * @param {'plus' | 'nomal'} props.icon
@@ -58,8 +58,9 @@ const Component = ({
 export default Component;
 
 const Wrap = styled.View`
-  ${({ size }) => size === 'full' ?`width: ${screenWidth}px` : size === 'login' && `width : ${screenWidth}px`};
+  //${({ size }) => size === 'full' ?`width: ${screenWidth}px` : size === 'login' && `width : ${screenWidth}px`};
   align-items:center;
+
 `;
 
 const Wrapper = styled.Pressable`

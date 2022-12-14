@@ -2,7 +2,7 @@ import React from "react";
 import { Pressable, Text, View } from "react-native";
 import styled from "styled-components";
 
-import Arrow from '../../assets/icons/MealDetail/arrowRight.svg';
+import Arrow from '../../assets/icons/Arrow/arrowRight.svg';
 import Typography from "../Typography";
 
 

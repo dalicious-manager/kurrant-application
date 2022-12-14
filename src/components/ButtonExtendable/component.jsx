@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 
-import Arrow from '../../assets/icons/MealDetail/arrow.svg';
+import Arrow from '../../assets/icons/Arrow/arrowTop.svg';
 import MinusIcon from '../../assets/icons/MealDetail/minus.svg';
 import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
 import Trapezoid from '../../assets/icons/MealDetail/trapezoid.svg';

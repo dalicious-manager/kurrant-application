@@ -7,7 +7,6 @@ import PagerView from 'react-native-pager-view';
 import styled from 'styled-components/native';
 
 import { weekAtom } from '../../biz/useBanner/store';
-import { formattedDateAndDay } from '../../utils/dateFormatter';
 import Button from '../CalendarButton';
 import Typography from '../Typography';
 import { getCircleColor, getTodayColor, getFontStyle } from './style';
@@ -34,7 +33,7 @@ const Component = ({
     const pager = useRef();
     const today = new Date();
     const [weekly,] = useAtom(weekAtom)
-    
+   
   return (
     <React.Fragment>
      {BooleanValue ? <Button pager={pager} title="버튼"/> : <></>}
@@ -46,9 +45,8 @@ const Component = ({
                     {week.map(day => {
                         const txt = format(day,'EEE',{locale:ko});
                         const now = (day.toDateString() === today.toDateString());
-                        //const lastWeek = (day.toLocaleDateString() < today.toLocaleDateString());
-                        const lastWeek = (day.getDate() < today.getDate())
-                       
+                        
+                        const lastWeek = (day.toISOString().substring(0,10) < today.toISOString().substring(0,10))
                         return (
                         <DaysWrap key={day}>
                             <Day lastWeek={lastWeek} color={color} size={size}>{txt}</Day>

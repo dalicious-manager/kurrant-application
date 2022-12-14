@@ -22,7 +22,7 @@ const btnSizeStyle = {
     height: 56px;
   `,
   full: css`
-    width: 335px;
+    width: 100%;
     height: 56px;
   `,
   middle: css`
@@ -34,7 +34,7 @@ const btnSizeStyle = {
     height: 56px;
   `,
   modalFull: css`
-    width: 327px;
+    width: 100%;
     height: 50px;
   `,
   modalHalf: css`
@@ -42,7 +42,7 @@ const btnSizeStyle = {
     height: 50px;
   `,
   button38: css`
-    width: 81px;
+    width:100%;
     height: 38px;
   `,
   button32: css`
@@ -112,6 +112,9 @@ const buttonColor = {
   `,
   login: css`
     background-color: ${({ theme }) => theme.colors.yellow[500]};
+  `,
+  purple: css`
+    background-color: ${({ theme }) => theme.colors.purple[500]};
   `
 
 };
@@ -149,9 +152,13 @@ export const getLabelColor = (disabled, type) => {
     return css`
       color: ${({ theme }) => theme.colors.grey[5]}; 
     `
-  } else if (type !== 'grey2' && type !== 'grey3') {
+  } else if (type !== 'grey2' && type !== 'grey3' && type !== 'white') {
     return css`
       color: ${({ theme }) => theme.colors.grey[1]}; 
+    `
+  } else if (type === 'white'){
+    return css`
+      color: ${({ theme }) => theme.colors.grey[3]};
     `
   } else {
     return css`

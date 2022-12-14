@@ -1,8 +1,10 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useRef,useState } from "react";
 import { Image, SafeAreaView, ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
 
 import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
+import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import Count from "../../../../../components/Count";
 import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
@@ -10,10 +12,22 @@ import Typography from "../../../../../components/Typography";
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
-const Pages = ({navigation}) => {
+const Pages = () => {
+
+    const navigation = useNavigation();
+
     const [focus,setFocus] = useState(false);
     const [count, setCount] = useState(1);
     const bodyRef = useRef();
+    const [ modalVisible, setModalVisible ] = useState(false);
+    const [ modalVisible2, setModalVisible2 ] = useState(false);
+
+    const pointButton = () => {
+        setModalVisible(true);
+    }
+    const fundButton = () => {
+        setModalVisible2(true);
+    }
 
     const increasePress = () => {
         setCount(prev => Number(prev) + 1);
@@ -58,7 +72,6 @@ const Pages = ({navigation}) => {
                                     decreasePress={decreasePress}
                                 />
                             </CountWrap>
-                            
                     </ContentWrap>
                 </Wrap>
                 <Wrap>
@@ -92,7 +105,7 @@ const Pages = ({navigation}) => {
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>회사 지원금 사용 금액
-                            <QuestionIcon/>
+                            <QuestionIcon onPress={fundButton}/>
                          </PaymentText>
                          <PaymentText>10,000 원</PaymentText>
                     </PaymentView>
@@ -106,7 +119,7 @@ const Pages = ({navigation}) => {
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>포인트 사용금액
-                            <QuestionIcon/>
+                            <QuestionIcon onPress={pointButton}/>
                         </PaymentText>
                     </PaymentView>
                     <PaymentView>
@@ -129,6 +142,8 @@ const Pages = ({navigation}) => {
             <ButtonWrap>
                 <Button label={'총 21개 결제하기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
             </ButtonWrap>
+            <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='포인트란?' description='고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.' buttonTitle1='확인했어요' buttonType1='grey7'/>
+            <BottomModal  modalVisible={modalVisible2} setModalVisible={setModalVisible2} title='지원금이란?' description='고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.' buttonTitle1='확인했어요' buttonType1='grey7'/>
         </SafeView>
     )
 
@@ -144,7 +159,7 @@ const ScrollViewWrap = styled.ScrollView`
   //margin:0px 28px;
 `;
 
-const Wrap = styled.View`
+export const Wrap = styled.View`
 flex:1;
 padding:24px 0px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
@@ -153,46 +168,46 @@ position:relative;
 margin:0px 28px;
 `;
 
-const MealImage = styled.Image`
+export const MealImage = styled.Image`
 width:45px;
 height:45px;
 border-radius:7px;
 margin-right:12px;
 `;
 
-const PointBoldText = styled(Typography).attrs({text:'Body05SB'})`
+export const PointBoldText = styled(Typography).attrs({text:'Body05SB'})`
 color: ${props => props.theme.colors.green[500]};
 padding-right:4px;
 `;
 
-const ContentWrap = styled.View`
+export const ContentWrap = styled.View`
 flex-direction:row;
-
-
 `;
 
-const Price = styled(Typography).attrs({text:'Body05R'})`
+export const Price = styled(Typography).attrs({text:'Body05R'})`
 color:${props => props.theme.colors.grey[4]};
 `;
-const SalePrice = styled(Typography).attrs({text:'Body06R'})`
+
+export const SalePrice = styled(Typography).attrs({text:'Body06R'})`
 text-decoration:line-through;
 text-decoration-color:${props => props.theme.colors.grey[5]};
 color:${props => props.theme.colors.grey[5]};
 `;
 
-const SalePriceWrap = styled.View`
+export const SalePriceWrap = styled.View`
 flex-direction:row;
 `;
 
-const CountWrap = styled.View`
+export const CountWrap = styled.View`
 position:absolute;
 right:0;
 bottom:0;
 `;
 
-const ButtonWrap = styled.View`
+export const ButtonWrap = styled.View`
 position:absolute;
 bottom:35px;
+margin: 0px 24px;
 `;
 
 const PaymentWrap = styled.View`
@@ -207,11 +222,11 @@ justify-content:space-between;
 margin:0px 28px;
 `;
 
-const DiningName = styled(Typography).attrs({text:'CaptionR'})`
+export const DiningName = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[2]};
 padding-bottom:12px;
 `;
-const MealName = styled(Typography).attrs({text:'Body05SB'})`
+export const MealName = styled(Typography).attrs({text:'Body05SB'})`
 color:${props => props.theme.colors.grey[2]};
 `;
 
