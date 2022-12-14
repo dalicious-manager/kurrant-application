@@ -1,53 +1,83 @@
 import {useNavigation} from '@react-navigation/native';
 import React,{useState,useEffect} from 'react';
 import { useFormContext } from 'react-hook-form';
-import {StyleSheet,  TouchableOpacity,Platform,Keyboard,NativeModules} from 'react-native';
+import {StyleSheet,  TouchableOpacity,Platform,Keyboard,NativeModules,BackHandler, Alert} from 'react-native';
 import { useRef } from 'react/cjs/react.development';
 import styled, { useTheme } from 'styled-components/native';
 
+import useAuth from '../../biz/useAuth';
 import useKeyboardEvent from '../../hook/useKeyboardEvent';
+import {  PAGE_NAME as FindUserPageName } from '../../pages/Main/Modal/FindUser';
+import { SCREEN_NAME } from '../../screens/Main/Bnb';
 import Button from '../Button';
 import KeyboardButton from '../KeyboardButton';
 import RefTextInput from '../RefTextInput';
 import Typography from '../Typography';
+
+
 const { StatusBarManager } = NativeModules;
 
 const Component = () => {
   const navigation = useNavigation();
   const labelItems = [
-    {label: '아이디', route: null},
-    {label: '/', route: null},
-    {label: '비밀번호 찾기', route: null},
+    {label: '아이디'},
+    {label: '/'},
+    {label: '비밀번호 찾기'},
   ];
   const themeApp= useTheme();
-
-  const emailRef = useRef(null);
-  const [isEmailFocused, setEmailFocused] = useState(false);
+  const {login} =useAuth();
   const passwordRef = useRef(null);
-  const [isPasswordFocused, setPasswordFocused] = useState(false);
-  const {formState:{errors,dirtyFields}} = useFormContext();
+  const {handleSubmit,formState:{errors,dirtyFields}} = useFormContext();
   const keyboardStatus = useKeyboardEvent();
+  const handleRoutePress = () => {
+    navigation.navigate(FindUserPageName ?? '');
+  };
+  const onSubmit= async(data)=>{
+    try{
+      // await login(data);
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: SCREEN_NAME,
+          },
+        ],
+      })
 
+    }catch (err){
+      Alert.alert(
+        "로그인 실패",
+        err.toString(),
+          [
+              {
+                  text: "확인",
+                  onPress: () => { },
+                  style: "cancel",
+              },
+          ],
+      )
+    }  
+  }
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const renderLabels = labelItems.map((labelItem, index) => {
-    const handleRoutePress = () => {
-      navigation.navigate(labelItem.route ?? '');
-    };
+    
     return (
-      <TouchableOpacity key={index} onPress={handleRoutePress}>
+      
         <Typography 
+        key={index}
         text={'CaptionR'}
         textColor={themeApp.colors.grey[4]}
         >{labelItem.label}</Typography>
-      </TouchableOpacity>
     );
   });
 
   const isValidation = dirtyFields.email && dirtyFields.password && !errors.email && !errors.password;
   useEffect(()=>{
+
     Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
-        setStatusBarHeight(statusBarFrameData.height)
-      }) : null
+      setStatusBarHeight(statusBarFrameData.height)
+    }) : null
+
 }, []);
   
   return (
@@ -58,14 +88,10 @@ const Component = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"} >
       <Container>
         <RefTextInput
-          name="email" 
-          ref={emailRef} 
+          name="email"
           label="가입한 이메일 주소" 
           returnKeyType="next"
           autoCapitalize = 'none'
-          focus={isEmailFocused}
-          onFocus={()=>setEmailFocused(true)}
-          setFocused={setEmailFocused}
           onSubmitEditing={() => passwordRef.current?.focus()}
           blurOnSubmit={false}
           suffix={
@@ -90,12 +116,9 @@ const Component = () => {
         />
         <RefTextInput 
           name="password" 
-          ref={passwordRef} 
           label="비밀번호"
+          ref={passwordRef}
           autoCapitalize = 'none'
-          focus={isPasswordFocused}
-          onFocus={()=>setPasswordFocused(true)}
-          setFocused={setPasswordFocused}
           placeholder="비밀번호"
           rules={
             {
@@ -117,21 +140,29 @@ const Component = () => {
           style={styles.input} 
         />
         {!keyboardStatus.isKeyboardActivate &&<ButtonContainer>
+          <TouchableOpacity  onPress={handleRoutePress}>
           <LableContainer>
+          
           {renderLabels}
         </LableContainer>
-          <Button type='yellow' label="로그인" disabled={!isValidation}/>
+        </TouchableOpacity>
+          <Button type='yellow' label="로그인" disabled={!isValidation} onPressEvent={handleSubmit(onSubmit)}/>
         </ButtonContainer> }
        
         
         
       </Container>
-      {keyboardStatus.isKeyboardActivate && <LableContainer>
+      {keyboardStatus.isKeyboardActivate && <TouchableOpacity  onPress={handleRoutePress}><LableContainer>
+        
           {renderLabels}
-        </LableContainer>}
-      <KeyboardButton type='login' isKeyboardActivate={keyboardStatus.isKeyboardActivate} label="로그인" disabled={!isValidation} />
+         
+        </LableContainer>
+        </TouchableOpacity>}
+      <KeyboardButton type='login' isKeyboardActivate={keyboardStatus.isKeyboardActivate} label="로그인" disabled={!isValidation} onPressEvent={handleSubmit(onSubmit)}/>
+      
     </KeyContainer>
     </KeyDismiss>
+    
     </SafeContainer>
   );
 };

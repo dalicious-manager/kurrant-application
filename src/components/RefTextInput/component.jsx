@@ -45,6 +45,7 @@ const Component = forwardRef(({
   },
   label = '',
   errMsg = '',
+  defaultValue,
   style,
   ...rest
 },ref) => {
@@ -124,6 +125,7 @@ const Component = forwardRef(({
       control={control}
       name={name}
       rules={rules}
+      defaultValue={defaultValue && defaultValue}
       render={({field: {onChange,value}}) => {
         return (
           <Wrapper {...style}>
@@ -154,7 +156,7 @@ const Component = forwardRef(({
                   text={'InputText'}
                   suffix={!!suffixContent}
                   timer={timer.remainTime > 0}
-                  value={value}
+                  value={value || ''}
                   secureTextEntry={name==='password' || name ==='passwordChecked' ? !isShowing :false}
                   {...rest}
                 />
@@ -165,7 +167,12 @@ const Component = forwardRef(({
               </TimerContainer><SuffixContainer suffix={!!suffixContent} isAuth={suffix.isAuth}>
                   {suffixContent}
                 </SuffixContainer></>}
-              {isEditable && suffix.isAuth && <AuthenticationButton onPress={suffix.authPressEvent}>
+              {isEditable && suffix.isAuth && <AuthenticationButton onPress={()=>{
+                if(suffix.authText ==='재발송'){
+                  setTimer(prev => ({...prev, remainTime: 180}));
+                }
+                suffix.authPressEvent()
+              }}>
                     <Typography 
                       text={'Button10SB'} 
                       textColor={suffix.authText ==='재발송'
@@ -227,7 +234,7 @@ const ControlContainer = styled.View`
     }
   }`;
 
-const AuthenticationButton = styled.Pressable`
+const AuthenticationButton = styled.TouchableOpacity`
   min-width: 77px;
   text-align: center;
   justify-content: center;

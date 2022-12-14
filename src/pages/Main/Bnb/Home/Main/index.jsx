@@ -1,6 +1,8 @@
 import React from 'react';
+
 import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet} from 'react-native';
+
 import styled, {css} from 'styled-components/native';
 
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
@@ -13,8 +15,6 @@ import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import Button from '../../../../../components/Button';
 import CheckButton from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
-import Form from '../../../../../components/Form';
-import Switch from '../../../../../components/Switch';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 

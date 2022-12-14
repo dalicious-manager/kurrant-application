@@ -2,7 +2,6 @@ import React,{useState,useEffect} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {Platform,Keyboard,NativeModules,View} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useRef } from 'react/cjs/react.development';
 import styled from 'styled-components/native';
 
 import useAuth from '../../../../biz/useAuth';
@@ -22,12 +21,6 @@ const Pages = () => {
 
   const auth = useAuth();
 
-  const emailRef = useRef(null);
-  const emailAuthlRef = useRef(null);
-  const phoneRef = useRef(null);
-  const phoneAuthlRef = useRef(null);
-  const passwordRef = useRef(null);
-  const passwordCheckedRef = useRef(null);
 
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [progress, setProgress] = useState(1);
@@ -42,6 +35,7 @@ const Pages = () => {
   const password = watch('password');
   const passwordChecked = watch('passwordChecked');
   const phoneNumber = watch('phone');
+  const email = watch('email');
   const emailAuth = watch('eauth');
   const phoneAuth = watch('pauth');
   const userName = watch('name');
@@ -69,7 +63,7 @@ const Pages = () => {
   const callMailAuth = async()=>{
     console.log("메일 인증요청");    
     try {
-      await auth.requestEmailAuth(emailAuth);
+      await auth.requestEmailAuth(email);
       setProgress(progress+1);
     }catch(err){
       console.log(err)
@@ -79,7 +73,7 @@ const Pages = () => {
     console.log("핸드폰 인증요청");    
     if(phoneNumber && !errors.phone ) {
       try {
-        await auth.requestPhoneAuth(phoneAuth);
+        await auth.requestPhoneAuth(phoneNumber);
         setProgress(progress+1);
         setPhoneAuth(true);
       }catch(err){
@@ -89,16 +83,19 @@ const Pages = () => {
     }
   }
   const onSubmit = async(data) => {
-    const datas={
-      email: data.email,
-      name: data.name,
-      password : data.password,
-      passwordCheck:data.passwordChecked,
-      phone : data.phone
+    try {
+      const datas={
+        email: data.email,
+        name: data.name,
+        password : data.password,
+        passwordCheck:data.passwordChecked,
+        phone : data.phone
+      }
+      await joinUser(datas);
+      
+    }catch(err){
+      console.log(err)
     }
-    const joinresult = await joinUser(datas);
-    console.error(joinresult);
-    
   };
 
 
@@ -124,13 +121,14 @@ const Pages = () => {
               <ProgressBar progress={progress}/>
               <InfomationText>{Infomation()}</InfomationText>
               <Container>
-                <ScrollView>
+                <ScrollView
+                  keyboardShouldPersistTaps={'always'}
+                >
                 {progress < 5 && <RefTextInput
                   name="email" 
                   label="이메일 주소" 
                   placeholder="이메일 주소" 
                   autoCapitalize = 'none'
-                  ref={emailRef}
                   blurOnSubmit={false}
                   isEditable={progress === 1}
                   suffix={
@@ -160,7 +158,6 @@ const Pages = () => {
                     label="인증번호" 
                     placeholder="인증번호" 
                     autoCapitalize = 'none'
-                    ref={emailAuthlRef}
                     blurOnSubmit={false}
                     suffix={
                       {
@@ -189,7 +186,6 @@ const Pages = () => {
                 {progress > 2 && progress < 5 &&<PasswordBox>
                  <RefTextInput 
                   name="password" 
-                  ref={passwordRef} 
                   label="비밀번호"
                   autoCapitalize = 'none'
                   placeholder="비밀번호"
@@ -214,7 +210,6 @@ const Pages = () => {
                 />
                  <RefTextInput 
                   name="passwordChecked" 
-                  ref={passwordCheckedRef} 
                   label="비밀번호 재입력"
                   autoCapitalize = 'none'
                   placeholder="비밀번호 재입력"
@@ -240,25 +235,25 @@ const Pages = () => {
                 />
                 {progress === 3 && !(password === passwordChecked) && <View>
                 <CaptionBox>
-                  <CaptionText>
+                  <CaptionPoint>
                     {'\u2022   '}
-                  </CaptionText>
+                  </CaptionPoint>
                   <CaptionText>
                     {'비밀번호는 8~32자리의 영문자, 숫자, 특수문자를 조합하여 설정해주세요.'}
                   </CaptionText>
                 </CaptionBox>
                 <CaptionBox>
-                  <CaptionText>
+                  <CaptionPoint>
                     {'\u2022   '}
-                  </CaptionText>
+                  </CaptionPoint>
                   <CaptionText>
                     {'다른 사이트에서 사용하는 것과 동일하거나 쉬운 비밀번호는 사용하지 마세요.'}
                   </CaptionText>
                 </CaptionBox>
                 <CaptionBox>
-                  <CaptionText>
+                  <CaptionPoint>
                     {'\u2022   '}
-                  </CaptionText>
+                  </CaptionPoint>
                   <CaptionText>
                     {'안전한 계정 사용을 위해 비밀번호는 주기적으로 변경해 주세요.'}
                   </CaptionText>
@@ -273,7 +268,6 @@ const Pages = () => {
                   label="휴대폰 번호" 
                   placeholder="휴대폰 번호" 
                   autoCapitalize = 'none'
-                  ref={phoneRef}
                   blurOnSubmit={false}
                   isEditable={progress === 3 && !isPhoneAuth}
                   suffix={
@@ -301,13 +295,12 @@ const Pages = () => {
                     label="인증번호" 
                     placeholder="인증번호" 
                     autoCapitalize = 'none'
-                    ref={phoneAuthlRef}
                     blurOnSubmit={false}
                     suffix={
                       {
                         isAuth:true,
                         authText:'재발송',
-                        authPressEvent:callMailAuth,
+                        authPressEvent:callPhoneAuth,
                         timer:180,
                       }
                     }
@@ -333,8 +326,13 @@ const Pages = () => {
                     label="이름" 
                     placeholder="이름" 
                     autoCapitalize = 'none'
-                    ref={phoneAuthlRef}
                     blurOnSubmit={false}           
+                    suffix={
+                      {
+                          isNeedDelete: true,
+                          // timer:900,
+                      }
+                    }
                     rules={
                       {
                         required: '필수 입력 항목 입니다.',
@@ -410,6 +408,10 @@ const CaptionBox = styled.View`
 `
 const CaptionText = styled(Typography).attrs({text :'CaptionR'})`
   color:${({theme})=>theme.colors.grey[4]};
+  flex:1;
+`
+const CaptionPoint = styled(Typography).attrs({ text: 'CaptionR' })`
+    color:${({ theme }) => theme.colors.grey[4]};
 `
 const Container = styled.View` 
   flex: 1;

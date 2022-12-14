@@ -9,6 +9,7 @@ import {PAGE_NAME as SignUpPage} from '../../SignUp';
 export const PAGE_NAME = 'P_LOGIN__MODAL__MAIN_LOGIN';
 
 const Pages = () => {
+
   const navigation = useNavigation();
   const handleLoginPress = () => {
     navigation.navigate(LoginPage ?? '');
@@ -16,8 +17,10 @@ const Pages = () => {
   const handleEmailPress = () => {
     navigation.navigate(SignUpPage ?? '');
   };
+  
   return (
     <View style={styles.container}>
+      
       {/* <FormProvider {...form}>
         <Login />
       </FormProvider> */}
@@ -33,12 +36,14 @@ const Pages = () => {
           </View>
         </View>
       </View>
+      
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     width: '100%',
     alignSelf: 'center',
     justifyContent: 'center',

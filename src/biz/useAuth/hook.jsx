@@ -1,22 +1,36 @@
 import { useAtom } from 'jotai';
 
 import * as Fetch from './Fetch';
-import {  isPhoneAuthLoadingAtom ,isEmailAuthLoadingAtom,isConfirmPhoneLoadingAtom,isConfirmEmailLoadingAtom,isLoginLoadingAtom} from './store';
+import {  
+  isPhoneAuthLoadingAtom ,
+  isEmailAuthLoadingAtom,
+  isConfirmPhoneLoadingAtom,
+  isConfirmEmailLoadingAtom,
+  isLoginLoadingAtom,
+  isCheckedAuthLoadingAtom,
+  isChangePasswordLoadingAtom
+} from './store';
 
 
 
-const useJoinUser = () => {
+const useAuth = () => {
   const [isEmailAuthLoading, setEmailAuthLoading] = useAtom(isEmailAuthLoadingAtom);
   const [isPhoneAuthLoading, setPhoneAuthLoading] = useAtom(isPhoneAuthLoadingAtom);
   const [isConfirmEmailLoading, setConfirmEmailLoading] = useAtom(isConfirmEmailLoadingAtom);
   const [isConfirmPhoneLoading, setConfirmPhoneLoading] = useAtom(isConfirmPhoneLoadingAtom);
+  const [isCheckedAuthLoading, setCheckedAuthLoading] = useAtom(isCheckedAuthLoadingAtom);
+  const [isChangePasswordLoading, setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
   
-  const requestEmailAuth = async (option = {}) => {
+  const requestEmailAuth = async (body,type,option = {}) => {
     try {
       setEmailAuthLoading(true);
 
       const res = await Fetch.requestEmailAuth(     
+        {
+          ...body
+        } ,  
+        type,
         option
       );
      console.log(res);
@@ -28,12 +42,12 @@ const useJoinUser = () => {
       setEmailAuthLoading(false);
     }
   };
-  const confirmEmailAuth = async (auth) => {
+  const confirmEmailAuth = async (auth,type) => {
     try {
       setConfirmEmailLoading(true);
 
       const res = await Fetch.confirmEmailAuth(     
-        auth
+        auth,type
       );
 
       return res;
@@ -43,11 +57,15 @@ const useJoinUser = () => {
       setConfirmEmailLoading(false);
     }
   };
-  const requestPhoneAuth = async (option = {}) => {
+  const requestPhoneAuth = async (body,type,option = {}) => {
+    console.log(body);
     try {
       setPhoneAuthLoading(true);
-
-      const res = await Fetch.requestPhoneAuth(     
+      const res = await Fetch.requestPhoneAuth(
+        {
+          ...body
+        } ,  
+        type,
         option
       );
 
@@ -58,12 +76,12 @@ const useJoinUser = () => {
       setPhoneAuthLoading(false);
     }
   };
-  const confirmPhoneAuth = async (auth) => {
+  const confirmPhoneAuth = async (auth,type) => {
     try {
       setConfirmPhoneLoading(true);
 
       const res = await Fetch.confirmPhoneAuth(     
-        auth
+        auth,type
       );
 
       return res;
@@ -71,6 +89,43 @@ const useJoinUser = () => {
       throw err
     } finally {
       setConfirmPhoneLoading(false);
+    }
+  };
+  const checkedAuth = async (body,option = {}) => {
+    console.log(body);
+    try {
+      setCheckedAuthLoading(true);
+      const res = await Fetch.checkedAuth(
+        {
+          ...body
+        } ,  
+        option
+      );
+
+      return res;
+    } catch (err) {
+      throw err
+    } finally {
+      setCheckedAuthLoading(false);
+    }
+  };
+  const changePassword = async (body,type,option = {}) => {
+    console.log(body);
+    try {
+      setChangePasswordLoading(true);
+      const res = await Fetch.changePassword(
+        {
+          ...body
+        } ,  
+        type,
+        option
+      );
+
+      return res;
+    } catch (err) {
+      throw err
+    } finally {
+      setChangePasswordLoading(false);
     }
   };
   const login = async (body,option = {}) => {
@@ -96,15 +151,19 @@ const useJoinUser = () => {
     confirmEmailAuth,
     requestPhoneAuth,
     confirmPhoneAuth,
+    checkedAuth,
+    changePassword,
     login,
     readableAtom: {
       isPhoneAuthLoading,
       isEmailAuthLoading,
       isConfirmPhoneLoading,
       isConfirmEmailLoading,
+      isCheckedAuthLoading,
+      isChangePasswordLoading,
       isLoginLoading,
     },
   };
 };
 
-export default useJoinUser;
+export default useAuth;

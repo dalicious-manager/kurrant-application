@@ -15,12 +15,27 @@ import SelectUserTypePage, {
 import EmailLoginModal, {
   PAGE_NAME as EmailLoginModalModalPageName,
 } from '../../pages/Main/Modal/EmailLogin';
+import FindUser, {
+  PAGE_NAME as FindUserPageName,
+} from '../../pages/Main/Modal/FindUser';
+import ChagePassword, {
+  PAGE_NAME as ChagePasswordPageName,
+} from '../../pages/Main/Modal/FindUser/ChagePassword';
+import FindId, {
+  PAGE_NAME as FindIdPageName,
+} from '../../pages/Main/Modal/FindUser/FindId';
+import FindPassword, {
+  PAGE_NAME as FindPasswordPageName,
+} from '../../pages/Main/Modal/FindUser/FindPassword';
 import LoginMainModal, {
   PAGE_NAME as LoginMainModalPageName,
 } from '../../pages/Main/Modal/Login';
 import SignUp, {
   PAGE_NAME as SignUpPageName,
 } from '../../pages/Main/Modal/SignUp';
+import SignUpComplate, {
+  PAGE_NAME as SignUpComplatePageName,
+} from '../../pages/Main/Modal/SignUp/SignUpComplate';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 // Pages > Exchange
 // Pages > IndexCard
@@ -166,8 +181,9 @@ const Screen = () => {
           component={LoginMainModal}
           options={{
             headerLeft: () => <BackButton mode="modal" />,
-            headerShown: false,
+            headerShown: true,
             headerShadowVisible: false,
+            headerTransparent:true,
             title: '',
           }}
         /> */}
@@ -178,6 +194,86 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             title: '회원가입',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={SignUpComplatePageName}
+          component={SignUpComplate}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '회원가입',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FindUserPageName}
+          component={FindUser}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FindIdPageName}
+          component={FindId}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FindPasswordPageName}
+          component={FindPassword}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={ChagePasswordPageName}
+          component={ChagePassword}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
