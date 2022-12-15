@@ -12,7 +12,7 @@ import ProgressBar from '../../../../components/ProgressBar';
 import RefTextInput from '../../../../components/RefTextInput';
 import Typography from '../../../../components/Typography';
 import Wrapper from '../../../../components/Wrapper';
-import useKeyboardEvent from '../../../../hook/useKeyboardEvent';
+import useKeyboardEvent from '../../../../hooks/useKeyboardEvent';
 
 export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP';
 const { StatusBarManager } = NativeModules;

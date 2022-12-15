@@ -6,8 +6,8 @@ import { useRef } from 'react/cjs/react.development';
 import styled, { useTheme } from 'styled-components/native';
 
 import useAuth from '../../biz/useAuth';
-import useKeyboardEvent from '../../hook/useKeyboardEvent';
-import {  PAGE_NAME as FindUserPageName } from '../../pages/Main/Modal/FindUser';
+import useKeyboardEvent from '../../hooks/useKeyboardEvent';
+import {  PAGE_NAME as FindUserPageName } from '../../pages/Main/Login/FindUser';
 import { SCREEN_NAME } from '../../screens/Main/Bnb';
 import Button from '../Button';
 import KeyboardButton from '../KeyboardButton';

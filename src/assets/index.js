@@ -8,3 +8,4 @@ export const ArrowLeftImage = require('../assets/images/arrow-left.png');
 export const LogoImage = require('../assets/images/logo.png');
 export const LogoBackground = require('../assets/images/loginBackground.png');
 export const SignUpComplate = require('../assets/images/signupcomplate.png');
+export const MembershipImage = require('../assets/images/kurrant-membership.png');

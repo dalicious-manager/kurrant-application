@@ -14,28 +14,28 @@ import SelectUserTypePage, {
 } from '../../pages/Main/Bnb/SignUp/SelectUserType';
 import EmailLoginModal, {
   PAGE_NAME as EmailLoginModalModalPageName,
-} from '../../pages/Main/Modal/EmailLogin';
+} from '../../pages/Main/Login/EmailLogin';
 import FindUser, {
   PAGE_NAME as FindUserPageName,
-} from '../../pages/Main/Modal/FindUser';
+} from '../../pages/Main/Login/FindUser';
 import ChagePassword, {
   PAGE_NAME as ChagePasswordPageName,
-} from '../../pages/Main/Modal/FindUser/ChagePassword';
+} from '../../pages/Main/Login/FindUser/ChagePassword';
 import FindId, {
   PAGE_NAME as FindIdPageName,
-} from '../../pages/Main/Modal/FindUser/FindId';
+} from '../../pages/Main/Login/FindUser/FindId';
 import FindPassword, {
   PAGE_NAME as FindPasswordPageName,
-} from '../../pages/Main/Modal/FindUser/FindPassword';
+} from '../../pages/Main/Login/FindUser/FindPassword';
 import LoginMainModal, {
   PAGE_NAME as LoginMainModalPageName,
-} from '../../pages/Main/Modal/Login';
+} from '../../pages/Main/Login/Login';
 import SignUp, {
   PAGE_NAME as SignUpPageName,
-} from '../../pages/Main/Modal/SignUp';
+} from '../../pages/Main/Login/SignUp';
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
-} from '../../pages/Main/Modal/SignUp/SignUpComplate';
+} from '../../pages/Main/Login/SignUp/SignUpComplate';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 // Pages > Exchange
 // Pages > IndexCard
@@ -176,17 +176,17 @@ const Screen = () => {
       {/* MODAL */}
       {/* MODAL > LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        {/* <MainRoot.Screen
+        <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
             headerLeft: () => <BackButton mode="modal" />,
-            headerShown: true,
+            headerShown: false,
             headerShadowVisible: false,
             headerTransparent:true,
             title: '',
           }}
-        /> */}
+        />
         <MainRoot.Screen
           name={SignUpPageName}
           component={SignUp}

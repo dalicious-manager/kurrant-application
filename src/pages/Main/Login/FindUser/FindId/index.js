@@ -10,7 +10,7 @@ import KeyboardButton from '../../../../../components/KeyboardButton';
 import RefTextInput from '../../../../../components/RefTextInput';
 import Typography from '../../../../../components/Typography';
 import Wrapper from '../../../../../components/Wrapper';
-import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import useKeyboardEvent from '../../../../../hooks/useKeyboardEvent';
 
 export const PAGE_NAME = 'P_LOGIN__MODAL__FIND_ID';
 /**

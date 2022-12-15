@@ -1,8 +1,6 @@
 import React from 'react';
-
 import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet} from 'react-native';
-
 import styled, {css} from 'styled-components/native';
 
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
