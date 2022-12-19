@@ -1,7 +1,8 @@
 
-import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { Dimensions, ScrollView, Pressable } from "react-native";
+import {  ScrollView } from "react-native";
 import styled from "styled-components/native";
 
 import Check from "../../../components/Check";
@@ -10,14 +11,19 @@ import { CommentsIcon, DeliveryFreeIcon, DiscountIcon, PointIcon } from "../../.
 import Typography from "../../../components/Typography";
 import Wrapper from "../../../components/Wrapper";
 import MembershipButton from "./MembershipButton";
+import { PAGE_NAME as MembershipJoinPaymentsPageName} from "./MembershipJoinPayments";
 import SubtractBox from "./SubtractBox";
+
 
 export const PAGE_NAME = "P__MEMBERSHIP__JOIN"
 const Pages= ()=>{
     const signUpCheck = useForm();
-
+    const navigation = useNavigation();
+    const signUpCheck1 = signUpCheck.watch('signUpCheck1')
+    const signUpCheck2 = signUpCheck.watch('signUpCheck2')
+    const signUpCheck3 = signUpCheck.watch('signUpCheck3')
+    const signUpCheck4 = signUpCheck.watch('signUpCheck4')
   const checkAll = () => {
-    console.log('123');
     signUpCheck.setValue('signUpCheck1', signUpCheck.watch('signUpCheckAll'))
     signUpCheck.setValue('signUpCheck2', signUpCheck.watch('signUpCheckAll'))
     signUpCheck.setValue('signUpCheck3', signUpCheck.watch('signUpCheckAll'))
@@ -27,25 +33,28 @@ const Pages= ()=>{
 
   console.log(signUpCheck.watch());
 
-  const handleSubmit = async data => {
-    try {
-      await console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSubmit = period => {
+    if(signUpCheck1&&
+        signUpCheck2&&
+        signUpCheck3){
+            console.log("다음페이지");
+            navigation.navigate(MembershipJoinPaymentsPageName,{
+                period:period
+            });
+    }   
   };
-  const handleSubmitError = data => {
+  const handleSubmitError = () => {
     try {
-      console.log(data);
+      console.log("에러");
     } catch (error) {
       console.log(error);
     }
   };
 
   const disabledCheck =
-    signUpCheck.watch('signUpCheck1') &&
-    signUpCheck.watch('signUpCheck2') &&
-    signUpCheck.watch('signUpCheck3') ;
+    signUpCheck1 &&
+    signUpCheck2 &&
+    signUpCheck3 ;
 
     return(
         <Wrapper>
@@ -116,10 +125,10 @@ const Pages= ()=>{
                 </CheckWrap>
                 <ButtonContainer>
                     <ButtonBox>
-                        <MembershipButton label="월간결제" payments={12000}/>  
+                        <MembershipButton label="월간결제" payments={12000} onPressEvent={disabledCheck ? ()=>handleSubmit('month'): ()=>handleSubmitError()} />  
                     </ButtonBox> 
                     <ButtonBox>
-                        <MembershipButton label="연간결제" payments={115200} isSale={true}/>   
+                        <MembershipButton label="연간결제" payments={115200} isSale={true} onPressEvent={disabledCheck ? ()=>handleSubmit('years'): ()=>handleSubmitError()} />   
                     </ButtonBox>
                 </ButtonContainer>
             </Form>

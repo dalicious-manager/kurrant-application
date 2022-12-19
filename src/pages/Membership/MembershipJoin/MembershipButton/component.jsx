@@ -3,8 +3,6 @@ import styled from "styled-components/native";
 
 import ArrowRight from "~assets/icons/Arrow/btnArrowRight.svg";
 
-import { Subtract } from "../../../../assets";
-import Image from "../../../../components/Image";
 import Label from "../../../../components/Label";
 import Typography from "../../../../components/Typography";
 import withCommas from "../../../../utils/withCommas";
@@ -12,12 +10,14 @@ import withCommas from "../../../../utils/withCommas";
 * @param {object} props
 * @param {string} props.label
 * @param {object} props.payments
+* @param {function} props.onPressEvent
+* @return
 */
 
-const Component = ({label,payments, isSale})=>{
+const Component = ({label,payments, isSale ,onPressEvent, ...rest})=>{
     const pay = withCommas(payments);
     return(
-        <Container isSale={isSale}>  
+        <Container isSale={isSale} onPress={onPressEvent} {...rest}>  
             <TitleBox>
                 <MembershipText>
                     {label}                
@@ -41,7 +41,7 @@ const Component = ({label,payments, isSale})=>{
 
 export default Component;
 
-const Container = styled.View`
+const Container = styled.Pressable`
     width: 100%;
     border-radius: 14px;
     border:1px solid ${({theme})=>theme.colors.grey[7]};

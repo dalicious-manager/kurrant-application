@@ -44,6 +44,12 @@ import MembershipIntro, {
 import MembershipJoin, {
   PAGE_NAME as MembershipJoinPageName,
 } from '../../pages/Membership/MembershipJoin';
+import MembershipJoinComplate, {
+  PAGE_NAME as MembershipJoinComplatePageName,
+} from '../../pages/Membership/MembershipJoin/MembershipJoinComplate';
+import MembershipJoinPayments, {
+  PAGE_NAME as MembershipJoinPaymentsPageName,
+} from '../../pages/Membership/MembershipJoin/MembershipJoinPayments';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 // Pages > Exchange
 // Pages > IndexCard
@@ -196,6 +202,36 @@ const Screen = () => {
         <MainRoot.Screen
           name={MembershipJoinPageName}
           component={MembershipJoin}
+          options={{headerShown: true,
+            title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipJoinPaymentsPageName}
+          component={MembershipJoinPayments}
+          options={{headerShown: true,
+            title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipJoinComplatePageName}
+          component={MembershipJoinComplate}
           options={{headerShown: true,
             title:'멤버십 가입',
             headerShadowVisible: false,
