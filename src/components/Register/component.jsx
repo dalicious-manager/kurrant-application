@@ -6,10 +6,10 @@ import EmailIcon from '../../assets/icons/email.svg';
 import PasswordIcon from '../../assets/icons/password.svg';
 import  {
   PAGE_NAME as FindIdPageName,
-} from '../../pages/Main/Modal/FindUser/FindId';
+} from '../../pages/Main/Login/FindUser/FindId';
 import  {
   PAGE_NAME as FindPasswordPageName,
-} from '../../pages/Main/Modal/FindUser/FindPassword';
+} from '../../pages/Main/Login/FindUser/FindPassword';
 import Typography from '../Typography';
 
 /**

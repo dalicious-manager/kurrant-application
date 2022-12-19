@@ -1,5 +1,6 @@
 import { useAtom } from 'jotai';
 
+import { setStorage } from '../../utils/asyncStorage';
 import * as Fetch from './Fetch';
 import {  
   isPhoneAuthLoadingAtom ,
@@ -8,7 +9,8 @@ import {
   isConfirmEmailLoadingAtom,
   isLoginLoadingAtom,
   isCheckedAuthLoadingAtom,
-  isChangePasswordLoadingAtom
+  isChangePasswordLoadingAtom,
+  isFindEmailLoading
 } from './store';
 
 
@@ -20,6 +22,7 @@ const useAuth = () => {
   const [isConfirmPhoneLoading, setConfirmPhoneLoading] = useAtom(isConfirmPhoneLoadingAtom);
   const [isCheckedAuthLoading, setCheckedAuthLoading] = useAtom(isCheckedAuthLoadingAtom);
   const [isChangePasswordLoading, setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
+  const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
   
   const requestEmailAuth = async (body,type,option = {}) => {
@@ -27,9 +30,7 @@ const useAuth = () => {
       setEmailAuthLoading(true);
 
       const res = await Fetch.requestEmailAuth(     
-        {
-          ...body
-        } ,  
+        body ,  
         type,
         option
       );
@@ -62,9 +63,7 @@ const useAuth = () => {
     try {
       setPhoneAuthLoading(true);
       const res = await Fetch.requestPhoneAuth(
-        {
-          ...body
-        } ,  
+        body ,  
         type,
         option
       );
@@ -89,6 +88,24 @@ const useAuth = () => {
       throw err
     } finally {
       setConfirmPhoneLoading(false);
+    }
+  };
+  const findEmail = async (body,option = {}) => {
+    try {
+      setEmailLoading(true);
+
+      const res = await Fetch.findEmail(     
+        {
+          ...body
+        } ,  
+        option
+      );
+
+      return res;
+    } catch (err) {
+      throw err
+    } finally {
+      setEmailLoading(false);
     }
   };
   const checkedAuth = async (body,option = {}) => {
@@ -131,14 +148,18 @@ const useAuth = () => {
   const login = async (body,option = {}) => {
     try {
       setLoginLoading(true);
-
+      const reqData = {
+        email:body.email,
+        password:body.password,
+      }
       const res = await Fetch.login(     
         {
-          ...body
+          ...reqData
         },
         option
       );
-
+      await setStorage('token',res.data.accessToken);
+      await setStorage('isLogin',body.autoLogin.toString());
       return res;
     } catch (err) {
       throw err
@@ -152,6 +173,7 @@ const useAuth = () => {
     requestPhoneAuth,
     confirmPhoneAuth,
     checkedAuth,
+    findEmail,
     changePassword,
     login,
     readableAtom: {
@@ -161,6 +183,7 @@ const useAuth = () => {
       isConfirmEmailLoading,
       isCheckedAuthLoading,
       isChangePasswordLoading,
+      isEmailLoading,
       isLoginLoading,
     },
   };

@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Platform, Keyboard, NativeModules, Alert } from 'react-native';
@@ -5,12 +6,17 @@ import { ScrollView } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 import useAuth from '../../../../../biz/useAuth';
+import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import KeyboardButton from '../../../../../components/KeyboardButton';
 import RefTextInput from '../../../../../components/RefTextInput';
 import Typography from '../../../../../components/Typography';
 import Wrapper from '../../../../../components/Wrapper';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import { PAGE_NAME as LoginPageName } from '../../Login';
+import { PAGE_NAME as SignUpPageName } from '../../SignUp';
+import { PAGE_NAME as FindIdComplatePageName } from './FindIdComplate';
+
 
 export const PAGE_NAME = 'P_LOGIN__MODAL__FIND_ID';
 /**
@@ -26,6 +32,8 @@ const inputStyle = {
 
 const Pages = () => {
     const [progress, setProgress] = useState(1);
+    const [modalVisible, setModalVisible] = useState(false);
+    const navigation = useNavigation();
     const Infomation = () => {
         if (progress === 1) return '아이디를 찾기 위해선\n휴대폰 번호 인증이 필요해요.'
         if (progress >= 2) return '휴대폰 SMS로 발송된 인증번호를\n확인해주세요.'
@@ -43,28 +51,30 @@ const Pages = () => {
     const keyboardStatus = useKeyboardEvent();
     const phoneNumber = watch('phone');
     const phoneAuth = watch('pauth');
-
-    const callPhoneAuth = async () => {
+    const goSignUp = () => {
+        navigation.reset({
+            index: 1,
+            routes: [
+                {
+                    name: LoginPageName,
+                },
+                {
+                    name: SignUpPageName
+                },
+            ],
+        })
+    }
+    const callPhoneAuth = async (again) => {
         console.log("핸드폰 인증요청", phoneNumber);
-
         if (phoneNumber && !errors.phone) {
             try {
-                // await auth.requestPhoneAuth({ to: phoneNumber }, 2);
-                setProgress(progress + 1);
+                await auth.requestPhoneAuth({ to: phoneNumber }, 2);
+                if (!again) {
+                    setProgress(progress + 1);
+                }
                 setPhoneAuth(true);
             } catch (err) {
-                Alert.alert(
-                    "안증요청 실패",
-                    err.toString(),
-                    [
-                        {
-                            text: "확인",
-                            onPress: () => { },
-                            style: "cancel",
-                        },
-                    ],
-
-                ); console.log(err)
+                setModalVisible(true)
             }
 
         }
@@ -74,6 +84,10 @@ const Pages = () => {
     const onSubmit = async (data) => {
         try {
             await auth.confirmPhoneAuth(phoneAuth, 2);
+            // await auth.findEmail({ phone: phoneNumber });
+            navigation.navigate(FindIdComplatePageName, {
+                phone: phoneNumber
+            })
             console.log(data);
         } catch (err) {
             Alert.alert(
@@ -93,7 +107,6 @@ const Pages = () => {
 
     };
     useEffect(() => {
-
         Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
             setStatusBarHeight(statusBarFrameData.height)
         }) : null
@@ -196,6 +209,18 @@ const Pages = () => {
                     </KeyDismiss>
                 </SafeContainer>
             </FormProvider>
+            <BottomModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                title="가입된 계정 정보가 없어요"
+                description='회원가입하고 다양한 혜택을 받아보세요'
+                buttonTitle1='취소'
+                buttonTitle2='회원가입하기'
+                buttonType1='grey7'
+                buttonType2='yellow'
+                onPressEvent1={() => setModalVisible(false)}
+                onPressEvent2={goSignUp}
+            />
         </Wrapper>
     );
 };

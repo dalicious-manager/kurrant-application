@@ -1,15 +1,15 @@
 import {useNavigation} from '@react-navigation/native';
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef} from 'react';
 import { useFormContext } from 'react-hook-form';
-import {StyleSheet,  TouchableOpacity,Platform,Keyboard,NativeModules,BackHandler, Alert} from 'react-native';
-import { useRef } from 'react/cjs/react.development';
+import {StyleSheet,  TouchableOpacity,Platform,Keyboard,NativeModules, Alert } from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
 
 import useAuth from '../../biz/useAuth';
 import useKeyboardEvent from '../../hook/useKeyboardEvent';
-import {  PAGE_NAME as FindUserPageName } from '../../pages/Main/Modal/FindUser';
+import {  PAGE_NAME as FindUserPageName } from '../../pages/Main/Login/FindUser';
 import { SCREEN_NAME } from '../../screens/Main/Bnb';
 import Button from '../Button';
+import Check from '../Check';
 import KeyboardButton from '../KeyboardButton';
 import RefTextInput from '../RefTextInput';
 import Typography from '../Typography';
@@ -17,7 +17,7 @@ import Typography from '../Typography';
 
 const { StatusBarManager } = NativeModules;
 
-const Component = () => {
+const Component = ({userId}) => {
   const navigation = useNavigation();
   const labelItems = [
     {label: '아이디'},
@@ -27,14 +27,18 @@ const Component = () => {
   const themeApp= useTheme();
   const {login} =useAuth();
   const passwordRef = useRef(null);
+  const emailRef = useRef(null);
   const {handleSubmit,formState:{errors,dirtyFields}} = useFormContext();
   const keyboardStatus = useKeyboardEvent();
   const handleRoutePress = () => {
     navigation.navigate(FindUserPageName ?? '');
   };
-  const onSubmit= async(data)=>{
-    try{
-      // await login(data);
+  const onSubmit= async(datas)=>{
+    
+    try{  
+        
+      await login(datas);
+      
       navigation.reset({
         index: 0,
         routes: [
@@ -45,6 +49,7 @@ const Component = () => {
       })
 
     }catch (err){
+      console.log(err)
       Alert.alert(
         "로그인 실패",
         err.toString(),
@@ -53,7 +58,8 @@ const Component = () => {
                   text: "확인",
                   onPress: () => { },
                   style: "cancel",
-              },
+    
+                },
           ],
       )
     }  
@@ -70,16 +76,17 @@ const Component = () => {
         >{labelItem.label}</Typography>
     );
   });
-
-  const isValidation = dirtyFields.email && dirtyFields.password && !errors.email && !errors.password;
+  
+  const isValidation = (dirtyFields.email||userId) && dirtyFields.password && !errors.email && !errors.password;
+  
   useEffect(()=>{
 
     Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
       setStatusBarHeight(statusBarFrameData.height)
     }) : null
 
-}, []);
-  
+  }, []);
+
   return (
     <SafeContainer >
     <KeyDismiss onPress={()=>Keyboard.dismiss()}>
@@ -90,9 +97,11 @@ const Component = () => {
         <RefTextInput
           name="email"
           label="가입한 이메일 주소" 
+          ref={emailRef}
           returnKeyType="next"
           autoCapitalize = 'none'
           onSubmitEditing={() => passwordRef.current?.focus()}
+          defaultValue={userId && userId}
           blurOnSubmit={false}
           suffix={
             {
@@ -139,6 +148,11 @@ const Component = () => {
           }
           style={styles.input} 
         />
+        <CheckView>
+          <Check name={'autoLogin'} type='login'>
+            <Label>로그인 상태 유지</Label>
+          </Check>
+        </CheckView>
         {!keyboardStatus.isKeyboardActivate &&<ButtonContainer>
           <TouchableOpacity  onPress={handleRoutePress}>
           <LableContainer>
@@ -171,6 +185,7 @@ const KeyDismiss = styled.Pressable`
 `
 const SafeContainer = styled.SafeAreaView`
   flex:1;
+  
 `
 const KeyContainer = styled.KeyboardAvoidingView`
   flex: 1;
@@ -178,7 +193,7 @@ const KeyContainer = styled.KeyboardAvoidingView`
 `
 
 const Container = styled.View` 
-  background-color: gold;
+
   flex: 1;
   position: relative;
   align-items: center;
@@ -200,7 +215,12 @@ const ButtonContainer = styled.View`
   bottom: 22px;
   margin-bottom: 24px;
 `;
-
+const Label = styled(Typography).attrs({ text:'CaptionR' })`
+  color: ${({ theme }) => theme.colors.grey[2]};
+`;
+const CheckView = styled.View`
+  width: 100%;
+`
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',

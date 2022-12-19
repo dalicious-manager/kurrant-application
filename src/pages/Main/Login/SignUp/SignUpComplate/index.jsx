@@ -12,29 +12,31 @@ import { PAGE_NAME as LoginPage } from "../../EmailLogin";
 import { PAGE_NAME as LoginMain } from "../../Login/LoginMain";
 export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP_COMPLATE';
 
-const Pages = () => {
+const Pages = ({route}) => {
+    console.log(route)
+    const {useName}=route.params;
     const themeApp = useTheme();
     const navigation = useNavigation();
     return (
         <Conotainer>
             <Image imagePath={SignUpComplate} scale={1.0}/>
-            <Title textColor={themeApp.colors.grey[2]}>김달리님, 환영합니다!</Title>
+            <Title textColor={themeApp.colors.grey[2]}>{useName}님, 환영합니다!</Title>
             <CaptionText textColor={themeApp.colors.grey[4]}>커런트 가입을 축하드려요. {'\n'}이제 맛있는 식사를 주문해볼까요?</CaptionText>
             <ButtonContainer>
                 <Button
                     type='yellow'
                     label={"시작하기"}
                     onPressEvent={() => {
-                        // navigation.popToTop()
-                        // navigation.navigate(LoginPage)
-                        navigation.reset({
-                            index: 0,
-                            routes: [
-                              {
-                                name: SCREEN_NAME,
-                              },
-                            ],
-                          })
+                        navigation.popToTop()
+                        navigation.navigate(LoginPage)
+                        // navigation.reset({
+                        //     index: 0,
+                        //     routes: [
+                        //       {
+                        //         name: SCREEN_NAME,
+                        //       },
+                        //     ],
+                        //   })
                     }}
                 />
             </ButtonContainer>
@@ -64,4 +66,6 @@ const ButtonContainer = styled.View`
   position: absolute;
   bottom: 22px;
   margin-bottom: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
 `;

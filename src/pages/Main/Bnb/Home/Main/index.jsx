@@ -1,8 +1,6 @@
 import React from 'react';
-
 import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet} from 'react-native';
-
 import styled, {css} from 'styled-components/native';
 
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
@@ -13,7 +11,6 @@ import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import Button from '../../../../../components/Button';
-import CheckButton from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -41,7 +38,6 @@ const Pages = ({navigation}) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
     //console.log("스크롤 움직임",updateScroll);
   }
-
 
   return (
     <SafeView>
