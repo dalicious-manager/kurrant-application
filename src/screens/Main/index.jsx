@@ -1,7 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { useAtom } from 'jotai';
 import React from 'react';
-import { Alert, Text } from 'react-native';
+import {  Alert, Text } from 'react-native';
 
+import { isLoginLoadingAtom,    } from '../../biz/useAuth/store';
 import BackButton from '../../components/BackButton';
 import ShoppingCart from '../../components/BasketButton';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
@@ -9,9 +11,6 @@ import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/Meal
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
-import SelectUserTypePage, {
-  PAGE_NAME as SelectUserTypePageName,
-} from '../../pages/Main/Bnb/SignUp/SelectUserType';
 import EmailLoginModal, {
   PAGE_NAME as EmailLoginModalModalPageName,
 } from '../../pages/Main/Login/EmailLogin';
@@ -24,6 +23,9 @@ import ChagePassword, {
 import FindId, {
   PAGE_NAME as FindIdPageName,
 } from '../../pages/Main/Login/FindUser/FindId';
+import FindIdComplate, {
+  PAGE_NAME as FindIdComplatePageName,
+} from '../../pages/Main/Login/FindUser/FindId/FindIdComplate';
 import FindPassword, {
   PAGE_NAME as FindPasswordPageName,
 } from '../../pages/Main/Login/FindUser/FindPassword';
@@ -36,6 +38,12 @@ import SignUp, {
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
 } from '../../pages/Main/Login/SignUp/SignUpComplate';
+import MembershipIntro, {
+  PAGE_NAME as MembershipIntroPageName,
+} from '../../pages/Membership/MembershipIntro';
+import MembershipJoin, {
+  PAGE_NAME as MembershipJoinPageName,
+} from '../../pages/Membership/MembershipJoin';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 // Pages > Exchange
 // Pages > IndexCard
@@ -46,6 +54,8 @@ import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
+  const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
+  
   return (
     <MainRoot.Navigator initialRouteName={LoginMainModalPageName}>
       {/* BNB */}
@@ -165,16 +175,42 @@ const Screen = () => {
       </MainRoot.Group>
 
       
-      {/* BNB > SIGN_UP  */}
+
+      {/* MEMBERSHIP */}
       <MainRoot.Group>
         <MainRoot.Screen
-          name={SelectUserTypePageName}
-          component={SelectUserTypePage}
-          options={{headerShown: false}}
+          name={MembershipIntroPageName}
+          component={MembershipIntro}
+          options={{headerShown: false,
+            title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipJoinPageName}
+          component={MembershipJoin}
+          options={{headerShown: true,
+            title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
         />
       </MainRoot.Group>
-      {/* MODAL */}
-      {/* MODAL > LOGIN */}
+      
+      {/* LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -252,6 +288,22 @@ const Screen = () => {
           }}
         />
         <MainRoot.Screen
+          name={FindIdComplatePageName}
+          component={FindIdComplate}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
           name={FindPasswordPageName}
           component={FindPassword}
           options={{
@@ -288,7 +340,7 @@ const Screen = () => {
           name={EmailLoginModalModalPageName}
           component={EmailLoginModal}
           options={{
-            headerShown: true,
+            headerShown: !isLoginLoading,
             headerShadowVisible: false,
             title: '',
             headerTitleAlign: 'center',

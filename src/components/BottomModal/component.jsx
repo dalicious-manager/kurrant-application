@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
-import styled from 'styled-components/native';
+import styled, { useTheme } from 'styled-components/native';
 
 import Button from '../Button';
 import Typography from '../Typography';
@@ -30,7 +30,7 @@ const Component = props => {
   // const [selected, setSelected] = useState(new Map());
   
 
-
+  const themeApp = useTheme();
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const upY = useRef(new Animated.Value(0)).current;
@@ -86,15 +86,15 @@ const Component = props => {
             <DragButtonView/>
           </DragButton> */}
           <BottomSheetTitleView>
-            <BottomSheetTitle>
+            <BottomSheetTitle textColor={themeApp.colors.grey[2]}>
               {title}
             </BottomSheetTitle>
-            {description !== '' && <BottomSheetDecs>
+            {description !== '' && <BottomSheetDecs textColor={themeApp.colors.grey[3]}>
               {description}
             </BottomSheetDecs>}
           </BottomSheetTitleView>
          {!onPressEvent2 ? 
-         <Button label={buttonTitle1} size="modalFull" type={buttonType1} text={"Button09SB"} onPressEvent1={onPressEvent1}/>
+         <Button label={buttonTitle1} size="modalFull" type={buttonType1} text={"Button09SB"} onPressEvent={onPressEvent1}/>
          :
          <HalfBox>
           <ButtonMargin>

@@ -1,6 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import React,{useState,useEffect} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import {Platform,Keyboard,NativeModules,View} from 'react-native';
+import {Platform,Keyboard,NativeModules,View, Alert} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
@@ -12,8 +13,8 @@ import ProgressBar from '../../../../components/ProgressBar';
 import RefTextInput from '../../../../components/RefTextInput';
 import Typography from '../../../../components/Typography';
 import Wrapper from '../../../../components/Wrapper';
-import useKeyboardEvent from '../../../../hooks/useKeyboardEvent';
-
+import useKeyboardEvent from '../../../../hook/useKeyboardEvent';
+import { PAGE_NAME as SignUpComplatePageName } from './SignUpComplate';
 export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP';
 const { StatusBarManager } = NativeModules;
 
@@ -21,7 +22,7 @@ const Pages = () => {
 
   const auth = useAuth();
 
-
+  const navigation = useNavigation();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [progress, setProgress] = useState(1);
   const [isPhoneAuth, setPhoneAuth] = useState(false);
@@ -41,7 +42,9 @@ const Pages = () => {
   const userName = watch('name');
 
   const {joinUser} = useJoinUser();
-  
+  // navigation.navigate(SignUpComplatePageName,{
+  //   useName:"장경태"
+  // });
   const Infomation = ()=>{
     if (progress === 1) return '커런트 계정으로 사용할\n이메일 주소를 입력해 주세요.'
     if (progress === 2) return '이메일로 발송된 인증번호를\n입력해 주세요.'
@@ -63,21 +66,43 @@ const Pages = () => {
   const callMailAuth = async()=>{
     console.log("메일 인증요청");    
     try {
-      await auth.requestEmailAuth(email);
+      await auth.requestEmailAuth({ receivers: [email] }, 1);
       setProgress(progress+1);
     }catch(err){
-      console.log(err)
+      Alert.alert(
+        "메일 인증 요청 실패",
+        err.toString(),
+          [
+              {
+                  text: "확인",
+                  onPress: () => { },
+                  style: "cancel",
+    
+                },
+          ],
+      )
     }
   }
   const callPhoneAuth = async()=>{
     console.log("핸드폰 인증요청");    
     if(phoneNumber && !errors.phone ) {
       try {
-        await auth.requestPhoneAuth(phoneNumber);
+        await auth.requestPhoneAuth({to:phoneNumber}, 1);
         setProgress(progress+1);
         setPhoneAuth(true);
       }catch(err){
-        console.log(err)
+        Alert.alert(
+          "핸드폰 인증 요청 실패",
+          err.toString(),
+            [
+                {
+                    text: "확인",
+                    onPress: () => { },
+                    style: "cancel",
+      
+                  },
+            ],
+        )
       }
       
     }
@@ -92,7 +117,9 @@ const Pages = () => {
         phone : data.phone
       }
       await joinUser(datas);
-      
+      navigation.navigate(SignUpComplatePageName,{
+        useName:"장경태"
+      });
     }catch(err){
       console.log(err)
     }
@@ -157,6 +184,7 @@ const Pages = () => {
                     name="eauth" 
                     label="인증번호" 
                     placeholder="인증번호" 
+                    keyboardType='numeric'
                     autoCapitalize = 'none'
                     blurOnSubmit={false}
                     suffix={
@@ -267,6 +295,7 @@ const Pages = () => {
                   name="phone" 
                   label="휴대폰 번호" 
                   placeholder="휴대폰 번호" 
+                  keyboardType='numeric'
                   autoCapitalize = 'none'
                   blurOnSubmit={false}
                   isEditable={progress === 3 && !isPhoneAuth}
@@ -294,6 +323,7 @@ const Pages = () => {
                     name="pauth" 
                     label="인증번호" 
                     placeholder="인증번호" 
+                    keyboardType='numeric'
                     autoCapitalize = 'none'
                     blurOnSubmit={false}
                     suffix={
@@ -366,8 +396,14 @@ const Pages = () => {
                 isKeyboardActivate={keyboardStatus.isKeyboardActivate} 
                 label={progress >= 5 ? "가입완료": "다음"}
                 disabled={!isValidation} 
-                onPressEvent={()=>{
+                onPressEvent={async()=>{
                   if(progress < 5){
+                    if(progress<=2){
+                      await auth.confirmEmailAuth(emailAuth, 1);
+                    }else{
+                      await auth.confirmPhoneAuth(phoneAuth, 1);
+                    }
+                    
                     return setProgress(progress+1)
                   }                  
                   handleSubmit(onSubmit)();                  

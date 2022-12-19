@@ -76,7 +76,7 @@ export default Component;
 const Wrapper = styled(Animated.View)`
   position: absolute;
   align-items: center;
-  top: 50px;
+  top: 8px;
   width: 100%;
   border-radius: 100px;
 `;

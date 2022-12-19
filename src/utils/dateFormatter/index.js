@@ -36,8 +36,12 @@ export function formattedDate(data, delimiter = '.') {
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
+  if (delimiter === "년월일") {
+    return `${year}년 ${month}월 ${day}일`;
+  }
   return [year, month, day].join(delimiter);
 }
+
 
 export function formattedDateAndTime(data, delimiter = '.') {
   const dateTime = transDateType(data);

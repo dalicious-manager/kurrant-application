@@ -5,6 +5,7 @@ module.exports = api => {
     presets: ['module:metro-react-native-babel-preset'],
     plugins: [
       '@babel/plugin-proposal-export-namespace-from',
+      '@babel/plugin-transform-destructuring',
       'react-native-reanimated/plugin',
       [
         'module:react-native-dotenv',
@@ -46,6 +47,7 @@ module.exports = api => {
             '~pages': './src/pages',
             '~components': './src/components',
             '~hooks': './src/hooks',
+            '~hook': './src/hook',
             '~utils': './src/utils',
             '~theme': './src/theme.js',
           },

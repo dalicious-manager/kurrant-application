@@ -9,7 +9,7 @@ import Button from '../../../../../components/Button';
 import RefTextInput from '../../../../../components/RefTextInput';
 import Typography from '../../../../../components/Typography';
 import Wrapper from '../../../../../components/Wrapper';
-import useKeyboardEvent from '../../../../../hooks/useKeyboardEvent';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 import {
     PAGE_NAME as ChagePasswordPageName,
 } from '../ChagePassword';

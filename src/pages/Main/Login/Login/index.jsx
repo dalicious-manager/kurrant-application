@@ -1,5 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import {BackHandler, Dimensions,TouchableOpacity} from 'react-native';
+import { ActivityIndicator, BackHandler, Dimensions,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 
@@ -9,40 +10,59 @@ import HorizonLine from '../../../../components/HorizonLine';
 import Image from '../../../../components/Image';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
+import useToken from '../../../../hook/useToken';
+import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
+import {
+  PAGE_NAME as MembershipJoinPageName,
+} from '../../../Membership/MembershipIntro';
 import LoginMain from './LoginMain';
-
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
 const screenHeight = Dimensions.get('screen').height;
 
-const Pages = () => {  
-  const toast = Toast();
 
-  useEffect(()=>{
+const Pages = () => {  
+  const {token,isTokenLoading} = useToken();
+  const navigation = useNavigation();
+  const toast = Toast();
+  
+  useEffect(()=>{   
+    
     let timeout;
     let exitApp = false;   
      const handleBackButton = () => {
-        // 2000(2초) 안에 back 버튼을 한번 더 클릭 할 경우 앱 종료
-        if (exitApp == undefined || !exitApp) {
-            exitApp= true;
-            toast.toastEvent();
-            timeout = setTimeout(
-                () => {
-                  exitApp = false;
-                },
-                2000    // 2초
-            );
-        } else {
-            clearTimeout(timeout);
-            exitApp = false; 
-            BackHandler.exitApp();  // 앱 종료
+        if(navigation.isFocused()){// 2000(2초) 안에 back 버튼을 한번 더 클릭 할 경우 앱 종료
+          if (exitApp === undefined || !exitApp) {
+              exitApp= true;
+              toast.toastEvent();
+              timeout = setTimeout(
+                  () => {
+                    exitApp = false;
+                  },
+                  2000    // 2초
+              );
+          } else {
+              clearTimeout(timeout);
+              exitApp = false; 
+              BackHandler.exitApp();  // 앱 종료
+          }
+        }else{
+          return false;
         }
         return true;
     }
     BackHandler.addEventListener('hardwareBackPress', handleBackButton);
     return ()=>BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-  },[toast])
+  },[ navigation, toast])
 
+  useEffect(()=>{
+    if(token ){
+      navigation.navigate(SCREEN_NAME);
+    }
+  },[navigation, token])
+  if(isTokenLoading){
+    return<ActivityIndicator size="large" />
+  }
   return (
     <WrapperBox>
       <BackgroundContainer>
@@ -58,7 +78,9 @@ const Pages = () => {
           <Image imagePath={LogoImage} scale={1.0}/>
         </LogoBox>
         <LoginMain />
-        <TouchableOpacity onPress={()=>console.log("터치")}>
+        <TouchableOpacity onPress={()=>{
+          navigation.navigate(MembershipJoinPageName)
+        }}>
           <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
         </TouchableOpacity>
         <EtcSNSContainer>

@@ -9,3 +9,4 @@ export const LogoImage = require('../assets/images/logo.png');
 export const LogoBackground = require('../assets/images/loginBackground.png');
 export const SignUpComplate = require('../assets/images/signupcomplate.png');
 export const MembershipImage = require('../assets/images/kurrant-membership.png');
+export const Subtract = require('../assets/images/subtract.png');
