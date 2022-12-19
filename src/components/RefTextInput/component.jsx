@@ -79,7 +79,7 @@ const Component = forwardRef(({
   if (suffix.isNeedDelete && data) {
     suffixContent = <TouchableOpacity onPress={()=>{
       resetField(name)
-      ref.current?.focus();
+      ref?.current?.focus();
     }}><AntDesignIcon name="closecircle" /></TouchableOpacity>;
   }
 
@@ -170,8 +170,10 @@ const Component = forwardRef(({
               {isEditable && suffix.isAuth && <AuthenticationButton onPress={()=>{
                 if(suffix.authText ==='재발송'){
                   setTimer(prev => ({...prev, remainTime: 180}));
-                }
-                suffix.authPressEvent()
+                  resetField(name);
+                  return suffix.authPressEvent(true)
+                }                
+                suffix.authPressEvent(false)
               }}>
                     <Typography 
                       text={'Button10SB'} 

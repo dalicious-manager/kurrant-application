@@ -11,3 +11,4 @@ export { default as GoogleSnsIcon } from './_components/GoogleSnsIcon';
 export { default as NaverIcon } from './_components/NaverIcon';
 export { default as Octicons } from './_components/Octicons';
 export { default as MaterialIcons } from './_components/MaterialIcons';
+export { default as SocialIcons } from './_components/SocialIcons';

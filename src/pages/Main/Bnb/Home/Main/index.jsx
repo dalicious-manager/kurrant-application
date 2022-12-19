@@ -11,7 +11,6 @@ import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import Button from '../../../../../components/Button';
-import CheckButton from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -39,7 +38,6 @@ const Pages = ({navigation}) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
     //console.log("스크롤 움직임",updateScroll);
   }
-
 
   return (
     <SafeView>

@@ -12,7 +12,7 @@ import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from "../../../../../components/Typography";
-import useAnimatedHeaderTitle from "../../../../../hooks/useAnimatedHeaderTitle";
+import useAnimatedHeaderTitle from "../../../../../hook/useAnimatedHeaderTitle";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 
 export const PAGE_NAME = 'MEAL_DEATAIL_PAGE';

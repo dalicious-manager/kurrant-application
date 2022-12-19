@@ -58,7 +58,6 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
-
   if (ret.error) {
     const errors = new Error(ret.message);
     errors.name = "error";

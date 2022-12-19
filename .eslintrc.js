@@ -57,6 +57,10 @@ module.exports = {
             group: 'internal',
           },
           {
+            pattern: '~hook/**',
+            group: 'internal',
+          },
+          {
             pattern: '~theme/**',
             group: 'internal',
           },

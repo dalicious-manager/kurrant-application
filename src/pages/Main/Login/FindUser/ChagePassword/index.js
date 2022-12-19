@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Platform, Keyboard, NativeModules, Alert, View } from 'react-native';
@@ -10,7 +11,9 @@ import KeyboardButton from '../../../../../components/KeyboardButton';
 import RefTextInput from '../../../../../components/RefTextInput';
 import Typography from '../../../../../components/Typography';
 import Wrapper from '../../../../../components/Wrapper';
-import useKeyboardEvent from '../../../../../hooks/useKeyboardEvent';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import { PAGE_NAME as EmailLoginPageName } from '../../EmailLogin';
+import { PAGE_NAME as LoginPageName } from '../../Login';
 
 export const PAGE_NAME = 'P_LOGIN__MODAL__CHANGE_PASSWORD';
 /**
@@ -27,6 +30,7 @@ const inputStyle = {
 const Pages = ({ route }) => {
     const [progress, setProgress] = useState(1);
     const { type, email } = route.params;
+    const navigation = useNavigation();
     const Infomation = () => {
         if (progress === 1 && type === 'email') return '이메일로 발송된 인증번호를\n입력해주세요.'
         if (progress === 1) return 'SNS로 발송된 인증번호를\n입력해 주세요.'
@@ -52,7 +56,7 @@ const Pages = ({ route }) => {
     const callPhoneAuth = async () => {
         if (phoneNumber && !errors.phone) {
             try {
-                // await auth.requestPhoneAuth({ to: phoneNumber }, 4);
+                await auth.requestPhoneAuth({ to: phoneNumber }, 3);
                 setAuth(true);
             } catch (err) {
                 console.log(err)
@@ -61,7 +65,7 @@ const Pages = ({ route }) => {
     }
     const callMailAuth = async () => {
         try {
-            // await auth.requestEmailAuth({ receivers: [email] }, 4);
+            await auth.requestEmailAuth({ receivers: [email] }, 3);
             setAuth(true);
         } catch (err) {
             console.log(err)
@@ -75,30 +79,44 @@ const Pages = ({ route }) => {
         try {
             if (progress === 1) {
                 if (type === 'phone') {
-                    await auth.confirmPhoneAuth(authNumber, 2);
+                    await auth.confirmPhoneAuth(authNumber, 3);
                 } else {
-                    await auth.confirmEmailAuth(authNumber, 2);
+                    await auth.confirmEmailAuth(authNumber, 3);
                 }
                 return setProgress(progress + 1);
             }
-
             if (type === 'phone') {
                 const reqPhone = {
                     phone: data.phone,
                     password: data.password,
-                    passwordChecked: data.passwordChecked,
-                    type: 3
+                    passwordCheck: data.passwordChecked,
                 }
                 await auth.changePassword(reqPhone, type);
             } else {
                 const reqEmail = {
                     email: data.email,
                     password: data.password,
-                    passwordChecked: data.passwordChecked,
-                    type: 3
+                    passwordCheck: data.passwordChecked,
                 }
                 await auth.changePassword(reqEmail, type);
             }
+            navigation.reset({
+                index: 1,
+                routes: [
+                    {
+                        name: LoginPageName,
+                    },
+                    {
+                        name: EmailLoginPageName,
+                        params: {
+                            isPassword: true
+                        }
+                    },
+                ],
+            })
+            // navigation.navigate(EmailLoginPageName, {
+            //     isPassword: true
+            // })
 
         } catch (err) {
             const AlertTitle = progress === 1 ? "인증번호 오류" : "비밀번호 변경 실패"
@@ -205,7 +223,7 @@ const Pages = ({ route }) => {
                                                 {
                                                     isAuth: true,
                                                     authText: '재발송',
-                                                    authPressEvent: callPhoneAuth,
+                                                    authPressEvent: type === 'phone' ? callPhoneAuth : callMailAuth,
                                                     timer: 180,
                                                 }
                                             }
