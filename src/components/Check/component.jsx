@@ -34,7 +34,7 @@ const Component = ({
   children,
   value,
   onPressEvents=()=>{}
- }) => {
+}) => {
   const { control } = useFormContext();
   const [checked, setChecked] = useState(value || false);
   

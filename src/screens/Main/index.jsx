@@ -63,6 +63,7 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '../../pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
+
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
