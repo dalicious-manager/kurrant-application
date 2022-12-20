@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import styled, { css } from 'styled-components/native';
 
 import Checkicon from '../../assets/icons/smallCheck.svg';

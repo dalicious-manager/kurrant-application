@@ -153,7 +153,9 @@ const Pages = () => {
                 <FormWrap>
                     
                         <Form form={agreeCheck}>
-                            <Check name="agreeCheck" label="구매 조건 확인 및 결제 진행 필수 동의"/>
+                            <Check name="agreeCheck" >
+                                <Label>구매 조건 확인 및 결제 진행 필수 동의</Label>
+                            </Check>
                         </Form>
                 </FormWrap>
                 </ViewScroll>
@@ -176,7 +178,9 @@ const ViewScroll = styled.ScrollView`
 margin-bottom:35px;
 
 `;
-
+const Label = styled(Typography).attrs({ text:'Body06R' })`
+  color: ${({ theme }) => theme.colors.grey[4]};
+`;
 const BorderWrap = styled.View`
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 6px;

@@ -8,7 +8,7 @@ import styled from 'styled-components/native';
 /**
  *
  * @param {object} props
- * @param {number} props.paddingVertical
+ * @param {number} props.paddingHorizontal
  * @param {number} props.paddingTop
  * @param {object} props.children
  */

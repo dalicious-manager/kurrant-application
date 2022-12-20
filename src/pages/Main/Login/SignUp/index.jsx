@@ -88,7 +88,7 @@ const Pages = () => {
     if(phoneNumber && !errors.phone ) {
       try {
         await auth.requestPhoneAuth({to:phoneNumber}, 1);
-        setProgress(progress+1);
+        setProgress(progressed => progressed+1);
         setPhoneAuth(true);
       }catch(err){
         Alert.alert(
@@ -118,7 +118,7 @@ const Pages = () => {
       }
       await joinUser(datas);
       navigation.navigate(SignUpComplatePageName,{
-        useName:"장경태"
+        useName:data.name
       });
     }catch(err){
       console.log(err)

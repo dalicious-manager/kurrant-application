@@ -11,9 +11,6 @@ import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/Meal
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
-import SelectUserTypePage, {
-  PAGE_NAME as SelectUserTypePageName,
-} from '../../pages/Main/Bnb/SignUp/SelectUserType';
 import EmailLoginModal, {
   PAGE_NAME as EmailLoginModalModalPageName,
 } from '../../pages/Main/Login/EmailLogin';
@@ -41,7 +38,32 @@ import SignUp, {
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
 } from '../../pages/Main/Login/SignUp/SignUpComplate';
-import BnbScreen, {SCREEN_NAME as BnbScreenName } from './Bnb';
+import MembershipInfo, {
+  PAGE_NAME as MembershipInfoPageName,
+} from '../../pages/Membership/MembershipInfo';
+import MembershipUsagedetails, {
+  PAGE_NAME as MembershipUsagedetailsPageName,
+} from '../../pages/Membership/MembershipInfo/MembershipUsageDetails';
+import MembershipIntro, {
+  PAGE_NAME as MembershipIntroPageName,
+} from '../../pages/Membership/MembershipIntro';
+import MembershipJoin, {
+  PAGE_NAME as MembershipJoinPageName,
+} from '../../pages/Membership/MembershipJoin';
+import MembershipJoinComplate, {
+  PAGE_NAME as MembershipJoinComplatePageName,
+} from '../../pages/Membership/MembershipJoin/MembershipJoinComplate';
+import MembershipJoinPayments, {
+  PAGE_NAME as MembershipJoinPaymentsPageName,
+} from '../../pages/Membership/MembershipJoin/MembershipJoinPayments';
+import MembershipTerminate, {
+  PAGE_NAME as MembershipTerminatePageName,
+} from '../../pages/Membership/MembershipTerminate';
+import MembershipTerminateComplate, {
+  PAGE_NAME as MembershipTerminateComplatePageName,
+} from '../../pages/Membership/MembershipTerminate/MembershipTerminateComplate';
+import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
+
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -172,16 +194,132 @@ const Screen = () => {
       </MainRoot.Group>
 
       
-      {/* BNB > SIGN_UP  */}
+
+      {/* MEMBERSHIP */}
       <MainRoot.Group>
         <MainRoot.Screen
-          name={SelectUserTypePageName}
-          component={SelectUserTypePage}
-          options={{headerShown: false}}
+          name={MembershipIntroPageName}
+          component={MembershipIntro}
+          options={{headerShown: false,
+            title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipJoinPageName}
+          component={MembershipJoin}
+          options={{headerShown: true,
+            title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipJoinPaymentsPageName}
+          component={MembershipJoinPayments}
+          options={{headerShown: true,
+            title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipJoinComplatePageName}
+          component={MembershipJoinComplate}
+          options={{headerShown: true,
+            title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipInfoPageName}
+          component={MembershipInfo}
+          options={{headerShown: true,
+            title:'멤버십',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipUsagedetailsPageName}
+          component={MembershipUsagedetails}
+          options={{headerShown: true,
+            title:'멤버십 이용내역',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipTerminatePageName}
+          component={MembershipTerminate}
+          options={{headerShown: true,
+            title:'멤버십 해지',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipTerminateComplatePageName}
+          component={MembershipTerminateComplate}
+          options={{headerShown: true,
+            title:'멤버십 해지',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
         />
       </MainRoot.Group>
-      {/* MODAL */}
-      {/* MODAL > LOGIN */}
+      
+      {/* LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}

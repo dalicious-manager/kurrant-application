@@ -12,8 +12,10 @@ import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
 import useToken from '../../../../hook/useToken';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
+import {
+  PAGE_NAME as MembershipJoinPageName,
+} from '../../../Membership/MembershipInfo';
 import LoginMain from './LoginMain';
-
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
 const screenHeight = Dimensions.get('screen').height;
@@ -55,8 +57,15 @@ const Pages = () => {
 
   useEffect(()=>{
     if(token ){
-      navigation.navigate(SCREEN_NAME);
-    }
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: SCREEN_NAME,
+          },
+        ],
+      })
+    } 
   },[navigation, token])
   if(isTokenLoading){
     return<ActivityIndicator size="large" />
@@ -76,7 +85,9 @@ const Pages = () => {
           <Image imagePath={LogoImage} scale={1.0}/>
         </LogoBox>
         <LoginMain />
-        <TouchableOpacity onPress={()=>console.log("터치")}>
+        <TouchableOpacity onPress={()=>{
+          navigation.navigate(MembershipJoinPageName)
+        }}>
           <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
         </TouchableOpacity>
         <EtcSNSContainer>

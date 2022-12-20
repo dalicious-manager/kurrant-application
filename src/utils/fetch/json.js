@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
@@ -27,6 +28,7 @@ const buildQuery = queryObj => {
 
 async function json(url, method, options = {}) {
   console.log(options);
+
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
       throw new Error('body is empty');
@@ -34,6 +36,7 @@ async function json(url, method, options = {}) {
   }
 
   let reqUrl = apiHostUrl + url;
+
   if (options.querystring !== undefined) {
     const params = Object.assign({}, options.querystring);
     reqUrl += buildQuery(params);
@@ -49,7 +52,7 @@ async function json(url, method, options = {}) {
   console.log('fetching to:', reqUrl);
   console.log('fetching method:', method);
   console.log('fetching option:', options.body);
-
+  // throw new Error('rul : ' + reqUrl);
   let startTs = Date.now();
 
   const res = await fetch(reqUrl, {

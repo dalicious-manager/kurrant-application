@@ -1,29 +1,31 @@
-import {  useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import React from "react"
 import styled from "styled-components";
 import { useTheme } from "styled-components/native";
 
-import { SignUpComplate } from "../../../../../assets"
-import Button from "../../../../../components/Button";
-import Image from '../../../../../components/Image';
-import Typography from "../../../../../components/Typography";
-import { PAGE_NAME as LoginPage } from "../../EmailLogin";
-export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP_COMPLATE';
+import Button from "~components/Button";
+import Image from '~components/Image';
+import Typography from "~components/Typography";
+
+import { PAGE_NAME as LoginPage } from "../../../Main/Login/EmailLogin";
+
+import { MembershipJoinComplateImage } from "~assets"
+export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_COMPLATE';
 
 const Pages = ({route}) => {
     console.log(route)
-    const {useName}=route.params;
+    const {params}=route;
     const themeApp = useTheme();
     const navigation = useNavigation();
     return (
         <Conotainer>
-            <Image imagePath={SignUpComplate} scale={1.0}/>
-            <Title textColor={themeApp.colors.grey[2]}>{useName}님, 환영합니다!</Title>
-            <CaptionText textColor={themeApp.colors.grey[4]}>커런트 가입을 축하드려요. {'\n'}이제 맛있는 식사를 주문해볼까요?</CaptionText>
+            <Image imagePath={MembershipJoinComplateImage} scale={1.0}/>
+            <Title textColor={themeApp.colors.grey[2]}>{params?.useName}님, 축하드려요!</Title>
+            <CaptionText textColor={themeApp.colors.grey[4]}>멤버십 가입이 완료되었어요.{'\n'}이제 다양한 혜택을 누릴 수 있어요.</CaptionText>
             <ButtonContainer>
                 <Button
                     type='yellow'
-                    label={"시작하기"}
+                    label={"확인"}
                     onPressEvent={() => {
                         navigation.popToTop()
                         navigation.navigate(LoginPage)
