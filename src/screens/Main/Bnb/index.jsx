@@ -26,7 +26,7 @@ const BottomTab = createBottomTabNavigator();
 
 const Screen = () => {
   const theme = useTheme();
-
+  
   return (
     <BottomTab.Navigator
       initialRouteName={HomeMainPageName}

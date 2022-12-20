@@ -81,7 +81,7 @@ export const textStyles = {
     line-height: 30px;
     font-family: 'Pretendard-Regular';
 `,
-  Title02RB: css`
+  Title02SB: css`
     font-size: 22px;
     line-height: 30px;
     font-family: 'Pretendard-SemiBold';

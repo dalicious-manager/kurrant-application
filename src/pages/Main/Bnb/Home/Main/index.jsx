@@ -1,6 +1,8 @@
+
 import { useNavigation } from '@react-navigation/native';
 import { useAtom, useAtomValue } from 'jotai';
 import React, { useEffect, useRef, useState } from 'react';
+
 import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -32,6 +34,7 @@ const Pages = () => {
     let updateScroll = e.nativeEvent.contentOffset.y;
     //console.log("스크롤 움직임",updateScroll);
   }
+
 
     
     const {isUserMe, userMe} = useUserMe();

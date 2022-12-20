@@ -11,8 +11,6 @@ import {
   getLabelColor,
 } from './style';
 
-const screenWidth = Dimensions.get('window').width;
-
 /**
  * @param {object} props
  * @param {'full' | 'middle' |'half' | 'modalFull' | 'modalHalf' | 'button38' | 'button32'} props.size
@@ -58,7 +56,6 @@ const Component = ({
 export default Component;
 
 const Wrap = styled.View`
-  //${({ size }) => size === 'full' ?`width: ${screenWidth}px` : size === 'login' && `width : ${screenWidth}px`};
   align-items:center;
 
 `;

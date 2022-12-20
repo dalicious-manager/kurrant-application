@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import styled, { css } from 'styled-components/native';
 
-import Checkicon from '../../assets/icons/check.svg';
+import Checkicon from '../../assets/icons/smallCheck.svg';
 import Typography from '../Typography';
 
 
@@ -17,7 +16,7 @@ import Typography from '../Typography';
 
 /**
  * @param {object} props
- * @param {'yellow' | 'grey' | 'white'} props.type 버튼 색상
+ * @param {'yellow' | 'grey' | 'white' |'login'} props.type 버튼 색상
  * @param {string} props.name useFormContext의 name 지정
  * @param {string} props.label 간단 설명
  * @param {string} props.labelDetail 설명 상세
@@ -32,7 +31,10 @@ const Component = ({
   label,
   onPressEventViewDetail,
   labelDetail,
-  value }) => {
+  children,
+  value,
+  onPressEvents=()=>{}
+}) => {
   const { control } = useFormContext();
   const [checked, setChecked] = useState(value || false);
   
@@ -42,17 +44,18 @@ const Component = ({
         name={name}
         control={control}
         defaultValue={value || false}
-        render={({ field: { onChange } }) => {
+        render={({ field: { onChange ,value} }) => {
           const onPressEvent = () => {
-            onChange(!checked)
-              setChecked(!checked)
+            onChange(!checked);
+            setChecked(!checked);
+            onPressEvents(!checked);
           }
           return (
             <Wrap>
               <Wrapper>
                 <CheckboxWrap onPress={onPressEvent}>
-                  <Checkbox checked={checked} type={type}>
-                    <CheckIcon  checked={checked} type={type} />
+                  <Checkbox checked={value} type={type}>
+                    <CheckIcon  checked={value} type={type} />
                     {/* <FeatherIcon
                       name="check"
                       color={checked ? '#fff' : '#d4d8dd'}
@@ -61,7 +64,7 @@ const Component = ({
                   </Checkbox>
                 </CheckboxWrap>
                 <LabelWrap>
-                  <Label>{label}</Label>
+                  {children}
                 </LabelWrap>
                 {onPressEventViewDetail && (
                   <DetailWrap onPress={onPressEventViewDetail}>
@@ -96,9 +99,9 @@ const CheckboxWrap = styled.Pressable`
   margin-right: 8px;
 `;
 const Checkbox = styled.View`
-  width: 24px;
-  height: 24px;
-  border-radius: 7px;
+  width: ${({ type }) =>type ==='login' ? '18.33px':'24px'};
+  height: ${({ type }) =>type ==='login' ? '18.33px':'24px'};
+  border-radius: ${({ type }) =>type ==='login' ? '20px':'7px'};
   background-color:
         ${({ checked }) =>
     checked
@@ -106,7 +109,7 @@ const Checkbox = styled.View`
           ${({ type,theme }) => type === 'yellow' 
           ? theme.colors.yellow[500] 
           : type ==='grey' ? theme.colors.grey[2] 
-          : theme.colors.grey[0]};
+          : type ==='login' ? theme.colors.green[500] :theme.colors.grey[0]};
         `
       : css`
           ${({ type,theme }) => type === 'white' ? theme.colors.grey[0] : theme.colors.grey[7]};
@@ -117,9 +120,7 @@ const Checkbox = styled.View`
 const LabelWrap = styled.View`
   flex: 1;
 `;
-const Label = styled(Typography).attrs({ text:'Body06R' })`
-  color: ${({ theme }) => theme.colors.grey[4]};
-`;
+
 const DetailWrap = styled.Pressable`
   margin-left: auto;
   justify-content: center;
@@ -143,7 +144,7 @@ const CheckIcon = styled(Checkicon)`
              ${({ type,theme }) => type === 'yellow' 
           ? theme.colors.grey[1] 
           : type === 'grey' ? theme.colors.grey[0] 
-          : theme.colors.grey[2]};
+          : type ==='login' ? theme.colors.neutral[0] :theme.colors.grey[2]};
           `
         : css`
             ${({ type,theme }) => type === 'white' ? theme.colors.grey[7] : theme.colors.grey[0]};
