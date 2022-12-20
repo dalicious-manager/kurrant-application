@@ -16,6 +16,7 @@ import BottomModal from "../../../../components/BottomModal";
 import Check from "../../../../components/Check";
 import Form from "../../../../components/Form";
 import Image from "../../../../components/Image";
+import { PAGE_NAME as MembershipJoinComplatePageName } from "../MembershipJoinComplate";
 
 export const PAGE_NAME = "P__MEMBERSHIP__JOIN_PAYMENTS"
 const Pages= ({route})=>{
@@ -25,22 +26,31 @@ const Pages= ({route})=>{
     const [fadeIn, setFadeIn] = useState(false);
     const [rotate, setRotate] = useState('0deg');
     const [ modalVisible, setModalVisible ] = useState(false);
-    const fadeAnim = useRef(new Animated.Value(0)).current;
-    const rotateAnim = useRef(new Animated.Value(0)).current;
+    const fadeAnim = useRef(new Animated.Value(period ==='month' ? 86 :108)).current;
+    const rotateAnim = useRef(new Animated.Value(1)).current;
     const themeApp = useTheme();
     const handlePress = () => {
       Animated.timing(fadeAnim, {
-        toValue: fadeIn ? 0 : period ==='month' ?86 :108,
+        toValue: fadeIn ? period ==='month' ? 86 :108 : 0,
         duration: 300,
         useNativeDriver: false,
       }).start();
       setFadeIn(prev => !prev);
       Animated.timing(rotateAnim, {
-        toValue: fadeIn ? 0 : 1,
+        toValue: fadeIn ? 1 : 0,
         duration: 300,
         useNativeDriver: false,
       }).start();
     };
+
+    const handleEventPayments = ()=>{
+      console.log(agreeCheck.watch(agreeCheck).agreeCheck);
+      if(agreeCheck.watch(agreeCheck).agreeCheck){
+        navigation.navigate(MembershipJoinComplatePageName)
+      }else{
+
+      }        
+    }
     const ProductInfoBlock = ()=>{
       if(period === 'month'){
         return (
@@ -120,7 +130,7 @@ const Pages= ({route})=>{
                 <PaymentPriceTotalBox mb={16}>
                   <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>할인금액</PaymentPriceText>
                   <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>
-                    <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.green[500]}>0</PaymentPriceText> 원
+                    <PaymentPriceText text={'Body05R'} textColor={period === 'month' ? themeApp.colors.grey[4]:  themeApp.colors.green[500]}>0</PaymentPriceText> 원
                   </PaymentPriceText>
                 </PaymentPriceTotalBox>
                 <PaymentPriceTotalBox mb={24}>
@@ -161,7 +171,7 @@ const Pages= ({route})=>{
             </ScrollView>
             <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow'/>
             <ButtonContainer>
-              <Button type='yellow' label="결제하기"  onPressEvent={()=>console.log("결제하기")}/>
+              <Button type='yellow' label="결제하기"  onPressEvent={handleEventPayments}/>
             </ButtonContainer>
           </>
         

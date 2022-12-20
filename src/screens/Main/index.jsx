@@ -38,6 +38,12 @@ import SignUp, {
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
 } from '../../pages/Main/Login/SignUp/SignUpComplate';
+import MembershipInfo, {
+  PAGE_NAME as MembershipInfoPageName,
+} from '../../pages/Membership/MembershipInfo';
+import MembershipUsagedetails, {
+  PAGE_NAME as MembershipUsagedetailsPageName,
+} from '../../pages/Membership/MembershipInfo/MembershipUsageDetails';
 import MembershipIntro, {
   PAGE_NAME as MembershipIntroPageName,
 } from '../../pages/Membership/MembershipIntro';
@@ -50,6 +56,12 @@ import MembershipJoinComplate, {
 import MembershipJoinPayments, {
   PAGE_NAME as MembershipJoinPaymentsPageName,
 } from '../../pages/Membership/MembershipJoin/MembershipJoinPayments';
+import MembershipTerminate, {
+  PAGE_NAME as MembershipTerminatePageName,
+} from '../../pages/Membership/MembershipTerminate';
+import MembershipTerminateComplate, {
+  PAGE_NAME as MembershipTerminateComplatePageName,
+} from '../../pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 // Pages > Exchange
 // Pages > IndexCard
@@ -234,6 +246,66 @@ const Screen = () => {
           component={MembershipJoinComplate}
           options={{headerShown: true,
             title:'멤버십 가입',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipInfoPageName}
+          component={MembershipInfo}
+          options={{headerShown: true,
+            title:'멤버십',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipUsagedetailsPageName}
+          component={MembershipUsagedetails}
+          options={{headerShown: true,
+            title:'멤버십 이용내역',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipTerminatePageName}
+          component={MembershipTerminate}
+          options={{headerShown: true,
+            title:'멤버십 해지',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MembershipTerminateComplatePageName}
+          component={MembershipTerminateComplate}
+          options={{headerShown: true,
+            title:'멤버십 해지',
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerTitleStyle:{

@@ -12,3 +12,4 @@ export const MembershipImage = require('../assets/images/kurrant-membership.png'
 export const MembershipIconImage = require('../assets/images/membership-icon.png');
 export const MembershipJoinComplateImage = require('../assets/images/membership-join-complate.png');
 export const Subtract = require('../assets/images/subtract.png');
+export const Terminate = require('../assets/images/terminate.png');

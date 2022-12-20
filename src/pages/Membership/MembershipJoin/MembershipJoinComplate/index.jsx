@@ -14,13 +14,13 @@ export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_COMPLATE';
 
 const Pages = ({route}) => {
     console.log(route)
-    const {useName}=route.params;
+    const {params}=route;
     const themeApp = useTheme();
     const navigation = useNavigation();
     return (
         <Conotainer>
             <Image imagePath={MembershipJoinComplateImage} scale={1.0}/>
-            <Title textColor={themeApp.colors.grey[2]}>{useName}님, 축하드려요!</Title>
+            <Title textColor={themeApp.colors.grey[2]}>{params?.useName}님, 축하드려요!</Title>
             <CaptionText textColor={themeApp.colors.grey[4]}>멤버십 가입이 완료되었어요.{'\n'}이제 다양한 혜택을 누릴 수 있어요.</CaptionText>
             <ButtonContainer>
                 <Button

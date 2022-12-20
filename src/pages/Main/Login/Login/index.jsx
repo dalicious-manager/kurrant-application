@@ -14,7 +14,7 @@ import useToken from '../../../../hook/useToken';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
 import {
   PAGE_NAME as MembershipJoinPageName,
-} from '../../../Membership/MembershipIntro';
+} from '../../../Membership/MembershipInfo';
 import LoginMain from './LoginMain';
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -57,8 +57,15 @@ const Pages = () => {
 
   useEffect(()=>{
     if(token ){
-      navigation.navigate(SCREEN_NAME);
-    }
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: SCREEN_NAME,
+          },
+        ],
+      })
+    } 
   },[navigation, token])
   if(isTokenLoading){
     return<ActivityIndicator size="large" />
