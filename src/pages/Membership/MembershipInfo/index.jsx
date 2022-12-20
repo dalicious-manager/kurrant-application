@@ -74,8 +74,7 @@ const Pages= ()=>{
                 </SaleTextBox>                
               </InfoContainer>
             </Container>
-          </ScrollView>
-          <ButtonContainer>
+            <ButtonContainer>
             <ButtonBox>
               <Button type='yellow' label="멤버십 이용내역"  onPressEvent={()=>{
                   navigation.navigate(MembershipUsagedetailsPageName);
@@ -92,6 +91,8 @@ const Pages= ()=>{
               <TextCenterField text={'Body06R'} textColor={themeApp.colors.grey[3]}>멤버십 해지하기</TextCenterField>
             </Terminate>
           </ButtonContainer>
+          </ScrollView>
+          
       </BackGround>
   )
 }
@@ -107,7 +108,7 @@ const Container = styled.View`
   background-color: white;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
-  padding-bottom: 230px;
+  padding-bottom: 20px;
 `
 const TitleBox = styled.View`
   margin-top  : 40px;
@@ -145,8 +146,6 @@ const SaleTextBox = styled.View`
 `
 const ButtonContainer = styled.View`
   background-color: white;
-  position: absolute;
-  bottom: 0px;
   padding-bottom: 35px;
   padding-left: 20px;
   padding-right: 20px;
