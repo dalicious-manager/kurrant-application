@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useRef,useState } from "react";
-import { Image, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
 
-import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
+import Question from '../../../../../assets/icons/MealCart/question.svg';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import Count from "../../../../../components/Count";
@@ -46,6 +46,12 @@ const Pages = () => {
     const changeText = number => {
         setCount(number);
       };
+
+    const closeModal = () => {
+        setModalVisible(false);
+        setModalVisible2(false);
+        
+    };
 
     return (
         <SafeView>
@@ -103,11 +109,12 @@ const Pages = () => {
                         <PaymentText>총 상품금액</PaymentText>
                         <PaymentText>10,000 원</PaymentText>
                     </PaymentView>
-                    <PaymentView>
-                        <PaymentText>회사 지원금 사용 금액
-                            <QuestionIcon onPress={fundButton}/>
-                         </PaymentText>
-                         <PaymentText>10,000 원</PaymentText>
+                    <PaymentView >
+                        <PressableView onPress={fundButton}>
+                            <PaymentText >회사 지원금 사용 금액</PaymentText>
+                            <QuestionIcon />
+                         </PressableView>
+                            <PaymentText>10,000 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>구독 할인 금액</PaymentText>
@@ -118,9 +125,10 @@ const Pages = () => {
                         <PaymentText>0 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
-                        <PaymentText>포인트 사용금액
-                            <QuestionIcon onPress={pointButton}/>
-                        </PaymentText>
+                        <PressableView onPress={pointButton}>
+                            <PaymentText>포인트 사용금액</PaymentText>
+                            <QuestionIcon />
+                        </PressableView>
                     </PaymentView>
                     <PaymentView>
                         
@@ -142,8 +150,8 @@ const Pages = () => {
             <ButtonWrap>
                 <Button label={'총 21개 결제하기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
             </ButtonWrap>
-            <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='포인트란?' description='고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.' buttonTitle1='확인했어요' buttonType1='grey7'/>
-            <BottomModal  modalVisible={modalVisible2} setModalVisible={setModalVisible2} title='지원금이란?' description='고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.' buttonTitle1='확인했어요' buttonType1='grey7'/>
+            <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
+            <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
         </SafeView>
     )
 
@@ -157,6 +165,15 @@ flex:1;
 `;
 const ScrollViewWrap = styled.ScrollView`
   //margin:0px 28px;
+`;
+
+const PressableView = styled.Pressable`
+flex-direction:row;
+align-items:center;
+`;
+
+const QuestionIcon = styled(Question)`
+margin-left:4px;
 `;
 
 export const Wrap = styled.View`
@@ -220,6 +237,7 @@ export const PaymentView = styled.View`
 flex-direction:row;
 justify-content:space-between;
 margin:0px 28px;
+padding-bottom:16px;
 `;
 
 export const DiningName = styled(Typography).attrs({text:'CaptionR'})`
@@ -232,7 +250,7 @@ color:${props => props.theme.colors.grey[2]};
 
 export const PaymentText = styled(Typography).attrs({text:'Body05R'})`
 color:${props => props.theme.colors.grey[4]};
-padding-bottom:16px;
+//padding-bottom:16px;
 `;
 
 export const PointText = styled(Typography).attrs({text:'Body05R'})`

@@ -1,16 +1,23 @@
+// import Slider from '@react-native-community/slider';
+import {Slider} from '@miblanchard/react-native-slider';
 import { useNavigation } from '@react-navigation/native';
-import React, { useRef, forwardRef,useState } from 'react';
+import { useAtomValue } from 'jotai';
+import React, { useRef, forwardRef,useState, useEffect } from 'react';
 import {useForm} from 'react-hook-form';
-import { Image, SafeAreaView, ScrollView, Text, View, TouchableOpacity ,ImageBackground, Pressable,Dimensions} from "react-native";
+import { Image, SafeAreaView, ScrollView, Text, View, TouchableOpacity ,ImageBackground, Pressable,Dimensions, StyleSheet} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
+import useFoodDaily from '../../../../../biz/useDailyFood/hook';
+import { isUserMeAtom } from '../../../../../biz/useUserMe/store';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
-import Lable from '../../../../../components/Label';
+import Label from '../../../../../components/Label';
 import MembershipBar from '../../../../../components/MembershipBar';
 import Typography from '../../../../../components/Typography';
+import { formattedDate } from '../../../../../utils/dateFormatter';
+import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 
@@ -21,229 +28,169 @@ const screenHeight = Dimensions.get('window').height;
 const Pages = () => {
     
     const navigation = useNavigation();
-    const dinningRef = useRef();
+    const diningRef = useRef();
+
+    const [focus,setFocus] = useState(1);
+    const [touchDate, setTouchDate] = useState(null);
+    const [sliderValue, setSliderValue] = useState(1);
+    const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood} = useFoodDaily();
+    const userMembership = useAtomValue(isUserMeAtom);
     
+    const DININGTYPE = ['아침','점심','저녁'];
+    
+    const date = formattedDate(new Date());
+    // const todayMeal = mealInfo?.filter((m) => m.date === date);
+    // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
+
+    useEffect(()=>{
+        async function loadDailyFood(){
+            await dailyFood();
+        }
+
+        loadDailyFood();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+
+
+    // const dayPress = async () =>{
+    //     try {
+    //         await dailyFood();
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    // }
+    // console.log(isMorningFood)
+
     
     return (
         <SafeView>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {/* <MembershipBar/> */}
+                {userMembership[0].membership && <MembershipBar/>}
+
                 <CalendarWrap>
-                    <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'}/>
+                    <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} setTouchDate={setTouchDate} onPressEvent2/>
                 </CalendarWrap>
                 <PagerViewWrap>
                     <ProgressWrap>
-                        <View style={{alignItems:'center'}}>
-                            <View >
+                        <ProgressInner>
+                            {/* <View >
                                 <ProgressBar/>
                                 <ProgressCircle/>
-                            </View>
+                            </View> */}
+                            <Slider
+                                value={sliderValue}
+                                onValueChange={(e) => setSliderValue(...e)}
+                                minimumValue={0}
+                                maximumValue={2}
+                                maximumTrackTintColor="#343337"
+                                minimumTrackTintColor="#343337"
+                                onSlidingComplete={(e) => {diningRef.current.setPage(...e); setFocus(...e)}}
+                                step={1}
+                                trackStyle={styles.trackStyle}
+                                thumbStyle={styles.thumbStyle}
+                            />
                             <Progress>
-                                <ProgressText onPress={() => dinningRef.current.setPage(0)}>아침</ProgressText>
-                                <ProgressText onPress={() => dinningRef.current.setPage(1)}>점심</ProgressText>
-                                <ProgressText onPress={() => dinningRef.current.setPage(2)}>저녁</ProgressText>
+                                {DININGTYPE.map((btn,i) => 
+                                    <Pressable key={i} onPress={() => {diningRef.current.setPage(i);setSliderValue(i);setFocus(i)}}>
+                                        <ProgressText focus={focus} index={i}>{btn}</ProgressText>
+                                    </Pressable>
+                                )}
+                                {/* <ProgressText onPress={() => diningRef.current.setPage(0)}>아침</ProgressText>
+                                <ProgressText onPress={() => diningRef.current.setPage(1)}>점심</ProgressText>
+                                <ProgressText onPress={() => diningRef.current.setPage(2)}>저녁</ProgressText> */}
                             </Progress>
-                        </View>
+
+                        </ProgressInner>
                     </ProgressWrap>
-                    <Pager ref={dinningRef} initialPage={1}>
+                    <Pager ref={diningRef} initialPage={1}>
                         <View key="1">
-                            <Contents 
+                            {/* 아침 */}
+                            {isMorningFood?.map((m,i) => 
+                            <Contents key={i}
                             onPress={()=>{navigation.navigate(MealDetailPageName)}}>
                                 <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                    <Lable label='신라면 맵기'/>
+                                    <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
+                                    <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
+                                    <MealDsc soldOut={m.isSoldOut}>{m.description}</MealDsc>
+                                    <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
                                 </ContentsText>
+                                    {m.spicy !== null && 
+                                    <LabelWrap>
+                                        {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
+                                    </LabelWrap>
+                                    }
                                 <MealImageWrap>
+                                    {m.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
-                                        <CartIcon/>
-                                    </CartIconWrap>
+                                    
+                                    {!m.isSoldOut && (
+                                        <CartIconWrap>
+                                            <CartIcon/>
+                                        </CartIconWrap>
+                                    )}
                                 </MealImageWrap>
+                                    {m.isSoldOut && <SoldOut>품절됐어요</SoldOut>}
                             </Contents>
-                            <Contents>
-                                <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                </ContentsText>
-                                <MealImageWrap>
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
-                                        <CartIcon/>
-                                    </CartIconWrap>
-                                </MealImageWrap>
-                            </Contents>
-                            <Contents>
-                                <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                </ContentsText>
-                                <MealImageWrap>
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
-                                        <CartIcon/>
-                                    </CartIconWrap>
-                                </MealImageWrap>
-                                <View style={{backgroundColor:'gold', width:'100%',height:'100%',position:'absolute'}}/>
-                                {/* <BlurView/>
-                                <SoldOut>품절됐어요</SoldOut> */}
-                            </Contents>
+                            )}
                         </View>
                         <View key="2">
-                            <Contents 
-                            activeOpacity={1}
-                            onPress={()=>{navigation.navigate(MealDetailPageName)}}>
+                            {/* 점심 */}
+                            {isLunchFood?.map((l,i)=>
+                            <Contents key={i}>
                                 <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                    <Lable label='신라면 맵기'/>
+                                    <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
+                                    <MealName soldOut={l.isSoldOut}>{l.name}</MealName>
+                                    <MealDsc soldOut={l.isSoldOut}>{l.description}</MealDsc>
+                                    <Price soldOut={l.isSoldOut}>{withCommas(l.price)}원</Price>
                                 </ContentsText>
+                                    {l.spicy !== null && 
+                                    <LabelWrap>
+                                        <Label label={`${l.spicy}`}/>
+                                    </LabelWrap>
+                                    }
                                 <MealImageWrap>
+                                    {l.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
-                                        <CartIcon/>
-                                    </CartIconWrap>
+                                    {!l.isSoldOut && (
+                                        <CartIconWrap>
+                                            <CartIcon/>
+                                        </CartIconWrap>
+                                    )}
                                 </MealImageWrap>
+                                    {l.isSoldOut && <SoldOut>품절됐어요</SoldOut>}
                             </Contents>
-                            <Contents>
-                                <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                </ContentsText>
-                                <MealImageWrap>
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
-                                        <CartIcon/>
-                                    </CartIconWrap>
-                                </MealImageWrap>
-                            </Contents>
-                            <Contents>
-                                <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                </ContentsText>
-                                <MealImageWrap>
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
-                                        <CartIcon/>
-                                    </CartIconWrap>
-                                </MealImageWrap>
-                                <BlurView/>
-                                <SoldOut>품절됐어요</SoldOut>
-                            </Contents>
+                            
+                            )}
                         </View>
                         <View key="3">
-                            <Contents 
-                            activeOpacity={1}
+                            {/* 저녁 */}
+                            {isDinnerFood?.map((d,i) => 
+                            <Contents key={i}
                             onPress={()=>{navigation.navigate(MealDetailPageName)}}>
                                 <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                    <Lable label='신라면 맵기'/>
+                                    <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName>
+                                    <MealName soldOut={d.isSoldOut}>{d.name}</MealName>
+                                    <MealDsc soldOut={d.isSoldOut}>{d.description}</MealDsc>
+                                    <Price soldOut={d.isSoldOut}>{withCommas(d.price)}원</Price>
                                 </ContentsText>
+                                    {d.spicy !== null && 
+                                    <LabelWrap>
+                                        <Label label={`${d.spicy}`}/>
+                                    </LabelWrap>
+                                    }
                                 <MealImageWrap>
+                                    {d.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     <CartIconWrap>
                                         <CartIcon/>
                                     </CartIconWrap>
                                 </MealImageWrap>
+                                    {d.isSoldOut && <SoldOut>품절됐어요</SoldOut>}
                             </Contents>
-                            <Contents>
-                                <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                </ContentsText>
-                                <MealImageWrap>
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
-                                        <CartIcon/>
-                                    </CartIconWrap>
-                                </MealImageWrap>
-                            </Contents>
-                            <Contents>
-                                <ContentsText>
-                                    <MakersName>[폴어스]</MakersName>
-                                    <MealName>리코타 치즈 샐러드</MealName>
-                                    <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                                    <Price>8,500원</Price>
-                                </ContentsText>
-                                <MealImageWrap>
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
-                                        <CartIcon/>
-                                    </CartIconWrap>
-                                </MealImageWrap>
-                                <BlurView/>
-                                <SoldOut>품절됐어요</SoldOut>
-                            </Contents>
+                            )}
                         </View>
                     </Pager> 
                 </PagerViewWrap>
-             
-                {/* <Contents 
-                    activeOpacity={1}
-                    onPress={()=>{navigation.navigate(MealDetailPageName)}}>
-                        <ContentsText>
-                            <MakersName>[폴어스]</MakersName>
-                            <MealName>리코타 치즈 샐러드</MealName>
-                            <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                            <Price>8,500원</Price>
-                            <Lable label='신라면 맵기'/>
-                        </ContentsText>
-                        <MealImageWrap>
-                            <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                            <CartIconWrap>
-                                <CartIcon/>
-                            </CartIconWrap>
-                        </MealImageWrap>
-                    </Contents>
-                    <Contents>
-                        <ContentsText>
-                            <MakersName>[폴어스]</MakersName>
-                            <MealName>리코타 치즈 샐러드</MealName>
-                            <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                            <Price>8,500원</Price>
-                        </ContentsText>
-                        <MealImageWrap>
-                            <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                            <CartIconWrap>
-                                <CartIcon/>
-                            </CartIconWrap>
-                        </MealImageWrap>
-                    </Contents>
-                    <Contents>
-                        <ContentsText>
-                            <MakersName>[폴어스]</MakersName>
-                            <MealName>리코타 치즈 샐러드</MealName>
-                            <MealDsc>샐러드에 샐러드 없는 그런 샐러드에 리코타 치즈를 얹은 프리미엄 상품</MealDsc>
-                            <Price>8,500원</Price>
-                        </ContentsText>
-                        <MealImageWrap>
-                            <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                            <CartIconWrap>
-                                <CartIcon/>
-                            </CartIconWrap>
-                        </MealImageWrap>
-                        <BlurView/>
-                        <SoldOut>품절됐어요</SoldOut>
-                    </Contents> */}
-               
             </ScrollView>
             
             <ButtonWrap>
@@ -253,6 +200,27 @@ const Pages = () => {
         
     )
 }
+const styles = StyleSheet.create({
+    trackStyle:{
+        backgroundColor:'black',
+        width:87,
+        height:2,
+        borderRadius:50
+    },
+    thumbStyle:{
+        width:16,
+        height:16,
+        backgroundColor:'white',
+        shadowColor: "#000",
+        shadowOffset: {
+        width: 0,
+        height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    }
+});
 
 export default Pages;
 
@@ -277,6 +245,10 @@ const ProgressWrap = styled.View`
 flex-direction:row;
 align-items:center;
 justify-content:center;
+`;
+
+const ProgressInner = styled.View`
+align-items:center;
 `;
 
 const Progress = styled.View`
@@ -312,13 +284,30 @@ justify-content:space-between;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
 align-items:center;
-position:relative;
-/* padding-bottom:28px; */
+
 
 `;
 
+const BlurView = styled.View`
+position:absolute;
+width:107px;
+height:107px;
+border-radius:7px;
+left:0px;
+background-color:#ffffffCC;
+z-index:999;
+`;
+
+
+const LabelWrap = styled.View`
+position:absolute;
+bottom:12px;
+`;
+
+
 const ContentsText = styled.View`
 width:60%;
+height:107px;
 `;
 
 const MealImageWrap = styled.View`
@@ -345,18 +334,11 @@ bottom:8px;
 right:8px;
 `;
 
-const BlurView = styled.View`
-position:absolute;
-width:100%;
-height:100%;
-background-color:#ffffffCC;
-`;
 
 
 const SoldOut = styled(Typography).attrs({text:'Title04SB'})`
 position:absolute;
-top:50%;
-right:6%;
+right:15px;
 color:${props => props.theme.colors.grey[4]};
 
 `;
@@ -366,21 +348,25 @@ bottom:35px;
 margin:0px 24px;
 `;
 
+
 export const MakersName = styled(Typography).attrs({text:'Body05R'})`
-color:${props => props.theme.colors.grey[2]};
+//color:${props => props.theme.colors.grey[2]};
+color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]}
 `;
 export const MealName = styled(Typography).attrs({text:'Body05SB'})`
-color:${props => props.theme.colors.grey[2]};
+//color:${props => props.theme.colors.grey[2]};
+color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]}
 `;
 
 const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
-color:${props => props.theme.colors.grey[4]};
+//color:${props => props.theme.colors.grey[4]};
+color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]}
 `;
 
 const Price = styled(MakersName)`
-margin-bottom:6px;
+color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]}
 `;
 
 const ProgressText = styled(Typography).attrs({text:'CaptionSB'})`
-color:${props => props.theme.colors.grey[2]};
+color:${({theme,focus, index}) => focus === index ? theme.colors.grey[2] : theme.colors.grey[5]};
 `;

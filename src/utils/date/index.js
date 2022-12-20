@@ -11,10 +11,8 @@ export const dates = eachWeekOfInterval(
 ).reduce((acc,cur) =>{
     const allDays = eachDayOfInterval({
         start: cur,
-        end: addDays(cur, 6)
+        end: addDays(cur,6)
     });
-
     acc.push(allDays);
-
     return acc;
 },[]);

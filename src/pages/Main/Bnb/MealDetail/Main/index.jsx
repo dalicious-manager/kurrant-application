@@ -5,6 +5,7 @@ import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeMo
 import styled from "styled-components";
 
 import StartIcon from '../../../../../assets/icons/star.svg';
+import useFoodDetail from "../../../../../biz/useFoodDetail/hook";
 import Button from '../../../../../components/ButtonExtendable';
 import MoreButton from '../../../../../components/ButtonMore';
 import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
@@ -17,13 +18,22 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 
 export const PAGE_NAME = 'MEAL_DEATAIL_PAGE';
 
-const Pages = () =>{
-
+const Pages = () => {
+    const bodyRef = useRef();
     const navigation = useNavigation();
 
     const [focus,setFocus] = useState(false);
     const [count, setCount] = useState(1);
-    const bodyRef = useRef();
+
+    const {isFoodDetail,foodDetail} = useFoodDetail();
+    
+    useEffect(()=>{
+        async function loadFoodDetail(){
+            await foodDetail();
+        }
+        loadFoodDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
     const increasePress = () => {
         setCount(prev => Number(prev) + 1);
@@ -65,8 +75,8 @@ const Pages = () =>{
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                 <Content>
                     <View>
-                        <MakersName>일품만찬</MakersName>
-                        <MealTitle>맛있는 한식 도시락</MealTitle>
+                        <MakersName>{isFoodDetail?.makers}</MakersName>
+                        <MealTitle>{isFoodDetail?.name}</MealTitle>
                         <Line>
                             <ReviewWrap>
                                 <StartIcon/>
@@ -74,14 +84,13 @@ const Pages = () =>{
                                 <ReviewCount>(132)</ReviewCount>
                             </ReviewWrap>
                             <InformationWrap
-                            activeOpacity={1}
-                            onPress={()=>{navigation.navigate(MealInformationPageName)}}
+                            onPress={()=>{navigation.navigate(MealInformationPageName,{data:isFoodDetail?.originList})}}
                             >
                                 <InformationText>알레르기/원산지</InformationText>
                             </InformationWrap>
                         </Line>
                         <MealDsc>
-                            샤브육수, 샤브야채, 소고기, 소스4종, 칼국수, 그날의 서비수
+                            {isFoodDetail?.description}
                         </MealDsc>
                         <Label label='신라면 맵기'/>
                         <PriceTitleWrap>
@@ -224,7 +233,7 @@ align-items:center;
 margin-bottom:10px;
 `;
 
-const InformationWrap = styled.TouchableOpacity`
+const InformationWrap = styled.Pressable`
 border: 1px solid ${props => props.theme.colors.grey[7]};
 border-radius: 7px;
 padding: 5px 12px 4px 12px;

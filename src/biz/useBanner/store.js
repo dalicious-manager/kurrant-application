@@ -6,4 +6,4 @@ export const isLoadingAtom = atomWithReset(false);
 export const heroBannersAtom = atomWithReset([]);
 export const heroBuyBannersAtom = atomWithReset([]);
 export const tieBannersAtom = atomWithReset([]);
-export const weekAtom = atomWithReset(dates);
+export const weekAtom = atomWithReset(dates); // 경로 바꿔야함 

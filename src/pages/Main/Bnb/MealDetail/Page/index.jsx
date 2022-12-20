@@ -8,8 +8,9 @@ import Typography from "../../../../../components/Typography";
 import { ButtonWrap } from "../../MealCart/Main";
 
 export const PAGE_NAME = 'MEAL_DEATAIL_INFORMATION_PAGE';
-const Pages = () =>{
+const Pages = ({route}) =>{
 
+    const list = route.params.data;
     const navigation = useNavigation();
 
     const handleBackPress = () => {
@@ -29,14 +30,12 @@ const Pages = () =>{
                         <OriginText>항목</OriginText>
                         <OriginText>원산지</OriginText>
                     </TableTitle>
-                    <Table>
-                        <OriginText>감자</OriginText>
-                        <OriginText>국내산</OriginText>
-                    </Table>
-                    <Table>
-                        <OriginText>감자</OriginText>
-                        <OriginText>국내산</OriginText>
-                    </Table>
+                    {list.map((l,i) => 
+                        <Table key={i}>
+                            <OriginText>{l.name}</OriginText>
+                            <OriginText>{l.origin}</OriginText>
+                        </Table>
+                    )}
                 </View>
             </Wrap>
             <ButtonWrap>

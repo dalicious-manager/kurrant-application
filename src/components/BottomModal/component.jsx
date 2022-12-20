@@ -93,8 +93,10 @@ const Component = props => {
               {description}
             </BottomSheetDecs>}
           </BottomSheetTitleView>
-         {!onPressEvent2 ? 
-         <Button label={buttonTitle1} size="modalFull" type={buttonType1} text={"Button09SB"} onPressEvent1={onPressEvent1}/>
+         {!onPressEvent2 ?
+         <ButtonWrap>
+          <Button label={buttonTitle1} size="modalFull" type={buttonType1} text={"Button09SB"} onPressEvent={onPressEvent1}/>
+         </ButtonWrap>
          :
          <HalfBox>
           <ButtonMargin>
@@ -139,6 +141,7 @@ const BottomSheetTitleView = styled.View`
   align-items: center;
 `;
 const BottomSheetTitle = styled(Typography).attrs({text : 'Title03SB'})`
+  color:${props => props.theme.colors.grey[2]};
   margin-bottom: 6px;
   max-width:279px;
   text-align:center;
@@ -154,5 +157,9 @@ const HalfBox = styled.View`
   flex-direction:row;
   justify-content: center;
 `
+
+const ButtonWrap = styled.View`
+  margin:0px 24px;
+`;
 
 export default Component;
