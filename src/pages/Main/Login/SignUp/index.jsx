@@ -381,11 +381,34 @@ const Pages = () => {
                       type='yellow' 
                       label={progress >= 5 ? "가입완료": "다음"}
                       disabled={!isValidation}
-                      onPressEvent={()=>{                        
+                      onPressEvent={async()=>{                        
                         if(progress < 5){
-                          return setProgress(progress+1)
-                        }
-                        
+                          try {
+                            if(progress<=2){
+                              await auth.confirmEmailAuth(emailAuth, 1);
+                              return setProgress(progress+1);
+                            }else{
+                              await auth.confirmPhoneAuth(phoneAuth, 1);
+                              return setProgress(progress+1);
+                            }                      
+                            
+                          } catch (err) {
+                            Alert.alert(
+                              "인증확인 실패",
+                              err.toString(),
+                                [
+                                    {
+                                        text: "확인",
+                                        onPress: () => { },
+                                        style: "cancel",
+                          
+                                      },
+                                ],
+                            )
+                            return
+                          }
+                          
+                        }                             
                         handleSubmit(onSubmit)();
                       }}
                     />
@@ -398,13 +421,31 @@ const Pages = () => {
                 disabled={!isValidation} 
                 onPressEvent={async()=>{
                   if(progress < 5){
-                    if(progress<=2){
-                      await auth.confirmEmailAuth(emailAuth, 1);
-                    }else{
-                      await auth.confirmPhoneAuth(phoneAuth, 1);
+                    try {
+                      if(progress<=2){
+                        await auth.confirmEmailAuth(emailAuth, 1);
+                        return setProgress(progress+1);
+                      }else{
+                        await auth.confirmPhoneAuth(phoneAuth, 1);
+                        return setProgress(progress+1);
+                      }                      
+                      
+                    } catch (err) {
+                      Alert.alert(
+                        "인증확인 실패",
+                        err.toString(),
+                          [
+                              {
+                                  text: "확인",
+                                  onPress: () => { },
+                                  style: "cancel",
+                    
+                                },
+                          ],
+                      )
+                      return
                     }
                     
-                    return setProgress(progress+1)
                   }                  
                   handleSubmit(onSubmit)();                  
                 }}
