@@ -36,6 +36,9 @@ const labelWrapColor = {
     outline: css`
         border: 1px solid ${({theme}) => theme.colors.grey[6]};
         background-color: ${({theme}) => theme.colors.grey[0]};
+    `,
+    soldOut: css`
+        background-color: ${({theme}) => theme.colors.grey[6]};
     `
 
 }
@@ -62,6 +65,9 @@ const labelColor = {
     `,
     outline: css`
         color: ${({theme}) => theme.colors.grey[3]};
-    `
+    `,
+    soldOut: css`
+        color: ${({theme}) => theme.colors.grey[0]};
+ `
 
 }

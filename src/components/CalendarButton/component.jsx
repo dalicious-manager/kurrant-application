@@ -7,22 +7,25 @@ import warnOnce from 'react-native/Libraries/Utilities/warnOnce';
 import styled from 'styled-components';
 
 import { weekAtom } from '../../biz/useBanner/store';
-import { formattedDate, formattedDateAndDay, formattedDateBtn } from '../../utils/dateFormatter';
+import { formattedDateBtn, formattedWeekDate } from '../../utils/dateFormatter';
 import Typography from '../Typography';
 
-const Component = ({pager}) =>{
+const Component = ({
+    pager,
+    buyMeal,
+    orderMealList
+}) =>{
 
     const [weekly,] = useAtom(weekAtom);
     
-    const data = weekly.map((w) => {
+    const btn = weekly.map((w) => {
         const a = formattedDateBtn(w[0])
         const b = formattedDateBtn(w[6])
         const result = ( a+ ' - ' +b)
-        
         return result
     });
-    data[0] = '이번주';
-    data[1] = '다음주';
+    btn[0] = '이번주';
+    btn[1] = '다음주';
 
     const [checked,setChecked] = useState(0);
     
@@ -33,6 +36,27 @@ const Component = ({pager}) =>{
     const pagerPress = (idx) => {
         pager.current.setPage(idx)
     }
+
+    const start = weekly.map((s) => {
+        const startData = formattedWeekDate(s[0]);
+        return (
+            startData
+        )
+    });
+
+    const end = weekly.map((e) => {
+        const endData =  formattedWeekDate(e.slice(-1)[0]);
+        return (
+            endData
+        )
+    });
+
+    // console.log(startDate[0],endDate[0])
+    const mealPress = (startDate,endDate) => {
+       console.log('시작',startDate, '끝',endDate)
+    }
+
+   
     return (
         <SafeAreaView>
         <Wrap horizontal={true} showsHorizontalScrollIndicator={false} >
@@ -49,14 +73,16 @@ const Component = ({pager}) =>{
                 <Text>다다다음주</Text>
             </Btn> */}
           
-            {data.map((week,idx) => 
+            {btn.map((week,idx) => 
                 <Btn key={idx} 
                 idx={idx}
-                onPress={()=> {pagerPress(idx);checkedPress(idx)}}
+                onPress={()=> {pagerPress(idx);checkedPress(idx);mealPress(start[idx],end[idx])}}
                 checked={checked}
                 >
-                <WeekText checked={checked} idx={idx}>{week}</WeekText>
-            </Btn>)}
+                    <WeekText checked={checked} idx={idx}>{week}</WeekText>
+                </Btn>
+                )}
+           
         </Wrap>
         </SafeAreaView>
 

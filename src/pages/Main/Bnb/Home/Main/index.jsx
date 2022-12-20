@@ -1,4 +1,8 @@
-import React from 'react';
+
+import { useNavigation } from '@react-navigation/native';
+import { useAtom, useAtomValue } from 'jotai';
+import React, { useEffect, useRef, useState } from 'react';
+
 import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -10,41 +14,58 @@ import CatorIcon from '../../../../../assets/icons/Home/cator.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
+import useOrderMeal from '../../../../../biz/useOrderMeal';
+import { isOrderMealAtom } from '../../../../../biz/useOrderMeal/store';
+import useUserMe from '../../../../../biz/useUserMe';
+import { isUserMeAtom } from '../../../../../biz/useUserMe/store';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
+import { formattedDate } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
+import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 
-// const todos = [
-//   { id: 1, text: '샤워하기' },
-//   { id: 2, text: '기술 공부하기'},
-//   { id: 3, text: '독서하기' },
-//   { id: 4, text: '샤워하기' },
-//   { id: 5, text: '기술 공부하기' },
-//   { id: 6, text: '독서하기' },
-//   { id: 7, text: '샤워하기' },
-//   { id: 8, text: '기술 공부하기' },
-//   { id: 9, text: '독서하기' },
-//   { id: 10, text: '샤워하기'},
-//   { id: 11, text: '기술 공부하기' },
-//   { id: 12, text: '독서하기' },
-// ];
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
-const screenWidth = Dimensions.get('window').width;
+const Pages = () => {
 
-const Pages = ({navigation}) => {
+  const navigation = useNavigation();
   const test = (e) => {
     let updateScroll = e.nativeEvent.contentOffset.y;
     //console.log("스크롤 움직임",updateScroll);
   }
 
+
+    
+    const {isUserMe, userMe} = useUserMe();
+    const mealInfo = useAtomValue(isOrderMealAtom);
+    const [data,setData] = useState(null);
+    
+  useEffect(()=>{
+
+    async function loadUser(){
+      await userMe();
+    }
+    loadUser();
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+
+
+  const userName = isUserMe?.[0].name;
+  const userSpot = isUserMe?.[0].spot;
+
+  const date = formattedDate(new Date());
+  const todayMeal = mealInfo?.filter((m) => m.date === date);
+
+
   return (
     <SafeView>
+      
       <Wrap>
         <BarWrap>
           <SpotName>
-          <SpotNameText>팁스타운 1층</SpotNameText>
+          <SpotNameText>{userSpot}</SpotNameText>
           <ArrowIcon/>
           </SpotName>
           <Icons>
@@ -54,20 +75,47 @@ const Pages = ({navigation}) => {
         </BarWrap>
       </Wrap>
       <ScrollView onScroll={test} scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
-        <LargeTitle>김달리님 안녕하세요!</LargeTitle>
-  
+        <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
+        
         <MainWrap>
-          {/* 식사 없을시 */}
+          {todayMeal?.length === 0 ? (
           <NoMealInfo>
             <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
-          </NoMealInfo>
+          </NoMealInfo>  
+        ) : todayMeal?.map(m => {
+            return (
+              <React.Fragment key={m.id}>
+                {m.orderItemDtoList.map(meal => {
+                  return (
+                    <MealInfoWrap key={meal.name}>
+                    <MealInfo >
+                      <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                        <MealText>
+                          <View>
+                            <DiningType>{meal.diningType}</DiningType>
+                            <View>
+                              <MealTxt>{meal.name}</MealTxt>
+                            </View>
+                          </View>
+                          <MealCount>
+                            <GreyTxt>{meal.count}개</GreyTxt>
+                          </MealCount>
+                        </MealText>
+                    </MealInfo>
+                    </MealInfoWrap>
+                  )
+                })}
+              </React.Fragment>
+              
+            )
+          }) }
           {/* 메뉴 수령 그림자 styles.shadow */}
           <MealInfoWrap style={styles.shadow}>
             <MealInfo>
               <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
               <MealText>
                 <View>
-                  <CaptionTitle>점심</CaptionTitle>
+                  <DiningType>점심</DiningType>
                   <View>
                     <MealTxt>훈제오리 애플시나몬 샐러드(L)</MealTxt>
                   </View>
@@ -90,6 +138,7 @@ const Pages = ({navigation}) => {
               </MealCheckButtonText>
             </MealCheckButton>
           </MealCheckWrap>
+
          <Wrap>
          <MainWrap>
           <MealCalendar>
@@ -97,7 +146,7 @@ const Pages = ({navigation}) => {
               <CalendarIcon/>
               <TitleText>식사일정</TitleText>
             </MealCalendarTitle>
-            <Calendar/>
+            <Calendar setData={setData} onPressEvent={()=>navigation.navigate(MealMainPageName)}/>
           </MealCalendar>
           <MenbershipBanner>
             <MembershipImage source={require('../../../../../assets/images/membership.png')} resizeMode='stretch'/>
@@ -142,9 +191,6 @@ const Pages = ({navigation}) => {
           <Button label={'식사 구매하기'} type={'yellow'} icon={'plus'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
       </ButtonWrap>
       
-        
-        
-        
     </SafeView>
   )
 };
@@ -266,7 +312,8 @@ const MealCount = styled.View`
 
 const MealCalendar = styled.View`
 ${BoxWrap};
-height:128px;
+height:130px;
+
 //padding:15px 16px;
 
 `;
@@ -387,7 +434,7 @@ const SpotNameText = styled(Typography).attrs({text:'BottomButtonSB'})`
 color:${props => props.theme.colors.grey[2]};
 `;
 
-const CaptionTitle = styled(Typography).attrs({text:'CaptionSB'})`
+const DiningType = styled(Typography).attrs({text:'CaptionSB'})`
 color:${props => props.theme.colors.grey[2]};
 `;
 

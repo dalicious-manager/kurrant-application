@@ -85,6 +85,13 @@ export function formattedDateBtn(data) {
   return month + '월' + day + '일'
 }
 
+export function formattedWeekDate(data,delimiter = '-') {
+  const dateTime = transDateType(data);
+  const year = dateTime.getFullYear();
+  const month = leftPad(dateTime.getMonth() + 1);
+  const day = leftPad(dateTime.getDate());
+  return `${[year, month, day].join(delimiter)}`
+}
 // export function daysLeft(endDate) {
 //   const dayNow = new Date();
 
