@@ -1,4 +1,4 @@
-package com.gdacapp.newarchitecture.modules;
+package com.kurrant.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
