@@ -2,7 +2,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useAtom, useAtomValue } from 'jotai';
 import React, { useEffect, useRef, useState } from 'react';
-
 import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -110,7 +109,7 @@ const Pages = () => {
             )
           }) }
           {/* 메뉴 수령 그림자 styles.shadow */}
-          <MealInfoWrap style={styles.shadow}>
+          {/* <MealInfoWrap style={styles.shadow}>
             <MealInfo>
               <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
               <MealText>
@@ -124,11 +123,11 @@ const Pages = () => {
                   <GreyTxt>2개</GreyTxt>
                 </MealCount>
               </MealText>
-          </MealInfo>
-          </MealInfoWrap> 
+            </MealInfo>
+          </MealInfoWrap>  */}
         </MainWrap>  
         {/* 오늘의 식사 시간 지나면 나오는 View */}
-          <MealCheckWrap>
+          {/* <MealCheckWrap>
             <MealCheckText>
               메뉴 확인 후 수령하셨나요?
             </MealCheckText>
@@ -137,7 +136,7 @@ const Pages = () => {
                 네, 확인했어요
               </MealCheckButtonText>
             </MealCheckButton>
-          </MealCheckWrap>
+          </MealCheckWrap> */}
 
          <Wrap>
          <MainWrap>
@@ -236,6 +235,7 @@ align-items:center;
 `;
 
 const SafeView = styled.SafeAreaView`
+flex:1;
 background-color:${props => props.theme.colors.grey[8]};
 `;
 
@@ -393,7 +393,7 @@ align-items:center;
 
 const ButtonWrap = styled.View`
 position:absolute;
-bottom:55px;
+bottom:17px;
 margin:0px 24px;
 
 

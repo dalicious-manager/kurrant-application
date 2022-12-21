@@ -17,7 +17,8 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
-//  const {data} = route.params;
+  const {data} = route.params;
+
   const navigation = useNavigation();
   const mealInfo = useAtomValue(isOrderMealAtom);
 

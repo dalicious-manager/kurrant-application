@@ -321,7 +321,7 @@ const Screen = () => {
       
       {/* LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <MainRoot.Screen
+        {/* <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
@@ -331,7 +331,7 @@ const Screen = () => {
             headerTransparent:true,
             title: '',
           }}
-        />
+        /> */}
         <MainRoot.Screen
           name={SignUpPageName}
           component={SignUp}

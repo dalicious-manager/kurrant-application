@@ -38,5 +38,6 @@ const Wrap = styled.View`
 ${({ type }) => getLabelWrapColor(type)};
 border-radius:4px;
 padding:2px 4px;
+align-self:flex-start;
 `;
 
