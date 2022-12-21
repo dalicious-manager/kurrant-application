@@ -114,12 +114,13 @@ const Pages = () => {
                                     <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
                                     <MealDsc soldOut={m.isSoldOut}>{m.description}</MealDsc>
                                     <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
-                                </ContentsText>
                                     {m.spicy !== null && 
                                     <LabelWrap>
                                         {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
                                     </LabelWrap>
                                     }
+                                </ContentsText>
+                                    
                                 <MealImageWrap>
                                     {m.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
@@ -145,12 +146,13 @@ const Pages = () => {
                                     <MealName soldOut={l.isSoldOut}>{l.name}</MealName>
                                     <MealDsc soldOut={l.isSoldOut}>{l.description}</MealDsc>
                                     <Price soldOut={l.isSoldOut}>{withCommas(l.price)}원</Price>
-                                </ContentsText>
                                     {l.spicy !== null && 
                                     <LabelWrap>
                                         <Label label={`${l.spicy}`}/>
                                     </LabelWrap>
                                     }
+                                </ContentsText>
+                                    
                                 <MealImageWrap>
                                     {l.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
@@ -175,13 +177,15 @@ const Pages = () => {
                                     <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName>
                                     <MealName soldOut={d.isSoldOut}>{d.name}</MealName>
                                     <MealDsc soldOut={d.isSoldOut}>{d.description}</MealDsc>
-                                    <Price soldOut={d.isSoldOut}>{withCommas(d.price)}원</Price>
-                                </ContentsText>
                                     {d.spicy !== null && 
-                                    <LabelWrap>
-                                        <Label label={`${d.spicy}`}/>
-                                    </LabelWrap>
+                                        <LabelWrap>
+                                            <Label label={`${d.spicy}`}/>
+                                        </LabelWrap>
                                     }
+                                    <Price soldOut={d.isSoldOut}>{withCommas(d.price)}원</Price>
+                                    
+                                </ContentsText>
+                                    
                                 <MealImageWrap>
                                     {d.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
@@ -304,14 +308,12 @@ z-index:999;
 
 
 const LabelWrap = styled.View`
-position:absolute;
-bottom:12px;
+    margin-top: 6px;
 `;
 
 
 const ContentsText = styled.View`
 width:60%;
-height:107px;
 `;
 
 const MealImageWrap = styled.View`
