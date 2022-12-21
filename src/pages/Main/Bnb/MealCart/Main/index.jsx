@@ -15,10 +15,11 @@ export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
 
     const navigation = useNavigation();
-
+    const bodyRef = useRef();
+    
     const [focus,setFocus] = useState(false);
     const [count, setCount] = useState(1);
-    const bodyRef = useRef();
+    
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
 

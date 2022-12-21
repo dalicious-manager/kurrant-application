@@ -92,10 +92,12 @@ const Pages = () => {
                         <MealDsc>
                             {isFoodDetail?.description}
                         </MealDsc>
-                        <Label label='신라면 맵기'/>
+                        <Label label={`${isFoodDetail?.spicy}`}/>
                         <PriceTitleWrap>
                             <PriceTitle>최종 판매가</PriceTitle>
-                            <Modal/>
+                            <ModalWrap>
+                                <Modal/>
+                            </ModalWrap>
                         </PriceTitleWrap>
                         <PriceWrap>
                             <Percent>20%</Percent>
@@ -286,6 +288,10 @@ const KeypadInput= styled.View`
   
 `;
 
+const ModalWrap = styled.View`
+margin-left:2px;
+width:20px;
+`;
 const MakersName = styled(Typography).attrs({text:'Body06SB'})`
 color:${props => props.theme.colors.grey[2]};
 `;
@@ -311,6 +317,7 @@ color:${props => props.theme.colors.grey[3]};
 
 const MealDsc = styled(Typography).attrs({text:'Body06R'})`
 color:${props => props.theme.colors.grey[4]};
+margin-bottom:8px;
 `;
 
 const PriceTitle = styled(Typography).attrs({text:'CaptionR'})`

@@ -13,7 +13,7 @@ export async function FoodDetail(data,option,foodId){
             description:'샤브육수,샤브야채,소고기,소스,칼국수,그날의 서비스',
             diningType:'점심',
             img:'',
-            spicy:'',
+            spicy:'불닭볶음면면',
             originList:[{name:'감자',origin:'국내산'},{name:'고구마',origin:'국내산'}]
         }
     }

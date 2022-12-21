@@ -51,7 +51,6 @@ const Pages = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
-
     // const dayPress = async () =>{
     //     try {
     //         await dailyFood();
@@ -107,7 +106,9 @@ const Pages = () => {
                             {/* 아침 */}
                             {isMorningFood?.map((m,i) => 
                             <Contents key={i}
-                            onPress={()=>{navigation.navigate(MealDetailPageName)}}>
+                            disabled={m.isSoldOut}
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}
+                            >
                                 <ContentsText>
                                     <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
                                     <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
@@ -124,7 +125,7 @@ const Pages = () => {
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     
                                     {!m.isSoldOut && (
-                                        <CartIconWrap>
+                                        <CartIconWrap onPress={()=>{alert('장바구니임')}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
@@ -136,7 +137,9 @@ const Pages = () => {
                         <View key="2">
                             {/* 점심 */}
                             {isLunchFood?.map((l,i)=>
-                            <Contents key={i}>
+                            <Contents key={i}
+                            disabled={l.isSoldOut}
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
                                     <MealName soldOut={l.isSoldOut}>{l.name}</MealName>
@@ -152,7 +155,7 @@ const Pages = () => {
                                     {l.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     {!l.isSoldOut && (
-                                        <CartIconWrap>
+                                        <CartIconWrap onPress={()=>{alert('장바구니임')}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
@@ -166,7 +169,8 @@ const Pages = () => {
                             {/* 저녁 */}
                             {isDinnerFood?.map((d,i) => 
                             <Contents key={i}
-                            onPress={()=>{navigation.navigate(MealDetailPageName)}}>
+                            disabled={d.isSoldOut}
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName>
                                     <MealName soldOut={d.isSoldOut}>{d.name}</MealName>
@@ -181,7 +185,7 @@ const Pages = () => {
                                 <MealImageWrap>
                                     {d.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap>
+                                    <CartIconWrap onPress={()=>{alert('장바구니임')}}>
                                         <CartIcon/>
                                     </CartIconWrap>
                                 </MealImageWrap>
@@ -321,7 +325,7 @@ height:107px;
 border-radius:7px;
 `;
 
-const CartIconWrap = styled.View`
+const CartIconWrap = styled.Pressable`
 width:40px;
 height:40px;
 background:rgba(255, 255, 255, 0.7);
