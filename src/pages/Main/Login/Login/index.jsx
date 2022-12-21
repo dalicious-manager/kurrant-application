@@ -14,7 +14,7 @@ import useToken from '../../../../hook/useToken';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
 import {
   PAGE_NAME as MembershipJoinPageName,
-} from '../../../Membership/MembershipInfo';
+} from '../../../Membership/MembershipJoin';
 import LoginMain from './LoginMain';
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
