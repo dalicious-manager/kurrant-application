@@ -84,7 +84,18 @@ const Pages = () => {
     const token = await login();
     
     setResult(JSON.stringify(token));
-    console.log(JSON.stringify(token))
+    Alert.alert(
+      "로그인 성공",
+      JSON.stringify(token),
+        [
+            {
+                text: "확인",
+                onPress: () => { },
+                style: "cancel",
+  
+              },
+        ],
+    )
   };
   
   const signOutWithKakao = async () => {
