@@ -73,7 +73,7 @@ const Component = ({
     <React.Fragment>
      {BooleanValue  ? <Button pager={pager}  title="버튼"/> : <></>}
      
-     <PagerViewWrap ref={pager} initialPage={0}>
+     <PagerViewWrap ref={pager} initialPage={0} pageMargin={22}>
     {weekly.map((week,i) => {
         return (
             <View key={i}>

@@ -7,7 +7,7 @@ import Button from "../../../../../components/Button";
 import Typography from "../../../../../components/Typography";
 import { ButtonWrap } from "../../MealCart/Main";
 
-export const PAGE_NAME = 'MEAL_DEATAIL_INFORMATION_PAGE';
+export const PAGE_NAME = 'MEAL_DETAIL_INFORMATION_PAGE';
 const Pages = ({route}) =>{
 
     const list = route.params.data;

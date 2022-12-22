@@ -13,6 +13,8 @@ import CatorIcon from '../../../../../assets/icons/Home/cator.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
+import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
+import {weekAtom} from '../../../../../biz/useBanner/store';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import { isOrderMealAtom } from '../../../../../biz/useOrderMeal/store';
 import useUserMe from '../../../../../biz/useUserMe';
@@ -20,7 +22,7 @@ import { isUserMeAtom } from '../../../../../biz/useUserMe/store';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
-import { formattedDate } from '../../../../../utils/dateFormatter';
+import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 
@@ -34,12 +36,29 @@ const Pages = () => {
     //console.log("스크롤 움직임",updateScroll);
   }
 
-
-    
+    const weekly = useAtomValue(weekAtom);
     const {isUserMe, userMe} = useUserMe();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [data,setData] = useState(null);
-    
+
+
+    const start = weekly.map((s) => {
+      const startData = formattedWeekDate(s[0]);
+      return (
+          startData
+      )
+  });
+
+  const end = weekly.map((e) => {
+      const endData =  formattedWeekDate(e.slice(-1)[0]);
+      return (
+          endData
+      )
+  });
+
+  
+
+  
   useEffect(()=>{
 
     async function loadUser(){
@@ -152,7 +171,7 @@ const Pages = () => {
             <MembershipText>멤버십 가입하고 <PointText>20%할인</PointText> 받기</MembershipText>
           </MenbershipBanner>
           
-          <CatorWrap>
+          {/* <CatorWrap>
             <Cator>
               <CatorIcon/>
               <TitleText>케이터링</TitleText>
@@ -181,13 +200,13 @@ const Pages = () => {
               <Count>2</Count>
               <CountText>건</CountText>
             </CountWrap>
-          </MarketWrap>
+          </MarketWrap> */}
         </MainWrap>
         </Wrap>   
           </ScrollView>
         
       <ButtonWrap>
-          <Button label={'식사 구매하기'} type={'yellow'} icon={'plus'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
+          <Button label={'식사 구매하기'}  type={'yellow'} icon={'plus'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
       </ButtonWrap>
       
     </SafeView>
