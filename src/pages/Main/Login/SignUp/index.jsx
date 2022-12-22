@@ -199,12 +199,12 @@ const Pages = () => {
                       {
                         required: '필수 입력 항목 입니다.',                        
                         minLength:{
-                          value: 8,
-                          message: '이메일로 발송된 8자리 인증번호를 입력해 주세요.'
+                          value: 6,
+                          message: '이메일로 발송된 6자리 인증번호를 입력해 주세요.'
                         },
                         maxLength:{
-                          value: 8,
-                          message: '이메일로 발송된 8자리 인증번호를 입력해 주세요.'
+                          value: 6,
+                          message: '이메일로 발송된 6자리 인증번호를 입력해 주세요.'
                         },
                       }
                     }
@@ -338,12 +338,12 @@ const Pages = () => {
                       {
                         required: '필수 입력 항목 입니다.',                        
                         minLength:{
-                          value: 8,
-                          message: '휴대폰으로 발송된 8자리 인증번호를 입력해주세요.'
+                          value: 6,
+                          message: '휴대폰으로 발송된 6자리 인증번호를 입력해주세요.'
                         },
                         maxLength:{
-                          value: 8,
-                          message: '휴대폰으로 발송된 8자리 인증번호를 입력해주세요.'
+                          value: 6,
+                          message: '휴대폰으로 발송된 6자리 인증번호를 입력해주세요.'
                         },
                       }
                     }

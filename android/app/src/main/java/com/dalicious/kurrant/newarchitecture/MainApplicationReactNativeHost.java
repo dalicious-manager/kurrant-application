@@ -1,4 +1,4 @@
-package com.gdacapp.newarchitecture;
+package com.dalicious.kurrant.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.gdacapp.BuildConfig;
-import com.gdacapp.newarchitecture.components.MainComponentsRegistry;
-import com.gdacapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.dalicious.kurrant.BuildConfig;
+import com.dalicious.kurrant.newarchitecture.components.MainComponentsRegistry;
+import com.dalicious.kurrant.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
