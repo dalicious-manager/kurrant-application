@@ -68,6 +68,7 @@ const Wrapper = styled.Pressable`
   align-items:center;
   flex-direction:row;
   justify-content:center;
+
 `;
 
 const IconWrap = styled.View`
@@ -79,6 +80,7 @@ export const LabelWrap = styled.View`
   justify-content:center;
   align-items: center;
   width: 100%;
+  
   
 `;
 

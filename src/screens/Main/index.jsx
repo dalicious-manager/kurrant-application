@@ -110,14 +110,16 @@ const Screen = () => {
           name={MealDetailPageName}
           component={MealDetail}
           options={{headerShown: true,
+            
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
-            headerRight: () => <ShoppingCart/>
+            
+            // headerLeft: () => <BackButton />,
+            // headerRight: () => <ShoppingCart/>
           }}
         />
       </MainRoot.Group>
@@ -321,7 +323,7 @@ const Screen = () => {
       
       {/* LOGIN */}
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        {/* <MainRoot.Screen
+        <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
@@ -331,7 +333,7 @@ const Screen = () => {
             headerTransparent:true,
             title: '',
           }}
-        /> */}
+        />
         <MainRoot.Screen
           name={SignUpPageName}
           component={SignUp}

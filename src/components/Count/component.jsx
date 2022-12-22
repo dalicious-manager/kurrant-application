@@ -27,7 +27,7 @@ const Component = ({
         <PressableView onPress={decreasePress}>
           <MinusIcon />
         </PressableView>
-          <Text onPress={onPressEvent}>
+          <Text onPress={onPressEvent} style={{backgroundColor:'gold'}}>
               {count}
           </Text>
           <PressableView onPress={increasePress}>
