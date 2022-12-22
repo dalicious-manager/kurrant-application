@@ -9,16 +9,19 @@ const useOrderMeal = () => {
     const [isOrderMorning,setOrderMorning] = useAtom(isOrderMorningAtom);
     const [isOrderLunch,setOrderLunch] = useAtom(isOrderLunchAtom);
     const [isOrderDinner,setOrderDinner] = useAtom(isOrderDinnerAtom);
-    const orderMeal = async () => {
+    console.log(isOrderMeal,'dd')
+    const orderMeal = async (startdate,enddate) => {
 
         try {
-            const res = await Fetch.orderMeal();
+            const res = await Fetch.orderMeal(
+                startdate,enddate
+            );
             setOrderMeal(res.orderFood);
             setOrderMorning(res.orderFood.map(m => m.orderItemDtoList.filter(f => f.diningType === '아침')));
             setOrderLunch(res.orderFood.map(m => m.orderItemDtoList.filter(f => f.diningType === '점심')));
             setOrderDinner(res.orderFood.map(m => m.orderItemDtoList.filter(f => f.diningType === '저녁')));
         } catch(err){
-            throw err;
+            console.log(err)
         }
     };
 

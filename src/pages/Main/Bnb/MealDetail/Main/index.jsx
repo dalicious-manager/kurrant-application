@@ -1,11 +1,13 @@
 
 import { useNavigation } from "@react-navigation/native";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeModules, Animated,ScrollView, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView} from "react-native";
 import styled from "styled-components";
 
 import StartIcon from '../../../../../assets/icons/star.svg';
 import useFoodDetail from "../../../../../biz/useFoodDetail/hook";
+import BackButton from "../../../../../components/BackButton";
+import ShoppingCart from "../../../../../components/BasketButton";
 import Button from '../../../../../components/ButtonExtendable';
 import MoreButton from '../../../../../components/ButtonMore';
 import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
@@ -13,10 +15,9 @@ import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from "../../../../../components/Typography";
-import useAnimatedHeaderTitle from "../../../../../hook/useAnimatedHeaderTitle";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 
-export const PAGE_NAME = 'MEAL_DEATAIL_PAGE';
+export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 
 const Pages = () => {
     const bodyRef = useRef();
@@ -24,8 +25,10 @@ const Pages = () => {
 
     const [focus,setFocus] = useState(false);
     const [count, setCount] = useState(1);
-
+    const [scroll,setScroll] = useState(0);
     const {isFoodDetail,foodDetail} = useFoodDetail();
+    
+    const headerTitle = isFoodDetail?.name;
     
     useEffect(()=>{
         async function loadFoodDetail(){
@@ -34,6 +37,20 @@ const Pages = () => {
         loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
+   
+    useLayoutEffect(()=>{
+        navigation.setOptions({   
+            headerTransparent: true,
+            headerStyle: {
+                backgroundColor:`${scroll < 180 ? 'transparent' : 'white'}`
+              },
+            headerTitle:`${scroll > 180 ? `${headerTitle}`: ''}`,
+            headerLeft: () => (scroll > 180 ? <BackButton color={'#343337'}/> : <BackButton color={'white'}/>),
+            headerRight: () => (scroll > 180 ? <ShoppingCart color={'#343337'}/> : <ShoppingCart color={'white'}/>)
+          });
+
+    },[headerTitle, navigation, scroll]);
+
 
     const increasePress = () => {
         setCount(prev => Number(prev) + 1);
@@ -42,12 +59,11 @@ const Pages = () => {
         setCount(prev => (prev <= 1 ? 1 : prev - 1));
       };
 
-    const { scrollY } = useAnimatedHeaderTitle({ title: '이름', triggerPoint: 30 });
-
-    const handleScroll = Animated.event(
-        [ { nativeEvent: { contentOffset: { y: scrollY } } } ], 
-        { useNativeDriver: false }
-    )
+    const handleScroll = (e) => {
+        const scrollY =  e.nativeEvent.contentOffset.y;
+        setScroll(scrollY);
+        ;
+    }
 
     const focusPress = () => {
         setFocus(true);
@@ -61,17 +77,19 @@ const Pages = () => {
       };
 
     const PRICE = 7500;
-    let result = PRICE.toLocaleString('ko-KR')
+    let result = PRICE.toLocaleString('ko-KR');
 
     return (
-        <Wrap >
+        <>
+        {/* <Wrap > */}
             <ScrollView
              showsVerticalScrollIndicator={false}
-             onScroll = { handleScroll }
+             onScroll = { (e) => handleScroll(e) }
              scrollEventThrottle={16}
+             style={{backgroundColor:'white'}}
             >
                 <View>
-                    <StatusBar barStyle='light-content'/>
+                    {scroll > 180 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                 <Content>
                     <View>
@@ -200,9 +218,9 @@ const Pages = () => {
                 </ButtonWrap>}
                 {/* </KeyboardAvoidingView> */}
                 
-        </Wrap>
+         {/* </Wrap> */}
                
-        
+        </>
     )
 }
 export default Pages;

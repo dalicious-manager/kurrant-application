@@ -67,7 +67,7 @@ const Pages = () => {
     console.log("메일 인증요청");    
     try {
       await auth.requestEmailAuth({ receivers: [email] }, 1);
-      setProgress(progress+1);
+      if(progress < 2) setProgress(progressed => progressed+1);
     }catch(err){
       Alert.alert(
         "메일 인증 요청 실패",
@@ -88,7 +88,7 @@ const Pages = () => {
     if(phoneNumber && !errors.phone ) {
       try {
         await auth.requestPhoneAuth({to:phoneNumber}, 1);
-        setProgress(progressed => progressed+1);
+        if (progress < 4) setProgress(progressed => progressed+1);
         setPhoneAuth(true);
       }catch(err){
         Alert.alert(
@@ -472,7 +472,6 @@ const KeyContainer = styled.KeyboardAvoidingView`
   position: relative;
 `
 const InfomationText = styled(Typography).attrs({text:'Title04SB'})`
-  color:${({theme})=>theme.colors.grey[2]};
   margin: 24px;
   margin-top: 40px;
 

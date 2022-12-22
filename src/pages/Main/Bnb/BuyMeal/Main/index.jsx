@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import { isUserMeAtom } from '../../../../../biz/useUserMe/store';
+import Balloon from '../../../../../components/Balloon';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Label from '../../../../../components/Label';
@@ -29,12 +30,15 @@ const Pages = () => {
     
     const navigation = useNavigation();
     const diningRef = useRef();
-
+    
     const [focus,setFocus] = useState(1);
     const [touchDate, setTouchDate] = useState(null);
     const [sliderValue, setSliderValue] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood} = useFoodDaily();
+    const { balloonEvent, BalloonWrap } = Balloon();
     const userMembership = useAtomValue(isUserMeAtom);
+    
     
     const DININGTYPE = ['아침','점심','저녁'];
     
@@ -49,7 +53,15 @@ const Pages = () => {
 
         loadDailyFood();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+
+    },[]);
+    
+    const onPageScroll = (e) => {
+        const { position } = e.nativeEvent;
+        
+            setSliderValue(position);
+            setFocus(position);
+         } 
 
     // const dayPress = async () =>{
     //     try {
@@ -65,17 +77,14 @@ const Pages = () => {
         <SafeView>
             <ScrollView showsVerticalScrollIndicator={false}>
                 {userMembership[0].membership && <MembershipBar/>}
-
+                
                 <CalendarWrap>
                     <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} setTouchDate={setTouchDate} onPressEvent2/>
                 </CalendarWrap>
+               
                 <PagerViewWrap>
                     <ProgressWrap>
                         <ProgressInner>
-                            {/* <View >
-                                <ProgressBar/>
-                                <ProgressCircle/>
-                            </View> */}
                             <Slider
                                 value={sliderValue}
                                 onValueChange={(e) => setSliderValue(...e)}
@@ -94,25 +103,22 @@ const Pages = () => {
                                         <ProgressText focus={focus} index={i}>{btn}</ProgressText>
                                     </Pressable>
                                 )}
-                                {/* <ProgressText onPress={() => diningRef.current.setPage(0)}>아침</ProgressText>
-                                <ProgressText onPress={() => diningRef.current.setPage(1)}>점심</ProgressText>
-                                <ProgressText onPress={() => diningRef.current.setPage(2)}>저녁</ProgressText> */}
                             </Progress>
-
                         </ProgressInner>
                     </ProgressWrap>
-                    <Pager ref={diningRef} initialPage={1}>
-                        <View key="1">
+                    <Pager ref={diningRef} initialPage={1} onPageSelected={(e) => {onPageScroll(e)}}>
+                        <View>
                             {/* 아침 */}
                             {isMorningFood?.map((m,i) => 
                             <Contents key={i}
+                            spicy={m.spicy}
                             disabled={m.isSoldOut}
                             onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}
                             >
                                 <ContentsText>
                                     <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
                                     <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
-                                    <MealDsc soldOut={m.isSoldOut}>{m.description}</MealDsc>
+                                    <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
                                     <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
                                     {m.spicy !== null && 
                                     <LabelWrap>
@@ -131,20 +137,21 @@ const Pages = () => {
                                         </CartIconWrap>
                                     )}
                                 </MealImageWrap>
-                                    {m.isSoldOut && <SoldOut>품절됐어요</SoldOut>}
+                                    {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>}
                             </Contents>
                             )}
                         </View>
-                        <View key="2">
+                        <View>
                             {/* 점심 */}
                             {isLunchFood?.map((l,i)=>
                             <Contents key={i}
+                            spicy={l.spicy}
                             disabled={l.isSoldOut}
                             onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
                                     <MealName soldOut={l.isSoldOut}>{l.name}</MealName>
-                                    <MealDsc soldOut={l.isSoldOut}>{l.description}</MealDsc>
+                                    <MealDsc soldOut={l.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{l.description}</MealDsc>
                                     <Price soldOut={l.isSoldOut}>{withCommas(l.price)}원</Price>
                                     {l.spicy !== null && 
                                     <LabelWrap>
@@ -157,26 +164,27 @@ const Pages = () => {
                                     {l.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     {!l.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{alert('장바구니임')}}>
+                                        <CartIconWrap onPress={balloonEvent}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
                                 </MealImageWrap>
-                                    {l.isSoldOut && <SoldOut>품절됐어요</SoldOut>}
+                                    {l.isSoldOut && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
                             </Contents>
                             
                             )}
                         </View>
-                        <View key="3">
+                        <View>
                             {/* 저녁 */}
                             {isDinnerFood?.map((d,i) => 
                             <Contents key={i}
+                            spicy={d.spicy}
                             disabled={d.isSoldOut}
                             onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName>
                                     <MealName soldOut={d.isSoldOut}>{d.name}</MealName>
-                                    <MealDsc soldOut={d.isSoldOut}>{d.description}</MealDsc>
+                                    <MealDsc soldOut={d.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{d.description}</MealDsc>
                                     {d.spicy !== null && 
                                         <LabelWrap>
                                             <Label label={`${d.spicy}`}/>
@@ -193,14 +201,14 @@ const Pages = () => {
                                         <CartIcon/>
                                     </CartIconWrap>
                                 </MealImageWrap>
-                                    {d.isSoldOut && <SoldOut>품절됐어요</SoldOut>}
+                                    {d.isSoldOut && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
                             </Contents>
                             )}
                         </View>
                     </Pager> 
                 </PagerViewWrap>
             </ScrollView>
-            
+            <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'10px', right:'5px'}}/>
             <ButtonWrap>
                 <Button label={'장바구니 보기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(MealCartPageName)}}/>
             </ButtonWrap>
@@ -285,9 +293,10 @@ flex:1;
 `;
 
 const Contents = styled.Pressable`
+padding: ${({spicy}) => spicy ? '24px 0px 12px 0px': '24px 0px 28px 0px'};
 margin: 0px 28px;
 flex-direction:row;
-padding:24px 0px 28px 0px;
+/* padding:24px 0px 28px 0px; */
 justify-content:space-between;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
@@ -344,9 +353,10 @@ right:8px;
 
 const SoldOut = styled(Typography).attrs({text:'Title04SB'})`
 position:absolute;
+top:60%;
 right:15px;
 color:${props => props.theme.colors.grey[4]};
-
+z-index:1000;
 `;
 const ButtonWrap = styled.View`
 position:absolute;
@@ -360,6 +370,15 @@ export const MakersName = styled(Typography).attrs({text:'Body05R'})`
 `;
 
 export const MealName = styled(Typography).attrs({text:'Body05SB'})`
+color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
+`;
+
+const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
+
+`;
+
+const Price = styled(MakersName)`
     color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
