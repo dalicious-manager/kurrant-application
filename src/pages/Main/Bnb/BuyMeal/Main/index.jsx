@@ -365,24 +365,30 @@ margin:0px 24px;
 
 
 export const MakersName = styled(Typography).attrs({text:'Body05R'})`
-//color:${props => props.theme.colors.grey[2]};
-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
+    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
+
 export const MealName = styled(Typography).attrs({text:'Body05SB'})`
-//color:${props => props.theme.colors.grey[2]};
 color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
-//color:${props => props.theme.colors.grey[4]};
 color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
 
 `;
 
 const Price = styled(MakersName)`
-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
+    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
+`;
+
+const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
+    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
+`;
+
+const Price = styled(MakersName)`
+    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const ProgressText = styled(Typography).attrs({text:'CaptionSB'})`
-color:${({theme,focus, index}) => focus === index ? theme.colors.grey[2] : theme.colors.grey[5]};
+    color:${({theme,focus, index}) => focus === index ? theme.colors.grey[2] : theme.colors.grey[5]};
 `;

@@ -7,7 +7,7 @@ import Button from "~components/Button";
 import Image from '~components/Image';
 import Typography from "~components/Typography";
 
-import { PAGE_NAME as LoginPage } from "../../../Main/Login/EmailLogin";
+import { PAGE_NAME as MembershipInfoPage } from "../../../Membership/MembershipInfo";
 
 import { MembershipJoinComplateImage } from "~assets"
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_COMPLATE';
@@ -27,8 +27,7 @@ const Pages = ({route}) => {
                     type='yellow'
                     label={"확인"}
                     onPressEvent={() => {
-                        navigation.popToTop()
-                        navigation.navigate(LoginPage)
+                        navigation.navigate(MembershipInfoPage)
                         // navigation.reset({
                         //     index: 0,
                         //     routes: [
