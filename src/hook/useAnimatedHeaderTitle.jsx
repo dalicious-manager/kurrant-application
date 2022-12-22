@@ -11,14 +11,21 @@ const useAnimatedHeaderTitle = ({ title,  triggerPoint }) => {
   useLayoutEffect(() => {
     if (title) {
       navigation.setOptions({
+        headerTransparent: true,
+            headerStyle: {
+                backgroundColor:`${scrollY < 150 ? 'transparent' : 'white'}`
+              },
+            headerTitle:`${scrollY > 150 ? '타이틀': ''}`,
         title
       })
     }
-  }, [navigation, title])
+  }, [navigation, scrollY, title])
 
   useEffect(() => {
     navigation.setOptions({
       
+
+          
       headerStyleInterpolator: () => {
         const opacity = scrollY.interpolate({
           inputRange: [triggerPoint, triggerPoint + 20],
@@ -30,7 +37,8 @@ const useAnimatedHeaderTitle = ({ title,  triggerPoint }) => {
         }
       }
     })
-  }, [navigation, scrollY, triggerPoint])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation, scrollY])
 
   return { scrollY };
 }

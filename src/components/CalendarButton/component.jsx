@@ -3,10 +3,10 @@ import {ko} from 'date-fns/locale';
 import { useAtom } from 'jotai';
 import React, { useState } from 'react';
 import {SafeAreaView,Text} from  'react-native'
-import warnOnce from 'react-native/Libraries/Utilities/warnOnce';
 import styled from 'styled-components';
 
 import { weekAtom } from '../../biz/useBanner/store';
+import useOrderMeal from '../../biz/useOrderMeal';
 import { formattedDateBtn, formattedWeekDate } from '../../utils/dateFormatter';
 import Typography from '../Typography';
 
@@ -17,7 +17,8 @@ const Component = ({
 }) =>{
 
     const [weekly,] = useAtom(weekAtom);
-    
+    const {isOrderMeal,orderMeal} = useOrderMeal;
+
     const btn = weekly.map((w) => {
         const a = formattedDateBtn(w[0])
         const b = formattedDateBtn(w[6])
@@ -52,11 +53,14 @@ const Component = ({
     });
 
     // console.log(startDate[0],endDate[0])
-    const mealPress = (startDate,endDate) => {
-       console.log('시작',startDate, '끝',endDate)
+    const mealPress = async (startDate,endDate) => {
+        try {
+            await orderMeal(startDate,endDate);
+        } catch(err) {
+            console.log(err)
+        }
+       //console.log('시작',startDate, '끝',endDate)
     }
-
-   
     return (
         <SafeAreaView>
         <Wrap horizontal={true} showsHorizontalScrollIndicator={false} >

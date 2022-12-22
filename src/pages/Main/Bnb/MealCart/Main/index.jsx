@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Question from '../../../../../assets/icons/MealCart/question.svg';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
+import NoMealButton from '../../../../../components/Button';
 import Count from "../../../../../components/Count";
 import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
 import Typography from "../../../../../components/Typography";
@@ -56,7 +57,13 @@ const Pages = () => {
 
     return (
         <SafeView>
-            <ScrollViewWrap showsVerticalScrollIndicator={false}>
+            <EmptyView>
+                <NoMealText>아직 담은 식사가 없어요!</NoMealText>
+                <NoMealButtonWrap>
+                    <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'}/>
+                </NoMealButtonWrap>
+            </EmptyView>
+            {/* <ScrollViewWrap showsVerticalScrollIndicator={false}>
                 <Wrap>
                     <View>
                         <DiningName>4월 21일(월) 점심</DiningName>
@@ -137,8 +144,8 @@ const Pages = () => {
                         <TotalPrice>10,000 원</TotalPrice>
                     </PaymentView>
                 </PaymentWrap>
-            </ScrollViewWrap>
-            <KeyboardAvoiding
+            </ScrollViewWrap> */}
+            {/* <KeyboardAvoiding
                 blurPress={blurPress}
                 focus={focus}
                 increasePress={increasePress}
@@ -152,7 +159,7 @@ const Pages = () => {
                 <Button label={'총 21개 결제하기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
             </ButtonWrap>
             <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
-            <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
+            <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/> */}
         </SafeView>
     )
 
@@ -241,6 +248,16 @@ margin:0px 28px;
 padding-bottom:16px;
 `;
 
+const NoMealButtonWrap = styled.View`
+padding:0px 120px;
+`;
+
+const EmptyView = styled.View`
+justify-content:center;
+align-items:center;
+flex:1;
+`;
+
 export const DiningName = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[2]};
 padding-bottom:12px;
@@ -263,4 +280,9 @@ color: ${props => props.theme.colors.grey[4]};
 `;
 export const TotalPrice = styled(Typography).attrs({text:'Title03SB'})`
 color: ${props => props.theme.colors.grey[2]};
+`;
+
+const NoMealText = styled(Typography).attrs({text:'Body05R'})`
+color: ${props => props.theme.colors.grey[5]};
+margin-bottom:16px;
 `;

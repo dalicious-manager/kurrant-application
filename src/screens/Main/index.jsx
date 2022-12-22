@@ -110,14 +110,16 @@ const Screen = () => {
           name={MealDetailPageName}
           component={MealDetail}
           options={{headerShown: true,
+            
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
-            headerRight: () => <ShoppingCart/>
+            
+            // headerLeft: () => <BackButton />,
+            // headerRight: () => <ShoppingCart/>
           }}
         />
       </MainRoot.Group>
