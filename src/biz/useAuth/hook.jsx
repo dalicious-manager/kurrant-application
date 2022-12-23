@@ -158,6 +158,7 @@ const useAuth = () => {
         },
         option
       );
+      console.log(res.data.accessToken);
       await setStorage('token',res.data.accessToken);
       await setStorage('isLogin',body.autoLogin.toString());
       return res;

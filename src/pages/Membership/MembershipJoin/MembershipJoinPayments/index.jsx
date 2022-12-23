@@ -16,11 +16,12 @@ import BottomModal from "../../../../components/BottomModal";
 import Check from "../../../../components/Check";
 import Form from "../../../../components/Form";
 import Image from "../../../../components/Image";
+import withCommas from "../../../../utils/withCommas";
 import { PAGE_NAME as MembershipJoinComplatePageName } from "../MembershipJoinComplate";
 
 export const PAGE_NAME = "P__MEMBERSHIP__JOIN_PAYMENTS"
 const Pages= ({route})=>{
-    const {period} = route.params;
+    const {period,membershipData} = route.params;
     const navigation = useNavigation();
     const agreeCheck = useForm();
     const [fadeIn, setFadeIn] = useState(false);
@@ -58,7 +59,7 @@ const Pages= ({route})=>{
             <Image imagePath={MembershipIconImage} scale={1.0}/>
             <InnerTextView>
               <MembershipText textColor={themeApp.colors.grey[2]}>커런트 월간 멤버십 정기결제</MembershipText>
-              <PriceText textColor={themeApp.colors.grey[4]}>12,000원</PriceText>    
+              <PriceText textColor={themeApp.colors.grey[4]}>{withCommas(membershipData.price)}원</PriceText>    
             </InnerTextView>
           </Inner>
         )
@@ -125,17 +126,23 @@ const Pages= ({route})=>{
                 <PaymentPriceTitle textColor={themeApp.colors.grey[2]}>최종 결제금액</PaymentPriceTitle>
                 <PaymentPriceTotalBox mb={24}>
                   <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>총 상품금액</PaymentPriceText>
-                  <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>12,000 원</PaymentPriceText>
+                  <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>{withCommas(membershipData.price)} 원</PaymentPriceText>
                 </PaymentPriceTotalBox>
                 <PaymentPriceTotalBox mb={16}>
                   <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>할인금액</PaymentPriceText>
                   <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>
-                    <PaymentPriceText text={'Body05R'} textColor={period === 'month' ? themeApp.colors.grey[4]:  themeApp.colors.green[500]}>0</PaymentPriceText> 원
+                    <PaymentPriceText 
+                    text={'Body05R'} 
+                    textColor={period === 'month' 
+                    ? themeApp.colors.grey[4]
+                    :  themeApp.colors.green[500]}>
+                      {withCommas(membershipData.price-membershipData.discountedPrice) || 0}
+                      </PaymentPriceText> 원
                   </PaymentPriceText>
                 </PaymentPriceTotalBox>
                 <PaymentPriceTotalBox mb={24}>
                   <PaymentPriceText text={'Title03SB'} textColor={themeApp.colors.grey[4]}>총 결제금액</PaymentPriceText>
-                  <PaymentPriceText text={'Title03SB'} textColor={themeApp.colors.grey[2]}>12,000 원</PaymentPriceText>
+                  <PaymentPriceText text={'Title03SB'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipData.discountedPrice)} 원</PaymentPriceText>
                 </PaymentPriceTotalBox>
               </PaymentPriceContainer>
               <Line />

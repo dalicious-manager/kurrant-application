@@ -32,7 +32,7 @@ const Pages = () => {
             <ButtonSns type_sns="email" onPressEvent={handleEmailPress} />
           </View>
           <View style={{...styles.buttonBox, marginLeft:3.5}}>
-            <ButtonSns type_sns="login" onPressEvent={handleLoginPress}/>
+            <ButtonSns type_sns="login" onPressEvent={handleLoginPress} />
           </View>
         </View>
       </View>

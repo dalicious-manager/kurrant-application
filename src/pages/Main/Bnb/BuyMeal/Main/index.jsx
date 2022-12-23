@@ -53,7 +53,6 @@ const Pages = () => {
 
         loadDailyFood();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-
     },[]);
     
     const onPageScroll = (e) => {
@@ -376,14 +375,6 @@ color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2
 const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
 color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
 
-`;
-
-const Price = styled(MakersName)`
-    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
-`;
-
-const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
-    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
 `;
 
 const Price = styled(MakersName)`

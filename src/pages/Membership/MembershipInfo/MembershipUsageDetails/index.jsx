@@ -1,19 +1,32 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {    ScrollView } from "react-native";
 import styled, { useTheme } from "styled-components/native";
 
 import Typography from "~components/Typography";
 
+import useMembership from "../../../../biz/useMembership";
 import Label from "../../../../components/Label";
+import withCommas from "../../../../utils/withCommas";
 
 
 
 export const PAGE_NAME = "P__MEMBERSHIP__USAGE__DETAIL"
 const Pages= ()=>{
     const themeApp = useTheme();
-    
-  
+    const {getMembershipHistory} = useMembership();
+    const [membershipHistory ,setMebershipHistory] = useState();
+    const getData = async()=>{
+      const {statusCode,data} = await getMembershipHistory();
+      if(statusCode === 200){
+        setMebershipHistory(data);
+      }
+      
+    }
+    useEffect(()=>{
+      getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
     return(
           <>
             <ScrollView>
@@ -28,20 +41,24 @@ const Pages= ()=>{
               <Line />
               {/** 주문 상품 정보 */}
               <ProductInfoContainer >
-                <SubscriptionBox>
-                    <TextBox>
-                        <Label size="labelM" type="blue" label="월간구독"/>
-                        <Typography text={'Body05SB'} textColor={themeApp.colors.grey[2]}>12,000 원</Typography>
-                    </TextBox>
-                    <TextBox>
-                        <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>기간</Typography>
-                        <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>2022.01.02 ~ 2022.02.01</Typography>
-                    </TextBox>
-                    <TextBox>
-                        <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>총 이용기간</Typography>
-                        <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>50 개월</Typography>
-                    </TextBox>
-                </SubscriptionBox>
+                {membershipHistory?.map((membership,index)=>{
+                  return (
+                    <SubscriptionBox key={index}>
+                        <TextBox>
+                            <Label size="labelM" type="blue" label="월간구독"/>
+                            <Typography text={'Body05SB'} textColor={themeApp.colors.grey[2]}>{withCommas(membership.price)} 원</Typography>
+                        </TextBox>
+                        <TextBox>
+                            <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>기간</Typography>
+                            <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{`${membership.startDate} ~ ${membership.endDate}`}</Typography>
+                        </TextBox>
+                        <TextBox>
+                            <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>총 이용기간</Typography>
+                            <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{membership.membershipUsingPeriod} 개월</Typography>
+                        </TextBox>
+                    </SubscriptionBox>
+                  )
+                })}
               </ProductInfoContainer>
 
              
