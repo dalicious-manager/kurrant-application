@@ -1,10 +1,8 @@
 import { fetchJson } from '../../utils/fetch';
 
-export async function DailyFood(spotId,selectedDate){
-    const fetchRes = await fetchJson(`/foods/dailyfoods?spotId=${spotId}&selectedDate=${selectedDate}` ,'GET',{
-        'accessToken' : 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY3MTc4OTYyNSwiZXhwIjoxNjcyMTQ5NjI1fQ.o8tp8TUib2OLWcnGK9aaY4Qc_rR-ViYUUnzrP_1uQEM'
-    });
-    
+export async function DailyFood(spotId, selectedDate) {
+    const fetchRes = await fetchJson(`/foods/dailyfoods?spotId=${spotId}&selectedDate=${selectedDate}`, 'GET');
+
     return fetchRes;
 
     // return {
@@ -18,7 +16,7 @@ export async function DailyFood(spotId,selectedDate){
     //         img: 'string',
     //         spicy: '불닭볶음탕탕면맵기임',
     //         isSoldOut : false
-            
+
     //         },
     //         {
     //         id: 1,
@@ -30,7 +28,7 @@ export async function DailyFood(spotId,selectedDate){
     //         img: 'string',
     //         spicy: '신라면맵기',
     //         isSoldOut : true
-            
+
     //         },
     //         {
     //             id: 2,
@@ -42,7 +40,7 @@ export async function DailyFood(spotId,selectedDate){
     //             img: 'string',
     //             spicy: '불닭맵기',
     //             isSoldOut : false
-                
+
     //             },
     //             {
     //                 id: 3,
@@ -54,7 +52,7 @@ export async function DailyFood(spotId,selectedDate){
     //                 img: 'string',
     //                 spicy: null,
     //                 isSoldOut : false
-                    
+
     //                 },
     //                 {
     //                     id: 4,
@@ -66,7 +64,7 @@ export async function DailyFood(spotId,selectedDate){
     //                     img: 'string',
     //                     spicy: null,
     //                     isSoldOut : true
-                        
+
     //                     }
     //     ]
     // }

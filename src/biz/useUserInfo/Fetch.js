@@ -1,10 +1,8 @@
 import mSleep from '../../helpers/mSleep';
 import { fetchJson } from "../../utils/fetch";
 
-export async function userInfo(data,option){
-    const fetchRes = await fetchJson(`/users/me/userInfo`,'GET', {
-     'accessToken' : 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY3MTc4OTYyNSwiZXhwIjoxNjcyMTQ5NjI1fQ.o8tp8TUib2OLWcnGK9aaY4Qc_rR-ViYUUnzrP_1uQEM'
-    });
+export async function userInfo(data, option) {
+  const fetchRes = await fetchJson(`/users/me/userInfo`, 'GET');
 
   //await mSleep(1000);
 
@@ -19,6 +17,6 @@ export async function userInfo(data,option){
   //           address:'주소주소주소'
   //          }
   //   ]   
-     
+
   // }
 }

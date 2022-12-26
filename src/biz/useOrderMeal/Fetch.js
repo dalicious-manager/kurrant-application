@@ -1,18 +1,16 @@
 import { fetchJson } from "../../utils/fetch";
 
-export async function OrderMeal(startdate,enddate){
-    
-    const fetchRes = await fetchJson(`/users/me/order?startDate=${startdate}&endDate=${enddate}`,'GET',{
-        'accessToken' : 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY3MTc4OTYyNSwiZXhwIjoxNjcyMTQ5NjI1fQ.o8tp8TUib2OLWcnGK9aaY4Qc_rR-ViYUUnzrP_1uQEM'
-    });
-   
+export async function OrderMeal(startdate, enddate) {
+
+    const fetchRes = await fetchJson(`/users/me/order?startDate=${startdate}&endDate=${enddate}`, 'GET');
+
     return fetchRes;
     // return {
     //     orderFood: [
     //         {
     //             id: 0,
     //             date : '2022-12-19',
-    
+
     //             orderItemDtoList: [
     //             {   makers:'메이커스이름',
     //                 name: '비빔밥',
@@ -39,13 +37,13 @@ export async function OrderMeal(startdate,enddate){
     //                 count: 1
     //                 }
     //         ]
-                
+
     //         },
 
     //         {
     //         id: 1,
     //         date : '2022-12-23',
-            
+
     //         orderItemDtoList: [{
     //         makers:'메이커스이름',
     //         name: '오리구이',
@@ -53,12 +51,12 @@ export async function OrderMeal(startdate,enddate){
     //         img: 111,
     //         count: 1
     //         }]
-            
+
     //         },
     //         {
     //             id: 2,
     //             date : '2022-12-24',
-    
+
     //             orderItemDtoList: [{
     //             makers:'메이커스이름',    
     //             name: '오리구탕탕',
@@ -66,12 +64,12 @@ export async function OrderMeal(startdate,enddate){
     //             img: 111,
     //             count: 1
     //             }]
-                
+
     //         },
     //         {
     //             id: 3,
     //             date : '2022-12-26',
-    
+
     //             orderItemDtoList: [
     //             {
     //                 makers:'메이커스이름',
@@ -88,13 +86,13 @@ export async function OrderMeal(startdate,enddate){
     //                 count: 1
     //                 }
     //         ]
-                
+
     //         },
 
     //         {
     //             id: 4,
     //             date : '2022-12-20',
-    
+
     //             orderItemDtoList: [
     //             {   makers:'메이커스이름',
     //                 name: '비빔밥',
@@ -108,7 +106,7 @@ export async function OrderMeal(startdate,enddate){
     //                 img: 111,
     //                 count: 1
     //             },
-                
+
     //             {   makers:'메이커스이름',
     //                 name: '뚝불',
     //                 diningType: '저녁',
@@ -116,8 +114,8 @@ export async function OrderMeal(startdate,enddate){
     //                 count: 1
     //                 }
     //         ]
-                
+
     //         },
     //     ]
     // }
- }
+}

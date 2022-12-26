@@ -9,28 +9,30 @@ import withCommas from "../../../../utils/withCommas";
 /** 
 * @param {object} props
 * @param {string} props.label
-* @param {object} props.payments
+* @param {number} props.payments
+* @param {number} props.isSale
+* @param {number} props.dicountPayments
 * @param {function} props.onPressEvent
 * @return
 */
 
-const Component = ({label,payments, isSale ,onPressEvent, ...rest})=>{
-    const pay = withCommas(payments);
+const Component = ({label,payments, isSale,dicountPayments ,onPressEvent, ...rest})=>{
+    const pay = withCommas(payments === dicountPayments ? payments : dicountPayments);
     return(
-        <Container isSale={isSale} onPress={onPressEvent} {...rest}>  
+        <Container isSale={isSale>0} onPress={onPressEvent} {...rest}>  
             <TitleBox>
                 <MembershipText>
                     {label}                
                 </MembershipText>         
-                {isSale && <Label size="labelS" label="20%" type="green"/> }
+                {isSale > 0 && <Label size="labelS" label={`${isSale}%`} type="green"/> }
             </TitleBox>
             <PaymentsBox>
                 <PaymentsTextBox>
                     <PaymentsText>
                         {pay}원
                     </PaymentsText>
-                    {isSale && <CaptionText>
-                        (월 9,600원)
+                    {isSale> 0  && <CaptionText>
+                        (월 {withCommas((payments === dicountPayments ? payments : dicountPayments)/12)}원)
                     </CaptionText>}
                 </PaymentsTextBox>
                 <ArrowIcon />

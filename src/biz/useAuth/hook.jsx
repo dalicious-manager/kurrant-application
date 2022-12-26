@@ -158,6 +158,28 @@ const useAuth = () => {
         },
         option
       );
+      console.log(res.data.accessToken);
+      await setStorage('token',res.data.accessToken);
+      await setStorage('isLogin',body.autoLogin.toString());
+      return res;
+    } catch (err) {
+      throw err
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+  const snsLogin = async (body,type,option = {}) => {
+    try {
+      setLoginLoading(true);
+      
+      const res = await Fetch.snsLogin(     
+        {
+          ...body
+        },
+        type,
+        option
+      );
+      console.log(res.data.accessToken);
       await setStorage('token',res.data.accessToken);
       await setStorage('isLogin',body.autoLogin.toString());
       return res;
@@ -176,6 +198,7 @@ const useAuth = () => {
     findEmail,
     changePassword,
     login,
+    snsLogin,
     readableAtom: {
       isPhoneAuthLoading,
       isEmailAuthLoading,
