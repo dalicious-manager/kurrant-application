@@ -189,6 +189,11 @@ export const textStyles = {
     line-height: 12px;
     font-family: 'Pretendard-Regular';
   `,
+  Badge: css`
+  font-size: 12px;
+  line-height: 14.4px;
+  font-family: 'Pretendard-SemiBold';
+`,
 
 
 };

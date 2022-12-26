@@ -27,7 +27,8 @@ const Component = ({
   count,
   onPressEvent,
   increasePress,
-  decreasePress
+  decreasePress,
+  onPressEvent2 = () => console.log('장바구니 버튼')
 }) => {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -65,7 +66,7 @@ const Component = ({
 
   return (
       <Container>
-        <BtnContainer>
+        <BtnContainer onPress={onPressEvent2}>
           <PressView>
             <Pressable onPress={handlePress}>
               <Trapezoid />
@@ -94,6 +95,7 @@ const Component = ({
                       <PlusIcon onPress={increasePress}/>
                   </InnerView> */}
                   <Count
+                  detail
                   count={count}
                   increasePress={increasePress}
                   decreasePress={decreasePress}
@@ -121,8 +123,9 @@ const Container = styled.SafeAreaView`
   //justify-content: flex-end;
   align-items: center;
   width: ${screenWidth}px;
+  
 `;
-const BtnContainer = styled.View`
+const BtnContainer = styled.Pressable`
   
  // margin-bottom:100px;
 `;
@@ -139,7 +142,6 @@ width:343px;
 height:56px;
 border-radius:29px;
 padding:15px;
-
 
 `;
 

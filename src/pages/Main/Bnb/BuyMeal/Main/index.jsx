@@ -10,14 +10,14 @@ import styled from 'styled-components';
 
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import { isUserMeAtom } from '../../../../../biz/useUserMe/store';
+import { isUserInfoAtom, isUserMeAtom } from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/Balloon';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Label from '../../../../../components/Label';
 import MembershipBar from '../../../../../components/MembershipBar';
 import Typography from '../../../../../components/Typography';
-import { formattedDate } from '../../../../../utils/dateFormatter';
+import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
@@ -30,31 +30,31 @@ const Pages = () => {
     
     const navigation = useNavigation();
     const diningRef = useRef();
-    
+
     const [focus,setFocus] = useState(1);
-    const [touchDate, setTouchDate] = useState(null);
+    
     const [sliderValue, setSliderValue] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
     const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood} = useFoodDaily();
     const { balloonEvent, BalloonWrap } = Balloon();
-    const userMembership = useAtomValue(isUserMeAtom);
-    
-    
+    const userMembership = useAtomValue(isUserInfoAtom);
+    console.log(isLunchFood)
     const DININGTYPE = ['아침','점심','저녁'];
+    const daily = true;
     
-    const date = formattedDate(new Date());
+    const date = formattedWeekDate(new Date()); // 오늘
     // const todayMeal = mealInfo?.filter((m) => m.date === date);
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-
+    const spotId = 1;
+    
     useEffect(()=>{
         async function loadDailyFood(){
-            await dailyFood();
+            await dailyFood(spotId,date);
         }
-
         loadDailyFood();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
-    
+   
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
         
@@ -62,23 +62,22 @@ const Pages = () => {
             setFocus(position);
          } 
 
-    // const dayPress = async () =>{
-    //     try {
-    //         await dailyFood();
-    //     }catch(err){
-    //         console.log(err)
-    //     }
-    // }
-    // console.log(isMorningFood)
+    const dayPress = async (selectedDate) =>{
+        
+        try {
+            await dailyFood(spotId,selectedDate);
+        }catch(err){
+            console.log(err)
+        }
+    }
 
-    
     return (
         <SafeView>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {userMembership[0].membership && <MembershipBar/>}
+                {userMembership?.isMembership && <MembershipBar/>}
                 
                 <CalendarWrap>
-                    <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} setTouchDate={setTouchDate} onPressEvent2/>
+                    <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={dayPress} daily={daily} margin/>
                 </CalendarWrap>
                
                 <PagerViewWrap>
@@ -114,19 +113,19 @@ const Pages = () => {
                             disabled={m.isSoldOut}
                             onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}
                             >
-                                <ContentsText>
+                                {/* <ContentsText>
                                     <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
                                     <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
                                     <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
                                     <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
-                                    {m.spicy !== null && 
+                                    {m.spicy !== undefined && 
                                     <LabelWrap>
                                         {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
                                     </LabelWrap>
                                     }
-                                </ContentsText>
+                                </ContentsText> */}
                                     
-                                <MealImageWrap>
+                                {/* <MealImageWrap>
                                     {m.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     
@@ -135,8 +134,8 @@ const Pages = () => {
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
-                                </MealImageWrap>
-                                    {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>}
+                                </MealImageWrap> */}
+                                    {/* {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>} */}
                             </Contents>
                             )}
                         </View>
@@ -146,13 +145,13 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={l.spicy}
                             disabled={l.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
-                                    <MealName soldOut={l.isSoldOut}>{l.name}</MealName>
+                                    <MealName soldOut={l.isSoldOut}>{l.foodName}</MealName>
                                     <MealDsc soldOut={l.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{l.description}</MealDsc>
                                     <Price soldOut={l.isSoldOut}>{withCommas(l.price)}원</Price>
-                                    {l.spicy !== null && 
+                                    {l.spicy !== undefined && 
                                     <LabelWrap>
                                         <Label label={`${l.spicy}`}/>
                                     </LabelWrap>
@@ -160,7 +159,7 @@ const Pages = () => {
                                 </ContentsText>
                                     
                                 <MealImageWrap>
-                                    {l.isSoldOut && <BlurView/>}
+                                    {l.isSoldOut === 0 && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     {!l.isSoldOut && (
                                         <CartIconWrap onPress={balloonEvent}>
@@ -168,7 +167,7 @@ const Pages = () => {
                                         </CartIconWrap>
                                     )}
                                 </MealImageWrap>
-                                    {l.isSoldOut && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
+                                    {l.isSoldOut === 0 && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
                             </Contents>
                             
                             )}
@@ -182,9 +181,9 @@ const Pages = () => {
                             onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName>
-                                    <MealName soldOut={d.isSoldOut}>{d.name}</MealName>
+                                    <MealName soldOut={d.isSoldOut}>{d.foodName}</MealName>
                                     <MealDsc soldOut={d.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{d.description}</MealDsc>
-                                    {d.spicy !== null && 
+                                    {d.spicy !== undefined && 
                                         <LabelWrap>
                                             <Label label={`${d.spicy}`}/>
                                         </LabelWrap>
@@ -194,13 +193,13 @@ const Pages = () => {
                                 </ContentsText>
                                     
                                 <MealImageWrap>
-                                    {d.isSoldOut && <BlurView/>}
+                                    {d.isSoldOut === 0 && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     <CartIconWrap onPress={()=>{alert('장바구니임')}}>
                                         <CartIcon/>
                                     </CartIconWrap>
                                 </MealImageWrap>
-                                    {d.isSoldOut && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
+                                    {d.isSoldOut === 0 && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
                             </Contents>
                             )}
                         </View>
@@ -245,11 +244,11 @@ flex:1;
 `;
 
 export const CalendarWrap = styled.View`
-margin:0px 28px;
+
 height:120px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
-//background-color:gold;
+width:100%;
 `;
 
 const PagerViewWrap = styled.View`
@@ -372,21 +371,12 @@ export const MealName = styled(Typography).attrs({text:'Body05SB'})`
 color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
-const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
-
-`;
-
 const Price = styled(MakersName)`
     color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
     color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
-`;
-
-const Price = styled(MakersName)`
-    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const ProgressText = styled(Typography).attrs({text:'CaptionSB'})`

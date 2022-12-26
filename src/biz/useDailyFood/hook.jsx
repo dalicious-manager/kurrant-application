@@ -10,15 +10,18 @@ const useFoodDaily = () => {
     const [isLunchFood,setLunch] = useAtom(isLunchFoodAtom);
     const [isDinnerFood,setDinner] = useAtom(isDinnerFoodAtom);
     
-    const dailyFood = async () => {
+    const dailyFood = async (spotId,seletedDate) => {
+        
         try {
-            const res = await Fetch.DailyFood();
-            setDailyFood(res.dailyFood);
-            setMorning(res.dailyFood.filter(x => x.diningType === '아침'));
-            setLunch(res.dailyFood.filter(x => x.diningType === '점심'));
-            setDinner(res.dailyFood.filter(x => x.diningType === '저녁'));
+            const res = await Fetch.DailyFood(spotId,seletedDate);
+            
+            setDailyFood(res.data);
+            //setMorning(res.data.filter(x => x.diningType === '아침'));
+            setLunch(res.data.filter(x => x.diningType === 'LUNCH'));
+            setDinner(res.data.filter(x => x.diningType === 'DINNER'));
         } catch (err) {
             throw err;
+            // console.log(err)
         }
     }
     return {

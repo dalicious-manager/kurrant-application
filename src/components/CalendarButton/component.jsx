@@ -1,8 +1,9 @@
 import { format }from 'date-fns';
 import {ko} from 'date-fns/locale';
-import { useAtom } from 'jotai';
-import React, { useState } from 'react';
-import {SafeAreaView,Text} from  'react-native'
+import { atom, useAtom, useSetAtom } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
+import React, { useEffect, useState } from 'react';
+import {SafeAreaView,Text,Dimensions} from  'react-native'
 import styled from 'styled-components';
 
 import { weekAtom } from '../../biz/useBanner/store';
@@ -10,15 +11,18 @@ import useOrderMeal from '../../biz/useOrderMeal';
 import { formattedDateBtn, formattedWeekDate } from '../../utils/dateFormatter';
 import Typography from '../Typography';
 
+
 const Component = ({
     pager,
-    buyMeal,
-    orderMealList
+    meal,
+    daily,
+    chk
+    
 }) =>{
-
+    
     const [weekly,] = useAtom(weekAtom);
-    const {isOrderMeal,orderMeal} = useOrderMeal;
-
+    const {isOrderMeal,orderMeal} = useOrderMeal();
+    
     const btn = weekly.map((w) => {
         const a = formattedDateBtn(w[0])
         const b = formattedDateBtn(w[6])
@@ -30,8 +34,13 @@ const Component = ({
 
     const [checked,setChecked] = useState(0);
     
+    useEffect(()=>{
+        setChecked(chk)
+        
+    },[chk,checked])
+
     const checkedPress = (idx) => {
-        setChecked(idx)
+        setChecked(idx);
     }
 
     const pagerPress = (idx) => {
@@ -51,15 +60,14 @@ const Component = ({
             endData
         )
     });
-
-    // console.log(startDate[0],endDate[0])
-    const mealPress = async (startDate,endDate) => {
+    
+    const mealPress = async (startdate,enddate) => {
         try {
-            await orderMeal(startDate,endDate);
+            await orderMeal(startdate,enddate);
+            console.log(startdate,enddate,'index')
         } catch(err) {
             console.log(err)
         }
-       //console.log('시작',startDate, '끝',endDate)
     }
     return (
         <SafeAreaView>
@@ -77,13 +85,26 @@ const Component = ({
                 <Text>다다다음주</Text>
             </Btn> */}
           
-            {btn.map((week,idx) => 
+            {meal && btn.map((week,idx) => 
                 <Btn key={idx} 
                 idx={idx}
                 onPress={()=> {pagerPress(idx);checkedPress(idx);mealPress(start[idx],end[idx])}}
                 checked={checked}
+                
+                
                 >
                     <WeekText checked={checked} idx={idx}>{week}</WeekText>
+                </Btn>
+                )}
+            {daily && btn.map((week,idx) => 
+                <Btn key={idx}
+                idx={idx}
+                onPress={()=> {checkedPress(idx);pagerPress(idx)}}
+                checked={checked}
+                chk={chk}
+                
+                >
+                    <WeekText checked={checked} idx={idx} chk={chk}>{week}</WeekText>
                 </Btn>
                 )}
            
@@ -95,7 +116,6 @@ const Component = ({
 export default Component;
 
 const Wrap = styled.ScrollView`
-//background:lightblue;
 `;
 
 const Btn = styled.Pressable`
@@ -103,11 +123,12 @@ margin-right:8px;
 padding:6px 12px;
 border:1px solid;
 border-radius:4px;
-border-color: ${({checked,idx}) => checked === idx ?  props => props.theme.colors.grey[2] : props => props.theme.colors.grey[8]};
-background-color:${({checked,idx}) => checked === idx ? props => props.theme.colors.grey[0]: props => props.theme.colors.grey[8]};
+border-color: ${({checked,idx,chk}) => checked === idx || chk === idx ?  props => props.theme.colors.grey[2] : props => props.theme.colors.grey[8]};
+background-color:${({checked,idx,chk}) => checked === idx || chk === idx ? props => props.theme.colors.grey[0]: props => props.theme.colors.grey[8]};
 align-self:flex-start;
+${({idx})=> idx === 0 ? 'margin-left:28px' : idx === 3 && 'margin-right:28px'};
 `;
 
 const WeekText = styled(Typography).attrs({text:'Button10SB'})`
-color:${({checked,idx}) => checked === idx ? props => props.theme.colors.grey[2] : props => props.theme.colors.grey[5]};
+color:${({checked,idx,chk}) => checked === idx || chk === idx ? props => props.theme.colors.grey[2] : props => props.theme.colors.grey[5]};
 `;

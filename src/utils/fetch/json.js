@@ -46,7 +46,7 @@ async function json(url, method, options = {}) {
     'content-type': 'application/json',
   };
   if (options.accessToken !== undefined) {
-    headers.authorization = 'Bearer ' + options.accessToken;
+    headers.Authorization = 'Bearer ' + options.accessToken;
   }
 
   console.log('fetching to:', reqUrl);

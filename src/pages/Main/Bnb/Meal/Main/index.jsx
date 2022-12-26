@@ -6,11 +6,13 @@ import { makeShareable } from "react-native-reanimated/lib/reanimated2/core";
 import styled from "styled-components";
 
 import Plus from "../../../../../assets/icons/Home/plus.svg";
+import { weekAtom } from "../../../../../biz/useBanner/store";
+import useOrderMeal from "../../../../../biz/useOrderMeal";
 import { isOrderDinnerAtom, isOrderLunchAtom, isOrderMealAtom, isOrderMorningAtom } from "../../../../../biz/useOrderMeal/store";
 import Button from "../../../../../components/Button";
 import Calendar from "../../../../../components/Calendar";
 import Typography from "../../../../../components/Typography";
-import { formattedDate } from "../../../../../utils/dateFormatter";
+import { formattedDate, formattedDateBtn, formattedWeekDate } from "../../../../../utils/dateFormatter";
 import { CalendarWrap, MakersName, MealName } from "../../BuyMeal/Main";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 
@@ -21,30 +23,43 @@ const Pages = ({route}) => {
 
   const navigation = useNavigation();
   const mealInfo = useAtomValue(isOrderMealAtom);
-
+  const meal = true;
 
   const [touchDate,setTouchDate] = useState();
+  const weekly = useAtomValue(weekAtom);
+  const {isOrderMeal,orderMeal} = useOrderMeal();
 
-  // useEffect(()=>{
-  //   mealInfo
-    
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[])
+  const startDate = formattedWeekDate(weekly[0][0]);
+  const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
+
+  useEffect(()=>{
+    async function loadDailyFood(){
+      await orderMeal(startDate,endDate);
+  }
+  loadDailyFood();
   
-  const date = formattedDate(new Date());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
+  const date = formattedWeekDate(new Date());
   const todayMeal = mealInfo?.filter((m) => m.date === date);
   const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-  //console.log(selectDate,'셀렉')
+  // const loadData = weekly.map((w,i) => w.filter(x => console.log(formattedWeekDate(x))));
 
+  const pressDay = (day) => {
+    console.log(day)
+  }
+
+  
   return (
     <SafeView>
       <ScrollView>
         <CalendarView>
-          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} setTouchDate={setTouchDate} onPressEvent2/>
+          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent3={pressDay}  meal={meal} margin/>
         </CalendarView>
         
         <MealWrap>
-        {touchDate ? 
+        {/* {touchDate ? 
         (<>
           {selectDate.map((s,index) => 
             <React.Fragment key={index}>
@@ -99,7 +114,7 @@ const Pages = ({route}) => {
           </React.Fragment>
           )}
           </>
-        )}
+        )} */}
         </MealWrap>
       </ScrollView>
         {/* { selectDate.length === 0 && <NoMealWrap><NoMealText>주문한 메뉴가 없어요</NoMealText></NoMealWrap>} */}

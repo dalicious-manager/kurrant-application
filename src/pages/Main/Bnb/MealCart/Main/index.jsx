@@ -1,15 +1,25 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useRef,useState } from "react";
-import { Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { is } from "date-fns/locale";
+import { useAtom } from "jotai";
+import { atomWithReset } from "jotai/utils";
+import React, { useCallback, useEffect, useLayoutEffect, useRef,useState } from "react";
+import { Alert, Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
 
+import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
+import Minus from "../../../../../assets/icons/MealDetail/minus.svg";
+import PlusIcon from "../../../../../assets/icons/MealDetail/plus.svg";
+import { loadMealCart } from "../../../../../biz/useShoppingBasket/Fetch";
+import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
+import { isQuantityAtom } from "../../../../../biz/useShoppingBasket/store";
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import NoMealButton from '../../../../../components/Button';
 import Count from "../../../../../components/Count";
 import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
 import Typography from "../../../../../components/Typography";
+import withCommas from "../../../../../utils/withCommas";
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
@@ -19,11 +29,29 @@ const Pages = () => {
     const bodyRef = useRef();
     
     const [focus,setFocus] = useState(false);
-    const [count, setCount] = useState(1);
+    const [count, setCount] = useState(0);
+    const [id, setId] = useState(null);
+    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal } = useShoppingBasket();
     
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
+    console.log(isLoadMeal)
+    useFocusEffect(
+        useCallback(() => {
+          // Do something when the screen is focused
+            console.log('???')
 
+          return () => {
+            // Do something when the screen is unfocused
+            // Useful for cleanup functions
+            console.log('나감')
+          };
+       
+        }, [])
+      );
+    // const id = isLoadMeal.map(m => m.id)
+    // const quantity = isLoadMeal.map(m => m.count);
+   
     const pointButton = () => {
         setModalVisible(true);
     }
@@ -31,13 +59,44 @@ const Pages = () => {
         setModalVisible2(true);
     }
 
-    const increasePress = () => {
-        setCount(prev => Number(prev) + 1);
-      };
-    const decreasePress = () => {
-        setCount(prev => (prev <= 1 ? 1 : prev - 1));
-      };
+    // const increasePress = () => {
+    //     setCount(prev => Number(prev) + 1);
+    //   };
+    // const decreasePress = () => {
+    //     setCount(prev => (prev <= 1 ? 1 : prev - 1));   
+    //   };
 
+    const addHandle = (productId) => {
+        const addQty = isLoadMeal.map(p => {
+            if (productId === p.id){
+                return {...p, count:p.count + 1}
+        } else return p ; 
+        });
+ 
+        setLoadMeal(addQty);
+        
+    }
+
+    const substractHandle = (productId) => {
+        const substracQty = isLoadMeal.map(p => {
+            if (productId === p.id){
+                return {...p, count:( p.count <= 1? 1:p.count - 1)}
+        } else return p ; 
+        });
+        
+        setLoadMeal(substracQty);
+        
+        
+    }
+    
+    const totalCount = isLoadMeal.map(p => p.count).reduce((acc,cur) => {
+        return acc + cur
+    });
+
+    const totalPrice = isLoadMeal.map(p => p.count * p.price).reduce((acc,cur) => {
+        return acc + cur
+    });
+    
     const focusPress = () => {
         setFocus(true);
       };
@@ -45,8 +104,16 @@ const Pages = () => {
         setFocus(false);
       };
 
-    const changeText = number => {
-        setCount(number);
+    const changeText = (number,pi) => {
+        //setCount(number);
+        const addQty = isLoadMeal.map(p => {
+            if (pi === p.id){
+                return {...p, count:Number(number)}
+        } else return p ; 
+        });
+ 
+        setLoadMeal(addQty);
+
       };
 
     const closeModal = () => {
@@ -55,67 +122,81 @@ const Pages = () => {
         
     };
 
+    const deleteButton = async (foodId) => {
+        try {
+            await deleteMeal(foodId);
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    // useEffect(()=>{
+    //     async function getLoadMeal(){
+    //         await loadMeal();
+    //     }
+    //     getLoadMeal();
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // },[]);
+
+    const propsCount = (cnt) => {
+        setCount(cnt);
+    };
+    const propsId = (mealId) => {
+        setId(mealId)
+    };
+
+    
+
     return (
         <SafeView>
-            <EmptyView>
+            {/* <EmptyView>
                 <NoMealText>아직 담은 식사가 없어요!</NoMealText>
                 <NoMealButtonWrap>
                     <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'}/>
                 </NoMealButtonWrap>
-            </EmptyView>
-            {/* <ScrollViewWrap showsVerticalScrollIndicator={false}>
-                <Wrap>
-                    <View>
-                        <DiningName>4월 21일(월) 점심</DiningName>
-                    </View>
-                    <ContentWrap>
-                        <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                            <View>
-                                <MealName>[폴어스] 리코타 치즈 샐러드</MealName>
-                                <SalePriceWrap>
-                                    <PointBoldText>20%</PointBoldText>
-                                    <Price>8,500원</Price>
-                                </SalePriceWrap>
-                                <SalePrice>8,500원</SalePrice>
-                            </View>
-                            <CountWrap>
-                                <Count
-                                    onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
-                                    count={count} 
-                                    increasePress={increasePress}
-                                    decreasePress={decreasePress}
-                                />
-                            </CountWrap>
-                    </ContentWrap>
-                </Wrap>
-                <Wrap>
-                    <View>
-                        <DiningName>4월 21일(월) 점심</DiningName>
-                    </View>
-                    <ContentWrap>
-                        <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                            <View>
-                                <MealName>[폴어스] 리코타 치즈 샐러드</MealName>
-                                <SalePriceWrap>
-                                    <PointBoldText>20%</PointBoldText>
-                                    <Price>8,500원</Price>
-                                </SalePriceWrap>
-                                <SalePrice>8,500원</SalePrice>
-                            </View>
-                            <CountWrap>
-                            <Count
-                                onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
-                                count={count} 
-                                increasePress={increasePress}
-                                decreasePress={decreasePress}
-                                />
-                            </CountWrap>
-                    </ContentWrap>
-                </Wrap>
+            </EmptyView> */}
+            <ScrollViewWrap showsVerticalScrollIndicator={false}>
+                {isLoadMeal?.map((l,idx) => {
+                    const price = l.price * l.count;
+                    
+                    return (
+                        <Wrap key={idx}>
+                                         <ContentHeader>
+                                             <DiningName>{l.date} {l.diningType}</DiningName>
+                                             <Pressable onPress={()=>{deleteButton(l.id)}}><DeleteIcon/></Pressable>
+                                         </ContentHeader>
+                                         <ContentWrap>
+                                         <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                                             <View>
+                                                 <MealName>[{l.makers}] {l.name}</MealName>
+                                                 {/* 할인 적용 되면  */}
+                                                 {/* <SalePriceWrap>
+                                                     <PointBoldText>20%</PointBoldText>
+                                                   <Price>{withCommas(el.price)}원</Price>
+                                                 </SalePriceWrap>
+                                                 <SalePrice>{withCommas(el.price)}원</SalePrice> */}
+                                                 <Price>{withCommas(price)}원</Price>
+                                             </View>
+                                         <CountWrap>                                
+                                                 <Count
+                                                 cart
+                                                 onPressEvent={() => {bodyRef.current.focus(); focusPress();propsCount(l.count);propsId(l.id)}} 
+                                                 // count={count} 
+                                                 addHandle={addHandle}
+                                                 substractHandle={substractHandle}
+                                                 quantity={l.count}
+                                                 id={l.id}
+                                                />
+                                             </CountWrap>
+                                         </ContentWrap>
+                                     </Wrap>
+                    )
+                })}
+                
                 <PaymentWrap>
                     <PaymentView>
                         <PaymentText>총 상품금액</PaymentText>
-                        <PaymentText>10,000 원</PaymentText>
+                        <PaymentText>{withCommas(totalPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView >
                         <PressableView onPress={fundButton}>
@@ -139,27 +220,32 @@ const Pages = () => {
                         </PressableView>
                     </PaymentView>
                     <PaymentView>
-                        
                         <TotalPriceTitle>총 결제금액</TotalPriceTitle>
                         <TotalPrice>10,000 원</TotalPrice>
                     </PaymentView>
                 </PaymentWrap>
-            </ScrollViewWrap> */}
-            {/* <KeyboardAvoiding
+            </ScrollViewWrap>
+            <KeyboardAvoiding
+                mealCart
                 blurPress={blurPress}
                 focus={focus}
-                increasePress={increasePress}
-                decreasePress={decreasePress}
+                addHandle={addHandle}
+                substractHandle={substractHandle}
+                // increasePress={increasePress}
+                // decreasePress={decreasePress}
                 bodyRef={bodyRef}
                 changeText={changeText}
                 count={count}
-                value={count.toString()}
+                id={id}
+                //value={count.toString()}
+            
+                
             />
             <ButtonWrap>
-                <Button label={'총 21개 결제하기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
+                <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
             </ButtonWrap>
             <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
-            <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/> */}
+            <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
         </SafeView>
     )
 
@@ -182,6 +268,13 @@ align-items:center;
 
 const QuestionIcon = styled(Question)`
 margin-left:4px;
+`;
+
+const ContentHeader = styled.View`
+flex-direction:row;
+justify-content:space-between;
+align-items:center;
+
 `;
 
 export const Wrap = styled.View`
@@ -207,6 +300,8 @@ padding-right:4px;
 
 export const ContentWrap = styled.View`
 flex-direction:row;
+padding-top:12px;
+padding:24px 0;
 `;
 
 export const Price = styled(Typography).attrs({text:'Body05R'})`
@@ -260,7 +355,6 @@ flex:1;
 
 export const DiningName = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[2]};
-padding-bottom:12px;
 `;
 export const MealName = styled(Typography).attrs({text:'Body05SB'})`
 color:${props => props.theme.colors.grey[2]};
@@ -285,4 +379,26 @@ color: ${props => props.theme.colors.grey[2]};
 const NoMealText = styled(Typography).attrs({text:'Body05R'})`
 color: ${props => props.theme.colors.grey[5]};
 margin-bottom:16px;
+`;
+
+const InnerView = styled.View`
+flex-direction:row;
+align-items:center;
+justify-content:space-around;
+width:98px;
+height:38px;
+background-color:${props => props.theme.colors.grey[0]};
+border:1px solid ${props => props.theme.colors.grey[6]};
+border-radius:7px;
+`;
+
+ const IconWrap = styled.Pressable`
+padding:5px;
+height:100%;
+justify-content:center;
+
+`;
+
+const MinusIcon = styled(Minus)`
+color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]}
 `;
