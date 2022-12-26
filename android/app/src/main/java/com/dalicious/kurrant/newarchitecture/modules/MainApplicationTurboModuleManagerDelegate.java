@@ -1,4 +1,4 @@
-package com.kurrant.newarchitecture.modules;
+package com.dalicious.kurrant.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

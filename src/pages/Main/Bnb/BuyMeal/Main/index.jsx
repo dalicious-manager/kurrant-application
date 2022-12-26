@@ -373,8 +373,7 @@ color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2
 `;
 
 const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
-
+    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
 `;
 
 const Price = styled(MakersName)`
