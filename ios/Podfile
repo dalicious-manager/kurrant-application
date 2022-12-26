@@ -6,7 +6,7 @@ install! 'cocoapods', :deterministic_uuids => false
 
 target 'kurrant' do
   config = use_native_modules!
-
+  
   # Flags change depending on the env values.
   flags = get_default_flags()
 
@@ -31,6 +31,8 @@ target 'kurrant' do
     # Pods for testing
   end
   
+  
+
   post_install do |installer|
     react_native_post_install(
       installer,
