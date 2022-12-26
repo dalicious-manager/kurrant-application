@@ -4,7 +4,9 @@ import React from 'react';
 import {  Alert, Text } from 'react-native';
 
 import { isLoginLoadingAtom,    } from '../../biz/useAuth/store';
+import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
+import Badge from '../../components/Badge';
 import ShoppingCart from '../../components/BasketButton';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
 import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
@@ -74,6 +76,7 @@ const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
   const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
+  const {allDeleteMeal} = useShoppingBasket();
   
   return (
     <MainRoot.Navigator initialRouteName={LoginMainModalPageName}>
@@ -96,11 +99,16 @@ const Screen = () => {
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
               fontSize:14,
-              lineHeight:22
+              lineHeight:22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
-            headerRight: () => <ShoppingCart/>
+            headerLeft: () => <BackButton margin={[10,0]}/>,
+            headerRight:() => (
+              <>
+              <ShoppingCart margin={[0,10]}/>
+              <Badge/>
+              </>
+            )
           }}
         />
       </MainRoot.Group>
@@ -157,7 +165,7 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
             headerRight: () => <Text onPress={()=>{Alert.alert(
               '전체 삭제',
               '메뉴를 모두 삭제하시겠어요?',
@@ -169,7 +177,7 @@ const Screen = () => {
                 },
                 {
                   text:'삭제',
-                  onPress:() => console.log('ok pressed')
+                  onPress:() => allDeleteMeal()
                 }
               ]
             )}}>전체삭제</Text>
@@ -190,7 +198,7 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             headerTitleAlign: 'center',
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
       </MainRoot.Group>

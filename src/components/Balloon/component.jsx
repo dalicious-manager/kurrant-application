@@ -89,7 +89,7 @@ const Wrapper = styled(Animated.View)`
     retSpot+=location?.left ? `left :${location.left}; ` : '';
     retSpot+=location?.bottom ? `bottom :${location.bottom}; `: '';
     retSpot+=location?.right ? `right :${location.right}; `: '';
-    console.log(retSpot);
+    // console.log(retSpot);
     return retSpot
   }}
 `;

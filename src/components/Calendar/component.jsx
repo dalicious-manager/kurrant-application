@@ -8,9 +8,10 @@ import PagerView from 'react-native-pager-view';
 import styled from 'styled-components/native';
 
 import { weekAtom } from '../../biz/useBanner/store';
+import useFoodDaily from '../../biz/useDailyFood/hook';
 import useFoodDetail from '../../biz/useFoodDetail/hook';
 import useOrderMeal from '../../biz/useOrderMeal/hook';
-import { isUserMeAtom } from '../../biz/useUserMe/store';
+import { isUserMeAtom } from '../../biz/useUserInfo/store';
 import {PAGE_NAME as MealMainPageName} from '../../pages/Main/Bnb/Meal/Main';
 import { formattedDate, formattedWeekDate } from '../../utils/dateFormatter';
 import Button from '../CalendarButton';
@@ -35,30 +36,35 @@ const Component = ({
     size ='Body06R',
     onPressEvent,
     onPressEvent2,
-    setTouchDate,
-
+    onPressEvent3,
+    daily,
+    meal,
+    margin
 }) => {
   const navigation = useNavigation();
     const pager = useRef();
     const today = new Date()
     const weekly = useAtomValue(weekAtom);
+    const {isDailyFood,dailyFood} = useFoodDaily();
     const {isOrderMeal,orderMeal} = useOrderMeal();
-    const {isDailyfood, dailyFood} = useFoodDetail();
-    const [filter,setFilter] = useState();
+    // const {isDailyfood, dailyFood} = useFoodDetail();
+    // const [touched,setTouched] = useState();
     const [currentPress,setCurrentPress] = useState(null);
-   
+    const [chk,setChk] = useState(0);
+    
     // 파라미터 보낼 날짜
     const startDate = formattedWeekDate(weekly[0][0]);
     const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
-
-    useEffect(()=>{
-        async function loadOrderMeal(){
-          await orderMeal();
-        }
-        loadOrderMeal();
+  
+  
+    // useEffect(()=>{
+    //     async function loadOrderMeal(){
+    //       await orderMeal();
+    //     }
+    //     loadOrderMeal();
       
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      },[]);
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    //   },[]);
 
    const selectedPress = (day) => {
       setCurrentPress(day)
@@ -68,12 +74,30 @@ const Component = ({
       //   setFilter(isOrderMeal?.filter(x => x.date === day));
       // };
       // console.log(filter)
+
       
+    const onPageScroll = (e) => {
+      const { position } = e.nativeEvent;
+        setChk(position)
+    } 
+
+   const dayPress = async (propsDay) =>{
+        
+        try {
+            await dailyFood('123',propsDay);
+            
+        }catch(err){
+            console.log(err)
+        }
+    }
+      
+    
   return (
     <React.Fragment>
-     {BooleanValue  ? <Button pager={pager}  title="버튼"/> : <></>}
+     {BooleanValue && daily ? <Button pager={pager} daily chk={chk} /> : <></>}
+     {BooleanValue && meal ? <Button pager={pager} meal chk={chk}  /> : <></>}
      
-     <PagerViewWrap ref={pager} initialPage={0} pageMargin={22}>
+     <PagerViewWrap ref={pager} initialPage={0} pageMargin={22} onPageScroll={(e) => {onPageScroll(e)}} margin={margin}>
     {weekly.map((week,i) => {
         return (
             <View key={i}>
@@ -83,26 +107,33 @@ const Component = ({
                         const txt = format(day,'EEE',{locale:ko});
                         const now = (day.toDateString() === today.toDateString());
                         const pressDay = (formattedDate(day));
+                        const propsDay = (formattedWeekDate(day));
                         // const lastDay = (day.toISOString().substring(0,10) < today.toISOString().substring(0,10))
                         const lastDay = (day.toLocaleDateString() < today.toLocaleDateString());
-                        const order = isOrderMeal?.find(x => x.date === pressDay);
+                        const order = isOrderMeal?.find(x => x.date === propsDay);
+                        
                         const orderCount = order && order.orderItemDtoList;
                         const set = new Set(orderCount?.map((x) => x.diningType));
                         const newArr = [...set].length;
-                        
+                      
                         
                         return (
                         <DaysWrap key={day}>
                             <Day lastDay={lastDay} color={color} size={size}>{txt}</Day>
                             <TodayCircle now={now} type={type} currentPress={currentPress} day={day}>
                               {/* setTouchDate : BuyMeal,Meal , setData: Home  */}
-                              {!onPressEvent2 && 
+                              {onPressEvent && 
                                 <Pressable onPress={()=>navigation.reset({ routes: [{name:MealMainPageName,params:{data:pressDay}}]})}>
                                 <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
                                 </Pressable>
                               }
-                              {!onPressEvent && 
-                                <Pressable onPress={()=>{setTouchDate(pressDay); selectedPress(day) }}>
+                              {onPressEvent2 && 
+                                <Pressable onPress={()=>{ selectedPress(day); onPressEvent2(propsDay)}}>
+                                <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
+                                </Pressable>
+                              }
+                              {onPressEvent3 && 
+                                <Pressable onPress={()=>{ selectedPress(day); onPressEvent3(propsDay)}}>
                                 <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
                                 </Pressable>
                               }
@@ -130,6 +161,7 @@ export default Component;
 
 const PagerViewWrap = styled(PagerView)`
 flex:1;
+margin:${props => props.margin ? '0px 28px':'0px'};
 `;
 
 const Wrap = styled.View`

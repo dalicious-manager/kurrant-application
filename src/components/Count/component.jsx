@@ -1,9 +1,14 @@
+import { atom, useAtom } from 'jotai';
+import { atomWithReset } from 'jotai/utils';
 import React, { useState,useRef, useEffect,  } from 'react';
 import { View, Text,TextInput, TouchableWithoutFeedback, Dimensions, Pressable} from 'react-native';
+import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
 import styled from 'styled-components';
 
-import MinusIcon from '../../assets/icons/MealDetail/minus.svg';
+import Minus from '../../assets/icons/MealDetail/minus.svg';
 import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
+import useShoppingBasket from '../../biz/useShoppingBasket/hook';
+import { isQuantityAtom } from '../../biz/useShoppingBasket/store';
 
 /**
  * @param {} props
@@ -12,43 +17,58 @@ import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
 
  * @returns
  */
- const screenWidth = Dimensions.get('window').width;
+
 
 const Component = ({
   increasePress,
   decreasePress,
   onPressEvent,
-  count
+  count,
+  quantity,
+  detail,
+  cart,
+  id,
+  addHandle,
+  substractHandle
 }) => {
   
   return (
-    <View>
-      <InnerView>
-        <PressableView onPress={decreasePress}>
-          <MinusIcon />
-        </PressableView>
-          <Text onPress={onPressEvent} style={{backgroundColor:'gold'}}>
-              {count}
-          </Text>
-          <PressableView onPress={increasePress}>
-            <PlusIcon />
+    <>
+      {detail && <View>
+        <InnerView>
+          <PressableView onPress={decreasePress}>
+            <MinusIcon/>
           </PressableView>
-      </InnerView>
-    </View>
+            <Text onPress={onPressEvent}>
+                {count}
+            </Text>
+            <PressableView onPress={increasePress}>
+              <PlusIcon />
+            </PressableView>
+        </InnerView>
+      </View>}
+
+
+      {cart && <View>
+        <InnerView>
+          <PressableView onPress={()=>substractHandle(id)}>
+            <MinusIcon disabled={quantity}/>
+          </PressableView>
+          <Pressable onPress={onPressEvent}>
+            <Text>
+              {quantity}
+            </Text>
+          </Pressable>
+            <PressableView onPress={()=>addHandle(id)}>
+              <PlusIcon />
+            </PressableView>
+        </InnerView>
+      </View>}
+    </>
   )
 }; 
 // onPress={() => {bodyRef.current.focus(); testPress()}}
 export default Component;
-
-const KeypadInput= styled.View`
-  height:50px;
-  flex-direction:row;
-  background-color:${props => props.theme.colors.yellow[500]};
-  justify-content:space-between;
-  align-items:center;
-  opacity: ${props => props.focus ? 1: 0 };  
-`;
-
 const InnerView = styled.View`
 flex-direction:row;
 align-items:center;
@@ -65,4 +85,8 @@ padding:5px;
 height:100%;
 justify-content:center;
 
+`;
+
+const MinusIcon = styled(Minus)`
+color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]}
 `;

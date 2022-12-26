@@ -17,8 +17,8 @@ import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import { isOrderMealAtom } from '../../../../../biz/useOrderMeal/store';
-import useUserMe from '../../../../../biz/useUserMe';
-import { isUserMeAtom } from '../../../../../biz/useUserMe/store';
+import useUserMe from '../../../../../biz/useUserInfo';
+import useUserInfo from '../../../../../biz/useUserInfo';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
@@ -37,10 +37,9 @@ const Pages = () => {
   }
 
     const weekly = useAtomValue(weekAtom);
-    const {isUserMe, userMe} = useUserMe();
+    const {isUserInfo, userInfo} = useUserInfo();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [data,setData] = useState(null);
-
 
     const start = weekly.map((s) => {
       const startData = formattedWeekDate(s[0]);
@@ -56,13 +55,10 @@ const Pages = () => {
       )
   });
 
-  
-
-  
+ 
   useEffect(()=>{
-
     async function loadUser(){
-      await userMe();
+      await userInfo();
     }
     loadUser();
   
@@ -70,8 +66,8 @@ const Pages = () => {
   },[]);
 
 
-  const userName = isUserMe?.[0].name;
-  const userSpot = isUserMe?.[0].spot;
+  const userName = isUserInfo?.name;
+  const userSpot = isUserInfo?.spot;
 
   const date = formattedDate(new Date());
   const todayMeal = mealInfo?.filter((m) => m.date === date);
@@ -164,12 +160,13 @@ const Pages = () => {
               <CalendarIcon/>
               <TitleText>식사일정</TitleText>
             </MealCalendarTitle>
-            <Calendar setData={setData} onPressEvent={()=>navigation.navigate(MealMainPageName)}/>
+            <Calendar setData={setData} onPressEvent={()=>navigation.navigate(MealMainPageName)} />
           </MealCalendar>
-          <MenbershipBanner>
+
+          {!isUserInfo?.isMembership && <MenbershipBanner>
             <MembershipImage source={require('../../../../../assets/images/membership.png')} resizeMode='stretch'/>
             <MembershipText>멤버십 가입하고 <PointText>20%할인</PointText> 받기</MembershipText>
-          </MenbershipBanner>
+          </MenbershipBanner>}
           
           {/* <CatorWrap>
             <Cator>
@@ -180,8 +177,8 @@ const Pages = () => {
               <Count>2</Count>
               <CountText>건</CountText>
             </CountWrap>
-          </CatorWrap>
-          <MembershipWrap>
+          </CatorWrap> */}
+          {isUserInfo?.isMembership && <MembershipWrap>
             <Membership>
               <MembershipIcon/>
               <TitleText>멤버십</TitleText>
@@ -190,8 +187,8 @@ const Pages = () => {
               <Count>2</Count>
               <CountText>건</CountText>
             </CountWrap>
-          </MembershipWrap>
-          <MarketWrap>
+          </MembershipWrap>}
+          {/* <MarketWrap>
             <Market>
               <MarketIcon/>
               <TitleText>마켓 상품</TitleText>

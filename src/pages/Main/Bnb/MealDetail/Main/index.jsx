@@ -1,12 +1,15 @@
 
 import { useNavigation } from "@react-navigation/native";
+import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeModules, Animated,ScrollView, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView} from "react-native";
 import styled from "styled-components";
 
 import StartIcon from '../../../../../assets/icons/star.svg';
 import useFoodDetail from "../../../../../biz/useFoodDetail/hook";
+import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
 import BackButton from "../../../../../components/BackButton";
+import Badge from "../../../../../components/Badge";
 import ShoppingCart from "../../../../../components/BasketButton";
 import Button from '../../../../../components/ButtonExtendable';
 import MoreButton from '../../../../../components/ButtonMore';
@@ -15,11 +18,13 @@ import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from "../../../../../components/Typography";
+import { formattedWeekDate } from "../../../../../utils/dateFormatter";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 
-const Pages = () => {
+const Pages = ({route}) => {
+    
     const bodyRef = useRef();
     const navigation = useNavigation();
 
@@ -27,9 +32,14 @@ const Pages = () => {
     const [count, setCount] = useState(1);
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,foodDetail} = useFoodDetail();
-    
+    const {addMeal} = useShoppingBasket();
+
     const headerTitle = isFoodDetail?.name;
+    const foodId = route.params.foodId;
+    const type = route.params.type;
     
+    
+    // foodId 넘겨줘야함 
     useEffect(()=>{
         async function loadFoodDetail(){
             await foodDetail();
@@ -42,14 +52,15 @@ const Pages = () => {
         navigation.setOptions({   
             headerTransparent: true,
             headerStyle: {
-                backgroundColor:`${scroll < 180 ? 'transparent' : 'white'}`
+                backgroundColor:`${scroll < 100 ? 'transparent' : 'white'}`
               },
-            headerTitle:`${scroll > 180 ? `${headerTitle}`: ''}`,
-            headerLeft: () => (scroll > 180 ? <BackButton color={'#343337'}/> : <BackButton color={'white'}/>),
-            headerRight: () => (scroll > 180 ? <ShoppingCart color={'#343337'}/> : <ShoppingCart color={'white'}/>)
+            headerTitle:`${scroll > 100 ? `${headerTitle}`: ''}`,
+            headerLeft: () => (scroll > 100 ? <BackButton color={'#343337'} margin={[10,0]}/> : <BackButton color={'white'} margin={[10,0]}/>),
+            headerRight: () => (scroll > 100 ?  <View><ShoppingCart color={'#343337'} margin={[0,10]}/><Badge/></View>:<View><ShoppingCart color={'white'} margin={[0,10]}/><Badge/></View> )
           });
 
-    },[headerTitle, navigation, scroll]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[headerTitle,navigation, scroll]);
 
 
     const increasePress = () => {
@@ -79,17 +90,30 @@ const Pages = () => {
     const PRICE = 7500;
     let result = PRICE.toLocaleString('ko-KR');
 
+    const addCartPress = async () =>{
+        try {
+           await addMeal({
+                "foodId":foodId,
+                "count":count,
+                "serviceDate":"2022-12-23",
+                "diningType":type
+            });
+        } catch(err){
+            console.log(err)
+        }
+    }
+
     return (
         <>
         {/* <Wrap > */}
-            <ScrollView
+            <ScrollViewWrap
              showsVerticalScrollIndicator={false}
              onScroll = { (e) => handleScroll(e) }
              scrollEventThrottle={16}
-             style={{backgroundColor:'white'}}
+             //style={{backgroundColor:'white',flex:1}}
             >
                 <View>
-                    {scroll > 180 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
+                    {scroll > 100 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                 <Content>
                     <View>
@@ -167,19 +191,17 @@ const Pages = () => {
                 </Content>
                 
                 {/* 리뷰자리 */}
-                <Content >
+                {/* <Content >
                     <View>
-
-                 
-                    
                     <ReviewPage/>
                     </View>
                 </Content>
-                <MoreButton/>
+                <MoreButton/> */}
                 </View>
-                </ScrollView>
+                </ScrollViewWrap>
 
                 <KeyboardAvoiding
+                mealDetail
                 blurPress={blurPress}
                 focus={focus}
                 increasePress={increasePress}
@@ -189,34 +211,18 @@ const Pages = () => {
                 count={count}
                 value={count.toString()}
                 />
-                {/* <KeyboardAvoidingView 
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight+44 }
-                >
-                    <TouchableWithoutFeedback onBlur={blurPress}>
-                        <KeypadInput focus={focus}>
-                            <MinusIcon onPress={decreasePress}/>
-                            <TextInput
-                                keyboardType="number-pad"
-                                //onPress={focusPress}
-                                ref={bodyRef}
-                                onChangeText={changeText}
-                                value={count.toString()}
-                                />
-                            <PlusIcon onPress={increasePress}/>
-                        </KeypadInput>
-                    </TouchableWithoutFeedback> */}
-
-                {!focus && <ButtonWrap>
+                { !focus && <ButtonWrap >
                     <Button 
                         price={PRICE} 
+                        onPressEvent2={()=>{addCartPress()}}
                         onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
                         count={count} 
                         increasePress={increasePress}
                         decreasePress={decreasePress}
+                        
                     />
                 </ButtonWrap>}
-                {/* </KeyboardAvoidingView> */}
+                
                 
          {/* </Wrap> */}
                
@@ -229,6 +235,10 @@ const Wrap = styled.SafeAreaView`
 background-color:${props => props.theme.colors.grey[0]};
 position:relative;
 flex:1;
+`;
+
+const ScrollViewWrap = styled.ScrollView`
+background-color:${props => props.theme.colors.grey[0]};
 `;
 
 const Content = styled.View`
