@@ -55,7 +55,7 @@ const Pages = ({route}) => {
     <SafeView>
       <ScrollView>
         <CalendarView>
-          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent3={pressDay}  meal={meal} margin/>
+          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent3={pressDay}  meal={meal} margin={'0px 28px'}/>
         </CalendarView>
         
         <MealWrap>

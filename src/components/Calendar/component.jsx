@@ -39,7 +39,7 @@ const Component = ({
     onPressEvent3,
     daily,
     meal,
-    margin
+    margin='0px',
 }) => {
   const navigation = useNavigation();
     const pager = useRef();
@@ -97,7 +97,7 @@ const Component = ({
      {BooleanValue && daily ? <Button pager={pager} daily chk={chk} /> : <></>}
      {BooleanValue && meal ? <Button pager={pager} meal chk={chk}  /> : <></>}
      
-     <PagerViewWrap ref={pager} initialPage={0} pageMargin={22} onPageScroll={(e) => {onPageScroll(e)}} margin={margin}>
+     <PagerViewWrap ref={pager} initialPage={0} pageMargin={22} onPageScroll={(e) => {onPageScroll(e)}} margins={margin}>
     {weekly.map((week,i) => {
         return (
             <View key={i}>
@@ -161,7 +161,7 @@ export default Component;
 
 const PagerViewWrap = styled(PagerView)`
 flex:1;
-margin:${props => props.margin ? '0px 28px':'0px'};
+margin:${({margins}) => margins && margins};
 `;
 
 const Wrap = styled.View`
