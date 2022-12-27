@@ -4,9 +4,9 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '12.4'
 install! 'cocoapods', :deterministic_uuids => false
 
-target 'gdacApp' do
+target 'kurrant' do
   config = use_native_modules!
-
+  
   # Flags change depending on the env values.
   flags = get_default_flags()
 
@@ -26,11 +26,13 @@ target 'gdacApp' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'gdacAppTests' do
+  target 'kurrantTests' do
     inherit! :complete
     # Pods for testing
   end
   
+  
+
   post_install do |installer|
     react_native_post_install(
       installer,

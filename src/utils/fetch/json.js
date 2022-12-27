@@ -2,7 +2,8 @@
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
-
+import useToken from '../../hook/useToken';
+import { getStorage } from '../asyncStorage';
 const RESPONSE_SLEEP = 300;
 
 const apiHostUrl =
@@ -28,7 +29,7 @@ const buildQuery = queryObj => {
 
 async function json(url, method, options = {}) {
   console.log(options);
-
+  const token = await getStorage('token');
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
       throw new Error('body is empty');
@@ -41,10 +42,11 @@ async function json(url, method, options = {}) {
     const params = Object.assign({}, options.querystring);
     reqUrl += buildQuery(params);
   }
-
   let headers = {
     'content-type': 'application/json',
+    'Authorization': `Bearer ${token}`
   };
+
   if (options.accessToken !== undefined) {
     headers.Authorization = 'Bearer ' + options.accessToken;
   }
@@ -52,6 +54,7 @@ async function json(url, method, options = {}) {
   console.log('fetching to:', reqUrl);
   console.log('fetching method:', method);
   console.log('fetching option:', options.body);
+  console.log('fetching token:', headers.authorization);
   // throw new Error('rul : ' + reqUrl);
   let startTs = Date.now();
 

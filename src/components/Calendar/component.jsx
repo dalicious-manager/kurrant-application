@@ -39,7 +39,9 @@ const Component = ({
     onPressEvent3,
     daily,
     meal,
-    margin = '0px'
+
+    margin='0px',
+
 }) => {
   const navigation = useNavigation();
     const pager = useRef();

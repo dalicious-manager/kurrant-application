@@ -1,3 +1,4 @@
+
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, BackHandler, Dimensions,TouchableOpacity} from 'react-native';
@@ -16,7 +17,13 @@ import {
   PAGE_NAME as MembershipJoinPageName,
 } from '../../../Membership/MembershipJoin';
 import LoginMain from './LoginMain';
+
+
+
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
+
+
+
 
 const screenHeight = Dimensions.get('screen').height;
 

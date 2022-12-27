@@ -1,12 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
+
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React ,{useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 
+import Balloon from '../../../../../components/Balloon'
 import ButtonSns from '../../../../../components/ButtonSns';
+import snsLogin from '../../../../../utils/snsLogin';
 import {PAGE_NAME as LoginPage} from '../../EmailLogin';
 import {PAGE_NAME as SignUpPage} from '../../SignUp';
 export const PAGE_NAME = 'P_LOGIN__MODAL__MAIN_LOGIN';
+
 
 const Pages = () => {
 
@@ -16,8 +20,14 @@ const Pages = () => {
   };
   const handleEmailPress = () => {
     navigation.navigate(SignUpPage ?? '');
-  };
+  };  
+  const {naverLogin, kakaoLogin} = snsLogin();
   
+  const balloon = Balloon();
+  
+  // useEffect(()=>{
+  //   fetch('https://nid.naver.com/oauth2.0/authorize')
+  // },[])
   return (
     <View style={styles.container}>
       
@@ -25,14 +35,15 @@ const Pages = () => {
         <Login />
       </FormProvider> */}
       <View style={styles.SNSContainer}>
-        <ButtonSns type_sns="kakao" />
-        <ButtonSns type_sns="naver" />
+        <balloon.BalloonWrap /> 
+        <ButtonSns type_sns="kakao" onPressEvent={kakaoLogin} />
+        <ButtonSns type_sns="naver" onPressEvent={naverLogin} />
         <View style={styles.buttonContainer}>
           <View style={{...styles.buttonBox, marginRight:3.5}}>
             <ButtonSns type_sns="email" onPressEvent={handleEmailPress} />
           </View>
           <View style={{...styles.buttonBox, marginLeft:3.5}}>
-            <ButtonSns type_sns="login" onPressEvent={handleLoginPress}/>
+            <ButtonSns type_sns="login" onPressEvent={handleLoginPress} />
           </View>
         </View>
       </View>

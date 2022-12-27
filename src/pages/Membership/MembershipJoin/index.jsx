@@ -1,10 +1,11 @@
 
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {  ScrollView } from "react-native";
 import styled from "styled-components/native";
 
+import useMembership from "../../../biz/useMembership";
 import Check from "../../../components/Check";
 import Form from "../../../components/Form";
 import { CommentsIcon, DeliveryFreeIcon, DiscountIcon, PointIcon } from "../../../components/Icon";
@@ -19,43 +20,57 @@ export const PAGE_NAME = "P__MEMBERSHIP__JOIN"
 const Pages= ()=>{
     const signUpCheck = useForm();
     const navigation = useNavigation();
+    const membershipProduct = useMembership();
+
+    const [membershipData, setMembershipData] = useState();
+
     const signUpCheck1 = signUpCheck.watch('signUpCheck1')
     const signUpCheck2 = signUpCheck.watch('signUpCheck2')
     const signUpCheck3 = signUpCheck.watch('signUpCheck3')
     const signUpCheck4 = signUpCheck.watch('signUpCheck4')
-  const checkAll = () => {
-    signUpCheck.setValue('signUpCheck1', signUpCheck.watch('signUpCheckAll'))
-    signUpCheck.setValue('signUpCheck2', signUpCheck.watch('signUpCheckAll'))
-    signUpCheck.setValue('signUpCheck3', signUpCheck.watch('signUpCheckAll'))
-    signUpCheck.setValue('signUpCheck4', signUpCheck.watch('signUpCheckAll'))
-    
-  };
+    const checkAll = () => {
+        signUpCheck.setValue('signUpCheck1', signUpCheck.watch('signUpCheckAll'))
+        signUpCheck.setValue('signUpCheck2', signUpCheck.watch('signUpCheckAll'))
+        signUpCheck.setValue('signUpCheck3', signUpCheck.watch('signUpCheckAll'))
+        signUpCheck.setValue('signUpCheck4', signUpCheck.watch('signUpCheckAll'))
+        
+    };
+    const getMembershipData = useCallback(async()=>{
+        const {data} = await membershipProduct.getMembershipProduct();
+        setMembershipData(data);
+    },[membershipProduct])
+    console.log(signUpCheck.watch());
 
-  console.log(signUpCheck.watch());
+    const  handleSubmit = async(period) => {
+        
+        if(signUpCheck1&&
+            signUpCheck2&&
+            signUpCheck3){
+                if(signUpCheck4){
+                    console.log("알람 동의");
+                }
+                navigation.navigate(MembershipJoinPaymentsPageName,{
+                    period:period ==="월간구독" ? 'month':'yaers',
+                    membershipData:period ==="월간구독" ? membershipData[0]:membershipData[1],
+                });
+        }   
+    };
+    const handleSubmitError = () => {
+        try {
+        console.log("에러");
+        } catch (error) {
+        console.log(error);
+        }
+    };
 
-  const handleSubmit = period => {
-    if(signUpCheck1&&
-        signUpCheck2&&
-        signUpCheck3){
-            console.log("다음페이지");
-            navigation.navigate(MembershipJoinPaymentsPageName,{
-                period:period
-            });
-    }   
-  };
-  const handleSubmitError = () => {
-    try {
-      console.log("에러");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const disabledCheck =
-    signUpCheck1 &&
-    signUpCheck2 &&
-    signUpCheck3 ;
-
+    const disabledCheck =
+        signUpCheck1 &&
+        signUpCheck2 &&
+        signUpCheck3 ;
+    useEffect(()=>{
+        getMembershipData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
     return(
         <Wrapper>
             <ScrollView>
@@ -124,12 +139,11 @@ const Pages= ()=>{
                     </Check>              
                 </CheckWrap>
                 <ButtonContainer>
-                    <ButtonBox>
-                        <MembershipButton label="월간결제" payments={12000} onPressEvent={disabledCheck ? ()=>handleSubmit('month'): ()=>handleSubmitError()} />  
+                    {membershipData?.map((membership)=>{
+                        return <ButtonBox key={membership.membershipSubscriptionType}>
+                        <MembershipButton label={membership.membershipSubscriptionType} isSale={membership.discountRate} payments={membership.price} dicountPayments={membership.discountedPrice} onPressEvent={disabledCheck ? ()=>handleSubmit(membership.membershipSubscriptionType): ()=>handleSubmitError()} />  
                     </ButtonBox> 
-                    <ButtonBox>
-                        <MembershipButton label="연간결제" payments={115200} isSale={true} onPressEvent={disabledCheck ? ()=>handleSubmit('years'): ()=>handleSubmitError()} />   
-                    </ButtonBox>
+                    })}             
                 </ButtonContainer>
             </Form>
 
