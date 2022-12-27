@@ -30,6 +30,7 @@ export default () => {
         console.log('로그인')
         const {successResponse} = await NaverLogin.login(naverData());
         if(successResponse){
+            console.log(successResponse)
             Clipboard.setString(successResponse.accessToken)
             await snsLogin({
                 snsAccessToken:successResponse.accessToken,
