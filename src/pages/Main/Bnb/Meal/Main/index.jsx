@@ -20,11 +20,10 @@ export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
   // const {data} = route.params;
-
+console.log(route)
   const navigation = useNavigation();
   const mealInfo = useAtomValue(isOrderMealAtom);
   const meal = true;
-
   const [touchDate,setTouchDate] = useState();
   const weekly = useAtomValue(weekAtom);
   const {isOrderMeal,orderMeal} = useOrderMeal();
@@ -55,7 +54,7 @@ const Pages = ({route}) => {
     <SafeView>
       <ScrollView>
         <CalendarView>
-          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent3={pressDay}  meal={meal} margin/>
+          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent3={pressDay}  meal={meal} margin={'0px 28px'}/>
         </CalendarView>
         
         <MealWrap>

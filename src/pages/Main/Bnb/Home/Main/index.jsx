@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAtom, useAtomValue } from 'jotai';
 import React, { useEffect, useRef, useState } from 'react';
 import {useForm} from 'react-hook-form';
-import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet} from 'react-native';
+import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
@@ -19,6 +19,7 @@ import useOrderMeal from '../../../../../biz/useOrderMeal';
 import { isOrderMealAtom } from '../../../../../biz/useOrderMeal/store';
 import useUserMe from '../../../../../biz/useUserInfo';
 import useUserInfo from '../../../../../biz/useUserInfo';
+import BottomSheet from '../../../../../components/BottomSheet/component';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
@@ -39,6 +40,7 @@ const Pages = () => {
     const weekly = useAtomValue(weekAtom);
     const {isUserInfo, userInfo} = useUserInfo();
     const mealInfo = useAtomValue(isOrderMealAtom);
+    const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
 
     const start = weekly.map((s) => {
@@ -72,6 +74,9 @@ const Pages = () => {
   const date = formattedDate(new Date());
   const todayMeal = mealInfo?.filter((m) => m.date === date);
 
+  const PressSpotButton = () => {
+    setModalVisible(true);
+}
 
   return (
     <SafeView>
@@ -79,7 +84,9 @@ const Pages = () => {
       <Wrap>
         <BarWrap>
           <SpotName>
-          <SpotNameText>{userSpot}</SpotNameText>
+            <Pressable onPress={PressSpotButton}>
+              <SpotNameText>팁스타운 1층{userSpot}</SpotNameText>
+            </Pressable>
           <ArrowIcon/>
           </SpotName>
           <Icons>
@@ -205,7 +212,7 @@ const Pages = () => {
       <ButtonWrap>
           <Button label={'식사 구매하기'}  type={'yellow'} icon={'plus'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
       </ButtonWrap>
-      
+      <BottomSheet modalVisible={modalVisible} setModalVisible={setModalVisible} title={'???'}/>
     </SafeView>
   )
 };
@@ -448,6 +455,7 @@ color: ${props => props.theme.colors.green[500]};
 
 const SpotNameText = styled(Typography).attrs({text:'BottomButtonSB'})`
 color:${props => props.theme.colors.grey[2]};
+margin-right:6px;
 `;
 
 const DiningType = styled(Typography).attrs({text:'CaptionSB'})`

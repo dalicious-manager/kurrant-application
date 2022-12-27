@@ -2,12 +2,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { useAtom } from 'jotai';
 import React from 'react';
 import {  Alert, Text } from 'react-native';
+import styled from 'styled-components';
 
 import { isLoginLoadingAtom,    } from '../../biz/useAuth/store';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
 import ShoppingCart from '../../components/BasketButton';
+import Typography from '../../components/Typography';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
 import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
@@ -166,7 +168,7 @@ const Screen = () => {
             headerShadowVisible: false,
             
             headerLeft: () => <BackButton margin={[10,0]}/>,
-            headerRight: () => <Text onPress={()=>{Alert.alert(
+            headerRight: () => <DeleteTxt onPress={()=>{Alert.alert(
               '전체 삭제',
               '메뉴를 모두 삭제하시겠어요?',
               [
@@ -180,7 +182,7 @@ const Screen = () => {
                   onPress:() => allDeleteMeal()
                 }
               ]
-            )}}>전체삭제</Text>
+            )}}>전체삭제</DeleteTxt>
           }}
         />
       </MainRoot.Group>
@@ -477,3 +479,8 @@ const Screen = () => {
 };
 
 export default Screen;
+
+const DeleteTxt = styled(Typography).attrs({text:'Button09R'})`
+color:${({theme}) => theme.colors.grey[2]};
+margin-right:10px;
+`;

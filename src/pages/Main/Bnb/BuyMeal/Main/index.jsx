@@ -77,7 +77,7 @@ const Pages = () => {
                 {userMembership?.isMembership && <MembershipBar/>}
                 
                 <CalendarWrap>
-                    <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={dayPress} daily={daily} margin/>
+                    <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={dayPress} daily={daily} margin={'0px 28px'}/>
                 </CalendarWrap>
                
                 <PagerViewWrap>

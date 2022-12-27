@@ -2,7 +2,7 @@ import { fetchJson } from '../../utils/fetch';
 
 export async function DailyFood(spotId,selectedDate){
     const fetchRes = await fetchJson(`/foods/dailyfoods?spotId=${spotId}&selectedDate=${selectedDate}` ,'GET',{
-        'accessToken' : 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY3MTc4OTYyNSwiZXhwIjoxNjcyMTQ5NjI1fQ.o8tp8TUib2OLWcnGK9aaY4Qc_rR-ViYUUnzrP_1uQEM'
+        'accessToken' : 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY3MjA1NDY2NiwiZXhwIjoxNjcyNDE0NjY2fQ.wiHnYeiDCA3QltvuMCi8rNT3oeJDvonz3aXJ-srCayo'
     });
     
     return fetchRes;

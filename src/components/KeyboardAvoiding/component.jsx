@@ -22,14 +22,12 @@ const Component = ({
     mealDetail,
     addHandle,
     substractHandle,
-    aa,
-    id
+    id,
+    
     
 }) =>{
-  
-    useEffect(()=>{
-        console.log(count)
-    },[count])
+
+    
     const {isLoadMeal} = useShoppingBasket();
     
     const [statusBarHeight, setStatusBarHeight] = useState(0);
@@ -42,8 +40,12 @@ const Component = ({
           : null;
       }, []);
 
+      const quantity = isLoadMeal.find(x => id === x.id);
+
     return (
         <Wrap
+        onBlur={blurPress}
+        focus={focus}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight+44 }
         >
@@ -51,14 +53,15 @@ const Component = ({
                 <React.Fragment>
                 {mealCart && <KeypadInput focus={focus}>
                     <PressableView onPress={()=>{substractHandle(id)}}>
-                        <MinusIcon />
+                        <MinusIcon disabled={quantity?.count}/>
                     </PressableView>
-                    <TextInput
+                    <InnerTextInput
+                        min={1}
                         keyboardType="number-pad"
                         //onPress={focusPress}
                         ref={bodyRef}
                         onChangeText={(text)=>{changeText(text,id)}}
-                        value={count.toString()}
+                        value={quantity?.count.toString()}
                         />
                        
                     <PressableView onPress={()=>{addHandle(id)}}>
@@ -66,20 +69,20 @@ const Component = ({
                     </PressableView>
                 </KeypadInput>}
                 {mealDetail && <KeypadInput focus={focus}>
-                    <PressableView onPress={decreasePress}>
-                        <MinusIcon />
-                    </PressableView>
-                    <TextInput
-                        keyboardType="number-pad"
-                        //onPress={focusPress}
-                        ref={bodyRef}
-                        onChangeText={changeText}
-                        value={count.toString()}
-                        />
-                    <PressableView onPress={increasePress}>
-                        <PlusIcon />
-                    </PressableView>
-                </KeypadInput>}
+                        <PressableView onPress={decreasePress}>
+                            <MinusIcon />
+                        </PressableView>
+                        <TextInput
+                            keyboardType="number-pad"
+                            //onPress={focusPress}
+                            ref={bodyRef}
+                            onChangeText={changeText}
+                            value={count.toString()}
+                            />
+                        <PressableView onPress={increasePress}>
+                            <PlusIcon />
+                        </PressableView>
+                    </KeypadInput>}
                 </React.Fragment>
             </TouchableWithoutFeedback>
         </Wrap>
@@ -106,5 +109,12 @@ const Wrap = styled.KeyboardAvoidingView`
 `;
 
 const MinusIcon = styled(Minus)`
-color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]}
+color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]};
 `;
+
+const InnerTextInput = styled.TextInput`
+font-weight:600;
+font-size:16px;
+line-height:22px;
+`;
+

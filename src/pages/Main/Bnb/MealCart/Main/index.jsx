@@ -1,13 +1,16 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import milliseconds from "date-fns/esm/fp/milliseconds/index";
 import { is } from "date-fns/locale";
 import { useAtom } from "jotai";
 import { atomWithReset } from "jotai/utils";
 import React, { useCallback, useEffect, useLayoutEffect, useRef,useState } from "react";
-import { Alert, Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { Alert, Dimensions, Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import styled from "styled-components";
 
 import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
+import X from "../../../../../assets/icons/MealCart/x.svg";
 import Minus from "../../../../../assets/icons/MealDetail/minus.svg";
 import PlusIcon from "../../../../../assets/icons/MealDetail/plus.svg";
 import { loadMealCart } from "../../../../../biz/useShoppingBasket/Fetch";
@@ -19,9 +22,11 @@ import NoMealButton from '../../../../../components/Button';
 import Count from "../../../../../components/Count";
 import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
 import Typography from "../../../../../components/Typography";
+import { formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
 
+const windowHeight = Dimensions.get('window').height;
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
 
@@ -29,17 +34,16 @@ const Pages = () => {
     const bodyRef = useRef();
     
     const [focus,setFocus] = useState(false);
-    const [count, setCount] = useState(0);
     const [id, setId] = useState(null);
     const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal } = useShoppingBasket();
     
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
-    console.log(isLoadMeal)
+    //console.log(isLoadMeal)
     useFocusEffect(
         useCallback(() => {
           // Do something when the screen is focused
-            console.log('???')
+            console.log('들어옴')
 
           return () => {
             // Do something when the screen is unfocused
@@ -49,22 +53,20 @@ const Pages = () => {
        
         }, [])
       );
-    // const id = isLoadMeal.map(m => m.id)
-    // const quantity = isLoadMeal.map(m => m.count);
-   
+     const arr = isLoadMeal.map(m => m.id);
+    
+     const quantity = isLoadMeal.map(m => m.count);
+    //console.log(quantity)
+
+
+    
+     
     const pointButton = () => {
         setModalVisible(true);
     }
     const fundButton = () => {
         setModalVisible2(true);
     }
-
-    // const increasePress = () => {
-    //     setCount(prev => Number(prev) + 1);
-    //   };
-    // const decreasePress = () => {
-    //     setCount(prev => (prev <= 1 ? 1 : prev - 1));   
-    //   };
 
     const addHandle = (productId) => {
         const addQty = isLoadMeal.map(p => {
@@ -96,6 +98,8 @@ const Pages = () => {
     const totalPrice = isLoadMeal.map(p => p.count * p.price).reduce((acc,cur) => {
         return acc + cur
     });
+    // const totalCount = 1200;
+    // const totalPrice = 1200000;
     
     const focusPress = () => {
         setFocus(true);
@@ -105,7 +109,7 @@ const Pages = () => {
       };
 
     const changeText = (number,pi) => {
-        //setCount(number);
+        
         const addQty = isLoadMeal.map(p => {
             if (pi === p.id){
                 return {...p, count:Number(number)}
@@ -138,61 +142,60 @@ const Pages = () => {
     // // eslint-disable-next-line react-hooks/exhaustive-deps
     // },[]);
 
-    const propsCount = (cnt) => {
-        setCount(cnt);
-    };
     const propsId = (mealId) => {
         setId(mealId)
     };
+
+
 
     
 
     return (
         <SafeView>
-            {/* <EmptyView>
+            {isLoadMeal.length === 0 && <EmptyView>
                 <NoMealText>아직 담은 식사가 없어요!</NoMealText>
                 <NoMealButtonWrap>
                     <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'}/>
                 </NoMealButtonWrap>
-            </EmptyView> */}
+            </EmptyView>}
             <ScrollViewWrap showsVerticalScrollIndicator={false}>
                 {isLoadMeal?.map((l,idx) => {
                     const price = l.price * l.count;
-                    
                     return (
                         <Wrap key={idx}>
-                                         <ContentHeader>
-                                             <DiningName>{l.date} {l.diningType}</DiningName>
-                                             <Pressable onPress={()=>{deleteButton(l.id)}}><DeleteIcon/></Pressable>
-                                         </ContentHeader>
-                                         <ContentWrap>
-                                         <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                             <View>
-                                                 <MealName>[{l.makers}] {l.name}</MealName>
-                                                 {/* 할인 적용 되면  */}
-                                                 {/* <SalePriceWrap>
-                                                     <PointBoldText>20%</PointBoldText>
-                                                   <Price>{withCommas(el.price)}원</Price>
-                                                 </SalePriceWrap>
-                                                 <SalePrice>{withCommas(el.price)}원</SalePrice> */}
-                                                 <Price>{withCommas(price)}원</Price>
-                                             </View>
-                                         <CountWrap>                                
-                                                 <Count
-                                                 cart
-                                                 onPressEvent={() => {bodyRef.current.focus(); focusPress();propsCount(l.count);propsId(l.id)}} 
-                                                 // count={count} 
-                                                 addHandle={addHandle}
-                                                 substractHandle={substractHandle}
-                                                 quantity={l.count}
-                                                 id={l.id}
-                                                />
-                                             </CountWrap>
-                                         </ContentWrap>
-                                     </Wrap>
+                            <ContentHeader>
+                                <DiningName>{formattedMonthDay(l.date)} {l.diningType}</DiningName>
+                                <Pressable onPress={()=>{deleteButton(l.id)}}><DeleteIcon/></Pressable>
+                            </ContentHeader>
+                            <ContentWrap>
+                            <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                                <View>
+                                    <MealName>[{l.makers}] {l.name}</MealName>
+                                    {/* 할인 적용 되면  */}
+                                    {/* <SalePriceWrap>
+                                        <PointBoldText>20%</PointBoldText>
+                                    <Price>{withCommas(el.price)}원</Price>
+                                    </SalePriceWrap>
+                                    <SalePrice>{withCommas(el.price)}원</SalePrice> */}
+                                    <Price>{withCommas(price)}원</Price>
+                                </View>
+                            <CountWrap>                                
+                                    <Count
+                                    cart
+                                    onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(l.id)}} 
+                                    // count={count} 
+                                    addHandle={addHandle}
+                                    substractHandle={substractHandle}
+                                    quantity={l.count}
+                                    id={l.id}
+                                />
+                                </CountWrap>
+                            </ContentWrap>
+                        </Wrap>
                     )
                 })}
-                
+                {isLoadMeal.length !== 0 && 
+            
                 <PaymentWrap>
                     <PaymentView>
                         <PaymentText>총 상품금액</PaymentText>
@@ -218,12 +221,20 @@ const Pages = () => {
                             <PaymentText>포인트 사용금액</PaymentText>
                             <QuestionIcon />
                         </PressableView>
+                        <PointWrap>
+                            <PointInputWrap>
+                                <PointInput keyboardType="number-pad" />
+                                <XIcon/>
+                            </PointInputWrap>
+                            <PointUnitText>P</PointUnitText>
+                        </PointWrap>
                     </PaymentView>
                     <PaymentView>
                         <TotalPriceTitle>총 결제금액</TotalPriceTitle>
                         <TotalPrice>10,000 원</TotalPrice>
                     </PaymentView>
                 </PaymentWrap>
+                }
             </ScrollViewWrap>
             <KeyboardAvoiding
                 mealCart
@@ -231,22 +242,20 @@ const Pages = () => {
                 focus={focus}
                 addHandle={addHandle}
                 substractHandle={substractHandle}
-                // increasePress={increasePress}
-                // decreasePress={decreasePress}
                 bodyRef={bodyRef}
                 changeText={changeText}
-                count={count}
                 id={id}
-                //value={count.toString()}
-            
-                
             />
-            <ButtonWrap>
+            
+           
+            <ButtonWrap focus={focus}>
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
             </ButtonWrap>
+             
             <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
             <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
-        </SafeView>
+                    
+            </SafeView>
     )
 
 }
@@ -256,17 +265,19 @@ export default Pages;
 const SafeView = styled.SafeAreaView`
 background-color:${props => props.theme.colors.grey[0]};
 flex:1;
+padding-bottom:50px;
 `;
 const ScrollViewWrap = styled.ScrollView`
-  //margin:0px 28px;
+
+ 
 `;
 
-const PressableView = styled.Pressable`
+export const PressableView = styled.Pressable`
 flex-direction:row;
 align-items:center;
 `;
 
-const QuestionIcon = styled(Question)`
+export const QuestionIcon = styled(Question)`
 margin-left:4px;
 `;
 
@@ -328,6 +339,7 @@ export const ButtonWrap = styled.View`
 position:absolute;
 bottom:35px;
 margin: 0px 24px;
+opacity:${({focus}) => focus ? 0 : 1};
 `;
 
 const PaymentWrap = styled.View`
@@ -400,5 +412,38 @@ justify-content:center;
 `;
 
 const MinusIcon = styled(Minus)`
-color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]}
+color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]};
+`;
+
+export const PointWrap = styled.View`
+flex-direction:row;
+justify-content:center;
+align-items:center;
+`;
+
+export const PointInputWrap = styled.View`
+width:115px;
+height:38px;
+border-radius:7px;
+border : 1px solid ${({theme}) => theme.colors.grey[7]};
+background-color:${({theme}) => theme.colors.grey[0]};
+padding:0px 28px 0px 12px;
+flex-direction:row;
+text-align:center;
+align-items:center;
+position: relative;
+`;
+
+export const PointInput = styled.TextInput`
+flex-direction:row;
+width:100%;
+`;
+export const XIcon = styled(X)`
+position:absolute;
+right:6px;
+`;
+
+export const PointUnitText = styled(Typography).attrs({text:'Title04R'})`
+color:${({theme}) => theme.colors.grey[2]};
+margin-left:8px;
 `;

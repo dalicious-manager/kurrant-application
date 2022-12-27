@@ -2,7 +2,7 @@ import { addDays, eachWeekOfInterval, subDays,eachDayOfInterval} from 'date-fns'
 
 export const dates = eachWeekOfInterval(
     {
-     start: subDays(new Date(), 7), // 지난주
+     start: subDays(new Date(), 0), // 지난주
      end: addDays(new Date(), 21), // 다음주
     },
     {

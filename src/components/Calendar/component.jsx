@@ -39,7 +39,7 @@ const Component = ({
     onPressEvent3,
     daily,
     meal,
-    margin
+    margin = '0px'
 }) => {
   const navigation = useNavigation();
     const pager = useRef();
@@ -97,7 +97,7 @@ const Component = ({
      {BooleanValue && daily ? <Button pager={pager} daily chk={chk} /> : <></>}
      {BooleanValue && meal ? <Button pager={pager} meal chk={chk}  /> : <></>}
      
-     <PagerViewWrap ref={pager} initialPage={0} pageMargin={22} onPageScroll={(e) => {onPageScroll(e)}} margin={margin}>
+     <PagerViewWrap ref={pager} initialPage={0} pageMargin={22} onPageScroll={(e) => {onPageScroll(e)}} margins={margin}>
     {weekly.map((week,i) => {
         return (
             <View key={i}>
@@ -121,7 +121,7 @@ const Component = ({
                         <DaysWrap key={day}>
                             <Day lastDay={lastDay} color={color} size={size}>{txt}</Day>
                             <TodayCircle now={now} type={type} currentPress={currentPress} day={day}>
-                              {/* setTouchDate : BuyMeal,Meal , setData: Home  */}
+                              {/* onPressEvent: Home, onPressEvent2: BuyMeal, onPressEvent3: Meal  */}
                               {onPressEvent && 
                                 <Pressable onPress={()=>navigation.reset({ routes: [{name:MealMainPageName,params:{data:pressDay}}]})}>
                                 <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
@@ -161,7 +161,7 @@ export default Component;
 
 const PagerViewWrap = styled(PagerView)`
 flex:1;
-margin:${props => props.margin ? '0px 28px':'0px'};
+margin:${({margins}) => margins && margins};
 `;
 
 const Wrap = styled.View`
@@ -181,7 +181,7 @@ border-radius:50px;
 margin-top:3px;
 align-items:center;
 justify-content:center;
-background-color:${({currentPress, day}) => currentPress === day ? 'gold' : 'white'};
+background-color:${({currentPress, day}) => currentPress === day ? '#E4E3E7' : 'white'};
  ${({ type, now }) => now && getCircleColor(type)};
 `;
 
