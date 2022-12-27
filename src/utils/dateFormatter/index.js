@@ -92,6 +92,17 @@ export function formattedWeekDate(data,delimiter = '-') {
   const day = leftPad(dateTime.getDate());
   return `${[year, month, day].join(delimiter)}`
 }
+
+export function formattedMonthDay(data) {
+  const dateTime = transDateType(data);
+  
+  const month = leftPad(dateTime.getMonth() + 1);
+  const day = leftPad(dateTime.getDate());
+
+  const week = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = week[dateTime.getDay()];
+  return `${month}월 ${day}일(${dayOfWeek})`;
+}
 // export function daysLeft(endDate) {
 //   const dayNow = new Date();
 

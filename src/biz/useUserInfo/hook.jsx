@@ -3,7 +3,7 @@ import {useAtom} from 'jotai';
 import * as Fetch from './Fetch';
 import { isUserInfoAtom } from './store';
 
-const useUserMe = () => {
+const useUserInfo = () => {
 
     const [isUserInfo,setUserInfo] = useAtom(isUserInfoAtom);
         
@@ -28,4 +28,4 @@ const useUserMe = () => {
 
 
 
-export default useUserMe;
+export default useUserInfo;

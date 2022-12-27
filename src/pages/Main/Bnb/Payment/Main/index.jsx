@@ -7,13 +7,17 @@ import ArrowDownIcon from '../../../../../assets/icons/Arrow/arrowDown.svg';
 import ArrowRightIcon from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
 import PayError from "../../../../../assets/icons/Payment/payError.svg";
+import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
+import useUserInfo from "../../../../../biz/useUserInfo";
 import According from '../../../../../components/Accordion';
 import BottomModal from "../../../../../components/BottomModal";
 import Button from '../../../../../components/Button';
 import Check from "../../../../../components/Check";
 import Form from "../../../../../components/Form";
 import Typography from "../../../../../components/Typography";
-import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointText, Price, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, Wrap } from "../../MealCart/Main";
+import { formattedMonthDay } from "../../../../../utils/dateFormatter";
+import withCommas from "../../../../../utils/withCommas";
+import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, Wrap, XIcon } from "../../MealCart/Main";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -22,10 +26,31 @@ const Pages = () => {
     const agreeCheck = useForm();
     const [show,setShow] = useState(false);
     const [ modalVisible, setModalVisible ] = useState(false);
+    const [ modalVisible2, setModalVisible2 ] = useState(false);
+    const {isLoadMeal} = useShoppingBasket();
+    const {isUserInfo} = useUserInfo();
 
     const PressButton = () => {
         setModalVisible(true);
     }
+
+    const pointButton = () => {
+        setModalVisible2(true);
+    }
+
+    const closeModal = () => {
+        setModalVisible2(false);
+        
+    };
+
+
+    const totalCount = isLoadMeal.map(p => p.count).reduce((acc,cur) => {
+        return acc + cur
+    });
+
+    const totalPrice = isLoadMeal.map(p => p.count * p.price).reduce((acc,cur) => {
+        return acc + cur
+    });
 
 
     return (
@@ -43,7 +68,7 @@ const Pages = () => {
                     </DeliveryTextWrap>
                     <View>
                         <DeliveryTitle>주문자 정보</DeliveryTitle>
-                        <DeliveryText>이대희(01012345678)</DeliveryText>
+                        <DeliveryText>{isUserInfo?.name}(01012345678)</DeliveryText>
                     </View>
                 </Container>
                 
@@ -57,46 +82,32 @@ const Pages = () => {
                     
                 </Container>
                 {show && <ProductInfo> 
-                    <OrderWrap>
-                    <View>
-                        <DiningName>4월 21일(월) 점심</DiningName>
-                    </View>
-                    <ContentWrap>
-                        <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                       {isLoadMeal.map((meal,idx) => {
+                        
+                        return (
+                            <OrderWrap key={meal.id}>
                             <View>
-                                <MealName>[폴어스] 리코타 치즈 샐러드</MealName>
-                                <SalePriceWrap>
-                                    <PointBoldText>20%</PointBoldText>
-                                    <Price>8,500원</Price>
-                                </SalePriceWrap>
-                                <SalePrice>8,500원</SalePrice>
+                                <DiningName>{formattedMonthDay(meal.date)} {meal.diningType}</DiningName>
                             </View>
-                            <CountWrap>
-                                <CountText>수량: 1개</CountText>
-                            </CountWrap>
-                    </ContentWrap>
-                </OrderWrap>
-                <OrderWrap>
-                <View>
-                    <DiningName>4월 21일(월) 점심</DiningName>
-                </View>
-                <ContentWrap>
-                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                        <View>
-                            <MealName>[폴어스] 리코타 치즈 샐러드</MealName>
-                            <SalePriceWrap>
-                                <PointBoldText>20%</PointBoldText>
-                                <Price>8,500원</Price>
-                            </SalePriceWrap>
-                            <SalePrice>8,500원</SalePrice>
-                        </View>
-                        <CountWrap>
-                            <CountText>수량: 1개</CountText>
-                        </CountWrap>
-                </ContentWrap>
-            </OrderWrap>
-            </ProductInfo>
-                }
+                            <ContentWrap>
+                                <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                                    <View>
+                                        <MealName>[{meal.makers}] {meal.name} </MealName>
+                                        <SalePriceWrap>
+                                            <PointBoldText>20%</PointBoldText>
+                                            <Price>{withCommas(meal.price)} 원</Price>
+                                        </SalePriceWrap>
+                                        <SalePrice>8,500원</SalePrice>
+                                    </View>
+                                    <CountWrap>
+                                        <CountText>수량: {meal.count}개</CountText>
+                                    </CountWrap>
+                            </ContentWrap>
+                            </OrderWrap>
+                        )
+                       })}
+                    </ProductInfo>
+                    }
             </BorderWrap>
             <BorderWrap>
                 <PriceTitle>
@@ -104,7 +115,7 @@ const Pages = () => {
                 </PriceTitle>
                     <PaymentView>
                         <PaymentText>총 상품금액</PaymentText>
-                        <PaymentText>10,000 원</PaymentText>
+                        <PaymentText>{withCommas(totalPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>회사 지원금 사용 금액
@@ -121,9 +132,17 @@ const Pages = () => {
                         <PaymentText>0 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
-                        <PaymentText>포인트 사용금액
-                            <QuestionIcon/>
-                        </PaymentText>
+                        <PressableView onPress={pointButton}>
+                            <PaymentText>포인트 사용금액</PaymentText>
+                            <QuestionIcon />
+                        </PressableView>
+                        <PointWrap>
+                            <PointInputWrap>
+                                <PointInput keyboardType="number-pad" />
+                                <XIcon/>
+                            </PointInputWrap>
+                            <PointUnitText>P</PointUnitText>
+                        </PointWrap>
                     </PaymentView>
                     <PaymentView>
                         
@@ -160,9 +179,10 @@ const Pages = () => {
                 </FormWrap>
                 </ViewScroll>
                 <ButtonWrap>
-                    <Button label='총 21개 결제하기' onPressEvent={PressButton}/>
+                    <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={PressButton}/>
                 </ButtonWrap>
                 <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow'/>
+                <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
         </SafeArea>
     )
 }
@@ -172,6 +192,7 @@ export default Pages;
 const SafeArea = styled.SafeAreaView`
 flex:1;
 background-color:${props => props.theme.colors.grey[0]};
+padding-bottom:50px;
 `;
 
 const ViewScroll = styled.ScrollView`

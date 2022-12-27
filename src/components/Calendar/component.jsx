@@ -39,7 +39,9 @@ const Component = ({
     onPressEvent3,
     daily,
     meal,
+
     margin='0px',
+
 }) => {
   const navigation = useNavigation();
     const pager = useRef();
@@ -121,7 +123,7 @@ const Component = ({
                         <DaysWrap key={day}>
                             <Day lastDay={lastDay} color={color} size={size}>{txt}</Day>
                             <TodayCircle now={now} type={type} currentPress={currentPress} day={day}>
-                              {/* setTouchDate : BuyMeal,Meal , setData: Home  */}
+                              {/* onPressEvent: Home, onPressEvent2: BuyMeal, onPressEvent3: Meal  */}
                               {onPressEvent && 
                                 <Pressable onPress={()=>navigation.reset({ routes: [{name:MealMainPageName,params:{data:pressDay}}]})}>
                                 <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
@@ -181,7 +183,7 @@ border-radius:50px;
 margin-top:3px;
 align-items:center;
 justify-content:center;
-background-color:${({currentPress, day}) => currentPress === day ? 'gold' : 'white'};
+background-color:${({currentPress, day}) => currentPress === day ? '#E4E3E7' : 'white'};
  ${({ type, now }) => now && getCircleColor(type)};
 `;
 

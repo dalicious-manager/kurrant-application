@@ -20,11 +20,10 @@ export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
   // const {data} = route.params;
-
+console.log(route)
   const navigation = useNavigation();
   const mealInfo = useAtomValue(isOrderMealAtom);
   const meal = true;
-
   const [touchDate,setTouchDate] = useState();
   const weekly = useAtomValue(weekAtom);
   const {isOrderMeal,orderMeal} = useOrderMeal();

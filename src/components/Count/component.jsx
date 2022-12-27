@@ -9,6 +9,7 @@ import Minus from '../../assets/icons/MealDetail/minus.svg';
 import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import { isQuantityAtom } from '../../biz/useShoppingBasket/store';
+import Typography from '../Typography';
 
 /**
  * @param {} props
@@ -39,9 +40,9 @@ const Component = ({
           <PressableView onPress={decreasePress}>
             <MinusIcon/>
           </PressableView>
-            <Text onPress={onPressEvent}>
+            <CountText onPress={onPressEvent}>
                 {count}
-            </Text>
+            </CountText>
             <PressableView onPress={increasePress}>
               <PlusIcon />
             </PressableView>
@@ -55,9 +56,9 @@ const Component = ({
             <MinusIcon disabled={quantity}/>
           </PressableView>
           <Pressable onPress={onPressEvent}>
-            <Text>
+            <CountText>
               {quantity}
-            </Text>
+            </CountText>
           </Pressable>
             <PressableView onPress={()=>addHandle(id)}>
               <PlusIcon />
@@ -88,5 +89,9 @@ justify-content:center;
 `;
 
 const MinusIcon = styled(Minus)`
-color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]}
+color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]};
+`;
+
+const CountText = styled(Typography).attrs({text:'Body05SB'})`
+color:${({theme}) => theme.colors.grey[2]};
 `;
