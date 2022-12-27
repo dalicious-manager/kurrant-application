@@ -171,15 +171,17 @@ const useAuth = () => {
   const snsLogin = async (body,type,option = {}) => {
     try {
       setLoginLoading(true);
-      
+      const reqData = {
+        snsAccessToken:body.snsAccessToken,
+      }
       const res = await Fetch.snsLogin(     
         {
-          ...body
+          ...reqData
         },
         type,
         option
       );
-      console.log(res.data.accessToken);
+      console.log(res);
       await setStorage('token',res.data.accessToken);
       await setStorage('isLogin',body.autoLogin.toString());
       return res;

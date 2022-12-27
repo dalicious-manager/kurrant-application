@@ -15,7 +15,7 @@ import useToken from '../../../../hook/useToken';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
 import {
   PAGE_NAME as MembershipJoinPageName,
-} from '../../../Membership/MembershipJoin';
+} from '../../../Membership/MembershipIntro';
 import LoginMain from './LoginMain';
 
 

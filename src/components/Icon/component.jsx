@@ -8,11 +8,14 @@ import styled from 'styled-components/native';
  * @param {number} width
  * @returns
  */
-const Component = ({children, ...rest}) => {
-  return <IconWrapper>{children}</IconWrapper>;
+const Component = ({children, style}) => {
+  return <IconWrapper style={{...style}}>{children}</IconWrapper>;
 };
 
 // Styling
-const IconWrapper = styled.View``;
+const IconWrapper = styled.View`
+  justify-content: center;
+  align-items: center;
+`;
 
 export default Component;

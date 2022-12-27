@@ -7,11 +7,12 @@ import styled, {css} from 'styled-components/native';
  * @param {string} props.imagePath
  * @param {number} props.scale
  * @param {number} props.styles
+ * @param {string} props.resizeMode
  * @returns
  */
-const Component = ({imagePath, scale, styles}) => {
+const Component = ({imagePath, scale, styles,resizeMode='cover'}) => {
   // Render
-  return <StyledImage source={imagePath} scale={scale} styles={styles} resizeMode="cover" />;
+  return <StyledImage source={imagePath} scale={scale} styles={styles} resizeMode={resizeMode} />;
 };
 
 // Styling

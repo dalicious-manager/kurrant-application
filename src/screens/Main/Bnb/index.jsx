@@ -98,12 +98,22 @@ const Screen = () => {
           )
         }}
       />
-      <BottomTab.Screen
+      <BottomTab.Screen  screenOptions={{presentation: 'fullScreenModal'}}
         name={MoreMainPageName}
         component={MoreMainPage}
         options={{
-          title: '더보기',
-          headerShown: false,
+          title: '마이페이지',
+          headerShown: true,
+          ttabBarStyle: {display: 'none'},
+          headerLeft: () => <BackButton mode="modal" margin={[12,0]} />,
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          headerTitleStyle:{
+            fontFamily:'Pretendard-SemiBold',
+            fontSize:14,
+            lineHeight:22
+          },
+          // headerTransparent:true,
           tabBarIcon: ({ focused }) => (
             <TabBarIconWrap>
               {focused ? (<ActiveMore/>):(<More/>)}

@@ -54,7 +54,7 @@ async function json(url, method, options = {}) {
   console.log('fetching to:', reqUrl);
   console.log('fetching method:', method);
   console.log('fetching option:', options.body);
-  console.log('fetching token:', headers.authorization);
+  console.log('fetching token:', headers.Authorization);
   // throw new Error('rul : ' + reqUrl);
   let startTs = Date.now();
 

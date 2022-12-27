@@ -79,7 +79,131 @@ const Pages = () => {
                 <CalendarWrap>
                     <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={dayPress} daily={daily} margin={'0px 28px'} />
                 </CalendarWrap>
-               
+                <PagerViewWrap>
+                    <ProgressWrap>
+                        <ProgressInner>
+                            <Slider
+                                value={sliderValue}
+                                onValueChange={(e) => setSliderValue(...e)}
+                                minimumValue={0}
+                                maximumValue={2}
+                                maximumTrackTintColor="#343337"
+                                minimumTrackTintColor="#343337"
+                                onSlidingComplete={(e) => {diningRef.current.setPage(...e); setFocus(...e)}}
+                                step={1}
+                                trackStyle={styles.trackStyle}
+                                thumbStyle={styles.thumbStyle}
+                            />
+                            <Progress>
+                                {DININGTYPE.map((btn,i) => 
+                                    <Pressable key={i} onPress={() => {diningRef.current.setPage(i);setSliderValue(i);setFocus(i)}}>
+                                        <ProgressText focus={focus} index={i}>{btn}</ProgressText>
+                                    </Pressable>
+                                )}
+                            </Progress>
+                        </ProgressInner>
+                    </ProgressWrap>
+                    <Pager ref={diningRef} initialPage={1} onPageSelected={(e) => {onPageScroll(e)}}>
+                        <View>
+                            {/* 아침 */}
+                            {isMorningFood?.map((m,i) => 
+                            <Contents key={i}
+                            spicy={m.spicy}
+                            disabled={m.isSoldOut}
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}
+                            >
+                                {/* <ContentsText>
+                                    <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
+                                    <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
+                                    <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
+                                    <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
+                                    {m.spicy !== undefined && 
+                                    <LabelWrap>
+                                        {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
+                                    </LabelWrap>
+                                    }
+                                </ContentsText> */}
+
+                                {/* <MealImageWrap>
+                                    {m.isSoldOut && <BlurView/>}
+                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                                    
+                                    {!m.isSoldOut && (
+                                        <CartIconWrap onPress={()=>{alert('장바구니임')}}>
+                                            <CartIcon/>
+                                        </CartIconWrap>
+                                    )}
+                                </MealImageWrap> */}
+                                    {/* {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>} */}
+                            </Contents>
+                            )}
+                        </View>
+                        <View>
+                            {/* 점심 */}
+                            {isLunchFood?.map((l,i)=>
+                            <Contents key={i}
+                            spicy={l.spicy}
+                            disabled={l.isSoldOut}
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType});e.stopPropagation()}}>
+                                <ContentsText>
+                                    <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
+                                    <MealName soldOut={l.isSoldOut}>{l.foodName}</MealName>
+                                    <MealDsc soldOut={l.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{l.description}</MealDsc>
+                                    <Price soldOut={l.isSoldOut}>{withCommas(l.price)}원</Price>
+                                    {l.spicy !== undefined && 
+                                    <LabelWrap>
+                                        <Label label={`${l.spicy}`}/>
+                                    </LabelWrap>
+                                    }
+                                </ContentsText>
+
+                                <MealImageWrap>
+                                    {l.isSoldOut === 0 && <BlurView/>}
+                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                                    {!l.isSoldOut && (
+                                        <CartIconWrap onPress={balloonEvent}>
+                                            <CartIcon/>
+                                        </CartIconWrap>
+                                    )}
+                                </MealImageWrap>
+                                    {l.isSoldOut === 0 && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
+                            </Contents>
+
+                            )}
+                        </View>
+                        <View>
+                            {/* 저녁 */}
+                            {isDinnerFood?.map((d,i) => 
+                            <Contents key={i}
+                            spicy={d.spicy}
+                            disabled={d.isSoldOut}
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}>
+                                <ContentsText>
+                                    <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName>
+                                    <MealName soldOut={d.isSoldOut}>{d.foodName}</MealName>
+                                    <MealDsc soldOut={d.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{d.description}</MealDsc>
+                                    {d.spicy !== undefined && 
+                                        <LabelWrap>
+                                            <Label label={`${d.spicy}`}/>
+                                        </LabelWrap>
+                                    }
+                                    <Price soldOut={d.isSoldOut}>{withCommas(d.price)}원</Price>
+
+                                </ContentsText>
+
+                                <MealImageWrap>
+                                    {d.isSoldOut === 0 && <BlurView/>}
+                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                                    <CartIconWrap onPress={()=>{alert('장바구니임')}}>
+                                        <CartIcon/>
+                                    </CartIconWrap>
+                                </MealImageWrap>
+                                    {d.isSoldOut === 0 && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
+                            </Contents>
+                            )}
+                        </View>
+                    </Pager> 
+                </PagerViewWrap>
                 
             </ScrollView>
             <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'10px', right:'5px'}}/>
