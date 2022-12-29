@@ -3,7 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
 
-import { PointBoxIcon } from '~components/Icon';
+import { PointBadge } from '~components/Icon';
 import Typography from '~components/Typography';
 
 import { ArrowRightBoxIcon } from '../../../../../../components/Icon';
@@ -22,7 +22,7 @@ const Component = ({point}) => {
   return (
    <Container>
     <TitleBox>
-      <PointBoxIcon style={{marginRight:8}}/>
+      <PointBadge style={{marginRight:8}}/>
       <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>적립포인트</Title>
     </TitleBox>
     <TailBox>

@@ -1,8 +1,6 @@
-/* eslint-disable no-unreachable */
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
-import useToken from '../../hook/useToken';
 import { getStorage } from '../asyncStorage';
 const RESPONSE_SLEEP = 300;
 
@@ -64,6 +62,7 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
+  console.log(ret);
   if (ret.error) {
     const errors = new Error(ret.message);
     errors.name = "error";

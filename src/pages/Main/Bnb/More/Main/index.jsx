@@ -1,42 +1,70 @@
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import React, { useLayoutEffect } from "react";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-hooks/exhaustive-deps */
+import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/native';
+import React, { useEffect, useLayoutEffect } from "react";
+import { Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import styled, { useTheme } from 'styled-components/native';
 
 import ArrowRightIcon from "~assets/icons/Arrow/arrowRight.svg";
-import PointIcon from "~assets/icons/pointIcon.svg";
+import useUserMe from '~biz/useUserMe';
+import { SettingIcon } from '~components/Icon';
+import Image from '~components/Image';
+import Typography from '~components/Typography';
+import Wrapper from '~components/Wrapper';
+import {PAGE_NAME as TermOfServicePageName } from '~pages/Main/MyPage/TermOfService'
 
-import { MembershipJoin } from '../../../../../assets';
-import Image from '../../../../../components/Image';
-import Typography from '../../../../../components/Typography';
-import Wrapper from '../../../../../components/Wrapper';
+import { PAGE_NAME as PersonalInfoPageName } from '../../../MyPage/PersonalInfo';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
+import MembershipBox from './MembershipBox';
 import PointBox from './PointBox';
+import SkeletonUI from './SkeletonUI';
+
+import { AvatarNon, MembershipJoin } from '~assets';
+
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
-const Pages = ({navigation, route}) => {
+const Pages = () => {
   const themeApp = useTheme();
-  useLayoutEffect(() => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-    if (routeName !== 'MyPage') { //MyPage이외의 화면에 대해 tabBar none을 설정한다.
-      navigation.setOptions({tabBarStyle: {display: 'none'}});
-    } else {
-      navigation.setOptions({tabBarStyle: {display: undefined}});
-    }
-  }, [navigation, route]);
+  const navigation = useNavigation();
+  const { userMe, readableAtom:{myInfo,isMyInfoLoading}} = useUserMe();
+  const getData = async()=>{
+    await userMe();
+  }
+
+
+  useEffect(()=>{
+    getData();
+  },[])
+  if(isMyInfoLoading){
+    return <SkeletonUI />
+  }
   return (
       <Wrapper paddingTop={24}>
         <ScrollView>
-          <GourmetTestButton><Typography text='CaptionSB' textColor={themeApp.colors.blue[500]}>나의 미식타입 테스트 </Typography><ArrowRight/></GourmetTestButton>
-          <LoginBox>
-            <Typography text='Title02SB' textColor={themeApp.colors.grey[2]}>로그인 </Typography><ArrowRightLogin height={16} width={8}/>
-          </LoginBox>
-          <MembershipBox source={MembershipJoin} resizeMode={'stretch'}>
-            <MembershipText text={'Body05SB'} textColor={themeApp.colors.neutral[0]}>멤버십 가입하고 
-            <MembershipEffectText text={'Body05SB'} textColor={themeApp.colors.yellow[500]}> 20%할인</MembershipEffectText> 받기</MembershipText>            
-          </MembershipBox>
+          <GourmetTestButton>
+            <Typography text='CaptionSB' textColor={themeApp.colors.blue[500]}>나의 미식타입 테스트 </Typography>
+            <ArrowRight/>
+          </GourmetTestButton>
+          {myInfo 
+          ? <LoginBox>
+              <LoginIdBox>              
+                <AvatarBackground source={AvatarNon} resizeMode={'stretch'}>
+                  {myInfo.gourmetType !== null && <Image imagePath={{uri:'https://asset.kurrant.co/img/common/soup.png'}} scale={1.0} styles={{width:25,height:22}}/>}
+                </AvatarBackground>
+                <Typography text='Title02SB' textColor={themeApp.colors.grey[2]}>{myInfo.name}님</Typography>
+              </LoginIdBox>
+              <Pressable onPress={()=> navigation.navigate(PersonalInfoPageName)}>
+                <SettingIcon height={16} width={8}/>
+              </Pressable>
+            </LoginBox>
+          : <LoginBox>
+              <Typography text='Title02SB' textColor={themeApp.colors.grey[2]}>로그인 </Typography>
+              <ArrowRightLogin height={16} width={8}/>
+            </LoginBox>}
+        
+            <MembershipBox isMembership={false}/>
           {/* 포인트 활성시
             <PointBox point={41030}/> 
           */}
@@ -46,7 +74,7 @@ const Pages = ({navigation, route}) => {
               <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[2]}>구매후기</InfomationLabel>
             </InfomationBox>
             <InfomationBox>
-              <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>...</InfomationText>
+              <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>0</InfomationText>
               <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[2]}>찜목록<InfomationCaption textColor={themeApp.colors.grey[5]}>(준비중)</InfomationCaption></InfomationLabel>
             </InfomationBox>
             <InfomationBox>
@@ -67,7 +95,7 @@ const Pages = ({navigation, route}) => {
           </ListContainer>
           <ListContainer title='알림'>
             <ListBox title='공지사항' />
-            <ListBox title='약관 및 개인 정보' />
+            <ListBox title='약관 및 개인 정보' routeName={TermOfServicePageName}/>
           </ListContainer>
           <ListContainer title='문의하기'>
             <ListBox title='고객센터' />
@@ -97,6 +125,10 @@ const LoginBox = styled.Pressable`
   margin-left: 24px;
   margin-right: 24px;
 `
+const LoginIdBox = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+`
 const ArrowRightLogin = styled(ArrowRightIcon).attrs({strokeWidth:2 })`
   color:${props => props.theme.colors.grey[2]};
   margin: 4px 8px;
@@ -105,25 +137,21 @@ const ArrowRight = styled(ArrowRightIcon)`
   color:${props => props.theme.colors.blue[500]};
  
 `;
-const MembershipBox = styled.ImageBackground`
-  margin-bottom: 7px;
-  margin-left: 24px;
-  margin-right: 24px;
-`
 
+const AvatarBackground =  styled.ImageBackground`
+  width: 34px;
+  height: 34px;
+  margin-right: 4px;
+  justify-content: center;
+  align-items: center;
+`
 const Line = styled.View`
   width: 100%;
   height: 6px;
   background-color: ${({theme}) => theme.colors.grey[8]};
   margin-top: 4px;
 `;
-const MembershipText = styled(Typography)`
-  z-index: 1;
-  padding: 23px 20px;
-`
-const MembershipEffectText = styled(Typography)`
 
-`
 const InfomationContainer = styled.View`
   margin: 12px 20px;
   flex-direction: row;

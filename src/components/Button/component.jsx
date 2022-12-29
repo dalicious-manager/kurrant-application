@@ -13,6 +13,7 @@ import {
 
 /**
  * @param {object} props
+ * @param {string} props.label
  * @param {'full' | 'middle' |'half' | 'modalFull' | 'modalHalf' | 'button38' | 'button32'} props.size
  * @param {'grey1' | 'grey2' | 'grey3' | 'grey7' | 'white' | 'yellow' | 'login' | 'purple'} props.type
  * @param {boolean} props.disabled

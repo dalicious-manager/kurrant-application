@@ -19,13 +19,12 @@ import {
  * @returns
  */
 
-const Component = ({ name, size = 'md', agree = true }) => {
+const Component = ({ name, size = 'md', agree = true ,toggleEvent=(name)=>{}}) => {
   const translation = useRef(new Animated.Value(0)).current;
 
-  const { control, watch } = useFormContext();
+  const { control } = useFormContext();
   const [toggle, setToggle] = useState(agree);
-  console.log('toggle:',toggle)
-  const watching = watch('toggleChecked');
+
   
   const switchOnOff = () => {
     agree
@@ -70,18 +69,18 @@ const Component = ({ name, size = 'md', agree = true }) => {
       <Controller
         control={control}
         name={name}
-        defaultValue={agree}
+        defaultValue={toggle}
         render={({ field: { onChange, value } }) => {
-          const pressEvent = value => {
+          const pressEvent = () => {
             onChange(!value)
             switchOnOff();
-            console.log('value:' ,value)
+            toggleEvent(name);
           };
           return (
             <ToggleWrap
               toggle={toggle}
               size={size}
-              onPress={() => pressEvent(value)}>
+              onPress={pressEvent}>
               <Toggle
                 toggle={agree}
                 size={size}

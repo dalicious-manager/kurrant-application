@@ -17,7 +17,6 @@ import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import { isOrderMealAtom } from '../../../../../biz/useOrderMeal/store';
-import useUserMe from '../../../../../biz/useUserInfo';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import BottomSheet from '../../../../../components/BottomSheet/component';
 import Button from '../../../../../components/Button';
