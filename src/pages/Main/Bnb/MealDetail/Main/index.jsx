@@ -2,7 +2,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
-import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeModules, Animated,ScrollView, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView} from "react-native";
+import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeModules, Animated,ScrollView, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Dimensions} from "react-native";
 import styled from "styled-components";
 
 import StartIcon from '../../../../../assets/icons/star.svg';
@@ -10,6 +10,7 @@ import useFoodDetail from "../../../../../biz/useFoodDetail/hook";
 import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
 import BackButton from "../../../../../components/BackButton";
 import Badge from "../../../../../components/Badge";
+import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from "../../../../../components/BasketButton";
 import Button from '../../../../../components/ButtonExtendable';
 import MoreButton from '../../../../../components/ButtonMore';
@@ -24,25 +25,28 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 
 const Pages = ({route}) => {
-    
+    //console.log(route)
     const bodyRef = useRef();
     const navigation = useNavigation();
-
+    const { balloonEvent, BalloonWrap } = Balloon();
     const [focus,setFocus] = useState(false);
     const [count, setCount] = useState(1);
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,foodDetail} = useFoodDetail();
     const {addMeal} = useShoppingBasket();
-
+    console.log(isFoodDetail)
     const headerTitle = isFoodDetail?.name;
     const foodId = route.params.foodId;
     const type = route.params.type;
+    const day = route.params.date;
     
+    const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
+    const serviceDate = day[0]+'-'+day[1]+'-'+day[2];
     
     // foodId 넘겨줘야함 
     useEffect(()=>{
         async function loadFoodDetail(){
-            await foodDetail();
+            await foodDetail(foodId);
         }
         loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,15 +56,28 @@ const Pages = ({route}) => {
         navigation.setOptions({   
             headerTransparent: true,
             headerStyle: {
-                backgroundColor:`${scroll < 100 ? 'transparent' : 'white'}`
+                backgroundColor:`${scroll < 60 ? 'transparent' : 'white'}`
               },
-            headerTitle:`${scroll > 100 ? `${headerTitle}`: ''}`,
-            headerLeft: () => (scroll > 100 ? <BackButton color={'#343337'} margin={[10,0]}/> : <BackButton color={'white'} margin={[10,0]}/>),
-            headerRight: () => (scroll > 100 ?  <View><ShoppingCart color={'#343337'} margin={[0,10]}/><Badge/></View>:<View><ShoppingCart color={'white'} margin={[0,10]}/><Badge/></View> )
+            headerTitle:`${scroll > 60 ? `${headerTitle}`: ''}`,
+            headerLeft: () => (scroll > 60 ? <BackButton color={'#343337'} margin={[10,0]}/> : <BackButton color={'white'} margin={[10,0]}/>),
+            headerRight: () => (scroll > 60 ?  <View><ShoppingCart color={'#343337'} margin={[0,10]}/><Badge/></View>:<View><ShoppingCart color={'white'} margin={[0,10]}/><Badge/></View> )
           });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[headerTitle,navigation, scroll]);
+
+    const addCartPress = async () =>{
+        try {
+           await addMeal({
+                "foodId":foodId,
+                "count":count,
+                "serviceDate":serviceDate,
+                "diningType":diningType
+            });
+        } catch(err){
+            console.log(err)
+        }
+    }
 
 
     const increasePress = () => {
@@ -90,30 +107,18 @@ const Pages = ({route}) => {
     const PRICE = 7500;
     let result = PRICE.toLocaleString('ko-KR');
 
-    const addCartPress = async () =>{
-        try {
-           await addMeal({
-                "foodId":foodId,
-                "count":count,
-                "serviceDate":"2022-12-23",
-                "diningType":type
-            });
-        } catch(err){
-            console.log(err)
-        }
-    }
+ 
 
     return (
         <>
-        {/* <Wrap > */}
+        <Wrap >
             <ScrollViewWrap
              showsVerticalScrollIndicator={false}
              onScroll = { (e) => handleScroll(e) }
              scrollEventThrottle={16}
-             //style={{backgroundColor:'white',flex:1}}
             >
                 <View>
-                    {scroll > 100 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
+                    {scroll > 60 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                 <Content>
                     <View>
@@ -134,7 +139,7 @@ const Pages = ({route}) => {
                         <MealDsc>
                             {isFoodDetail?.description}
                         </MealDsc>
-                        <Label label={`${isFoodDetail?.spicy}`}/>
+                        {isFoodDetail?.spicy !== null && <Label label={`${isFoodDetail?.spicy}`}/>}
                         <PriceTitleWrap>
                             <PriceTitle>최종 판매가</PriceTitle>
                             <ModalWrap>
@@ -191,54 +196,57 @@ const Pages = ({route}) => {
                 </Content>
                 
                 {/* 리뷰자리 */}
-                {/* <Content >
+                <Content >
                     <View>
                     <ReviewPage/>
                     </View>
                 </Content>
-                <MoreButton/> */}
+                <MoreButton/>
                 </View>
                 </ScrollViewWrap>
 
                 <KeyboardAvoiding
-                mealDetail
-                blurPress={blurPress}
-                focus={focus}
-                increasePress={increasePress}
-                decreasePress={decreasePress}
-                bodyRef={bodyRef}
-                changeText={changeText}
-                count={count}
-                value={count.toString()}
+                    mealDetail
+                    blurPress={blurPress}
+                    focus={focus}
+                    increasePress={increasePress}
+                    decreasePress={decreasePress}
+                    bodyRef={bodyRef}
+                    changeText={changeText}
+                    count={count}
+                    value={count.toString()}
                 />
-                { !focus && <ButtonWrap >
+                { !focus && 
+                <ButtonWrap >
                     <Button 
                         price={PRICE} 
-                        onPressEvent2={()=>{addCartPress()}}
+                        onPressEvent2={()=>{addCartPress();balloonEvent()}}
                         onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
                         count={count} 
                         increasePress={increasePress}
                         decreasePress={decreasePress}
-                        
                     />
                 </ButtonWrap>}
+                <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'96px', right:'14px'}}/>
                 
-                
-         {/* </Wrap> */}
+         </Wrap>
                
         </>
     )
 }
 export default Pages;
 
-const Wrap = styled.SafeAreaView`
+const Wrap = styled.View`
 background-color:${props => props.theme.colors.grey[0]};
 position:relative;
 flex:1;
+
+
 `;
 
 const ScrollViewWrap = styled.ScrollView`
 background-color:${props => props.theme.colors.grey[0]};
+
 `;
 
 const Content = styled.View`
@@ -299,7 +307,9 @@ justify-content:space-between;
 
 const ButtonWrap = styled.View`
 position:absolute;
-bottom:25px;
+bottom:35px;
+padding:0px 16px;
+width:100%;
 `;
 
 const countText = styled.TextInput`

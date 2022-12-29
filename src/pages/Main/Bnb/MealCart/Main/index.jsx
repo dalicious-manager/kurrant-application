@@ -24,6 +24,7 @@ import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
 import Typography from "../../../../../components/Typography";
 import { formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
+import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
 
 const windowHeight = Dimensions.get('window').height;
@@ -35,32 +36,29 @@ const Pages = () => {
     
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
-    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal } = useShoppingBasket();
-    
+    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal } = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
-    //console.log(isLoadMeal)
-    useFocusEffect(
-        useCallback(() => {
-          // Do something when the screen is focused
-            console.log('들어옴')
 
-          return () => {
-            // Do something when the screen is unfocused
-            // Useful for cleanup functions
-            console.log('나감')
-          };
-       
-        }, [])
-      );
-     const arr = isLoadMeal.map(m => m.id);
+
+    useEffect(()=>{
+        async function loadCart(){
+            await loadMeal();
+        }
+        loadCart();
     
-     const quantity = isLoadMeal.map(m => m.count);
-    //console.log(quantity)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+  
+    const quantity = isLoadMeal.map(m => {
+        return{
+            foodId: m.id,
+            count: m.count
+        }
+     });
 
-
+     console.log(quantity,'gggg')
     
-     
     const pointButton = () => {
         setModalVisible(true);
     }
@@ -74,9 +72,8 @@ const Pages = () => {
                 return {...p, count:p.count + 1}
         } else return p ; 
         });
- 
+      
         setLoadMeal(addQty);
-        
     }
 
     const substractHandle = (productId) => {
@@ -85,7 +82,7 @@ const Pages = () => {
                 return {...p, count:( p.count <= 1? 1:p.count - 1)}
         } else return p ; 
         });
-        
+    
         setLoadMeal(substracQty);
         
         
@@ -93,11 +90,11 @@ const Pages = () => {
     
     const totalCount = isLoadMeal.map(p => p.count).reduce((acc,cur) => {
         return acc + cur
-    });
+    },0);
 
     const totalPrice = isLoadMeal.map(p => p.count * p.price).reduce((acc,cur) => {
         return acc + cur
-    });
+    },0);
     // const totalCount = 1200;
     // const totalPrice = 1200000;
     
@@ -129,22 +126,36 @@ const Pages = () => {
     const deleteButton = async (foodId) => {
         try {
             await deleteMeal(foodId);
+            setLoadMeal(isLoadMeal.filter(t => t.id !== foodId));
         } catch(err) {
             console.log(err)
         }
     }
 
-    // useEffect(()=>{
-    //     async function getLoadMeal(){
-    //         await loadMeal();
-    //     }
-    //     getLoadMeal();
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // },[]);
+   
 
     const propsId = (mealId) => {
         setId(mealId)
     };
+
+    // useFocusEffect(
+    //     useCallback(() => {
+    //       // Do something when the screen is focused
+    //         console.log('들어옴')
+        
+
+    //       return  () => {
+    //         // Do something when the screen is unfocused
+    //             console.log(quantity)
+    //              updateMeal({"updateCartList":quantity});
+            
+    //       };
+        
+       
+        
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //     }, [])
+    //   );
 
 
 
@@ -155,22 +166,24 @@ const Pages = () => {
             {isLoadMeal.length === 0 && <EmptyView>
                 <NoMealText>아직 담은 식사가 없어요!</NoMealText>
                 <NoMealButtonWrap>
-                    <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'}/>
+                    <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
                 </NoMealButtonWrap>
             </EmptyView>}
             <ScrollViewWrap showsVerticalScrollIndicator={false}>
                 {isLoadMeal?.map((l,idx) => {
                     const price = l.price * l.count;
+                    const svcDate = l.serviceDate[0]+'-'+l.serviceDate[1]+'-'+l.serviceDate[2];
+                    
                     return (
                         <Wrap key={idx}>
                             <ContentHeader>
-                                <DiningName>{formattedMonthDay(l.date)} {l.diningType}</DiningName>
+                                <DiningName>{formattedMonthDay(svcDate)} {l.diningType}</DiningName>
                                 <Pressable onPress={()=>{deleteButton(l.id)}}><DeleteIcon/></Pressable>
                             </ContentHeader>
                             <ContentWrap>
                             <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                 <View>
-                                    <MealName>[{l.makers}] {l.name}</MealName>
+                                    <MealName>[{l.makers.name}] {l.name}</MealName>
                                     {/* 할인 적용 되면  */}
                                     {/* <SalePriceWrap>
                                         <PointBoldText>20%</PointBoldText>
@@ -181,13 +194,12 @@ const Pages = () => {
                                 </View>
                             <CountWrap>                                
                                     <Count
-                                    cart
-                                    onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(l.id)}} 
-                                    // count={count} 
-                                    addHandle={addHandle}
-                                    substractHandle={substractHandle}
-                                    quantity={l.count}
-                                    id={l.id}
+                                        cart
+                                        onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(l.id)}} 
+                                        addHandle={addHandle}
+                                        substractHandle={substractHandle}
+                                        quantity={l.count}
+                                        id={l.id}
                                 />
                                 </CountWrap>
                             </ContentWrap>
@@ -195,7 +207,9 @@ const Pages = () => {
                     )
                 })}
                 {isLoadMeal.length !== 0 && 
-            
+                <View style={{paddingBottom:50}}>
+
+                
                 <PaymentWrap>
                     <PaymentView>
                         <PaymentText>총 상품금액</PaymentText>
@@ -204,7 +218,7 @@ const Pages = () => {
                     <PaymentView >
                         <PressableView onPress={fundButton}>
                             <PaymentText >회사 지원금 사용 금액</PaymentText>
-                            <QuestionIcon />
+                            <QuestionIcon/>
                          </PressableView>
                             <PaymentText>10,000 원</PaymentText>
                     </PaymentView>
@@ -234,6 +248,7 @@ const Pages = () => {
                         <TotalPrice>10,000 원</TotalPrice>
                     </PaymentView>
                 </PaymentWrap>
+                </View>
                 }
             </ScrollViewWrap>
             <KeyboardAvoiding
@@ -248,9 +263,9 @@ const Pages = () => {
             />
             
            
-            <ButtonWrap focus={focus}>
+            {isLoadMeal.length !== 0 && <ButtonWrap focus={focus}>
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
-            </ButtonWrap>
+            </ButtonWrap>}
              
             <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
             <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
@@ -265,11 +280,11 @@ export default Pages;
 const SafeView = styled.SafeAreaView`
 background-color:${props => props.theme.colors.grey[0]};
 flex:1;
-padding-bottom:50px;
+
 `;
 const ScrollViewWrap = styled.ScrollView`
-
- 
+ flex:1;
+ //margin-bottom:80px;
 `;
 
 export const PressableView = styled.Pressable`
@@ -346,6 +361,7 @@ const PaymentWrap = styled.View`
 border-top-color: ${props => props.theme.colors.grey[8]};
 border-top-width: 6px;
 padding-top:24px;
+padding-bottom:50px;
 
 `;
 export const PaymentView = styled.View`
@@ -360,9 +376,10 @@ padding:0px 120px;
 `;
 
 const EmptyView = styled.View`
-justify-content:center;
+justify-content:flex-end;
 align-items:center;
 flex:1;
+
 `;
 
 export const DiningName = styled(Typography).attrs({text:'CaptionR'})`

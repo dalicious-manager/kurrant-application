@@ -12,7 +12,7 @@ import { isOrderDinnerAtom, isOrderLunchAtom, isOrderMealAtom, isOrderMorningAto
 import Button from "../../../../../components/Button";
 import Calendar from "../../../../../components/Calendar";
 import Typography from "../../../../../components/Typography";
-import { formattedDate, formattedDateBtn, formattedWeekDate } from "../../../../../utils/dateFormatter";
+import { formattedDate, formattedDateBtn, formattedMonthDay, formattedWeekDate } from "../../../../../utils/dateFormatter";
 import { CalendarWrap, MakersName, MealName } from "../../BuyMeal/Main";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 
@@ -20,9 +20,9 @@ export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
   // const {data} = route.params;
-console.log(route)
+
   const navigation = useNavigation();
-  const mealInfo = useAtomValue(isOrderMealAtom);
+  // const mealInfo = useAtomValue(isOrderMealAtom);
   const meal = true;
   const [touchDate,setTouchDate] = useState();
   const weekly = useAtomValue(weekAtom);
@@ -41,15 +41,15 @@ console.log(route)
   },[])
 
   const date = formattedWeekDate(new Date());
-  const todayMeal = mealInfo?.filter((m) => m.date === date);
-  const selectDate = mealInfo?.filter((m) => m.date === touchDate);
+  const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
+  const selectDate = isOrderMeal?.filter((m) => m.serviceDate === touchDate);
   // const loadData = weekly.map((w,i) => w.filter(x => console.log(formattedWeekDate(x))));
 
   const pressDay = (day) => {
-    console.log(day)
+    setTouchDate(day)
   }
 
-  
+
   return (
     <SafeView>
       <ScrollView>
@@ -58,14 +58,14 @@ console.log(route)
         </CalendarView>
         
         <MealWrap>
-        {/* {touchDate ? 
+        {touchDate ? 
         (<>
           {selectDate.map((s,index) => 
             <React.Fragment key={index}>
               {s.orderItemDtoList.map((sm,idx) => 
               <React.Fragment key={idx}>
                 <DiningTimeWrap >
-                  <DiningTime>{s.date} {sm.diningType}・오늘</DiningTime>
+                  <DiningTime>{formattedMonthDay(s.serviceDate)} {sm.diningType}・오늘</DiningTime>
                 </DiningTimeWrap>
                 <MealContentWrap >
                   <View>
@@ -89,19 +89,19 @@ console.log(route)
           <>
           {todayMeal && todayMeal.map((m,i) => 
             <React.Fragment key={i}>
-              {m.orderItemDtoList.map((meal,idx) => 
+              {m.orderItemDtoList.map((el,idx) => 
               <React.Fragment key={idx}>
                 <DiningTimeWrap >
-                  <DiningTime>{m.date} {meal.diningType}・오늘</DiningTime>
+                  <DiningTime>{formattedMonthDay(m.serviceDate)} {el.diningType}・오늘</DiningTime>
                 </DiningTimeWrap>
                 <MealContentWrap >
                   <View>
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                   </View>
                   <Content>
-                    <MakersName>[{meal.makers}]</MakersName>
-                    <MealName>{meal.name}</MealName>
-                    <CountText>{meal.count}개</CountText>
+                    <MakersName>[{el.makers}]</MakersName>
+                    <MealName>{el.name}</MealName>
+                    <CountText>{el.count}개</CountText>
                   </Content>
                   <ReviewBtnWrap>
                     <ReviewText>리뷰작성</ReviewText>
@@ -113,10 +113,10 @@ console.log(route)
           </React.Fragment>
           )}
           </>
-        )} */}
+        )}
         </MealWrap>
       </ScrollView>
-        {/* { selectDate.length === 0 && <NoMealWrap><NoMealText>주문한 메뉴가 없어요</NoMealText></NoMealWrap>} */}
+        { (todayMeal.length === 0 && selectDate.length === 0) && <NoMealWrap><NoMealText>주문한 메뉴가 없어요</NoMealText></NoMealWrap>}
       <ButtonWrap>
         <PlusButton onPress={()=>{navigation.navigate(BuyMealPageName)}}>
             <PlusIcon/>

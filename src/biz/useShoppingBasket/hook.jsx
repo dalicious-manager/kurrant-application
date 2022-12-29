@@ -1,25 +1,18 @@
 import {useAtom} from 'jotai';
 
 import * as Fetch from './Fetch';
-import { isAddMealCartAtom, isLoadMealCartAtom, isQuantityAtom } from './store';
+import { isLoadMealCartAtom, isQuantityAtom } from './store';
 
 const useShoppingBasket = () => {
 
     const [isLoadMeal,setLoadMeal] = useAtom(isLoadMealCartAtom);
-    const [isAddMeal,setAddMeal] = useAtom(isAddMealCartAtom);
-    
+    const [isquantity,setQuantity] = useAtom(isQuantityAtom)
     
     const loadMeal = async () => {
         try {
             const res = await Fetch.loadMealCart();
             setLoadMeal(res.data);
-            // const test = res.data.map((x) => x.orderTable);
-            // const result = [].concat.apply([],test);
-            // const id = result.map((r) => r.id);
-            // const count = result.map((r) => r.count);
-            // setQuantity(result)
-            
-            
+            setQuantity(res.data.length);
         } catch (err) {
             throw err;
         }
@@ -32,7 +25,8 @@ const useShoppingBasket = () => {
             },
             option
             );
-            return res;
+            setQuantity(v => v + 1)
+           return res
 
         }catch(err){
             throw err
@@ -49,10 +43,10 @@ const useShoppingBasket = () => {
         }
     };
 
-    const deleteMeal = async (body) => {
-        
+    const deleteMeal = async (foodId) => {
+        console.log(foodId)
         try {
-            const res = await Fetch.deleteMealCart(body);
+            const res = await Fetch.deleteMealCart(foodId);
             return res;
 
         }catch(err){
@@ -61,7 +55,7 @@ const useShoppingBasket = () => {
     };
 
     const updateMeal = async (body) => {
-        
+
         try {
             const res = await Fetch.updateMealCart({
                 ...body
@@ -78,10 +72,11 @@ const useShoppingBasket = () => {
         addMeal,
         allDeleteMeal,
         deleteMeal,
+        setQuantity,
         updateMeal,
         setLoadMeal,
         isLoadMeal,
-        isAddMeal,
+        isquantity
         
     };
 
