@@ -52,8 +52,12 @@ const Pages = () => {
     
     useEffect(()=>{
         async function loadDailyFood(){
-            await dailyFood(spotId,date);
-            await loadMeal();
+            try {
+                await dailyFood(spotId,date);
+                await loadMeal();
+            }catch (err) {
+                console.log(err.toString())
+            }
         }
         loadDailyFood();
     // eslint-disable-next-line react-hooks/exhaustive-deps
