@@ -59,14 +59,14 @@ const Component = ({
     const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
   
   
-    // useEffect(()=>{
-    //     async function loadOrderMeal(){
-    //       await orderMeal();
-    //     }
-    //     loadOrderMeal();
+    useEffect(()=>{
+        async function loadOrderMeal(){
+          await orderMeal();
+        }
+        loadOrderMeal();
       
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
-    //   },[]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[]);
 
    const selectedPress = (day) => {
       setCurrentPress(day)
@@ -112,7 +112,8 @@ const Component = ({
                         const propsDay = (formattedWeekDate(day));
                         // const lastDay = (day.toISOString().substring(0,10) < today.toISOString().substring(0,10))
                         const lastDay = (day.toLocaleDateString() < today.toLocaleDateString());
-                        const order = isOrderMeal?.find(x => x.date === propsDay);
+                        const order = isOrderMeal?.find(x => x.serviceDate === propsDay); 
+                        //const order = isOrderMeal?.find(x => x.date === propsDay);
                         
                         const orderCount = order && order.orderItemDtoList;
                         const set = new Set(orderCount?.map((x) => x.diningType));
@@ -169,7 +170,7 @@ margin:${({margins}) => margins && margins};
 const Wrap = styled.View`
 flex-direction:row;
 justify-content:space-between;
-margin-top:16px;
+padding:16px 0px;
 `;
 
 const DaysWrap = styled.View`

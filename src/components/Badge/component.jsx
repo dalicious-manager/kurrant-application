@@ -6,29 +6,26 @@ import useShoppingBasket from "../../biz/useShoppingBasket/hook";
 import Typography from "../Typography";
 
 
-const Component = ({text}) =>{
+const Component = () =>{
 
-    const {isLoadMeal,loadMeal} = useShoppingBasket();
+    const {isLoadMeal,loadMeal,isquantity} = useShoppingBasket();
 
-    useEffect(()=>{
-        async function loadCart(){
-            await loadMeal();
-        }
-        loadCart();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+    // useEffect(()=>{
+    //     async function loadCart(){
+    //         await loadMeal();
+            
+    //     }
+    //     loadCart();
+    
+    
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // },[])
 
-    // const count = isLoadMeal?.map((x => x.orderTable.map(m =>m.count))).flat();
-    // const quantity = count?.reduce((acc,cur) => {
-    //     return acc + cur
-    // },0);
-    const count = isLoadMeal?.map((x => x.orderTable)).flat();
-    const quantity = count && Object.keys(count);
 
     return (
         <>
-         { quantity&&quantity.length !== 0 &&<Wrap>
-            <Count>{quantity&&quantity.length}</Count>
+         { isquantity !== 0 &&<Wrap>
+            <Count>{isquantity}</Count>
         </Wrap>}
         </>
     )

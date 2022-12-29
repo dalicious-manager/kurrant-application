@@ -9,7 +9,7 @@ import { ButtonWrap } from "../../MealCart/Main";
 
 export const PAGE_NAME = 'MEAL_DETAIL_INFORMATION_PAGE';
 const Pages = ({route}) =>{
-
+    
     const list = route.params.data;
     const navigation = useNavigation();
 
@@ -33,7 +33,7 @@ const Pages = ({route}) =>{
                     {list.map((l,i) => 
                         <Table key={i}>
                             <OriginText>{l.name}</OriginText>
-                            <OriginText>{l.origin}</OriginText>
+                            <OriginText>{l.from}</OriginText>
                         </Table>
                     )}
                 </View>

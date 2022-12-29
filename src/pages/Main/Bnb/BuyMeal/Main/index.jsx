@@ -2,7 +2,7 @@
 import {Slider} from '@miblanchard/react-native-slider';
 import { useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
-import React, { useRef, forwardRef,useState, useEffect } from 'react';
+import React, { useRef, forwardRef,useState, useEffect, useLayoutEffect } from 'react';
 import {useForm} from 'react-hook-form';
 import { Image, SafeAreaView, ScrollView, Text, View, TouchableOpacity ,ImageBackground, Pressable,Dimensions, StyleSheet} from "react-native";
 import PagerView from 'react-native-pager-view';
@@ -10,8 +10,11 @@ import styled from 'styled-components';
 
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
+import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import { isUserInfoAtom, isUserMeAtom } from '../../../../../biz/useUserInfo/store';
+import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
+import ShoppingCart from '../../../../../components/BasketButton';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Label from '../../../../../components/Label';
@@ -36,12 +39,12 @@ const Pages = () => {
     const [sliderValue, setSliderValue] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
     const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood} = useFoodDaily();
+    const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
     const userMembership = useAtomValue(isUserInfoAtom);
-    console.log(isLunchFood)
+    
     const DININGTYPE = ['아침','점심','저녁'];
     const daily = true;
-    
     const date = formattedWeekDate(new Date()); // 오늘
     // const todayMeal = mealInfo?.filter((m) => m.date === date);
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
@@ -50,10 +53,23 @@ const Pages = () => {
     useEffect(()=>{
         async function loadDailyFood(){
             await dailyFood(spotId,date);
+            await loadMeal();
         }
         loadDailyFood();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
+
+    // useLayoutEffect(()=>{
+    //     navigation.setOptions({ 
+    //         headerRight:() => (
+    //           <>
+    //           <ShoppingCart margin={[0,10]}/>
+    //           <Badge/>
+    //           </>
+    //         )
+    //       });
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // },[]);
    
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
@@ -63,12 +79,41 @@ const Pages = () => {
          } 
 
     const dayPress = async (selectedDate) =>{
-        
         try {
             await dailyFood(spotId,selectedDate);
         }catch(err){
             console.log(err)
+            throw err
         }
+    }
+
+    
+    const duplication = isLoadMeal?.map((m) => {
+        return {
+            date:m.date,
+            diningType:m.diningType
+        }
+    });
+    //console.log(duplication)
+
+
+    const addCartPress = async (id,day,type) =>{
+        //console.log(id,day,type)
+        const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
+        const serviceDate = day[0]+'-'+day[1]+'-'+day[2];
+
+        try {
+           await addMeal({
+                "foodId":id,
+                "count":1,
+                "serviceDate":serviceDate,
+                "diningType":diningType
+            });
+
+            } catch(err){
+                console.log(err)
+                throw err
+            }
     }
 
     return (
@@ -110,9 +155,8 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={m.spicy}
                             disabled={m.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}
-                            >
-                                {/* <ContentsText>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate});e.stopPropagation()}}>
+                                <ContentsText>
                                     <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
                                     <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
                                     <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
@@ -122,19 +166,19 @@ const Pages = () => {
                                         {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
                                     </LabelWrap>
                                     }
-                                </ContentsText> */}
+                                </ContentsText>
 
-                                {/* <MealImageWrap>
+                                <MealImageWrap>
                                     {m.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     
                                     {!m.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{alert('장바구니임')}}>
+                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(m.foodId,m.serviceDate,m.diningType)}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
-                                </MealImageWrap> */}
-                                    {/* {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>} */}
+                                </MealImageWrap>
+                                    {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>}
                             </Contents>
                             )}
                         </View>
@@ -144,7 +188,7 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={l.spicy}
                             disabled={l.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType,date:l.serviceDate});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
                                     <MealName soldOut={l.isSoldOut}>{l.foodName}</MealName>
@@ -158,15 +202,15 @@ const Pages = () => {
                                 </ContentsText>
 
                                 <MealImageWrap>
-                                    {l.isSoldOut === 0 && <BlurView/>}
+                                    {l.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     {!l.isSoldOut && (
-                                        <CartIconWrap onPress={balloonEvent}>
+                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(l.foodId,l.serviceDate,l.diningType)}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
                                 </MealImageWrap>
-                                    {l.isSoldOut === 0 && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
+                                    {l.isSoldOut && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
                             </Contents>
 
                             )}
@@ -177,7 +221,7 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={d.spicy}
                             disabled={d.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName);e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:d.foodId,type:d.diningType,date:d.serviceDate});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName>
                                     <MealName soldOut={d.isSoldOut}>{d.foodName}</MealName>
@@ -192,13 +236,13 @@ const Pages = () => {
                                 </ContentsText>
 
                                 <MealImageWrap>
-                                    {d.isSoldOut === 0 && <BlurView/>}
+                                    {d.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap onPress={()=>{alert('장바구니임')}}>
+                                    <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(d.foodId,d.serviceDate,d.diningType)}}>
                                         <CartIcon/>
                                     </CartIconWrap>
                                 </MealImageWrap>
-                                    {d.isSoldOut === 0 && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
+                                    {d.isSoldOut && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
                             </Contents>
                             )}
                         </View>
@@ -206,7 +250,7 @@ const Pages = () => {
                 </PagerViewWrap>
                 
             </ScrollView>
-            <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'10px', right:'5px'}}/>
+            <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'8px', right:'14px'}}/>
             <ButtonWrap>
                 <Button label={'장바구니 보기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(MealCartPageName)}}/>
             </ButtonWrap>
@@ -315,7 +359,8 @@ z-index:999;
 
 
 const LabelWrap = styled.View`
-    margin-top: 6px;
+margin-top: 6px;
+    
 `;
 
 

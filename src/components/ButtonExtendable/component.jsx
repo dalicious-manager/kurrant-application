@@ -66,7 +66,7 @@ const Component = ({
 
   return (
       <Container>
-        <BtnContainer onPress={onPressEvent2}>
+        <BtnContainer >
           <PressView>
             <Pressable onPress={handlePress}>
               <Trapezoid />
@@ -104,7 +104,7 @@ const Component = ({
                 </Inner>
               </AnimationView>
             </Animated.View>
-            <PressButton >
+            <PressButton onPress={onPressEvent2}>
               <ButtonText>
                 {fadeIn ? '장바구니에 담기' : `${count}개 담기`}
               </ButtonText>
@@ -120,14 +120,10 @@ export default Component;
 
 
 const Container = styled.SafeAreaView`
-  //justify-content: flex-end;
   align-items: center;
-  width: ${screenWidth}px;
-  
 `;
 const BtnContainer = styled.Pressable`
-  
- // margin-bottom:100px;
+  width:100%;
 `;
 
 const PressView = styled.View`
@@ -136,18 +132,16 @@ const PressView = styled.View`
  justify-content:center;
 `;
 
-const PressButton = styled.View`
+const PressButton = styled.Pressable`
 background-color:${props => props.theme.colors.yellow[500]};
-width:343px;
+width:100%;
 height:56px;
 border-radius:29px;
-padding:15px;
-
+padding:16px;
 `;
 
 const AnimationView = styled.View`
 background-color:${props => props.theme.colors.yellow[500]};
-//width:343px;
 height:70px;
 border-radius:29px;
 padding:4px;
@@ -173,7 +167,6 @@ border-radius:7px;
 const Inner = styled.View`
 background-color:${props => props.theme.colors.grey[0]};
 height:56px;
-//width:339px;
 border-top-left-radius:27px;
 border-top-right-radius:27px;
 justify-content:space-between;

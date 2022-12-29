@@ -43,15 +43,15 @@ const Component = ({
       const quantity = isLoadMeal.find(x => id === x.id);
 
     return (
-        <Wrap
-        onBlur={blurPress}
-        focus={focus}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight+44 }
-        >
-            <TouchableWithoutFeedback onBlur={blurPress}>
-                <React.Fragment>
-                {mealCart && <KeypadInput focus={focus}>
+        <React.Fragment>
+        { mealCart && <Wrap
+            onBlur={blurPress}
+            focus={focus}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'heigth'}
+            keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44 }
+            >
+            <TouchableWithoutFeedback onBlur={blurPress} >  
+                 <KeypadInput focus={focus}>
                     <PressableView onPress={()=>{substractHandle(id)}}>
                         <MinusIcon disabled={quantity?.count}/>
                     </PressableView>
@@ -62,13 +62,23 @@ const Component = ({
                         ref={bodyRef}
                         onChangeText={(text)=>{changeText(text,id)}}
                         value={quantity?.count.toString()}
-                        />
-                       
+                        />  
                     <PressableView onPress={()=>{addHandle(id)}}>
                         <PlusIcon />
                     </PressableView>
-                </KeypadInput>}
-                {mealDetail && <KeypadInput focus={focus}>
+                </KeypadInput>
+            </TouchableWithoutFeedback>
+            </Wrap>}
+
+            {mealDetail && <Wrap
+                onBlur={blurPress}
+                focus={focus}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'heigth'}
+                keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 10 }
+                platform={Platform.OS}
+                >
+                <TouchableWithoutFeedback onBlur={blurPress} >
+                 <KeypadInput focus={focus}>
                         <PressableView onPress={decreasePress}>
                             <MinusIcon />
                         </PressableView>
@@ -82,10 +92,10 @@ const Component = ({
                         <PressableView onPress={increasePress}>
                             <PlusIcon />
                         </PressableView>
-                    </KeypadInput>}
-                </React.Fragment>
-            </TouchableWithoutFeedback>
-        </Wrap>
+                    </KeypadInput>                
+                </TouchableWithoutFeedback>
+            </Wrap>}
+            </React.Fragment>
     )
 }
 
@@ -105,6 +115,11 @@ const KeypadInput= styled.View`
 `;
 
 const Wrap = styled.KeyboardAvoidingView`
+
+//background-color:gold;
+${({focus}) => !focus && 'height:0px'};
+${({platform}) => platform === 'ios' && 'height:0px'};
+opacity:${({focus}) => !focus ? 0 : 1};
 
 `;
 

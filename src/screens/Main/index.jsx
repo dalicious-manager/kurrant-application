@@ -1,15 +1,23 @@
+import { useNavigation } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { useAtom } from 'jotai';
 import React from 'react';
 import {  Alert, Text } from 'react-native';
 import styled from 'styled-components';
 
+import CloseIcon from '../../assets/icons/Group/close.svg';
 import { isLoginLoadingAtom,    } from '../../biz/useAuth/store';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
 import ShoppingCart from '../../components/BasketButton';
 import Typography from '../../components/Typography';
+import GrouptCreateApartmnet, {PAGE_NAME as GroupCreateApartmentPageName} from '../../pages/Group/GroupApartment';
+import ApartmnetApplicitionFirst, {PAGE_NAME as ApartmentApplicationFirstPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/FirstPage';
+import ApartmnetApplicitionLast, {PAGE_NAME as ApartmentApplicationLastPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/LastPage';
+import ApartmnetApplicitionSecond, {PAGE_NAME as ApartmentApplicationSecondPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/SecondPage';
+import ApartmnetApplicitionThird, {PAGE_NAME as ApartmentApplicationThirdPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/ThirdPage';
+import GroupCreate, {PAGE_NAME as GroupCreateMainPageName} from '../../pages/Group/GroupCreate';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
 import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
@@ -78,7 +86,8 @@ const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
   const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
-  const {allDeleteMeal} = useShoppingBasket();
+  const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
+  const navigation = useNavigation();
   
   return (
     <MainRoot.Navigator initialRouteName={LoginMainModalPageName}>
@@ -179,7 +188,14 @@ const Screen = () => {
                 },
                 {
                   text:'삭제',
-                  onPress:() => allDeleteMeal()
+                  onPress:() => {
+                    try {
+                      allDeleteMeal();
+                      setLoadMeal([]);
+                    }catch(err){
+                      console.log(err)
+                    }
+                  }
                 }
               ]
             )}}>전체삭제</DeleteTxt>
@@ -473,6 +489,115 @@ const Screen = () => {
             headerLeft: () => <BackButton />,
           }}
         />
+      </MainRoot.Group>
+
+      {/* 그룹/스팟 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+            name={GroupCreateMainPageName}
+            component={GroupCreate}
+            options={{
+              headerStyle:{
+                backgroundColor:'#F5F5F5'
+              },
+              headerShown: true,
+              headerShadowVisible: false,
+              title: '',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+               headerLeft: () => <CloseIcon onPress={()=>{navigation.goBack();}} style={{marginLeft:10}}/>,
+            }}
+          />
+          {/* 조식 스팟 신청 */}
+          <MainRoot.Screen
+            name={GroupCreateApartmentPageName}
+            component={GrouptCreateApartmnet}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title: '',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton />,
+            }}
+          />
+          <MainRoot.Screen
+            name={ApartmentApplicationFirstPageName}
+            component={ApartmnetApplicitionFirst}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title: '신청자 정보',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton />,
+            }}
+          />
+          <MainRoot.Screen
+            name={ApartmentApplicationSecondPageName}
+            component={ApartmnetApplicitionSecond}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title: '기본 정보',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton />,
+            }}
+          />
+           <MainRoot.Screen
+            name={ApartmentApplicationThirdPageName}
+            component={ApartmnetApplicitionThird}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title: '기본 정보',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton />,
+            }}
+          />
+          <MainRoot.Screen
+            name={ApartmentApplicationLastPageName}
+            component={ApartmnetApplicitionLast}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title: '기본 정보',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton />,
+            }}
+          />
       </MainRoot.Group>
     </MainRoot.Navigator>
   );

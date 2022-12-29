@@ -28,7 +28,7 @@ const buildQuery = queryObj => {
 };
 
 async function json(url, method, options = {}) {
-  console.log(options);
+  console.log('options: ',options);
   const token = await getStorage('token');
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
