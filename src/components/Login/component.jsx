@@ -127,6 +127,7 @@ const Component = ({userId}) => {
           name="password" 
           label="비밀번호"
           ref={passwordRef}
+          isPassword={true}
           autoCapitalize = 'none'
           placeholder="비밀번호"
           rules={

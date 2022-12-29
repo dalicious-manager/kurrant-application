@@ -17,6 +17,7 @@ import { textStyles } from './styles';
  * @param {string} props.name
  * @param {string} props.placeholder
  * @param {boolean} props.isEditable
+ * @param {boolean} props.isPassword
  * @param {boolean} props.focus
  * @param {function} props.setFocused
  * @param {object} props.suffix
@@ -35,6 +36,7 @@ const Component = forwardRef(({
   name,
   placeholder = '',
   isEditable = true,
+  isPassword = false,
   rules={},
   suffix = {
     isNeedDelete: false,
@@ -43,6 +45,7 @@ const Component = forwardRef(({
     authText:'',
     authPressEvent:()=>{console.log('인증 요청')},
   },
+  setisFocused,
   label = '',
   errMsg = '',
   defaultValue,
@@ -84,7 +87,7 @@ const Component = forwardRef(({
   }
 
   // Password Showing
-  if ((name==='password' || name==='passwordChecked') && data) {
+  if (isPassword && data) {
     suffixContent = <TouchableOpacity onPress={()=>{
       setShowing(!isShowing)
     }}>{isShowing ? <EyeOn />:<EyeOff />}</TouchableOpacity>;
@@ -101,9 +104,7 @@ const Component = forwardRef(({
   if (timer.remainTime > 0 && !timer.isRunning) {
     setTimer(prev => ({...prev, isRunning: true}));
   }
-  useEffect(()=>{
-    console.log(errors)
-  },[errors])
+ 
   useEffect(() => {
     if (timer.isRunning) {
       const timerId = setTimeout(() => {
@@ -151,13 +152,23 @@ const Component = forwardRef(({
                   ref={ref && ref}
                   {...textInputProps}
                   onChangeText={onChange}
-                  onBlur={()=>setFocused(false)}
-                  onFocus={()=>setFocused(true)}
+                  onBlur={()=>{
+                    setFocused(false)
+                    if(setisFocused){
+                      setisFocused(false)
+                    }
+                  }}
+                  onFocus={()=>{
+                    setFocused(true);
+                    if(setisFocused){
+                      setisFocused(true)
+                    }
+                  }}
                   text={'InputText'}
                   suffix={!!suffixContent}
                   timer={timer.remainTime > 0}
                   value={value || ''}
-                  secureTextEntry={name==='password' || name ==='passwordChecked' ? !isShowing :false}
+                  secureTextEntry={isPassword ? !isShowing :false}
                   {...rest}
                 />
               </InputContainer>

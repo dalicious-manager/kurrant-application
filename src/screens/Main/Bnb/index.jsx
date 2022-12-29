@@ -98,21 +98,12 @@ const Screen = () => {
           )
         }}
       />
-      <BottomTab.Screen  screenOptions={{presentation: 'fullScreenModal'}}
+      <BottomTab.Screen
         name={MoreMainPageName}
         component={MoreMainPage}
         options={{
           title: '마이페이지',
-          headerShown: true,
-          ttabBarStyle: {display: 'none'},
-          headerLeft: () => <BackButton mode="modal" margin={[12,0]} />,
-          headerShadowVisible: false,
-          headerTitleAlign: 'center',
-          headerTitleStyle:{
-            fontFamily:'Pretendard-SemiBold',
-            fontSize:14,
-            lineHeight:22
-          },
+          headerShown: false,
           // headerTransparent:true,
           tabBarIcon: ({ focused }) => (
             <TabBarIconWrap>

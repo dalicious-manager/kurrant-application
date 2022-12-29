@@ -4,68 +4,91 @@ import React from 'react';
 import {  Alert, Text } from 'react-native';
 import styled from 'styled-components';
 
-import { isLoginLoadingAtom,    } from '../../biz/useAuth/store';
-import useShoppingBasket from '../../biz/useShoppingBasket/hook';
-import BackButton from '../../components/BackButton';
-import Badge from '../../components/Badge';
-import ShoppingCart from '../../components/BasketButton';
-import Typography from '../../components/Typography';
-import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
-import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
-import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
-import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
-import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
+import { isLoginLoadingAtom,    } from '~biz/useAuth/store';
+import useShoppingBasket from '~biz/useShoppingBasket/hook';
+import BackButton from '~components/BackButton';
+import Badge from '~components/Badge';
+import ShoppingCart from '~components/BasketButton';
+import Typography from '~components/Typography';
+import BuyMeal, {PAGE_NAME as BuyMealPageName} from '~pages/Main/Bnb/BuyMeal/Main';
+import MealCart, {PAGE_NAME as MealCartPageName} from '~pages/Main/Bnb/MealCart/Main';
+import MealDetail, {PAGE_NAME as MealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main'; 
+import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '~pages/Main/Bnb/MealDetail/Page';
+import Payment, {PAGE_NAME as PaymentPageName} from '~pages/Main/Bnb/Payment/Main';
 import EmailLoginModal, {
   PAGE_NAME as EmailLoginModalModalPageName,
-} from '../../pages/Main/Login/EmailLogin';
+} from '~pages/Main/Login/EmailLogin';
 import FindUser, {
   PAGE_NAME as FindUserPageName,
-} from '../../pages/Main/Login/FindUser';
+} from '~pages/Main/Login/FindUser';
 import ChagePassword, {
   PAGE_NAME as ChagePasswordPageName,
-} from '../../pages/Main/Login/FindUser/ChagePassword';
+} from '~pages/Main/Login/FindUser/ChagePassword';
 import FindId, {
   PAGE_NAME as FindIdPageName,
-} from '../../pages/Main/Login/FindUser/FindId';
+} from '~pages/Main/Login/FindUser/FindId';
 import FindIdComplate, {
   PAGE_NAME as FindIdComplatePageName,
-} from '../../pages/Main/Login/FindUser/FindId/FindIdComplate';
+} from '~pages/Main/Login/FindUser/FindId/FindIdComplate';
 import FindPassword, {
   PAGE_NAME as FindPasswordPageName,
-} from '../../pages/Main/Login/FindUser/FindPassword';
+} from '~pages/Main/Login/FindUser/FindPassword';
 import LoginMainModal, {
   PAGE_NAME as LoginMainModalPageName,
-} from '../../pages/Main/Login/Login';
+} from '~pages/Main/Login/Login';
 import SignUp, {
   PAGE_NAME as SignUpPageName,
-} from '../../pages/Main/Login/SignUp';
+} from '~pages/Main/Login/SignUp';
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
-} from '../../pages/Main/Login/SignUp/SignUpComplate';
+} from '~pages/Main/Login/SignUp/SignUpComplate';
+import PersonalInfo, {
+  PAGE_NAME as PersonalInfoPageName,
+} from '~pages/Main/MyPage/PersonalInfo';
+import ConnectedSNS, {
+  PAGE_NAME as ConnectedSNSPageName,
+} from '~pages/Main/MyPage/PersonalInfo/pages/ConnectedSNS';
+import EmailSetting, {
+  PAGE_NAME as EmailSettingPageName,
+} from '~pages/Main/MyPage/PersonalInfo/pages/EmailSetting';
+import MarketingAgree, {
+  PAGE_NAME as MarketingAgreePageName,
+} from '~pages/Main/MyPage/PersonalInfo/pages/MarketingAgree';
+import NotificationSetting, {
+  PAGE_NAME as NotificationSettingPageName,
+} from '~pages/Main/MyPage/PersonalInfo/pages/NotificationSetting';
+import PasswordSetting, {
+  PAGE_NAME as PasswordSettingPageName,
+} from '~pages/Main/MyPage/PersonalInfo/pages/PasswordSetting';
+import TermOfService, {
+  PAGE_NAME as TermOfServicePageName,
+} from '~pages/Main/MyPage/TermOfService';
 import MembershipInfo, {
   PAGE_NAME as MembershipInfoPageName,
-} from '../../pages/Membership/MembershipInfo';
+} from '~pages/Membership/MembershipInfo';
 import MembershipUsagedetails, {
   PAGE_NAME as MembershipUsagedetailsPageName,
-} from '../../pages/Membership/MembershipInfo/MembershipUsageDetails';
+} from '~pages/Membership/MembershipInfo/MembershipUsageDetails';
 import MembershipIntro, {
   PAGE_NAME as MembershipIntroPageName,
-} from '../../pages/Membership/MembershipIntro';
+} from '~pages/Membership/MembershipIntro';
 import MembershipJoin, {
   PAGE_NAME as MembershipJoinPageName,
-} from '../../pages/Membership/MembershipJoin';
+} from '~pages/Membership/MembershipJoin';
 import MembershipJoinComplate, {
   PAGE_NAME as MembershipJoinComplatePageName,
-} from '../../pages/Membership/MembershipJoin/MembershipJoinComplate';
+} from '~pages/Membership/MembershipJoin/MembershipJoinComplate';
 import MembershipJoinPayments, {
   PAGE_NAME as MembershipJoinPaymentsPageName,
-} from '../../pages/Membership/MembershipJoin/MembershipJoinPayments';
+} from '~pages/Membership/MembershipJoin/MembershipJoinPayments';
 import MembershipTerminate, {
   PAGE_NAME as MembershipTerminatePageName,
-} from '../../pages/Membership/MembershipTerminate';
+} from '~pages/Membership/MembershipTerminate';
 import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
-} from '../../pages/Membership/MembershipTerminate/MembershipTerminateComplate';
+} from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
+
+
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 
 // Pages > Exchange
@@ -204,9 +227,114 @@ const Screen = () => {
           }}
         />
       </MainRoot.Group>
-
-      
-
+      {/* MYPAGE */}
+      <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
+        <MainRoot.Screen
+          name={TermOfServicePageName}
+          component={TermOfService}
+          options={{headerShown: true,
+            title:'약관 및 개인 정보',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={PersonalInfoPageName}
+          component={PersonalInfo}
+          options={{headerShown: true,
+            title:'개인 정보',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={ConnectedSNSPageName}
+          component={ConnectedSNS}
+          options={{headerShown: true,
+            title:'SNS 계정 연결',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={NotificationSettingPageName}
+          component={NotificationSetting}
+          options={{headerShown: true,
+            title:'알림 설정',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={PasswordSettingPageName}
+          component={PasswordSetting}
+          options={{headerShown: true,
+            title:'비밀번호 변경하기',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={EmailSettingPageName}
+          component={EmailSetting}
+          options={{headerShown: true,
+            title:'이메일/비밀번호 설정',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MarketingAgreePageName}
+          component={MarketingAgree}
+          options={{headerShown: true,
+            title:'마케팅 정보 수신 동의',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+      </MainRoot.Group>
       {/* MEMBERSHIP */}
       <MainRoot.Group>
         <MainRoot.Screen

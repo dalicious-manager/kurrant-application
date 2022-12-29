@@ -248,6 +248,7 @@ const Pages = ({ route }) => {
                                             name="password"
                                             label="비밀번호"
                                             autoFocus={true}
+                                            isPassword={true}
                                             autoCapitalize='none'
                                             placeholder="비밀번호"
                                             rules={
@@ -272,6 +273,7 @@ const Pages = ({ route }) => {
                                         <RefTextInput
                                             name="passwordChecked"
                                             label="비밀번호 재입력"
+                                            isPassword={true}
                                             autoCapitalize='none'
                                             placeholder="비밀번호 재입력"
                                             rules={

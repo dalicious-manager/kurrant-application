@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {View} from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
@@ -20,11 +21,13 @@ const Component = ({
   isVersion,
   isArrow = true,
   description,
-  effect
+  effect,
+  routeName,
 }) => {
   const themeApp = useTheme();
+  const navigation = useNavigation();
   return (
-    <TitleContainer>
+    <TitleContainer onPress ={()=> routeName && navigation.navigate(routeName)}>
       <TitleBox>
         <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>{title}</Title>
         {isVersion &&<VersionInfo textColor={themeApp.colors.grey[4]}>1.0.0</VersionInfo> }
@@ -56,7 +59,7 @@ const VersionInfo = styled(Typography)`
 const ArrowIcon = styled(ArrowRightIcon)`
   color:${props => props.theme.colors.grey[5]};
 `
-const TitleContainer = styled.View`
+const TitleContainer = styled.Pressable`
   padding:0px 17px;
   height: 56px;
   flex-direction: row;
