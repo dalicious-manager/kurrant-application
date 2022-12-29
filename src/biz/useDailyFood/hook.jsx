@@ -16,12 +16,12 @@ const useFoodDaily = () => {
             const res = await Fetch.DailyFood(spotId,seletedDate);
             
             setDailyFood(res.data);
-            //setMorning(res.data.filter(x => x.diningType === '아침'));
+            setMorning(res.data.filter(x => x.diningType === 'MORNING'));
             setLunch(res.data.filter(x => x.diningType === 'LUNCH'));
             setDinner(res.data.filter(x => x.diningType === 'DINNER'));
         } catch (err) {
             throw err;
-            // console.log(err)
+            
         }
     }
     return {

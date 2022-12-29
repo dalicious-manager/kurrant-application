@@ -7,10 +7,10 @@ const useFoodDetail = () => {
 
     const [isFoodDetail,setFoodDetail] = useAtom(isFoodDetailAtom);
 
-    const foodDetail = async () => {
+    const foodDetail = async (foodId) => {
         try {
-            const res = await Fetch.FoodDetail();
-            setFoodDetail(res.foodDetail);
+            const res = await Fetch.FoodDetail(foodId);
+            setFoodDetail(res.data);
         } catch (err) {
             throw err;
         }

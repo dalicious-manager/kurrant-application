@@ -23,6 +23,7 @@ import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
+import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 
@@ -38,6 +39,7 @@ const Pages = () => {
 
     const weekly = useAtomValue(weekAtom);
     const {isUserInfo, userInfo} = useUserInfo();
+    const {isOrderMeal,orderMeal} = useOrderMeal();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
@@ -56,7 +58,6 @@ const Pages = () => {
       )
   });
 
- 
   useEffect(()=>{
     async function loadUser(){
       await userInfo();
@@ -66,21 +67,31 @@ const Pages = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
+  useEffect(() => {
+    async function loadMeal(){
+      await orderMeal(start[0],end[0])
+    };
+    loadMeal();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
 
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
 
-  const date = formattedDate(new Date());
-  const todayMeal = mealInfo?.filter((m) => m.date === date);
-
+  const date = formattedWeekDate(new Date());
+  const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
+  //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
   const PressSpotButton = () => {
     setModalVisible(true);
 }
 
   return (
     <SafeView>
-      
-      <Wrap>
+      <Pressable onPress={() => {navigation.navigate(GroupCreateMainPageName)}}>
+        <Text> 임시버튼임 </Text>
+      </Pressable>
+      <View>
         <BarWrap>
           <SpotName>
             <Pressable onPress={PressSpotButton}>
@@ -93,8 +104,8 @@ const Pages = () => {
             <CsIcon/>
           </Icons>
         </BarWrap>
-      </Wrap>
-      <ScrollView onScroll={test} scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
+      </View>
+      <ScrollViewWrap onScroll={test} scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         
         <MainWrap>
@@ -174,7 +185,7 @@ const Pages = () => {
             <MembershipText>멤버십 가입하고 <PointText>20%할인</PointText> 받기</MembershipText>
           </MenbershipBanner>}
           
-          {/* <CatorWrap>
+          <CatorWrap>
             <Cator>
               <CatorIcon/>
               <TitleText>케이터링</TitleText>
@@ -183,7 +194,7 @@ const Pages = () => {
               <Count>2</Count>
               <CountText>건</CountText>
             </CountWrap>
-          </CatorWrap> */}
+          </CatorWrap>
           {isUserInfo?.isMembership && <MembershipWrap>
             <Membership>
               <MembershipIcon/>
@@ -194,7 +205,7 @@ const Pages = () => {
               <CountText>건</CountText>
             </CountWrap>
           </MembershipWrap>}
-          {/* <MarketWrap>
+          <MarketWrap>
             <Market>
               <MarketIcon/>
               <TitleText>마켓 상품</TitleText>
@@ -203,10 +214,10 @@ const Pages = () => {
               <Count>2</Count>
               <CountText>건</CountText>
             </CountWrap>
-          </MarketWrap> */}
+          </MarketWrap>
         </MainWrap>
         </Wrap>   
-          </ScrollView>
+          </ScrollViewWrap>
         
       <ButtonWrap>
           <Button label={'식사 구매하기'}  type={'yellow'} icon={'plus'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
@@ -237,7 +248,7 @@ export default Pages;
 
 const BoxWrap = css`
   width:100%;
-  height:64px;
+  //height:64px;
   border-radius:14px;
   background-color:${props => props.theme.colors.grey[0]};
   margin-bottom:16px;
@@ -259,12 +270,15 @@ align-items:center;
 const SafeView = styled.SafeAreaView`
 flex:1;
 background-color:${props => props.theme.colors.grey[8]};
+
 `;
 
-const Wrap = styled.View`
+const ScrollViewWrap = styled.ScrollView`
 
-//padding: 0px 24px;
-//margin: 0px 24px;
+`;
+const Wrap = styled.View`
+padding-bottom:100px;
+
 
 `;
 const BarWrap = styled.View`
@@ -334,8 +348,8 @@ const MealCount = styled.View`
 
 const MealCalendar = styled.View`
 ${BoxWrap};
-height:130px;
-
+min-height:130px;
+padding-bottom:10px;
 //padding:15px 16px;
 
 `;

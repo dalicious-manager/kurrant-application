@@ -15,3 +15,6 @@ export const MembershipJoin = require('../assets/images/membership-join.png');
 export const Subtract = require('../assets/images/subtract.png');
 export const AvatarNon = require('../assets/images/circle-question.png');
 export const Terminate = require('../assets/images/terminate.png');
+export const Corporation = require('../assets/images/corporation.png');
+export const Apartment = require('../assets/images/apartment.png');
+export const AlreadyApartment = require('../assets/images/alreadyApart.png');

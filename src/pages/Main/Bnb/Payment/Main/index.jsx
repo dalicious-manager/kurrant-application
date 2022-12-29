@@ -1,11 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import React, {useState} from "react";
 import {useForm} from 'react-hook-form';
-import { View, Text ,SafeAreaView, ScrollView , Pressable, FlatList} from "react-native";
+import { View, Text ,SafeAreaView, ScrollView , Pressable, FlatList, Alert} from "react-native";
 import styled from "styled-components";
 
 import ArrowDownIcon from '../../../../../assets/icons/Arrow/arrowDown.svg';
 import ArrowRightIcon from '../../../../../assets/icons/Arrow/arrowRight.svg';
-import QuestionIcon from '../../../../../assets/icons/MealCart/question.svg';
 import PayError from "../../../../../assets/icons/Payment/payError.svg";
 import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
 import useUserInfo from "../../../../../biz/useUserInfo";
@@ -17,16 +17,18 @@ import Form from "../../../../../components/Form";
 import Typography from "../../../../../components/Typography";
 import { formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
-import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, Wrap, XIcon } from "../../MealCart/Main";
+import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, Wrap, XIcon } from "../../MealCart/Main";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
 const Pages = () => {
 
+    const navigation = useNavigation();
     const agreeCheck = useForm();
     const [show,setShow] = useState(false);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
+    const [ modalVisible3, setModalVisible3 ] = useState(false);
     const {isLoadMeal} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
 
@@ -36,6 +38,10 @@ const Pages = () => {
 
     const pointButton = () => {
         setModalVisible2(true);
+    }
+
+    const fundButton = () => {
+        setModalVisible3(true);
     }
 
     const closeModal = () => {
@@ -51,6 +57,25 @@ const Pages = () => {
     const totalPrice = isLoadMeal.map(p => p.count * p.price).reduce((acc,cur) => {
         return acc + cur
     });
+
+    const handleEventPayments = ()=>{
+        console.log(agreeCheck.watch(agreeCheck).agreeCheck);
+        if(agreeCheck.watch(agreeCheck).agreeCheck){
+            console.log('동의함');
+            PressButton();
+          //navigation.navigate(MembershipJoinComplatePageName)
+        }else{
+            Alert.alert(
+                '동의가 필요합니다',
+                '결제 진행 필수사항에 동의해주세요',
+                [
+                    {
+                        text:'확인'
+                    }
+                ]
+            )
+        }        
+      }
 
 
     return (
@@ -83,16 +108,16 @@ const Pages = () => {
                 </Container>
                 {show && <ProductInfo> 
                        {isLoadMeal.map((meal,idx) => {
-                        
+                        const svcDate = meal.serviceDate[0]+'-'+meal.serviceDate[1]+'-'+meal.serviceDate[2];
                         return (
-                            <OrderWrap key={meal.id}>
+                            <OrderWrap key={idx}>
                             <View>
-                                <DiningName>{formattedMonthDay(meal.date)} {meal.diningType}</DiningName>
+                                <DiningName>{formattedMonthDay(svcDate)} {meal.diningType}</DiningName>
                             </View>
                             <ContentWrap>
                                 <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     <View>
-                                        <MealName>[{meal.makers}] {meal.name} </MealName>
+                                        <MealName>[{meal.makers.name}] {meal.name} </MealName>
                                         <SalePriceWrap>
                                             <PointBoldText>20%</PointBoldText>
                                             <Price>{withCommas(meal.price)} 원</Price>
@@ -118,9 +143,11 @@ const Pages = () => {
                         <PaymentText>{withCommas(totalPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView>
-                        <PaymentText>회사 지원금 사용 금액
+                        <PressableView onPress={fundButton}>
+                            <PaymentText>회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
-                         </PaymentText>
+
+                         </PressableView>
                          <PaymentText>10,000 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
@@ -155,32 +182,35 @@ const Pages = () => {
                         <Title>결제 수단</Title>
                         <DeliveryTitle>카드 결제시 등록한 카드로 결제가 진행됩니다.</DeliveryTitle>
                     <Card>
-                        {/* <CardText>결제 카드 등록</CardText> */}
-                        <CardText>현대카드(1234)</CardText>
-                        <PayInfoWrap>
+                        <NoPayInfoWrap>
+                            <CardText>결제 카드 등록</CardText>
+                            <ArrowRight/>
+                        </NoPayInfoWrap>
+                        {/* <CardText>현대카드(1234)</CardText> */}
+                        {/* <PayInfoWrap>
                             <PayInfo>
                                 <PayError/>
                                 <PayText>결제불가</PayText>
                             </PayInfo>
                             <ArrowRight/>
-                        </PayInfoWrap>
+                        </PayInfoWrap> */}
                     </Card>
                     
                     </Container>
                     
                 </BorderWrap>
                 <FormWrap>
-                    
-                        <Form form={agreeCheck}>
-                            <Check name="agreeCheck" >
-                                <Label>구매 조건 확인 및 결제 진행 필수 동의</Label>
-                            </Check>
-                        </Form>
+                    <Form form={agreeCheck}>
+                        <Check name="agreeCheck" >
+                            <Label>구매 조건 확인 및 결제 진행 필수 동의</Label>
+                        </Check>
+                    </Form>
                 </FormWrap>
                 </ViewScroll>
                 <ButtonWrap>
-                    <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={PressButton}/>
+                    <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{handleEventPayments()}}/>
                 </ButtonWrap>
+                <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                 <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow'/>
                 <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
         </SafeArea>
@@ -237,7 +267,6 @@ margin-bottom:24px;
 `;
 
 const Card = styled.View`
-height:56px;
 width:100%;
 border:1px solid ${props => props.theme.colors.grey[7]};
 border-radius:14px;
@@ -281,6 +310,14 @@ const PayInfoWrap = styled.View`
 flex-direction:row;
 align-items:center;
 text-align:center;
+`;
+
+const NoPayInfoWrap = styled.View`
+flex-direction:row;
+align-items:center;
+text-align:center;
+justify-content:space-between;
+width:100%;
 `;
 
 const PayInfo = styled.View`
