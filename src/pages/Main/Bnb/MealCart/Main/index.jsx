@@ -43,7 +43,11 @@ const Pages = () => {
 
     useEffect(()=>{
         async function loadCart(){
-            await loadMeal();
+            try {
+                await loadMeal();
+            }catch(err){
+                console.log(err.toString())
+            }
         }
         loadCart();
     

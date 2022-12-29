@@ -33,7 +33,7 @@ const Pages = ({route}) => {
     const [count, setCount] = useState(1);
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,foodDetail} = useFoodDetail();
-    const {addMeal} = useShoppingBasket();
+    const {addMeal,loadMeal} = useShoppingBasket();
     console.log(isFoodDetail)
     const headerTitle = isFoodDetail?.name;
     const foodId = route.params.foodId;
@@ -47,6 +47,7 @@ const Pages = ({route}) => {
     useEffect(()=>{
         async function loadFoodDetail(){
             await foodDetail(foodId);
+            await loadMeal();
         }
         loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
