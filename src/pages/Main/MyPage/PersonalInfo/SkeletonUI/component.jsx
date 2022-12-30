@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
+import { SafeAreaView } from 'react-native';
 import {View} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import styled, { useTheme } from 'styled-components/native';
@@ -15,6 +16,7 @@ import Typography from '~components/Typography';
 
 const Component = () => {
   return (
+    <SafeAreaView>
     <SkeletonPlaceholder borderRadius={4} flex={1} backgroundColor={"white"} >
     <SkeletonPlaceholder.Item flexDirection="row" alignItems="center" justifyContent='space-between' marginHorizontal={24} marginTop={24}>      
       <SkeletonPlaceholder.Item >
@@ -48,6 +50,7 @@ const Component = () => {
         <SkeletonPlaceholder.Item width={80} marginTop={24} height={20} />
       </SkeletonPlaceholder.Item>
   </SkeletonPlaceholder>
+  </SafeAreaView>
   )
 };
  

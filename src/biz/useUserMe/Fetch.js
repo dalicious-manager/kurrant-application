@@ -12,13 +12,28 @@ export async function userMePersonal() {
 
 
 export async function changePassword(body, option) {
-  const fetchRes = await fetchJson(`//users/change/password`, 'POST', {
+  const fetchRes = await fetchJson(`/users/me/change/password`, 'POST', {
     ...option,
     body: JSON.stringify(body)
   });
   return fetchRes
 }
 
+export async function settingEmail(body, option) {
+  const fetchRes = await fetchJson(`/users/me/setting/GENERAL`, 'POST', {
+    ...option,
+    body: JSON.stringify(body)
+  });
+  return fetchRes
+}
+
+export async function settingPhoneNumber(body, option) {
+  const fetchRes = await fetchJson(`/users/me/change/phone`, 'POST', {
+    ...option,
+    body: JSON.stringify(body)
+  });
+  return fetchRes
+}
 
 export async function snsConnect(body, type, option) {
   const fetchRes = await fetchJson(`/users/me/connecting/${type}`, 'POST', {
@@ -33,8 +48,15 @@ export async function snsDisconnect(type) {
   return fetchRes
 }
 
-export async function alarmSetting(type, value) {
-  const fetchRes = await fetchJson(`/users/me/setting?${type}=${value}`, 'POST');
+export async function alarmSetting(body, option) {
+  const fetchRes = await fetchJson(`/users/me/setting`, 'POST', {
+    ...option,
+    body: JSON.stringify(body)
+  });
   return fetchRes
 }
 
+export async function alarmLookup() {
+  const fetchRes = await fetchJson(`/users/me/setting`, 'GET');
+  return fetchRes
+}

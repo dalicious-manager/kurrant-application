@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Animated } from 'react-native';
 import styled from 'styled-components/native';
@@ -63,7 +64,9 @@ const Component = ({ name, size = 'md', agree = true ,toggleEvent=(name)=>{}}) =
           }).start(),
             setToggle(!toggle));
   };
-
+  useEffect(()=>{
+    setToggle(agree);
+  },[agree])
   return (
     <Wrap>
       <Controller

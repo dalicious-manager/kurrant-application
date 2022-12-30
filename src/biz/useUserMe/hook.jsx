@@ -3,13 +3,17 @@ import {useAtom} from 'jotai';
 import * as Fetch from './Fetch';
 import { 
     isAlarmSettingLoadingAtom,
+    isAlarmLookUpLoadingAtom,
     isMyInfoAtom , 
     isMyInfoLoadingAtom ,
     isMyInfoPersonalLoadingAtom,
     isSNSConnectAtom,
     isSNSConnectLoadingAtom,
     isSNSDisconnectLoadingAtom,
-    isChangePasswordLoadingAtom
+    isChangePasswordLoadingAtom,
+    isSettingEmailLoadingAtom,
+    isSettingPhoneNumberLoadingAtom,
+    alarmAtom
 } from './store';
 
 const useUserInfo = () => {
@@ -22,7 +26,11 @@ const useUserInfo = () => {
     const [isSNSConnectLoading,setSNSConnectLoading] = useAtom(isSNSConnectLoadingAtom);
     const [isSNSDisconnectLoading,setSNSDisconnectLoading] = useAtom(isSNSDisconnectLoadingAtom);
     const [isAlarmSettingLoading,setAlarmSettingLoading] = useAtom(isAlarmSettingLoadingAtom);
+    const [isAlarmLookUpLoading,setAlarmLookUpLoading] = useAtom(isAlarmLookUpLoadingAtom);
+    const [alarm,setAlarm] = useAtom(alarmAtom);
     const [isChangePasswordLoading,setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
+    const [isSettingEmailLoading,setSettingEmailLoading] = useAtom(isSettingEmailLoadingAtom);
+    const [isSettingPhoneNumberLoading,setSettingPhoneNumberLoading] = useAtom(isSettingPhoneNumberLoadingAtom);
 
     const userMe = async () => {
         
@@ -91,16 +99,42 @@ const useUserInfo = () => {
         }
     };
 
-    const alarmSetting = async (type,value) => {
-        
+    const alarmSetting = async (body,option={}) => {
+        console.log(body);
         try {
             setAlarmSettingLoading(true)
-            const res = await Fetch.alarmSetting(type,value);
+            const res = await Fetch.alarmSetting(
+                    {
+                        ...body
+                    },
+                    option
+                );                
             return res;
         } catch (err) {
             throw err;
         }finally{
             setAlarmSettingLoading(false)
+        }
+    };
+
+    const alarmLookup = async () => {
+        
+        try {
+            setAlarmLookUpLoading(true)
+            const res = await Fetch.alarmLookup();
+            setAlarm(
+                {
+                    "marketingAgreedDateTime": res.data.marketingAgreedDateTime,
+                    "isMarketingInfoAgree": res.data.marketingAgree,
+                    "isMarketingAlarmAgree": res.data.marketingAlarm,
+                    "isOrderAlarmAgree": res.data.orderAlarm,
+                }
+            );
+            return res;
+        } catch (err) {
+            throw err;
+        }finally{
+            setAlarmLookUpLoading(false)
         }
     };
 
@@ -121,6 +155,40 @@ const useUserInfo = () => {
             setChangePasswordLoading(false)
         }
     };
+    const settingEmail = async (body,option={}) => {
+        
+        try {
+            setSettingEmailLoading(true)
+            const res = await Fetch.settingEmail( 
+                {
+                  ...body
+                },
+                option
+            );
+            return res;
+        } catch (err) {
+            throw err;
+        }finally{
+            setSettingEmailLoading(false)
+        }
+    };
+    const settingPhoneNumber = async (body,option={}) => {
+        
+        try {
+            setSettingPhoneNumberLoading(true)
+            const res = await Fetch.settingPhoneNumber( 
+                {
+                  ...body
+                },
+                option
+            );
+            return res;
+        } catch (err) {
+            throw err;
+        }finally{
+            setSettingPhoneNumberLoading(false)
+        }
+    };
 
     return {
         userMe,
@@ -128,7 +196,10 @@ const useUserInfo = () => {
         snsDisconnect,
         userMePersonal,
         alarmSetting,
+        alarmLookup,
         changePassword,
+        settingEmail,
+        settingPhoneNumber,
         readableAtom: {
             myInfo,
             myInfoPerson,
@@ -137,7 +208,11 @@ const useUserInfo = () => {
             isSNSDisconnectLoading,
             isMyInfoPersonalLoading,
             isAlarmSettingLoading,
-            isChangePasswordLoading
+            isAlarmLookUpLoading,
+            isChangePasswordLoading,
+            isSettingEmailLoading,
+            isSettingPhoneNumberLoading,
+            alarm
         } 
     }
 };

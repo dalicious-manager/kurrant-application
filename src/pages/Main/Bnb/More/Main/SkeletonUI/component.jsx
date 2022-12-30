@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { SafeAreaView } from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 
@@ -10,6 +11,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const Component = () => {
   return (
+    <SafeAreaView>
     <SkeletonPlaceholder borderRadius={4} flex={1} backgroundColor={"white"} >
     <SkeletonPlaceholder.Item flexDirection="row" alignItems="center" justifyContent='space-between' marginHorizontal={24} marginTop={24}>      
       <SkeletonPlaceholder.Item marginBottom={24}>
@@ -42,6 +44,7 @@ const Component = () => {
       <SkeletonPlaceholder.Item width={'100%'} height={6} marginVertical={12}/>
  
   </SkeletonPlaceholder>
+  </SafeAreaView>
   )
 };
  

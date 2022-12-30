@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
-import { login } from '@react-native-seoul/kakao-login';
+import { login ,getProfile } from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import {  Alert, Platform } from 'react-native';
 
@@ -54,20 +54,18 @@ export default () => {
       }
       
     };
+
+    
+  const getKakaoProfile = async () => {
+    const profile = await getProfile();
+
+    return JSON.stringify(profile);
+  };
     const snsDisconnectID = async (social) => {
       try {
         await snsDisconnect(social)
       } catch (error) {
-        Alert.alert(
-          'SNS 연결해제 실패',
-          error.toString().replace('error: ',''),
-          [
-            {
-              text:'확인',
-              onPress:()=>{}
-            }
-          ]
-        )
+        throw error
       }
      
     };
@@ -78,5 +76,5 @@ export default () => {
    
 
 
-    return {snsConnectID,snsDisconnectID};
+    return {snsConnectID,snsDisconnectID,getKakaoProfile};
 };

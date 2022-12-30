@@ -50,9 +50,18 @@ import NotificationSetting, {
 import PasswordSetting, {
   PAGE_NAME as PasswordSettingPageName,
 } from '~pages/Main/MyPage/PersonalInfo/pages/PasswordSetting';
+import PhoneNumberSetting, {
+  PAGE_NAME as PhoneNumberSettingPageName,
+} from '~pages/Main/MyPage/PersonalInfo/pages/PhoneNumberSetting';
 import TermOfService, {
   PAGE_NAME as TermOfServicePageName,
 } from '~pages/Main/MyPage/TermOfService';
+import Privacy, {
+  PAGE_NAME as PrivacyPageName,
+} from '~pages/Main/MyPage/TermOfService/Privacy';
+import Term, {
+  PAGE_NAME as TermPageName,
+} from '~pages/Main/MyPage/TermOfService/Term';
 import MembershipInfo, {
   PAGE_NAME as MembershipInfoPageName,
 } from '~pages/Membership/MembershipInfo';
@@ -261,6 +270,36 @@ const Screen = () => {
           }}
         />
         <MainRoot.Screen
+          name={TermPageName}
+          component={Term}
+          options={{headerShown: true,
+            title:'이용 약관',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:17,
+              lineHeight:21
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={PrivacyPageName}
+          component={Privacy}
+          options={{headerShown: true,
+            title:'개인 정보 수집 약관',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:17,
+              lineHeight:21
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
           name={PersonalInfoPageName}
           component={PersonalInfo}
           options={{headerShown: true,
@@ -295,6 +334,21 @@ const Screen = () => {
           component={NotificationSetting}
           options={{headerShown: true,
             title:'알림 설정',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={PhoneNumberSettingPageName}
+          component={PhoneNumberSetting}
+          options={{headerShown: true,
+            title:'휴대폰 번호 변경',
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerTitleStyle:{

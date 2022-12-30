@@ -1,12 +1,39 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import styled from 'styled-components/native';
+import { useEffect } from "react";
+import { useState } from "react";
+import { ActivityIndicator } from "react-native";
+import styled, { useTheme } from 'styled-components/native';
 
 import Button from "~components/Button";
 import Typography from "~components/Typography";
 import Wrapper from "~components/Wrapper";
 
+import useUserMe from "../../../../../../biz/useUserMe";
+
 export const PAGE_NAME = "P__MY_PAGE__MARKETING_AGREE"
 const Pages = ()=>{
+
+    const {alarmLookup ,alarmSetting,readableAtom:{alarm ,isAlarmLookUpLoading}}=useUserMe();
+    const themeApp = useTheme();
+    const navigation = useNavigation();
+    const alarmData = async()=>{
+        await alarmLookup();
+        
+    }
+    const onSetAlarm = async()=>{
+        await alarmSetting({'isMarketingAlarmAgree':!(alarm.isMarketingAlarmAgree || alarm.isOrderAlarmAgree),'isOrderAlarmAgree' : !(alarm.isMarketingAlarmAgree || alarm.isOrderAlarmAgree) ,"isMarketingInfoAgree": false,});
+        navigation.goBack();
+    }
+    useEffect(()=>{
+        alarmData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+    if(isAlarmLookUpLoading){
+        return <LoadingBox>
+            <ActivityIndicator size={'large'} color={themeApp.colors.yellow[500]}/>
+          </LoadingBox>
+    }
     return(
         <Wrapper paddingTop={40} paddingHorizontal={20}>
             <TextBox>
@@ -28,7 +55,7 @@ const Pages = ()=>{
                 </Typography>
             </TextBox>
             <ButtonBox>
-                <Button label="동의하고 알림받기"/>
+                <Button label={alarm.isMarketingAlarmAgree || alarm.isOrderAlarmAgree ?"동의 철회하기" : "동의하고 알림받기"} type={alarm.isMarketingAlarmAgree || alarm.isOrderAlarmAgree ?"grey7" : "yellow"} onPressEvent={onSetAlarm}/>
             </ButtonBox>
         </Wrapper>  
     )
@@ -47,4 +74,14 @@ const ButtonBox = styled.View`
 const TextBox = styled.View`
     padding-left: 4px;
     padding-right: 4px;
+`
+const LoadingBox = styled.View`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
 `

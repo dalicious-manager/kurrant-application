@@ -1,6 +1,8 @@
+/* eslint-disable no-unreachable */
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
+import useToken from '../../hook/useToken';
 import { getStorage } from '../asyncStorage';
 const RESPONSE_SLEEP = 300;
 
@@ -26,7 +28,7 @@ const buildQuery = queryObj => {
 };
 
 async function json(url, method, options = {}) {
-  console.log('options: ',options);
+  console.log(options);
   const token = await getStorage('token');
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
@@ -62,7 +64,6 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
-  console.log(ret);
   if (ret.error) {
     const errors = new Error(ret.message);
     errors.name = "error";
