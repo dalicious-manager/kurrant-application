@@ -99,6 +99,7 @@ import ApartmnetApplicitionFirst, {PAGE_NAME as ApartmentApplicationFirstPageNam
 import ApartmnetApplicitionLast, {PAGE_NAME as ApartmentApplicationLastPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/LastPage';
 import ApartmnetApplicitionSecond, {PAGE_NAME as ApartmentApplicationSecondPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/SecondPage';
 import ApartmnetApplicitionThird, {PAGE_NAME as ApartmentApplicationThirdPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/ThirdPage';
+import ApartmentApplicationInformation, { PAGE_NAME as ApartmentApplicationInformationPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/ThirdPage/Pages';
 import GroupCreate, {PAGE_NAME as GroupCreateMainPageName} from '../../pages/Group/GroupCreate';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
 import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
@@ -777,6 +778,23 @@ const Screen = () => {
               },
               
               headerLeft: () => <BackButton />,
+            }}
+          />
+          <MainRoot.Screen
+            name={ApartmentApplicationInformationPageName}
+            component={ApartmentApplicationInformation}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title: '아침 식사 정보',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <CloseIcon onPress={()=>{navigation.goBack();}} style={{marginLeft:10}}/>,
             }}
           />
       </MainRoot.Group>

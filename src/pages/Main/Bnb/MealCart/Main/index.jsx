@@ -56,12 +56,10 @@ const Pages = () => {
   
     const quantity = isLoadMeal.map(m => {
         return{
-            foodId: m.id,
+            foodId: m.dailyFoodId,
             count: m.count
         }
      });
-
-     console.log(quantity,'gggg')
     
     const pointButton = () => {
         setModalVisible(true);
@@ -71,8 +69,9 @@ const Pages = () => {
     }
 
     const addHandle = (productId) => {
+        console.log(productId,'id')
         const addQty = isLoadMeal.map(p => {
-            if (productId === p.id){
+            if (productId === p.dailyFoodId){
                 return {...p, count:p.count + 1}
         } else return p ; 
         });
@@ -82,7 +81,7 @@ const Pages = () => {
 
     const substractHandle = (productId) => {
         const substracQty = isLoadMeal.map(p => {
-            if (productId === p.id){
+            if (productId === p.dailyFoodId){
                 return {...p, count:( p.count <= 1? 1:p.count - 1)}
         } else return p ; 
         });
@@ -112,7 +111,7 @@ const Pages = () => {
     const changeText = (number,pi) => {
         
         const addQty = isLoadMeal.map(p => {
-            if (pi === p.id){
+            if (pi === p.dailyFoodId){
                 return {...p, count:Number(number)}
         } else return p ; 
         });
@@ -128,9 +127,11 @@ const Pages = () => {
     };
 
     const deleteButton = async (foodId) => {
+        console.log(foodId)
         try {
             await deleteMeal(foodId);
-            setLoadMeal(isLoadMeal.filter(t => t.id !== foodId));
+            setLoadMeal(isLoadMeal.filter(t => t.dailyFoodId !== foodId));
+            
         } catch(err) {
             console.log(err)
         }
@@ -150,7 +151,7 @@ const Pages = () => {
 
     //       return  () => {
     //         // Do something when the screen is unfocused
-    //             console.log(quantity)
+    //             console.log("나감")
     //              updateMeal({"updateCartList":quantity});
             
     //       };
@@ -158,7 +159,7 @@ const Pages = () => {
        
         
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //     }, [])
+    //     }, [updateMeal])
     //   );
 
 
@@ -182,7 +183,7 @@ const Pages = () => {
                         <Wrap key={idx}>
                             <ContentHeader>
                                 <DiningName>{formattedMonthDay(svcDate)} {l.diningType}</DiningName>
-                                <Pressable onPress={()=>{deleteButton(l.id)}}><DeleteIcon/></Pressable>
+                                <Pressable onPress={()=>{deleteButton(l.dailyFoodId)}}><DeleteIcon/></Pressable>
                             </ContentHeader>
                             <ContentWrap>
                             <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
@@ -199,11 +200,11 @@ const Pages = () => {
                             <CountWrap>                                
                                     <Count
                                         cart
-                                        onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(l.id)}} 
+                                        onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(l.dailyFoodId)}} 
                                         addHandle={addHandle}
                                         substractHandle={substractHandle}
                                         quantity={l.count}
-                                        id={l.id}
+                                        id={l.dailyFoodId}
                                 />
                                 </CountWrap>
                             </ContentWrap>
@@ -228,7 +229,7 @@ const Pages = () => {
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>구독 할인 금액</PaymentText>
-                        <PaymentText><PointText>20,000</PointText> 원</PaymentText>
+                        <PaymentText>20,000원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>

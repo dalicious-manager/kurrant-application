@@ -194,6 +194,16 @@ export const textStyles = {
   line-height: 14.4px;
   font-family: 'Pretendard-SemiBold';
 `,
+  Description: css`
+  font-size: 14px;
+  line-height: 22px;
+  font-family: 'Pretendard-Regular';
+  `,
+  MealCount: css`
+  font-size: 14px;
+  line-height: 20px;
+  font-family: 'Pretendard-Regular';
+  `,
 
 
 };
