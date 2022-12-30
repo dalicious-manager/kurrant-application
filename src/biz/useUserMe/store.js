@@ -14,4 +14,13 @@ export const isMyInfoPersonalLoadingAtom = atomWithReset(false);
 export const isSNSConnectLoadingAtom = atomWithReset(false);
 export const isSNSDisconnectLoadingAtom = atomWithReset(false);
 export const isAlarmSettingLoadingAtom = atomWithReset(false);
+export const isAlarmLookUpLoadingAtom = atomWithReset(false);
+export const alarmAtom = atomWithReset({
+    "marketingAgreedDateTime": null,
+    "isMarketingInfoAgree": false,
+    "isMarketingAlarmAgree": false,
+    "isOrderAlarmAgree": false
+});
 export const isChangePasswordLoadingAtom = atomWithReset(false);
+export const isSettingEmailLoadingAtom = atomWithReset(false);
+export const isSettingPhoneNumberLoadingAtom = atomWithReset(false);

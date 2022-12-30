@@ -59,7 +59,8 @@ const ArrowIcon = styled(ArrowRightIcon)`
   color:${props => props.theme.colors.grey[5]};
 `
 const TitleContainer = styled.Pressable`
-  padding:0px 17px;
+  padding:17px 24px;
+  padding-right: 30px;
   height: 56px;
   flex-direction: row;
   justify-content: space-between;

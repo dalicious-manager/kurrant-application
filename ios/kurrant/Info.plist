@@ -39,7 +39,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakaob24df94c40d168ec4ebad7badb064e76</string>
+				<string>kakao40bd7dbc9db18a3a1c431d60c885d50f</string>
 			</array>
 		</dict>
 	</array>
@@ -48,7 +48,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>KAKAO_APP_KEY</key>
-	<string>b24df94c40d168ec4ebad7badb064e76</string>
+	<string>40bd7dbc9db18a3a1c431d60c885d50f</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>naversearchapp</string>

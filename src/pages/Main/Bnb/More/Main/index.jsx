@@ -41,6 +41,7 @@ const Pages = () => {
     return <SkeletonUI />
   }
   return (
+    <Container>
       <Wrapper paddingTop={24}>
         <ScrollView>
           <GourmetTestButton>
@@ -105,6 +106,7 @@ const Pages = () => {
           </ListContainer>
         </ScrollView>
       </Wrapper>
+      </Container>
   )
 }
 
@@ -115,6 +117,9 @@ const GourmetTestButton = styled.Pressable`
   align-items: center;
   margin-left: 24px;
   margin-right: 24px;
+`
+const Container = styled.SafeAreaView`
+  flex: 1;
 `
 const LoginBox = styled.Pressable`
   flex-direction: row;

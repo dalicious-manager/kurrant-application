@@ -26,9 +26,9 @@ const Component = ({
   toggle={
     isToggle:false,
     toggleName:'',
-    toggleAgree:false,
     toggleEvent:()=>console.log("스위치가 변경 되었습니다.")
   },
+  toggleAgree=false,
   description,
   effect,
   routeName,
@@ -48,7 +48,7 @@ const Component = ({
         </TailTextBox>
         {isVersion &&<Description text={'Button10R'} textColor={themeApp.colors.grey[4]}>최신버전</Description> }
         {isArrow && <ArrowIcon />}
-        {toggle.isToggle && <Switch name={toggle.toggleName} size={'md'} agree={toggle.toggleAgree}  toggleEvent={toggle.toggleEvent}/>}
+        {toggle.isToggle && <Switch name={toggle.toggleName} size={'md'} agree={toggleAgree}  toggleEvent={toggle.toggleEvent}/>}
       </TailBox>
     </TitleContainer>
   )

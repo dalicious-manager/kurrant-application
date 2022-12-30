@@ -145,7 +145,7 @@ const BottomSheetTitleView = styled.View`
 const BottomSheetTitle = styled(Typography).attrs({text : 'Title03SB'})`
   color:${props => props.theme.colors.grey[2]};
   margin-bottom: 6px;
-  max-width:279px;
+  max-width:285px;
   text-align:center;
 `;
 const BottomSheetDecs = styled(Typography).attrs({text : 'Body06R'})`

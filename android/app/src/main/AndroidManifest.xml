@@ -32,7 +32,7 @@
             <!-- 카카오 디벨로퍼에서 받은 네이티브 앱 key를 test 텍스트를 대치하여 넣어준다. -->
             <!-- kakao라는 텍스트는 지우지 않는다!!!!! -->
             <data android:host="oauth"
-                android:scheme="kakaob24df94c40d168ec4ebad7badb064e76" />
+                android:scheme="kakao40bd7dbc9db18a3a1c431d60c885d50f" />
         </intent-filter>
     </activity>
   </application>

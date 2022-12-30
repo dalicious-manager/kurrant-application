@@ -16,12 +16,14 @@ import Wrapper from '~components/Wrapper';
 import {getStorage} from '~utils/asyncStorage';
 import snsConnected from '~utils/snsConnected';
 
+import BottomModal from '../../../../components/BottomModal';
 import { setStorage } from '../../../../utils/asyncStorage';
 import ListBox from './ListBox';
 import { PAGE_NAME as  ConnectedSNSPageName} from './pages/ConnectedSNS';
 import { PAGE_NAME as  EmailSettingPageName} from './pages/EmailSetting';
 import { PAGE_NAME as  NotificationSettingPageName} from './pages/NotificationSetting';
 import { PAGE_NAME as  PasswordSettingPageName} from './pages/PasswordSetting';
+import { PAGE_NAME as  PhoneNumberSettingPageName} from './pages/PhoneNumberSetting';
 
 import { AvatarNon } from '~assets';
 
@@ -31,7 +33,7 @@ export const PAGE_NAME = "P__MY_PAGE__PERSONAL_INFO"
 const Pages = ({route}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
-  
+  const [modalVisible, setModalVisible] = useState(false);
   const { userMePersonal, readableAtom:{myInfoPerson,isMyInfoPersonalLoading, isSNSConnectLoading,isSNSDisconnectLoading}} = useUserMe();
   const [isConnected , ] = useAtom(isSNSConnectAtom);
   const [message , setMessage] = useState("계정이 연결됐어요");
@@ -67,10 +69,22 @@ const Pages = ({route}) => {
         {
           text:"해지",
           onPress:async()=>{
-            await snsDisconnectID(social);
-            await getData();
-            setMessage("계정 연결이 해지됐어요");
-            toastEvent();
+            try {
+              const result = await snsDisconnectID(social);
+           
+              if(result?.statusCode !== 200){
+                setModalVisible(true);
+              }else{
+                await getData();
+                setMessage("계정 연결이 해지됐어요");
+                toastEvent();
+              }
+            } catch (error) {
+              console.log(error.toString());
+              setModalVisible(true);
+            }
+            
+            
           }
         }
       ],{
@@ -149,7 +163,7 @@ const Pages = ({route}) => {
             </SNSBox>
           </SNSContainer>
           <Line />
-          <ListBox title='휴대폰번호 변경' />
+          <ListBox title='휴대폰번호 변경' routeName={PhoneNumberSettingPageName}/>
           <ListBox 
           title={!myInfoPerson.hasGeneralProvider ? '이메일/비밀번호 설정' : '비밀번호 변경'}  
           description={!myInfoPerson.hasGeneralProvider && '설정하기'} 
@@ -167,6 +181,18 @@ const Pages = ({route}) => {
           </TextButtonBox>
         </ScrollView>
         <ToastWrap icon='checked' message={message}/>
+        <BottomModal 
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          title='이메일/비밀번호를 설정해주세요' 
+          description={'SNS 계정 연결 해제는\n이메일/비밀번호 설정 후 가능해요.'} 
+          buttonTitle1="다음에하기" 
+          buttonTitle2='설정하러가기' 
+          buttonType1='grey7' 
+          buttonType2='yellow'  
+          onPressEvent1={()=> setModalVisible(false)}
+          onPressEvent2={()=>console.log("설정하러 가기")}
+        />
       </Wrapper>
       {isLoading && <LoadingBox>
         <ActivityIndicator size={'large'} color={themeApp.colors.yellow[500]}/>

@@ -44,33 +44,30 @@ const Pages = () => {
     const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
 
+    
+
+
+  useEffect(() => {
     const start = weekly.map((s) => {
       const startData = formattedWeekDate(s[0]);
       return (
           startData
       )
-  });
+    });
 
-  const end = weekly.map((e) => {
-      const endData =  formattedWeekDate(e.slice(-1)[0]);
-      return (
-          endData
-      )
-  });
-
-  useEffect(()=>{
+    const end = weekly.map((e) => {
+        const endData =  formattedWeekDate(e.slice(-1)[0]);
+        return (
+            endData
+        )
+    });
     async function loadUser(){
       await userInfo();
-    }
-    loadUser();
-  
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
-
-  useEffect(() => {
+    }    
     async function loadMeal(){
       await orderMeal(start[0],end[0])
     };
+    loadUser();
     loadMeal();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])

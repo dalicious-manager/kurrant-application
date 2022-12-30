@@ -51,7 +51,7 @@ export default () => {
     
       const kakaoLogin = async () => {
         const token = await login();
-        // Clipboard.setString(token.accessToken);
+        Clipboard.setString(token.accessToken);
         console.log(token.accessToken)
         await snsLogin({
             snsAccessToken:token.accessToken,
