@@ -1,3 +1,4 @@
+import Postcode from '@actbase/react-daum-postcode';
 import { useNavigation } from "@react-navigation/native";
 import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
@@ -12,7 +13,10 @@ import {PAGE_NAME as ApartmentApplicationThirdPageName} from '../ThirdPage';
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__SECOND" ;
 const Pages = () => {
+
     const navigation = useNavigation();
+
+    //const [show, setShow] = useState(false);
 
     const form = useForm({
         mode:'all'
@@ -21,6 +25,10 @@ const Pages = () => {
     const inputStyle = {
         marginBottom:16,
       }
+
+    // const openAddress = () => {
+    //     setShow(!show)
+    // }
 
     
 
@@ -41,12 +49,18 @@ const Pages = () => {
                     placeholder="아파트 주소"
                     keyboardType="numeric"
                     style={inputStyle}
+                    onPress={()=>{console.log('눌ㄹ름')}}
+                    />
+                    <Postcode
+                        style={{ width: 320, height: 320 }}
+                        jsOptions={{ animation: true }}
+                        onSelected={data => console.log(JSON.stringify(data))}
                     />
                     <RefTextInput
                     label="단지 총 세대수"
                     name="familyCount"
                     placeholder="단지 총 세대수"
-                    keyboardType="email-address"
+                    keyboardType="numeric"
                     style={inputStyle}
                     />
                     <RefTextInput

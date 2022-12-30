@@ -59,14 +59,14 @@ const Component = ({
     const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
   
   
-    useEffect(()=>{
-        async function loadOrderMeal(){
-          await orderMeal();
-        }
-        loadOrderMeal();
+    // useEffect(()=>{
+    //     async function loadOrderMeal(){
+    //       await orderMeal();
+    //     }
+    //     loadOrderMeal();
       
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      },[]);
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    //   },[]);
 
    const selectedPress = (day) => {
       setCurrentPress(day)

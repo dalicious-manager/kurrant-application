@@ -21,6 +21,7 @@ import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from "../../../../../components/Typography";
 import { formattedWeekDate } from "../../../../../utils/dateFormatter";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
+import Skeleton from '../Skeleton';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 
@@ -32,9 +33,9 @@ const Pages = ({route}) => {
     const [focus,setFocus] = useState(false);
     const [count, setCount] = useState(1);
     const [scroll,setScroll] = useState(0);
-    const {isFoodDetail,foodDetail} = useFoodDetail();
+    const {isFoodDetail,isFoodDetailLoading,foodDetail} = useFoodDetail();
     const {addMeal,loadMeal} = useShoppingBasket();
-    console.log(isFoodDetail)
+    
     const headerTitle = isFoodDetail?.name;
     const foodId = route.params.foodId;
     const type = route.params.type;
@@ -108,6 +109,9 @@ const Pages = ({route}) => {
     const PRICE = 7500;
     let result = PRICE.toLocaleString('ko-KR');
 
+    if(isFoodDetailLoading){
+        return  <Skeleton/>
+    }
  
 
     return (
@@ -118,7 +122,7 @@ const Pages = ({route}) => {
              onScroll = { (e) => handleScroll(e) }
              scrollEventThrottle={16}
             >
-                <View>
+                <View style={{marginBottom:150}}>
                     {scroll > 60 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                 <Content>
@@ -137,9 +141,8 @@ const Pages = ({route}) => {
                                 <InformationText>알레르기/원산지</InformationText>
                             </InformationWrap>
                         </Line>
-                        <MealDsc>
-                            {isFoodDetail?.description}
-                        </MealDsc>
+                        {/* <MealDsc>{isFoodDetail?.description}</MealDsc> */}
+                        <MealDsc>민지님이 좋아하는 마라샹궈 숙주 푸주 버섯 청경채 배추 땅콩소스 마라마라 마라탕탕</MealDsc>
                         {isFoodDetail?.spicy !== null && <Label label={`${isFoodDetail?.spicy}`}/>}
                         <PriceTitleWrap>
                             <PriceTitle>최종 판매가</PriceTitle>

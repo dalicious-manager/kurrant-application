@@ -25,20 +25,15 @@ import Typography from '../../../../../components/Typography';
 import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
+import SkeletonUI from "../../Home/Skeleton";
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
 
-  const navigation = useNavigation();
-  const test = (e) => {
-    let updateScroll = e.nativeEvent.contentOffset.y;
-    //console.log("스크롤 움직임",updateScroll);
-  }
-
+    const navigation = useNavigation();
     const weekly = useAtomValue(weekAtom);
-    const {isUserInfo, userInfo} = useUserInfo();
+    const {isUserInfo, userInfo , isUserInfoLoading} = useUserInfo();
     const {isOrderMeal,orderMeal} = useOrderMeal();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
@@ -86,10 +81,13 @@ const Pages = () => {
     setModalVisible(true);
 }
 
+if(isUserInfoLoading){
+  return <SkeletonUI/>
+}
   return (
     <SafeView>
       <Pressable onPress={() => {navigation.navigate(GroupCreateMainPageName)}}>
-        <Text> 임시버튼임 </Text>
+        <Text> 임시버튼(그룹/스팟) </Text>
       </Pressable>
       <View>
         <BarWrap>
@@ -105,7 +103,7 @@ const Pages = () => {
           </Icons>
         </BarWrap>
       </View>
-      <ScrollViewWrap onScroll={test} scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
+      <ScrollViewWrap scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         
         <MainWrap>
