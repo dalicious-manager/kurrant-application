@@ -1,7 +1,7 @@
 import {useAtom} from 'jotai';
 
 import * as Fetch from './Fetch';
-import { isDailyFoodAtom, isDinnerFoodAtom, isLunchFoodAtom, isMorningFoodAtom } from './store';
+import { isDailyFoodAtom, isDailyFoodLoadingAtom, isDinnerFoodAtom, isDinnerFoodLoadingAtom, isLunchFoodAtom, isLunchFoodLoadingAtom, isMorningFoodAtom, isMorningFoodLoadingAtom } from './store';
 
 const useFoodDaily = () => {
 
@@ -9,18 +9,31 @@ const useFoodDaily = () => {
     const [isMorningFood,setMorning] = useAtom(isMorningFoodAtom);
     const [isLunchFood,setLunch] = useAtom(isLunchFoodAtom);
     const [isDinnerFood,setDinner] = useAtom(isDinnerFoodAtom);
+    const [isDailyFoodLoading,setDailyFoodLoading] = useAtom(isDailyFoodLoadingAtom);
+    // const [isMorningFoodLoading,setMorningFoodLoading] = useAtom(isMorningFoodLoadingAtom);
+    // const [isLunchFoodLoading,setLunchFoodLoading] = useAtom(isLunchFoodLoadingAtom);
+    // const [isDinnerFoodLoading,setDinnerFoodLoading] = useAtom(isDinnerFoodLoadingAtom);
     
     const dailyFood = async (spotId,seletedDate) => {
         
         try {
+            setDailyFoodLoading(true)
             const res = await Fetch.DailyFood(spotId,seletedDate);
+            console.log(res, 'gigiig')
+            if(res.data === null){
+                setMorning([]);
+                setLunch([]);
+                setDinner([]);
+                throw new Error('없음');
+            }
             setDailyFood(res.data);
-            setMorning(res.data.filter(x => x.diningType === 'MORNING'));
-            setLunch(res.data.filter(x => x.diningType === 'LUNCH'));
-            setDinner(res.data.filter(x => x.diningType === 'DINNER'));
+            setMorning(res.data.filter(x => x.diningType === '아침'));
+            setLunch(res.data.filter(x => x.diningType === '점심'));
+            setDinner(res.data.filter(x => x.diningType === '저녁'));
         } catch (err) {
             throw err;
-            
+        } finally {
+            setDailyFoodLoading(false)
         }
     }
     return {
@@ -28,7 +41,8 @@ const useFoodDaily = () => {
         isDailyFood,
         isMorningFood,
         isLunchFood,
-        isDinnerFood
+        isDinnerFood,
+        isDailyFoodLoading
     }
 };
 

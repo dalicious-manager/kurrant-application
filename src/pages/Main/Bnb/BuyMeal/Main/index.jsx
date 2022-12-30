@@ -9,6 +9,8 @@ import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
+import StarIcon from '../../../../../assets/icons/BuyMeal/smallStar.svg';
+import SoldOutStarIcon from '../../../../../assets/icons/BuyMeal/soldOutStar.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import { isUserInfoAtom, isUserMeAtom } from '../../../../../biz/useUserInfo/store';
@@ -24,6 +26,7 @@ import { formattedDate, formattedWeekDate } from '../../../../../utils/dateForma
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
+import SkeletonUI from '../Skeleton';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -38,7 +41,7 @@ const Pages = () => {
     
     const [sliderValue, setSliderValue] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
-    const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood} = useFoodDaily();
+    const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
     const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
     const userMembership = useAtomValue(isUserInfoAtom);
@@ -48,33 +51,8 @@ const Pages = () => {
     const date = formattedWeekDate(new Date()); // 오늘
     // const todayMeal = mealInfo?.filter((m) => m.date === date);
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-    const spotId = 1;
+    const spotId = 1; // 스팟 생성 전 이어서 임의로 줌
     
-    useEffect(()=>{
-        async function loadDailyFood(){
-            try {
-                await dailyFood(spotId,date);
-                await loadMeal();
-            }catch (err) {
-                console.log(err.toString())
-            }
-        }
-        loadDailyFood();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
-
-    // useLayoutEffect(()=>{
-    //     navigation.setOptions({ 
-    //         headerRight:() => (
-    //           <>
-    //           <ShoppingCart margin={[0,10]}/>
-    //           <Badge/>
-    //           </>
-    //         )
-    //       });
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // },[]);
-   
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
         
@@ -100,6 +78,19 @@ const Pages = () => {
     });
     //console.log(duplication)
 
+    useEffect(()=>{
+        async function loadDailyFood(){
+            try {
+                await dailyFood(spotId,date);
+                await loadMeal();
+            }catch (err) {
+                console.log(err.toString())
+            }
+        }
+        loadDailyFood();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
+
 
     const addCartPress = async (id,day,type) =>{
         //console.log(id,day,type)
@@ -119,6 +110,7 @@ const Pages = () => {
                 throw err
             }
     }
+
 
     return (
         <SafeView>
@@ -152,7 +144,9 @@ const Pages = () => {
                             </Progress>
                         </ProgressInner>
                     </ProgressWrap>
-                    <Pager ref={diningRef} initialPage={1} onPageSelected={(e) => {onPageScroll(e)}}>
+
+
+                    {isDailyFoodLoading ? <SkeletonUI/> : <Pager ref={diningRef} initialPage={2} onPageSelected={(e) => {onPageScroll(e)}}>
                         <View>
                             {/* 아침 */}
                             {isMorningFood?.map((m,i) => 
@@ -227,15 +221,35 @@ const Pages = () => {
                             disabled={d.isSoldOut}
                             onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:d.foodId,type:d.diningType,date:d.serviceDate});e.stopPropagation()}}>
                                 <ContentsText>
-                                    <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName>
+                                    {/* <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName> */}
+                                    <MakersName soldOut={d.isSoldOut}>[메이커스]</MakersName>
                                     <MealName soldOut={d.isSoldOut}>{d.foodName}</MealName>
-                                    <MealDsc soldOut={d.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{d.description}</MealDsc>
+                                    {/* <MealDsc soldOut={d.isSoldOut} numberOfLines={2} ellipsizeMode="tail">
+                                        {d.description}
+                                    </MealDsc> */}
+                                    <MealDsc soldOut={d.isSoldOut} numberOfLines={2} ellipsizeMode="tail">
+                                        테스트용 메뉴설명 테스트용 메뉴설명 테스트용 메뉴설명
+                                    </MealDsc>
                                     {d.spicy !== undefined && 
                                         <LabelWrap>
                                             <Label label={`${d.spicy}`}/>
                                         </LabelWrap>
                                     }
-                                    <Price soldOut={d.isSoldOut}>{withCommas(d.price)}원</Price>
+                                    {/* <Price soldOut={d.isSoldOut}>{withCommas(d.price)}원</Price> */}
+                                    <Price soldOut={d.isSoldOut}>{withCommas(8500)}원</Price>
+                                    {/* 멤버십 가입시 변동 될 UI */}
+                                    {/* <PriceWrap>
+                                        <PercentText soldOut={d.isSoldOut}>20%</PercentText>
+                                        <Price soldOut={d.isSoldOut}>8,500원</Price>
+                                        <OriginPrice soldOut={d.isSoldOut}>10,500원</OriginPrice>
+                                    </PriceWrap>
+                                    <ReviewWrap>
+                                        <ReviewText>
+                                            {d.isSoldOut ?  <SoldOutStarIcon/> : <StarIcon/>}
+                                            <ReviewText soldOut={d.isSoldOut}>4.0</ReviewText>
+                                            <ReviewCount soldOut={d.isSoldOut}>(132)</ReviewCount>
+                                        </ReviewText>
+                                    </ReviewWrap> */}
 
                                 </ContentsText>
 
@@ -250,7 +264,7 @@ const Pages = () => {
                             </Contents>
                             )}
                         </View>
-                    </Pager> 
+                    </Pager> }
                 </PagerViewWrap>
                 
             </ScrollView>
@@ -396,6 +410,12 @@ bottom:8px;
 right:8px;
 `;
 
+const PriceWrap = styled.View`
+flex-direction:row;
+margin-top:4px;
+margin-bottom:6px;
+`;
+
 
 
 const SoldOut = styled(Typography).attrs({text:'Title04SB'})`
@@ -409,6 +429,13 @@ const ButtonWrap = styled.View`
 position:absolute;
 bottom:35px;
 margin:0px 24px;
+`;
+
+
+const ReviewWrap = styled.View`
+flex-direction:row;
+align-items:center;
+text-align:center;
 `;
 
 
@@ -431,3 +458,25 @@ const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
 const ProgressText = styled(Typography).attrs({text:'CaptionSB'})`
     color:${({theme,focus, index}) => focus === index ? theme.colors.grey[2] : theme.colors.grey[5]};
 `;
+
+const PercentText = styled(Typography).attrs({text:'Body05R'})`
+    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] :'#DD5257'};
+    margin-right:4px;
+`;
+
+const OriginPrice = styled(Typography).attrs({text:'Body06R'})`
+ color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[5]};
+text-decoration:line-through;
+text-decoration-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[5]};
+margin-left:6px;
+`;
+
+const ReviewText =styled(Typography).attrs({text:'SmallLabel'})`
+color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] :theme.colors.grey[2]};
+
+`;
+
+const ReviewCount =styled(Typography).attrs({text:'SmallLabel'})`
+color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] :theme.colors.grey[4]};
+`;
+

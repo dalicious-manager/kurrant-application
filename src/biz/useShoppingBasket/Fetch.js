@@ -1,7 +1,7 @@
 import { fetchJson } from "../../utils/fetch";
 
 export async function addMealCart(body, option) {
-    console.log(body,'post')
+
     const fetchRes = await fetchJson('/users/me/order/cart', 'POST', {
         ...option,
         body: JSON.stringify(body)

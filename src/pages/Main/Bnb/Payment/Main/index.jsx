@@ -152,7 +152,7 @@ const Pages = () => {
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>구독 할인 금액</PaymentText>
-                        <PaymentText><PointText>20,000</PointText> 원</PaymentText>
+                        <PaymentText>20,000원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>

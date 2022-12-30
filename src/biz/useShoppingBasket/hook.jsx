@@ -11,6 +11,9 @@ const useShoppingBasket = () => {
     const loadMeal = async () => {
         try {
             const res = await Fetch.loadMealCart();
+            if(res.data === null){
+                return
+            }
             setLoadMeal(res.data);
             setQuantity(res.data.length);
         } catch (err) {
@@ -36,6 +39,7 @@ const useShoppingBasket = () => {
     const allDeleteMeal = async () => {
         try {
             const res = await Fetch.allDeleteMealCart();
+            setQuantity(0)
             return res;
 
         }catch(err){
@@ -44,11 +48,12 @@ const useShoppingBasket = () => {
     };
 
     const deleteMeal = async (foodId) => {
-        console.log(foodId)
+        
         try {
             const res = await Fetch.deleteMealCart(foodId);
+            setQuantity(v => v - 1)
             return res;
-
+            
         }catch(err){
             throw err
         }
@@ -60,6 +65,7 @@ const useShoppingBasket = () => {
             const res = await Fetch.updateMealCart({
                 ...body
             });
+            
             return res;
 
         }catch(err){

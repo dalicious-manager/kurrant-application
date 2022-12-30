@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, Text, View ,Image, Pressable} from "react-native";
+import { SafeAreaView, ScrollView, Text, View ,Image, Pressable, Alert} from "react-native";
 import { makeShareable } from "react-native-reanimated/lib/reanimated2/core";
 import styled from "styled-components";
 
@@ -10,6 +10,7 @@ import { weekAtom } from "../../../../../biz/useBanner/store";
 import useOrderMeal from "../../../../../biz/useOrderMeal";
 import { isOrderDinnerAtom, isOrderLunchAtom, isOrderMealAtom, isOrderMorningAtom } from "../../../../../biz/useOrderMeal/store";
 import Button from "../../../../../components/Button";
+import LabelButton from "../../../../../components/ButtonMeal";
 import Calendar from "../../../../../components/Calendar";
 import Typography from "../../../../../components/Typography";
 import { formattedDate, formattedDateBtn, formattedMonthDay, formattedWeekDate } from "../../../../../utils/dateFormatter";
@@ -49,6 +50,46 @@ const Pages = ({route}) => {
     setTouchDate(day)
   }
 
+  const cancelMealPress = () =>{
+    Alert.alert(
+      "메뉴 취소",
+      "메뉴를 취소하시겠어요?",
+      [
+        {
+          text:'아니요',
+          onPress:() => {},
+          
+        },
+        {
+          text:'메뉴 취소',
+          onPress:() => {},
+          style:'destructive'
+        }
+      ]
+    )
+  };
+
+  const changeMealPress = () =>{
+    Alert.alert(
+      "메뉴 변경",
+      "현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?",
+      
+
+      [
+        {
+          text:'아니요',
+          onPress:() => {},
+          
+        },
+        {
+          text:'메뉴 취소',
+          onPress:() => {},
+          style:'destructive'
+        }
+      ]
+    )
+  }
+
 
   return (
     <SafeView>
@@ -72,13 +113,17 @@ const Pages = ({route}) => {
                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                   </View>
                   <Content>
-                    <MakersName>[{sm.makers}]</MakersName>
+                    {/* <MakersName>[{sm.makers}]</MakersName> */}
+                    <MakersName>[메이커스]</MakersName>
                     <MealName>{sm.name}</MealName>
                     <CountText>{sm.count}개</CountText>
                   </Content>
-                  <ReviewBtnWrap>
-                    <ReviewText>리뷰작성</ReviewText>
-                  </ReviewBtnWrap>
+                  <CancleBtnWrap >
+                    <LabelButton label={"취소"} onPressEvent={cancelMealPress}/>
+                  </CancleBtnWrap>
+                  <MealChangeWrap>
+                    <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
+                  </MealChangeWrap>
               </MealContentWrap>
               </React.Fragment>
               )}
@@ -103,9 +148,12 @@ const Pages = ({route}) => {
                     <MealName>{el.name}</MealName>
                     <CountText>{el.count}개</CountText>
                   </Content>
-                  <ReviewBtnWrap>
-                    <ReviewText>리뷰작성</ReviewText>
-                  </ReviewBtnWrap>
+                  <CancleBtnWrap>
+                    <LabelButton label={"취소"} onPressEvent={cancelMealPress}/>
+                  </CancleBtnWrap>
+                  <MealChangeWrap>
+                    <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
+                  </MealChangeWrap>
               </MealContentWrap>
               </React.Fragment>
               )}
@@ -166,21 +214,13 @@ const Content = styled.View`
 margin-left:16px;
 `;
 
-const ReviewBtnWrap = styled.Pressable`
-width:77px;
-height:32px;
-border:1px solid ${props => props.theme.colors.grey[7]}; 
-border-radius:100px;
-background-color:${props => props.theme.colors.grey[0]};
-align-items:center;
-justify-content:center;
+const MealChangeWrap = styled.Pressable`
 position:absolute;
 right:0;
 bottom:28px;
-margin-left:6px;
 `;
 
-const CancleBtnWrap = styled(ReviewBtnWrap)`
+const CancleBtnWrap = styled(MealChangeWrap)`
 right:83px;
 `;
 
@@ -204,12 +244,9 @@ bottom:20px;
 left:18px;
 
 `;
-const ReviewText = styled(Typography).attrs({text:'Button10SB'})`
-color:${props => props.theme.colors.grey[3]};
-`;
 
-const CountText= styled(Typography).attrs({text:'CaptionR'})`
-color:${props => props.theme.colors.grey[5]};
+const CountText= styled(Typography).attrs({text:'MealCount'})`
+color:${props => props.theme.colors.grey[4]};
 `;
 
 const NoMealWrap = styled.View`

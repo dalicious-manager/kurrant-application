@@ -15,11 +15,10 @@ const Component = ({
     label = '텍스트',
     type = 'red',
     size = 'labelS',
-    
 }) => {
 
     return (
-        <Wrap type={type}>
+        <Wrap type={type} >
             <Label type={type} size={size}>
                 {label}
             </Label>
