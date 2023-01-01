@@ -13,6 +13,7 @@ import RefTextInput from '../../../../../../components/RefTextInput';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
+import { setStorage } from '../../../../../../utils/asyncStorage';
 import { PAGE_NAME as SignUpComplatePageName } from './SignUpComplate';
 const { StatusBarManager } = NativeModules;
 
@@ -86,6 +87,10 @@ const Pages = ()=>{
             console.log(data);
             const result = await settingPhoneNumber(data);
             console.log(result);
+
+            await setStorage('isChange','휴대폰 번호가 변경됐어요');
+            console.log("isChange");
+            navigation.goBack(null);
         }catch(err){
             console.log(err)
         }

@@ -33,6 +33,7 @@ const Pages = ()=>{
     const [ modalVisible, setModalVisible ] = useState(false);
     const [title,setTitle] = useState();
     const {changePassword} = useUserMe()
+    const navigation = useNavigation();
     const inputStyle = {
             marginBottom:16,
         }
@@ -50,13 +51,12 @@ const Pages = ()=>{
     const onSubmit = async(data)=>{
         try {
             const result = await changePassword(data);
-            if(result.errors.length > 0){
-                console.log(result)
-                return
-                // navigation.goBack(null);
+            if(result.errors){
+                throw new Error(result.errors);
             }
             await setStorage('isChange','비밀번호가 변경됐어요');
             console.log("isChange");
+            navigation.goBack(null);
         } catch (error) {
             console.log(error.toString());
         }

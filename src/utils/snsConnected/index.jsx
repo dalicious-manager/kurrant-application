@@ -29,16 +29,18 @@ export default () => {
           if(successResponse){
               console.log(successResponse)
               Clipboard.setString(successResponse.accessToken)
-              await snsConnect({
+              const res = await snsConnect({
                   snsAccessToken:successResponse.accessToken,
-              },'NAVER');          
+              },'NAVER');       
+              return res;   
           }
         }else if(social ==='KAKAO'){
           const token = await login();
           console.log(token.accessToken)
-          await snsConnect({
+          const res = await snsConnect({
               snsAccessToken:token.accessToken,
           },'KAKAO');
+          return res;  
         }
       } catch (error) {
         Alert.alert(
@@ -63,7 +65,8 @@ export default () => {
   };
     const snsDisconnectID = async (social) => {
       try {
-        await snsDisconnect(social)
+        const res = await snsDisconnect(social)
+        return res;
       } catch (error) {
         throw error
       }

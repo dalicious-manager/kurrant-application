@@ -53,10 +53,13 @@ const Pages = ({route}) => {
     await userMePersonal();   
   },[userMePersonal])
   const connectSNS = async(social)=>{
-    await snsConnectID(social);
-    await getData();
-    setMessage("계정이 연결됐어요");
-    toastEvent();
+    const result = await snsConnectID(social);
+    console.log(result);
+    if(result?.statusCode === 200){
+      await getData();
+      setMessage("계정이 연결됐어요");
+      toastEvent();
+    }
     
   }
   const disconnectSNS = async(social)=>{
@@ -71,8 +74,8 @@ const Pages = ({route}) => {
           onPress:async()=>{
             try {
               const result = await snsDisconnectID(social);
-           
               if(result?.statusCode !== 200){
+                console.log(result)
                 setModalVisible(true);
               }else{
                 await getData();
