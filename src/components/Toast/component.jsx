@@ -18,6 +18,7 @@ import Typography from '../Typography';
  * @param {object} props 
  * @param {string} props.ToastWrap 
  * @param {string} props.ToastWrap.message 
+ * @param {boolean} props.ToastWrap.isBottom
  * @param {nomal | checked | error} props.ToastWrap.icon 
  * @param {function} props.toastEvent onPress 
  * @returns 
@@ -48,7 +49,7 @@ const Component = () => {
   }, [fadeToast]);
 
   const ToastWrap = useCallback(
-    ({ message="test" ,icon = 'nomal'}) => {
+    ({ message="test" ,icon = 'nomal',isBottom=false}) => {
       const renderIcon = () => {
         switch(icon) {
           case 'checked':
@@ -59,7 +60,7 @@ const Component = () => {
             return null;
         }
       }
-      return <Wrapper style={{ opacity: fadeToast }}>
+      return <Wrapper style={{ opacity: fadeToast }}  isBottom={isBottom}>
         <Container icon={icon}>
           <IconWrap icon={icon}>{renderIcon(icon)}</IconWrap>
           <ToastMessage>{message.trim()}</ToastMessage>
@@ -76,7 +77,7 @@ export default Component;
 const Wrapper = styled(Animated.View)`
   position: absolute;
   align-items: center;
-  top: 8px;
+  ${({isBottom})=> isBottom ? 'bottom:35px;' :'top: 8px;'}
   width: 100%;
   border-radius: 100px;
 `;

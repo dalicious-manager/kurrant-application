@@ -20,10 +20,10 @@ import {
  * @returns
  */
 
-const Component = ({ name, size = 'md', agree = true ,toggleEvent=(name)=>{}}) => {
+const Component = ({ name, size = 'md', agree = true ,toggleEvent=()=>{}}) => {
   const translation = useRef(new Animated.Value(0)).current;
 
-  const { control } = useFormContext();
+  const { control} = useFormContext();
   const [toggle, setToggle] = useState(agree);
 
   
@@ -63,6 +63,7 @@ const Component = ({ name, size = 'md', agree = true ,toggleEvent=(name)=>{}}) =
             useNativeDriver: true,
           }).start(),
             setToggle(!toggle));
+
   };
   useEffect(()=>{
     setToggle(agree);
@@ -72,7 +73,8 @@ const Component = ({ name, size = 'md', agree = true ,toggleEvent=(name)=>{}}) =
       <Controller
         control={control}
         name={name}
-        defaultValue={toggle}
+        value={toggle}
+        defaultValue={agree}
         render={({ field: { onChange, value } }) => {
           const pressEvent = () => {
             onChange(!value)

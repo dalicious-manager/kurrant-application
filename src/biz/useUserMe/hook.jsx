@@ -100,15 +100,22 @@ const useUserInfo = () => {
     };
 
     const alarmSetting = async (body,option={}) => {
-        console.log(body);
         try {
             setAlarmSettingLoading(true)
             const res = await Fetch.alarmSetting(
-                    {
-                        ...body
-                    },
-                    option
-                );                
+                {
+                    ...body
+                },
+                option
+            );          
+            // setAlarm(
+            //     {
+            //         "marketingAgreedDateTime": res.data.marketingAgreedDateTime,
+            //         "isMarketingInfoAgree": res.data.marketingAgree,
+            //         "isMarketingAlarmAgree": res.data.marketingAlarm,
+            //         "isOrderAlarmAgree": res.data.orderAlarm,
+            //     }
+            // );      
             return res;
         } catch (err) {
             throw err;

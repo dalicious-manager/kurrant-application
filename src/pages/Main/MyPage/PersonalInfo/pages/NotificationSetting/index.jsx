@@ -25,11 +25,16 @@ const Pages = ()=>{
     const {watch}= form;
     const themeApp = useTheme();
     const {toastEvent, ToastWrap} = Toast();
+
+    
    const alarmAgree = useCallback(async()=>{
-    const marketingAlarm = watch('marketingAlarm');
-    const orderAlarm = watch('orderAlarm');
+        const marketingAlarm = watch('marketingAlarm');
+        const orderAlarm = watch('orderAlarm');
         await alarmSetting({'isMarketingAlarmAgree':marketingAlarm,'isOrderAlarmAgree' : orderAlarm ,"isMarketingInfoAgree": false,})
         setAgree(marketingAlarm || orderAlarm);
+        if(marketingAlarm || orderAlarm){
+            toastEvent()
+        }
         // await getAlarm();
    // eslint-disable-next-line react-hooks/exhaustive-deps
    },[])
@@ -47,7 +52,6 @@ const Pages = ()=>{
        },{
         isToggle:true,
         toggleName:'marketingAgree',
-        toggleAgree:result.data.marketingAgree|| false,
         toggleEvent:(name)=>alarmAgree(name)
        }])
        setAgree(result.data.marketingAgree || result.data.orderAlarm);
@@ -56,10 +60,11 @@ const Pages = ()=>{
    const isLoading = isAlarmSettingLoading
     useEffect(()=>{        
         const willFocusSubscription = navigation.addListener('focus', () => {
+            toastEvent();
             getAlarm();
         });    
         return willFocusSubscription; 
-    },[getAlarm, navigation])
+    },[getAlarm, navigation, toastEvent])
     return(
         <Wrapper paddingTop={24}>
             <FormProvider {...form}>
@@ -67,7 +72,7 @@ const Pages = ()=>{
                 <ListBox title="주문 알림" toggle={toggleData[1]} toggleAgree={alarm.isOrderAlarmAgree}  isArrow={false}/>
                 <ListBox title="마케팅 정보 수신 동의" description={ agree ? "동의함": "철회함"} routeName={MarketingAgreePageName}/>
             </FormProvider>
-            <ToastWrap message={"2022년 11월 18일\n커런트 마케팅 정보 수신에 동의했어요."}/>
+            <ToastWrap message={`${alarm.marketingAgreedDateTime}\n커런트 마케팅 정보 수신에 동의했어요.`} isBottom={true}/>
             {isLoading && <LoadingBox>
         <ActivityIndicator size={'large'} color={themeApp.colors.yellow[500]}/>
       </LoadingBox>}
