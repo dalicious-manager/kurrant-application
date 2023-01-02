@@ -19,7 +19,7 @@ const useFoodDaily = () => {
         try {
             setDailyFoodLoading(true)
             const res = await Fetch.DailyFood(spotId,seletedDate);
-            console.log(res, 'gigiig')
+            
             if(res.data === null){
                 setMorning([]);
                 setLunch([]);

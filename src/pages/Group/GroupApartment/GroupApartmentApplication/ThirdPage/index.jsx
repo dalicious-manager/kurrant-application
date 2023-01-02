@@ -1,10 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
+import { useAtomValue } from "jotai";
 import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
 
 import Arrow from "../../../../../assets/icons/Spot/arrowRight.svg";
+import { isApartMealInfoAtom } from "../../../../../biz/useApartApplication/store";
 import Button from "../../../../../components/Button";
 import MealButton from "../../../../../components/ButtonMealType";
 import Label from "../../../../../components/Label";
@@ -20,7 +22,8 @@ const Pages = () => {
     const [touch,setTouch] = useState(false);
     // const [touch2,setTouch2] = useState(false);
     // const [touch3,setTouch3] = useState(false);
-
+    const mealInfo = useAtomValue(isApartMealInfoAtom);
+    console.log(mealInfo,'meal')
     const inputStyle = {
         marginBottom:16,
       }
@@ -43,7 +46,7 @@ const Pages = () => {
                         <InfoBar onPress={()=>{navigation.navigate(ApartmentApplicationInformationPageName)}}>
                             <DiningType>아침</DiningType>
                             <InfoBarView>
-                                <Label type='blue' label='입력하기' size='labelM' />
+                                {mealInfo === null ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
                                 <ArrowIcon/>
                             </InfoBarView>
                         </InfoBar>
@@ -82,7 +85,7 @@ const Container = styled.View`
 margin-bottom:40px;
 `;
 
-const Title = styled(Typography).attrs({text:'Body06R'})`
+export const Title = styled(Typography).attrs({text:'Body06R'})`
 color:${({theme}) => theme.colors.grey[2]};
 margin-bottom:8px;
 `;

@@ -87,17 +87,20 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
-import CloseIcon from '../../assets/icons/Group/close.svg';
+//import CloseIcon from '../../assets/icons/Group/close.svg';
 import { isLoginLoadingAtom,    } from '../../biz/useAuth/store';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
 import ShoppingCart from '../../components/BasketButton';
+import CloseIcon from '../../components/CloseButton';
 import Typography from '../../components/Typography';
 import GrouptCreateApartmnet, {PAGE_NAME as GroupCreateApartmentPageName} from '../../pages/Group/GroupApartment';
+import ApartmentApplicationCheck, {PAGE_NAME as ApartmentApplicationCheckPageName} from '../../pages/Group/GroupApartment/ApartmentApplicationCheck';
 import ApartmnetApplicitionFirst, {PAGE_NAME as ApartmentApplicationFirstPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/FirstPage';
 import ApartmnetApplicitionLast, {PAGE_NAME as ApartmentApplicationLastPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/LastPage';
 import ApartmnetApplicitionSecond, {PAGE_NAME as ApartmentApplicationSecondPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/SecondPage';
+import ApartmentApplicationPostCode,{PAGE_NAME as AprtmentApplicationPostcodePageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/SecondPage/Pages';
 import ApartmnetApplicitionThird, {PAGE_NAME as ApartmentApplicationThirdPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/ThirdPage';
 import ApartmentApplicationInformation, { PAGE_NAME as ApartmentApplicationInformationPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/ThirdPage/Pages';
 import GroupCreate, {PAGE_NAME as GroupCreateMainPageName} from '../../pages/Group/GroupCreate';
@@ -107,7 +110,6 @@ import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
-
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -120,6 +122,7 @@ const Screen = () => {
   const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
   const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
   const navigation = useNavigation();
+  
   
   return (
     <MainRoot.Navigator initialRouteName={LoginMainModalPageName}>
@@ -691,10 +694,10 @@ const Screen = () => {
                 fontSize:14,
                 lineHeight:22
               },
-               headerLeft: () => <CloseIcon onPress={()=>{navigation.goBack();}} style={{marginLeft:10}}/>,
+               headerLeft: () => <CloseIcon/>,
             }}
           />
-          {/* 조식 스팟 신청 */}
+          {/* 아파트 스팟 신청 */}
           <MainRoot.Screen
             name={GroupCreateApartmentPageName}
             component={GrouptCreateApartmnet}
@@ -769,7 +772,7 @@ const Screen = () => {
             options={{
               headerShown: true,
               headerShadowVisible: false,
-              title: '기본 정보',
+              title: '기타옵션',
               headerTitleAlign: 'center',
               headerTitleStyle:{
                 fontFamily:'Pretendard-SemiBold',
@@ -794,7 +797,41 @@ const Screen = () => {
                 lineHeight:22
               },
               
-              headerLeft: () => <CloseIcon onPress={()=>{navigation.goBack();}} style={{marginLeft:10}}/>,
+              headerLeft: () => <CloseIcon/>,
+            }}
+          />
+            <MainRoot.Screen
+            name={AprtmentApplicationPostcodePageName}
+            component={ApartmentApplicationPostCode}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title:'주소 검색',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton />,
+            }}
+          />
+          <MainRoot.Screen
+            name={ApartmentApplicationCheckPageName}
+            component={ApartmentApplicationCheck}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title:'스팟 신청 내역',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <CloseIcon />,
             }}
           />
       </MainRoot.Group>

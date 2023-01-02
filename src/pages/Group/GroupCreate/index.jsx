@@ -3,7 +3,7 @@ import React from "react";
 import { View,Text, SafeAreaView ,Image} from "react-native";
 import styled from "styled-components";
 
-import { AlreadyApartment, Apartment, Corporation } from "../../../assets";
+import { AlreadyApartment, Apartment, Corporation ,ApartMeal } from "../../../assets";
 import AlreadyApartIcon from "../../../assets/icons/Group/alreadyApart.svg";
 import ApartmentIcon from "../../../assets/icons/Group/apartment.svg";
 import ArrowRight from "../../../assets/icons/Group/arrowRight.svg";
@@ -52,8 +52,8 @@ const Pages = () => {
                     <ArrowRight/>
                 </SubTitleWrap>
                 <ImageWrap>
-                    {/* <Img source={AlreadyApartment} /> */}
-                    <AlreadyApartIcon/>
+                    <Img source={ApartMeal} />
+                    {/* <AlreadyApartIcon/> */}
                 </ImageWrap>
             </BoxWrap>
             <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>

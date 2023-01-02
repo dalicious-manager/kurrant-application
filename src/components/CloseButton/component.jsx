@@ -4,17 +4,15 @@ import {BackHandler, NativeModules, Platform} from 'react-native'
 import { useTheme } from 'styled-components';
 import styled from 'styled-components/native';
 
-import { MaterialIcons } from '../Icon';
+import CloseIcon from '../../assets/icons/Group/close.svg';
 
 /**
  *
  * @param {object} props
- * @param {'page' | 'modal'} props.mode
- * @param {string} color
  * @param {number[]} margin index 0 : margin-left, index 1 : margin-right
  * @returns
  */
-const Component = ({ mode = 'page', color, margin = [0, 0]}) => {
+const Component = ({ margin = [0, 0] }) => {
   const navigation = useNavigation();
   const theme = useTheme();
 
@@ -28,28 +26,10 @@ const Component = ({ mode = 'page', color, margin = [0, 0]}) => {
     }
   };
 
-  const renderContents = {
-    page: (
-      <React.Fragment>
-        <MaterialIcons
-          name="arrow-back-ios"
-          size={24}
-          color={color || theme.colors.neutral[900]}
-        />
-      </React.Fragment>
-    ),
-    modal: (
-      <MaterialIcons
-        name="close"
-        size={24}
-        color={color || theme.colors.neutral[900]}
-      />
-    ),
-  };
 
   return (
     <Wrpaper margin={margin} onPress={handleBackPress}>
-      {renderContents[mode]}
+      <CloseIcon/>
     </Wrpaper>
   );
 };

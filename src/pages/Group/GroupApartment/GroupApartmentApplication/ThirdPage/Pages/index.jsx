@@ -1,24 +1,31 @@
-    import { useNavigation } from "@react-navigation/native";
+import DatePicker from '@react-native-community/datetimepicker';
+import { useNavigation } from "@react-navigation/native";
+import { useAtom } from 'jotai';
 import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
-import { SafeAreaView, Text ,View} from "react-native";
+import { Keyboard, Platform, SafeAreaView, Text ,View} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import styled from "styled-components";
 
-import DatePicker from "../../../../../../components/BottomPicker";
+import Arrow from "../../../../../../assets/icons/Group/arrowDown.svg";
+import { apartDeliveryAtom, isApartMealInfoAtom } from '../../../../../../biz/useApartApplication/store';
 import Button from "../../../../../../components/Button";
 import WeekButton from "../../../../../../components/ButtonWeek";
 import RefTextInput from "../../../../../../components/RefTextInput";
 import Typography from "../../../../../../components/Typography";
+import { formattedMealTime, formattedTime } from '../../../../../../utils/dateFormatter';
+import { Cancel, Confirm, IosButton } from '../../SecondPage';
 
 
 export const PAGE_NAME = 'APARTMENT__APPLICATION__INFORMAION';
 const Pages = () => {
     const navigation = useNavigation();
 
-    const [modalVisible,setModalVisible] = useState(false);
-
-    const [touch,setTouch] = useState(false);
+    const [isApartMealInfo,setMealInfo] = useAtom(isApartMealInfoAtom);
+    const [time, setTime] = useState(new Date());
+    const [show, setShow] = useState(false);
+    const [text, setText] = useAtom(apartDeliveryAtom);
+    //const [touch,setTouch] = useState(false);
     const [monday,setMonday] = useState(false);
     const [thuesday,setThuesday] = useState(false);
     const [wendnesday,setWendnesday] = useState(false);
@@ -27,51 +34,114 @@ const Pages = () => {
     const [saturday,setSaturday] = useState(false);
     const [sunday,setSunday] = useState(false);
     
+    const checkDay = [monday,thuesday,wendnesday,thursday,friday,saturday,sunday];
+    //console.log(formattedTime(time))
     const form = useForm({
         mode:'all'
       });
+    
+    const {formState:{errors},watch,handleSubmit} = form;
+
+    const svcDongCountChk = watch('svcDongCount');
+    const deliveryTimeChk = watch('deliveryTime');
 
     const inputStyle = {
         marginBottom:16,
       };
 
-    const openPicker = () =>{
-        setModalVisible(true)
-    };
+    const search = true;
+    const searchResult = [];
+    let index = checkDay.indexOf(search);
+    while (index !== -1) {
+        searchResult.push(index);
+        index = checkDay.indexOf(search, index + 1);
+        
+    }
+    // const sendDay = [];
+    // const aa = searchResult.map(x => {   
+    //     if(x === 0){
+    //         sendDay.push('월')
+    //     }else if(x === 1){
+    //         sendDay.push('화')
+    //     }else if(x === 2){
+    //         sendDay.push('수')
+    //     }else if(x === 3){
+    //         sendDay.push('목')
+    //     }else if(x === 4){
+    //         sendDay.push('금')
+    //     }else if(x === 5){
+    //         sendDay.push('토')
+    //     }else{
+    //         sendDay.push('일')
+    //     }
+    // });
+    //console.log(sendDay)
+    
 
+    const saveAtom = () => {
+        setMealInfo([{
+            'diningType':1,
+            'expectedUserCount':Number(svcDongCountChk),
+            'serviceDays':searchResult,
+            'deliveryTime':formattedTime(time)
+        }]);
+    }
+    
+    const showTimePicker = () => {
+        setShow(true)
+    }
+
+    const onChange = (event,selectedTime) => {
+        if (Platform.OS === 'android') {
+            setShow(false);
+        }
+        // const currentDate = selectedDate;
+        setTime(selectedTime);
+        setText(formattedMealTime(selectedTime));
+      };
     
     
 
     return (
         <Wrap>
             <FormProvider {...form}>
-                <Container>
-                    <RefTextInput
-                    label="서비스 이용 예상 세대수"
-                    name="svcDongCount"
-                    keyboardType="numeric"
-                    placeholder="서비스 이용 예상 세대수"
-                    style={inputStyle}
-                    />
-                    <WeekButton 
-                    touch={touch} setTouch={setTouch}
-                    monday={monday} setmonday={setMonday} 
-                    thuesday={thuesday} setThuesday={setThuesday}
-                    wendnesday={wendnesday} setWendnesday={setWendnesday}
-                    thursday={thursday} setThursday={setThursday}
-                    friday={friday} setFriday={setFriday}
-                    saturday={saturday} setSaturday={setSaturday}
-                    sunday={sunday} setSunday={setSunday}
-                    />
-                    <RefTextInput
-                    label="배송 시간"
-                    name="address"
-                    placeholder="배송 시간"
-                    style={inputStyle}
-                    />
-                </Container>
+                <KeyDismiss onPress={()=>Keyboard.dismiss()}>
+                    <Container>
+                        <RefTextInput
+                        label="서비스 이용 예상 세대수"
+                        name="svcDongCount"
+                        keyboardType="numeric"
+                        placeholder="서비스 이용 예상 세대수"
+                        style={inputStyle}
+                        />
+                        <WeekButton 
+                        // touch={touch} setTouch={setTouch}
+                        monday={monday} setmonday={setMonday} 
+                        thuesday={thuesday} setThuesday={setThuesday}
+                        wendnesday={wendnesday} setWendnesday={setWendnesday}
+                        thursday={thursday} setThursday={setThursday}
+                        friday={friday} setFriday={setFriday}
+                        saturday={saturday} setSaturday={setSaturday}
+                        sunday={sunday} setSunday={setSunday}
+                        />
+                        <View style={inputStyle}>
+                            <RefTextInput
+                            label="배송 시간"
+                            name="deliveryTime"
+                            placeholder="배송 시간"
+                            onPressIn={showTimePicker}
+                            showSoftInputOnFocus={false}
+                            value={text}
+                            />
+                            <ArrowIcon/>
+                        </View>
+                    </Container>
+                </KeyDismiss>
             </FormProvider>
-            <Container>
+
+            
+
+            {!show && <Container>
                 <LetterWrap>
                     <Letter>
                         <InfoTitle>🚩아래 내용은 모두 상담시 안내해드립니다.</InfoTitle>
@@ -98,19 +168,44 @@ const Pages = () => {
                         </Description>
                     </Letter>
                 </LetterWrap>
-            </Container>
-                <DatePicker modalVisible={modalVisible} setModalVisible={setModalVisible}/>
-            <ButtonWrap>
-                <Button label={'다음'} onPressEvent={()=>{navigation.navigate()}}/>
-            </ButtonWrap>
+            </Container>}
+            {show && (
+                <DatePickerWrap>
+                   {Platform.OS === 'ios' && <IosButton>
+                        <Pressable onPress={()=>{setShow(false)}}>
+                            <Cancel>취소</Cancel>
+                        </Pressable>
+                        <Pressable onPress={()=>{setShow(false)}}>
+                            <Confirm>완료</Confirm>
+                        </Pressable>
+                    </IosButton>}
+                    
+                        <DatePicker
+                        value={time}
+                        display="spinner"
+                        onChange={onChange}
+                        locale='ko-KR'
+                        mode="time"
+                        />
+                </DatePickerWrap>
+                   
+                
+            )}
+            {!show && <ButtonWrap>
+                <Button label={'저장'} onPressEvent={()=>{saveAtom();}}/>
+            </ButtonWrap>}
         </Wrap>
     )
 }
-
+//navigation.goBack();
 export default Pages;
 
 const Wrap = styled.SafeAreaView`
 background-color:${({theme}) => theme.colors.grey[0]};
+flex:1;
+`;
+
+const KeyDismiss = styled.Pressable`
 flex:1;
 `;
 
@@ -144,4 +239,16 @@ color:${({theme}) => theme.colors.blue[500]};
 
 const Description = styled(Typography).attrs({text:'CaptionR'})`
 color:${({theme}) => theme.colors.grey[4]};
+`;
+
+const DatePickerWrap = styled.View`
+width:100%;
+position:absolute;
+bottom:0;
+`;
+
+const ArrowIcon = styled(Arrow)`
+position:absolute;
+right:4px;
+bottom:12px;
 `;

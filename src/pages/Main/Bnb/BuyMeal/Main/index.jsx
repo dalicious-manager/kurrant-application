@@ -93,15 +93,13 @@ const Pages = () => {
 
 
     const addCartPress = async (id,day,type) =>{
-        //console.log(id,day,type)
         const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
-        const serviceDate = day[0]+'-'+day[1]+'-'+day[2];
-
+        console.log(day)
         try {
            await addMeal({
-                "foodId":id,
+                "dailyFoodId":id,
                 "count":1,
-                "serviceDate":serviceDate,
+                "serviceDate":day,
                 "diningType":diningType
             });
 
@@ -153,7 +151,7 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={m.spicy}
                             disabled={m.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dateFoodId:m.id});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
                                     <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
@@ -171,7 +169,7 @@ const Pages = () => {
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     
                                     {!m.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(m.foodId,m.serviceDate,m.diningType)}}>
+                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(m.id,m.serviceDate,m.diningType)}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
@@ -186,7 +184,7 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={l.spicy}
                             disabled={l.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType,date:l.serviceDate});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType,date:l.serviceDate,dailyFoodId:l.id});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
                                     <MealName soldOut={l.isSoldOut}>{l.foodName}</MealName>
@@ -203,7 +201,7 @@ const Pages = () => {
                                     {l.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     {!l.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(l.foodId,l.serviceDate,l.diningType)}}>
+                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(l.id,l.serviceDate,l.diningType)}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
@@ -219,7 +217,7 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={d.spicy}
                             disabled={d.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:d.foodId,type:d.diningType,date:d.serviceDate});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:d.foodId,type:d.diningType,date:d.serviceDate,dailyFoodId:d.id});e.stopPropagation()}}>
                                 <ContentsText>
                                     {/* <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName> */}
                                     <MakersName soldOut={d.isSoldOut}>[메이커스]</MakersName>
@@ -256,7 +254,7 @@ const Pages = () => {
                                 <MealImageWrap>
                                     {d.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(d.foodId,d.serviceDate,d.diningType)}}>
+                                    <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(d.id,d.serviceDate,d.diningType)}}>
                                         <CartIcon/>
                                     </CartIconWrap>
                                 </MealImageWrap>

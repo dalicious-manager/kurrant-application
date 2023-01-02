@@ -20,13 +20,14 @@ import Modal from '../../../../../components/Modal';
 import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from "../../../../../components/Typography";
 import { formattedWeekDate } from "../../../../../utils/dateFormatter";
+import withCommas from "../../../../../utils/withCommas";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import Skeleton from '../Skeleton';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 
 const Pages = ({route}) => {
-    //console.log(route)
+    console.log(route)
     const bodyRef = useRef();
     const navigation = useNavigation();
     const { balloonEvent, BalloonWrap } = Balloon();
@@ -38,11 +39,12 @@ const Pages = ({route}) => {
     
     const headerTitle = isFoodDetail?.name;
     const foodId = route.params.foodId;
+    const dailyFoodId = route.params.dailyFoodId;
     const type = route.params.type;
     const day = route.params.date;
     
     const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
-    const serviceDate = day[0]+'-'+day[1]+'-'+day[2];
+    
     
     // foodId 넘겨줘야함 
     useEffect(()=>{
@@ -53,7 +55,7 @@ const Pages = ({route}) => {
         loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
-   
+    
     useLayoutEffect(()=>{
         navigation.setOptions({   
             headerTransparent: true,
@@ -71,9 +73,9 @@ const Pages = ({route}) => {
     const addCartPress = async () =>{
         try {
            await addMeal({
-                "foodId":foodId,
+                "dailyFoodId":dailyFoodId,
                 "count":count,
-                "serviceDate":serviceDate,
+                "serviceDate":day,
                 "diningType":diningType
             });
         } catch(err){
@@ -150,10 +152,11 @@ const Pages = ({route}) => {
                                 <Modal/>
                             </ModalWrap>
                         </PriceTitleWrap>
-                        <PriceWrap>
-                            <Percent>20%</Percent>
+                        <PriceWrap> 
+                            <SalePrice>{withCommas(isFoodDetail?.price)}원</SalePrice>
+                            {/* <Percent>20%</Percent>
                             <SalePrice>{result}원</SalePrice>
-                            <Price>15,000원</Price>
+                            <Price>15,000원</Price> */}
                         </PriceWrap>
                     </View>
                 </Content>
