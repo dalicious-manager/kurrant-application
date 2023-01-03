@@ -7,6 +7,8 @@
 #import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
 #import <RNKakaoLogins.h>
 #import <React/RCTAppSetupUtils.h>
+#import <Firebase.h>
+#import <RNGoogleSignin/RNGoogleSignin.h>
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -42,7 +44,6 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   RCTAppSetupPrepareApp(application);
@@ -50,7 +51,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   [[NaverThirdPartyLoginConnection getSharedInstance] setIsNaverAppOauthEnable:YES];
 	[[NaverThirdPartyLoginConnection getSharedInstance] setIsInAppOauthEnable:YES];
-
+  [FIRApp configure];
 
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();

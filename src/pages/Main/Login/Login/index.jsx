@@ -1,7 +1,9 @@
 
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect } from 'react';
-import { ActivityIndicator, BackHandler, Dimensions,TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, BackHandler, Dimensions,Platform,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 
@@ -13,6 +15,7 @@ import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
 import useToken from '../../../../hook/useToken';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
+import snsLogin from '../../../../utils/snsLogin';
 import {
   PAGE_NAME as MembershipJoinPageName,
 } from '../../../Membership/MembershipIntro';
@@ -32,6 +35,18 @@ const Pages = () => {
   const {token,isTokenLoading} = useToken();
   const navigation = useNavigation();
   const toast = Toast();
+  const {googleLogin,appleLogin} = snsLogin();
+  const googleSigninConfigure = () => {
+    GoogleSignin.configure({
+      scopes:['https://www.googleapis.com/auth/user.phonenumbers.read'],
+      webClientId: '872782655273-mhb2jokicsaqb99astkb4hlqr4dndf7o.apps.googleusercontent.com', 
+    });
+   
+    console.log("구글")
+  }
+
+  
+
   
   useEffect(()=>{   
     
@@ -61,8 +76,11 @@ const Pages = () => {
     BackHandler.addEventListener('hardwareBackPress', handleBackButton);
     return ()=>BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
   },[ navigation, toast])
-
   useEffect(()=>{
+    googleSigninConfigure();
+  },[]);
+  useEffect(()=>{
+    
     if(token ){
       navigation.reset({
         index: 0,
@@ -74,6 +92,7 @@ const Pages = () => {
       })
     } 
   },[navigation, token])
+  
   if(isTokenLoading){
     return<ActivityIndicator size="large" />
   }
@@ -99,12 +118,12 @@ const Pages = () => {
         </TouchableOpacity>
         <EtcSNSContainer>
 
-         <HorizonLine text="그외 SNS로 로그인"/>
+         <HorizonLine text={`그외 SNS로 로그인`}/>
           {/* <Text style={{flex:1 ,textAlign:'center'}} >───── 그외 SNS로 로그인 ─────</Text> */}
           <EtcSNSBox >
             <ButtonRoundSns type_sns='facebook' size={32}/>
-            <ButtonRoundSns type_sns='google' size={32}/>
-            <ButtonRoundSns type_sns='apple' size={32}/>
+            <ButtonRoundSns type_sns='google' size={32} onPressEvent={googleLogin}/>
+            {Platform.OS !== 'android' && <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>}
           </EtcSNSBox>
         </EtcSNSContainer>
       </LoginBox>

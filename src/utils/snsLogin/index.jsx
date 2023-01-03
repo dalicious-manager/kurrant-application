@@ -1,4 +1,7 @@
+import { appleAuth } from '@invertase/react-native-apple-authentication';
 import Clipboard from '@react-native-clipboard/clipboard';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { login, logout, getProfile as getKakaoProfile, unlink } from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import { useNavigation } from '@react-navigation/native';
@@ -47,7 +50,47 @@ export default () => {
         }
       };
     
-
+      const googleLogin = async ()=>{
+        try {
+          // Check if your device supports Google Play
+          // Get the users ID token
+          await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+          // Get the users ID token
+          const { idToken,user ,serverAuthCode} = await GoogleSignin.signIn();
+        
+          // Create a Google credential with the token
+          const test = await GoogleSignin.getCurrentUser()
+          
+          const {accessToken} =await GoogleSignin.getTokens();
+          const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+          console.log(idToken);
+          console.log(accessToken);
+          // Sign-in the user with the credential
+          return auth().signInWithCredential(googleCredential);
+        } catch (error) {
+          console.log("err",error.toString());
+        }
+        
+      }
+      const appleLogin  = async() =>{
+        // Start the sign-in request
+        const appleAuthRequestResponse = await appleAuth.performRequest({
+          requestedOperation: appleAuth.Operation.LOGIN,
+          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+        });
+      
+        // Ensure Apple returned a user identityToken
+        if (!appleAuthRequestResponse.identityToken) {
+          throw new Error('Apple Sign-In failed - no identify token returned');
+        }
+      
+        // Create a Firebase credential from the response
+        const { identityToken, nonce } = appleAuthRequestResponse;
+        const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+        console.log(appleCredential)
+        // Sign the user in with the credential
+        return auth().signInWithCredential(appleCredential);
+      }
     
       const kakaoLogin = async () => {
         const token = await login();
@@ -67,8 +110,8 @@ export default () => {
           })
       };
       
-   
+      
 
 
-    return {naverLogin,kakaoLogin};
+    return {naverLogin,kakaoLogin,googleLogin,appleLogin};
 };
