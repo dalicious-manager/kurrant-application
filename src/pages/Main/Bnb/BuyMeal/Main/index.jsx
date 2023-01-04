@@ -17,6 +17,7 @@ import { isUserInfoAtom, isUserMeAtom } from '../../../../../biz/useUserInfo/sto
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
+import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Label from '../../../../../components/Label';
@@ -38,14 +39,14 @@ const Pages = () => {
     const diningRef = useRef();
 
     const [focus,setFocus] = useState(1);
-    
+    const [modalVisible,setModalVisible] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
     const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
     const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
     const userMembership = useAtomValue(isUserInfoAtom);
-    
+    //console.log(isDailyFood,'daily')
     const DININGTYPE = ['아침','점심','저녁'];
     const daily = true;
     const date = formattedWeekDate(new Date()); // 오늘
@@ -61,6 +62,7 @@ const Pages = () => {
          } 
 
     const dayPress = async (selectedDate) =>{
+        
         try {
             await dailyFood(spotId,selectedDate);
         }catch(err){
@@ -69,13 +71,16 @@ const Pages = () => {
         }
     }
 
-    
-    const duplication = isLoadMeal?.map((m) => {
-        return {
-            date:m.date,
-            diningType:m.diningType
-        }
-    });
+    const openModal = () =>{
+        setModalVisible(true)
+    }
+
+    const closeModal = () => {
+        setModalVisible(false)
+    }
+
+    //
+   
     //console.log(duplication)
 
     useEffect(()=>{
@@ -93,33 +98,57 @@ const Pages = () => {
 
 
     const addCartPress = async (id,day,type) =>{
-        //console.log(id,day,type)
         const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
-        const serviceDate = day[0]+'-'+day[1]+'-'+day[2];
+        const duplication = isLoadMeal.some((item) => item.dailyFoodId === id)
+        
+        if(duplication){
+            setModalVisible(true)
+        }else {
+            try {
+                await addMeal({
+                     "dailyFoodId":id,
+                     "count":1,
+                     "serviceDate":day,
+                     "diningType":diningType
+                 });
+                 await loadMeal();
+                 await balloonEvent();
+                 } catch(err){
+                     console.log(err)
+                     throw err
+                 }
+        }
+        
+    }
 
-        try {
-           await addMeal({
-                "foodId":id,
-                "count":1,
-                "serviceDate":serviceDate,
-                "diningType":diningType
-            });
-
-            } catch(err){
-                console.log(err)
-                throw err
-            }
+    const addToCart = async (id,day,type) =>{
+        const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
+            try {
+                await addMeal({
+                     "dailyFoodId":id,
+                     "count":1,
+                     "serviceDate":day,
+                     "diningType":diningType
+                 });
+                 await loadMeal();
+                 await balloonEvent();
+                 } catch(err){
+                     console.log(err)
+                     throw err
+                 }
+               closeModal();    
     }
 
 
     return (
         <SafeView>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            
                 {userMembership?.isMembership && <MembershipBar/>}
-                
+                <ScrollView showsVerticalScrollIndicator={false}>
                 <CalendarWrap>
                     <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={dayPress} daily={daily} margin={'0px 28px'} />
                 </CalendarWrap>
+                
                 <PagerViewWrap>
                     <ProgressWrap>
                         <ProgressInner>
@@ -146,14 +175,17 @@ const Pages = () => {
                     </ProgressWrap>
 
 
-                    {isDailyFoodLoading ? <SkeletonUI/> : <Pager ref={diningRef} initialPage={2} onPageSelected={(e) => {onPageScroll(e)}}>
+                    {isDailyFoodLoading ? <SkeletonUI/> : <Pager ref={diningRef} initialPage={1} onPageSelected={(e) => {onPageScroll(e)}}>
                         <View>
                             {/* 아침 */}
+                            {isMorningFood.length === 0 && <NoServieceView>
+                                <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
+                            </NoServieceView>}
                             {isMorningFood?.map((m,i) => 
                             <Contents key={i}
                             spicy={m.spicy}
                             disabled={m.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dateFoodId:m.id});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
                                     <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
@@ -171,22 +203,31 @@ const Pages = () => {
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     
                                     {!m.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(m.foodId,m.serviceDate,m.diningType)}}>
+                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(m.id,m.serviceDate,m.diningType)}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
                                 </MealImageWrap>
                                     {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>}
+                                    <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
+                                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
+                                    description={'그래도 추가하시겠어요?'} 
+                                    buttonTitle1={'아니요'} buttonType1='grey7' 
+                                    buttonTitle2={'추가'} buttonType2='yellow' 
+                                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart(m.id,m.serviceDate,m.diningType)}/>
                             </Contents>
                             )}
                         </View>
                         <View>
                             {/* 점심 */}
+                            {isLunchFood.length === 0 && <NoServieceView>
+                                <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
+                            </NoServieceView>}
                             {isLunchFood?.map((l,i)=>
                             <Contents key={i}
                             spicy={l.spicy}
                             disabled={l.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType,date:l.serviceDate});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType,date:l.serviceDate,dailyFoodId:l.id});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
                                     <MealName soldOut={l.isSoldOut}>{l.foodName}</MealName>
@@ -203,23 +244,32 @@ const Pages = () => {
                                     {l.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     {!l.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(l.foodId,l.serviceDate,l.diningType)}}>
+                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(l.id,l.serviceDate,l.diningType)}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
                                 </MealImageWrap>
                                     {l.isSoldOut && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
+                                    <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
+                                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
+                                    description={'그래도 추가하시겠어요?'} 
+                                    buttonTitle1={'아니요'} buttonType1='grey7' 
+                                    buttonTitle2={'추가'} buttonType2='yellow' 
+                                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart(l.id,l.serviceDate,l.diningType)}/>
                             </Contents>
 
                             )}
                         </View>
                         <View>
                             {/* 저녁 */}
+                            {isDinnerFood.length === 0 && <NoServieceView>
+                                <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
+                            </NoServieceView>}
                             {isDinnerFood?.map((d,i) => 
                             <Contents key={i}
                             spicy={d.spicy}
                             disabled={d.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:d.foodId,type:d.diningType,date:d.serviceDate});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:d.foodId,type:d.diningType,date:d.serviceDate,dailyFoodId:d.id});e.stopPropagation()}}>
                                 <ContentsText>
                                     {/* <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName> */}
                                     <MakersName soldOut={d.isSoldOut}>[메이커스]</MakersName>
@@ -256,11 +306,17 @@ const Pages = () => {
                                 <MealImageWrap>
                                     {d.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(d.foodId,d.serviceDate,d.diningType)}}>
+                                    <CartIconWrap onPress={()=>{addCartPress(d.id,d.serviceDate,d.diningType)}}>
                                         <CartIcon/>
                                     </CartIconWrap>
                                 </MealImageWrap>
                                     {d.isSoldOut && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
+                                    <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
+                                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
+                                    description={'그래도 추가하시겠어요?'} 
+                                    buttonTitle1={'아니요'} buttonType1='grey7' 
+                                    buttonTitle2={'추가'} buttonType2='yellow' 
+                                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart(d.id,d.serviceDate,d.diningType)}/>
                             </Contents>
                             )}
                         </View>
@@ -302,7 +358,7 @@ export default Pages;
 
 const SafeView = styled.View` 
 background-color:${props => props.theme.colors.grey[0]};
-flex:1;
+
 `;
 
 export const CalendarWrap = styled.View`
@@ -428,7 +484,7 @@ z-index:1000;
 const ButtonWrap = styled.View`
 position:absolute;
 bottom:35px;
-margin:0px 24px;
+margin:0px 48px;
 `;
 
 
@@ -480,3 +536,15 @@ const ReviewCount =styled(Typography).attrs({text:'SmallLabel'})`
 color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] :theme.colors.grey[4]};
 `;
 
+const NoServiceText = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.grey[5]};
+`;
+
+const NoServieceView = styled.View`
+/* justify-content:center;
+align-items:center;
+flex:1; */
+position:absolute;
+top:30%;
+left:30%;
+`;

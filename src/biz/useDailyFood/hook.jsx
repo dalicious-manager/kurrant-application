@@ -13,25 +13,31 @@ const useFoodDaily = () => {
     // const [isMorningFoodLoading,setMorningFoodLoading] = useAtom(isMorningFoodLoadingAtom);
     // const [isLunchFoodLoading,setLunchFoodLoading] = useAtom(isLunchFoodLoadingAtom);
     // const [isDinnerFoodLoading,setDinnerFoodLoading] = useAtom(isDinnerFoodLoadingAtom);
-    
+    //console.log(isDinnerFood,'ddddd')
     const dailyFood = async (spotId,seletedDate) => {
         
         try {
             setDailyFoodLoading(true)
             const res = await Fetch.DailyFood(spotId,seletedDate);
-            console.log(res, 'gigiig')
+            
             if(res.data === null){
                 setMorning([]);
                 setLunch([]);
                 setDinner([]);
                 throw new Error('없음');
             }
+    
             setDailyFood(res.data);
-            setMorning(res.data.filter(x => x.diningType === '아침'));
-            setLunch(res.data.filter(x => x.diningType === '점심'));
-            setDinner(res.data.filter(x => x.diningType === '저녁'));
+            setMorning(res.data.filter(x => x.serviceDate === seletedDate && x.diningType === '아침'));
+            setLunch(res.data.filter(x => x.serviceDate === seletedDate && x.diningType === '점심'));
+            setDinner(res.data.filter(x => x.serviceDate === seletedDate && x.diningType === '저녁'));
+            
         } catch (err) {
-            throw err;
+            console.log(err,'err');
+            setDailyFood([]);
+            setMorning([]);
+            setLunch([]);
+            setDinner([]);
         } finally {
             setDailyFoodLoading(false)
         }

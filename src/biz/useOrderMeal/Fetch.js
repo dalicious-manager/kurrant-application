@@ -2,7 +2,7 @@ import { fetchJson } from "../../utils/fetch";
 
 export async function OrderMeal(startdate, enddate) {
     const fetchRes = await fetchJson(`/users/me/order?startDate=${startdate}&endDate=${enddate}`, 'GET');
-    console.log(startdate,enddate,'ddd')
+
 
     return fetchRes;
     // return {

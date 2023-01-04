@@ -39,8 +39,23 @@ const Pages = () => {
     const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal } = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
+    
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         // Do something when the screen is focused
+    //         console.log('들어옴')
+        
 
-
+    //         return  () => {
+    //         // Do something when the screen is unfocused
+    //             console.log("나감")
+    //                 updateMeal({"updateCartList":quantity});
+            
+    //         };
+    
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [updateMeal])
+    // );
     useEffect(()=>{
         async function loadCart(){
             try {
@@ -56,11 +71,11 @@ const Pages = () => {
   
     const quantity = isLoadMeal.map(m => {
         return{
-            foodId: m.dailyFoodId,
+            dailyFoodId: m.dailyFoodId,
             count: m.count
         }
      });
-    
+    //console.log(quantity)
     const pointButton = () => {
         setModalVisible(true);
     }
@@ -69,7 +84,6 @@ const Pages = () => {
     }
 
     const addHandle = (productId) => {
-        console.log(productId,'id')
         const addQty = isLoadMeal.map(p => {
             if (productId === p.dailyFoodId){
                 return {...p, count:p.count + 1}
@@ -87,8 +101,7 @@ const Pages = () => {
         });
     
         setLoadMeal(substracQty);
-        
-        
+     
     }
     
     const totalCount = isLoadMeal.map(p => p.count).reduce((acc,cur) => {
@@ -127,7 +140,7 @@ const Pages = () => {
     };
 
     const deleteButton = async (foodId) => {
-        console.log(foodId)
+    
         try {
             await deleteMeal(foodId);
             setLoadMeal(isLoadMeal.filter(t => t.dailyFoodId !== foodId));
@@ -137,35 +150,18 @@ const Pages = () => {
         }
     }
 
-   
-
     const propsId = (mealId) => {
         setId(mealId)
     };
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //       // Do something when the screen is focused
-    //         console.log('들어옴')
-        
 
-    //       return  () => {
-    //         // Do something when the screen is unfocused
-    //             console.log("나감")
-    //              updateMeal({"updateCartList":quantity});
-            
-    //       };
-        
-       
-        
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //     }, [updateMeal])
-    //   );
-
-
-
-    
-
+    const modifyPress = async () => {
+        try {
+            await updateMeal({"updateCartList":quantity});
+        } catch(err){
+            throw new Error ('에러남')
+        }
+    }
     return (
         <SafeView>
             {isLoadMeal.length === 0 && <EmptyView>
@@ -177,12 +173,11 @@ const Pages = () => {
             <ScrollViewWrap showsVerticalScrollIndicator={false}>
                 {isLoadMeal?.map((l,idx) => {
                     const price = l.price * l.count;
-                    const svcDate = l.serviceDate[0]+'-'+l.serviceDate[1]+'-'+l.serviceDate[2];
-                    
+                   
                     return (
                         <Wrap key={idx}>
                             <ContentHeader>
-                                <DiningName>{formattedMonthDay(svcDate)} {l.diningType}</DiningName>
+                                <DiningName>{formattedMonthDay(l.serviceDate)} {l.diningType}</DiningName>
                                 <Pressable onPress={()=>{deleteButton(l.dailyFoodId)}}><DeleteIcon/></Pressable>
                             </ContentHeader>
                             <ContentWrap>
@@ -269,7 +264,7 @@ const Pages = () => {
             
            
             {isLoadMeal.length !== 0 && <ButtonWrap focus={focus}>
-                <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName)}}/>
+                <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName);modifyPress()}}/>
             </ButtonWrap>}
              
             <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>

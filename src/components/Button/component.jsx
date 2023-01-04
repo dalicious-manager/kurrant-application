@@ -44,7 +44,6 @@ const Component = ({
     <Wrap size={size}>
       <Wrapper size={size} type={type} disabled={disabled} onPress={onPressEvent}>
         <LabelWrap>
-          <IconWrap>{renderIcon(icon)}</IconWrap>
           <Label type={type} disabled={disabled} text={text}>
             {label}
           </Label>
@@ -88,3 +87,5 @@ export const LabelWrap = styled.View`
 export const Label = styled(Typography)`
   ${({ disabled, type }) =>  getLabelColor(disabled,type)};
 `;
+
+//<IconWrap>{renderIcon(icon)}</IconWrap>

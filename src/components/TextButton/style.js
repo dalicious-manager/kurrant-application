@@ -38,5 +38,10 @@ const labelColor = {
     red: css`
         color: ${({theme}) => theme.colors.red[500]};
     `,
+    redLine: css`
+    color: ${({theme}) => theme.colors.red[500]};
+    text-decoration:underline;
+    text-decoration-color:${({theme}) => theme.colors.red[500]};
+`,
 
 }

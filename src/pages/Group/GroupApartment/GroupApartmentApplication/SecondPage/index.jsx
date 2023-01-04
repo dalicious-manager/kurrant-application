@@ -1,87 +1,184 @@
 import Postcode from '@actbase/react-daum-postcode';
+import DatePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from "@react-navigation/native";
-import React, { useLayoutEffect, useState } from "react";
+import { useAtom, useAtomValue } from 'jotai';
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
-import { SafeAreaView, Text ,View} from "react-native";
+import { Alert, Keyboard, Modal, Platform, Pressable, SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
 
+import Arrow from "../../../../../assets/icons/Group/arrowDown.svg";
+import { apartApplicationDate, isApartAddressAtom, isApartDongCountAtom, isApartFamilyCountAtom, isApartFullAddressAtom, isApartNameAtom, isApartSendAddressAtom, isApartSendAddressInfoAtom, isApartStartDateAtom } from '../../../../../biz/useApartApplication/store';
 import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar2";
 import RefTextInput from "../../../../../components/RefTextInput";
+import Typography from '../../../../../components/Typography';
+import { formattedApplicationDate, formattedDate } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as ApartmentApplicationThirdPageName} from '../ThirdPage';
-
+import {PAGE_NAME as ApartmentApplicationPostcodePageName} from './Pages';
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__SECOND" ;
 const Pages = () => {
 
     const navigation = useNavigation();
-
-    //const [show, setShow] = useState(false);
-
+    
+    const [date, setDate] = useState(new Date());
+    const [show, setShow] = useState(false);
+    const [text, setText] = useAtom(apartApplicationDate);
+    const [isApartAddress,setApartAddress] = useAtom(isApartSendAddressAtom);
+    const isApartFullAddress = useAtomValue(isApartFullAddressAtom); // TextInput value
+    //const isSendAddress = useAtomValue(isApartSendAddressInfoAtom); // body에 담을 주소2
+    
     const form = useForm({
         mode:'all'
       });
 
+    const {formState:{errors},watch,handleSubmit} = form;
+
+    const apartNameChk = watch('apartName');
+    const apartAddressChk = watch('address');
+    const apartFamilyCountChk = watch('familyCount');
+    const apartDongCountChk = watch('dongCount');
+    const apartStartDateChk = watch('startDate');
+    
+    
+    const isValidation = 
+    (apartNameChk && !errors.apartName) &&
+    (isApartFullAddress !== '') &&
+    (apartFamilyCountChk &&!errors.familyCount) &&
+    (apartDongCountChk &&!errors.dongCount) && (text !== '')
+    ;
+
     const inputStyle = {
         marginBottom:16,
       }
+//console.log(isApartAddress)
+    const saveAtom = () => {
+        setApartAddress({
+            'apartmentName' : apartNameChk,
+            'familyCount': Number(apartFamilyCountChk),
+            'dongCount' : Number(apartDongCountChk),
+            'serviceStartDate' : formattedApplicationDate(date)
 
-    // const openAddress = () => {
-    //     setShow(!show)
-    // }
-
+        })
+    }
     
+    const showDatePicker = () => {
+        setShow(true)
+    }
 
+    const onChangeDate = (event,selectedDate) => {
+        if (Platform.OS === 'android') {
+            setShow(false);
+        }
+        // const currentDate = selectedDate;
+        setDate(selectedDate);
+        setText(formattedDate(selectedDate));
+      };
+
+    const confirmPress = () =>{
+        
+        setShow(false);
+    }
+     
     return (
         <Wrap>
             <ProgressBar progress={2}/>
             <FormProvider {...form}>
-                <Container>
-                    <RefTextInput
-                    label="아파트명"
-                    name="apartName"
-                    placeholder="아파트명"
-                    style={inputStyle}
-                    />
-                    <RefTextInput
-                    label="아파트주소"
-                    name="address"
-                    placeholder="아파트 주소"
-                    keyboardType="numeric"
-                    style={inputStyle}
-                    onPress={()=>{console.log('눌ㄹ름')}}
-                    />
-                    <Postcode
-                        style={{ width: 320, height: 320 }}
-                        jsOptions={{ animation: true }}
-                        onSelected={data => console.log(JSON.stringify(data))}
-                    />
-                    <RefTextInput
-                    label="단지 총 세대수"
-                    name="familyCount"
-                    placeholder="단지 총 세대수"
-                    keyboardType="numeric"
-                    style={inputStyle}
-                    />
-                    <RefTextInput
-                    label="아파트 단지내 동 개수"
-                    name="dongCount"
-                    placeholder="아파트 단지내 동 개수"
-                    keyboardType="numeric"
-                    style={inputStyle}
-                    />
-                    <RefTextInput
-                    label="이용 시작 얘정일"
-                    name="phone"
-                    placeholder="이용 시작 예정일"
-                    keyboardType="numeric"
-                    style={inputStyle}
-                    />
-                </Container>
+                <KeyDismiss onPress={()=>Keyboard.dismiss()}>
+                    <Container>
+                        <RefTextInput
+                        label="아파트명"
+                        name="apartName"
+                        placeholder="아파트명"
+                        style={inputStyle}
+                        defaultValue={isApartAddress.apartmentName}
+                        rules={
+                            {
+                              required: '필수 입력 항목 입니다.',
+                              pattern: {                        
+                                value: /^[가-힣a-zA-Z]+$/,
+                                message: '올바른 아파트명을 입력해 주세요.',
+                              }
+                            }
+                          }
+                        />
+
+                        <View style={inputStyle}>
+                            <RefTextInput
+                            label="아파트주소"
+                            name="address"
+                            placeholder="아파트 주소"
+                            value={isApartFullAddress}
+                            onPressIn={()=>navigation.navigate(ApartmentApplicationPostcodePageName)}
+                            />
+                            <ArrowIcon/>
+                        </View>
+
+                    
+                        <RefTextInput
+                        label="단지 총 세대수"
+                        name="familyCount"
+                        placeholder="단지 총 세대수"
+                        keyboardType="numeric"
+                        style={inputStyle}
+                        defaultValue={isApartAddress.familyCount !== undefined && String(isApartAddress.familyCount)}
+                        />
+
+                        <RefTextInput
+                        label="아파트 단지내 동 개수"
+                        name="dongCount"
+                        placeholder="아파트 단지내 동 개수"
+                        keyboardType="numeric"
+                        caption="동 개수를 입력해주세요.(예.101동 - 105동이면 5개)"
+                        style={inputStyle}
+                        defaultValue={isApartAddress.dongCount !== undefined && String(isApartAddress.dongCount)}
+                        />
+
+                        <View>
+                            <RefTextInput
+                            label="이용 시작 예정일"
+                            name="startDate"
+                            placeholder="이용 시작 예정일"
+                            value={text}
+                            showSoftInputOnFocus={false}
+                            onPressIn={showDatePicker}
+                            // value={formattedDate(date) }
+                            />
+                            <ArrowIcon/>
+                        </View>
+                        
+                    </Container>
+                </KeyDismiss>
             </FormProvider>
-            <ButtonWrap>
-                <Button label={'다음'} onPressEvent={()=>{navigation.navigate(ApartmentApplicationThirdPageName)}}/>
-            </ButtonWrap>
+
+            {show && (
+                <React.Fragment>
+                   {Platform.OS === 'ios' && <IosButton>
+                        <Pressable onPress={()=>{setShow(false)}}>
+                            <Cancel>취소</Cancel>
+                        </Pressable>
+                        <Pressable onPress={confirmPress}>
+                            <Confirm>완료</Confirm>
+                        </Pressable>
+                    </IosButton>}
+                    <DatePicker
+                    value={date}
+                    display="spinner"
+                    onChange={onChangeDate}
+                    locale='ko-KR'
+                    />
+                   
+                </React.Fragment>
+            )}
+                
+            
+            {!show&&<ButtonWrap>
+                <Button 
+                    label={'다음'}  
+                    // disabled={!isValidation}
+                    onPressEvent={()=>{navigation.navigate(ApartmentApplicationThirdPageName);saveAtom()}}/>
+            </ButtonWrap>}
         </Wrap>
     )
 }
@@ -93,6 +190,10 @@ background-color:${({theme}) => theme.colors.grey[0]};
 flex:1;
 `;
 
+const KeyDismiss = styled.Pressable`
+flex:1;
+`;
+
 const ButtonWrap = styled.View`
 padding:0px 20px;
 position:absolute;
@@ -100,6 +201,27 @@ bottom:35px;
 `;
 
 
-const Container = styled.View`
+const Container = styled.ScrollView`
 margin:0px 24px;
+`;
+
+export const IosButton = styled.Pressable`
+width:100%;
+flex-direction:row;
+justify-content:space-between;
+padding:8px 20px;
+`;
+
+export const Cancel = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.grey[4]};
+`;
+
+export const Confirm = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.blue[500]};
+`;
+
+const ArrowIcon = styled(Arrow)`
+position:absolute;
+right:4px;
+bottom:12px;
 `;
