@@ -2,28 +2,23 @@
 import {Slider} from '@miblanchard/react-native-slider';
 import { useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
-import React, { useRef, forwardRef,useState, useEffect, useLayoutEffect } from 'react';
-import {useForm} from 'react-hook-form';
-import { Image, SafeAreaView, ScrollView, Text, View, TouchableOpacity ,ImageBackground, Pressable,Dimensions, StyleSheet} from "react-native";
+import React, { useRef, useState, useEffect } from 'react';
+import { ScrollView, View, Pressable,Dimensions, StyleSheet} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
-import StarIcon from '../../../../../assets/icons/BuyMeal/smallStar.svg';
-import SoldOutStarIcon from '../../../../../assets/icons/BuyMeal/soldOutStar.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import { isUserInfoAtom, isUserMeAtom } from '../../../../../biz/useUserInfo/store';
-import Badge from '../../../../../components/Badge';
+import { isUserInfoAtom } from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/Balloon';
-import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Label from '../../../../../components/Label';
 import MembershipBar from '../../../../../components/MembershipBar';
 import Typography from '../../../../../components/Typography';
-import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
+import { formattedWeekDate } from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
@@ -104,8 +99,7 @@ const Pages = () => {
 
     const addCartPress = async (id,day,type) =>{
         const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
-        const duplication = isLoadMeal.some((item) => item.dailyFoodId === id)
-        console.log(duplication);
+        const duplication = isLoadMeal.some((item) => item.dailyFoodId === id);
         if(duplication){
             console.log(id,"type")
             if(diningType === 1){
