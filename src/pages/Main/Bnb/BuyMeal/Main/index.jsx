@@ -40,6 +40,8 @@ const Pages = () => {
 
     const [focus,setFocus] = useState(1);
     const [modalVisible,setModalVisible] = useState(false);
+    const [modalVisible2,setModalVisible2] = useState(false);
+    const [modalVisible3,setModalVisible3] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
     const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
@@ -76,7 +78,10 @@ const Pages = () => {
     }
 
     const closeModal = () => {
-        setModalVisible(false)
+        setModalVisible(false);
+        setModalVisible2(false)
+        setModalVisible3(false)
+        
     }
 
     //
@@ -100,9 +105,20 @@ const Pages = () => {
     const addCartPress = async (id,day,type) =>{
         const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
         const duplication = isLoadMeal.some((item) => item.dailyFoodId === id)
-        
+        console.log(duplication);
         if(duplication){
-            setModalVisible(true)
+            console.log(id,"type")
+            if(diningType === 1){
+                setModalVisible(true)
+            }
+
+            if(diningType === 2){
+                setModalVisible2(true)
+            }
+            if(diningType === 3){
+                setModalVisible3(true)
+            }
+            
         }else {
             try {
                 await addMeal({
@@ -185,7 +201,7 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={m.spicy}
                             disabled={m.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dateFoodId:m.id});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dailyFoodId:m.id});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
                                     <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
@@ -224,7 +240,9 @@ const Pages = () => {
                                 <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
                             </NoServieceView>}
                             {isLunchFood?.map((l,i)=>
-                            <Contents key={i}
+                            {
+                                console.log(l)
+                            return <Contents key={i}
                             spicy={l.spicy}
                             disabled={l.isSoldOut}
                             onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType,date:l.serviceDate,dailyFoodId:l.id});e.stopPropagation()}}>
@@ -250,7 +268,7 @@ const Pages = () => {
                                     )}
                                 </MealImageWrap>
                                     {l.isSoldOut && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
-                                    <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
+                                    <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} 
                                     title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
                                     description={'그래도 추가하시겠어요?'} 
                                     buttonTitle1={'아니요'} buttonType1='grey7' 
@@ -258,7 +276,7 @@ const Pages = () => {
                                     onPressEvent1={closeModal} onPressEvent2={()=>addToCart(l.id,l.serviceDate,l.diningType)}/>
                             </Contents>
 
-                            )}
+                                    })}
                         </View>
                         <View>
                             {/* 저녁 */}
@@ -266,7 +284,9 @@ const Pages = () => {
                                 <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
                             </NoServieceView>}
                             {isDinnerFood?.map((d,i) => 
-                            <Contents key={i}
+                            {
+                                console.log(d);
+                            return <Contents key={i}
                             spicy={d.spicy}
                             disabled={d.isSoldOut}
                             onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:d.foodId,type:d.diningType,date:d.serviceDate,dailyFoodId:d.id});e.stopPropagation()}}>
@@ -311,13 +331,13 @@ const Pages = () => {
                                     </CartIconWrap>
                                 </MealImageWrap>
                                     {d.isSoldOut && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
-                                    <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
+                                    <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} 
                                     title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
                                     description={'그래도 추가하시겠어요?'} 
                                     buttonTitle1={'아니요'} buttonType1='grey7' 
                                     buttonTitle2={'추가'} buttonType2='yellow' 
                                     onPressEvent1={closeModal} onPressEvent2={()=>addToCart(d.id,d.serviceDate,d.diningType)}/>
-                            </Contents>
+                            </Contents>}
                             )}
                         </View>
                     </Pager> }

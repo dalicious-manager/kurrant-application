@@ -119,7 +119,7 @@ const Overlay =styled.View`
   position: relative;
   flex: 1;
   justify-content: flex-end;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
 `
 const Background = styled.View`
   flex: 1;
