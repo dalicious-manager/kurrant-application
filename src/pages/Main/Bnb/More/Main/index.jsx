@@ -13,6 +13,7 @@ import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {PAGE_NAME as TermOfServicePageName } from '~pages/Main/MyPage/TermOfService'
 
+import { PAGE_NAME as FAQPageName } from '../../../MyPage/FAQ';
 import { PAGE_NAME as PersonalInfoPageName } from '../../../MyPage/PersonalInfo';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
@@ -99,7 +100,7 @@ const Pages = () => {
             <ListBox title='약관 및 개인 정보' routeName={TermOfServicePageName}/>
           </ListContainer>
           <ListContainer title='문의하기'>
-            <ListBox title='고객센터' />
+            <ListBox title='고객센터'  routeName={FAQPageName}/>
           </ListContainer>
           <ListContainer title='버전 정보'>
             <ListBox title='앱 버전' isVersion={true} isArrow={false}/>
