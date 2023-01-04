@@ -1,4 +1,5 @@
 import {useAtom} from 'jotai';
+import react from 'react';
 
 import * as Fetch from './Fetch';
 import { isLoadMealCartAtom, isQuantityAtom } from './store';
@@ -12,9 +13,10 @@ const useShoppingBasket = () => {
         try {
             const res = await Fetch.loadMealCart();
             if(res.data === null){
-                return
+                throw new Error ('에러')
             }
             setLoadMeal(res.data);
+            
             setQuantity(res.data.length);
         } catch (err) {
             throw err;

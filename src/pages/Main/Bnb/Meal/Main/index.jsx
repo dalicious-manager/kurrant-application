@@ -20,15 +20,16 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
-  // const {data} = route.params;
-
+  
+  //console.log(route.params.data)
+  const data = route?.params?.data === undefined ? '' : route.params.data;
   const navigation = useNavigation();
   // const mealInfo = useAtomValue(isOrderMealAtom);
   const meal = true;
-  const [touchDate,setTouchDate] = useState();
+  const [touchDate,setTouchDate] = useState(data);
   const weekly = useAtomValue(weekAtom);
   const {isOrderMeal,orderMeal} = useOrderMeal();
-
+  console.log(touchDate,'ee')
   const startDate = formattedWeekDate(weekly[0][0]);
   const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
 
@@ -245,7 +246,7 @@ left:18px;
 
 `;
 
-const CountText= styled(Typography).attrs({text:'MealCount'})`
+const CountText = styled(Typography).attrs({text:'MealCount'})`
 color:${props => props.theme.colors.grey[4]};
 `;
 

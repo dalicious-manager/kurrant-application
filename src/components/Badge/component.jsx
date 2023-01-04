@@ -9,7 +9,7 @@ import Typography from "../Typography";
 const Component = () =>{
 
     const {isLoadMeal,loadMeal,isquantity} = useShoppingBasket();
-
+    console.log(isquantity,'ddd')
     // useEffect(()=>{
     //     async function loadCart(){
     //         await loadMeal();

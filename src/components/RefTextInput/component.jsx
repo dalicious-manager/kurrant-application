@@ -47,6 +47,7 @@ const Component = forwardRef(({
   },
   setisFocused,
   label = '',
+  caption ='',
   errMsg = '',
   defaultValue,
   style,
@@ -200,6 +201,16 @@ const Component = forwardRef(({
                     </Typography>
                   </AuthenticationButton>}
             </ControlContainer>
+            {/* caption */}
+            {caption && (
+                <CaptionContainer>
+                  <Typography
+                    text="CaptionR"
+                    textColor={value ? themeApp.colors.grey[4] : themeApp.colors.grey[5]}>
+                      {caption}
+                  </Typography>
+                </CaptionContainer>
+              )}
             {/* Error Message */}
             {errors[name] && (
               <LabelContainer>
@@ -225,6 +236,12 @@ const Wrapper = styled.View`
 
 // Label
 const LabelContainer = styled.View`
+  width: 100%;
+  background-color: transparent;
+`;
+
+// Caption
+const CaptionContainer = styled.View`
   width: 100%;
   background-color: transparent;
 `;

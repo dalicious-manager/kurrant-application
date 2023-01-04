@@ -7,7 +7,7 @@ const Component = () => {
         
             <View flex={1}>
                 <SkeletonPlaceholder borderRadius={4} backgroundColor={"white"} >
-                    <SkeletonPlaceholder.Item marginLeft={24} marginRight={24} borderRadius={14} backgroundColor={'blue'} >
+                    <SkeletonPlaceholder.Item marginLeft={24} marginRight={24} borderRadius={14} backgroundColor={'white'} >
                         <SkeletonPlaceholder.Item marginTop={16} width={'100%'} height={128} />
                         <SkeletonPlaceholder.Item marginTop={16} width={'100%'} height={128} />
                         <SkeletonPlaceholder.Item marginTop={16} width={'100%'} height={128} />

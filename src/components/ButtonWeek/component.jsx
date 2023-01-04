@@ -57,7 +57,7 @@ const Component = ({
     return (
         <Wrap>
             <ButtonWrap touch={monday} onPress={buttonPress}>
-                <WeekText touch={monday}>월</WeekText>
+                <WeekText touch={monday} value={'월'}>월</WeekText>
             </ButtonWrap>
             <ButtonWrap touch={thuesday} onPress={buttonPress2}>
                 <WeekText touch={thuesday}>화</WeekText>

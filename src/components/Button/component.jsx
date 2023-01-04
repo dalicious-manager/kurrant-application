@@ -88,3 +88,5 @@ export const LabelWrap = styled.View`
 export const Label = styled(Typography)`
   ${({ disabled, type }) =>  getLabelColor(disabled,type)};
 `;
+
+//<IconWrap>{renderIcon(icon)}</IconWrap>

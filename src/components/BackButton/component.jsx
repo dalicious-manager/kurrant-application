@@ -14,7 +14,7 @@ import { MaterialIcons } from '../Icon';
  * @param {number[]} margin index 0 : margin-left, index 1 : margin-right
  * @returns
  */
-const Component = ({ mode = 'page', color, margin = [0, 0] }) => {
+const Component = ({ mode = 'page', color, margin = [0, 0]}) => {
   const navigation = useNavigation();
   const theme = useTheme();
 
