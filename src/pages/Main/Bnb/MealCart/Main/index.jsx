@@ -33,7 +33,7 @@ const Pages = () => {
 
     const navigation = useNavigation();
     const bodyRef = useRef();
-    
+    console.log(isLoadMeal)
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
     const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal } = useShoppingBasket();
@@ -192,15 +192,15 @@ const Pages = () => {
                                     <SalePrice>{withCommas(el.price)}원</SalePrice> */}
                                     <Price>{withCommas(price)}원</Price>
                                 </View>
-                            <CountWrap>                                
-                                    <Count
-                                        cart
-                                        onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(l.dailyFoodId)}} 
-                                        addHandle={addHandle}
-                                        substractHandle={substractHandle}
-                                        quantity={l.count}
-                                        id={l.dailyFoodId}
-                                />
+                                <CountWrap>                                
+                                        <Count
+                                            cart
+                                            onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(l.dailyFoodId)}} 
+                                            addHandle={addHandle}
+                                            substractHandle={substractHandle}
+                                            quantity={l.count}
+                                            id={l.dailyFoodId}
+                                    />
                                 </CountWrap>
                             </ContentWrap>
                         </Wrap>

@@ -127,7 +127,7 @@ const BottomSheet = props => {
           <FlatList
             data={data}
             ref={list}
-            scrollEnabled={up > 500}
+            //scrollEnabled={up > 500}
             renderItem={({ item }) => (
               <ContentItemContainer onPress={()=>onSelect(item.clientType.toString() + item.id.toString(), item.date)}>
                 {selected === item.clientType.toString() + item.id.toString() ?<ContentItemBox><ContentItemText>
@@ -201,6 +201,7 @@ const ContentItemContainer = styled.TouchableOpacity`
   width: ${Dimensions.get('screen').width}px;
   height: 60px;
   padding: 19px 24px;
+  background-color:gold;
 `
 
 const ContentItemBox = styled.View`
