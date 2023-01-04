@@ -13,7 +13,8 @@ const Pages = ({route}) => {
 
     const navigation = useNavigation();
     const memoValue = route.params.data;
-    const {apartApplicationMemo} = useApartApplication();
+    const {apartApplicationMemo,isApartCheck} = useApartApplication();
+    console.log(isApartCheck)
     const [text,setText] = useState('');
     
     const additionPress = async () => {

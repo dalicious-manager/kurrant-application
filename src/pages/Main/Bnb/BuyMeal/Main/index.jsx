@@ -203,7 +203,7 @@ const Pages = () => {
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     
                                     {!m.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(m.id,m.serviceDate,m.diningType)}}>
+                                        <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
@@ -244,7 +244,7 @@ const Pages = () => {
                                     {l.isSoldOut && <BlurView/>}
                                     <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
                                     {!l.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{balloonEvent(); addCartPress(l.id,l.serviceDate,l.diningType)}}>
+                                        <CartIconWrap onPress={()=>{addCartPress(l.id,l.serviceDate,l.diningType)}}>
                                             <CartIcon/>
                                         </CartIconWrap>
                                     )}
