@@ -12,7 +12,7 @@ const useUserInfo = () => {
     
         try {
             setUserInfoLoading(true)
-            const res = await Fetch.userInfo();
+            const res = await Fetch.userInfomation();
             setUserInfo(res.data)
            
         } catch (err) {

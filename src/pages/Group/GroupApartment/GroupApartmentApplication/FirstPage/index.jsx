@@ -1,9 +1,8 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm} from 'react-hook-form';
-import { Keyboard, SafeAreaView, Text ,View} from "react-native";
+import { Keyboard, Pressable, SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
 
 import { isApartmentApplicant, isApartUserEmailAtom, isApartUserNameAtom, isApartUserPhoneAtom } from "../../../../../biz/useApartApplication/store";
@@ -21,9 +20,10 @@ export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__FIRST" ;
 const Pages = () => {
     const navigation = useNavigation();
     const userInfo = useAtomValue(isUserInfoAtom);
-    //console.log(userInfo)
+    console.log(userInfo)
     const [isApplicant,setApplicant] = useAtom(isApartmentApplicant);
-    
+  
+  
      //const [isName,setName] = useAtom(isApartUserNameAtom);
     // const [isPhone,setPhone] = useAtom(isApartUserPhoneAtom);
     // const [isEmail,setEmail] = useAtom(isApartUserEmailAtom);
@@ -39,10 +39,11 @@ const Pages = () => {
         marginBottom:16,
         }
 
+    const checkBox = information.watch('agreeCheck');
     const namechk = watch('name');
     const phonechk = watch('phone');
     const emailchk = watch('email');
-
+  
     const isValidation = 
         (namechk && !errors.name) &&
         (phonechk &&!errors.phone) &&
@@ -56,15 +57,7 @@ const Pages = () => {
             'email' : emailchk
         });
     };
-
-    // const save = async () => {
-    //   try {
-    //     await AsyncStorage.setItem('name', namechk);
-    //     //await AsyncStorage.setItem('info', JSON.stringify(info)); // 객체 형태 저장
-    //   } catch (e) {
-    //     // 오류 예외 처리
-    //   }
-    // }
+// const aaa= checkBox ? userInfo.name : '';
 
     return (
         <Wrap>
@@ -72,7 +65,7 @@ const Pages = () => {
             <CheckWrap>
                 <Form form={information}>
                     <Label>회원정보와 동일</Label>
-                    <Check name="agreeCheck" />
+                    <Check name="agreeCheck" value={true} />
                 </Form>
             </CheckWrap>
             <FormProvider {...form}>
@@ -84,8 +77,6 @@ const Pages = () => {
                         placeholder="신청자명"
                         style={inputStyle}
                         defaultValue={isApplicant.name}
-                        //value={isName}
-                        //onChangeText={(newText) => setName(newText)}
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',

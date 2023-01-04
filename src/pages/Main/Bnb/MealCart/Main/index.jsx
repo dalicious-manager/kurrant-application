@@ -39,24 +39,23 @@ const Pages = () => {
     const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal } = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
-    //console.log(isLoadMeal)
-    // console.log(isLoadMeal)
-    useFocusEffect(
-        useCallback(() => {
-            // Do something when the screen is focused
-            console.log('들어옴')
+    
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         // Do something when the screen is focused
+    //         console.log('들어옴')
         
 
-            return  () => {
-            // Do something when the screen is unfocused
-                console.log("나감")
-                    updateMeal({"updateCartList":quantity});
+    //         return  () => {
+    //         // Do something when the screen is unfocused
+    //             console.log("나감")
+    //                 updateMeal({"updateCartList":quantity});
             
-            };
+    //         };
     
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updateMeal])
-    );
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [updateMeal])
+    // );
     useEffect(()=>{
         async function loadCart(){
             try {

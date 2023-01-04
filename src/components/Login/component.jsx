@@ -5,6 +5,7 @@ import {StyleSheet,  TouchableOpacity,Platform,Keyboard,NativeModules, Alert } f
 import styled, { useTheme } from 'styled-components/native';
 
 import useAuth from '../../biz/useAuth';
+import useUserInfo from '../../biz/useUserInfo';
 import useKeyboardEvent from '../../hook/useKeyboardEvent';
 import { PAGE_NAME as GroupCreateMainPageName } from '../../pages/Group/GroupCreate';
 import {  PAGE_NAME as FindUserPageName } from '../../pages/Main/Login/FindUser';
@@ -30,6 +31,7 @@ const Component = ({userId}) => {
   const passwordRef = useRef(null);
   const emailRef = useRef(null);
   const {handleSubmit,formState:{errors,dirtyFields}} = useFormContext();
+  const {userInfo, isUserInfo} = useUserInfo();
   const keyboardStatus = useKeyboardEvent();
   const handleRoutePress = () => {
     navigation.navigate(FindUserPageName ?? '');
@@ -49,7 +51,7 @@ const Component = ({userId}) => {
       //   ],
       // })
       navigation.reset({routes:[{ name:GroupCreateMainPageName}]});
-      
+      //await userInfo();
 
     }catch (err){
       console.log(err)
@@ -67,6 +69,7 @@ const Component = ({userId}) => {
       )
     }  
   }
+  // console.log(isUserInfo,'info')
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const renderLabels = labelItems.map((labelItem, index) => {
     

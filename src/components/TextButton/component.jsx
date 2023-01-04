@@ -32,6 +32,7 @@ export default Component;
 const Label = styled.Text`
  ${({ type }) => getLabelColor(type)};
  ${({ size }) => getLabelSizeStyle(size)};
+ 
 
 `
 

@@ -23,7 +23,7 @@ const Pages = () => {
     // const [touch2,setTouch2] = useState(false);
     // const [touch3,setTouch3] = useState(false);
     const mealInfo = useAtomValue(isApartMealInfoAtom);
-    console.log(mealInfo,'meal')
+    
     const inputStyle = {
         marginBottom:16,
       }

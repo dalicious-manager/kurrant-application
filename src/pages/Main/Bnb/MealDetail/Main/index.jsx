@@ -12,6 +12,7 @@ import BackButton from "../../../../../components/BackButton";
 import Badge from "../../../../../components/Badge";
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from "../../../../../components/BasketButton";
+import BottomModal from "../../../../../components/BottomModal";
 import Button from '../../../../../components/ButtonExtendable';
 import MoreButton from '../../../../../components/ButtonMore';
 import KeyboardAvoiding from "../../../../../components/KeyboardAvoiding";
@@ -31,11 +32,12 @@ const Pages = ({route}) => {
     const bodyRef = useRef();
     const navigation = useNavigation();
     const { balloonEvent, BalloonWrap } = Balloon();
+    const [modalVisible,setModalVisible] = useState(false);
     const [focus,setFocus] = useState(false);
     const [count, setCount] = useState(1);
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,isFoodDetailLoading,foodDetail} = useFoodDetail();
-    const {addMeal,loadMeal} = useShoppingBasket();
+    const {addMeal,loadMeal,isLoadMeal} = useShoppingBasket();
     
     const headerTitle = isFoodDetail?.name;
     const foodId = route.params.foodId;
@@ -45,6 +47,9 @@ const Pages = ({route}) => {
     
     const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
     
+    const closeModal = () => {
+        setModalVisible(false)
+    }
     
     // foodId 넘겨줘야함 
     useEffect(()=>{
@@ -71,16 +76,42 @@ const Pages = ({route}) => {
     },[headerTitle,navigation, scroll]);
 
     const addCartPress = async () =>{
-        try {
-           await addMeal({
-                "dailyFoodId":dailyFoodId,
-                "count":count,
-                "serviceDate":day,
-                "diningType":diningType
-            });
-        } catch(err){
-            console.log(err)
+        const duplication = isLoadMeal.some((item) => item.dailyFoodId === dailyFoodId)
+
+        if(duplication){
+            setModalVisible(true);
+        }else{
+            try {
+                await addMeal({
+                     "dailyFoodId":dailyFoodId,
+                     "count":count,
+                     "serviceDate":day,
+                     "diningType":diningType
+                 });
+                 await loadMeal();
+                 await balloonEvent();
+             } catch(err){
+                 console.log(err)
         }
+    }
+}
+
+    const addToCart = async () =>{
+        
+            try {
+                await addMeal({
+                     "dailyFoodId":dailyFoodId,
+                     "count":count,
+                     "serviceDate":day,
+                     "diningType":diningType
+                 });
+                 await loadMeal();
+                 await balloonEvent();
+                 } catch(err){
+                     console.log(err)
+                     throw err
+                 }
+               closeModal();    
     }
 
 
@@ -227,7 +258,7 @@ const Pages = ({route}) => {
                 <ButtonWrap >
                     <Button 
                         price={PRICE} 
-                        onPressEvent2={()=>{addCartPress();balloonEvent()}}
+                        onPressEvent2={()=>{addCartPress()}}
                         onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
                         count={count} 
                         increasePress={increasePress}
@@ -235,7 +266,12 @@ const Pages = ({route}) => {
                     />
                 </ButtonWrap>}
                 <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'96px', right:'14px'}}/>
-                
+                <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
+                                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
+                                    description={'그래도 추가하시겠어요?'} 
+                                    buttonTitle1={'아니요'} buttonType1='grey7' 
+                                    buttonTitle2={'추가'} buttonType2='yellow' 
+                                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart()}/>
          </Wrap>
                
         </>

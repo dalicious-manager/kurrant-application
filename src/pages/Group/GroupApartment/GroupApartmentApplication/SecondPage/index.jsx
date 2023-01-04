@@ -8,7 +8,7 @@ import { Alert, Keyboard, Modal, Platform, Pressable, SafeAreaView, Text ,View} 
 import styled from "styled-components";
 
 import Arrow from "../../../../../assets/icons/Group/arrowDown.svg";
-import { isApartAddressAtom, isApartDongCountAtom, isApartFamilyCountAtom, isApartFullAddressAtom, isApartNameAtom, isApartSendAddressAtom, isApartSendAddressInfoAtom, isApartStartDateAtom } from '../../../../../biz/useApartApplication/store';
+import { apartApplicationDate, isApartAddressAtom, isApartDongCountAtom, isApartFamilyCountAtom, isApartFullAddressAtom, isApartNameAtom, isApartSendAddressAtom, isApartSendAddressInfoAtom, isApartStartDateAtom } from '../../../../../biz/useApartApplication/store';
 import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar2";
 import RefTextInput from "../../../../../components/RefTextInput";
@@ -24,11 +24,11 @@ const Pages = () => {
     
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [text, setText] = useState('');
+    const [text, setText] = useAtom(apartApplicationDate);
     const [isApartAddress,setApartAddress] = useAtom(isApartSendAddressAtom);
     const isApartFullAddress = useAtomValue(isApartFullAddressAtom); // TextInput value
     //const isSendAddress = useAtomValue(isApartSendAddressInfoAtom); // body에 담을 주소2
-    console.log(isApartAddress)
+    
     const form = useForm({
         mode:'all'
       });
@@ -40,14 +40,14 @@ const Pages = () => {
     const apartFamilyCountChk = watch('familyCount');
     const apartDongCountChk = watch('dongCount');
     const apartStartDateChk = watch('startDate');
-    //console.log(apartAddressChk)
+    
     
     const isValidation = 
     (apartNameChk && !errors.apartName) &&
-    (apartAddressChk &&!errors.address) &&
+    (isApartFullAddress !== '') &&
     (apartFamilyCountChk &&!errors.familyCount) &&
-    (apartDongCountChk &&!errors.dongCount) &&
-    (apartStartDateChk && !errors.startDate);
+    (apartDongCountChk &&!errors.dongCount) && (text !== '')
+    ;
 
     const inputStyle = {
         marginBottom:16,
@@ -122,7 +122,7 @@ const Pages = () => {
                         placeholder="단지 총 세대수"
                         keyboardType="numeric"
                         style={inputStyle}
-                        defaultValue={isApartAddress.familyCount}
+                        defaultValue={isApartAddress.familyCount !== undefined && String(isApartAddress.familyCount)}
                         />
 
                         <RefTextInput
@@ -132,7 +132,7 @@ const Pages = () => {
                         keyboardType="numeric"
                         caption="동 개수를 입력해주세요.(예.101동 - 105동이면 5개)"
                         style={inputStyle}
-                        defaultValue={isApartAddress.dongCount}
+                        defaultValue={isApartAddress.dongCount !== undefined && String(isApartAddress.dongCount)}
                         />
 
                         <View>

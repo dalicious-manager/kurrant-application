@@ -6,6 +6,7 @@ import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
+
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
@@ -18,11 +19,12 @@ import {weekAtom} from '../../../../../biz/useBanner/store';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import { isOrderMealAtom } from '../../../../../biz/useOrderMeal/store';
 import useUserInfo from '../../../../../biz/useUserInfo';
+import Balloon from '../../../../../components/BalloonHome';
 import BottomSheet from '../../../../../components/BottomSheet/component';
-import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
+import {PAGE_NAME as ApartApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from "../../Home/Skeleton";
@@ -32,15 +34,14 @@ export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
 
     const navigation = useNavigation();
+
+    const [isVisible, setIsVisible] = useState(true);
     const weekly = useAtomValue(weekAtom);
     const {isUserInfo, userInfo , isUserInfoLoading} = useUserInfo();
     const {isOrderMeal,orderMeal} = useOrderMeal();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
-
-    
-
 
   useEffect(() => {
     const start = weekly.map((s) => {
@@ -56,6 +57,7 @@ const Pages = () => {
             endData
         )
     });
+    console.log(isOrderMeal,'ddddddd')
     async function loadUser(){
       await userInfo();
     }    
@@ -67,6 +69,10 @@ const Pages = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
+  // useEffect(()=>{
+  //   balloonEvent()
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[])
 
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
@@ -76,15 +82,25 @@ const Pages = () => {
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
   const PressSpotButton = () => {
     setModalVisible(true);
-}
+  }
+
+  const closeBalloon = () => {
+    setIsVisible(false)
+  }
 
 if(isUserInfoLoading){
   return <SkeletonUI/>
 }
+
+
+
   return (
     <SafeView>
       <Pressable onPress={() => {navigation.navigate(GroupCreateMainPageName)}}>
         <Text> 임시버튼(그룹/스팟) </Text>
+      </Pressable>
+      <Pressable onPress={() => {navigation.navigate(ApartApplicationCheckPageName)}}>
+        <Text> 임시버튼 (아파트 신청조회) </Text>
       </Pressable>
       <View>
         <BarWrap>
@@ -172,7 +188,7 @@ if(isUserInfoLoading){
               <CalendarIcon/>
               <TitleText>식사일정</TitleText>
             </MealCalendarTitle>
-            <Calendar setData={setData} onPressEvent={()=>navigation.navigate(MealMainPageName)} />
+            <Calendar onPressEvent={()=>navigation.navigate(MealMainPageName)} />
           </MealCalendar>
 
           {!isUserInfo?.isMembership && <MenbershipBanner>
@@ -213,9 +229,16 @@ if(isUserInfoLoading){
         </MainWrap>
         </Wrap>   
           </ScrollViewWrap>
-        
+
+      {isVisible && <BalloonWrap>
+        <Balloon label='다음주 식사 구매하셨나요?'/>
+      </BalloonWrap>}
+
       <ButtonWrap>
-          <Button label={'식사 구매하기'}  type={'yellow'} icon={'plus'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
+          <Button onPress={()=>{navigation.navigate(BuyMealPageName);closeBalloon()}}>
+            <PlusIcon/>
+            <ButtonText>식사 구매하기</ButtonText>
+          </Button>
       </ButtonWrap>
       <BottomSheet modalVisible={modalVisible} setModalVisible={setModalVisible} title={'???'}/>
     </SafeView>
@@ -269,11 +292,9 @@ background-color:${props => props.theme.colors.grey[8]};
 `;
 
 const ScrollViewWrap = styled.ScrollView`
-
 `;
 const Wrap = styled.View`
-padding-bottom:100px;
-
+//padding-bottom:100px;
 
 `;
 const BarWrap = styled.View`
@@ -425,8 +446,8 @@ align-items:center;
 const ButtonWrap = styled.View`
 position:absolute;
 bottom:17px;
-margin:0px 24px;
-
+/* margin:0px 24px; */
+width:100%;
 
 `;
 
@@ -494,3 +515,24 @@ const MealCheckButtonText = styled(Typography).attrs({text:'Button09SB'})`
 color:${props => props.theme.colors.grey[0]};
 `;
 
+const Button = styled.Pressable`
+margin:0px 24px;
+background-color:${({theme}) => theme.colors.yellow[500]};
+border-radius:100px;
+
+padding:16px 0px;
+flex-direction:row;
+justify-content:center;
+align-items:center;
+`;
+
+const ButtonText = styled(Typography).attrs({text:'BottomButtonSB'})`
+color:${props => props.theme.colors.grey[1]};
+margin-left:8px;
+`;
+
+const BalloonWrap = styled.View`
+position:absolute;
+bottom:80px;
+left:28%;
+`;

@@ -97,6 +97,9 @@ import CloseIcon from '../../components/CloseButton';
 import Typography from '../../components/Typography';
 import GrouptCreateApartmnet, {PAGE_NAME as GroupCreateApartmentPageName} from '../../pages/Group/GroupApartment';
 import ApartmentApplicationCheck, {PAGE_NAME as ApartmentApplicationCheckPageName} from '../../pages/Group/GroupApartment/ApartmentApplicationCheck';
+import ApartMentApplicationDetail, {PAGE_NAME as ApartmentApplicationDetailPageName} from '../../pages/Group/GroupApartment/ApartmentApplicationCheck/Pages/DetailPage';
+import ApartMentApplicationEtc, {PAGE_NAME as ApartmentApplicationEtcPageName} from '../../pages/Group/GroupApartment/ApartmentApplicationCheck/Pages/DetailPage/EtcPage';
+import ApartMentApplicationReject, {PAGE_NAME as ApartmentApplicationRejectPageName} from '../../pages/Group/GroupApartment/ApartmentApplicationCheck/Pages/RejectPage';
 import ApartmnetApplicitionFirst, {PAGE_NAME as ApartmentApplicationFirstPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/FirstPage';
 import ApartmnetApplicitionLast, {PAGE_NAME as ApartmentApplicationLastPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/LastPage';
 import ApartmnetApplicitionSecond, {PAGE_NAME as ApartmentApplicationSecondPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/SecondPage';
@@ -685,7 +688,7 @@ const Screen = () => {
               headerStyle:{
                 backgroundColor:'#F5F5F5'
               },
-              headerShown: true,
+              headerShown: false,
               headerShadowVisible: false,
               title: '',
               headerTitleAlign: 'center',
@@ -832,6 +835,57 @@ const Screen = () => {
               },
               
               headerLeft: () => <CloseIcon />,
+            }}
+          />
+          <MainRoot.Screen
+            name={ApartmentApplicationRejectPageName}
+            component={ApartMentApplicationReject}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title:'',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <CloseIcon margin={[10,0]}/>,
+            }}
+          />
+          <MainRoot.Screen
+            name={ApartmentApplicationDetailPageName}
+            component={ApartMentApplicationDetail}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title:'신청 정보',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton margin={[10,0]}/>,
+            }}
+          />
+          <MainRoot.Screen
+            name={ApartmentApplicationEtcPageName}
+            component={ApartMentApplicationEtc}
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title:'',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton margin={[10,0]}/>,
             }}
           />
       </MainRoot.Group>

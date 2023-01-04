@@ -1,4 +1,5 @@
 import {useAtom} from 'jotai';
+import react from 'react';
 
 import * as Fetch from './Fetch';
 import { isLoadMealCartAtom, isQuantityAtom } from './store';

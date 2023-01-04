@@ -23,42 +23,44 @@ const Pages = () => {
             {/* <CloseWrap>
                 <CloseIcon/>
             </CloseWrap> */}
-            <BoxWrap>
-                <MainTitle>기업 식사 도입하기</MainTitle>
-                <SubTitleWrap>
-                    <SubTitle>신규 스팟 개설 신청 </SubTitle>
-                    <ArrowRight/>
-                </SubTitleWrap>
-                <ImageWrap>
-                    {/* <Img source={Corporation} /> */}
-                    <CorporationIcon/>
-                </ImageWrap>
-            </BoxWrap>
-            <BoxWrap onPress={()=>{navigation.navigate(GroupCreateApartmentPageName)}}>
-                <MainTitle>아파트 조식 도입하기</MainTitle>
-                <SubTitleWrap>
-                    <SubTitle>신규 스팟 개설 신청 </SubTitle>
-                    <ArrowRight/>
-                </SubTitleWrap>
-                <ImageWrap>
-                    {/* <Img source={Apartment} /> */}
-                    <ApartmentIcon/>
-                </ImageWrap>
-            </BoxWrap>
-            <BoxWrap>
-                <MainTitle>우리 아파트가 이미{"\n"}커런트밀 고객사인가요?</MainTitle>
-                <SubTitleWrap>
-                    <SubTitle>우리 아파트 검색</SubTitle>
-                    <ArrowRight/>
-                </SubTitleWrap>
-                <ImageWrap>
-                    <Img source={ApartMeal} />
-                    {/* <AlreadyApartIcon/> */}
-                </ImageWrap>
-            </BoxWrap>
-            <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>
-                <NextText>다음에 하기</NextText>
-            </NextView>
+            <Wrap>
+                <BoxWrap>
+                    <MainTitle>기업 식사 도입하기</MainTitle>
+                    <SubTitleWrap>
+                        <SubTitle>신규 스팟 개설 신청 </SubTitle>
+                        <ArrowRight/>
+                    </SubTitleWrap>
+                    <ImageWrap>
+                        {/* <Img source={Corporation} /> */}
+                        <CorporationIcon/>
+                    </ImageWrap>
+                </BoxWrap>
+                <BoxWrap onPress={()=>{navigation.navigate(GroupCreateApartmentPageName)}}>
+                    <MainTitle>아파트 조식 도입하기</MainTitle>
+                    <SubTitleWrap>
+                        <SubTitle>신규 스팟 개설 신청 </SubTitle>
+                        <ArrowRight/>
+                    </SubTitleWrap>
+                    <ImageWrap>
+                        {/* <Img source={Apartment} /> */}
+                        <ApartmentIcon/>
+                    </ImageWrap>
+                </BoxWrap>
+                <BoxWrap>
+                    <MainTitle>우리 아파트가 이미{"\n"}커런트밀 고객사인가요?</MainTitle>
+                    <SubTitleWrap>
+                        <SubTitle>우리 아파트 검색</SubTitle>
+                        <ArrowRight/>
+                    </SubTitleWrap>
+                    <ImageWrap>
+                        <Img source={ApartMeal} />
+                        {/* <AlreadyApartIcon/> */}
+                    </ImageWrap>
+                </BoxWrap>
+                <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>
+                    <NextText>다음에 하기</NextText>
+                </NextView>
+            </Wrap>
         </Wrapper>
     )
 }
@@ -122,4 +124,8 @@ margin-top:24px;
 
 const CloseWrap = styled.View`
 margin-bottom:24px;
+`;
+
+const Wrap = styled.View`
+margin-top: 56px;
 `;
