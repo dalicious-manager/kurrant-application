@@ -32,6 +32,12 @@ import SignUp, {
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
 } from '~pages/Main/Login/SignUp/SignUpComplate';
+import FAQ, {
+  PAGE_NAME as FAQPageName,
+} from '~pages/Main/MyPage/FAQ';
+import FAQListPage, {
+  PAGE_NAME as FAQListPageName,
+} from '~pages/Main/MyPage/FAQ/FAQListPage';
 import PersonalInfo, {
   PAGE_NAME as PersonalInfoPageName,
 } from '~pages/Main/MyPage/PersonalInfo';
@@ -289,6 +295,36 @@ const Screen = () => {
           component={Privacy}
           options={{headerShown: true,
             title:'개인 정보 수집 약관',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:17,
+              lineHeight:21
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FAQPageName}
+          component={FAQ}
+          options={{headerShown: true,
+            title:'고객센터',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:17,
+              lineHeight:21
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FAQListPageName}
+          component={FAQListPage}
+          options={{headerShown: true,
+            title:'회원정보',
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerTitleStyle:{

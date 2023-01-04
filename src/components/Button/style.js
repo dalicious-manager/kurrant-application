@@ -101,6 +101,7 @@ const buttonColor = {
   `,
   grey7: css`
     background-color: ${({ theme }) => theme.colors.grey[7]};
+    box-sizing:border-box;
   `,
   white: css`
     background-color: ${({ theme }) => theme.colors.grey[0]}; 
@@ -156,7 +157,7 @@ export const getLabelColor = (disabled, type) => {
     return css`
       color: ${({ theme }) => theme.colors.grey[1]}; 
     `
-  } else if (type === 'white'){
+  } else if (type === 'white') {
     return css`
       color: ${({ theme }) => theme.colors.grey[3]};
     `

@@ -1,3 +1,4 @@
+$RNFirebaseAsStaticFramework = true
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
@@ -9,8 +10,7 @@ target 'kurrant' do
   
   # Flags change depending on the env values.
   flags = get_default_flags()
-
-  
+  use_frameworks! :linkage => :static
   use_react_native!(
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.
@@ -22,19 +22,17 @@ target 'kurrant' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => FlipperConfiguration.enabled,
+    # :flipper_configuration => FlipperConfiguration.enabled,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  
+
   target 'kurrantTests' do
     inherit! :complete
     # Pods for testing
   end
-  use_modular_headers!
-  pod 'GoogleUtilities', :modular_headers => true
-  pod 'GoogleSignIn'
-  pod 'GoogleMaps'    
+  
+  
 
   post_install do |installer|
     react_native_post_install(
@@ -46,4 +44,3 @@ target 'kurrant' do
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end
-  
