@@ -185,10 +185,10 @@ const Pages = () => {
                             <Contents key={i}
                             spicy={m.spicy}
                             disabled={m.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dateFoodId:m.id});e.stopPropagation()}}>
+                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dailyFoodId:m.id});e.stopPropagation()}}>
                                 <ContentsText>
                                     <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
-                                    <MealName soldOut={m.isSoldOut}>{m.name}</MealName>
+                                    <MealName soldOut={m.isSoldOut}>{m.foodName}</MealName>
                                     <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
                                     <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
                                     {m.spicy !== undefined && 

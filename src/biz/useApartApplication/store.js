@@ -32,7 +32,7 @@ export const isApartSendAddressInfoAtom = atomWithReset({});
 export const isApartMealInfoAtom = atomWithReset(null);
 
 
-export const apartDeliveryAtom = atomWithReset();
+export const apartDeliveryAtom = atomWithReset('');
 
 export const apartMemoAtom = atomWithReset('');
 // 배송 날짜 
@@ -49,3 +49,7 @@ export const apartApplicationResAtom = atomWithReset({});
 // 스팟 신청 목록 조회
 
 export const apartApplicationListAtom = atomWithReset([]);
+
+// 요일
+
+export const apartApplicationWeek = atomWithReset([]);

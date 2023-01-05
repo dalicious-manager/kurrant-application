@@ -8,7 +8,8 @@ import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import styled from "styled-components";
 
 import Arrow from "../../../../../../assets/icons/Group/arrowDown.svg";
-import { apartApplicationWeek, apartDeliveryAtom, isApartMealInfoAtom } from '../../../../../../biz/useApartApplication/store';
+import { apartDeliveryAtom, isApartMealInfoAtom } from '../../../../../../biz/useApartApplication/store';
+import { corpApplicationWeek, isCorpMealInfoAtom, isCorpMealMorningInfoAtom } from '../../../../../../biz/useCorporationApplication/store';
 import Button from "../../../../../../components/Button";
 import WeekButton from "../../../../../../components/ButtonWeek";
 import RefTextInput from "../../../../../../components/RefTextInput";
@@ -17,18 +18,18 @@ import { formattedMealTime, formattedTime } from '../../../../../../utils/dateFo
 import { Cancel, Confirm, IosButton } from '../../SecondPage';
 
 
-export const PAGE_NAME = 'APARTMENT__APPLICATION__INFORMAION';
-const Pages = () => {
+export const PAGE_NAME = 'CORPORATION__APPLICATION__MEAL__INFO';
+const Pages = ({route}) => {
     const navigation = useNavigation();
 
-    const [isApartMealInfo,setMealInfo] = useAtom(isApartMealInfoAtom);
+    const [isCorpMealInfo,setMealInfo] = useAtom(isCorpMealMorningInfoAtom);
     const [time, setTime] = useState(new Date());
     const [show, setShow] = useState(false);
     const [infoShow,setInfoShow] = useState(false);
     const [text, setText] = useAtom(apartDeliveryAtom);
     
-    const [touch,setTouch] = useAtom(apartApplicationWeek);
-console.log(touch)
+    const [touch,setTouch] = useAtom(corpApplicationWeek);
+    console.log(touch)
     // const [monday,setMonday] = useState(false);
     // const [thuesday,setThuesday] = useState(false);
     // const [wendnesday,setWendnesday] = useState(false);
@@ -37,14 +38,13 @@ console.log(touch)
     // const [saturday,setSaturday] = useState(false);
     // const [sunday,setSunday] = useState(false);
     
-    //const checkDay = [monday,thuesday,wendnesday,thursday,friday,saturday,sunday];
+    // const checkDay = [monday,thuesday,wendnesday,thursday,friday,saturday,sunday];
     //console.log(formattedTime(time))
     const form = useForm({
         mode:'all'
       });
     
     const {formState:{errors},watch,handleSubmit} = form;
-    //const daysChk = checkDay.some(el => el === true);
     const svcDongCountChk = watch('svcDongCount');
     const deliveryTimeChk = watch('deliveryTime');
 
@@ -57,22 +57,14 @@ console.log(touch)
         marginBottom:16,
       };
 
-    // const search = true;
-    // const searchResult = [];
-    // let index = checkDay.indexOf(search);
-    // while (index !== -1) {
-    //     searchResult.push(index);
-    //     index = checkDay.indexOf(search, index + 1);
-        
-    // }
 
     const saveAtom = () => {
-        setMealInfo([{
-            'diningType':1,
-            'expectedUserCount':Number(svcDongCountChk),
-            'serviceDays':touch,
-            'deliveryTime':formattedTime(time)
-        }]);
+            setMealInfo([{
+                'diningType':1,
+                'expectedUserCount':Number(svcDongCountChk),
+                'serviceDays':touch,
+                'deliveryTime':formattedTime(time)
+            }]);
     }
     
     const showTimePicker = () => {
@@ -91,6 +83,7 @@ console.log(touch)
     
 
     return (
+        
         <Wrap>
             <FormProvider {...form}>
                 <KeyDismiss onPress={()=>Keyboard.dismiss()}>

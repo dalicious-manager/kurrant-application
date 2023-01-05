@@ -1,5 +1,6 @@
 import {useAtom} from 'jotai';
 
+import { setStorage } from '../../utils/asyncStorage';
 import * as Fetch from './Fetch';
 import { apartApplicationListAtom, apartApplicationResAtom, isApartApplicationCheckAtom } from './store';
 
@@ -20,7 +21,8 @@ const useApartApplication = () => {
             option
             );
             setApartRes(res.data); // response 저장
-            //console.log(res.data)
+            console.log(res.data)
+            await setStorage('applicationId',res.data.id)
             return res;
 
         } catch(err){
