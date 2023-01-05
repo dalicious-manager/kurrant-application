@@ -8,8 +8,8 @@ import useApartApplication from "../../../../../biz/useApartApplication/hook";
 import { apartMemoAtom, isApartMealInfoAtom, isApartmentApplicant, isApartSendAddressAtom, isApartSendAddressInfoAtom } from "../../../../../biz/useApartApplication/store";
 import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar2";
+import {PAGE_NAME as GroupCompletePageName} from '../../../GroupCreate/CreateComplete';
 import { Title } from "../ThirdPage";
-
 
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__LAST" ;
@@ -34,9 +34,11 @@ const Pages = () => {
             'mealDetails':mealInfo,
             'memo':memo
         }
-        console.log(data,'data')
+        
         try{
-            await apartApplication(data)
+            await apartApplication(data);
+            console.log('???')
+            navigation.navigate(GroupCompletePageName)
         }catch(err){
             console.log(err)
         }

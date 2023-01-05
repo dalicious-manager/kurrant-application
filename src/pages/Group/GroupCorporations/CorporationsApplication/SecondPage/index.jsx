@@ -8,60 +8,59 @@ import { Alert, Keyboard, Modal, Platform, Pressable, SafeAreaView, Text ,View} 
 import styled from "styled-components";
 
 import Arrow from "../../../../../assets/icons/Group/arrowDown.svg";
-import { apartApplicationDate, isApartAddressAtom, isApartDongCountAtom, isApartFamilyCountAtom, isApartFullAddressAtom, isApartNameAtom, isApartSendAddressAtom, isApartSendAddressInfoAtom, isApartStartDateAtom } from '../../../../../biz/useApartApplication/store';
+import { corpApplicationDate, isCorpFullAddressAtom, isCorpSendAddressAtom } from '../../../../../biz/useCorporationApplication/store';
 import Button from "../../../../../components/Button";
-import ProgressBar from "../../../../../components/ProgressBar2";
+import ProgressBar from "../../../../../components/ProgressBar";
 import RefTextInput from "../../../../../components/RefTextInput";
 import Typography from '../../../../../components/Typography';
 import { formattedApplicationDate, formattedDate } from '../../../../../utils/dateFormatter';
-import {PAGE_NAME as ApartmentApplicationThirdPageName} from '../ThirdPage';
-import {PAGE_NAME as ApartmentApplicationPostcodePageName} from './Pages';
+import {PAGE_NAME as corpApplicationThirdPageName} from '../ThirdPage';
+import {PAGE_NAME as corpApplicationPostcodePageName} from './Pages';
 
-export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__SECOND" ;
+
+export const PAGE_NAME = "P__GROUP__CREATE__COR__APPLICATION__SECOND" ;
 const Pages = () => {
 
     const navigation = useNavigation();
     
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [text, setText] = useAtom(apartApplicationDate);
-    const [isApartAddress,setApartAddress] = useAtom(isApartSendAddressAtom);
-    const isApartFullAddress = useAtomValue(isApartFullAddressAtom); // TextInput value
+    const [text, setText] = useAtom(corpApplicationDate);
+    const [isCorpAddress,setCorpAddress] = useAtom(isCorpSendAddressAtom);
+    const isCoprFullAddress = useAtomValue(isCorpFullAddressAtom); // TextInput value
     //const isSendAddress = useAtomValue(isApartSendAddressInfoAtom); // body에 담을 주소2
-    console.log(isApartFullAddress)
+    console.log(isCorpAddress)
     const form = useForm({
         mode:'all'
       });
 
     const {formState:{errors},watch,handleSubmit} = form;
 
-    const apartNameChk = watch('apartName');
-    const apartAddressChk = watch('address');
-    const apartFamilyCountChk = watch('familyCount');
-    const apartDongCountChk = watch('dongCount');
-    const apartStartDateChk = watch('startDate');
+    const corpNameChk = watch('corpName');
+    const corpAddress2Chk = watch('address2');
+    const corpemployeeCountChk = watch('employeeCount');
+    
     
     
     const isValidation = 
-    (apartNameChk && !errors.apartName) &&
-    (isApartFullAddress !== '') &&
-    (apartFamilyCountChk &&!errors.familyCount) &&
-    (apartDongCountChk &&!errors.dongCount) && (text !== '')
+    (corpNameChk && !errors.corpName) &&
+    (isCoprFullAddress !== '') &&
+    (corpAddress2Chk &&!errors.address2) &&
+    (corpemployeeCountChk &&!errors.employeeCount) && (text !== '')
     ;
 
     const inputStyle = {
         marginBottom:16,
       }
 //console.log(isApartAddress)
-    const saveAtom = () => {
-        setApartAddress({
-            'apartmentName' : apartNameChk,
-            'familyCount': Number(apartFamilyCountChk),
-            'dongCount' : Number(apartDongCountChk),
-            'serviceStartDate' : formattedApplicationDate(date)
+    // const saveAtom = () => {
+    //     setCorpAddress({
+    //         'corporationName' : corpNameChk,
+    //         'employeeCount':corpemployeeCountChk,
+    //         'startDate' : formattedApplicationDate(date)
 
-        })
-    }
+    //     })
+    // }
     
     const showDatePicker = () => {
         setShow(true)
@@ -88,11 +87,11 @@ const Pages = () => {
                 <KeyDismiss onPress={()=>Keyboard.dismiss()}>
                     <Container>
                         <RefTextInput
-                        label="아파트명"
-                        name="apartName"
-                        placeholder="아파트명"
+                        label="기업명"
+                        name="corpName"
+                        placeholder="기업명"
                         style={inputStyle}
-                        defaultValue={isApartAddress.apartmentName}
+                        defaultValue={isCorpAddress.apartmentName}
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -106,33 +105,32 @@ const Pages = () => {
 
                         <View style={inputStyle}>
                             <RefTextInput
-                            label="아파트주소"
+                            label="기업주소"
                             name="address"
-                            placeholder="아파트 주소"
-                            value={isApartFullAddress}
-                            onPressIn={()=>navigation.navigate(ApartmentApplicationPostcodePageName)}
+                            placeholder="기업 주소"
+                            value={isCoprFullAddress}
+                            onPressIn={()=>navigation.navigate(corpApplicationPostcodePageName)}
                             />
                             <ArrowIcon/>
                         </View>
 
                     
                         <RefTextInput
-                        label="단지 총 세대수"
-                        name="familyCount"
-                        placeholder="단지 총 세대수"
-                        keyboardType="numeric"
+                        label="나머지 주소"
+                        name="address2"
+                        placeholder="나머지 주소"
+                        // keyboardType="numeric"
                         style={inputStyle}
-                        defaultValue={isApartAddress.familyCount !== undefined && String(isApartAddress.familyCount)}
+                        // defaultValue={isCorpAddress.familyCount !== undefined && String(isCorpAddress.familyCount)}
                         />
 
                         <RefTextInput
-                        label="아파트 단지내 동 개수"
-                        name="dongCount"
-                        placeholder="아파트 단지내 동 개수"
+                        label="기업 총 인원수(미이용자 포함)"
+                        name="employeeCount"
+                        placeholder="기업 총 인원수(미이용자 포함)"
                         keyboardType="numeric"
-                        caption="동 개수를 입력해주세요.(예.101동 - 105동이면 5개)"
                         style={inputStyle}
-                        defaultValue={isApartAddress.dongCount !== undefined && String(isApartAddress.dongCount)}
+                        // defaultValue={isCorpAddress.dongCount !== undefined && String(isCorpAddress.dongCount)}
                         />
 
                         <View>
@@ -143,7 +141,7 @@ const Pages = () => {
                             value={text}
                             showSoftInputOnFocus={false}
                             onPressIn={showDatePicker}
-                            // value={formattedDate(date) }
+                            
                             />
                             <ArrowIcon/>
                         </View>
@@ -177,7 +175,7 @@ const Pages = () => {
                 <Button 
                     label={'다음'}  
                     // disabled={!isValidation}
-                    onPressEvent={()=>{navigation.navigate(ApartmentApplicationThirdPageName);saveAtom()}}/>
+                    onPressEvent={()=>{navigation.navigate(corpApplicationThirdPageName)}}/>
             </ButtonWrap>}
         </Wrap>
     )
@@ -203,6 +201,7 @@ bottom:35px;
 
 const Container = styled.ScrollView`
 margin:0px 24px;
+margin-top:40px;
 `;
 
 export const IosButton = styled.Pressable`

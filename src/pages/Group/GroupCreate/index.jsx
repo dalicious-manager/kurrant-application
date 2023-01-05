@@ -11,8 +11,9 @@ import CloseIcon from "../../../assets/icons/Group/close.svg";
 import CorporationIcon from "../../../assets/icons/Group/corporation.svg";
 import Typography from "../../../components/Typography";
 import { SCREEN_NAME } from "../../../screens/Main/Bnb";
-import {PAGE_NAME as Home} from '../../Main/Bnb/Home/Main';
+import {PAGE_NAME as HomePageName} from '../../Main/Bnb/Home/Main';
 import {PAGE_NAME as GroupCreateApartmentPageName} from '../GroupApartment';
+import {PAGE_NAME as GroupCreateCorporationsPageName} from '../GroupCorporations';
 
 export const PAGE_NAME = "P__GROUP__CREATE" ;
 const Pages = () => {
@@ -24,7 +25,7 @@ const Pages = () => {
                 <CloseIcon/>
             </CloseWrap> */}
             <Wrap>
-                <BoxWrap>
+                <BoxWrap onPress={()=>{navigation.navigate(GroupCreateCorporationsPageName)}}>
                     <MainTitle>기업 식사 도입하기</MainTitle>
                     <SubTitleWrap>
                         <SubTitle>신규 스팟 개설 신청 </SubTitle>
@@ -57,7 +58,7 @@ const Pages = () => {
                         {/* <AlreadyApartIcon/> */}
                     </ImageWrap>
                 </BoxWrap>
-                <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>
+                <NextView onPress={() => {navigation.navigate(HomePageName)}}>
                     <NextText>다음에 하기</NextText>
                 </NextView>
             </Wrap>

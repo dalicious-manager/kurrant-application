@@ -12,6 +12,7 @@ import BottomDate from "../../../../components/BottomDate";
 import ProgressBar from "../../../../components/ProgressBarSpot";
 import TextButton from "../../../../components/TextButton";
 import Typography from "../../../../components/Typography";
+import { getStorage } from "../../../../utils/asyncStorage";
 import {PAGE_NAME as ApartmentApplicationDetailPageName} from '../ApartmentApplicationCheck/Pages/DetailPage';
 import {PAGE_NAME as ApartmentApplicationRejectPageName} from '../ApartmentApplicationCheck/Pages/RejectPage';
 
@@ -29,7 +30,9 @@ const Pages = () => {
 
     useEffect(() => {
        async function LoadCheckList() {
-            await apartApplicationCheck(isApartRes?.id);
+           const getId =  await getStorage('applicationId');
+           console.log(getId,'id')
+            // await apartApplicationCheck(isApartRes?.id);
             await apartApplicationList();
         }
 

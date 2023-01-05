@@ -1,3 +1,4 @@
+import id from "date-fns/esm/locale/id/index.js";
 import React, { useState } from "react";
 import { View,Text } from "react-native";
 import styled from "styled-components";
@@ -24,39 +25,42 @@ const Component = ({
 
 }) => {
 
-    //const week =['월', '화', '수', '목', '금', '토', '일'];
-   // const [checked,setChecked] = useState();
+    const week =['월', '화', '수', '목', '금', '토', '일'];
 
-    // const onPressButton = (idx) =>{
-    //     setTouch(prev => !prev);
-    //     setChecked(idx)
-    // }
+
+    const onPressButton = (idx) =>{
+        if(touch?.includes(idx)){
+            return setTouch(touch?.filter((v)=> v !==idx))
+        }
+        setTouch([...touch,idx]);
     
-    const buttonPress = () => {
-        setmonday(prev => !prev);     
     }
+    
+    // const buttonPress = () => {
+    //     setmonday(prev => !prev);     
+    // }
 
-    const buttonPress2 = () =>{
-        setThuesday(prev => !prev);
-    }
-    const buttonPress3 = () =>{
-        setWendnesday(prev => !prev);
-    }
-    const buttonPress4 = () =>{
-        setThursday(prev => !prev);
-    }
-    const buttonPress5 = () =>{
-        setFriday(prev => !prev);
-    }
-    const buttonPress6 = () =>{
-        setSaturday(prev => !prev);
-    }
-    const buttonPress7 = () =>{
-        setSunday(prev => !prev);  
-    }
+    // const buttonPress2 = () =>{
+    //     setThuesday(prev => !prev);
+    // }
+    // const buttonPress3 = () =>{
+    //     setWendnesday(prev => !prev);
+    // }
+    // const buttonPress4 = () =>{
+    //     setThursday(prev => !prev);
+    // }
+    // const buttonPress5 = () =>{
+    //     setFriday(prev => !prev);
+    // }
+    // const buttonPress6 = () =>{
+    //     setSaturday(prev => !prev);
+    // }
+    // const buttonPress7 = () =>{
+    //     setSunday(prev => !prev);  
+    // }
     return (
         <Wrap>
-            <ButtonWrap touch={monday} onPress={buttonPress}>
+            {/* <ButtonWrap touch={monday} onPress={buttonPress}>
                 <WeekText touch={monday} value={'월'}>월</WeekText>
             </ButtonWrap>
             <ButtonWrap touch={thuesday} onPress={buttonPress2}>
@@ -76,14 +80,14 @@ const Component = ({
             </ButtonWrap>
             <ButtonWrap touch={sunday} onPress={buttonPress7}>
                 <WeekText touch={sunday}>일</WeekText>
-            </ButtonWrap>
-            {/* {week.map((m ,idx)=> {
+            </ButtonWrap> */}
+            {week.map((m ,idx)=> {
                 return (
-                    <ButtonWrap key={idx} onPress={()=>{onPressButton(idx)}} touch={touch} idx={idx} checked={checked}>
-                        <WeekText touch={touch}  checked={checked} idx={idx}>{m}</WeekText>
+                    <ButtonWrap key={idx} onPress={()=>{onPressButton(idx)}} touch={touch?.includes(idx)} idx={idx} >
+                        <WeekText touch={touch?.includes(idx)} idx={idx}>{m}</WeekText>
                     </ButtonWrap>
                 )
-            })} */}
+            })}
             {/* <Wrap>
                 <WeekText>월</WeekText>
             </Wrap> */}

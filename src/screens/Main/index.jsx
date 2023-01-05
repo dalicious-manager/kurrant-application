@@ -93,7 +93,6 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
-//import CloseIcon from '../../assets/icons/Group/close.svg';
 import { isLoginLoadingAtom,    } from '../../biz/useAuth/store';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
@@ -101,7 +100,7 @@ import Badge from '../../components/Badge';
 import ShoppingCart from '../../components/BasketButton';
 import CloseIcon from '../../components/CloseButton';
 import Typography from '../../components/Typography';
-import GrouptCreateApartmnet, {PAGE_NAME as GroupCreateApartmentPageName} from '../../pages/Group/GroupApartment';
+import GroupCreateApartmnet, {PAGE_NAME as GroupCreateApartmentPageName} from '../../pages/Group/GroupApartment';
 import ApartmentApplicationCheck, {PAGE_NAME as ApartmentApplicationCheckPageName} from '../../pages/Group/GroupApartment/ApartmentApplicationCheck';
 import ApartMentApplicationDetail, {PAGE_NAME as ApartmentApplicationDetailPageName} from '../../pages/Group/GroupApartment/ApartmentApplicationCheck/Pages/DetailPage';
 import ApartMentApplicationEtc, {PAGE_NAME as ApartmentApplicationEtcPageName} from '../../pages/Group/GroupApartment/ApartmentApplicationCheck/Pages/DetailPage/EtcPage';
@@ -112,7 +111,14 @@ import ApartmnetApplicitionSecond, {PAGE_NAME as ApartmentApplicationSecondPageN
 import ApartmentApplicationPostCode,{PAGE_NAME as AprtmentApplicationPostcodePageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/SecondPage/Pages';
 import ApartmnetApplicitionThird, {PAGE_NAME as ApartmentApplicationThirdPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/ThirdPage';
 import ApartmentApplicationInformation, { PAGE_NAME as ApartmentApplicationInformationPageName} from '../../pages/Group/GroupApartment/GroupApartmentApplication/ThirdPage/Pages';
+import GroupCreateCorporations,{PAGE_NAME as GroupCreateCorporationsPageName} from '../../pages/Group/GroupCorporations';
+import CorporationApplicationFirst, {PAGE_NAME as CorporationtApplicationFirstPageName} from '../../pages/Group/GroupCorporations/CorporationsApplication/FirstPage';
+import CorporationApplicationSecond, {PAGE_NAME as CorporationtApplicationSecondPageName} from '../../pages/Group/GroupCorporations/CorporationsApplication/SecondPage';
+import CorporationApplicationPostCode,{PAGE_NAME as CorporationApplicationPostcodePageName} from '../../pages/Group/GroupCorporations/CorporationsApplication/SecondPage/Pages';
+import CorporationApplicitionThird, {PAGE_NAME as CorporationApplicationThirdPageName} from '../../pages/Group/GroupCorporations/CorporationsApplication/ThirdPage';
+import CorpotaionApplicationMealInformation, { PAGE_NAME as CorporationApplicationInformationMealPageName} from '../../pages/Group/GroupCorporations/CorporationsApplication/ThirdPage/Pages';
 import GroupCreate, {PAGE_NAME as GroupCreateMainPageName} from '../../pages/Group/GroupCreate';
+import GroupCreateComplete, {PAGE_NAME as GroupCreateCompletePageName} from '../../pages/Group/GroupCreate/CreateComplete';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
 import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
@@ -739,7 +745,7 @@ const Screen = () => {
           {/* 아파트 스팟 신청 */}
           <MainRoot.Screen
             name={GroupCreateApartmentPageName}
-            component={GrouptCreateApartmnet}
+            component={GroupCreateApartmnet}
             options={{
               headerShown: true,
               headerShadowVisible: false,
@@ -924,7 +930,129 @@ const Screen = () => {
               headerLeft: () => <BackButton margin={[10,0]}/>,
             }}
           />
+          <MainRoot.Screen
+            name={GroupCreateCompletePageName}
+            component={GroupCreateComplete}
+            options={{
+              headerShown: false,
+              headerShadowVisible: false,
+              title:'',
+              headerTitleAlign: 'center',
+              headerTitleStyle:{
+                fontFamily:'Pretendard-SemiBold',
+                fontSize:14,
+                lineHeight:22
+              },
+              
+              headerLeft: () => <BackButton margin={[10,0]}/>,
+            }}
+          />
       </MainRoot.Group>
+      {/* 기업 스팟 신청 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={GroupCreateCorporationsPageName}
+          component={GroupCreateCorporations}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title:'',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            
+            headerLeft: () => <BackButton margin={[10,0]}/>
+          }}
+          />
+        <MainRoot.Screen
+          name={CorporationtApplicationFirstPageName}
+          component={CorporationApplicationFirst}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title:'',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            
+            headerLeft: () => <BackButton margin={[10,0]}/>
+          }}
+          />
+        <MainRoot.Screen
+          name={CorporationtApplicationSecondPageName}
+          component={CorporationApplicationSecond}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title:'',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            
+            headerLeft: () => <BackButton margin={[10,0]}/>
+          }}
+          />
+        <MainRoot.Screen
+          name={CorporationApplicationPostcodePageName}
+          component={CorporationApplicationPostCode}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title:'',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            
+            headerLeft: () => <BackButton margin={[10,0]}/>
+          }}
+          />
+        <MainRoot.Screen
+          name={CorporationApplicationThirdPageName}
+          component={CorporationApplicitionThird}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title:'',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton margin={[10,0]}/>
+          }}
+          />
+        <MainRoot.Screen
+          name={CorporationApplicationInformationMealPageName}
+          component={CorpotaionApplicationMealInformation}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title:'',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton margin={[10,0]}/>
+          }}
+          />
+          
+      </MainRoot.Group>
+      
     </MainRoot.Navigator>
   );
 };

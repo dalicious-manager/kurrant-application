@@ -258,6 +258,7 @@ const Pages = () => {
 
 
                     {isDailyFoodLoading ? <SkeletonUI/> : <Pager ref={diningRef} initialPage={1} onPageSelected={(e) => {onPageScroll(e)}}>
+
                         {BuyMeal(isMorningFood)}
                         {BuyMeal(isLunchFood)}
                         {BuyMeal(isDinnerFood)}
