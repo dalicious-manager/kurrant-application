@@ -1,10 +1,11 @@
+import { appleAuth } from '@invertase/react-native-apple-authentication';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { login, logout, getProfile as getKakaoProfile, unlink } from '@react-native-seoul/kakao-login';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { login } from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import { useNavigation } from '@react-navigation/native';
-import {useEffect, useState} from 'react';
-import {AppState} from 'react-native';
-import { Alert, Platform } from 'react-native';
+import { Platform } from 'react-native';
 
 import useAuth from '../../biz/useAuth';
 import { SCREEN_NAME } from '../../screens/Main/Bnb';
@@ -32,22 +33,76 @@ export default () => {
         if(successResponse){
             // console.log(successResponse)
             // Clipboard.setString(successResponse.accessToken)
+            // const data = await NaverLogin.getProfile(successResponse.accessToken);
+            // console.log(data);
             await snsLogin({
                 snsAccessToken:successResponse.accessToken,
                 autoLogin:true,
             },'NAVER');
             navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              })
+              index: 0,
+              routes: [
+                {
+                  name: SCREEN_NAME,
+                },
+              ],
+            })
         }
       };
     
+      const googleLogin = async ()=>{
+        try {
+          // Get the users ID token
+          await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+          // Get the users ID token
+          const { idToken ,scopes} = await GoogleSignin.signIn();
+        
+          // Create a Google credential with the token
+          
+          const {accessToken} =await GoogleSignin.getTokens();
+          const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+          console.log(scopes);
+          console.log(accessToken);
+          Clipboard.setString(accessToken)
+          // Sign-in the user with the credential
+          await auth().signInWithCredential(googleCredential);
+          await snsLogin({
+            snsAccessToken:accessToken,
+            autoLogin:true,
+          },'GOOGLE');
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: SCREEN_NAME,
+              },
+            ],
+          })
+        } catch (error) {
+          console.log("err",error.toString());
+        }
+        
+      }
+      const appleLogin  = async() =>{
+        // Start the sign-in request
+        const appleAuthRequestResponse = await appleAuth.performRequest({
+          requestedOperation: appleAuth.Operation.LOGIN,
+          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME,appleAuth.Scope.PHONE],
+        });
 
+
+        // Ensure Apple returned a user identityToken
+        if (!appleAuthRequestResponse.identityToken) {
+          throw new Error('Apple Sign-In failed - no identify token returned');
+        }
+      
+
+        // Create a Firebase credential from the response
+        const { identityToken, nonce } = appleAuthRequestResponse;
+        const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+        // Sign the user in with the credential
+        return auth().signInWithCredential(appleCredential);
+      }
     
       const kakaoLogin = async () => {
         const token = await login();
@@ -65,10 +120,7 @@ export default () => {
               },
             ],
           })
-      };
-      
-   
+      };     
 
-
-    return {naverLogin,kakaoLogin};
+    return {naverLogin,kakaoLogin,googleLogin,appleLogin};
 };

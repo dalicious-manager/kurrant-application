@@ -1,4 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { login ,getProfile } from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import {  Alert, Platform } from 'react-native';
@@ -40,6 +42,20 @@ export default () => {
           const res = await snsConnect({
               snsAccessToken:token.accessToken,
           },'KAKAO');
+          return res;  
+        }
+        else if(social ==='GOOGLE'){
+          const { idToken } = await GoogleSignin.signIn();
+    
+          // Create a Google credential with the token
+          
+          const {accessToken} =await GoogleSignin.getTokens();
+          const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+          await auth().signInWithCredential(googleCredential);
+          const res = await snsConnect({
+            snsAccessToken:accessToken,
+            autoLogin:true,
+          },'GOOGLE');
           return res;  
         }
       } catch (error) {

@@ -30,7 +30,6 @@ const useShoppingBasket = () => {
             },
             option
             );
-            setQuantity(v => v + 1)
            return res
 
         }catch(err){

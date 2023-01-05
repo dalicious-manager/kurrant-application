@@ -44,6 +44,7 @@ const Component = ({
     <Wrap size={size}>
       <Wrapper size={size} type={type} disabled={disabled} onPress={onPressEvent}>
         <LabelWrap>
+          {icon && <IconWrap>{renderIcon(icon)}</IconWrap>}
           <Label type={type} disabled={disabled} text={text}>
             {label}
           </Label>

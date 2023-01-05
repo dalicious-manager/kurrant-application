@@ -2,28 +2,24 @@
 import {Slider} from '@miblanchard/react-native-slider';
 import { useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
-import React, { useRef, forwardRef,useState, useEffect, useLayoutEffect } from 'react';
-import {useForm} from 'react-hook-form';
-import { Image, SafeAreaView, ScrollView, Text, View, TouchableOpacity ,ImageBackground, Pressable,Dimensions, StyleSheet} from "react-native";
+import React, { useRef, useState, useEffect } from 'react';
+import { useCallback } from 'react';
+import { ScrollView, View, Pressable,Dimensions, StyleSheet} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
-import StarIcon from '../../../../../assets/icons/BuyMeal/smallStar.svg';
-import SoldOutStarIcon from '../../../../../assets/icons/BuyMeal/soldOutStar.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import { isUserInfoAtom, isUserMeAtom } from '../../../../../biz/useUserInfo/store';
-import Badge from '../../../../../components/Badge';
+import { isUserInfoAtom } from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/Balloon';
-import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import Calendar from '../../../../../components/Calendar';
 import Label from '../../../../../components/Label';
 import MembershipBar from '../../../../../components/MembershipBar';
 import Typography from '../../../../../components/Typography';
-import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
+import { formattedWeekDate } from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
@@ -40,7 +36,10 @@ const Pages = () => {
 
     const [focus,setFocus] = useState(1);
     const [modalVisible,setModalVisible] = useState(false);
+    const [modalVisible2,setModalVisible2] = useState(false);
+    const [modalVisible3,setModalVisible3] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
+    const [selectFood, setSelectFood] = useState()
     const [currentPage, setCurrentPage] = useState(0);
     const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
     const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
@@ -70,15 +69,31 @@ const Pages = () => {
             throw err
         }
     }
-
-    const openModal = () =>{
-        setModalVisible(true)
+    const isDiningType = (type)=>{
+        return type === '아침' ? 1 : type === '점심' ? 2 : 3;
+    }
+    const openModal = async (diningType) =>{
+        console.log(modalVisible,
+            modalVisible2,
+            modalVisible3,)
+        if(diningType === 1){
+            return await setModalVisible(true)
+        }
+        if(diningType === 2){
+            return await setModalVisible2(true)
+        }
+        if(diningType === 3){
+            return await setModalVisible3(true)
+        }
     }
 
     const closeModal = () => {
-        setModalVisible(false)
+        setModalVisible(false);
+        setModalVisible2(false)
+        setModalVisible3(false)
+        
     }
-
+    
     //
    
     //console.log(duplication)
@@ -98,37 +113,31 @@ const Pages = () => {
 
 
     const addCartPress = async (id,day,type) =>{
-        const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
-        const duplication = isLoadMeal.some((item) => item.dailyFoodId === id)
-        
+        console.log(type)
+        const diningType = isDiningType(type);
+        const duplication = isLoadMeal.some((item) => item.dailyFoodId === id);
+        console.log(duplication,diningType)
         if(duplication){
-            setModalVisible(true)
+            await setSelectFood({
+                id:id,
+                serviceDate:day,
+                diningType:type
+            })
+            await openModal(diningType)
         }else {
-            try {
-                await addMeal({
-                     "dailyFoodId":id,
-                     "count":1,
-                     "serviceDate":day,
-                     "diningType":diningType
-                 });
-                 await loadMeal();
-                 await balloonEvent();
-                 } catch(err){
-                     console.log(err)
-                     throw err
-                 }
+            await addToCart(id,day,type)
         }
         
     }
 
     const addToCart = async (id,day,type) =>{
-        const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
+        
             try {
                 await addMeal({
                      "dailyFoodId":id,
                      "count":1,
                      "serviceDate":day,
-                     "diningType":diningType
+                     "diningType":isDiningType(type)
                  });
                  await loadMeal();
                  await balloonEvent();
@@ -138,7 +147,80 @@ const Pages = () => {
                  }
                closeModal();    
     }
+    
+    const BuyMeal = (diningFood) =>{
+        const setModal = (type)=>{        
+            if(type === isMorningFood){
+                return setModalVisible
+            }            
+            if(type === isLunchFood){
+                return setModalVisible2
+            }
+            if(type === isDinnerFood){
+                return setModalVisible3
+            }
+        }
+        const modal = (type)=>{
+            if(type === isMorningFood){
+                console.log("1",modalVisible)
+                return modalVisible
+            }            
+            if(type === isLunchFood){
+                console.log("2",modalVisible2)
+                return modalVisible2
+            }
+            if(type === isDinnerFood){
+                console.log("3",modalVisible3)
+                return modalVisible3
+            }
+        }
+        return (<View>
+            {/* 아침 */}
+            {diningFood.length === 0 && <NoServieceView>
+                <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
+            </NoServieceView>}
+            {diningFood.map((m) => {               
+               console.log(m)
+            return <Contents key={m.id}
+            spicy={m.spicy}
+            disabled={m.isSoldOut}
+            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dailyFoodId:m.id});e.stopPropagation()}}>
+                <ContentsText>
+                    <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
+                    <MealName soldOut={m.isSoldOut}>{m.foodName}</MealName>
+                    <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
+                    <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
+                    {m.spicy !== undefined && 
+                    <LabelWrap>
+                        {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
+                    </LabelWrap>
+                    }
+                </ContentsText>
 
+                <MealImageWrap>
+                    {m.isSoldOut && <BlurView/>}
+                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                    
+                    {!m.isSoldOut && (
+                        <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>
+                            <CartIcon/>
+                        </CartIconWrap>
+                    )}
+                </MealImageWrap>
+                {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>}
+                
+            </Contents>
+            })}     
+            <BottomModal modalVisible={modal(diningFood)} setModalVisible={setModal(diningFood)} 
+                title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
+                description={'그래도 추가하시겠어요?'} 
+                buttonTitle1={'아니요'} buttonType1='grey7' 
+                buttonTitle2={'추가'} buttonType2='yellow' 
+                onPressEvent1={closeModal} onPressEvent2={()=>addToCart(selectFood.id,selectFood.serviceDate,selectFood.diningType)}/>
+        </View>)
+                        
+
+    }
 
     return (
         <SafeView>
@@ -176,150 +258,10 @@ const Pages = () => {
 
 
                     {isDailyFoodLoading ? <SkeletonUI/> : <Pager ref={diningRef} initialPage={1} onPageSelected={(e) => {onPageScroll(e)}}>
-                        <View>
-                            {/* 아침 */}
-                            {isMorningFood.length === 0 && <NoServieceView>
-                                <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
-                            </NoServieceView>}
-                            {isMorningFood?.map((m,i) => 
-                            <Contents key={i}
-                            spicy={m.spicy}
-                            disabled={m.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dailyFoodId:m.id});e.stopPropagation()}}>
-                                <ContentsText>
-                                    <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
-                                    <MealName soldOut={m.isSoldOut}>{m.foodName}</MealName>
-                                    <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
-                                    <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
-                                    {m.spicy !== undefined && 
-                                    <LabelWrap>
-                                        {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
-                                    </LabelWrap>
-                                    }
-                                </ContentsText>
 
-                                <MealImageWrap>
-                                    {m.isSoldOut && <BlurView/>}
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    
-                                    {!m.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>
-                                            <CartIcon/>
-                                        </CartIconWrap>
-                                    )}
-                                </MealImageWrap>
-                                    {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>}
-                                    <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
-                                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
-                                    description={'그래도 추가하시겠어요?'} 
-                                    buttonTitle1={'아니요'} buttonType1='grey7' 
-                                    buttonTitle2={'추가'} buttonType2='yellow' 
-                                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart(m.id,m.serviceDate,m.diningType)}/>
-                            </Contents>
-                            )}
-                        </View>
-                        <View>
-                            {/* 점심 */}
-                            {isLunchFood.length === 0 && <NoServieceView>
-                                <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
-                            </NoServieceView>}
-                            {isLunchFood?.map((l,i)=>
-                            <Contents key={i}
-                            spicy={l.spicy}
-                            disabled={l.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:l.foodId,type:l.diningType,date:l.serviceDate,dailyFoodId:l.id});e.stopPropagation()}}>
-                                <ContentsText>
-                                    <MakersName soldOut={l.isSoldOut}>[{l.makers}]</MakersName>
-                                    <MealName soldOut={l.isSoldOut}>{l.foodName}</MealName>
-                                    <MealDsc soldOut={l.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{l.description}</MealDsc>
-                                    <Price soldOut={l.isSoldOut}>{withCommas(l.price)}원</Price>
-                                    {l.spicy !== undefined && 
-                                    <LabelWrap>
-                                        <Label label={`${l.spicy}`}/>
-                                    </LabelWrap>
-                                    }
-                                </ContentsText>
-
-                                <MealImageWrap>
-                                    {l.isSoldOut && <BlurView/>}
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    {!l.isSoldOut && (
-                                        <CartIconWrap onPress={()=>{addCartPress(l.id,l.serviceDate,l.diningType)}}>
-                                            <CartIcon/>
-                                        </CartIconWrap>
-                                    )}
-                                </MealImageWrap>
-                                    {l.isSoldOut && <SoldOut soldOut={l.isSoldOut}>품절됐어요</SoldOut>}
-                                    <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
-                                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
-                                    description={'그래도 추가하시겠어요?'} 
-                                    buttonTitle1={'아니요'} buttonType1='grey7' 
-                                    buttonTitle2={'추가'} buttonType2='yellow' 
-                                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart(l.id,l.serviceDate,l.diningType)}/>
-                            </Contents>
-
-                            )}
-                        </View>
-                        <View>
-                            {/* 저녁 */}
-                            {isDinnerFood.length === 0 && <NoServieceView>
-                                <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
-                            </NoServieceView>}
-                            {isDinnerFood?.map((d,i) => 
-                            <Contents key={i}
-                            spicy={d.spicy}
-                            disabled={d.isSoldOut}
-                            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:d.foodId,type:d.diningType,date:d.serviceDate,dailyFoodId:d.id});e.stopPropagation()}}>
-                                <ContentsText>
-                                    {/* <MakersName soldOut={d.isSoldOut}>[{d.makers}]</MakersName> */}
-                                    <MakersName soldOut={d.isSoldOut}>[메이커스]</MakersName>
-                                    <MealName soldOut={d.isSoldOut}>{d.foodName}</MealName>
-                                    {/* <MealDsc soldOut={d.isSoldOut} numberOfLines={2} ellipsizeMode="tail">
-                                        {d.description}
-                                    </MealDsc> */}
-                                    <MealDsc soldOut={d.isSoldOut} numberOfLines={2} ellipsizeMode="tail">
-                                        테스트용 메뉴설명 테스트용 메뉴설명 테스트용 메뉴설명
-                                    </MealDsc>
-                                    {d.spicy !== undefined && 
-                                        <LabelWrap>
-                                            <Label label={`${d.spicy}`}/>
-                                        </LabelWrap>
-                                    }
-                                    {/* <Price soldOut={d.isSoldOut}>{withCommas(d.price)}원</Price> */}
-                                    <Price soldOut={d.isSoldOut}>{withCommas(8500)}원</Price>
-                                    {/* 멤버십 가입시 변동 될 UI */}
-                                    {/* <PriceWrap>
-                                        <PercentText soldOut={d.isSoldOut}>20%</PercentText>
-                                        <Price soldOut={d.isSoldOut}>8,500원</Price>
-                                        <OriginPrice soldOut={d.isSoldOut}>10,500원</OriginPrice>
-                                    </PriceWrap>
-                                    <ReviewWrap>
-                                        <ReviewText>
-                                            {d.isSoldOut ?  <SoldOutStarIcon/> : <StarIcon/>}
-                                            <ReviewText soldOut={d.isSoldOut}>4.0</ReviewText>
-                                            <ReviewCount soldOut={d.isSoldOut}>(132)</ReviewCount>
-                                        </ReviewText>
-                                    </ReviewWrap> */}
-
-                                </ContentsText>
-
-                                <MealImageWrap>
-                                    {d.isSoldOut && <BlurView/>}
-                                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                    <CartIconWrap onPress={()=>{addCartPress(d.id,d.serviceDate,d.diningType)}}>
-                                        <CartIcon/>
-                                    </CartIconWrap>
-                                </MealImageWrap>
-                                    {d.isSoldOut && <SoldOut soldOut={d.isSoldOut}>품절됐어요</SoldOut>}
-                                    <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
-                                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
-                                    description={'그래도 추가하시겠어요?'} 
-                                    buttonTitle1={'아니요'} buttonType1='grey7' 
-                                    buttonTitle2={'추가'} buttonType2='yellow' 
-                                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart(d.id,d.serviceDate,d.diningType)}/>
-                            </Contents>
-                            )}
-                        </View>
+                        {BuyMeal(isMorningFood)}
+                        {BuyMeal(isLunchFood)}
+                        {BuyMeal(isDinnerFood)}
                     </Pager> }
                 </PagerViewWrap>
                 

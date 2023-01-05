@@ -124,7 +124,7 @@ const Pages = ({route}) => {
                 <ArrowRight/>
               </GourmetTestButton>            
               <Typography text='Title02SB' textColor={themeApp.colors.grey[2]}>{myInfoPerson?.name}님</Typography>
-              <Typography text='Body06R' textColor={themeApp.colors.grey[2]}>{myInfoPerson?.email}</Typography>
+              {myInfoPerson.hasGeneralProvider && <Typography text='Body06R' textColor={themeApp.colors.grey[2]}>{myInfoPerson?.email}</Typography>}
             </LoginIdBox>
             <AvatarBackground source={AvatarNon} resizeMode={'cover'}>
               <Image imagePath={{uri:'https://asset.kurrant.co/img/common/soup.png'}} scale={1.0} styles={{width:55.05,height:48.47}}/>

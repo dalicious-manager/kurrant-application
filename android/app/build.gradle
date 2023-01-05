@@ -1,4 +1,5 @@
-apply plugin: "com.android.application"
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services' // <- Add this line
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 import com.android.build.OutputFile
@@ -140,8 +141,8 @@ android {
         applicationId "com.dalicious.kurrant"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.3"
+        versionCode 4
+        versionName "1.0.4"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
@@ -214,6 +215,12 @@ android {
     }
     signingConfigs {
         debug {
+            // if (project.hasProperty('KURRANT_RELEASE_STORE_FILE')) {
+            //     storeFile file(KURRANT_RELEASE_STORE_FILE)
+            //     storePassword KURRANT_RELEASE_STORE_PASSWORD
+            //     keyAlias KURRANT_RELEASE_KEY_ALIAS
+            //     keyPassword KURRANT_RELEASE_KEY_PASSWORD
+            // }
             storeFile file('debug.keystore')
             storePassword 'android'
             keyAlias 'androiddebugkey'
@@ -259,6 +266,7 @@ android {
 }
 
 dependencies {
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     //noinspection GradleDynamicVersion
@@ -269,7 +277,9 @@ dependencies {
     implementation project(':react-native-splash-screen')
 
     implementation project(':react-native-linear-gradient')
-
+    
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }
