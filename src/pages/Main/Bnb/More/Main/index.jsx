@@ -13,8 +13,11 @@ import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {PAGE_NAME as TermOfServicePageName } from '~pages/Main/MyPage/TermOfService'
 
+import { PAGE_NAME as MembershipIntroPageName } from '../../../../Membership/MembershipIntro';
 import { PAGE_NAME as FAQPageName } from '../../../MyPage/FAQ';
 import { PAGE_NAME as PersonalInfoPageName } from '../../../MyPage/PersonalInfo';
+import { PAGE_NAME as MealPageName } from '../../Meal/Main';
+import { PAGE_NAME as MealCartPageName } from '../../MealCart/Main';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
@@ -22,7 +25,6 @@ import PointBox from './PointBox';
 import SkeletonUI from './SkeletonUI';
 
 import { AvatarNon, MembershipJoin } from '~assets';
-
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -86,13 +88,13 @@ const Pages = () => {
           </InfomationContainer>
           <Line />
           <ListContainer title='이용 내역'>
-            <ListBox title='식사 일정' />
-            <ListBox title='장바구니(식사)' />
+            <ListBox title='식사 일정' routeName={MealPageName}/>
+            <ListBox title='장바구니(식사)' routeName={MealCartPageName} />
             {/* <ListBox title='장바구니(마켓)' /> */}
             {/* <ListBox title='찜목록' /> */}
             <ListBox title='구매 내역' />
             {/* <ListBox title='리뷰 관리' description={`모두 작성시 최대 `} effect={<Typography test={'CaptionR'} textColor={themeApp.colors.blue[500]}>500P</Typography>} /> */}
-            <ListBox title='커런트 멤버십' />
+            <ListBox title='커런트 멤버십' routeName={MembershipIntroPageName}/>
             {/* <ListBox title='커런트 포인트' /> */}
           </ListContainer>
           <ListContainer title='알림'>

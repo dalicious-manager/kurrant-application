@@ -1,5 +1,7 @@
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
@@ -17,10 +19,12 @@ import useToken from '../../../../hook/useToken';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
 import snsLogin from '../../../../utils/snsLogin';
 import {
+  PAGE_NAME as BuyMealPageName,
+} from '../../../Main/Bnb/BuyMeal';
+import {
   PAGE_NAME as MembershipJoinPageName,
 } from '../../../Membership/MembershipIntro';
 import LoginMain from './LoginMain';
-
 
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
@@ -35,6 +39,7 @@ const Pages = () => {
   const {token,isTokenLoading} = useToken();
   const navigation = useNavigation();
   const toast = Toast();
+
   const {googleLogin,appleLogin} = snsLogin();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
@@ -91,7 +96,8 @@ const Pages = () => {
         ],
       })
     } 
-  },[navigation, token])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[token])
   
   if(isTokenLoading){
     return<ActivityIndicator size="large" />

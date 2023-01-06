@@ -1,9 +1,10 @@
 
+import messaging from '@react-native-firebase/messaging';
 import { useNavigation } from '@react-navigation/native';
 import { useAtom, useAtomValue } from 'jotai';
 import React, { useEffect, useRef, useState } from 'react';
 import {useForm} from 'react-hook-form';
-import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable} from 'react-native';
+import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable, Alert} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 
@@ -32,7 +33,7 @@ import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
-
+  
     const navigation = useNavigation();
 
     const [isVisible, setIsVisible] = useState(true);
@@ -44,6 +45,7 @@ const Pages = () => {
     const [data,setData] = useState(null);
 
   useEffect(() => {
+    
     const start = weekly.map((s) => {
       const startData = formattedWeekDate(s[0]);
       return (
@@ -68,6 +70,30 @@ const Pages = () => {
     loadMeal();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
+
+  
+    useEffect(() => {
+  
+      // Check whether an initial notification is available
+    messaging()
+    .getInitialNotification()
+    .then(remoteMessage => {
+      if (remoteMessage) {
+        console.log(
+          'Notification caused app to open from quit state:',
+          remoteMessage.data,
+        );
+        navigation.navigate(remoteMessage.data.page)
+      }
+    });
+      
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      });
+      
+      console.log("메세지 테스트")
+      return unsubscribe;
+    }, [navigation]);
 
   // useEffect(()=>{
   //   balloonEvent()

@@ -50,6 +50,7 @@ module.exports = api => {
             '~hook': './src/hook',
             '~utils': './src/utils',
             '~theme': './src/theme.js',
+            '~atoms': './src/atoms',
           },
         },
       ],

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>872782655273-nn04qklq9mhoiivq5jscipo846dfp74h.apps.googleusercontent.com</string>
+	<string>872782655273-o63k78oq12kquda45db9irfvhqpqva49.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.872782655273-nn04qklq9mhoiivq5jscipo846dfp74h</string>
+	<string>com.googleusercontent.apps.872782655273-o63k78oq12kquda45db9irfvhqpqva49</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>872782655273-ebfi02p8mg7roqal42v7i55r3ii8bno9.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.dalicious.kurrant</string>
+	<string>io.dalicious.kurrant</string>
 	<key>PROJECT_ID</key>
 	<string>dalicious-v1</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:872782655273:ios:313bff5b8c587dd1b0d138</string>
+	<string>1:872782655273:ios:90e38cf6ccc0d0e3b0d138</string>
 </dict>
 </plist>

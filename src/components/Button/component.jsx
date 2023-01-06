@@ -1,5 +1,4 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 
 import PlusIcon from '../../assets/icons/Home/plus.svg';
@@ -81,8 +80,6 @@ export const LabelWrap = styled.View`
   justify-content:center;
   align-items: center;
   width: 100%;
-  
-  
 `;
 
 export const Label = styled(Typography)`

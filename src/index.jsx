@@ -1,5 +1,6 @@
-import {Provider} from 'jotai';
-import React, {useEffect} from 'react';
+import messaging from '@react-native-firebase/messaging';
+import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect } from 'react';
 import {StatusBar, LogBox} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
@@ -7,23 +8,33 @@ import {ThemeProvider} from 'styled-components';
 
 import Screen from './screens';
 import Theme from './theme';
-
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 
 const App = () => {
-  useEffect(() => {
+  
+  useEffect(()=>{
     SplashScreen.hide();
-  }, []);
-
+    async function requestUserPermission() {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+      }
+    }
+    requestUserPermission();
+  },[])
   return (
-    <Provider>
       <ThemeProvider theme={Theme}>
         <SafeAreaProvider>
           <StatusBar />
+          <NavigationContainer>
           <Screen />
+          </NavigationContainer>
         </SafeAreaProvider>
       </ThemeProvider>
-    </Provider>
   );
 };
 

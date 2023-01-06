@@ -9,7 +9,7 @@
 #import <React/RCTAppSetupUtils.h>
 #import <Firebase.h>
 #import <RNGoogleSignin/RNGoogleSignin.h>
-
+#import "RNFBMessagingModule.h"
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -52,7 +52,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   [[NaverThirdPartyLoginConnection getSharedInstance] setIsNaverAppOauthEnable:YES];
 	[[NaverThirdPartyLoginConnection getSharedInstance] setIsInAppOauthEnable:YES];
   [FIRApp configure];
-
+ 
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
   _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
@@ -61,9 +61,14 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
 #endif
 
-  NSDictionary *initProps = [self prepareInitialProps];
-  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"kurrant", initProps);
+  // NSDictionary *initProps = [ RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
+  // UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"kurrant", initProps);
+  NSDictionary *appProperties = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
 
+// Find the `RCTRootView` instance and update the `initialProperties` with your `appProperties` instance
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
+                                             moduleName:@"kurrant"
+                                             initialProperties:appProperties];
   if (@available(iOS 13.0, *)) {
     rootView.backgroundColor = [UIColor systemBackgroundColor];
   } else {

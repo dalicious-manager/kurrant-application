@@ -1,8 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { useAtom } from 'jotai';
 import React from 'react';
-import {  Alert, Text } from 'react-native';
+import {  Alert } from 'react-native';
 import styled from 'styled-components';
 
 import EmailLoginModal, {
@@ -93,7 +92,9 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
-import { isLoginLoadingAtom,    } from '../../biz/useAuth/store';
+// eslint-disable-next-line import/order
+
+//import CloseIcon from '../../assets/icons/Group/close.svg';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
@@ -131,16 +132,158 @@ import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 // Pages > Investment
 // Pages > Statement
 
+
+
+
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
-  const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
   const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
-  const navigation = useNavigation();
-  
-  
+
   return (
-    <MainRoot.Navigator initialRouteName={LoginMainModalPageName}>
+    <MainRoot.Navigator  >
+      <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
+        <MainRoot.Screen
+          name={LoginMainModalPageName}
+          component={LoginMainModal}
+          options={{
+            headerLeft: () => <BackButton mode="modal" />,
+            headerShown: false,
+            headerShadowVisible: false,
+            headerTransparent:true,
+            title: '',
+          }}
+        />
+        <MainRoot.Screen
+          name={SignUpPageName}
+          component={SignUp}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '회원가입',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={SignUpComplatePageName}
+          component={SignUpComplate}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '회원가입',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FindUserPageName}
+          component={FindUser}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FindIdPageName}
+          component={FindId}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FindIdComplatePageName}
+          component={FindIdComplate}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FindPasswordPageName}
+          component={FindPassword}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={ChagePasswordPageName}
+          component={ChagePassword}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '아이디/비밀번호 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+         
+         <MainRoot.Screen
+          name={EmailLoginModalModalPageName}
+          component={EmailLoginModal}
+          options={{
+            headerShown: false,
+            headerShadowVisible: false,
+            title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+      </MainRoot.Group>
       {/* BNB */}
       <MainRoot.Group>
         <MainRoot.Screen
@@ -578,148 +721,7 @@ const Screen = () => {
       </MainRoot.Group>
       
       {/* LOGIN */}
-      <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <MainRoot.Screen
-          name={LoginMainModalPageName}
-          component={LoginMainModal}
-          options={{
-            headerLeft: () => <BackButton mode="modal" />,
-            headerShown: false,
-            headerShadowVisible: false,
-            headerTransparent:true,
-            title: '',
-          }}
-        />
-        <MainRoot.Screen
-          name={SignUpPageName}
-          component={SignUp}
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: '회원가입',
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
-        <MainRoot.Screen
-          name={SignUpComplatePageName}
-          component={SignUpComplate}
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: '회원가입',
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
-        <MainRoot.Screen
-          name={FindUserPageName}
-          component={FindUser}
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: '아이디/비밀번호 찾기',
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
-        <MainRoot.Screen
-          name={FindIdPageName}
-          component={FindId}
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: '아이디/비밀번호 찾기',
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
-        <MainRoot.Screen
-          name={FindIdComplatePageName}
-          component={FindIdComplate}
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: '아이디/비밀번호 찾기',
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
-        <MainRoot.Screen
-          name={FindPasswordPageName}
-          component={FindPassword}
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: '아이디/비밀번호 찾기',
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
-        <MainRoot.Screen
-          name={ChagePasswordPageName}
-          component={ChagePassword}
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: '아이디/비밀번호 찾기',
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
-         
-         <MainRoot.Screen
-          name={EmailLoginModalModalPageName}
-          component={EmailLoginModal}
-          options={{
-            headerShown: !isLoginLoading,
-            headerShadowVisible: false,
-            title: '',
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
-      </MainRoot.Group>
+      
 
       {/* 그룹/스팟 */}
       <MainRoot.Group>
