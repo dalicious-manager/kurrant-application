@@ -973,7 +973,7 @@ const Screen = () => {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title:'',
+            title:'담당자 정보',
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
@@ -990,7 +990,7 @@ const Screen = () => {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title:'',
+            title:'기본 정보',
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
@@ -1024,7 +1024,7 @@ const Screen = () => {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title:'',
+            title:'식사 정보',
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',

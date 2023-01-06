@@ -15,7 +15,7 @@ import Button from '../../../../../components/Button';
 import Check from "../../../../../components/Check";
 import Form from "../../../../../components/Form";
 import Typography from "../../../../../components/Typography";
-import { formattedMonthDay } from "../../../../../utils/dateFormatter";
+import { formattedDate, formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
 import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, Wrap, XIcon } from "../../MealCart/Main";
 
@@ -77,6 +77,16 @@ const Pages = () => {
         }        
       }
 
+    const date = isLoadMeal.map(el => el.serviceDate);
+    
+    const deliveryStart = date.reduce((prev,curr) => {
+        return new Date(prev).getTime() <= new Date(curr).getTime() ? curr : prev;
+    });
+
+    const deliveryEnd = date.reduce((prev,curr) => {
+        return new Date(prev).getTime() <= new Date(curr).getTime() ? prev : curr;
+    });
+
 
     return (
         <SafeArea>
@@ -89,7 +99,7 @@ const Pages = () => {
                     </DeliveryTextWrap>
                     <DeliveryTextWrap>
                         <DeliveryTitle>배송 일시</DeliveryTitle>
-                        <DeliveryText>2022년 4월 21 - 2022년 5월 21일</DeliveryText>
+                        <DeliveryText>{formattedDate(deliveryStart,'년월일')} - {formattedDate(deliveryEnd,'년월일')}</DeliveryText>
                     </DeliveryTextWrap>
                     <View>
                         <DeliveryTitle>주문자 정보</DeliveryTitle>
@@ -108,11 +118,10 @@ const Pages = () => {
                 </Container>
                 {show && <ProductInfo> 
                        {isLoadMeal.map((meal,idx) => {
-                        const svcDate = meal.serviceDate[0]+'-'+meal.serviceDate[1]+'-'+meal.serviceDate[2];
                         return (
                             <OrderWrap key={idx}>
                             <View>
-                                <DiningName>{formattedMonthDay(svcDate)} {meal.diningType}</DiningName>
+                                <DiningName>{formattedMonthDay(meal.serviceDate)} {meal.diningType}</DiningName>
                             </View>
                             <ContentWrap>
                                 <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
@@ -146,13 +155,20 @@ const Pages = () => {
                         <PressableView onPress={fundButton}>
                             <PaymentText>회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
-
                          </PressableView>
-                         <PaymentText>10,000 원</PaymentText>
+                         <PaymentText>- 10,000 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
-                        <PaymentText>구독 할인 금액</PaymentText>
-                        <PaymentText>20,000원</PaymentText>
+                        <PaymentText>멤버십 할인 금액</PaymentText>
+                        <PaymentText>- 20,000원</PaymentText>
+                    </PaymentView>
+                    <PaymentView>
+                        <PaymentText>판매자 할인 금액</PaymentText>
+                        <PaymentText>- 20,000원</PaymentText>
+                    </PaymentView>
+                    <PaymentView>
+                        <PaymentText>기간 할인 금액</PaymentText>
+                        <PaymentText>- 20,000원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>

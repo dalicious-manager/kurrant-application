@@ -13,21 +13,23 @@ import Typography from '../Typography';
 
 
 const BottomSheet = props => {
-  const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected} = props;
+  const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected,setName, setValue = ()=>{}} = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
   
 
 
   const onSelect = useCallback(
-    (id) => {
+    (id,text) => {
       //멀티 셀렉터시 이용
       // const newSelected = new Map(selected);
       // newSelected.set(id, !selected.get(id));
+      setValue(text)
       setSelected(id);
+      setName(text)
       setModalVisible(false)
     },
-    [setModalVisible, setSelected],
+    [setModalVisible, setName, setSelected, setValue],
   );
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;

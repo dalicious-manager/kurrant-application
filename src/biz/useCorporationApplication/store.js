@@ -6,6 +6,9 @@ export const isCorpFullAddressAtom = atomWithReset('');
 export const isCorpSendAddressAtom = atomWithReset({});
 export const isCorpSendAddressInfoAtom = atomWithReset({});
 
+// 나머지 주소
+export const isCorpRemainingAddress = atomWithReset('');
+
 // 배송 날짜 
 export const corpApplicationDate = atomWithReset('');
 
@@ -18,4 +21,6 @@ export const isCorpMealInfoAtom = atomWithReset(null);
 
 // 요일
 
-export const corpApplicationWeek = atomWithReset([]);
+export const corpApplicationDaysMorning = atomWithReset({});
+export const corpApplicationDaysLunch = atomWithReset({});
+export const corpApplicationDaysDinner = atomWithReset({});

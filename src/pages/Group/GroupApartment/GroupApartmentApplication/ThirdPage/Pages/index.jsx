@@ -28,7 +28,7 @@ const Pages = () => {
     const [text, setText] = useAtom(apartDeliveryAtom);
     
     const [touch,setTouch] = useAtom(apartApplicationWeek);
-console.log(touch)
+
     // const [monday,setMonday] = useState(false);
     // const [thuesday,setThuesday] = useState(false);
     // const [wendnesday,setWendnesday] = useState(false);
@@ -101,6 +101,7 @@ console.log(touch)
                         keyboardType="numeric"
                         placeholder="서비스 이용 예상 세대수"
                         style={inputStyle}
+                        defaultValue={isApartMealInfo[0]?.expectedUserCount !== undefined && String(isApartMealInfo[0]?.expectedUserCount)}
                         />
                         <WeekButton 
                         touch={touch} setTouch={setTouch}
@@ -174,9 +175,9 @@ console.log(touch)
             )}
             {!show && <ButtonWrap>
                 <Button 
-                    // disabled={!isValidation}
+                    disabled={!isValidation}
                     label={'저장'} 
-                    onPressEvent={()=>{saveAtom();}}/>
+                    onPressEvent={()=>{saveAtom();navigation.goBack()}}/>
             </ButtonWrap>}
         </Wrap>
     )

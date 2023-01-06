@@ -6,13 +6,16 @@ import Button from "../../../../../../components/Button";
 import Typography from "../../../../../../components/Typography";
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__REJECT" ;
-const Pages = () => {
+const Pages = ({route}) => {
+    
     return(
         <SafeArea>
             <Wrap>
 
                 <Title>미승인 사유</Title>
-                <Content/>
+                <Content>
+                    <ContentText>{route.params.reason}</ContentText>
+                </Content>
             </Wrap>
             <ButtonWrap>
                 <Button label='확인'/>
@@ -50,4 +53,9 @@ const ButtonWrap = styled.View`
 margin: 0px 24px;
 position:absolute;
 bottom: 35px;
+`;
+
+const ContentText = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.grey[2]};
+
 `;

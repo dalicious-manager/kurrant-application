@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   FlatList,
+  View
 } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -16,7 +17,6 @@ const BottomSheet = props => {
   const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected} = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
-  console.log(selected,'dfdfdfd')
 
 
   const onSelect = useCallback(
@@ -127,14 +127,21 @@ const BottomSheet = props => {
           <FlatList
             data={data}
             ref={list}
-            //scrollEnabled={up > 500}
+            scrollEnabled={true}
             renderItem={({ item }) => (
               <ContentItemContainer onPress={()=>onSelect(item.clientType.toString() + item.id.toString(), item.date)}>
-                {selected === item.clientType.toString() + item.id.toString() ?<ContentItemBox><ContentItemText>
-                  {item.date}
-                </ContentItemText><CheckedIcon /></ContentItemBox>:<ContentItemText>
-                  {item.date}
-                </ContentItemText>}
+                {selected === item.clientType.toString() + item.id.toString() ?
+                  <ContentItemBox>
+                    <ContentItemText>{item.date}</ContentItemText>
+                    <CheckedView>
+                      <ContentNameText>{item.name}</ContentNameText>
+                      <CheckedIcon />
+                    </CheckedView>
+                  </ContentItemBox> :
+                  <ContentItemBox>
+                  <ContentItemText>{item.date}</ContentItemText>
+                  <ContentNameText>{item.name}</ContentNameText>
+                  </ContentItemBox>}
               </ContentItemContainer>
             )}
             keyExtractor={item => item.clientType.toString() + item.id.toString()}
@@ -201,7 +208,7 @@ const ContentItemContainer = styled.TouchableOpacity`
   width: ${Dimensions.get('screen').width}px;
   height: 60px;
   padding: 19px 24px;
-  background-color:gold;
+  /* background-color:gold; */
 `
 
 const ContentItemBox = styled.View`
@@ -209,7 +216,16 @@ const ContentItemBox = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})`
+`
 
+const ContentNameText = styled(Typography).attrs({text: 'Body06R'})`
+color:${({theme}) => theme.colors.grey[4]};
+margin-right:4px;
+`
 
+const CheckedView = styled.View`
+flex-direction:row;
+align-items:center
+`;
 export default BottomSheet;

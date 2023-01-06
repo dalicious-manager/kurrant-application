@@ -22,7 +22,7 @@ const useApartApplication = () => {
             );
             setApartRes(res.data); // response 저장
             console.log(res.data)
-            await setStorage('applicationId',res.data.id)
+            await setStorage('applicationId',res.data.id.toString())
             return res;
 
         } catch(err){
@@ -42,11 +42,14 @@ const useApartApplication = () => {
     }
 
     // 메모 수정
-    const apartApplicationMemo = async(body) =>{
+    const apartApplicationMemo = async(body,id) =>{
+        
         try {
             const res = await Fetch.ApartmentApplicationMemo({
                 ...body
-            })
+            },
+                id
+            )
             console.log(res)
             return res
         } catch(err) {
@@ -57,7 +60,7 @@ const useApartApplication = () => {
     const apartApplicationList = async () =>{
         try {
             const res = await Fetch.ApartmentApplicationList();
-            console.log(res.data);
+
             setApartApplicationList(res.data)
         } catch(err){
             console.log(err);
@@ -71,7 +74,8 @@ const useApartApplication = () => {
         apartApplicationList,
         isApartApplicationList,
         isApartCheck,
-        isApartRes
+        isApartRes,
+        setApartCheck
     }
 };
 

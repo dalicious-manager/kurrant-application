@@ -36,10 +36,10 @@ const Pages = () => {
     const {formState:{errors},watch,handleSubmit} = form;
 
     const apartNameChk = watch('apartName');
-    const apartAddressChk = watch('address');
+    // const apartAddressChk = watch('address');
     const apartFamilyCountChk = watch('familyCount');
     const apartDongCountChk = watch('dongCount');
-    const apartStartDateChk = watch('startDate');
+    // const apartStartDateChk = watch('startDate');
     
     
     const isValidation = 
@@ -54,13 +54,13 @@ const Pages = () => {
       }
 //console.log(isApartAddress)
     const saveAtom = () => {
-        setApartAddress({
-            'apartmentName' : apartNameChk,
-            'familyCount': Number(apartFamilyCountChk),
-            'dongCount' : Number(apartDongCountChk),
-            'serviceStartDate' : formattedApplicationDate(date)
+        // setApartAddress({
+        //     'apartmentName' : apartNameChk,
+        //     'familyCount': Number(apartFamilyCountChk),
+        //     'dongCount' : Number(apartDongCountChk),
+        //     'serviceStartDate' : formattedApplicationDate(date)
 
-        })
+        // })
     }
     
     const showDatePicker = () => {

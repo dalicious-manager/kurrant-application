@@ -129,6 +129,7 @@ const Component = forwardRef(({
       rules={rules}
       defaultValue={defaultValue && defaultValue}
       render={({field: {onChange,value}}) => {
+        
         return (
           <Wrapper {...style}>
             {/* Label */}

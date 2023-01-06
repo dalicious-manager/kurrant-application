@@ -28,7 +28,7 @@ import Skeleton from '../Skeleton';
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 
 const Pages = ({route}) => {
-    console.log(route)
+    
     const bodyRef = useRef();
     const navigation = useNavigation();
     const { balloonEvent, BalloonWrap } = Balloon();
@@ -174,9 +174,9 @@ const Pages = ({route}) => {
                                 <InformationText>알레르기/원산지</InformationText>
                             </InformationWrap>
                         </Line>
-                        {/* <MealDsc>{isFoodDetail?.description}</MealDsc> */}
-                        <MealDsc>민지님이 좋아하는 마라샹궈 숙주 푸주 버섯 청경채 배추 땅콩소스 마라마라 마라탕탕</MealDsc>
-                        {isFoodDetail?.spicy !== null && <Label label={`${isFoodDetail?.spicy}`}/>}
+                        <MealDsc>{isFoodDetail?.description}</MealDsc>
+                        
+                        {isFoodDetail?.spicy !== 'NULL' && <Label label={`${isFoodDetail?.spicy}`}/>}
                         <PriceTitleWrap>
                             <PriceTitle>최종 판매가</PriceTitle>
                             <ModalWrap>

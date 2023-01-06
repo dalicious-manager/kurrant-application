@@ -16,14 +16,13 @@ const Pages = () =>{
     const navigation = useNavigation();
     const [,setCorpFullAddress] = useAtom(isCorpFullAddressAtom); //TextInput 에 보여줄 주소
     const [,setSendAddress] = useAtom(isCorpSendAddressInfoAtom); // body에 담을 주소
-
     const handleAddress = (data) => {
         let fullAddress = data.address;
         let extraAddress = ''; 
         const zipcode = data.zonecode;
-        const zibunAddress = data.jibunAddress;
+        const address = data.address;
         const roadAddress = data.query;
-        
+        console.log(data)
         if (data.addressType === 'R') {
           if (data.bname !== '') {
             extraAddress += data.bname;
@@ -33,14 +32,16 @@ const Pages = () =>{
           }
           fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
         }
-        
+
+            
         setCorpFullAddress(fullAddress);
         setSendAddress({
           'zipCode' : Number(zipcode),
-          'address1' : zibunAddress,
-          'address2' : roadAddress,
+          'address1' : fullAddress,
+          'address2' : '',
           
         })
+        navigation.goBack();
       }
     
     return (
@@ -48,8 +49,6 @@ const Pages = () =>{
             <PostCodeView 
             onSelected={(data) => {
                 handleAddress(data);
-                
-                navigation.goBack()
             }} 
             />      
         </ModalWrap>

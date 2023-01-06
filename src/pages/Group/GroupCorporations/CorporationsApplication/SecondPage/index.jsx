@@ -1,14 +1,15 @@
 import Postcode from '@actbase/react-daum-postcode';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from 'jotai';
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
 import { Alert, Keyboard, Modal, Platform, Pressable, SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
 
 import Arrow from "../../../../../assets/icons/Group/arrowDown.svg";
-import { corpApplicationDate, isCorpFullAddressAtom, isCorpSendAddressAtom } from '../../../../../biz/useCorporationApplication/store';
+import { corpApplicationDate, isCorpFullAddressAtom, isCorpRemainingAddress, isCorpSendAddressAtom, isCorpSendAddressInfoAtom } from '../../../../../biz/useCorporationApplication/store';
 import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar";
 import RefTextInput from "../../../../../components/RefTextInput";
@@ -26,41 +27,49 @@ const Pages = () => {
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
     const [text, setText] = useAtom(corpApplicationDate);
-    const [isCorpAddress,setCorpAddress] = useAtom(isCorpSendAddressAtom);
+    const [isCorpAddress,setCorpAddress] = useAtom(isCorpSendAddressAtom); // corporationInfo
     const isCoprFullAddress = useAtomValue(isCorpFullAddressAtom); // TextInput value
-    //const isSendAddress = useAtomValue(isApartSendAddressInfoAtom); // body에 담을 주소2
-    console.log(isCorpAddress)
+    //const isSendAddress = useAtomValue(isCorpSendAddressInfoAtom); // body에 담을 주소2
+    const [isRemainingAddress,setRemainingAddress] = useAtom(isCorpRemainingAddress); // 나머지 주소 나중에 추가해야함 
+    console.log(isCorpAddress,'아아')
     const form = useForm({
         mode:'all'
       });
 
-    const {formState:{errors},watch,handleSubmit} = form;
+    const {formState:{errors},watch,handleSubmit,setValue} = form;
 
     const corpNameChk = watch('corpName');
-    const corpAddress2Chk = watch('address2');
+    const corpRemainingAddressChk = watch('address2');
     const corpemployeeCountChk = watch('employeeCount');
+    const corpStartDateChk = formattedApplicationDate(watch('startDate'))
     
-    
+
     
     const isValidation = 
     (corpNameChk && !errors.corpName) &&
     (isCoprFullAddress !== '') &&
-    (corpAddress2Chk &&!errors.address2) &&
-    (corpemployeeCountChk &&!errors.employeeCount) && (text !== '')
+    (corpRemainingAddressChk &&!errors.corpRemainingAddressChk) &&
+    (corpemployeeCountChk &&!errors.employeeCount) && (corpStartDateChk &&!errors.corpStartDateChk)
     ;
 
     const inputStyle = {
         marginBottom:16,
       }
-//console.log(isApartAddress)
-    // const saveAtom = () => {
-    //     setCorpAddress({
-    //         'corporationName' : corpNameChk,
-    //         'employeeCount':corpemployeeCountChk,
-    //         'startDate' : formattedApplicationDate(date)
 
-    //     })
-    // }
+    const saveAtom =  () => {
+        AsyncStorage.setItem('corpPage2',JSON.stringify({
+            'corporationName' : corpNameChk,
+            'employeeCount':corpemployeeCountChk,
+            'startDate': corpStartDateChk
+        }))
+        setCorpAddress({
+            'corporationName' : corpNameChk,
+            'employeeCount':corpemployeeCountChk,
+            'startDate' : formattedApplicationDate(date)
+
+        });
+        setRemainingAddress(corpRemainingAddressChk)
+    }
     
     const showDatePicker = () => {
         setShow(true)
@@ -70,15 +79,28 @@ const Pages = () => {
         if (Platform.OS === 'android') {
             setShow(false);
         }
-        // const currentDate = selectedDate;
         setDate(selectedDate);
         setText(formattedDate(selectedDate));
+        setValue('startDate',selectedDate)
       };
 
     const confirmPress = () =>{
         
         setShow(false);
     }
+
+    useEffect(()=>{
+        AsyncStorage.getItem('corpPage2',(_err,result) => {
+            const page2 = JSON.parse(result);
+            setCorpAddress({
+                'corporationName' : page2.corporationName,
+                'employeeCount': page2.employeeCount,
+                'startDate' : page2.startDate
+    
+            });
+            console.log(page2,'??@')
+        })
+    },[setCorpAddress])
      
     return (
         <Wrap>
@@ -91,7 +113,7 @@ const Pages = () => {
                         name="corpName"
                         placeholder="기업명"
                         style={inputStyle}
-                        defaultValue={isCorpAddress.apartmentName}
+                        defaultValue={isCorpAddress.corporationName}
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -130,7 +152,7 @@ const Pages = () => {
                         placeholder="기업 총 인원수(미이용자 포함)"
                         keyboardType="numeric"
                         style={inputStyle}
-                        // defaultValue={isCorpAddress.dongCount !== undefined && String(isCorpAddress.dongCount)}
+                        defaultValue={isCorpAddress.corporationName}
                         />
 
                         <View>
@@ -141,7 +163,7 @@ const Pages = () => {
                             value={text}
                             showSoftInputOnFocus={false}
                             onPressIn={showDatePicker}
-                            
+                            defaultValue={isCorpAddress.startDate}
                             />
                             <ArrowIcon/>
                         </View>
@@ -165,6 +187,7 @@ const Pages = () => {
                     display="spinner"
                     onChange={onChangeDate}
                     locale='ko-KR'
+                    style={{backgroundColor:'#F5F5F5'}}
                     />
                    
                 </React.Fragment>
@@ -175,7 +198,7 @@ const Pages = () => {
                 <Button 
                     label={'다음'}  
                     // disabled={!isValidation}
-                    onPressEvent={()=>{navigation.navigate(corpApplicationThirdPageName)}}/>
+                    onPressEvent={()=>{navigation.navigate(corpApplicationThirdPageName);saveAtom()}}/>
             </ButtonWrap>}
         </Wrap>
     )
@@ -183,7 +206,7 @@ const Pages = () => {
 
 export default Pages;
 
-const Wrap = styled.SafeAreaView`
+const Wrap = styled.View`
 background-color:${({theme}) => theme.colors.grey[0]};
 flex:1;
 `;
@@ -209,6 +232,8 @@ width:100%;
 flex-direction:row;
 justify-content:space-between;
 padding:8px 20px;
+background-color:#F5F5F5;
+z-index:999;
 `;
 
 export const Cancel = styled(Typography).attrs({text:'Body05R'})`
