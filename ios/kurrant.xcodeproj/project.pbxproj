@@ -23,7 +23,6 @@
 		B068103B2966B4E700A4D3AB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B068103A2966B4E700A4D3AB /* GoogleService-Info.plist */; };
 		B4D2137514CC45B88DE9C20C /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89AB231CA7C14416B4894EA1 /* Pretendard-Regular.otf */; };
 		B7DB5E91EEE741959BCEC57C /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 027BC5742DEB44B788FDCD2A /* OFL.txt */; };
-		D35B52922963BFAC00368C90 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D35B52912963BFAC00368C90 /* GoogleService-Info.plist */; };
 		E24E198112A94BC68F5DE259 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F9589E007B8423BA705319B /* Pretendard-Medium.otf */; };
 		EB1E3C52F14B4D8597275DB8 /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = C0A217AEDFE0481FB9F3985D /* Pretendard-Light.otf */; };
 		F1AE8E106A9E4FFBB1860ED2 /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BB88AAD1C21847FB868A3C00 /* Pretendard-ExtraBold.otf */; };
@@ -108,7 +107,6 @@
 		B068103A2966B4E700A4D3AB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "kurrant/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BB88AAD1C21847FB868A3C00 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraBold.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
 		C0A217AEDFE0481FB9F3985D /* Pretendard-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Light.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-Light.otf"; sourceTree = "<group>"; };
-		D35B52912963BFAC00368C90 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D35B52932963C45A00368C90 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D6DCF50CF739E20A8CA31AEC /* Pods_kurrant.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kurrant.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCA932196CC34D13A6907957 /* Pretendard-ExtraLight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraLight.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-ExtraLight.otf"; sourceTree = "<group>"; };
@@ -491,7 +489,6 @@
 				B4D2137514CC45B88DE9C20C /* Pretendard-Regular.otf in Resources */,
 				75A5E33A7F7249518BFAC2B4 /* Pretendard-SemiBold.otf in Resources */,
 				58C6DE8A34F648238F740925 /* Pretendard-Thin.otf in Resources */,
-				D3D7846E2967A27F00C98873 /* GoogleService-Info.plist in Resources */,
 				B7DB5E91EEE741959BCEC57C /* OFL.txt in Resources */,
 				2D06190E73714727B88B24AD /* LICENSE in Resources */,
 			);

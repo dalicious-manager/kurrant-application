@@ -13,7 +13,7 @@ import Typography from '../Typography';
 
 
 const BottomSheet = props => {
-  const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected,setName, setValue = ()=>{}} = props;
+  const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected,setName, setValue = ()=>{}, height=350} = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
   
@@ -24,9 +24,9 @@ const BottomSheet = props => {
       //멀티 셀렉터시 이용
       // const newSelected = new Map(selected);
       // newSelected.set(id, !selected.get(id));
-      setValue(text)
-      setSelected(id);
-      setName(text)
+      setValue(text,id)
+      if(setSelected)setSelected(id);
+      if(setName) setName(text)
       setModalVisible(false)
     },
     [setModalVisible, setName, setSelected, setValue],
@@ -79,7 +79,7 @@ const BottomSheet = props => {
     useNativeDriver: false,
   });
   const downSheet = Animated.timing(upY, {
-    toValue: 350,
+    toValue: height,
     duration: 300,
     useNativeDriver: false,
   });
@@ -108,6 +108,7 @@ const BottomSheet = props => {
           <Background />
         </TouchableWithoutFeedback>
         <AnimatedView
+          height={height}
           style={{
             transform: [{ translateY: translateY }],
             height: up,
@@ -159,7 +160,7 @@ const Background = styled.View`
 `;
 
 const AnimatedView = styled(Animated.View)`
-  min-height: 350px;
+  min-height: ${({height})=> `${height}px`};
   justify-content: center;
   align-items: center;
   background-color: white;

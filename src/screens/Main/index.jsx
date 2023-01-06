@@ -55,6 +55,9 @@ import NotificationSetting, {
 import PasswordSetting, {
   PAGE_NAME as PasswordSettingPageName,
 } from '~pages/Main/MyPage/PersonalInfo/pages/PasswordSetting';
+import PaymentManage, {
+  PAGE_NAME as PaymentManagePageName,
+} from '~pages/Main/MyPage/PersonalInfo/pages/PaymentManage';
 import PhoneNumberSetting, {
   PAGE_NAME as PhoneNumberSettingPageName,
 } from '~pages/Main/MyPage/PersonalInfo/pages/PhoneNumberSetting';
@@ -126,6 +129,7 @@ import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
+import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -290,6 +294,22 @@ const Screen = () => {
           name={BnbScreenName}
           component={BnbScreen}
           options={{headerShown: false}}
+        />
+      </MainRoot.Group>
+      {/* 카드 등록 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={RegisterCardScreenName}
+          component={RegisterCard}
+          options={{headerShown: true,title:"카드 등록",
+          headerTitleAlign: 'center',
+          headerTitleStyle:{
+            fontFamily:'Pretendard-SemiBold',
+            fontSize:14,
+            lineHeight:22,
+          },
+          headerLeft: () => <BackButton />,
+        }}
         />
       </MainRoot.Group>
       {/* 식사구매 */}
@@ -570,6 +590,21 @@ const Screen = () => {
           component={EmailSetting}
           options={{headerShown: true,
             title:'이메일/비밀번호 설정',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={PaymentManagePageName}
+          component={PaymentManage}
+          options={{headerShown: true,
+            title:'결제수단 관리',
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerTitleStyle:{
