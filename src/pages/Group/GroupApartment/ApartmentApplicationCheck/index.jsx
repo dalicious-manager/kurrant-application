@@ -23,26 +23,36 @@ const Pages = () => {
     const navigation = useNavigation();
     const [modalVisible,setModalVisible] = useState(false);
     const [selected,setSelected] = useState();
-    const {apartApplicationCheck,apartApplicationList,isApartCheck,isApartRes,isApartApplicationList} = useApartApplication();
+    const {apartApplicationCheck,apartApplicationList,isApartCheck,isApartApplicationList} = useApartApplication();
+    
     const datePress = () => {
         setModalVisible(true)
     }
+    const loadId = selected?.substr(1);
 
+    
     useEffect(() => {
        async function LoadCheckList() {
            const getId =  await getStorage('applicationId');
-           console.log(getId,'id')
-            // await apartApplicationCheck(isApartRes?.id);
-            await apartApplicationList();
+           
+           if(selected === undefined){
+               await apartApplicationCheck(getId);
+               await apartApplicationList();
+           } else {
+                await apartApplicationCheck(loadId);
+                await apartApplicationList();
+           }
         }
 
         LoadCheckList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+    },[loadId])
     
     const user = isApartCheck.user;
     const info = isApartCheck.info;
-
+    const name = isApartCheck.info?.apartmentName;
+    const propsId = isApartApplicationList.filter(el => el.name === name);
+    console.log(isApartCheck)
     return (
         <Wrapper>
             <ScrollViewWrap showsVerticalScrollIndicator={false} >
@@ -71,7 +81,7 @@ const Pages = () => {
                                 <>
                                     <ProgressTitle>미승인</ProgressTitle>
                                     <RejectWrap>
-                                        <TextButton size={'label13R'} label={'사유 보기'} type={'redLine'} onPressEvent={() => {navigation.navigate(ApartmentApplicationRejectPageName)}}/>
+                                        <TextButton size={'label13R'} label={'사유 보기'} type={'redLine'} onPressEvent={() => {navigation.navigate(ApartmentApplicationRejectPageName,{reason:isApartCheck.rejectedReason})}}/>
                                     </RejectWrap>
                                 </>
                             }
@@ -84,7 +94,7 @@ const Pages = () => {
                     <HeadingWrap>
                         <Heading>신청 정보</Heading>
                         <DetailWrap >
-                            <TextButton size='label13R' label='상세보기' type='blue' onPressEvent={()=>{navigation.navigate(ApartmentApplicationDetailPageName,{data:isApartCheck})}}/>
+                            <TextButton size='label13R' label='상세보기' type='blue' onPressEvent={()=>{navigation.navigate(ApartmentApplicationDetailPageName,{data:isApartCheck,id:propsId})}}/>
                             <ArrowRightIcon/>
                         </DetailWrap>
                     </HeadingWrap>

@@ -40,7 +40,7 @@ const Component = ({
           : null;
       }, []);
 
-      const quantity = isLoadMeal.find(x => id === x.id);
+      const quantity = isLoadMeal.find(x => x.dailyFoodId === id);
 
     return (
         <React.Fragment>

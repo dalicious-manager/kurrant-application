@@ -1,10 +1,6 @@
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import milliseconds from "date-fns/esm/fp/milliseconds/index";
-import { is } from "date-fns/locale";
-import { useAtom } from "jotai";
-import { atomWithReset } from "jotai/utils";
+import {  useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useLayoutEffect, useRef,useState } from "react";
-import { Alert, Dimensions, Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { Alert, Dimensions, Image, KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import styled from "styled-components";
 
@@ -33,29 +29,29 @@ const Pages = () => {
 
     const navigation = useNavigation();
     const bodyRef = useRef();
-    console.log(isLoadMeal)
+    const inputRef = useRef();
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
     const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal } = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         // Do something when the screen is focused
-    //         console.log('들어옴')
+    useFocusEffect(
+        useCallback(() => {
+            // Do something when the screen is focused
+            console.log('들어옴')
         
 
-    //         return  () => {
-    //         // Do something when the screen is unfocused
-    //             console.log("나감")
-    //                 updateMeal({"updateCartList":quantity});
+            return  () => {
+            // Do something when the screen is unfocused
+                console.log("나감")
+                    updateMeal({"updateCartList":quantity});
             
-    //         };
+            };
     
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [updateMeal])
-    // );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [updateMeal])
+    );
     useEffect(()=>{
         async function loadCart(){
             try {
@@ -162,6 +158,11 @@ const Pages = () => {
             throw new Error ('에러남')
         }
     }
+
+    const clearInput = () => {
+        inputRef.current.setNativeProps({ text: ''  }); 
+    }
+    
     return (
         <SafeView>
             {isLoadMeal.length === 0 && <EmptyView>
@@ -173,7 +174,7 @@ const Pages = () => {
             <ScrollViewWrap showsVerticalScrollIndicator={false}>
                 {isLoadMeal?.map((l,idx) => {
                     const price = l.price * l.count;
-                   
+                
                     return (
                         <Wrap key={idx}>
                             <ContentHeader>
@@ -220,11 +221,19 @@ const Pages = () => {
                             <PaymentText >회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
                          </PressableView>
-                            <PaymentText>10,000 원</PaymentText>
+                            <PaymentText>- 10,000 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
-                        <PaymentText>구독 할인 금액</PaymentText>
-                        <PaymentText>20,000원</PaymentText>
+                        <PaymentText>멤버십 할인 금액</PaymentText>
+                        <PaymentText>- 20,000원</PaymentText>
+                    </PaymentView>
+                    <PaymentView>
+                        <PaymentText>판매자 할인 금액</PaymentText>
+                        <PaymentText>- 20,000원</PaymentText>
+                    </PaymentView>
+                    <PaymentView>
+                        <PaymentText>기간 할인 금액</PaymentText>
+                        <PaymentText>- 20,000원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>
@@ -233,15 +242,17 @@ const Pages = () => {
                     <PaymentView>
                         <PressableView onPress={pointButton}>
                             <PaymentText>포인트 사용금액</PaymentText>
-                            <QuestionIcon />
+                            <QuestionIcon/>
                         </PressableView>
-                        <PointWrap>
-                            <PointInputWrap>
-                                <PointInput keyboardType="number-pad" />
-                                <XIcon/>
-                            </PointInputWrap>
-                            <PointUnitText>P</PointUnitText>
-                        </PointWrap>
+                        <KeyboardAvoidingView>
+                            <PointWrap>
+                                <PointInputWrap>
+                                    <PointInput keyboardType="number-pad" ref={inputRef}/>
+                                    <XIcon onPress={clearInput}/>
+                                </PointInputWrap>
+                                <PointUnitText>P</PointUnitText>
+                            </PointWrap>
+                        </KeyboardAvoidingView>
                     </PaymentView>
                     <PaymentView>
                         <TotalPriceTitle>총 결제금액</TotalPriceTitle>

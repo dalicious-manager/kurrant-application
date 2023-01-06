@@ -29,7 +29,7 @@ export const isApartFullAddressAtom = atomWithReset('');
 export const isApartSendAddressAtom = atomWithReset({});
 export const isApartSendAddressInfoAtom = atomWithReset({});
 
-export const isApartMealInfoAtom = atomWithReset(null);
+export const isApartMealInfoAtom = atomWithReset([]);
 
 
 export const apartDeliveryAtom = atomWithReset('');
@@ -53,3 +53,7 @@ export const apartApplicationListAtom = atomWithReset([]);
 // 요일
 
 export const apartApplicationWeek = atomWithReset([]);
+
+// 식사타입 
+
+export const apartApplicationDiningTypeAtom = atomWithReset(false);

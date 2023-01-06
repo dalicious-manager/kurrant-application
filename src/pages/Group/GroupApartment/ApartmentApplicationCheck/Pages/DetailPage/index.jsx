@@ -13,13 +13,13 @@ import {PAGE_NAME as ApartmentApplicationEtcPageName} from '../../Pages/DetailPa
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__DETAIL" ;
 const Pages = ({route}) => {
-
+    
     const user = route.params.data.user;
     const address = route.params.data.address;
     const info = route.params.data.info;
     const meal = route.params.data.meal;
-    const memo = route.params.data.memo;
-
+    const id = route.params.id[0];
+    
     const navigation = useNavigation();
     return (
         <Wrap>
@@ -77,7 +77,7 @@ const Pages = ({route}) => {
                     <TitleWrap>
                         <Title>기타 내용</Title>
                         <TextButtonWrap >
-                            <TextButton label='내용보기' type='grey4' size='label15R' onPressEvent={()=>{navigation.navigate(ApartmentApplicationEtcPageName,{data:memo})}} />
+                            <TextButton label='내용보기' type='grey4' size='label15R' onPressEvent={()=>{navigation.navigate(ApartmentApplicationEtcPageName,{data:id})}} />
                             <ArrowIcon/>
                         </TextButtonWrap>
                     </TitleWrap>

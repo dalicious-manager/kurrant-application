@@ -1,12 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
 
 import Arrow from "../../../../../assets/icons/Spot/arrowRight.svg";
-import { isApartMealInfoAtom } from "../../../../../biz/useApartApplication/store";
+import { apartApplicationDiningTypeAtom, isApartMealInfoAtom } from "../../../../../biz/useApartApplication/store";
 import Button from "../../../../../components/Button";
 import MealButton from "../../../../../components/ButtonMealType";
 import Label from "../../../../../components/Label";
@@ -19,14 +19,17 @@ export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__THIRD" ;
 const Pages = () => {
     const navigation = useNavigation();
 
-    const [touch,setTouch] = useState(false);
-    // const [touch2,setTouch2] = useState(false);
-    // const [touch3,setTouch3] = useState(false);
+    const [touch,setTouch] = useAtom(apartApplicationDiningTypeAtom);
+
     const mealInfo = useAtomValue(isApartMealInfoAtom);
-    
+    console.log(mealInfo)
     const inputStyle = {
         marginBottom:16,
       }
+
+      const isValidation = 
+      (touch) && (mealInfo.length !== 0)
+      
     
 
     return (
@@ -46,14 +49,17 @@ const Pages = () => {
                         <InfoBar onPress={()=>{navigation.navigate(ApartmentApplicationInformationPageName)}}>
                             <DiningType>아침</DiningType>
                             <InfoBarView>
-                                {mealInfo === null ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
+                                {mealInfo.length === 0 ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
                                 <ArrowIcon/>
                             </InfoBarView>
                         </InfoBar>
                     </Container>}
                 </ContainerWrap>
             <ButtonWrap>
-                <Button label={'다음'} onPressEvent={()=>{navigation.navigate(ApartmentApplicationLastPageName)}}/>
+                <Button 
+                label={'다음'} 
+                disabled={!isValidation}
+                onPressEvent={()=>{navigation.navigate(ApartmentApplicationLastPageName)}}/>
             </ButtonWrap>
         </Wrap>
     )

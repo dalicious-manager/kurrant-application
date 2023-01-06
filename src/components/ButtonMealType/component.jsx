@@ -11,6 +11,7 @@ const Component = ({
     setTouch
 }) => {
     
+    const title = ['아침','점심','저녁']
     const touchPress = () => { 
         
         setTouch(prev => !prev)

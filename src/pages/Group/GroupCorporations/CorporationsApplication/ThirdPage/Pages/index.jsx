@@ -3,68 +3,84 @@ import { useNavigation } from "@react-navigation/native";
 import { useAtom } from 'jotai';
 import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
-import { Keyboard, Platform, SafeAreaView, Text ,View} from "react-native";
+import { Keyboard, Platform, SafeAreaView, ScrollView, Text ,View} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import styled from "styled-components";
 
 import Arrow from "../../../../../../assets/icons/Group/arrowDown.svg";
 import { apartDeliveryAtom, isApartMealInfoAtom } from '../../../../../../biz/useApartApplication/store';
-import { corpApplicationWeek, isCorpMealInfoAtom, isCorpMealMorningInfoAtom } from '../../../../../../biz/useCorporationApplication/store';
+import { corpApplicationWeek, isCorpMealDinnerInfoAtom, isCorpMealInfoAtom, isCorpMealLunchInfoAtom, isCorpMealMorningInfoAtom } from '../../../../../../biz/useCorporationApplication/store';
+import BottomSheet from '../../../../../../components/BottomSheet/component';
 import Button from "../../../../../../components/Button";
 import WeekButton from "../../../../../../components/ButtonWeek";
 import RefTextInput from "../../../../../../components/RefTextInput";
 import Typography from "../../../../../../components/Typography";
 import { formattedMealTime, formattedTime } from '../../../../../../utils/dateFormatter';
 import { Cancel, Confirm, IosButton } from '../../SecondPage';
+import { foodPriceList , supportPriceList} from './Price/price';
 
 
 export const PAGE_NAME = 'CORPORATION__APPLICATION__MEAL__INFO';
 const Pages = ({route}) => {
-    const navigation = useNavigation();
 
-    const [isCorpMealInfo,setMealInfo] = useAtom(isCorpMealMorningInfoAtom);
+    const navigation = useNavigation();
+    const diningType = route.params.diningType;
+    // const [isCorpMealInfo,setMealInfo] = useAtom(isCorpMealMorningInfoAtom);
+    const [modalVisible,setModalVisible] = useState(false);
+    const [modalVisible2,setModalVisible2] = useState(false);
+    const [selected,setSelected] = useState();
+    const [selected2,setSelected2] = useState();
+    const [name,setName] = useState();
+    const [name2,setName2] = useState();
     const [time, setTime] = useState(new Date());
     const [show, setShow] = useState(false);
     const [infoShow,setInfoShow] = useState(false);
-    const [text, setText] = useAtom(apartDeliveryAtom);
+    const [textTime, setTextTime] = useAtom(apartDeliveryAtom);
+    const [isMorning,setMorning] = useAtom(isCorpMealMorningInfoAtom);
+    const [islunch,setLunch] = useAtom(isCorpMealLunchInfoAtom);
+    const [isdinner,setDinner] = useAtom(isCorpMealDinnerInfoAtom);
     
-    const [touch,setTouch] = useAtom(corpApplicationWeek);
-    console.log(touch)
-    // const [monday,setMonday] = useState(false);
-    // const [thuesday,setThuesday] = useState(false);
-    // const [wendnesday,setWendnesday] = useState(false);
-    // const [thursday,setThursday] = useState(false);
-    // const [friday,setFriday] = useState(false);
-    // const [saturday,setSaturday] = useState(false);
-    // const [sunday,setSunday] = useState(false);
-    
-    // const checkDay = [monday,thuesday,wendnesday,thursday,friday,saturday,sunday];
-    //console.log(formattedTime(time))
+    const [touch,setTouch] = useState([]);
+    console.log(name)
     const form = useForm({
         mode:'all'
       });
     
-    const {formState:{errors},watch,handleSubmit} = form;
+    const foodPrice = () => {
+        setModalVisible(true)
+    }
+
+    const supportPrice = () => {
+        setModalVisible2(true)
+    }
+   
+    const {formState:{errors},watch,handleSubmit,setValue} = form;
+    const priceAverageChk = watch('priceAverage');
+    const supportPriceChk = watch('supportPrice');
     const svcDongCountChk = watch('svcDongCount');
     const deliveryTimeChk = watch('deliveryTime');
 
     const isValidation = 
         (svcDongCountChk && !errors.name) &&
-        (touch.length !== 0) && (text !== '')
+        (touch.length !== 0) && (priceAverageChk && !errors.name)
         
-
+    
     const inputStyle = {
         marginBottom:16,
       };
 
-
+      console.log(deliveryTimeChk)
     const saveAtom = () => {
-            setMealInfo([{
-                'diningType':1,
-                'expectedUserCount':Number(svcDongCountChk),
-                'serviceDays':touch,
-                'deliveryTime':formattedTime(time)
-            }]);
+        if(diningType === 1){
+            setMorning([{
+                    'diningType':1,
+                    'priceAverage':priceAverageChk,
+                    'supportPrice':supportPriceChk,
+                    'expectedUserCount':Number(svcDongCountChk),
+                    'serviceDays':touch,
+                    'deliveryTime':formattedTime(time)
+                }]);
+        }
     }
     
     const showTimePicker = () => {
@@ -77,17 +93,42 @@ const Pages = ({route}) => {
         }
         // const currentDate = selectedDate;
         setTime(selectedTime);
-        setText(formattedMealTime(selectedTime));
+        setTextTime(formattedMealTime(selectedTime));
+        setValue('deliveryTime',selectedTime)
       };
+    
+      const foodPriceValue = (text) => {
+        setValue('priceAverage',text)
+      }
+
+      const supportPriceValue = (text) => {
+        setValue('supportPrice',text)
+      }
     
     
 
     return (
         
         <Wrap>
+            <ScrollWrap>
             <FormProvider {...form}>
                 <KeyDismiss onPress={()=>Keyboard.dismiss()}>
                     <Container>
+                  
+                        <RefTextInput
+                        label="식단 가격 범위"
+                        placeholder="식단 가격 범위"
+                        name="priceAverage"
+                        style={inputStyle}
+                        onPressIn={foodPrice}
+                        />
+                        <RefTextInput
+                        label="일일 회사 지원금"
+                        placeholder="일일 회사 지원금"
+                        name="supportPrice"
+                        style={inputStyle}
+                        onPressIn={supportPrice}
+                        />
                         <RefTextInput
                         label="서비스 이용 예상 세대수"
                         name="svcDongCount"
@@ -105,12 +146,14 @@ const Pages = ({route}) => {
                             placeholder="배송 시간"
                             onPressIn={showTimePicker}
                             showSoftInputOnFocus={false}
-                            value={text}
+                            value={textTime}
+                            
                             />
                             <ArrowIcon/>
                         </View>
                     </Container>
                 </KeyDismiss>
+                
             </FormProvider>
 
             
@@ -143,6 +186,7 @@ const Pages = ({route}) => {
                     </Letter>
                 </LetterWrap>
             </InfoWrap>}
+            </ScrollWrap>
             {show && (
                 <DatePickerWrap>
                    {Platform.OS === 'ios' && <IosButton>
@@ -160,29 +204,39 @@ const Pages = ({route}) => {
                         onChange={onChange}
                         locale='ko-KR'
                         mode="time"
+                        minuteInterval={5}
+                        style={{backgroundColor:'#F5F5F5'}}
                         />
                 </DatePickerWrap>
                    
                 
             )}
+            
             {!show && <ButtonWrap>
                 <Button 
                     // disabled={!isValidation}
                     label={'저장'} 
                     onPressEvent={()=>{saveAtom();}}/>
             </ButtonWrap>}
+            <BottomSheet title='식단 가격 범위' modalVisible={modalVisible} setModalVisible={setModalVisible} setSelected={setSelected} selected={selected} data={foodPriceList} setName={setName} setValue={foodPriceValue}/>
+            <BottomSheet title='일일 회사 지원금' modalVisible={modalVisible2} setModalVisible={setModalVisible2} setSelected={setSelected2} selected={selected2} data={supportPriceList} setName={setName2} setValue={supportPriceValue}/>
+            
         </Wrap>
     )
 }
 //navigation.goBack();
 export default Pages;
 
-const Wrap = styled.SafeAreaView`
+const Wrap = styled.View`
 background-color:${({theme}) => theme.colors.grey[0]};
 flex:1;
 `;
 
 const KeyDismiss = styled.Pressable`
+flex:1;
+`;
+
+const ScrollWrap = styled.ScrollView`
 flex:1;
 `;
 
@@ -232,4 +286,5 @@ bottom:12px;
 
 const InfoWrap = styled.View`
 margin:24px;
+margin-bottom:80px;
 `;

@@ -1,12 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
 
 import Arrow from "../../../../../assets/icons/Spot/arrowRight.svg";
-import { isCorpMealInfoAtom } from "../../../../../biz/useCorporationApplication/store";
+import { isCorpMealDinnerInfoAtom, isCorpMealInfoAtom, isCorpMealLunchInfoAtom, isCorpMealMorningInfoAtom } from "../../../../../biz/useCorporationApplication/store";
 import Button from "../../../../../components/Button";
 import MealButton from "../../../../../components/ButtonMealType";
 import Label from "../../../../../components/Label";
@@ -21,7 +21,12 @@ const Pages = () => {
     const [touch,setTouch] = useState(false);
     const [touch2,setTouch2] = useState(false);
     const [touch3,setTouch3] = useState(false);
+
+    const [isMorning,setMorning] = useAtom(isCorpMealMorningInfoAtom);
+    const [islunch,setLunch] = useAtom(isCorpMealLunchInfoAtom);
+    const [isdinner,setDinner] = useAtom(isCorpMealDinnerInfoAtom);
     const mealInfo = useAtomValue(isCorpMealInfoAtom);
+
     
     const inputStyle = {
         marginBottom:16,
@@ -42,7 +47,7 @@ const Pages = () => {
                     </Container>
                     {touch && <Container>
                         <Title>식사 정보</Title>
-                        <InfoBar onPress={()=>{navigation.navigate(CorpApplicationInformationPageName,{diningType:'morning'})}}>
+                        <InfoBar onPress={()=>{navigation.navigate(CorpApplicationInformationPageName,{diningType:1})}}>
                             <DiningType>아침</DiningType>
                             <InfoBarView>
                                 {mealInfo === null ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
@@ -52,7 +57,7 @@ const Pages = () => {
                     </Container>}
                     {touch2 && <Container>
                         <Title>식사 정보</Title>
-                        <InfoBar onPress={()=>{navigation.navigate(CorpApplicationInformationPageName,{diningType:'lunch'})}}>
+                        <InfoBar onPress={()=>{navigation.navigate(CorpApplicationInformationPageName,{diningType:2})}}>
                             <DiningType>점심</DiningType>
                             <InfoBarView>
                                 {mealInfo === null ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}

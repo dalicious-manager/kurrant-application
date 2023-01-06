@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm} from 'react-hook-form';
 import { Keyboard, Pressable, SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
@@ -18,16 +18,13 @@ import {PAGE_NAME as ApartmentApplicationSecondPageName} from '../SecondPage';
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__FIRST" ;
 const Pages = () => {
+    const nameRef = useRef(null);
+    const phoneRef = useRef(null);
+    const emailRef = useRef(null);
     const navigation = useNavigation();
     const userInfo = useAtomValue(isUserInfoAtom);
-    console.log(userInfo)
+    
     const [isApplicant,setApplicant] = useAtom(isApartmentApplicant);
-  
-  
-     //const [isName,setName] = useAtom(isApartUserNameAtom);
-    // const [isPhone,setPhone] = useAtom(isApartUserPhoneAtom);
-    // const [isEmail,setEmail] = useAtom(isApartUserEmailAtom);
-    console.log(isApplicant)
     const information = useForm(); // 체크박스
     const form = useForm({
         mode:'all'
@@ -43,7 +40,7 @@ const Pages = () => {
     const namechk = watch('name');
     const phonechk = watch('phone');
     const emailchk = watch('email');
-  
+  console.log(checkBox,'dkdkd')
     const isValidation = 
         (namechk && !errors.name) &&
         (phonechk &&!errors.phone) &&
@@ -57,7 +54,19 @@ const Pages = () => {
             'email' : emailchk
         });
     };
-// const aaa= checkBox ? userInfo.name : '';
+
+    const controlInput = () => {
+      if(checkBox !== undefined && !checkBox){
+        nameRef.current.setNativeProps({ text: userInfo.name  });
+        emailRef.current.setNativeProps({ text: userInfo.email });
+        phoneRef.current.setNativeProps({ text: userInfo.phone });
+      } else{
+        nameRef.current.setNativeProps({ text: ''  });
+        emailRef.current.setNativeProps({ text: '' });
+        phoneRef.current.setNativeProps({ text: '' });
+      }
+    };
+
 
     return (
         <Wrap>
@@ -65,7 +74,7 @@ const Pages = () => {
             <CheckWrap>
                 <Form form={information}>
                     <Label>회원정보와 동일</Label>
-                    <Check name="agreeCheck" value={true} />
+                    <Check name="agreeCheck"  value={true} onPressEvents={()=>controlInput()}/>
                 </Form>
             </CheckWrap>
             <FormProvider {...form}>
@@ -76,7 +85,8 @@ const Pages = () => {
                         name="name"
                         placeholder="신청자명"
                         style={inputStyle}
-                        defaultValue={isApplicant.name}
+                        defaultValue={userInfo.name}
+                        ref={nameRef}
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -94,8 +104,9 @@ const Pages = () => {
                         placeholder="신청자 연락처"
                         keyboardType="numeric"
                         style={inputStyle}
-                        defaultValue={isApplicant.phone}
+                        defaultValue={userInfo.phone}
                         // value={isApplicant.phone}
+                        ref={phoneRef}
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -115,8 +126,9 @@ const Pages = () => {
                         keyboardType="email-address"
                         autoCapitalize = "none"
                         style={inputStyle}
-                        defaultValue={isApplicant.email}
+                        defaultValue={userInfo.email}
                         // value={isApplicant.email}
+                        ref={emailRef}
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',

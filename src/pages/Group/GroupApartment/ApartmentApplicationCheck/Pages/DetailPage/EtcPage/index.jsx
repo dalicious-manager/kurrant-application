@@ -1,32 +1,32 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { Text } from "react-native";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import useApartApplication from "../../../../../../../biz/useApartApplication/hook";
 import Button from "../../../../../../../components/Button";
-import { MaterialIcons } from '../../../../../../../components/Icon';
 import Typography from "../../../../../../../components/Typography";
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__ETC" ;
 const Pages = ({route}) => {
-
+    const id = route.params.data.id;
+    
     const navigation = useNavigation();
-    const memoValue = route.params.data;
-    const {apartApplicationMemo,isApartCheck} = useApartApplication();
-    console.log(isApartCheck)
+    const {apartApplicationMemo,isApartCheck,setApartCheck} = useApartApplication();
+
     const [text,setText] = useState('');
     
     const additionPress = async () => {
         try {
            await apartApplicationMemo({
-            'memo' : text
-           });
-           
+            'memo' : text,
+
+           },id);
+           await setApartCheck({...isApartCheck,memo:text})
         } catch(err){
             console.log(err)
         }
     }
+
 
     return (
         <SafeArea>
@@ -35,7 +35,7 @@ const Pages = ({route}) => {
                 <Content 
                 multiline={true}
                 placeholder="특이사항이 있다면 적어주세요. &#13;&#10; 예. 비건 샐러드 식사 필요"
-                defaultValue={memoValue}
+                defaultValue={isApartCheck.memo}
                 onChangeText={(newText) => setText(newText)}
                 /> 
             </Wrap>

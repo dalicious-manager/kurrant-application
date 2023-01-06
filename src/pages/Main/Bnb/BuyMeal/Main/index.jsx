@@ -73,9 +73,9 @@ const Pages = () => {
         return type === '아침' ? 1 : type === '점심' ? 2 : 3;
     }
     const openModal = async (diningType) =>{
-        console.log(modalVisible,
-            modalVisible2,
-            modalVisible3,)
+        // console.log(modalVisible,
+        //     modalVisible2,
+        //     modalVisible3,)
         if(diningType === 1){
             return await setModalVisible(true)
         }
@@ -113,10 +113,10 @@ const Pages = () => {
 
 
     const addCartPress = async (id,day,type) =>{
-        console.log(type)
+        
         const diningType = isDiningType(type);
         const duplication = isLoadMeal.some((item) => item.dailyFoodId === id);
-        console.log(duplication,diningType)
+        
         if(duplication){
             await setSelectFood({
                 id:id,
@@ -175,22 +175,22 @@ const Pages = () => {
             }
         }
         return (<View>
-            {/* 아침 */}
+            
             {diningFood.length === 0 && <NoServieceView>
                 <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
             </NoServieceView>}
             {diningFood.map((m) => {               
-               console.log(m)
+               
             return <Contents key={m.id}
             spicy={m.spicy}
             disabled={m.isSoldOut}
             onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dailyFoodId:m.id});e.stopPropagation()}}>
                 <ContentsText>
-                    <MakersName soldOut={m.isSoldOut}>[{m.makers}]</MakersName>
+                    <MakersName soldOut={m.isSoldOut}>[{m.makersName}]</MakersName>
                     <MealName soldOut={m.isSoldOut}>{m.foodName}</MealName>
                     <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
                     <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
-                    {m.spicy !== undefined && 
+                    {m.spicy !== 'NULL' && 
                     <LabelWrap>
                         {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
                     </LabelWrap>
