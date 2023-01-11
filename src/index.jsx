@@ -5,11 +5,10 @@ import {StatusBar, LogBox} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 import {ThemeProvider} from 'styled-components';
-
+// import codePush from "react-native-code-push";
 import Screen from './screens';
 import Theme from './theme';
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
-
 const App = () => {
   
   useEffect(()=>{
@@ -37,7 +36,7 @@ const App = () => {
       </ThemeProvider>
   );
 };
-
+// App = codePush(App);
 export default App;
 
 

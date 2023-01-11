@@ -18,6 +18,7 @@
 #import <React/RCTSurfacePresenterBridgeAdapter.h>
 #import <ReactCommon/RCTTurboModuleManager.h>
 #import <react/config/ReactNativeConfig.h>
+#import <CodePush/CodePush.h>
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
@@ -40,7 +41,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
     // kakao
     if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
         return [RNKakaoLogins handleOpenUrl: url];
-    }
+    }    
+    
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 
@@ -52,7 +54,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   [[NaverThirdPartyLoginConnection getSharedInstance] setIsNaverAppOauthEnable:YES];
 	[[NaverThirdPartyLoginConnection getSharedInstance] setIsInAppOauthEnable:YES];
   [FIRApp configure];
- 
+  
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
   _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
@@ -114,7 +116,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 #else
-  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  return [CodePush bundleURL];
 #endif
 }
 
