@@ -18,6 +18,7 @@ import snsConnected from '~utils/snsConnected';
 
 import BottomModal from '../../../../components/BottomModal';
 import { setStorage } from '../../../../utils/asyncStorage';
+import {PAGE_NAME as ApartmentApplicationCheckPageName} from '../../../Group/GroupApartment/ApartmentApplicationCheck';
 import ListBox from './ListBox';
 import { PAGE_NAME as  ConnectedSNSPageName} from './pages/ConnectedSNS';
 import { PAGE_NAME as  EmailSettingPageName} from './pages/EmailSetting';
@@ -174,7 +175,7 @@ const Pages = ({route}) => {
           routeName={!myInfoPerson.hasGeneralProvider ? EmailSettingPageName:PasswordSettingPageName}/>
           <ListBox title='결제수단 관리' routeName={PaymentManagePageName}/>
           <ListBox title='그룹/스팟 관리' />
-          <ListBox title='스팟 개설 요청 내역' />
+          <ListBox title='스팟 개설 요청 내역' routeName={ApartmentApplicationCheckPageName}/>
           <ListBox title='알림 설정' routeName={NotificationSettingPageName}/>
           <Line />
           <TextButtonBox>

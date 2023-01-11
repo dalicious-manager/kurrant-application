@@ -96,6 +96,8 @@ import MembershipTerminateComplate, {
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
 // eslint-disable-next-line import/order
+import { isLoginLoadingAtom } from '../../biz/useAuth/store';
+
 
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
@@ -128,8 +130,11 @@ import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/Meal
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
+import RegisterCardScanner, {PAGE_NAME as RegisterCardScannerPageName} from '../../pages/Main/MyPage/PersonalInfo/pages/PaymentManage/RegisterCardScanner';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
+import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
+import NoticeDetail, {PAGE_NAME as NoticeDetailPageName} from '../../pages/Main/MyPage/Notice/NoticeDetail';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -142,10 +147,11 @@ import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCar
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
+  const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
   const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
 
   return (
-    <MainRoot.Navigator  >
+    <MainRoot.Navigator >
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -275,7 +281,7 @@ const Screen = () => {
           name={EmailLoginModalModalPageName}
           component={EmailLoginModal}
           options={{
-            headerShown: false,
+            headerShown: !isLoginLoading,
             headerShadowVisible: false,
             title: '',
             headerTitleAlign: 'center',
@@ -310,6 +316,53 @@ const Screen = () => {
           },
           headerLeft: () => <BackButton />,
         }}
+        />
+        <MainRoot.Screen
+          name={RegisterCardScannerPageName}
+          component={RegisterCardScanner}
+          options={{headerShown: false,title:"",
+          headerTitleAlign: 'center',
+          headerTitleStyle:{
+            fontFamily:'Pretendard-SemiBold',
+            fontSize:14,
+            lineHeight:22,
+          },
+          headerShadowVisible: false,
+          headerLeft: () => <BackButton />,
+        }}
+        />
+      </MainRoot.Group>
+      {/* BNB */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={NoticeScreenName}
+          component={Notice}
+          options={{
+            headerShown: true,
+            title:"공지사항",
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,}}
+        />
+        <MainRoot.Screen
+          name={NoticeDetailPageName}
+          component={NoticeDetail}
+          options={{
+            headerShown: true,
+            title:"공지사항",
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,}}
         />
       </MainRoot.Group>
       {/* 식사구매 */}

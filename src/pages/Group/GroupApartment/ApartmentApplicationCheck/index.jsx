@@ -28,31 +28,31 @@ const Pages = () => {
     const datePress = () => {
         setModalVisible(true)
     }
-    const loadId = selected?.substr(1);
+    // const loadId = selected?.substr(1);
 
     
-    useEffect(() => {
-       async function LoadCheckList() {
-           const getId =  await getStorage('applicationId');
+    // useEffect(() => {
+    //    async function LoadCheckList() {
+    //        const getId =  await getStorage('applicationId');
            
-           if(selected === undefined){
-               await apartApplicationCheck(getId);
-               await apartApplicationList();
-           } else {
-                await apartApplicationCheck(loadId);
-                await apartApplicationList();
-           }
-        }
+    //        if(selected === undefined){
+    //            await apartApplicationCheck(getId);
+    //            await apartApplicationList();
+    //        } else {
+    //             await apartApplicationCheck(loadId);
+    //             await apartApplicationList();
+    //        }
+    //     }
 
-        LoadCheckList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[loadId])
+    //     LoadCheckList();
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // },[loadId])
     
-    const user = isApartCheck.user;
-    const info = isApartCheck.info;
-    const name = isApartCheck.info?.apartmentName;
-    const propsId = isApartApplicationList.filter(el => el.name === name);
-    console.log(isApartCheck)
+    // const user = isApartCheck.user;
+    // const info = isApartCheck.info;
+    // const name = isApartCheck.info?.apartmentName;
+    // const propsId = isApartApplicationList.filter(el => el.name === name);
+    // console.log(isApartCheck)
     return (
         <Wrapper>
             <ScrollViewWrap showsVerticalScrollIndicator={false} >
@@ -94,11 +94,11 @@ const Pages = () => {
                     <HeadingWrap>
                         <Heading>신청 정보</Heading>
                         <DetailWrap >
-                            <TextButton size='label13R' label='상세보기' type='blue' onPressEvent={()=>{navigation.navigate(ApartmentApplicationDetailPageName,{data:isApartCheck,id:propsId})}}/>
+                            {/* <TextButton size='label13R' label='상세보기' type='blue' onPressEvent={()=>{navigation.navigate(ApartmentApplicationDetailPageName,{data:isApartCheck,id:propsId})}}/> */}
                             <ArrowRightIcon/>
                         </DetailWrap>
                     </HeadingWrap>
-                    <TitleWrap>
+                    {/* <TitleWrap>
                         <Title>서비스 이용 아파트명</Title>
                         <TitleContent>{info?.apartmentName}</TitleContent>
                     </TitleWrap>
@@ -113,7 +113,7 @@ const Pages = () => {
                     <TitleWrap>
                         <Title>신청자 이메일</Title>
                         <TitleContent>{user?.email}</TitleContent>
-                    </TitleWrap>
+                    </TitleWrap> */}
                 </ContentsWrap>
             </ScrollViewWrap>
                 <ButtonWrap>

@@ -59,7 +59,7 @@ const Pages = () => {
             endData
         )
     });
-    console.log(isOrderMeal,'ddddddd')
+    
     async function loadUser(){
       await userInfo();
     }    
@@ -137,7 +137,9 @@ if(isUserInfoLoading){
           <ArrowIcon/>
           </SpotName>
           <Icons>
-            <BellIcon/>
+            <Pressable onPress={()=>{}}>
+              <BellIcon/>
+            </Pressable>
             <CsIcon/>
           </Icons>
         </BarWrap>

@@ -58,7 +58,7 @@ const Pages = () => {
                         {/* <AlreadyApartIcon/> */}
                     </ImageWrap>
                 </BoxWrap>
-                <NextView onPress={() => {navigation.navigate(HomePageName)}}>
+                <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>
                     <NextText>다음에 하기</NextText>
                 </NextView>
             </Wrap>

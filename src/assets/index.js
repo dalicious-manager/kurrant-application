@@ -18,4 +18,15 @@ export const Terminate = require('../assets/images/terminate.png');
 export const Corporation = require('../assets/images/corporation.png');
 export const Apartment = require('../assets/images/apartment.png');
 export const AlreadyApartment = require('../assets/images/alreadyApart.png');
-export const ApartMeal = require('../assets/images/apartMeal.png');
+export const VISA = require('../assets/images/card/stp_card_visa.png');
+export const MASTERCARD = require('../assets/images/card/stp_card_mastercard.png');
+export const AMEX = require('../assets/images/card/stp_card_amex.png');
+export const DISCOVER = require('../assets/images/card/stp_card_discover.png');
+export const UNKOWN = require('../assets/images/card/stp_card_unknown.png');
+export const JCB = require('../assets/images/card/stp_card_jcb.png');
+export const UNION = require('../assets/images/card/union-pay.png');
+export const MAESTRO = require('../assets/images/card/maestro.png');
+export const DINERS = require('../assets/images/card/diners-club.png');
+
+
+
