@@ -12,6 +12,7 @@ LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 const App = () => {
   
   useEffect(()=>{
+    codePush.sync({ checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,deploymentKey: userProfile.CODEPUSH_KEY , installMode: codePush.InstallMode.ON_NEXT_RESUME })
     SplashScreen.hide();
     async function requestUserPermission() {
       const authStatus = await messaging().requestPermission();
@@ -36,7 +37,7 @@ const App = () => {
       </ThemeProvider>
   );
 };
-export default codePush({ checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESUME })(App);
+export default App;
 
 
 //                   _ooOoo_

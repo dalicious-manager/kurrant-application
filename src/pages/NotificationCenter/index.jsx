@@ -10,7 +10,7 @@ export const PAGE_NAME = "P__NOTIFICATION_CENTER"
 const alramData =[
     {
         id:0,
-        title:"콥샐러드 주문시 1+1",
+        title:"콥샐러드 주문시 2+1",
         type:"promotion",
         description:"커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
         dateTime:"07. 21 13:30"
