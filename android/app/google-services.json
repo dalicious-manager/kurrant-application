@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "872782655273",
+    "project_id": "dalicious-v1",
+    "storage_bucket": "dalicious-v1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872782655273:android:99f17d4fe2829297b0d138",
+        "android_client_info": {
+          "package_name": "com.dalicious.kurrant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872782655273-ebfi02p8mg7roqal42v7i55r3ii8bno9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dalicious.kurrant",
+            "certificate_hash": "43e5850fa1b6f7df1e28fc284d5111861a9e5ab0"
+          }
+        },
+        {
+          "client_id": "872782655273-ufa9p9e2c71ec8e6hec9s3o412npmsan.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dalicious.kurrant",
+            "certificate_hash": "df2b1acd18aed851b8c63310fdc131184f2e36f4"
+          }
+        },
+        {
+          "client_id": "872782655273-mhb2jokicsaqb99astkb4hlqr4dndf7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNqlkRl8munxEXBx2quw85BDISsRZ55UM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "872782655273-mhb2jokicsaqb99astkb4hlqr4dndf7o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "872782655273-nn04qklq9mhoiivq5jscipo846dfp74h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.dalicious.kurrant"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
