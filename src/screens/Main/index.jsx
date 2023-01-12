@@ -130,7 +130,6 @@ import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/Meal
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
-import RegisterCardScanner, {PAGE_NAME as RegisterCardScannerPageName} from '../../pages/Main/MyPage/PersonalInfo/pages/PaymentManage/RegisterCardScanner';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
@@ -317,20 +316,7 @@ const Screen = () => {
           headerLeft: () => <BackButton />,
         }}
         />
-        <MainRoot.Screen
-          name={RegisterCardScannerPageName}
-          component={RegisterCardScanner}
-          options={{headerShown: false,title:"",
-          headerTitleAlign: 'center',
-          headerTitleStyle:{
-            fontFamily:'Pretendard-SemiBold',
-            fontSize:14,
-            lineHeight:22,
-          },
-          headerShadowVisible: false,
-          headerLeft: () => <BackButton />,
-        }}
-        />
+       
       </MainRoot.Group>
       {/* BNB */}
       <MainRoot.Group>

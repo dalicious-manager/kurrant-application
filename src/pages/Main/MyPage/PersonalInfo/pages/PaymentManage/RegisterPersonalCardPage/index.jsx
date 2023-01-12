@@ -13,7 +13,6 @@ import useKeyboardEvent from '~hook/useKeyboardEvent';
 
 import { PAGE_NAME as PaymentManagePage } from '..';
 import { isValidCardNumber } from '../../../../../../../utils/cardFormatter';
-import { PAGE_NAME as RegisterCardScannerPageName } from '../RegisterCardScanner';
 export const PAGE_NAME = "P__MY_PAGE__PAYMENT_MANAGE__REGISTER_PERSONAL_CARD";
 
 const Pages = ()=>{
@@ -50,7 +49,6 @@ const Pages = ()=>{
             <CardRegisteredBox>
                 <RegisteredTitleBox>
                     <Typography text='Title03SB' textColor={themeApp.colors.grey[2]}>카드 정보</Typography>
-                    {/* <Button label="카드 스캔" onPressEvent={()=> navigation.navigate(RegisterCardScannerPageName)}/> */}
                 </RegisteredTitleBox>
                 <RegiteredView>
                     <RefTextInput
