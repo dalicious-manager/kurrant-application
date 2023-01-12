@@ -237,7 +237,7 @@ android {
     }
     buildTypes {
         debug {
-            resValue "string", "CodePushDeploymentKey", '""'
+            resValue "string", "CodePushDeploymentKey", '"sErMDClAFbVUOkomiJfxOxNBK4h5l3fdG5b1T"'
             signingConfig signingConfigs.debug
         }
         release {
