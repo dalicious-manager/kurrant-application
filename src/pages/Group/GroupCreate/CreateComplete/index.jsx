@@ -11,9 +11,9 @@ import {PAGE_NAME as apartApplicationCheckPageName} from '../../GroupApartment/A
 
 export const PAGE_NAME = 'P_CREATE_GROUP_COMPLETE_MODAL';
 
-const Pages = () => {
+const Pages = ({route}) => {
     
-    
+    const name = route.params.name
     
     const navigation = useNavigation();
     return (

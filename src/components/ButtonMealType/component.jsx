@@ -8,21 +8,45 @@ const Component = ({
     label,
     disabled = false,
     touch,
-    setTouch
+    setTouch,
+    apartment,
+    corporation
 }) => {
     
     const title = ['아침','점심','저녁']
+    
+    const onPressButton = (idx) =>{
+        if(touch?.includes(idx)){
+            return setTouch(touch?.filter((v)=> v !== idx))
+        }
+        setTouch([...touch,idx]);
+    
+    }
+    
     const touchPress = () => { 
         
         setTouch(prev => !prev)
     }
     return (
-        <Wrap onPress={touchPress} disabled={disabled} touch={touch}>
+        <>
+        {corporation && title.map((t,idx) => {
+            return (
+                <Wrap key={idx}  onPress={()=>{onPressButton(idx)}} touch={touch?.includes(idx)} idx={idx}>
+                    <TextView>
+                        <Label touch={touch?.includes(idx)} idx={idx}>{t}</Label>
+                    </TextView>
+                </Wrap>
+            )
+        })}
+
+        {apartment && <Wrap onPress={touchPress} disabled={disabled} touch={touch}>
             <TextView>
                 <Label disabled={disabled} touch={touch}>{label}</Label>
             </TextView>
             {disabled && <Line/>}
-        </Wrap>
+        </Wrap>}
+        </>
+        
     )
 
 }
@@ -37,6 +61,7 @@ background-color:${({theme,disabled,touch}) => touch ? theme.colors.grey[2] : di
 align-items:center;
 justify-content:center;
 overflow:hidden;
+
 `;
 
 const Line = styled.View`
@@ -55,5 +80,5 @@ padding:8px 36px;
 `;
 
 const Label = styled(Typography).attrs({text:'BottomButtonSB'})`
-color:${({theme,disabled,touch}) => !touch ? theme.colors.grey[5] :disabled ? theme.colors.grey[6] : theme.colors.grey[0] };
+color:${({theme,disabled,touch}) => touch ? theme.colors.grey[0] :disabled ? theme.colors.grey[6] : theme.colors.grey[5] };
 `;

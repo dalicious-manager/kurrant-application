@@ -13,9 +13,9 @@ import Button from "../../../../../../components/Button";
 import WeekButton from "../../../../../../components/ButtonWeek";
 import RefTextInput from "../../../../../../components/RefTextInput";
 import Typography from "../../../../../../components/Typography";
+import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
 import { formattedMealTime, formattedTime } from '../../../../../../utils/dateFormatter';
 import { Cancel, Confirm, IosButton } from '../../SecondPage';
-
 
 export const PAGE_NAME = 'APARTMENT__APPLICATION__INFORMAION';
 const Pages = () => {
@@ -29,42 +29,23 @@ const Pages = () => {
     
     const [touch,setTouch] = useAtom(apartApplicationWeek);
 
-    // const [monday,setMonday] = useState(false);
-    // const [thuesday,setThuesday] = useState(false);
-    // const [wendnesday,setWendnesday] = useState(false);
-    // const [thursday,setThursday] = useState(false);
-    // const [friday,setFriday] = useState(false);
-    // const [saturday,setSaturday] = useState(false);
-    // const [sunday,setSunday] = useState(false);
-    
-    //const checkDay = [monday,thuesday,wendnesday,thursday,friday,saturday,sunday];
-    //console.log(formattedTime(time))
     const form = useForm({
         mode:'all'
       });
     
-    const {formState:{errors},watch,handleSubmit} = form;
+    const {formState:{errors},watch,handleSubmit,setValue} = form;
     //const daysChk = checkDay.some(el => el === true);
     const svcDongCountChk = watch('svcDongCount');
     const deliveryTimeChk = watch('deliveryTime');
-
+      
     const isValidation = 
-        (svcDongCountChk && !errors.name) &&
-        (touch.length !== 0) && (text !== '')
+        (svcDongCountChk && !errors.svcDongCount) &&
+        (touch.length !== 0) && (deliveryTimeChk && !errors.deliveryTime) 
         
 
     const inputStyle = {
         marginBottom:16,
       };
-
-    // const search = true;
-    // const searchResult = [];
-    // let index = checkDay.indexOf(search);
-    // while (index !== -1) {
-    //     searchResult.push(index);
-    //     index = checkDay.indexOf(search, index + 1);
-        
-    // }
 
     const saveAtom = () => {
         setMealInfo([{
@@ -79,6 +60,7 @@ const Pages = () => {
         setShow(true)
     }
 
+    const keyboardStatus = useKeyboardEvent();
     const onChange = (event,selectedTime) => {
         if (Platform.OS === 'android') {
             setShow(false);
@@ -86,6 +68,7 @@ const Pages = () => {
         // const currentDate = selectedDate;
         setTime(selectedTime);
         setText(formattedMealTime(selectedTime));
+        setValue('deliveryTime',formattedMealTime(selectedTime));
       };
     
     
@@ -113,7 +96,7 @@ const Pages = () => {
                             placeholder="배송 시간"
                             onPressIn={showTimePicker}
                             showSoftInputOnFocus={false}
-                            value={text}
+                            
                             />
                             <ArrowIcon/>
                         </View>
@@ -173,9 +156,9 @@ const Pages = () => {
                    
                 
             )}
-            {!show && <ButtonWrap>
+            {(!show && !keyboardStatus.isKeyboardActivate)&& <ButtonWrap>
                 <Button 
-                    disabled={!isValidation}
+                    // disabled={!isValidation}
                     label={'저장'} 
                     onPressEvent={()=>{saveAtom();navigation.goBack()}}/>
             </ButtonWrap>}

@@ -8,9 +8,9 @@ import useApartApplication from "../../../../../biz/useApartApplication/hook";
 import { apartMemoAtom, isApartMealInfoAtom, isApartmentApplicant, isApartSendAddressAtom, isApartSendAddressInfoAtom } from "../../../../../biz/useApartApplication/store";
 import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar2";
+import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import {PAGE_NAME as GroupCompletePageName} from '../../../GroupCreate/CreateComplete';
 import { Title } from "../ThirdPage";
-
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__LAST" ;
 const Pages = () => {
@@ -37,12 +37,14 @@ const Pages = () => {
         
         try{
             await apartApplication(data);
-            console.log('???')
-            navigation.navigate(GroupCompletePageName)
+            // console.log('???')
+            navigation.navigate(GroupCompletePageName,{name:'apartment'})
         }catch(err){
             console.log(err)
         }
     }
+
+    const keyboardStatus = useKeyboardEvent();
 
     return (
         <Wrap>
@@ -61,9 +63,10 @@ const Pages = () => {
                 </ContainerWrap>
             </KeyDismiss>
             
+            {!keyboardStatus.isKeyboardActivate &&
             <ButtonWrap>
                 <Button label={'스팟 개설 신청'} onPressEvent={()=>{applicationPress()}}/>
-            </ButtonWrap>
+            </ButtonWrap>}
         </Wrap>
     )
 }

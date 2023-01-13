@@ -14,10 +14,10 @@ import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar";
 import RefTextInput from "../../../../../components/RefTextInput";
 import Typography from '../../../../../components/Typography';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 import { formattedApplicationDate, formattedDate } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as corpApplicationThirdPageName} from '../ThirdPage';
 import {PAGE_NAME as corpApplicationPostcodePageName} from './Pages';
-
 
 export const PAGE_NAME = "P__GROUP__CREATE__COR__APPLICATION__SECOND" ;
 const Pages = () => {
@@ -26,24 +26,24 @@ const Pages = () => {
     
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [text, setText] = useAtom(corpApplicationDate);
+    // const [text, setText] = useAtom(corpApplicationDate); // 지워도될지도
     const [isCorpAddress,setCorpAddress] = useAtom(isCorpSendAddressAtom); // corporationInfo
+    const [isSendAddress,setSendAddress] = useAtom(isCorpSendAddressInfoAtom); // 나머지 주소 추가
     const isCoprFullAddress = useAtomValue(isCorpFullAddressAtom); // TextInput value
     //const isSendAddress = useAtomValue(isCorpSendAddressInfoAtom); // body에 담을 주소2
-    const [isRemainingAddress,setRemainingAddress] = useAtom(isCorpRemainingAddress); // 나머지 주소 나중에 추가해야함 
-    console.log(isCorpAddress,'아아')
+    
+    console.log(isSendAddress,'아아')
     const form = useForm({
         mode:'all'
       });
 
     const {formState:{errors},watch,handleSubmit,setValue} = form;
-
+    
     const corpNameChk = watch('corpName');
+    const corpAddresschk = watch('address');
     const corpRemainingAddressChk = watch('address2');
     const corpemployeeCountChk = watch('employeeCount');
-    const corpStartDateChk = formattedApplicationDate(watch('startDate'))
-    
-
+    const corpStartDateChk = watch('startDate')
     
     const isValidation = 
     (corpNameChk && !errors.corpName) &&
@@ -55,20 +55,21 @@ const Pages = () => {
     const inputStyle = {
         marginBottom:16,
       }
-
+    const keyboardStatus = useKeyboardEvent();
     const saveAtom =  () => {
-        AsyncStorage.setItem('corpPage2',JSON.stringify({
-            'corporationName' : corpNameChk,
-            'employeeCount':corpemployeeCountChk,
-            'startDate': corpStartDateChk
-        }))
+        // AsyncStorage.setItem('corpPage2',JSON.stringify({
+        //     'corporationName' : corpNameChk,
+        //     'employeeCount':corpemployeeCountChk,
+        //     'startDate': corpStartDateChk
+        // }))
+        setSendAddress({...isSendAddress,'address2':corpRemainingAddressChk})
         setCorpAddress({
             'corporationName' : corpNameChk,
-            'employeeCount':corpemployeeCountChk,
+            'employeeCount':Number(corpemployeeCountChk),
             'startDate' : formattedApplicationDate(date)
 
         });
-        setRemainingAddress(corpRemainingAddressChk)
+        
     }
     
     const showDatePicker = () => {
@@ -80,8 +81,8 @@ const Pages = () => {
             setShow(false);
         }
         setDate(selectedDate);
-        setText(formattedDate(selectedDate));
-        setValue('startDate',selectedDate)
+        
+        setValue('startDate',formattedDate(selectedDate))
       };
 
     const confirmPress = () =>{
@@ -89,19 +90,22 @@ const Pages = () => {
         setShow(false);
     }
 
-    useEffect(()=>{
-        AsyncStorage.getItem('corpPage2',(_err,result) => {
-            const page2 = JSON.parse(result);
-            setCorpAddress({
-                'corporationName' : page2.corporationName,
-                'employeeCount': page2.employeeCount,
-                'startDate' : page2.startDate
+    // useEffect(()=>{
+    //     AsyncStorage.getItem('corpPage2',(_err,result) => {
+    //         const page2 = JSON.parse(result);
+    //         setCorpAddress({
+    //             'corporationName' : page2.corporationName,
+    //             'employeeCount': page2.employeeCount,
+    //             'startDate' : page2.startDate
     
-            });
-            console.log(page2,'??@')
-        })
-    },[setCorpAddress])
-     
+    //         });
+    //         console.log(page2,'??@')
+    //     })
+    // },[setCorpAddress])
+     useLayoutEffect(()=>{
+        setValue('address',isCoprFullAddress)
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     },[isCoprFullAddress])
     return (
         <Wrap>
             <ProgressBar progress={2}/>
@@ -119,7 +123,7 @@ const Pages = () => {
                               required: '필수 입력 항목 입니다.',
                               pattern: {                        
                                 value: /^[가-힣a-zA-Z]+$/,
-                                message: '올바른 아파트명을 입력해 주세요.',
+                                message: '올바른 기업명을 입력해 주세요.',
                               }
                             }
                           }
@@ -130,7 +134,6 @@ const Pages = () => {
                             label="기업주소"
                             name="address"
                             placeholder="기업 주소"
-                            value={isCoprFullAddress}
                             onPressIn={()=>navigation.navigate(corpApplicationPostcodePageName)}
                             />
                             <ArrowIcon/>
@@ -141,7 +144,6 @@ const Pages = () => {
                         label="나머지 주소"
                         name="address2"
                         placeholder="나머지 주소"
-                        // keyboardType="numeric"
                         style={inputStyle}
                         // defaultValue={isCorpAddress.familyCount !== undefined && String(isCorpAddress.familyCount)}
                         />
@@ -153,6 +155,16 @@ const Pages = () => {
                         keyboardType="numeric"
                         style={inputStyle}
                         defaultValue={isCorpAddress.corporationName}
+
+                        rules={
+                            {
+                            //   required: '필수 입력 항목 입니다.',
+                              pattern: {                        
+                                value: /^[0-9]+$/,
+                                message: '숫자만 입력해 주세요.',
+                              }
+                            }
+                          }
                         />
 
                         <View>
@@ -160,7 +172,6 @@ const Pages = () => {
                             label="이용 시작 예정일"
                             name="startDate"
                             placeholder="이용 시작 예정일"
-                            value={text}
                             showSoftInputOnFocus={false}
                             onPressIn={showDatePicker}
                             defaultValue={isCorpAddress.startDate}
@@ -194,7 +205,7 @@ const Pages = () => {
             )}
                 
             
-            {!show&&<ButtonWrap>
+            {(!show&&!keyboardStatus.isKeyboardActivate) &&<ButtonWrap>
                 <Button 
                     label={'다음'}  
                     // disabled={!isValidation}

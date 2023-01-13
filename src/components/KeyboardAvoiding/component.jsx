@@ -41,7 +41,7 @@ const Component = ({
       }, []);
 
       const quantity = isLoadMeal.find(x => x.dailyFoodId === id);
-
+      console.log(quantity)
     return (
         <React.Fragment>
         { mealCart && <Wrap

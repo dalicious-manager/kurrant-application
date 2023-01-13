@@ -197,7 +197,7 @@ const BottomSheetTitle = styled(Typography).attrs({text : 'Title03SB'})`
 `;
 
 const BottomSheetDecs = styled(Typography).attrs({text : 'Body06R'})`
-
+color:${({theme}) => theme.colors.grey[4]};
 `;
 
 const ContentItemContainer = styled.TouchableOpacity`

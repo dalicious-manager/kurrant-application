@@ -12,6 +12,7 @@ import PlusIcon from "../../../../../assets/icons/MealDetail/plus.svg";
 import { loadMealCart } from "../../../../../biz/useShoppingBasket/Fetch";
 import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
 import { isQuantityAtom } from "../../../../../biz/useShoppingBasket/store";
+import useUserInfo from "../../../../../biz/useUserInfo";
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import NoMealButton from '../../../../../components/Button';
@@ -35,23 +36,24 @@ const Pages = () => {
     const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal } = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
+    const {isUserInfo} = useUserInfo();
     
-    useFocusEffect(
-        useCallback(() => {
-            // Do something when the screen is focused
-            console.log('들어옴')
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         // Do something when the screen is focused
+    //         console.log('들어옴')
         
 
-            return  () => {
-            // Do something when the screen is unfocused
-                console.log("나감")
-                    updateMeal({"updateCartList":quantity});
+    //         return  () => {
+    //         // Do something when the screen is unfocused
+    //             console.log("나감")
+    //                 updateMeal({"updateCartList":quantity});
             
-            };
+    //         };
     
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updateMeal])
-    );
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [updateMeal])
+    // );
     useEffect(()=>{
         async function loadCart(){
             try {
@@ -71,7 +73,6 @@ const Pages = () => {
             count: m.count
         }
      });
-    //console.log(quantity)
     const pointButton = () => {
         setModalVisible(true);
     }
@@ -99,16 +100,37 @@ const Pages = () => {
         setLoadMeal(substracQty);
      
     }
-    
-    const totalCount = isLoadMeal.map(p => p.count).reduce((acc,cur) => {
+    // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
+    const totalCount = isLoadMeal?.map(p => p.count).reduce((acc,cur) => {
         return acc + cur
     },0);
 
-    const totalPrice = isLoadMeal.map(p => p.count * p.price).reduce((acc,cur) => {
+    const totalMealPrice = isLoadMeal?.map(p => p.count * p.price).reduce((acc,cur) => {
         return acc + cur
     },0);
-    // const totalCount = 1200;
-    // const totalPrice = 1200000;
+    // 배송비
+    const deliveryFee = isLoadMeal?.map(p => p.deliveryFee).reduce((acc,cur) => {
+        return acc + cur
+    },0);
+    // 기간 할인 금액
+    const periodDiscountPrice = isLoadMeal?.map(p => p.periodDiscountPrice).reduce((acc,cur) => {
+        return acc + cur
+    },0);
+    // 멤버십 할인 금액
+    const membershipPrice = isLoadMeal?.map(p => p.membershipPrice).reduce((acc,cur) => {
+        return acc + cur
+    },0);
+    // 판매자 할인 금액
+    const discountPrice = isLoadMeal?.map(p => p.discountPrice).reduce((acc,cur) => {
+        return acc + cur
+    },0);
+    // 회사 지원금
+    const supportPrice = isLoadMeal?.map(p => p.supportPrice).reduce((acc,cur) => {
+        return acc + cur
+    },0);
+
+    // 총 결제금액
+    const totalPrice = totalMealPrice - (deliveryFee + periodDiscountPrice  + membershipPrice + discountPrice + supportPrice)
     
     const focusPress = () => {
         setFocus(true);
@@ -152,20 +174,20 @@ const Pages = () => {
 
 
     const modifyPress = async () => {
-        try {
-            await updateMeal({"updateCartList":quantity});
-        } catch(err){
-            throw new Error ('에러남')
-        }
+        // try {
+        //     await updateMeal({"updateCartList":quantity});
+        // } catch(err){
+        //     throw new Error ('에러남')
+        // }
     }
 
     const clearInput = () => {
         inputRef.current.setNativeProps({ text: ''  }); 
     }
-    
+    // console.log(isLoadMeal)
     return (
         <SafeView>
-            {isLoadMeal.length === 0 && <EmptyView>
+            {isLoadMeal?.length === 0 && <EmptyView>
                 <NoMealText>아직 담은 식사가 없어요!</NoMealText>
                 <NoMealButtonWrap>
                     <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
@@ -173,8 +195,9 @@ const Pages = () => {
             </EmptyView>}
             <ScrollViewWrap showsVerticalScrollIndicator={false}>
                 {isLoadMeal?.map((l,idx) => {
+                    
                     const price = l.price * l.count;
-                
+                    const mealDiscountPrice = ((l.price * l.count) - ((l.price * l.count) * l.discountRate));
                     return (
                         <Wrap key={idx}>
                             <ContentHeader>
@@ -182,17 +205,19 @@ const Pages = () => {
                                 <Pressable onPress={()=>{deleteButton(l.dailyFoodId)}}><DeleteIcon/></Pressable>
                             </ContentHeader>
                             <ContentWrap>
-                            <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-                                <View>
-                                    <MealName>[{l.makers.name}] {l.name}</MealName>
+                                <MealImage source={{uri:`${l.img}`}}/>
+                                <MealNameView>
+                                    <MealName numberOfLines={1} ellipsizeMode="tail">[{l.makers.name}] {l.name}</MealName>
                                     {/* 할인 적용 되면  */}
-                                    {/* <SalePriceWrap>
-                                        <PointBoldText>20%</PointBoldText>
-                                    <Price>{withCommas(el.price)}원</Price>
+                                    <SalePriceWrap>
+                                        <PointBoldText>{(l.discountRate)*100}%</PointBoldText>
+                                    <Price>{withCommas(mealDiscountPrice)}원</Price>
                                     </SalePriceWrap>
-                                    <SalePrice>{withCommas(el.price)}원</SalePrice> */}
-                                    <Price>{withCommas(price)}원</Price>
-                                </View>
+                                    {/* 할인 전 가격 */}
+                                    <SalePrice>{withCommas(price)}원</SalePrice>
+                                    {/* 할인 하나도 없을 때 */}
+                                    {/* <Price>{withCommas(price)}원</Price> */}
+                                </MealNameView>
                                 <CountWrap>                                
                                         <Count
                                             cart
@@ -214,30 +239,30 @@ const Pages = () => {
                 <PaymentWrap>
                     <PaymentView>
                         <PaymentText>총 상품금액</PaymentText>
-                        <PaymentText>{withCommas(totalPrice)}원</PaymentText>
+                        <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView >
                         <PressableView onPress={fundButton}>
                             <PaymentText >회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
                          </PressableView>
-                            <PaymentText>- 10,000 원</PaymentText>
+                            <PaymentText>-{supportPrice === 0 ? 0 : withCommas(supportPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>멤버십 할인 금액</PaymentText>
-                        <PaymentText>- 20,000원</PaymentText>
+                        <PaymentText>- {membershipPrice === 0 ? 0 : withCommas(membershipPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>판매자 할인 금액</PaymentText>
-                        <PaymentText>- 20,000원</PaymentText>
+                        <PaymentText>- {discountPrice === 0 ? 0 : withCommas(discountPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>기간 할인 금액</PaymentText>
-                        <PaymentText>- 20,000원</PaymentText>
+                        <PaymentText>- {periodDiscountPrice === 0 ? 0 : withCommas(periodDiscountPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>
-                        <PaymentText>0 원</PaymentText>
+                        <PaymentText>{deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PressableView onPress={pointButton}>
@@ -254,9 +279,12 @@ const Pages = () => {
                             </PointWrap>
                         </KeyboardAvoidingView>
                     </PaymentView>
+                    <UserPointView>
+                            <UserPointText>잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserPointText>
+                    </UserPointView>
                     <PaymentView>
                         <TotalPriceTitle>총 결제금액</TotalPriceTitle>
-                        <TotalPrice>10,000 원</TotalPrice>
+                        <TotalPrice>{withCommas(totalPrice)} 원</TotalPrice>
                     </PaymentView>
                 </PaymentWrap>
                 </View>
@@ -275,10 +303,12 @@ const Pages = () => {
             
            
             {isLoadMeal.length !== 0 && <ButtonWrap focus={focus}>
-                <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName);modifyPress()}}/>
+                <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} onPressEvent={()=>{navigation.navigate(PaymentPageName,{
+                    totalCount,totalMealPrice,deliveryFee,periodDiscountPrice,membershipPrice,discountPrice,supportPrice,totalPrice
+                });modifyPress()}}/>
             </ButtonWrap>}
              
-            <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
+            <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
             <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                     
             </SafeView>
@@ -331,7 +361,7 @@ margin-right:12px;
 `;
 
 export const PointBoldText = styled(Typography).attrs({text:'Body05SB'})`
-color: ${props => props.theme.colors.green[500]};
+color: ${props => props.theme.colors.red[500]};
 padding-right:4px;
 `;
 
@@ -474,4 +504,19 @@ right:6px;
 export const PointUnitText = styled(Typography).attrs({text:'Title04R'})`
 color:${({theme}) => theme.colors.grey[2]};
 margin-left:8px;
+`;
+
+const MealNameView = styled.View`
+width:80%;
+`;
+
+const UserPointView = styled.View`
+flex-direction:row;
+justify-content:flex-end;
+margin:0px 28px;
+`;
+
+const UserPointText = styled(Typography).attrs({text:'SmallLabel'})`
+color:${({theme}) => theme.colors.grey[4]};
+margin-bottom:24px;
 `;
