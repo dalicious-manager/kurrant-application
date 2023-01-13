@@ -14,7 +14,7 @@ const Pages = () =>{
     const navigation = useNavigation();
     const [,setApartFullAddress] = useAtom(isApartFullAddressAtom); //TextInput 에 보여줄 주소
     const [aa,setSendAddress] = useAtom(isApartSendAddressInfoAtom); // body에 담을 주소
-console.log(aa,'aa')
+
     const handleAddress = (data) => {
         let fullAddress = data.address;
         let extraAddress = ''; 
@@ -39,6 +39,8 @@ console.log(aa,'aa')
           'address2' : roadAddress,
           
         })
+
+        navigation.goBack();
       }
     
     return (
@@ -47,7 +49,7 @@ console.log(aa,'aa')
             onSelected={(data) => {
                 handleAddress(data);
                 
-                //navigation.goBack()
+              
             }} 
             />      
         </ModalWrap>

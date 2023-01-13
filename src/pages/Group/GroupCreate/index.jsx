@@ -13,6 +13,7 @@ import Typography from "../../../components/Typography";
 import { SCREEN_NAME } from "../../../screens/Main/Bnb";
 import {PAGE_NAME as HomePageName} from '../../Main/Bnb/Home/Main';
 import {PAGE_NAME as GroupCreateApartmentPageName} from '../GroupApartment';
+import {PAGE_NAME as ApartmentSearchPageName} from '../GroupApartment/SearchApartment';
 import {PAGE_NAME as GroupCreateCorporationsPageName} from '../GroupCorporations';
 
 export const PAGE_NAME = "P__GROUP__CREATE" ;
@@ -47,7 +48,7 @@ const Pages = () => {
                         <ApartmentIcon/>
                     </ImageWrap>
                 </BoxWrap>
-                <BoxWrap>
+                <BoxWrap onPress={()=>{navigation.navigate(ApartmentSearchPageName)}}>
                     <MainTitle>우리 아파트가 이미{"\n"}커런트밀 고객사인가요?</MainTitle>
                     <SubTitleWrap>
                         <SubTitle>우리 아파트 검색</SubTitle>
@@ -58,7 +59,7 @@ const Pages = () => {
                         {/* <AlreadyApartIcon/> */}
                     </ImageWrap>
                 </BoxWrap>
-                <NextView onPress={() => {navigation.navigate(HomePageName)}}>
+                <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>
                     <NextText>다음에 하기</NextText>
                 </NextView>
             </Wrap>

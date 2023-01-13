@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { View,Text } from "react-native";
+import React from "react";
 import styled from "styled-components";
 
 import useShoppingBasket from "../../biz/useShoppingBasket/hook";
@@ -8,18 +7,7 @@ import Typography from "../Typography";
 
 const Component = () =>{
 
-    const {isLoadMeal,loadMeal,isquantity} = useShoppingBasket();
-    // useEffect(()=>{
-    //     async function loadCart(){
-    //         await loadMeal();
-            
-    //     }
-    //     loadCart();
-    
-    
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // },[])
-
+    const {isquantity} = useShoppingBasket();
 
     return (
         <>

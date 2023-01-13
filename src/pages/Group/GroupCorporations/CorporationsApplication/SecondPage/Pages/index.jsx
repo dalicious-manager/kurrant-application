@@ -2,6 +2,7 @@ import Postcode from '@actbase/react-daum-postcode';
 import { useNavigation } from '@react-navigation/native';
 import { useAtom } from 'jotai';
 import React from "react";
+import { useForm } from 'react-hook-form';
 import { SafeAreaView, Text } from "react-native";
 import styled from "styled-components";
 
@@ -9,20 +10,21 @@ import { isCorpFullAddressAtom, isCorpSendAddressInfoAtom } from '../../../../..
 
 
 
-
 export const PAGE_NAME = 'CORPORATION__APPLICATION__INFORMAION_POSTCODE';
 const Pages = () =>{
+
 
     const navigation = useNavigation();
     const [,setCorpFullAddress] = useAtom(isCorpFullAddressAtom); //TextInput 에 보여줄 주소
     const [,setSendAddress] = useAtom(isCorpSendAddressInfoAtom); // body에 담을 주소
+    
     const handleAddress = (data) => {
         let fullAddress = data.address;
         let extraAddress = ''; 
         const zipcode = data.zonecode;
         const address = data.address;
         const roadAddress = data.query;
-        console.log(data)
+        
         if (data.addressType === 'R') {
           if (data.bname !== '') {
             extraAddress += data.bname;
@@ -33,12 +35,12 @@ const Pages = () =>{
           fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
         }
 
-            
+        
         setCorpFullAddress(fullAddress);
         setSendAddress({
           'zipCode' : Number(zipcode),
           'address1' : fullAddress,
-          'address2' : '',
+          
           
         })
         navigation.goBack();

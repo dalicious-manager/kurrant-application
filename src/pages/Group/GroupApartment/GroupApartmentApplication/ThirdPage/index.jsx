@@ -39,9 +39,9 @@ const Pages = () => {
                     <Container>
                         <Title>식사 타입</Title>
                             <MealButtonWrap>
-                                <MealButton label={'아침'} touch={touch} setTouch={setTouch} />
-                                <MealButton label={'점심'} disabled={true}  />
-                                <MealButton label={'저녁'} disabled={true} />
+                                <MealButton label={'아침'} touch={touch} setTouch={setTouch} apartment/>
+                                <MealButton label={'점심'} disabled={true} apartment/>
+                                <MealButton label={'저녁'} disabled={true} apartment />
                             </MealButtonWrap>
                     </Container>
                     {touch && <Container>
@@ -58,7 +58,7 @@ const Pages = () => {
             <ButtonWrap>
                 <Button 
                 label={'다음'} 
-                disabled={!isValidation}
+                // disabled={!isValidation}
                 onPressEvent={()=>{navigation.navigate(ApartmentApplicationLastPageName)}}/>
             </ButtonWrap>
         </Wrap>

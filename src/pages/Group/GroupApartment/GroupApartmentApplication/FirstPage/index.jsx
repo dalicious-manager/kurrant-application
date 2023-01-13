@@ -13,8 +13,8 @@ import Form from "../../../../../components/Form";
 import ProgressBar from "../../../../../components/ProgressBar2";
 import RefTextInput from "../../../../../components/RefTextInput";
 import Typography from "../../../../../components/Typography";
+import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import {PAGE_NAME as ApartmentApplicationSecondPageName} from '../SecondPage';
-
 
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__FIRST" ;
 const Pages = () => {
@@ -37,24 +37,27 @@ const Pages = () => {
         }
 
     const checkBox = information.watch('agreeCheck');
-    const namechk = watch('name');
-    const phonechk = watch('phone');
-    const emailchk = watch('email');
-  console.log(checkBox,'dkdkd')
+    const nameChk = watch('name');
+    const phoneChk = watch('phone');
+    const emailChk = watch('email');
+  console.log(isApplicant,'dkdkd')
+  
     const isValidation = 
-        (namechk && !errors.name) &&
-        (phonechk &&!errors.phone) &&
-        (emailchk && !errors.email);
+        (nameChk && !errors.name) &&
+        (phoneChk &&!errors.phone) &&
+        (emailChk && !errors.email);
 
+    const keyboardStatus = useKeyboardEvent();
     const saveAtom = () =>{
         // setName(namechk)
         setApplicant({
-            'name' : namechk,
-            'phone' : phonechk,
-            'email' : emailchk
+            'name' : nameChk,
+            'phone' : phoneChk,
+            'email' : emailChk
         });
+        
     };
-
+    console.log(nameChk,phoneChk,emailChk)
     const controlInput = () => {
       if(checkBox !== undefined && !checkBox){
         nameRef.current.setNativeProps({ text: userInfo.name  });
@@ -85,7 +88,7 @@ const Pages = () => {
                         name="name"
                         placeholder="신청자명"
                         style={inputStyle}
-                        defaultValue={userInfo.name}
+                        // defaultValue={userInfo.name}
                         ref={nameRef}
                         rules={
                             {
@@ -104,8 +107,8 @@ const Pages = () => {
                         placeholder="신청자 연락처"
                         keyboardType="numeric"
                         style={inputStyle}
-                        defaultValue={userInfo.phone}
-                        // value={isApplicant.phone}
+                        // defaultValue={userInfo.phone}
+                        
                         ref={phoneRef}
                         rules={
                             {
@@ -126,8 +129,8 @@ const Pages = () => {
                         keyboardType="email-address"
                         autoCapitalize = "none"
                         style={inputStyle}
-                        defaultValue={userInfo.email}
-                        // value={isApplicant.email}
+                        // defaultValue={userInfo.email}
+                        
                         ref={emailRef}
                         rules={
                             {
@@ -145,12 +148,13 @@ const Pages = () => {
             </FormProvider>
             
             
+            {!keyboardStatus.isKeyboardActivate && 
             <ButtonWrap>
                 <Button 
                 label={'다음'} 
                 // disabled={!isValidation}
-                onPressEvent={()=>{navigation.navigate(ApartmentApplicationSecondPageName);saveAtom()}} />
-            </ButtonWrap>
+                onPressEvent={()=>{saveAtom();navigation.navigate(ApartmentApplicationSecondPageName);}} />
+            </ButtonWrap>}
         </Wrap>
     )
 }

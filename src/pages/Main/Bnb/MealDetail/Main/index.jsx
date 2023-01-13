@@ -38,7 +38,7 @@ const Pages = ({route}) => {
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,isFoodDetailLoading,foodDetail} = useFoodDetail();
     const {addMeal,loadMeal,isLoadMeal} = useShoppingBasket();
-    
+    console.log(isFoodDetail)
     const headerTitle = isFoodDetail?.name;
     const foodId = route.params.foodId;
     const dailyFoodId = route.params.dailyFoodId;
@@ -114,7 +114,6 @@ const Pages = ({route}) => {
                closeModal();    
     }
 
-
     const increasePress = () => {
         setCount(prev => Number(prev) + 1);
       };
@@ -139,9 +138,7 @@ const Pages = ({route}) => {
         setCount(number);
       };
 
-    const PRICE = 7500;
-    let result = PRICE.toLocaleString('ko-KR');
-
+    
     if(isFoodDetailLoading){
         return  <Skeleton/>
     }
@@ -157,7 +154,7 @@ const Pages = ({route}) => {
             >
                 <View style={{marginBottom:150}}>
                     {scroll > 60 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
-                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                    <MealImage source={{uri:`${isFoodDetail?.img}`}}/>
                 <Content>
                     <View>
                         <MakersName>{isFoodDetail?.makers}</MakersName>
@@ -199,15 +196,15 @@ const Pages = ({route}) => {
                         <InfoTextView>
                             <InfoTextWrap>
                                 <Info>멤버십 할인</Info>
-                                <Info>10%</Info>
-                            </InfoTextWrap>
-                            <InfoTextWrap>
-                                <Info>판매자 할인</Info>
                                 <Info>20%</Info>
                             </InfoTextWrap>
                             <InfoTextWrap>
+                                <Info>판매자 할인</Info>
+                                <Info>15%</Info>
+                            </InfoTextWrap>
+                            <InfoTextWrap>
                                 <Info>기간 할인</Info>
-                                <Info>5%</Info>
+                                <Info>10%</Info>
                             </InfoTextWrap>
                         </InfoTextView>
                     </InfoWrap>
@@ -234,12 +231,12 @@ const Pages = ({route}) => {
                 </Content>
                 
                 {/* 리뷰자리 */}
-                <Content >
+                {/* <Content >
                     <View>
                     <ReviewPage/>
                     </View>
                 </Content>
-                <MoreButton/>
+                <MoreButton/> */}
                 </View>
                 </ScrollViewWrap>
 
@@ -257,7 +254,7 @@ const Pages = ({route}) => {
                 { !focus && 
                 <ButtonWrap >
                     <Button 
-                        price={PRICE} 
+                        price={isFoodDetail?.price} 
                         onPressEvent2={()=>{addCartPress()}}
                         onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
                         count={count} 

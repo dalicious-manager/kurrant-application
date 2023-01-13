@@ -12,27 +12,30 @@ import MealButton from "../../../../../components/ButtonMealType";
 import Label from "../../../../../components/Label";
 import ProgressBar from "../../../../../components/ProgressBar";
 import Typography from "../../../../../components/Typography";
+import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
+import {PAGE_NAME as CorpApplicationFourthPageName } from "../FourthPage";
 import {PAGE_NAME as CorpApplicationInformationPageName } from "../ThirdPage/Pages";
 
 export const PAGE_NAME = "P__GROUP__CREATE__CORPORATION__APPLICATION__THIRD" ;
 const Pages = () => {
     const navigation = useNavigation();
 
-    const [touch,setTouch] = useState(false);
-    const [touch2,setTouch2] = useState(false);
-    const [touch3,setTouch3] = useState(false);
-
-    const [isMorning,setMorning] = useAtom(isCorpMealMorningInfoAtom);
-    const [islunch,setLunch] = useAtom(isCorpMealLunchInfoAtom);
-    const [isdinner,setDinner] = useAtom(isCorpMealDinnerInfoAtom);
-    const mealInfo = useAtomValue(isCorpMealInfoAtom);
-
+    const [touch,setTouch] = useAtom(isCorpMealInfoAtom);
+console.log(touch.length)
+    const isMorning = useAtomValue(isCorpMealMorningInfoAtom);
+    const isLunch = useAtomValue(isCorpMealLunchInfoAtom);
+    const isDinner = useAtomValue(isCorpMealDinnerInfoAtom);
     
     const inputStyle = {
         marginBottom:16,
       }
-    
 
+    const isValidation = (touch.length !== 0 ) && (isMorning !== null || isLunch !== null || isDinner)
+    //   (priceAverageChk && !errors.priceAverage) &&
+    //   (touch.length !== 0) && (supportPriceChk && !errors.supportPrice)
+    //   && (deliveryTimeChk && !errors.deliveryTime) &&  (svcCountChk && !errors.svcCount)
+    const keyboardStatus = useKeyboardEvent();
+    
     return (
         <Wrap>
             <ProgressBar progress={3}/>
@@ -40,45 +43,46 @@ const Pages = () => {
                     <Container>
                         <Title>식사 타입</Title>
                             <MealButtonWrap>
-                                <MealButton label={'아침'} touch={touch} setTouch={setTouch} />
-                                <MealButton label={'점심'} touch={touch2} setTouch={setTouch2} />
-                                <MealButton label={'저녁'} touch={touch3} setTouch={setTouch3}/>
+                                <MealButton touch={touch} setTouch={setTouch} corporation/>
                             </MealButtonWrap>
+                        
                     </Container>
-                    {touch && <Container>
+                   {touch.includes(0) && <Container>
                         <Title>식사 정보</Title>
                         <InfoBar onPress={()=>{navigation.navigate(CorpApplicationInformationPageName,{diningType:1})}}>
                             <DiningType>아침</DiningType>
                             <InfoBarView>
-                                {mealInfo === null ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
+                                {isMorning === null ? <Label type='blue' label='입력하기' size='labelM' /> : <Label type='grey8' label='입력완료' size='labelM' />}
                                 <ArrowIcon/>
                             </InfoBarView>
                         </InfoBar>
                     </Container>}
-                    {touch2 && <Container>
-                        <Title>식사 정보</Title>
+                    {touch.includes(1) && <Container>
                         <InfoBar onPress={()=>{navigation.navigate(CorpApplicationInformationPageName,{diningType:2})}}>
                             <DiningType>점심</DiningType>
                             <InfoBarView>
-                                {mealInfo === null ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
+                                {isLunch === null ?<Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
                                 <ArrowIcon/>
                             </InfoBarView>
                         </InfoBar>
                     </Container>}
-                    {touch3 && <Container>
-                        <Title>식사 정보</Title>
-                        <InfoBar onPress={()=>{navigation.navigate(CorpApplicationInformationPageName)}}>
+                    {touch.includes(2) && <Container>
+                        <InfoBar onPress={()=>{navigation.navigate(CorpApplicationInformationPageName,{diningType:3})}}>
                             <DiningType>저녁</DiningType>
                             <InfoBarView>
-                                {mealInfo === null ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
+                                {isDinner === null ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
                                 <ArrowIcon/>
                             </InfoBarView>
                         </InfoBar>
                     </Container>}
                 </ContainerWrap>
+            {!keyboardStatus.isKeyboardActivate &&
             <ButtonWrap>
-                <Button label={'다음'} onPressEvent={()=>{navigation.navigate()}}/>
-            </ButtonWrap>
+                <Button 
+                label={'다음'} 
+                // disabled={!isValidation}
+                onPressEvent={()=>{navigation.navigate(CorpApplicationFourthPageName)}}/>
+            </ButtonWrap>}
         </Wrap>
     )
 }

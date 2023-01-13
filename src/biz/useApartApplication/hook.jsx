@@ -2,7 +2,7 @@ import {useAtom} from 'jotai';
 
 import { setStorage } from '../../utils/asyncStorage';
 import * as Fetch from './Fetch';
-import { apartApplicationListAtom, apartApplicationResAtom, isApartApplicationCheckAtom } from './store';
+import { apartApplicationListAtom, apartApplicationResAtom, apartSearchAtom, applicationListAtom, isApartApplicationCheckAtom, isApartApplicationLoadingAtom } from './store';
 
 
 
@@ -10,7 +10,8 @@ const useApartApplication = () => {
 
     const [isApartCheck,setApartCheck] = useAtom(isApartApplicationCheckAtom);
     const [isApartRes,setApartRes] = useAtom(apartApplicationResAtom);
-    const [isApartApplicationList,setApartApplicationList] = useAtom(apartApplicationListAtom);
+    const [isApartSearch,setApartSearch] = useAtom(apartSearchAtom);
+    const [isApartLoading,setApartLoading] = useAtom(isApartApplicationLoadingAtom);
 
     const apartApplication = async (body,option={}) => {
         try {
@@ -20,9 +21,7 @@ const useApartApplication = () => {
             },
             option
             );
-            setApartRes(res.data); // response 저장
-            console.log(res.data)
-            await setStorage('applicationId',res.data.id.toString())
+            
             return res;
 
         } catch(err){
@@ -30,14 +29,17 @@ const useApartApplication = () => {
         }
     }
 
-    // 신청내역 확인
+    // 신청내역 조회
     const apartApplicationCheck = async(id) =>{
         try {
+            setApartLoading(true)
             const res = await Fetch.ApartmentApplicationCheck(id)
-            console.log(res.data.user)
+            
             setApartCheck(res.data)
         } catch(err) {
             throw err
+        } finally {
+            setApartLoading(false)
         }
     }
 
@@ -57,13 +59,27 @@ const useApartApplication = () => {
         }
     }
 
-    const apartApplicationList = async () =>{
+    // 아파트 검색
+    const apartSearch = async () => {
         try {
-            const res = await Fetch.ApartmentApplicationList();
-
-            setApartApplicationList(res.data)
+            const res = await Fetch.ApartmentSearch();
+            
+            setApartSearch(res.data)
         } catch(err){
-            console.log(err);
+            console.log(err)
+        }
+    }
+
+    // 유저 아파트 스팟 등록
+    const apartmentRegisterSpot = async (id,body) => {
+        try {
+            const res = await Fetch.ApartmentRegisterSpot(id,{
+                ...body
+            })
+            console.log(res.data)
+            return res
+        } catch(err){
+            console.log(err)
         }
     }
 
@@ -71,10 +87,12 @@ const useApartApplication = () => {
         apartApplication,
         apartApplicationCheck,
         apartApplicationMemo,
-        apartApplicationList,
-        isApartApplicationList,
+        apartSearch,
+        apartmentRegisterSpot,
         isApartCheck,
         isApartRes,
+        isApartSearch,
+        isApartLoading,
         setApartCheck
     }
 };

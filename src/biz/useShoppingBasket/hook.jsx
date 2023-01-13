@@ -15,9 +15,9 @@ const useShoppingBasket = () => {
             if(res.data === null){
                 throw new Error ('에러')
             }
-            setLoadMeal(res.data);
+            setLoadMeal(res.data[0]);
             
-            setQuantity(res.data.length);
+            setQuantity(res.data[0].length);
         } catch (err) {
             throw err;
         }

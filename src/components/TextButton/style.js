@@ -14,6 +14,7 @@ const labelSizeStyle = {
    label15R: textStyles.Button09R,
    label13SB: textStyles.Button10SB,
    label13R: textStyles.Button10R,
+   
 
 }
 
@@ -26,8 +27,14 @@ const labelColor = {
     grey2: css`
         color: ${({theme}) => theme.colors.grey[2]};
     `,
+    grey3: css`
+    color: ${({theme}) => theme.colors.grey[3]};
+    `,
     grey4: css`
         color: ${({theme}) => theme.colors.grey[4]};
+    `,
+    grey5: css`
+    color: ${({theme}) => theme.colors.grey[5]};
     `,
     grey6: css`
         color: ${({theme}) => theme.colors.grey[6]};

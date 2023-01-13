@@ -45,6 +45,7 @@ const Component = forwardRef(({
     authText:'',
     authPressEvent:()=>{console.log('인증 요청')},
   },
+  padding='4px 8px',
   setisFocused,
   label = '',
   caption ='',
@@ -151,6 +152,7 @@ const Component = forwardRef(({
             >
               <InputContainer>
                 <StyledTextInput
+                  paddings={padding}
                   ref={ref && ref}
                   {...textInputProps}
                   onChangeText={onChange}
@@ -253,7 +255,7 @@ const ControlContainer = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-  border-radius: 6px;
+  /* border-radius: 6px; */
   border: none;
   ${({isEditable,theme,isError,focus})=> { 
     if(isEditable){
@@ -287,8 +289,8 @@ const InputContainer = styled.View`
 const StyledTextInput = styled.TextInput`
   width: 100%;
   ${({text})=> text && textStyles[text]}
-  padding: 4px 8px;
-
+  /* padding: 4px 8px; */
+  padding:${({paddings}) => paddings && paddings};
   ${({suffix}) => {
     if (suffix) {
       return css`

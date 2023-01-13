@@ -48,6 +48,9 @@ export function formattedDate(data, delimiter = '.') {
   if (delimiter === "년월일") {
     return `${year}년 ${month}월 ${day}일`;
   }
+  if (delimiter === '/') {
+  return `${year}/${month}/${day}`;
+}
   return [year, month, day].join(delimiter);
 }
 

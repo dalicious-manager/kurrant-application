@@ -16,7 +16,7 @@ const Component = ({
 
     const onPressButton = (idx) =>{
         if(touch?.includes(idx)){
-            return setTouch(touch?.filter((v)=> v !==idx))
+            return setTouch(touch?.filter((v)=> v !== idx))
         }
         setTouch([...touch,idx]);
     
@@ -45,11 +45,11 @@ justify-content:space-between;
 margin-bottom:8px;
 `;
 const ButtonWrap = styled.Pressable`
-background-color:${({theme,touch,checked,idx}) => touch ? theme.colors.grey[2] : theme.colors.grey[8]};
+background-color:${({theme,touch}) => touch ? theme.colors.grey[2] : theme.colors.grey[8]};
 padding: 8px 12px;
 border-radius:7px;
 `;
 
 const WeekText =styled(Typography).attrs({text:'BottomButtonSB'})`
-color:${({theme,touch,checked,idx}) => touch ?  theme.colors.grey[0] : theme.colors.grey[5]};
+color:${({theme,touch}) => touch ?  theme.colors.grey[0] : theme.colors.grey[5]};
 `;

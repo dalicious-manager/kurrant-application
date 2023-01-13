@@ -27,6 +27,7 @@ import Typography from '../../../../../components/Typography';
 import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as ApartApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
+import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from "../../Home/Skeleton";
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
@@ -59,7 +60,7 @@ const Pages = () => {
             endData
         )
     });
-    console.log(isOrderMeal,'ddddddd')
+  
     async function loadUser(){
       await userInfo();
     }    
@@ -126,7 +127,10 @@ if(isUserInfoLoading){
         <Text> 임시버튼(그룹/스팟) </Text>
       </Pressable>
       <Pressable onPress={() => {navigation.navigate(ApartApplicationCheckPageName)}}>
-        <Text> 임시버튼 (아파트 신청조회) </Text>
+        <Text> 임시버튼 (신청조회) </Text>
+      </Pressable>
+      <Pressable onPress={() => {navigation.navigate(GroupManagePageName)}}>
+        <Text> 임시버튼 (스팟관리) </Text>
       </Pressable>
       <View>
         <BarWrap>

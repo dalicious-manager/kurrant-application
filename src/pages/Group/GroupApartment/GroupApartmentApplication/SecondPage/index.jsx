@@ -13,7 +13,8 @@ import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar2";
 import RefTextInput from "../../../../../components/RefTextInput";
 import Typography from '../../../../../components/Typography';
-import { formattedApplicationDate, formattedDate } from '../../../../../utils/dateFormatter';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import { formattedApplicationDate, formattedDate, formattedMealTime } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as ApartmentApplicationThirdPageName} from '../ThirdPage';
 import {PAGE_NAME as ApartmentApplicationPostcodePageName} from './Pages';
 
@@ -33,13 +34,13 @@ const Pages = () => {
         mode:'all'
       });
 
-    const {formState:{errors},watch,handleSubmit} = form;
+    const {formState:{errors},watch,handleSubmit,setValue} = form;
 
     const apartNameChk = watch('apartName');
     // const apartAddressChk = watch('address');
     const apartFamilyCountChk = watch('familyCount');
     const apartDongCountChk = watch('dongCount');
-    // const apartStartDateChk = watch('startDate');
+    const apartStartDateChk = watch('startDate');
     
     
     const isValidation = 
@@ -54,14 +55,15 @@ const Pages = () => {
       }
 //console.log(isApartAddress)
     const saveAtom = () => {
-        // setApartAddress({
-        //     'apartmentName' : apartNameChk,
-        //     'familyCount': Number(apartFamilyCountChk),
-        //     'dongCount' : Number(apartDongCountChk),
-        //     'serviceStartDate' : formattedApplicationDate(date)
+        setApartAddress({
+            'apartmentName' : apartNameChk,
+            'familyCount': Number(apartFamilyCountChk),
+            'dongCount' : Number(apartDongCountChk),
+            'serviceStartDate' : formattedApplicationDate(date)
 
-        // })
+        })
     }
+    const keyboardStatus = useKeyboardEvent();
     
     const showDatePicker = () => {
         setShow(true)
@@ -71,9 +73,10 @@ const Pages = () => {
         if (Platform.OS === 'android') {
             setShow(false);
         }
-        // const currentDate = selectedDate;
+        
         setDate(selectedDate);
         setText(formattedDate(selectedDate));
+        setValue('startDate',formattedMealTime(selectedDate))
       };
 
     const confirmPress = () =>{
@@ -81,6 +84,10 @@ const Pages = () => {
         setShow(false);
     }
      
+    useLayoutEffect(()=>{
+        setValue('address',isApartFullAddress)
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     },[isApartFullAddress])
     return (
         <Wrap>
             <ProgressBar progress={2}/>
@@ -143,7 +150,6 @@ const Pages = () => {
                             value={text}
                             showSoftInputOnFocus={false}
                             onPressIn={showDatePicker}
-                            // value={formattedDate(date) }
                             />
                             <ArrowIcon/>
                         </View>
@@ -173,7 +179,8 @@ const Pages = () => {
             )}
                 
             
-            {!show&&<ButtonWrap>
+            {(!show && !keyboardStatus.isKeyboardActivate )&&
+            <ButtonWrap>
                 <Button 
                     label={'다음'}  
                     // disabled={!isValidation}

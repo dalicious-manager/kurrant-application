@@ -42,15 +42,15 @@ const Component = ({userId}) => {
         
       await login(datas);
       
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [
-      //     {
-      //       name: SCREEN_NAME,
-      //     },
-      //   ],
-      // })
-      navigation.reset({routes:[{ name:GroupCreateMainPageName}]});
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: SCREEN_NAME,
+          },
+        ],
+      })
+      //navigation.reset({routes:[{ name:GroupCreateMainPageName}]});
       //await userInfo();
 
     }catch (err){
