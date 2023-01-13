@@ -10,6 +10,10 @@
 #import <Firebase.h>
 #import <RNGoogleSignin/RNGoogleSignin.h>
 #import "RNFBMessagingModule.h"
+#import <CodePush/CodePush.h>
+#import <AppCenterReactNative.h>
+#import <AppCenterReactNativeAnalytics.h>
+#import <AppCenterReactNativeCrashes.h>
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -18,7 +22,7 @@
 #import <React/RCTSurfacePresenterBridgeAdapter.h>
 #import <ReactCommon/RCTTurboModuleManager.h>
 #import <react/config/ReactNativeConfig.h>
-#import <CodePush/CodePush.h>
+
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
@@ -54,7 +58,9 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   [[NaverThirdPartyLoginConnection getSharedInstance] setIsNaverAppOauthEnable:YES];
 	[[NaverThirdPartyLoginConnection getSharedInstance] setIsInAppOauthEnable:YES];
   [FIRApp configure];
-  
+  [AppCenterReactNative register];
+  [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
+  [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
   _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
