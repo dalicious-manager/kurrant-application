@@ -32,11 +32,12 @@ const Component = ({
   description,
   effect,
   routeName,
+
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
   return (
-    <TitleContainer onPress ={()=> routeName && navigation.navigate(routeName)}>
+    <TitleContainer onPress ={()=> {routeName && navigation.navigate(routeName)}}>
       <TitleBox>
         <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>{title}</Title>
         {isVersion &&<VersionInfo textColor={themeApp.colors.grey[4]}>1.0.0</VersionInfo> }

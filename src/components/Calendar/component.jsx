@@ -40,6 +40,7 @@ const Component = ({
     daily,
     meal,
     margin='0px',
+    
 
 }) => {
   const navigation = useNavigation();
@@ -56,7 +57,7 @@ const Component = ({
     // 파라미터 보낼 날짜
     const startDate = formattedWeekDate(weekly[0][0]);
     const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
-  
+    
   
     // useEffect(()=>{
     //     async function loadOrderMeal(){
@@ -109,12 +110,13 @@ const Component = ({
                         const now = (day.toDateString() === today.toDateString());
                         const pressDay = (formattedDate(day));
                         const propsDay = (formattedWeekDate(day));
-                        const lastDay = (day.toLocaleDateString() < today.toLocaleDateString());
+                        // const lastDay = (day.toLocaleDateString() < today.toLocaleDateString());
+                        const lastDay = ( formattedDate(day,'/') < formattedDate(today,'/'));
                         const order = isOrderMeal?.find(x => x.serviceDate === propsDay); 
                         const orderCount = order && order.orderItemDtoList;
                         const set = new Set(orderCount?.map((x) => x.diningType));
                         const newArr = [...set].length;
-                      
+                      // console.log(lastDay)
                         
                         return (
                         <DaysWrap key={day}>
@@ -123,17 +125,17 @@ const Component = ({
                               {/* onPressEvent: Home, onPressEvent2: BuyMeal, onPressEvent3: Meal  */}
                               {onPressEvent && 
                                 // <Pressable onPress={()=>navigation.reset({ routes: [{name:MealMainPageName,params:{data:pressDay}}]})}>
-                                <Pressable onPress={()=>navigation.navigate(MealMainPageName,{data:pressDay})}>
+                                <Pressable onPress={()=>navigation.navigate(MealMainPageName,{data:pressDay})} disabled={lastDay && true}>
                                 <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
                                 </Pressable>
                               }
                               {onPressEvent2 && 
-                                <Pressable onPress={()=>{ selectedPress(day); onPressEvent2(propsDay)}}>
+                                <Pressable onPress={()=>{ selectedPress(day); onPressEvent2(propsDay)}} disabled={lastDay && true}>
                                 <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
                                 </Pressable>
                               }
                               {onPressEvent3 && 
-                                <Pressable onPress={()=>{ selectedPress(day); onPressEvent3(propsDay)}}>
+                                <Pressable onPress={()=>{ selectedPress(day); onPressEvent3(propsDay)}} disabled={lastDay && true}>
                                 <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
                                 </Pressable>
                               }
@@ -181,7 +183,7 @@ border-radius:50px;
 margin-top:3px;
 align-items:center;
 justify-content:center;
-background-color:${({currentPress, day}) => currentPress === day ? '#E4E3E7' : 'white'};
+background-color:${({currentPress, day ,pressDay}) => (currentPress === day) ? '#E4E3E7' : 'white'};
  ${({ type, now }) => now && getCircleColor(type)};
 `;
 

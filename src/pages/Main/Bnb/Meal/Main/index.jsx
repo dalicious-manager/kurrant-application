@@ -48,7 +48,7 @@ const Pages = ({route}) => {
   // const loadData = weekly.map((w,i) => w.filter(x => console.log(formattedWeekDate(x))));
 
   const pressDay = (day) => {
-    setTouchDate(day)
+    setTouchDate(day);
   }
 
   const cancelMealPress = () =>{

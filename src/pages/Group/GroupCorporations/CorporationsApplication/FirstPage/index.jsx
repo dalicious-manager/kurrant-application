@@ -13,8 +13,8 @@ import Form from "../../../../../components/Form";
 import ProgressBar from "../../../../../components/ProgressBar";
 import RefTextInput from "../../../../../components/RefTextInput";
 import Typography from "../../../../../components/Typography";
+import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import {PAGE_NAME as CorpApplicationSecondPageName} from '../SecondPage';
-
 
 export const PAGE_NAME = "P__GROUP__CREATE__CORPORATION__APPLICATION__FIRST" ;
 const Pages = () => {
@@ -38,6 +38,7 @@ const Pages = () => {
         marginBottom:16,
         }
 
+    const keyboardStatus = useKeyboardEvent();
     const checkBox = information.watch('agreeCheck');
     const namechk = watch('name');
     const phonechk = watch('phone');
@@ -86,7 +87,9 @@ const Pages = () => {
                         name="name"
                         placeholder="신청자명"
                         style={inputStyle}
-                        defaultValue={userInfo.name}
+                        returnKeyType="next"
+                        onSubmitEditing={() => phoneRef.current.focus()}
+                        // defaultValue={userInfo.name}
                         ref={nameRef}
                         rules={
                             {
@@ -105,8 +108,8 @@ const Pages = () => {
                         placeholder="신청자 연락처"
                         keyboardType="numeric"
                         style={inputStyle}
-                        defaultValue={userInfo.phone}
-                        // value={isApplicant.phone}
+                        // defaultValue={userInfo.phone}
+                        onEndEditing={() => emailRef.current.focus()}
                         ref={phoneRef}
                         rules={
                             {
@@ -127,8 +130,8 @@ const Pages = () => {
                         keyboardType="email-address"
                         autoCapitalize = "none"
                         style={inputStyle}
-                        defaultValue={userInfo.email}
-                        // value={isApplicant.email}
+                        // defaultValue={userInfo.email}
+                        
                         ref={emailRef}
                         rules={
                             {
@@ -146,12 +149,13 @@ const Pages = () => {
             </FormProvider>
             
             
+            {!keyboardStatus.isKeyboardActivate &&
             <ButtonWrap>
                 <Button 
                 label={'다음'} 
                 // disabled={!isValidation}
-                onPressEvent={()=>{navigation.navigate(CorpApplicationSecondPageName);saveAtom()}} />
-            </ButtonWrap>
+                onPressEvent={()=>{saveAtom();navigation.navigate(CorpApplicationSecondPageName);}} />
+            </ButtonWrap>}
         </Wrap>
     )
 }

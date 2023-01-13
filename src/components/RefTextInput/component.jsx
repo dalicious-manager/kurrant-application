@@ -51,6 +51,7 @@ const Component = forwardRef(({
     authText:'',
     authPressEvent:()=>{console.log('인증 요청')},
   },
+  padding='4px 8px',
   setisFocused,
   label = '',
   caption ='',
@@ -211,6 +212,7 @@ const Component = forwardRef(({
               {name.includes("cardNumber") && cardTypeIcon()}
               <InputContainer>
                 <StyledTextInput
+                  paddings={padding}
                   ref={ref && ref}
                   {...textInputProps}
                   name={name}
@@ -314,8 +316,7 @@ const ControlContainer = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  border-radius: 6px;
+  /* border-radius: 6px; */
   border: none;
   ${({isEditable,theme,isError,focus})=> { 
     if(isEditable){

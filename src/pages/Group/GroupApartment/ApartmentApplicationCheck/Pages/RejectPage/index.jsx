@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { SafeAreaView, Text } from "react-native";
 import styled from "styled-components";
@@ -8,6 +9,8 @@ import Typography from "../../../../../../components/Typography";
 export const PAGE_NAME = "P__GROUP__CREATE__APARTMENT__APPLICATION__REJECT" ;
 const Pages = ({route}) => {
     
+    const navigation = useNavigation();
+
     return(
         <SafeArea>
             <Wrap>
@@ -18,7 +21,7 @@ const Pages = ({route}) => {
                 </Content>
             </Wrap>
             <ButtonWrap>
-                <Button label='확인'/>
+                <Button label='확인' onPressEvent={() => navigation.goBack()}/>
             </ButtonWrap>
         </SafeArea>
     )

@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text ,View, Dimensions} from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import {Dimensions} from "react-native";
 import styled from "styled-components";
 
 import ArrowDown from "../../../../assets/icons/Group/arrowDown.svg";
@@ -8,13 +8,16 @@ import CallIcon from "../../../../assets/icons/Group/call.svg";
 import ChatIcon from "../../../../assets/icons/Group/chat.svg";
 import ArrowRight from "../../../../assets/icons/Group/checkArrow.svg";
 import useApartApplication from "../../../../biz/useApartApplication/hook";
+import useCorporationApplication from "../../../../biz/useCorporationApplication/hook";
+import useGroupSpots from "../../../../biz/useGroupSpots/hook";
 import BottomDate from "../../../../components/BottomDate";
 import ProgressBar from "../../../../components/ProgressBarSpot";
 import TextButton from "../../../../components/TextButton";
 import Typography from "../../../../components/Typography";
-import { getStorage } from "../../../../utils/asyncStorage";
+import {PAGE_NAME as CorporationApplicationDetailPageName} from '../../GroupCorporations/CorporationApplicationCheck/DetailPage';
 import {PAGE_NAME as ApartmentApplicationDetailPageName} from '../ApartmentApplicationCheck/Pages/DetailPage';
 import {PAGE_NAME as ApartmentApplicationRejectPageName} from '../ApartmentApplicationCheck/Pages/RejectPage';
+import SkeletonUI from "./Skeleton";
 
 const windowWidth = Dimensions.get('window').width;
 export const PAGE_NAME = "P__GROUP__CHECK__APPLICATION__APART" ;
@@ -23,36 +26,70 @@ const Pages = () => {
     const navigation = useNavigation();
     const [modalVisible,setModalVisible] = useState(false);
     const [selected,setSelected] = useState();
-    const {apartApplicationCheck,apartApplicationList,isApartCheck,isApartApplicationList} = useApartApplication();
+    const {apartApplicationCheck,isApartCheck,isApartLoading} = useApartApplication();
+    const {isApplicationList, applicationList} = useGroupSpots();
+    const {corpApplicationCheck, isCorpCheck} = useCorporationApplication();
+    const [state,setState] = useState();
     
+
     const datePress = () => {
         setModalVisible(true)
     }
-    // const loadId = selected?.substr(1);
+    const selectId = Number(selected?.substr(1));
+    const selectType = Number(selected?.charAt(0));
+    const loadData = isApplicationList[0]
+    const recentType = loadData?.clientType;
+    const recentId = loadData?.id
+    console.log(selectType,'-로드타입',typeof(state),state,'-state',recentType,'-최신타입')
 
-    
-    // useEffect(() => {
-    //    async function LoadCheckList() {
-    //        const getId =  await getStorage('applicationId');
-           
-    //        if(selected === undefined){
-    //            await apartApplicationCheck(getId);
-    //            await apartApplicationList();
-    //        } else {
-    //             await apartApplicationCheck(loadId);
-    //             await apartApplicationList();
-    //        }
-    //     }
+    const user = isApartCheck.user;
+    const info = isApartCheck.info;
+    const name = info?.apartmentName;
+    const propsId = isApplicationList.filter(el => el.name === name);
 
-    //     LoadCheckList();
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // },[loadId])
+    const corpUser = isCorpCheck.user;
+    const corpInfo = isCorpCheck.corporationInfo;
+    const corpName = corpInfo?.corporationName;
+    const propsCorpId = isApplicationList.filter(el => el.name === corpName);
     
-    // const user = isApartCheck.user;
-    // const info = isApartCheck.info;
-    // const name = isApartCheck.info?.apartmentName;
-    // const propsId = isApartApplicationList.filter(el => el.name === name);
-    // console.log(isApartCheck)
+    useEffect(() => {
+        async function LoadList(){
+            await applicationList();
+            
+        }
+        LoadList();
+        
+        async function LoadRecentList(){
+            
+            if(selected === undefined){
+                if(recentType === 0){
+                    await apartApplicationCheck(recentId);
+                }else {
+                    await corpApplicationCheck(recentId)
+                }
+                setState(recentType)
+            
+            } else if (selectType === 0){
+                await apartApplicationCheck(selectId);
+                setState(selectType)
+            } else {
+                await corpApplicationCheck(selectId);
+                setState(selectType)
+            }
+            
+            
+        }
+        LoadRecentList();
+       
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[selectId, selectType, recentId, recentType, selected]);
+
+    if(isApartLoading){
+        return <SkeletonUI/>
+    }
+
+
     return (
         <Wrapper>
             <ScrollViewWrap showsVerticalScrollIndicator={false} >
@@ -68,20 +105,21 @@ const Pages = () => {
                     <Heading>진행 상황</Heading>
                     <ProgressAllWrap >
                         <ProgressBarWrap >
-                            {isApartCheck.progressStatus === 1 && <ProgressBar progress={1}/> }
-                            {isApartCheck.progressStatus === 2 && <ProgressBar progress={2}/> }
-                            {isApartCheck.progressStatus === 3 && <ProgressBar progress={3}/> }
-                            {isApartCheck.progressStatus === 4 && <ProgressBar progress={4}/> }
+                            {(state === 0 && isApartCheck.progressStatus === 0 || state === 1 && isCorpCheck.progressStatus === 0) && <ProgressBar progress={1}/> }
+                            {(state === 0 && isApartCheck.progressStatus === 1 || state === 1 && isCorpCheck.progressStatus === 1) && <ProgressBar progress={2}/> }
+                            {(state === 0 && isApartCheck.progressStatus === 2 || state === 1 && isCorpCheck.progressStatus === 2) && <ProgressBar progress={3}/> }
+                            {(state === 0 && isApartCheck.progressStatus === 3 || state === 1 && isCorpCheck.progressStatus === 3) && <ProgressBar progress={4}/> }
                         </ProgressBarWrap>
                         <ProgressTitleWrap>
                             <ProgressTitle>스팟 개설 신청</ProgressTitle>
                             <ProgressTitle>운영 사항 협의</ProgressTitle>
-                           {isApartCheck.progressStatus !== 4 && <ProgressTitle>스팟 개설 완료</ProgressTitle>}
-                            {isApartCheck.progressStatus === 4 && 
+                           {(state === 0 && isApartCheck.progressStatus !== 3 || state === 1 && isCorpCheck.progressStatus !== 3) && <ProgressTitle>스팟 개설 완료</ProgressTitle>}
+                            {(state === 0 && isApartCheck.progressStatus === 3 || state === 1 && isCorpCheck.progressStatus === 3) && 
                                 <>
                                     <ProgressTitle>미승인</ProgressTitle>
                                     <RejectWrap>
-                                        <TextButton size={'label13R'} label={'사유 보기'} type={'redLine'} onPressEvent={() => {navigation.navigate(ApartmentApplicationRejectPageName,{reason:isApartCheck.rejectedReason})}}/>
+                                        <TextButton size={'label13R'} label={'사유 보기'} type={'redLine'} 
+                                        onPressEvent={() => state === 0 ? navigation.navigate(ApartmentApplicationRejectPageName,{reason:isApartCheck.rejectedReason}) : navigation.navigate(ApartmentApplicationRejectPageName,{reason:isCorpCheck.rejectedReason})}/>
                                     </RejectWrap>
                                 </>
                             }
@@ -94,26 +132,27 @@ const Pages = () => {
                     <HeadingWrap>
                         <Heading>신청 정보</Heading>
                         <DetailWrap >
-                            {/* <TextButton size='label13R' label='상세보기' type='blue' onPressEvent={()=>{navigation.navigate(ApartmentApplicationDetailPageName,{data:isApartCheck,id:propsId})}}/> */}
+                            <TextButton size='label13R' label='상세보기' type='blue' 
+                            onPressEvent={()=>{state === 0 ? navigation.navigate(ApartmentApplicationDetailPageName,{data:isApartCheck,id:propsId}) : navigation.navigate(CorporationApplicationDetailPageName,{data:isCorpCheck,id:propsCorpId})}}/>
                             <ArrowRightIcon/>
                         </DetailWrap>
                     </HeadingWrap>
-                    {/* <TitleWrap>
-                        <Title>서비스 이용 아파트명</Title>
-                        <TitleContent>{info?.apartmentName}</TitleContent>
+                    <TitleWrap>
+                        <Title>{state === 0 ? '서비스 이용 아파트명' : '서비스 이용사명'}</Title>
+                        <TitleContent>{state === 0 ? `${name}` : `${corpName}`}</TitleContent>
                     </TitleWrap>
                     <TitleWrap>
                         <Title>서비스 신청자명</Title>
-                        <TitleContent>{user?.name}</TitleContent>
+                        <TitleContent>{state === 0 ? `${user?.name}` : `${corpUser?.name}`}</TitleContent>
                     </TitleWrap>
                     <TitleWrap>
                         <Title>신청자 연락처</Title>
-                        <TitleContent>{user?.phone}</TitleContent>
+                        <TitleContent>{state === 0 ? `${user?.phone}` : `${corpUser?.phone}`}</TitleContent>
                     </TitleWrap>
                     <TitleWrap>
                         <Title>신청자 이메일</Title>
-                        <TitleContent>{user?.email}</TitleContent>
-                    </TitleWrap> */}
+                        <TitleContent>{state === 0 ? `${user?.email}` : `${corpUser?.email}`}</TitleContent>
+                    </TitleWrap>
                 </ContentsWrap>
             </ScrollViewWrap>
                 <ButtonWrap>
@@ -126,7 +165,7 @@ const Pages = () => {
                         <ChatText>1:1 문의</ChatText>
                     </ChatButton>
                 </ButtonWrap>
-                <BottomDate title='신청일' modalVisible={modalVisible} setModalVisible={setModalVisible} data={isApartApplicationList} setSelected={setSelected} selected={selected}/>
+                <BottomDate title='신청일' modalVisible={modalVisible} setModalVisible={setModalVisible} data={isApplicationList} setSelected={setSelected} selected={selected}/>
         </Wrapper>
         
     )

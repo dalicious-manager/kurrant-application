@@ -17,8 +17,7 @@ export async function ApartmentApplicationCheck(id) {
     return fetchRes;
 }
 
-export async function ApartmentApplicationMemo(body,id) { // id 바꿔야함
-    console.log(body,id)
+export async function ApartmentApplicationMemo(body,id) { 
     const fetchRes = await fetchJson(`/application-form/apartments/${id}/memo`, 'PUT',{
        
         body:JSON.stringify(body)
@@ -27,8 +26,21 @@ export async function ApartmentApplicationMemo(body,id) { // id 바꿔야함
     return fetchRes;
 }
 
-export async function ApartmentApplicationList(){
-    const fetchRes = await fetchJson('/application-form/clients','GET');
+
+//  아파트 검색
+
+export async function ApartmentSearch(){
+    const fetchRes = await fetchJson('/users/me/groups/apartments','GET');
+
+    return fetchRes;
+}
+
+// 유저 아파트 스팟 등록
+
+export async function ApartmentRegisterSpot(id,body){
+    const fetchRes = await fetchJson(`/users/me/groups/apartments/spots/${id}`,'POST',{
+        body:JSON.stringify(body)
+    });
 
     return fetchRes;
 }

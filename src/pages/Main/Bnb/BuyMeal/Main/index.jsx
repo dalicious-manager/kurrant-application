@@ -1,9 +1,7 @@
-// import Slider from '@react-native-community/slider';
 import {Slider} from '@miblanchard/react-native-slider';
 import { useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
 import React, { useRef, useState, useEffect } from 'react';
-import { useCallback } from 'react';
 import { ScrollView, View, Pressable,Dimensions, StyleSheet} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
@@ -59,7 +57,7 @@ const Pages = () => {
             setSliderValue(position);
             setFocus(position);
          } 
-
+    
     const dayPress = async (selectedDate) =>{
         
         try {
@@ -94,10 +92,7 @@ const Pages = () => {
         
     }
     
-    //
    
-    //console.log(duplication)
-
     useEffect(()=>{
         async function loadDailyFood(){
             try {
@@ -180,14 +175,14 @@ const Pages = () => {
                 <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
             </NoServieceView>}
             {diningFood.map((m) => {               
-               
+            //    console.log(diningFood)
             return <Contents key={m.id}
             spicy={m.spicy}
             disabled={m.isSoldOut}
             onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dailyFoodId:m.id});e.stopPropagation()}}>
                 <ContentsText>
                     <MakersName soldOut={m.isSoldOut}>[{m.makersName}]</MakersName>
-                    <MealName soldOut={m.isSoldOut}>{m.foodName}</MealName>
+                    <MealName soldOut={m.isSoldOut}  numberOfLines={1} ellipsizeMode="tail">{m.foodName}</MealName>
                     <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
                     <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
                     {m.spicy !== 'NULL' && 
@@ -199,7 +194,7 @@ const Pages = () => {
 
                 <MealImageWrap>
                     {m.isSoldOut && <BlurView/>}
-                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                    <MealImage source={{uri:`${m.img}`}}/>
                     
                     {!m.isSoldOut && (
                         <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>
