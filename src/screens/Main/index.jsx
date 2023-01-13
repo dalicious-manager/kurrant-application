@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { useAtom } from 'jotai';
 import React from 'react';
-import {  Alert } from 'react-native';
+import {  Alert, View } from 'react-native';
 import styled from 'styled-components';
 
 import EmailLoginModal, {
@@ -96,6 +96,8 @@ import MembershipTerminateComplate, {
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
 // eslint-disable-next-line import/order
+import { isLoginLoadingAtom } from '../../biz/useAuth/store';
+
 
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
@@ -136,12 +138,16 @@ import GroupCreateComplete, {PAGE_NAME as GroupCreateCompletePageName} from '../
 import GroupManage, {PAGE_NAME as GroupManagePageName} from '../../pages/Group/GroupManage';
 import GroupManageDetail, {PAGE_NAME as GroupManageDetailPageName} from '../../pages/Group/GroupManage/DetailPage';
 import BuyMeal, {PAGE_NAME as BuyMealPageName} from '../../pages/Main/Bnb/BuyMeal/Main';
+import NotificationCenter, {PAGE_NAME as NotificationCenterName} from '../../pages/NotificationCenter';
 import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
+import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
+import NoticeDetail, {PAGE_NAME as NoticeDetailPageName} from '../../pages/Main/MyPage/Notice/NoticeDetail';
+import { DeleteIcon, NotifySettingIcon, SettingIcon } from '../../components/Icon';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -154,10 +160,11 @@ import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCar
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
+  const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
   const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
 
   return (
-    <MainRoot.Navigator  >
+    <MainRoot.Navigator >
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -287,7 +294,7 @@ const Screen = () => {
           name={EmailLoginModalModalPageName}
           component={EmailLoginModal}
           options={{
-            headerShown: false,
+            headerShown: !isLoginLoading,
             headerShadowVisible: false,
             title: '',
             headerTitleAlign: 'center',
@@ -322,6 +329,68 @@ const Screen = () => {
           },
           headerLeft: () => <BackButton />,
         }}
+        />
+       
+      </MainRoot.Group>
+      {/* 공지사항 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={NoticeScreenName}
+          component={Notice}
+          options={{
+            headerShown: true,
+            title:"공지사항",
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,}}
+        />
+        <MainRoot.Screen
+          name={NoticeDetailPageName}
+          component={NoticeDetail}
+          options={{
+            headerShown: true,
+            title:"공지사항",
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,}}
+        />
+      </MainRoot.Group>
+      {/* 알림센터 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={NotificationCenterName}
+          component={NotificationCenter}
+          options={{headerShown: true,
+            title:'알림 센터',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
+            headerRight:() => (
+              <>
+              <View style={{marginRight:20}}>
+              <DeleteIcon />
+              </View>
+              <View>
+              <NotifySettingIcon />
+              </View>
+              </>
+            )
+          }}
         />
       </MainRoot.Group>
       {/* 식사구매 */}

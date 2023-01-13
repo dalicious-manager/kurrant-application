@@ -81,12 +81,11 @@ import org.apache.tools.ant.taskdefs.condition.Os
  */
 
 project.ext.react = [
-    enableHermes: true,  // clean and rebuild if changing
     bundleInDebug: true, 
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -237,14 +236,24 @@ android {
     }
     buildTypes {
         debug {
+            resValue "string", "CodePushDeploymentKey", '"sErMDClAFbVUOkomiJfxOxNBK4h5l3fdG5b1T"'
+            resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
             signingConfig signingConfigs.debug
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
+            resValue "string", "CodePushDeploymentKey", '"aKh-tMAQ8Xx6eIFD9-QPoA3l0cE-qgTOWwR_D"'
+            resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+        releaseStaging {
+            initWith release
+            resValue "string", "CodePushDeploymentKey", "sErMDClAFbVUOkomiJfxOxNBK4h5l3fdG5b1T"
+            resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
+            matchingFallbacks = ['release']
         }
     }
 
@@ -277,7 +286,7 @@ dependencies {
     implementation project(':react-native-splash-screen')
 
     implementation project(':react-native-linear-gradient')
-    
+    implementation project(':react-native-code-push')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
@@ -298,6 +307,7 @@ dependencies {
         implementation("com.facebook.react:hermes-engine:+") { // From node_modules
             exclude group:'com.facebook.fbjni'
         }
+        // releaseStagingImplementation files(hermesPath + "hermes-release.aar")
     } else {
         implementation jscFlavor
     }

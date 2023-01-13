@@ -27,8 +27,9 @@ import { PAGE_NAME as  NotificationSettingPageName} from './pages/NotificationSe
 import { PAGE_NAME as  PasswordSettingPageName} from './pages/PasswordSetting';
 import {PAGE_NAME as PaymentManagePageName} from './pages/PaymentManage';
 import { PAGE_NAME as  PhoneNumberSettingPageName} from './pages/PhoneNumberSetting';
-
+import { PAGE_NAME as  LoginPageName} from '../../../Main/Login/Login';
 import { AvatarNon } from '~assets';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const PAGE_NAME = "P__MY_PAGE__PERSONAL_INFO"
@@ -174,19 +175,26 @@ const Pages = ({route}) => {
           title={!myInfoPerson.hasGeneralProvider ? '이메일/비밀번호 설정' : '비밀번호 변경'}  
           description={!myInfoPerson.hasGeneralProvider && '설정하기'} 
           routeName={!myInfoPerson.hasGeneralProvider ? EmailSettingPageName:PasswordSettingPageName}/>
-<<<<<<< Updated upstream
+
           <ListBox title='결제수단 관리' routeName={PaymentManagePageName}/>
-          <ListBox title='그룹/스팟 관리' />
-          <ListBox title='스팟 개설 요청 내역' />
-=======
-          <ListBox title='결제수단 관리' />
           <ListBox title='그룹/스팟 관리' routeName={GroupManagePageName}/>
           <ListBox title='스팟 개설 요청 내역' routeName={GroupApplicationCheckPageName}/>
->>>>>>> Stashed changes
           <ListBox title='알림 설정' routeName={NotificationSettingPageName}/>
           <Line />
           <TextButtonBox>
-            <TextButton label="로그아웃" type='grey4' size='label13R'/>
+            <TextButton label="로그아웃" type='grey4' size='label13R' onPressEvent={async()=>{
+              await AsyncStorage.clear().then(()=>{
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                      {
+                          name: LoginPageName,
+                      },                    
+                  ],
+              })
+              });
+             
+            }}/>
           </TextButtonBox>
           <TextButtonBox>
             <TextButton label="탈퇴하기" type='grey4' size='label13R'/>

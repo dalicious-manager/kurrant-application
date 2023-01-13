@@ -9,6 +9,7 @@ module.exports = {
     // 'plugin:import/warnings',
     // 'plugin:import/typescript',
     // eslint plugin import settings [e]
+
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -85,5 +86,6 @@ module.exports = {
       },
     ],
     'prettier/prettier': 0,
+    "parser": "babel-eslint"
   },
 };
