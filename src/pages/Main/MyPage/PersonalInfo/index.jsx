@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import React, { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView } from "react-native";
 import styled, { useTheme } from 'styled-components/native';
@@ -12,14 +12,13 @@ import Image from '~components/Image';
 import TextButton from '~components/TextButton';
 import Toast from '~components/Toast';
 import Typography from '~components/Typography';
+
+import { AvatarNon } from '~assets';
+
 import Wrapper from '~components/Wrapper';
 import {getStorage} from '~utils/asyncStorage';
 import snsConnected from '~utils/snsConnected';
 
-import BottomModal from '../../../../components/BottomModal';
-import { setStorage } from '../../../../utils/asyncStorage';
-import { PAGE_NAME as GroupApplicationCheckPageName} from '../../../Group/GroupApartment/ApartmentApplicationCheck';
-import { PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage';
 import ListBox from './ListBox';
 import { PAGE_NAME as  ConnectedSNSPageName} from './pages/ConnectedSNS';
 import { PAGE_NAME as  EmailSettingPageName} from './pages/EmailSetting';
@@ -27,6 +26,13 @@ import { PAGE_NAME as  NotificationSettingPageName} from './pages/NotificationSe
 import { PAGE_NAME as  PasswordSettingPageName} from './pages/PasswordSetting';
 import {PAGE_NAME as PaymentManagePageName} from './pages/PaymentManage';
 import { PAGE_NAME as  PhoneNumberSettingPageName} from './pages/PhoneNumberSetting';
+
+import { isUserInfoAtom } from '../../../../biz/useUserInfo/store';
+import BottomModal from '../../../../components/BottomModal';
+import { setStorage } from '../../../../utils/asyncStorage';
+import { PAGE_NAME as GroupApplicationCheckPageName} from '../../../Group/GroupApartment/ApartmentApplicationCheck';
+import { PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/DetailPage';
+
 import { PAGE_NAME as  LoginPageName} from '../../../Main/Login/Login';
 import { AvatarNon } from '~assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -39,6 +45,7 @@ const Pages = ({route}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const { userMePersonal, readableAtom:{myInfoPerson,isMyInfoPersonalLoading, isSNSConnectLoading,isSNSDisconnectLoading}} = useUserMe();
+  const isUserInfo = useAtomValue(isUserInfoAtom);
   const [isConnected , ] = useAtom(isSNSConnectAtom);
   const [message , setMessage] = useState("계정이 연결됐어요");
   const {snsConnectID,snsDisconnectID} = snsConnected();
@@ -100,6 +107,9 @@ const Pages = ({route}) => {
     )
     
   }
+
+  const spotId = isUserInfo.spotId;
+  const groupId = isUserInfo.groupId;
   
   useEffect(()=>{
     
@@ -175,9 +185,8 @@ const Pages = ({route}) => {
           title={!myInfoPerson.hasGeneralProvider ? '이메일/비밀번호 설정' : '비밀번호 변경'}  
           description={!myInfoPerson.hasGeneralProvider && '설정하기'} 
           routeName={!myInfoPerson.hasGeneralProvider ? EmailSettingPageName:PasswordSettingPageName}/>
-
-          <ListBox title='결제수단 관리' routeName={PaymentManagePageName}/>
-          <ListBox title='그룹/스팟 관리' routeName={GroupManagePageName}/>
+          <ListBox title='결제수단 관리' routeName={PaymentManagePageName} />
+          <ListBox title='그룹/스팟 관리' onPressEvent={() =>{navigation.navigate(GroupManagePageName,{id:spotId,clientId:groupId})}}/>
           <ListBox title='스팟 개설 요청 내역' routeName={GroupApplicationCheckPageName}/>
           <ListBox title='알림 설정' routeName={NotificationSettingPageName}/>
           <Line />

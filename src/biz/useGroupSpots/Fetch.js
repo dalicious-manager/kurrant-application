@@ -40,3 +40,13 @@ export async function SpotRegister(body){
 
     return fetchRes;
 }
+
+// 그룹 탈퇴
+
+export async function WithdrawGroup(body){
+    const fetchRes = await fetchJson(`/users/me/groups`,'POST',{
+        body:JSON.stringify(body)
+    });
+
+    return fetchRes;
+}

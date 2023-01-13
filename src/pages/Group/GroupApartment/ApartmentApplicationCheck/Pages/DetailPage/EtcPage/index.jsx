@@ -21,7 +21,7 @@ const Pages = ({route}) => {
             'memo' : text,
 
            },id);
-           await setApartCheck({...isApartCheck,memo:text})
+           setApartCheck({...isApartCheck,memo:text})
         } catch(err){
             console.log(err)
         }

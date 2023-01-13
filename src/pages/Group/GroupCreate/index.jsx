@@ -11,7 +11,6 @@ import CloseIcon from "../../../assets/icons/Group/close.svg";
 import CorporationIcon from "../../../assets/icons/Group/corporation.svg";
 import Typography from "../../../components/Typography";
 import { SCREEN_NAME } from "../../../screens/Main/Bnb";
-import {PAGE_NAME as HomePageName} from '../../Main/Bnb/Home/Main';
 import {PAGE_NAME as GroupCreateApartmentPageName} from '../GroupApartment';
 import {PAGE_NAME as ApartmentSearchPageName} from '../GroupApartment/SearchApartment';
 import {PAGE_NAME as GroupCreateCorporationsPageName} from '../GroupCorporations';

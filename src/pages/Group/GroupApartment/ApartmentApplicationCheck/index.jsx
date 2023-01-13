@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import {Dimensions} from "react-native";
+import {Dimensions,Linking} from "react-native";
 import styled from "styled-components";
 
+import SkeletonUI from "./Skeleton";
 import ArrowDown from "../../../../assets/icons/Group/arrowDown.svg";
 import CallIcon from "../../../../assets/icons/Group/call.svg";
 import ChatIcon from "../../../../assets/icons/Group/chat.svg";
@@ -17,7 +18,6 @@ import Typography from "../../../../components/Typography";
 import {PAGE_NAME as CorporationApplicationDetailPageName} from '../../GroupCorporations/CorporationApplicationCheck/DetailPage';
 import {PAGE_NAME as ApartmentApplicationDetailPageName} from '../ApartmentApplicationCheck/Pages/DetailPage';
 import {PAGE_NAME as ApartmentApplicationRejectPageName} from '../ApartmentApplicationCheck/Pages/RejectPage';
-import SkeletonUI from "./Skeleton";
 
 const windowWidth = Dimensions.get('window').width;
 export const PAGE_NAME = "P__GROUP__CHECK__APPLICATION__APART" ;
@@ -156,7 +156,7 @@ const Pages = () => {
                 </ContentsWrap>
             </ScrollViewWrap>
                 <ButtonWrap>
-                    <CallButton>
+                    <CallButton onPress={() => {Linking.openURL(`tel:1577-9612`)}}>
                         <CallIcon/>
                         <CallText>전화 문의</CallText>
                     </CallButton>
