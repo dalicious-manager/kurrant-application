@@ -162,7 +162,7 @@ const useAuth = () => {
         option
       );
       console.log(res.data.accessToken);
-      await setStorage('token',res.data.accessToken);
+      await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       setUserSpotStatus(res.data.spotStatus)
       return res;
@@ -186,7 +186,7 @@ const useAuth = () => {
         option
       );
       console.log(res);
-      await setStorage('token',res.data.accessToken);
+      await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       setUserSpotStatus(res.data.spotStatus)
       return res;
@@ -196,6 +196,15 @@ const useAuth = () => {
       setLoginLoading(false);
     }
   };
+  const logout =async (body,option={})=>{
+    const res = await Fetch.logout(     
+      {
+        ...body
+      },
+      option
+    );
+    return res;
+  }
   return {
     requestEmailAuth,
     confirmEmailAuth,
@@ -206,6 +215,7 @@ const useAuth = () => {
     changePassword,
     login,
     snsLogin,
+    logout,
     readableAtom: {
       isPhoneAuthLoading,
       isEmailAuthLoading,

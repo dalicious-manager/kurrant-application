@@ -2,8 +2,8 @@
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
-import useToken from '../../hook/useToken';
-import { getStorage } from '../asyncStorage';
+
+import { getStorage, setStorage } from '../asyncStorage';
 const RESPONSE_SLEEP = 300;
 
 const apiHostUrl =
@@ -29,13 +29,34 @@ const buildQuery = queryObj => {
 
 async function json(url, method, options = {}) {
   console.log(options);
-  const token = await getStorage('token');
+  const storage = await getStorage('token');
+  let token = JSON.parse(storage);
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
       throw new Error('body is empty');
     }
   }
-
+  // console.log(token?.expiresIn, new Date().getTime(), token?.expiresIn < new Date().getTime())
+  if (token?.expiresIn < new Date().getTime()) {
+    const bodyData = {
+      "accessToken": token.accessToken,
+      "refreshToken": token.refreshToken
+    }
+    const reissue = await fetch(apiHostUrl + "/auth/reissue", {
+      headers: { 'content-type': 'application/json', },
+      method: "POST",
+      body: JSON.stringify(bodyData),
+    })
+    const { data } = await reissue.json();
+    const resultData = {
+      "accessToken": data.accessToken,
+      "expiresIn": data.accessTokenExpiredIn,
+      "refreshToken": data.refreshToken,
+      "spotStatus": token.spotStatus
+    }
+    await setStorage('token', JSON.stringify(resultData));
+    token = resultData;
+  }
   let reqUrl = apiHostUrl + url;
 
   if (options.querystring !== undefined) {
@@ -44,7 +65,7 @@ async function json(url, method, options = {}) {
   }
   let headers = {
     'content-type': 'application/json',
-    'Authorization': `Bearer ${token}`
+    'Authorization': `Bearer ${token?.accessToken}`
   };
 
   if (options.accessToken !== undefined) {
@@ -64,6 +85,7 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
+
   if (ret.error) {
     const errors = new Error(ret.message);
     errors.name = "error";
@@ -78,6 +100,7 @@ async function json(url, method, options = {}) {
   }
 
   return ret;
+
 }
 
 export default json;

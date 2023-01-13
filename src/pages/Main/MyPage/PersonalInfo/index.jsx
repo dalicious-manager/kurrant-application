@@ -37,12 +37,15 @@ import { PAGE_NAME as  LoginPageName} from '../../../Main/Login/Login';
 import { AvatarNon } from '~assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import useAuth from '../../../../biz/useAuth';
+
 
 export const PAGE_NAME = "P__MY_PAGE__PERSONAL_INFO"
 
 const Pages = ({route}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+
   const [modalVisible, setModalVisible] = useState(false);
   const { userMePersonal, readableAtom:{myInfoPerson,isMyInfoPersonalLoading, isSNSConnectLoading,isSNSDisconnectLoading}} = useUserMe();
   const isUserInfo = useAtomValue(isUserInfoAtom);
@@ -50,9 +53,10 @@ const Pages = ({route}) => {
   const [message , setMessage] = useState("계정이 연결됐어요");
   const {snsConnectID,snsDisconnectID} = snsConnected();
   const {toastEvent,ToastWrap} = Toast();
-  
+  const {logout} = useAuth();
   const getDataStorage =useCallback(async()=>{
     const data = await getStorage('isChange');
+    
     console.log("test",data);
     if(data !== null && data !==''){
       setMessage(data);        
@@ -192,16 +196,28 @@ const Pages = ({route}) => {
           <Line />
           <TextButtonBox>
             <TextButton label="로그아웃" type='grey4' size='label13R' onPressEvent={async()=>{
-              await AsyncStorage.clear().then(()=>{
-                navigation.reset({
-                  index: 0,
-                  routes: [
-                      {
-                          name: LoginPageName,
-                      },                    
-                  ],
-              })
-              });
+              try {
+                const token = await getStorage('token');
+                const getToken =JSON.parse(token);
+                await logout({
+                  "accessToken" : getToken.accessToken,
+                  "refreshToken": getToken.refreshToken
+                });
+                await AsyncStorage.clear().then(()=>{                
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                        {
+                            name: LoginPageName,
+                        },                    
+                    ],
+                })
+                });
+              } catch (error) {
+                console.log(error.toString());
+              }
+              
+              
              
             }}/>
           </TextButtonBox>
