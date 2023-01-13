@@ -1,8 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {  Alert, Pressable } from 'react-native';
-import {  Alert, View,Pressable } from 'react-native';
+import {  Alert, View } from 'react-native';
 import styled from 'styled-components';
 
 import EmailLoginModal, {
@@ -96,10 +95,7 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
-// eslint-disable-next-line import/order
 import { isLoginLoadingAtom } from '../../biz/useAuth/store';
-
-
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
@@ -149,11 +145,10 @@ import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../..
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
 
 import { SCREEN_NAME } from "../Main/Bnb";
-import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
-import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 import NoticeDetail, {PAGE_NAME as NoticeDetailPageName} from '../../pages/Main/MyPage/Notice/NoticeDetail';
 import { DeleteIcon, NotifySettingIcon, SettingIcon } from '../../components/Icon';
+import { useAtom } from 'jotai';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
