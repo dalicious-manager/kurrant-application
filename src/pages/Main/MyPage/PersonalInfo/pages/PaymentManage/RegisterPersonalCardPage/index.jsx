@@ -1,49 +1,176 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import cardValidator from 'card-validator';
+import React, { useCallback, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { ScrollView } from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
 
-import BottomSheet from '~components/BottomSheet/component';
 import Button from '~components/Button';
+import RefTextInput from '~components/RefTextInput';
 import Typography from '~components/Typography';
 import Wrapper from "~components/Wrapper";
+import useKeyboardEvent from '~hook/useKeyboardEvent';
 
-import RegisteredBox from '../RegisteredBox';
+import { PAGE_NAME as PaymentManagePage } from '..';
+import { isValidCardNumber } from '../../../../../../../utils/cardFormatter';
 export const PAGE_NAME = "P__MY_PAGE__PAYMENT_MANAGE__REGISTER_PERSONAL_CARD";
 
 const Pages = ()=>{
     const themeApp = useTheme();
+    const form = useForm({
+        mode:'all'
+    });
+    const keyboardEvent = useKeyboardEvent();
     const [modalVisible, setModalVisible]=useState(false);
-    const data=[
-        {id:0,text:'신용/체크카드'},
-        {id:1,text:'은행 계좌'},
-    ]
-    const navigation = useNavigation();
-    const onSelectEvent=(text,id)=>{
 
+    const card = form.watch('cardNumber')
+    const navigation = useNavigation();
+    const onSubmit=(data)=>{
+      console.log(data);
+      navigation.navigate(PaymentManagePage)
     }
+    useFocusEffect(
+      useCallback(() => {
+          navigation.setOptions({
+              tabBarLabelStyle:{fontSize:15,lineHeight:21,fontFamily:'Pretendard-SemiBold',}
+          })
+        return () => {
+          navigation.setOptions({
+              tabBarLabelStyle:{fontSize:15,lineHeight:21,fontFamily: 'Pretendard-Regular',}
+          })
+      }
+      }, [])
+    );
     return(
         <Wrapper paddingTop={24} paddingHorizontal={24} >
-            
+          
+            <FormProvider {...form} >
+            <ScrollView>
             <CardRegisteredBox>
                 <RegisteredTitleBox>
-                    <Typography text='Title04SB' textColor={themeApp.colors.grey[2]}>등록 카드</Typography>
+                    <Typography text='Title03SB' textColor={themeApp.colors.grey[2]}>카드 정보</Typography>
                 </RegisteredTitleBox>
                 <RegiteredView>
-                    <RegisteredBox cardName="신한카드" cardNumber="2222222222224316" isMembership={true} isDefault={true}/>
+                    <RefTextInput
+                        label="카드번호"
+                        name="cardNumber"
+                        placeholder="0000 0000 0000 0000"
+                        keyboardType="numeric"
+                        // value={isApplicant.phone}
+                        rules={
+                            {
+                              required: '필수 입력 항목 입니다.',
+                              validate: {
+                                isValid: (value) => {
+                                  console.log(cardValidator.number(value.replace(/\W/gi, '')))
+                                  return (
+                                    isValidCardNumber(value.replace(/\W/gi, '')) ||
+                                    '유효한 카드번호를 입력해주세요'
+                                  );
+                                },
+                              },
+                            }
+                          }
+                    />
                 </RegiteredView>
                 <RegiteredView>
-                    <RegisteredBox  cardName="국민카드" cardNumber="2222222222225473" />
+                    <RefTextInput
+                        label="유효기간"
+                        name="cardExpDate"
+                        placeholder="MM/YY"
+                        keyboardType="numeric"
+                        // value={isApplicant.phone}
+                        rules={
+                            {
+                              required: '필수 입력 항목 입니다.',
+                              validate: {
+                                isValid: (value) => {
+                                  return (
+                                    cardValidator.expirationDate(value).isValid ||
+                                    '올바른 유효기간을 입력해주세요'
+                                  );
+                                },
+                              },
+                            }
+                          }
+                    />
+                </RegiteredView>
+                <RegiteredView>
+                    <RefTextInput
+                        label="CVC(보안코드)"
+                        name="cardSecret"
+                        placeholder="카드 뒷면 세자리"
+                        keyboardType="numeric"
+                        // value={isApplicant.phone}
+                        rules={
+                            {
+                              required: '필수 입력 항목 입니다.',
+                              validate: {
+                                isValid: (value) => {
+                                  const {card:{type}}= cardValidator.number(card.replace(/\W/gi, ''))
+                                  if(type ==="american-express"){
+                                    return (
+                                      cardValidator.cvv(value,4).isValid ||
+                                      '올바른 보안코드를 입력해주세요'
+                                    );
+                                  }
+                                  return (
+                                    cardValidator.cvv(value).isValid ||
+                                    '올바른 보안코드를 입력해주세요'
+                                  );
+                                },
+                              },
+                            }
+                          }
+                    />
+                </RegiteredView>
+                <RegiteredView>
+                    <RefTextInput
+                        label="생년월일"
+                        name="cardBirthDay"
+                        placeholder="예.19870721"
+                        keyboardType="numeric"
+                        // value={isApplicant.phone}
+                        rules={
+                            {
+                              required: '필수 입력 항목 입니다.',
+                              pattern:{
+                                value:/^(19[0-9][0-9]|20\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$/,
+                                message:'올바른 생년월일를 입력해주세요'
+                              }
+                            }
+                          }
+                    />
+                </RegiteredView>
+                <RegiteredView>
+                    <RefTextInput
+                        label="비밀번호"
+                        name="cardPass"
+                        placeholder="앞에 두자리"
+                        keyboardType="numeric"
+                        isPassword={true}
+                        // value={isApplicant.phone}
+                        rules={
+                            {
+                              required: '필수 입력 항목 입니다.',
+                              maxLength:{
+                                value:2,
+                                message:"올바른 비밀번호를 입력해주세요"
+                              }
+                            }
+                          }
+                    />
                 </RegiteredView>
             </CardRegisteredBox>
+            </ScrollView>
             <ButtonBox>
-            <Button
-            label='결제수단 추가' 
-            icon='plus'
-            onPressEvent={()=>setModalVisible(true)}
-            />
-            </ButtonBox>
-            <BottomSheet 
-                modalVisible={modalVisible} setModalVisible={setModalVisible} title="결제수단 추가" data={data} setValue={onSelectEvent} height={200}/>
+            {!keyboardEvent.isKeyboardActivate && <Button
+            label='등록하기' 
+            onPressEvent={form.handleSubmit(onSubmit)}
+            />}
+            </ButtonBox>        
+            </FormProvider>   
+            
         </Wrapper>
     )
 }
@@ -53,11 +180,12 @@ export default Pages;
 const CardRegisteredBox = styled.View`
 `
 const RegisteredTitleBox = styled.View`
-    margin-bottom: 6px;
+    flex-direction: row;
+    margin-bottom: 28px;
 `
 const RegiteredView = styled.View`
-    margin-top: 6px;
-    margin-bottom: 6px;
+    margin-top: 12px;
+    margin-bottom: 12px;
 `
 const ButtonBox = styled.View`
     position: absolute;

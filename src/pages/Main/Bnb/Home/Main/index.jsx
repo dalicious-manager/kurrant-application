@@ -31,6 +31,7 @@ import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreat
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from "../../Home/Skeleton";
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
+import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
@@ -137,7 +138,9 @@ if(isUserInfoLoading){
           <ArrowIcon/>
           </SpotName>
           <Icons>
-            <BellIcon/>
+            <Pressable onPress={()=>{ navigation.navigate(NotificationCenterName)}}>
+              <BellIcon/>
+            </Pressable>
             <CsIcon/>
           </Icons>
         </BarWrap>

@@ -1,14 +1,20 @@
+/* eslint-disable react-native/no-inline-styles */
+import cardValidator from 'card-validator';
 import React, {useState, useEffect,forwardRef} from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
 import {TouchableOpacity} from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 
+import { VISA ,AMEX,DISCOVER,JCB,UNKOWN,MASTERCARD,UNION, MAESTRO, DINERS } from '../../assets';
 import EyeOff from '../../assets/icons/TextInput/eyeOff.svg';
 import EyeOn from '../../assets/icons/TextInput/eyeOn.svg';
+import { cardNumberFormatter, cardSerialNumberFormatter, expirationDateFormatter } from '../../utils/cardFormatter';
 import {formattedTimer} from '../../utils/dateFormatter';
 import {AntDesignIcon} from '../Icon';
+import Image from '../Image';
 import Typography from '../Typography';
 import { textStyles } from './styles';
+
 
 /**
  *
@@ -63,7 +69,7 @@ const Component = forwardRef(({
   const data = watch(name);
   const [isShowing , setShowing] = useState(false);
   const [focus,setFocused] = useState(false)
-  
+  const [values , setValues] = useState();
   const themeApp = useTheme();
 
   // Props
@@ -130,6 +136,58 @@ const Component = forwardRef(({
       rules={rules}
       defaultValue={defaultValue && defaultValue}
       render={({field: {onChange,value}}) => {
+        const formatter = ()=>{
+          if(name.includes("cardNumber")) {
+            return cardSerialNumberFormatter(value)
+          }else if(name.includes("cardExpDate")){
+            return expirationDateFormatter(value)
+          }
+          else{
+            if(value){
+              return value
+            }
+            return '';
+          }
+          
+        }
+        const cardTypeIcon = ()=>{
+          const {card} = cardValidator.number(value);
+          let source;
+          switch (card?.type) {
+            case 'visa':
+              source = VISA;
+              break;
+            case 'mastercard':
+              source = MASTERCARD;
+              break;
+            case 'discover':
+              source = DISCOVER;
+              break;
+            case 'american-express':
+              source = AMEX;
+              break;
+            case 'unionpay':
+              source = UNION;
+              break;
+            case 'maestro':
+              source = MAESTRO;
+              break;
+            case 'jcb':
+              source = JCB;
+              break;
+            case 'diners-club':
+              source = DINERS;
+              break;
+            default:
+              source = UNKOWN;
+              break;
+          }
+          if (!source) return null;
+          return <Image imagePath={source} scale={1.0} resizeMode={'stretch'}  styles={{
+            width:29,
+            height:18
+          }}/>;
+        }
         
         return (
           <Wrapper {...style}>
@@ -139,7 +197,7 @@ const Component = forwardRef(({
                 <Typography
                   text="CaptionR"
                   textColor={errors[name] ? themeApp.colors.red[500]: focus ? themeApp.colors.blue[500] : themeApp.colors.grey[2] }>
-                  {value ? label:'  '}
+                  {value ? label:name.includes("card") ? label : '  '}
                 </Typography>
               </LabelContainer>
             )}
@@ -150,11 +208,14 @@ const Component = forwardRef(({
               {...containerProps}
               focus={focus}
             >
+              
+              {name.includes("cardNumber") && cardTypeIcon()}
               <InputContainer>
                 <StyledTextInput
                   paddings={padding}
                   ref={ref && ref}
                   {...textInputProps}
+                  name={name}
                   onChangeText={onChange}
                   onBlur={()=>{
                     setFocused(false)
@@ -171,7 +232,7 @@ const Component = forwardRef(({
                   text={'InputText'}
                   suffix={!!suffixContent}
                   timer={timer.remainTime > 0}
-                  value={value || ''}
+                  value={formatter()}
                   secureTextEntry={isPassword ? !isShowing :false}
                   {...rest}
                 />
@@ -288,9 +349,17 @@ const InputContainer = styled.View`
 
 const StyledTextInput = styled.TextInput`
   width: 100%;
-  ${({text})=> text && textStyles[text]}
-  /* padding: 4px 8px; */
-  padding:${({paddings}) => paddings && paddings};
+  ${({text})=> text && textStyles[text]}  
+  ${({name})=> name.includes("cardNumber") ? 
+  css`
+    padding: 4px 8px;
+  `
+   : 
+   css`
+    padding: 4px 0px;
+    padding-right: 8px;
+   `
+   }
   ${({suffix}) => {
     if (suffix) {
       return css`

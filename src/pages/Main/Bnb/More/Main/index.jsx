@@ -18,6 +18,7 @@ import { PAGE_NAME as FAQPageName } from '../../../MyPage/FAQ';
 import { PAGE_NAME as PersonalInfoPageName } from '../../../MyPage/PersonalInfo';
 import { PAGE_NAME as MealPageName } from '../../Meal/Main';
 import { PAGE_NAME as MealCartPageName } from '../../MealCart/Main';
+import { SCREEN_NAME as NoticeScreenName } from '../../../../../screens/Main/Notice';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
@@ -98,7 +99,7 @@ const Pages = () => {
             {/* <ListBox title='커런트 포인트' /> */}
           </ListContainer>
           <ListContainer title='알림'>
-            <ListBox title='공지사항' />
+            <ListBox title='공지사항' routeName={NoticeScreenName} />
             <ListBox title='약관 및 개인 정보' routeName={TermOfServicePageName}/>
           </ListContainer>
           <ListContainer title='문의하기'>
