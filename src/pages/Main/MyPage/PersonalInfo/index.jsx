@@ -34,7 +34,6 @@ import { PAGE_NAME as GroupApplicationCheckPageName} from '../../../Group/GroupA
 import { PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/DetailPage';
 
 import { PAGE_NAME as  LoginPageName} from '../../../Main/Login/Login';
-import { AvatarNon } from '~assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import useAuth from '../../../../biz/useAuth';
