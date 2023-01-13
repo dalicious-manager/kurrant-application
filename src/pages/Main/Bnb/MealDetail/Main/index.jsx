@@ -181,10 +181,10 @@ const Pages = ({route}) => {
                             </ModalWrap>
                         </PriceTitleWrap>
                         <PriceWrap> 
-                            <SalePrice>{withCommas(isFoodDetail?.price)}원</SalePrice>
-                            {/* <Percent>20%</Percent>
-                            <SalePrice>{result}원</SalePrice>
-                            <Price>15,000원</Price> */}
+                            <Percent>{(isFoodDetail?.discountRate)*100}%</Percent>
+                            <SalePrice>{withCommas(isFoodDetail?.discountedPrice)}원</SalePrice>
+                            {/* <SalePrice>{}원</SalePrice> */}
+                            <Price>{withCommas(isFoodDetail?.price)}원</Price>
                         </PriceWrap>
                     </View>
                 </Content>

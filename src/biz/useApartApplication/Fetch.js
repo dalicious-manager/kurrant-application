@@ -44,3 +44,12 @@ export async function ApartmentRegisterSpot(id,body){
 
     return fetchRes;
 }
+
+// 아파트 상세주소 수정
+
+export async function ApartmentModifyHo(id,body){
+    const fetchRes = await fetchJson(`/users/me/groups/apartments/spots/${id}`,'POST',{
+        body:JSON.stringify(body)
+    })
+    return fetchRes;
+}

@@ -1,7 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import { useAtom } from 'jotai';
 import React from 'react';
-import {  Alert } from 'react-native';
+import {  Alert, Pressable } from 'react-native';
 import styled from 'styled-components';
 
 import EmailLoginModal, {
@@ -98,6 +98,8 @@ import MembershipTerminateComplate, {
 // eslint-disable-next-line import/order
 
 //import CloseIcon from '../../assets/icons/Group/close.svg';
+import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
+import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
@@ -118,6 +120,7 @@ import ApartmentApplicationInformation, { PAGE_NAME as ApartmentApplicationInfor
 import ApartmentSearch, {PAGE_NAME as ApartmentSearchPageName} from '../../pages/Group/GroupApartment/SearchApartment';
 import ApartmentAdd,{PAGE_NAME as ApartmentAddPageName} from '../../pages/Group/GroupApartment/SearchApartment/AddApartment';
 import ApartmentAddDetail,{PAGE_NAME as ApartmentAddDetailPageName} from '../../pages/Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
+import ApartmentAddHo,{PAGE_NAME as ApartmentAddDetailHoPageName} from '../../pages/Group/GroupApartment/SearchApartment/AddApartment/DetailHo';
 import GroupCreateCorporations,{PAGE_NAME as GroupCreateCorporationsPageName} from '../../pages/Group/GroupCorporations';
 import CorporationApplicationDetail, {PAGE_NAME as CorporationApplicationDetailPageName} from '../../pages/Group/GroupCorporations/CorporationApplicationCheck/DetailPage';
 import CorporationApplicationEtc, {PAGE_NAME as CorporationApplicationEtcPageName} from '../../pages/Group/GroupCorporations/CorporationApplicationCheck/DetailPage/EtcPage';
@@ -140,8 +143,7 @@ import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/Meal
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
-import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
-import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
+import { SCREEN_NAME } from "../Main/Bnb";
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -155,7 +157,7 @@ const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
   const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
-
+  const navigation = useNavigation();
   return (
     <MainRoot.Navigator  >
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
@@ -1268,7 +1270,11 @@ const Screen = () => {
               lineHeight:22
             },
             
-            headerLeft: () => <CloseIcon margin={[10,0]}/>,
+            // headerLeft: () => {
+            //   <Pressable onPress={()=>navigation.navigate(SCREEN_NAME)}>
+            //     <CloseIcon />
+            // </Pressable>
+            // },
           }}
         />
       <MainRoot.Screen
@@ -1294,6 +1300,22 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             title:'세부 주소',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton margin={[10,0]}/>
+          }}
+        />
+      <MainRoot.Screen
+          name={ApartmentAddDetailHoPageName}
+          component={ApartmentAddHo}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title:'상세 배송지',
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',

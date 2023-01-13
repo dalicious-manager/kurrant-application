@@ -1,8 +1,8 @@
 import {useAtom} from 'jotai';
 
-import { setStorage } from '../../utils/asyncStorage';
 import * as Fetch from './Fetch';
 import { apartApplicationListAtom, apartApplicationResAtom, apartSearchAtom, applicationListAtom, isApartApplicationCheckAtom, isApartApplicationLoadingAtom } from './store';
+import { setStorage } from '../../utils/asyncStorage';
 
 
 
@@ -83,12 +83,25 @@ const useApartApplication = () => {
         }
     }
 
+    const apartmentModifyHo = async (id,body) => {
+        try {
+            const res = await Fetch.ApartmentModifyHo(id,{
+                ...body
+            })
+            console.log(res.data)
+            return res;
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     return {
         apartApplication,
         apartApplicationCheck,
         apartApplicationMemo,
         apartSearch,
         apartmentRegisterSpot,
+        apartmentModifyHo,
         isApartCheck,
         isApartRes,
         isApartSearch,

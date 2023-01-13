@@ -26,7 +26,6 @@ const BottomSheet = props => {
       // const newSelected = new Map(selected);
       // newSelected.set(id, !selected.get(id));
       setSelected(id);
-      
       setModalVisible(false)
     },
     [setModalVisible, setSelected],
@@ -139,7 +138,7 @@ const BottomSheet = props => {
                 
               </ItemContainer>
               {item.spots.map((el,idx) => (
-                <ContentItemContainer onPress={()=>{onSelect(el.spotId);onPressEvent(el.spotId)}} key={el.spotId}>
+                <ContentItemContainer onPress={()=>{onSelect(el.spotId);onPressEvent(el.spotId,item.clientId)}} key={el.spotId}>
                   {selected === el.spotId ?
                 <ContentItemBox>
                   <ContentItemText>{el.spotName}</ContentItemText>

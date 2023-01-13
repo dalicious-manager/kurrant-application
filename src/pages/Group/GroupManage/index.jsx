@@ -19,7 +19,7 @@ const Pages = () => {
     const {userGroupSpotCheck,isUserGroupSpotCheck,groupSpotDetail,userSpotRegister} = useGroupSpots();
     
     const [selected,setSelected] = useState();
-    
+ 
     const modalOpen = () => {
         setModalVisible(true);
     }
@@ -32,7 +32,7 @@ const Pages = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
-    const goSpotRegisterPage = async (id) => {
+    const goSpotRegisterPage = async (id,clientId) => {
         try {
             const res = await userSpotRegister({
                 'id':id
@@ -40,7 +40,7 @@ const Pages = () => {
             if (res.data === null){
                 navigation.navigate(ApartRegisterSpotPageName,{id:id})
             } else {
-                navigation.navigate(GroupManageDetailPageName,{id:id})
+                navigation.navigate(GroupManageDetailPageName,{id:id,clientId:clientId})
             }
             
             
@@ -69,7 +69,7 @@ const Pages = () => {
             </ButtonWrap>
             <BottomSheetSpot modalVisible={modalVisible} setModalVisible={setModalVisible} 
             title='스팟 선택' data={isUserGroupSpotCheck} selected={selected} setSelected={setSelected} 
-            onPressEvent={(id)=>{goSpotRegisterPage(id)}}
+            onPressEvent={(id,clientId)=>{goSpotRegisterPage(id,clientId)}}
             />
         </SafeView>
     )

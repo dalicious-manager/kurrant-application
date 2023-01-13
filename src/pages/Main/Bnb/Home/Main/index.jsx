@@ -17,17 +17,17 @@ import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import {weekAtom} from '../../../../../biz/useBanner/store';
+import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import { isOrderMealAtom } from '../../../../../biz/useOrderMeal/store';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheet from '../../../../../components/BottomSheet/component';
+import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import { formattedDate, formattedWeekDate } from '../../../../../utils/dateFormatter';
-import {PAGE_NAME as ApartApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
-import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from "../../Home/Skeleton";
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
@@ -39,12 +39,13 @@ const Pages = () => {
 
     const [isVisible, setIsVisible] = useState(true);
     const weekly = useAtomValue(weekAtom);
-    const {isUserInfo, userInfo , isUserInfoLoading} = useUserInfo();
+    const {isUserInfo, userInfo , isUserInfoLoading,isUserSpotStatus} = useUserInfo();
+    const {userGroupSpotCheck,isUserGroupSpotCheck} = useGroupSpots();
     const {isOrderMeal,orderMeal} = useOrderMeal();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
-
+    const [selected,setSelected] = useState();
   useEffect(() => {
     
     const start = weekly.map((s) => {
@@ -69,6 +70,7 @@ const Pages = () => {
     };
     loadUser();
     loadMeal();
+    userGroupSpotCheck();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -100,7 +102,7 @@ const Pages = () => {
   //   balloonEvent()
   // // eslint-disable-next-line react-hooks/exhaustive-deps
   // },[])
-
+  console.log(isUserSpotStatus,'스팟 상태')
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
 
@@ -126,17 +128,11 @@ if(isUserInfoLoading){
       <Pressable onPress={() => {navigation.navigate(GroupCreateMainPageName)}}>
         <Text> 임시버튼(그룹/스팟) </Text>
       </Pressable>
-      <Pressable onPress={() => {navigation.navigate(ApartApplicationCheckPageName)}}>
-        <Text> 임시버튼 (신청조회) </Text>
-      </Pressable>
-      <Pressable onPress={() => {navigation.navigate(GroupManagePageName)}}>
-        <Text> 임시버튼 (스팟관리) </Text>
-      </Pressable>
       <View>
         <BarWrap>
           <SpotName>
             <Pressable onPress={PressSpotButton}>
-              <SpotNameText>팁스타운 1층{userSpot}</SpotNameText>
+              <SpotNameText>{userSpot}</SpotNameText>
             </Pressable>
           <ArrowIcon/>
           </SpotName>
@@ -270,7 +266,10 @@ if(isUserInfoLoading){
             <ButtonText>식사 구매하기</ButtonText>
           </Button>
       </ButtonWrap>
-      <BottomSheet modalVisible={modalVisible} setModalVisible={setModalVisible} title={'???'}/>
+      <BottomSheetSpot modalVisible={modalVisible} setModalVisible={setModalVisible} 
+            title='스팟 선택' data={isUserGroupSpotCheck} selected={selected} setSelected={setSelected} 
+            // onPressEvent={(id)=>{anotherSpot(id)}}
+            />
     </SafeView>
   )
 };

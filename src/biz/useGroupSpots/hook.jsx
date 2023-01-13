@@ -7,7 +7,7 @@ import { applicationListAtom, groupSpotDetailAtom, userGroupSpotListAtom } from 
 const useGroupSpots = () => {
 
     const [isApplicationList,setApplicationList] = useAtom(applicationListAtom); // 아파트 + 기업
-    const [isUserGroupSpotCheck,setUserGroupSpotCheck] = useAtom(userGroupSpotListAtom);
+    const [isUserGroupSpotCheck,setUserGroupSpotCheck] = useAtom(userGroupSpotListAtom); // 유저가 속한 그룹 스팟 조회
     const [isDetailSpot,setDetailSpot] = useAtom(groupSpotDetailAtom); // 그룹별 스팟 상세 조회
 
        // 그룹/스팟 신청 목록 조회 (아파트 + 기업)
@@ -24,7 +24,7 @@ const useGroupSpots = () => {
         const userGroupSpotCheck = async () => {
             try {
                 const res = await Fetch.GroupSpotCheck();
-                console.log(res.data)
+                
                 setUserGroupSpotCheck(res.data)
             } catch(err){
                 console.log(err)
@@ -69,15 +69,31 @@ const useGroupSpots = () => {
             }
         }
 
+        // 그룹 탈퇴
+
+        const userWithdrawGroup = async (body) => {
+            try {
+                const res  = await Fetch.WithdrawGroup({
+                    ...body
+                })
+                return res;
+            } catch(err){
+                console.log(err)
+            }
+            
+        }
+
     return {
         applicationList,
         userGroupSpotCheck,
         userGroupAdd,
         groupSpotDetail,
         userSpotRegister,
+        userWithdrawGroup,
         isApplicationList,
         isUserGroupSpotCheck,
-        isDetailSpot
+        isDetailSpot,
+        setDetailSpot
     }
 }
 
