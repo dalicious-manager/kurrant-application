@@ -1,7 +1,4 @@
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import auth from '@react-native-firebase/auth';
-import messaging from '@react-native-firebase/messaging';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
@@ -15,12 +12,10 @@ import HorizonLine from '../../../../components/HorizonLine';
 import Image from '../../../../components/Image';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
-import useToken from '../../../../hook/useToken';
+
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
+import { getStorage } from '../../../../utils/asyncStorage';
 import snsLogin from '../../../../utils/snsLogin';
-import {
-  PAGE_NAME as BuyMealPageName,
-} from '../../../Main/Bnb/BuyMeal';
 import {
   PAGE_NAME as MembershipJoinPageName,
 } from '../../../Membership/MembershipIntro';
@@ -36,25 +31,22 @@ const screenHeight = Dimensions.get('screen').height;
 
 
 const Pages = () => {  
-  const {token,isTokenLoading} = useToken();
+ 
   const navigation = useNavigation();
   const toast = Toast();
-
+  const [isLoginLoading, setLoginLoading] = useState();
   const {googleLogin,appleLogin} = snsLogin();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes:['https://www.googleapis.com/auth/user.phonenumbers.read'],
       webClientId: '872782655273-mhb2jokicsaqb99astkb4hlqr4dndf7o.apps.googleusercontent.com', 
     });
-   
-    console.log("구글")
   }
 
   
 
   
-  useEffect(()=>{   
-    
+  useEffect(()=>{       
     let timeout;
     let exitApp = false;   
      const handleBackButton = () => {
@@ -85,21 +77,34 @@ const Pages = () => {
     googleSigninConfigure();
   },[]);
   useEffect(()=>{
-    
-    if(token ){
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: SCREEN_NAME,
-          },
-        ],
-      })
-    } 
+    const isAutoLogin = async()=>{
+      const isLogin = await getStorage('isLogin');
+      if(isLogin !== 'false'){                
+        const token = await getStorage('token');
+        setLoginLoading(false);
+        if(token){
+          const getToken = JSON.parse(token);
+          if(getToken?.accessToken){
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: SCREEN_NAME,
+                },
+              ],
+            })
+          } 
+        }
+      }else{
+        setLoginLoading(false);
+      }
+    }
+    setLoginLoading(true);
+    isAutoLogin();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[token])
+  },[])
   
-  if(isTokenLoading){
+  if(isLoginLoading){
     return<ActivityIndicator size="large" />
   }
   return (
@@ -196,7 +201,5 @@ const EtcSNSBox = styled.View`
   justify-content: center;
   flex-direction: row;
 `
-
-
 
 export default Pages;

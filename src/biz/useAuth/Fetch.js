@@ -73,3 +73,14 @@ export async function snsLogin(body, type, option) {
   });
   return fetchRes;
 }
+
+
+export async function logout(body, option) {
+  console.log("로그아웃")
+  console.log(body);
+  const fetchRes = await fetchJson(`/auth/logout`, 'POST', {
+    ...option,
+    body: JSON.stringify(body)
+  });
+  return fetchRes;
+}
