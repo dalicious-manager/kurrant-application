@@ -141,6 +141,7 @@ const Pages = () => {
             </InfomationBox>
           </InfomationContainer>
           <Line />
+          {/* 여기서 한번 끊고 */}
           <ListContainer title="이용 내역">
             <ListBox title="식사 일정" routeName={MealPageName} />
             <ListBox title="장바구니(식사)" routeName={MealCartPageName} />
