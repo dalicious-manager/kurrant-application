@@ -1,8 +1,12 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import React, {useLayoutEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';
+
 import Yoyoyo, {hi1, hi2} from '../../../jaesin/Yoyoyo';
 export const SCREEN_NAME = 'S_MAIN__REVIEW';
+import Review, {
+  PAGE_NAME as ReviewPageName,
+} from '../../../pages/Main/MyPage/Review';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -21,8 +25,8 @@ const Screen = () => {
         tabBarStyle: {backgroundColor: '#ffffff'},
       }}>
       <Tab.Screen
-        name={'Yoyoyo'}
-        component={Yoyoyo}
+        name={ReviewPageName}
+        component={Review}
         options={{
           tabBarLabel: '리뷰 작성(7)',
           tabBarLabelStyle: {

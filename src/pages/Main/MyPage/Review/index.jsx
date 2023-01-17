@@ -1,34 +1,38 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import styled from 'styled-components';
-import AlamRow from '~components/AlamRow';
-// import Accordian from '../components/Accordion/component';
-import Typography from '../components/Typography';
-import QuestionCircleMonoIcon from '../assets/icons/QuestionCircleMono.svg';
+import Typography from '../../../../components/Typography';
 
-export const hi1 = 'S_MAIN_YOYO1';
-export const hi2 = 'S_MAIN_YOYO2';
-const Yoyoyo = () => {
+// import QuestionCircleMonoIcon from '../assets/icons/QuestionCircleMono.svg';
+import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
+import Card from './Card';
+
+// import Card from './Card';
+
+export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
+
+const Pages = () => {
   const ReviewWaitList = [
     {
-      orderDate: Date.now(),
-      restarentName: '세상의 모든 아침',
+      orderDate: new Date(Date.now()),
+      restaurentName: '세상의 모든 아침',
       menuName: '맛있는 버섯 그라탕',
-      option: '',
-      image: '',
+      option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
+      imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
     },
     {
-      orderDate: Date.now(),
-      restarentName: '세상의 모든 아침',
-      menuName: '맛있는 버섯 그라탕',
-      option: '',
-      image: '',
+      orderDate: new Date(Date.now()),
+      restaurentName: '세상의 모든 저녁',
+      menuName: '맛없는 버섯 그라탕',
+      option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
+      imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
     },
   ];
 
   return (
     <Container>
-      <Yoyo>
+      {/* 회색박스 포토후기, 텍스트후기  */}
+      <PlaneGreyBox>
         <SmallWrap>
           <PlaneRowView>
             <MiniWrap>
@@ -51,16 +55,30 @@ const Yoyoyo = () => {
             </PlaneRowView>
           </View>
         </SmallWrap>
-      </Yoyo>
+      </PlaneGreyBox>
       <View>
-        {/* thin text box */}
         {/* 카드를 map한다 */}
+
+        {ReviewWaitList.map((value, index) => {
+          return (
+            <Card
+              key={index}
+              orderDate={value.orderDate}
+              menuName={value.menuName}
+              option={value.option}
+              imageUrl={value.imageUrl}
+              restaurentName={value.restaurentName}
+            />
+          );
+        })}
+
+        {/* <Card /> */}
       </View>
     </Container>
   );
 };
 
-export default Yoyoyo;
+export default Pages;
 
 const Container = styled.View`
   width: 100%;
@@ -69,7 +87,7 @@ const Container = styled.View`
   background-color: #ffffff;
 `;
 
-const Yoyo = styled.View`
+const PlaneGreyBox = styled.View`
   width: 100%;
   height: 40px;
   border: 1px solid ${({theme}) => theme.colors.grey[8]};
