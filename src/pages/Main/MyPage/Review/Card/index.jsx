@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, View} from 'react-native';
+
 import {Line} from 'react-native-svg';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
@@ -139,7 +139,13 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
 `;
 
 const DDayText = styled(Typography).attrs({text: 'CaptionR'})`
-  color: ${props => props.theme.colors.grey[5]};
+  color: ${props => {
+    if (false) {
+      return props.theme.colors.grey[5];
+    } else {
+      return props.theme.colors.grey[5];
+    }
+  }};
   margin-left: 1px;
   margin: 2px 0;
 `;

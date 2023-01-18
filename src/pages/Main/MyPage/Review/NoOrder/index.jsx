@@ -6,9 +6,6 @@ import Typography from '../../../../../components/Typography';
 export const pathFind = 'yo';
 
 const Component = isArrayEmpty => {
-  console.log('noorder');
-  const screenHeight = Dimensions.get('screen').height;
-  console.log(screenHeight);
   return (
     <NoOrderText isArrayEmpty={isArrayEmpty}>
       주문 후 리뷰를 작성해 보세요.

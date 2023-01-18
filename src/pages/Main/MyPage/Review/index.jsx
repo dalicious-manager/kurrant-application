@@ -7,6 +7,7 @@ import Typography from '../../../../components/Typography';
 import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
 import Card from './Card';
 import NoOrder from './NoOrder';
+import {ScrollView} from 'react-native-gesture-handler';
 
 // import Card from './Card';
 
@@ -15,72 +16,110 @@ export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 const Pages = () => {
   const ReviewWaitList = [
     {
+      id: 1,
       orderDate: new Date(Date.now()),
-      restaurentName: '세상의 모든 아침',
-      menuName: '맛없는 버섯 그라탕',
-      diningType: '아침',
-      option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
-      imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+      orderItemDtoList: [
+        {
+          restaurentName: '세상의 모든 아침',
+          menuName: '맛없는 버섯 그라탕',
+          diningType: '아침',
+          option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
+          imageUrl:
+            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+        },
+        {
+          restaurentName: '세상의 모든 점심',
+          menuName: '맛있는 버섯 그라탕',
+          diningType: '점심',
+          option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
+          imageUrl:
+            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+        },
+      ],
     },
     {
-      orderDate: new Date(2023, 0, 15),
-      restaurentName: '세상의 모든 점심',
-      menuName: '맛있는 버섯 그라탕',
-      diningType: '점심',
-      option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
-      imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+      id: 2,
+      orderDate: new Date(2023, 0, 14),
+      orderItemDtoList: [
+        {
+          restaurentName: '오메 인자오셨소!',
+          menuName: '두부',
+          diningType: '아침',
+          option: '만두 두부무침',
+          imageUrl:
+            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+        },
+        {
+          restaurentName: '여자만 장어타운',
+          menuName: '장어구이',
+          diningType: '점심',
+          option: '1옵션 장어 소스 꼬치 소스꼬치1',
+          imageUrl:
+            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+        },
+      ],
     },
   ];
 
   return (
     <Container>
-      {/* 회색박스 포토후기, 텍스트후기  */}
-      {!!ReviewWaitList.length && (
-        <PlaneGreyBox>
-          <SmallWrap>
-            <PlaneRowView>
-              <MiniWrap>
-                <Typography1 variant="h400">포토후기</Typography1>
-
-                <PointText>100P</PointText>
-              </MiniWrap>
-              <MiniWrap>
-                <Typography1 variant="h400">텍스트 후기</Typography1>
-
-                <PointText>50P</PointText>
-              </MiniWrap>
-            </PlaneRowView>
-            <View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}>
+        {/* 회색박스 포토후기, 텍스트후기  */}
+        {!!ReviewWaitList.length && (
+          <PlaneGreyBox>
+            <SmallWrap>
               <PlaneRowView>
                 <MiniWrap>
-                  <Typography2 variant="h400">작성안내</Typography2>
-                  <QuestionCircleMonoIcon />
+                  <Typography1 variant="h400">포토후기</Typography1>
+
+                  <PointText>100P</PointText>
+                </MiniWrap>
+                <MiniWrap>
+                  <Typography1 variant="h400">텍스트 후기</Typography1>
+
+                  <PointText>50P</PointText>
                 </MiniWrap>
               </PlaneRowView>
-            </View>
-          </SmallWrap>
-        </PlaneGreyBox>
-      )}
+              <View>
+                <PlaneRowView>
+                  <MiniWrap>
+                    <Typography2 variant="h400">작성안내</Typography2>
+                    <QuestionCircleMonoIcon />
+                  </MiniWrap>
+                </PlaneRowView>
+              </View>
+            </SmallWrap>
+          </PlaneGreyBox>
+        )}
 
-      {/* 카드를 map한다 */}
+        {/* 카드를 map한다 */}
 
-      {!!ReviewWaitList.length ? (
-        ReviewWaitList.map((value, index) => {
-          return (
-            <Card
-              key={index}
-              orderDate={value.orderDate}
-              menuName={value.menuName}
-              option={value.option}
-              imageUrl={value.imageUrl}
-              diningType={value.diningType}
-              restaurentName={value.restaurentName}
-            />
-          );
-        })
-      ) : (
-        <NoOrder isArrayEmpty={!ReviewWaitList.length} />
-      )}
+        {!!ReviewWaitList.length ? (
+          ReviewWaitList.map((value, index) => {
+            return (
+              <View key={index}>
+                {value.orderItemDtoList.map((value2, index2) => {
+                  return (
+                    <Card
+                      key={index2}
+                      orderDate={value.orderDate}
+                      menuName={value2.menuName}
+                      option={value2.option}
+                      imageUrl={value2.imageUrl}
+                      diningType={value2.diningType}
+                      restaurentName={value2.restaurentName}
+                    />
+                  );
+                })}
+              </View>
+            );
+          })
+        ) : (
+          <NoOrder isArrayEmpty={!ReviewWaitList.length} />
+        )}
+      </ScrollView>
     </Container>
   );
 };
