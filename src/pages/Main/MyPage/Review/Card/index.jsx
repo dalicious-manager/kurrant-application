@@ -25,15 +25,16 @@ const Component = ({
   menuName,
   option,
   imageUrl,
+  diningType,
   ...rest
 }) => {
   return (
     <Container>
       <DateText>
         {orderDate &&
-          `${formattedMonthDay(orderDate)}  ${timePassIndicator(
-            orderDate,
+          `${formattedMonthDay(orderDate)} ${diningType} · ${timePassIndicator(
             new Date(Date.now()),
+            orderDate,
           )}`}
       </DateText>
 

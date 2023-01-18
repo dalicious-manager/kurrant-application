@@ -170,13 +170,13 @@ export const timePassIndicator = (criterionDate, compareDate) => {
   if (subtraction <= 1000 * 60 * 60 * 24) {
     return '오늘';
   } else if (
-    subtraction >= 1000 * 60 * 60 * 24 * 2 &&
-    subtraction < 1000 * 60 * 60 * 24
+    subtraction >= 1000 * 60 * 60 * 24 &&
+    subtraction < 1000 * 60 * 60 * 24 * 2
   ) {
     return '어제';
   } else if (
-    subtraction >= 1000 * 60 * 60 * 24 * 3 &&
-    subtraction < 1000 * 60 * 60 * 24 * 2
+    subtraction >= 1000 * 60 * 60 * 24 * 2 &&
+    subtraction < 1000 * 60 * 60 * 24 * 3
   ) {
     return '그저께';
   } else {

@@ -15,17 +15,19 @@ export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 const Pages = () => {
   const ReviewWaitList = [
     {
-      orderDate: new Date(2023, 0, 15),
+      orderDate: new Date(Date.now()),
       restaurentName: '세상의 모든 아침',
-      menuName: '맛있는 버섯 그라탕',
-      option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
+      menuName: '맛없는 버섯 그라탕',
+      diningType: '아침',
+      option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
       imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
     },
     {
-      orderDate: new Date(Date.now()),
-      restaurentName: '세상의 모든 저녁',
-      menuName: '맛없는 버섯 그라탕',
-      option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
+      orderDate: new Date(2023, 0, 15),
+      restaurentName: '세상의 모든 점심',
+      menuName: '맛있는 버섯 그라탕',
+      diningType: '점심',
+      option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
       imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
     },
   ];
@@ -71,6 +73,7 @@ const Pages = () => {
               menuName={value.menuName}
               option={value.option}
               imageUrl={value.imageUrl}
+              diningType={value.diningType}
               restaurentName={value.restaurentName}
             />
           );
