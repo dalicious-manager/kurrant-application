@@ -12,7 +12,7 @@ import HorizonLine from '../../../../components/HorizonLine';
 import Image from '../../../../components/Image';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
-
+import { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
 import { getStorage } from '../../../../utils/asyncStorage';
 import snsLogin from '../../../../utils/snsLogin';
@@ -21,10 +21,13 @@ import {
 } from '../../../Membership/MembershipIntro';
 import LoginMain from './LoginMain';
 
+import 'react-native-get-random-values';
+import { v4 as uuid } from 'uuid'
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
-
+const rawNonce = uuid();
+const state = uuid();
 
 
 const screenHeight = Dimensions.get('screen').height;
@@ -42,7 +45,28 @@ const Pages = () => {
       webClientId: '872782655273-mhb2jokicsaqb99astkb4hlqr4dndf7o.apps.googleusercontent.com', 
     });
   }
-
+  const appleSignConfig = ()=>{
+    appleAuthAndroid.configure({
+      // The Service ID you registered with Apple
+      clientId: 'kurrant.dalicious.io',
+  
+      // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
+      // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
+      redirectUri: 'https://dalicious-v1.firebaseapp.com/__/auth/handler',
+  
+      // The type of response requested - code, id_token, or both.
+      responseType: appleAuthAndroid.ResponseType.ALL,
+  
+      // The amount of user information requested from Apple.
+      scope: appleAuthAndroid.Scope.ALL,
+  
+      // Random nonce value that will be SHA256 hashed before sending to Apple.
+      nonce: rawNonce,
+  
+      // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
+      state,
+    });
+  }
   
 
   
@@ -75,6 +99,7 @@ const Pages = () => {
   },[ navigation, toast])
   useEffect(()=>{
     googleSigninConfigure();
+    appleSignConfig();
   },[]);
   useEffect(()=>{
     const isAutoLogin = async()=>{
@@ -134,7 +159,7 @@ const Pages = () => {
           <EtcSNSBox >
             <ButtonRoundSns type_sns='facebook' size={32}/>
             <ButtonRoundSns type_sns='google' size={32} onPressEvent={googleLogin}/>
-            {Platform.OS !== 'android' && <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>}
+            <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>
           </EtcSNSBox>
         </EtcSNSContainer>
       </LoginBox>

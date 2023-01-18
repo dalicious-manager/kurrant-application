@@ -161,7 +161,6 @@ const useAuth = () => {
         },
         option
       );
-      console.log(res.data.accessToken);
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       setUserSpotStatus(res.data.spotStatus)

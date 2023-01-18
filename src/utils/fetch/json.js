@@ -42,16 +42,19 @@ async function json(url, method, options = {}) {
       "accessToken": token.accessToken,
       "refreshToken": token.refreshToken
     }
+    console.log("test1", bodyData)
     const reissue = await fetch(apiHostUrl + "/auth/reissue", {
       headers: { 'content-type': 'application/json', },
       method: "POST",
       body: JSON.stringify(bodyData),
     })
-    const { data } = await reissue.json();
+    console.log(reissue);
+    const result = await reissue.json();
+    console.log("test", result);
     const resultData = {
-      "accessToken": data.accessToken,
-      "expiresIn": data.accessTokenExpiredIn,
-      "refreshToken": data.refreshToken,
+      "accessToken": result.data.accessToken,
+      "expiresIn": result.data.accessTokenExpiredIn,
+      "refreshToken": result.data.refreshToken,
       "spotStatus": token.spotStatus
     }
     await setStorage('token', JSON.stringify(resultData));

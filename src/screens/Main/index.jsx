@@ -37,6 +37,7 @@ import FAQ, {
 import FAQListPage, {
   PAGE_NAME as FAQListPageName,
 } from '~pages/Main/MyPage/FAQ/FAQListPage';
+import {FAQListDetailPage, FAQListDetailPageName } from '../../pages/Main/MyPage/FAQ/FAQListDetailPage';
 import PersonalInfo, {
   PAGE_NAME as PersonalInfoPageName,
 } from '~pages/Main/MyPage/PersonalInfo';
@@ -99,6 +100,7 @@ import { isLoginLoadingAtom } from '../../biz/useAuth/store';
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
+import PurchaseHistory, {SCREEN_NAME as PurchaseHistoryScreenName} from './PurchaseHistory';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
@@ -143,12 +145,13 @@ import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/Meal
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
-
+import {PurchaseDetailPage, PurchaseDetailPageName} from '../../pages/Main/MyPage/PurchaseHistory/Detail';
 import { SCREEN_NAME } from "../Main/Bnb";
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 import NoticeDetail, {PAGE_NAME as NoticeDetailPageName} from '../../pages/Main/MyPage/Notice/NoticeDetail';
 import { DeleteIcon, NotifySettingIcon, SettingIcon } from '../../components/Icon';
 import { useAtom } from 'jotai';
+import useBoard from '../../biz/useBoard';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -163,9 +166,10 @@ const MainRoot = createNativeStackNavigator();
 const Screen = () => {
   const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
   const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
+  const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
   return (
-    <MainRoot.Navigator >
+    <MainRoot.Navigator>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -323,12 +327,46 @@ const Screen = () => {
           component={RegisterCard}
           options={{headerShown: true,title:"카드 등록",
           headerTitleAlign: 'center',
+          headerShadowVisible: false,
           headerTitleStyle:{
             fontFamily:'Pretendard-SemiBold',
             fontSize:14,
             lineHeight:22,
           },
           headerLeft: () => <BackButton />,
+        }}
+        />
+       
+      </MainRoot.Group>
+
+      {/* 구매 내역 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PurchaseHistoryScreenName}
+          component={PurchaseHistory}
+          options={{headerShown: true,title:"구매내역",
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          headerTitleStyle:{
+            fontFamily:'Pretendard-SemiBold',
+            fontSize:14,
+            lineHeight:22,
+          },
+          headerLeft: () => <BackButton />,
+        }}
+        />
+        <MainRoot.Screen
+          name={PurchaseDetailPageName}
+          component={PurchaseDetailPage}
+          options={{headerShown: true,title:"상세정보",
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          headerTitleStyle:{
+            fontFamily:'Pretendard-SemiBold',
+            fontSize:14,
+            lineHeight:22,
+          },
+          headerLeft: () => <BackButton mode="modal" />,
         }}
         />
        
@@ -383,9 +421,27 @@ const Screen = () => {
             headerLeft: () => <BackButton margin={[10,0]}/>,
             headerRight:() => (
               <>
-              <View style={{marginRight:20}}>
-              <DeleteIcon />
-              </View>
+              <DeleteTxt style={{marginRight:20}} onPress={()=>{Alert.alert(
+              '알림 삭제',
+              '모든 알림을 삭제하시겠어요?',
+              [
+                {
+                  text:'취소',
+                  onPress:() => console.log('cancel pressed'),
+                  style:'destructive'
+                },
+                {
+                  text:'삭제',
+                  onPress:() => {
+                    try {
+                      deleteAlarm();
+                    }catch(err){
+                      console.log(err)
+                    }
+                  }
+                }
+              ]
+            )}}><DeleteIcon /></DeleteTxt>             
               <View>
               <NotifySettingIcon />
               </View>
@@ -431,7 +487,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            
+            headerShadowVisible: false,
             // headerLeft: () => <BackButton />,
             // headerRight: () => <ShoppingCart/>
           }}
@@ -581,7 +637,22 @@ const Screen = () => {
           name={FAQListPageName}
           component={FAQListPage}
           options={{headerShown: true,
-            title:'회원정보',
+            title:'',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:17,
+              lineHeight:21
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={FAQListDetailPageName}
+          component={FAQListDetailPage}
+          options={{headerShown: true,
+            title:'고객센터',
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerTitleStyle:{

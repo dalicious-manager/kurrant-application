@@ -108,6 +108,7 @@
 		BB88AAD1C21847FB868A3C00 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraBold.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
 		C0A217AEDFE0481FB9F3985D /* Pretendard-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Light.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-Light.otf"; sourceTree = "<group>"; };
 		D35B52932963C45A00368C90 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D3B3EB672977DB7A000B91E6 /* kurrant.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = kurrant.entitlements; path = kurrant/kurrant.entitlements; sourceTree = "<group>"; };
 		D6DCF50CF739E20A8CA31AEC /* Pods_kurrant.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kurrant.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCA932196CC34D13A6907957 /* Pretendard-ExtraLight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraLight.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-ExtraLight.otf"; sourceTree = "<group>"; };
 		DE29E860C41A91EAB5D08AB4 /* Pods-kurrant-kurrantTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant-kurrantTests.release.xcconfig"; path = "Target Support Files/Pods-kurrant-kurrantTests/Pods-kurrant-kurrantTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -201,6 +202,7 @@
 		13B07FAE1A68108700A75B9A /* kurrant */ = {
 			isa = PBXGroup;
 			children = (
+				D3B3EB672977DB7A000B91E6 /* kurrant.entitlements */,
 				D35B52932963C45A00368C90 /* GoogleService-Info.plist */,
 				FF1331DC28E17BDC00D27A78 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -757,7 +759,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = kurrant/kurrant.entitlements;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = P98WMV6993;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = kurrant/Info.plist;
@@ -767,7 +770,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -789,7 +792,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = kurrant/kurrantRelease.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = P98WMV6993;
 				INFOPLIST_FILE = kurrant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "커런트";
@@ -798,7 +801,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -37,7 +37,7 @@ const Pages= ()=>{
     };
     const getMembershipData = useCallback(async()=>{
         const {data} = await membershipProduct.getMembershipProduct();
-        setMembershipData(data);
+        setMembershipData(data.reverse());
     },[membershipProduct])
     console.log(signUpCheck.watch());
 

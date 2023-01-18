@@ -79,10 +79,12 @@ export const LabelWrap = styled.View`
   flex-direction:row;
   justify-content:center;
   align-items: center;
+  text-align: center;
   width: 100%;
 `;
 
 export const Label = styled(Typography)`
+  text-align: center;
   ${({ disabled, type }) =>  getLabelColor(disabled,type)};
 `;
 

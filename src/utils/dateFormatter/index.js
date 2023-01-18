@@ -36,7 +36,7 @@ export function formattedMealTime(data) {
   const hour = leftPad(dateTime.getHours());
   const minute = leftPad(dateTime.getMinutes());
 
-  return `${hour<12?'오전':'오후'} ${hour > 12 ? hour - 12 : hour}:${minute}`;
+  return `${hour < 12 ? '오전' : '오후'} ${hour > 12 ? hour - 12 : hour}:${minute}`;
   // return `${hour}:${minute}`;
 }
 
@@ -49,8 +49,8 @@ export function formattedDate(data, delimiter = '.') {
     return `${year}년 ${month}월 ${day}일`;
   }
   if (delimiter === '/') {
-  return `${year}/${month}/${day}`;
-}
+    return `${year}/${month}/${day}`;
+  }
   return [year, month, day].join(delimiter);
 }
 
@@ -76,7 +76,7 @@ export function formattedFullDate(data, delimiter = '-') {
   return `${[year, month, day].join(delimiter)} ${hour}:${minute}:${second}`;
 }
 
-export function formattedDateAndDay(data, delimiter = '.') {
+export function formattedDateAndDay(data, delimiter = '. ') {
   const dateTime = transDateType(data);
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
@@ -85,7 +85,7 @@ export function formattedDateAndDay(data, delimiter = '.') {
   const week = ['일', '월', '화', '수', '목', '금', '토'];
   const dayOfWeek = week[dateTime.getDay()];
 
-  return `${[year, month, day].join(delimiter)} ${dayOfWeek}`;
+  return `${[year, month, day].join(delimiter)} (${dayOfWeek})`;
 }
 
 // 식사구매 날짜 버튼
@@ -97,7 +97,17 @@ export function formattedDateBtn(data) {
   return month + '월' + day + '일'
 }
 
-export function formattedWeekDate(data,delimiter = '-') {
+// 취소 날짜
+export function formattedDateWeekBtn(data, delimiter = ".") {
+  const dateTime = transDateType(data);
+  const year = dateTime.getFullYear();
+  const month = leftPad(dateTime.getMonth() + 1);
+  const day = leftPad(dateTime.getDate());
+  const week = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = week[dateTime.getDay()];
+  return `${[month, day].join(delimiter)}(${dayOfWeek})`
+}
+export function formattedWeekDate(data, delimiter = '-') {
   const dateTime = transDateType(data);
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
@@ -107,7 +117,7 @@ export function formattedWeekDate(data,delimiter = '-') {
 
 export function formattedMonthDay(data) {
   const dateTime = transDateType(data);
-  
+
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
 
@@ -121,7 +131,20 @@ export function formattedApplicationDate(data) {
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
-  return `${[year, month, day]}`.replace(/[^0-9 ^\-]/g,"");
+  return `${[year, month, day]}`.replace(/[^0-9 ^\-]/g, "");
+}
+
+export function formattedDateType(data) {
+  switch (data) {
+    case 0:
+      return '아침';
+    case 1:
+      return '점심';
+    case 2:
+      return '저녁';
+    default:
+      break;
+  }
 }
 // export function daysLeft(endDate) {
 //   const dayNow = new Date();

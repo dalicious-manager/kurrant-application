@@ -5,7 +5,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { ScrollView, View, Pressable,Dimensions, StyleSheet} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
-
+import FastImage from 'react-native-fast-image';
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
@@ -194,7 +194,9 @@ const Pages = () => {
 
                 <MealImageWrap>
                     {m.isSoldOut && <BlurView/>}
-                    <MealImage source={{uri:`${m.img}`}}/>
+                    <MealImage source={{
+                        uri:`${m.img}`,
+                        priority: FastImage.priority.high,}}/>
                     
                     {!m.isSoldOut && (
                         <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>

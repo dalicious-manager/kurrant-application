@@ -1,4 +1,4 @@
-import { appleAuth } from '@invertase/react-native-apple-authentication';
+import { appleAuth,appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import Clipboard from '@react-native-clipboard/clipboard';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -84,24 +84,60 @@ export default () => {
         
       }
       const appleLogin  = async() =>{
+        try {
         // Start the sign-in request
-        const appleAuthRequestResponse = await appleAuth.performRequest({
-          requestedOperation: appleAuth.Operation.LOGIN,
-          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME,appleAuth.Scope.PHONE],
-        });
+        if(Platform.OS === "android"){
+          const {id_token} = await appleAuthAndroid.signIn();
+          console.log(id_token);
+          await snsLogin({
+            snsAccessToken:id_token,
+            autoLogin:true,
+          },'APPLE');
+          avigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: SCREEN_NAME,
+              },
+            ],
+          })
+        }else{
+            const appleAuthRequestResponse = await appleAuth.performRequest({
+              requestedOperation: appleAuth.Operation.LOGIN,
+              requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+            });
 
 
-        // Ensure Apple returned a user identityToken
-        if (!appleAuthRequestResponse.identityToken) {
-          throw new Error('Apple Sign-In failed - no identify token returned');
-        }
-      
+            // // Ensure Apple returned a user identityToken
+            if (!appleAuthRequestResponse.identityToken) {
+              throw new Error('Apple Sign-In failed - no identify token returned');
+            }
+          
 
-        // Create a Firebase credential from the response
-        const { identityToken, nonce } = appleAuthRequestResponse;
-        const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
-        // Sign the user in with the credential
-        return auth().signInWithCredential(appleCredential);
+            // // Create a Firebase credential from the response
+            const { identityToken, nonce } = appleAuthRequestResponse;
+            console.log(identityToken)
+            Clipboard.setString(identityToken)
+
+            await snsLogin({
+                snsAccessToken:identityToken,
+                autoLogin:true,
+            },'APPLE');
+            avigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: SCREEN_NAME,
+                },
+              ],
+            })
+          }
+          } catch (error) {
+            console.log("err",error.toString());
+          }
+        // const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+        // // Sign the user in with the credential
+        // return auth().signInWithCredential(appleCredential);
       }
     
       const kakaoLogin = async () => {

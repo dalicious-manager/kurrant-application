@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef,useState } from 
 import { Alert, Dimensions, Image, KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import styled from "styled-components";
-
+import FastImage from 'react-native-fast-image';
 import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
 import X from "../../../../../assets/icons/MealCart/x.svg";
@@ -205,7 +205,9 @@ const Pages = () => {
                                 <Pressable onPress={()=>{deleteButton(l.dailyFoodId)}}><DeleteIcon/></Pressable>
                             </ContentHeader>
                             <ContentWrap>
-                                <MealImage source={{uri:`${l.img}`}}/>
+                                <MealImage source={{
+                                    uri:`${l.img}`,
+                                    priority: FastImage.priority.high,}}/>
                                 <MealNameView>
                                     <MealName numberOfLines={1} ellipsizeMode="tail">[{l.makers.name}] {l.name}</MealName>
                                     {/* 할인 적용 되면  */}
@@ -353,7 +355,7 @@ position:relative;
 margin:0px 28px;
 `;
 
-export const MealImage = styled.Image`
+export const MealImage = styled(FastImage)`
 width:45px;
 height:45px;
 border-radius:7px;

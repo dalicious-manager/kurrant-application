@@ -4,7 +4,6 @@ import {useForm} from 'react-hook-form';
 import { View, Text ,SafeAreaView, ScrollView , Pressable, FlatList, Alert} from "react-native";
 import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
 import styled from "styled-components";
-
 import ArrowDownIcon from '../../../../../assets/icons/Arrow/arrowDown.svg';
 import ArrowRightIcon from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import PayError from "../../../../../assets/icons/Payment/payError.svg";
@@ -125,7 +124,9 @@ const Pages = ({route}) => {
                                 <DiningName>{formattedMonthDay(meal.serviceDate)} {meal.diningType}</DiningName>
                             </View>
                             <ContentWrap>
-                                <MealImage source={{uri:`${meal.img}`}}/>
+                                <MealImage source={{
+                                    uri:`${meal.img}`,
+                                    priority: FastImage.priority.high,}}/>
                                     <MealNameView>
                                         <MealName numberOfLines={1} ellipsizeMode="tail">[{meal.makers.name}] {meal.name} </MealName>
                                         {/* 할인 적용 되면  */}

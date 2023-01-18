@@ -20,16 +20,18 @@ const Component = ({
 export default Component ;
 
 const Wrap = styled.Pressable`
-width:77px;
-height:32px;
-border:1px solid ${props => props.theme.colors.grey[7]}; 
-border-radius:100px;
-background-color:${props => props.theme.colors.grey[0]};
-align-items:center;
-justify-content:center;
-margin-left:6px;
+    width:77px;
+    padding: 6.5px 0px;
+    box-sizing: border-box;
+    border:1px solid ${props => props.theme.colors.grey[7]}; 
+    border-radius:100px;
+    background-color:${props => props.theme.colors.grey[0]};
+    align-items:center;
+    justify-content:center;
+    margin-left:6px;
 `;
 
 const Label = styled(Typography).attrs({text:'Button10SB'})`
-color:${props => props.theme.colors.grey[3]};
+    color:${props => props.theme.colors.grey[3]};
+    line-height: 19px;
 `;

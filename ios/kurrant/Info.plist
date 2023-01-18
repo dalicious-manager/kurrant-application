@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>1.0.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -52,7 +52,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>KAKAO_APP_KEY</key>
@@ -73,11 +73,8 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
+			<key>codepush.appcenter.ms</key>
+			<dict/>
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -146,15 +143,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
-	<key>NSAppTransportSecurity</key>
-    <dict>
-      <key>NSExceptionDomains</key>
-      <dict>
-        <key>codepush.appcenter.ms</key>
-        <dict><!-- read the ATS Apple Docs for available options --></dict>
-      </dict>
-    </dict>
 	<key>CodePushPublicKey</key>
 	<string>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwEUb8X7m0QmhKr8ZQi2z
@@ -166,7 +154,7 @@ zobqlsBLsVeWxgYOfdEwaZnwA/iBhkYnv/kUgrPBTcI9a8WF5uhXy46QfABd+f8l
 LwIDAQAB
 -----END PUBLIC KEY-----
 </string>
-<key>CodePushDeploymentKey</key>
-<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>
+	<key>CodePushDeploymentKey</key>
+	<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>
 </dict>
 </plist>
