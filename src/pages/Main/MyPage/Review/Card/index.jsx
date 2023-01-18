@@ -3,7 +3,10 @@ import {Dimensions, View} from 'react-native';
 import {Line} from 'react-native-svg';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
-import {formattedMonthDay} from '../../../../../utils/dateFormatter';
+import {
+  formattedMonthDay,
+  timePassIndicator,
+} from '../../../../../utils/dateFormatter';
 
 /**
  * @param {object} props
@@ -25,7 +28,13 @@ const Component = ({
 }) => {
   return (
     <Container>
-      <DateText>{orderDate && formattedMonthDay(orderDate)}</DateText>
+      <DateText>
+        {orderDate &&
+          `${formattedMonthDay(orderDate)}  ${timePassIndicator(
+            orderDate,
+            new Date(Date.now()),
+          )}`}
+      </DateText>
 
       <CardContentBox>
         <MealImage
@@ -141,7 +150,7 @@ const ReviewFormWriteButton = styled.Pressable`
   width: 77px;
   /* line-height: 32px; */
   border: 1px solid ${props => props.theme.colors.grey[7]};
-  height: 24px;
+  height: 32px;
   border-radius: 16px;
 `;
 

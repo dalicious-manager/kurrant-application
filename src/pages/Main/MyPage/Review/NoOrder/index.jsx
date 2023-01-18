@@ -22,8 +22,6 @@ const NoOrderText = styled(Typography).attrs({text: 'Body05R'})`
   margin: auto;
 
   ${({isArrayEmpty}) => {
-    const screenHeight = Dimensions.get('screen').height;
-
     if (isArrayEmpty) {
       return `margin-top: 80%`;
     }

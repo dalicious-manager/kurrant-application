@@ -14,20 +14,20 @@ export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
   const ReviewWaitList = [
-    // {
-    //   orderDate: new Date(Date.now()),
-    //   restaurentName: '세상의 모든 아침',
-    //   menuName: '맛있는 버섯 그라탕',
-    //   option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
-    //   imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-    // },
-    // {
-    //   orderDate: new Date(Date.now()),
-    //   restaurentName: '세상의 모든 저녁',
-    //   menuName: '맛없는 버섯 그라탕',
-    //   option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
-    //   imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-    // },
+    {
+      orderDate: new Date(Date.now()),
+      restaurentName: '세상의 모든 아침',
+      menuName: '맛있는 버섯 그라탕',
+      option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
+      imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+    },
+    {
+      orderDate: new Date(Date.now()),
+      restaurentName: '세상의 모든 저녁',
+      menuName: '맛없는 버섯 그라탕',
+      option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
+      imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+    },
   ];
 
   return (
@@ -89,20 +89,6 @@ const Container = styled.View`
   height: 100%;
   padding: 24px 25px;
   background-color: #ffffff;
-
-  /* ${props => {
-    if (props.toggleValue) {
-      return `color: ${props.theme.Black};`;
-    } else {
-      return `color: ${props.theme.Gray};`;
-    }
-  }} */
-
-  /* ${({isArrayLength}) => {
-    if (isArrayLength) {
-      return `display: flex; justify-content: center; align-items:center;`;
-    }
-  }} */
 `;
 
 const PlaneGreyBox = styled.View`
