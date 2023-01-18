@@ -2,6 +2,7 @@ import React from 'react';
 
 import {Line} from 'react-native-svg';
 import styled from 'styled-components';
+import {isDueDateClose} from '../../../../../biz/useMypageReview';
 import Typography from '../../../../../components/Typography';
 import {
   formattedMonthDay,
@@ -55,7 +56,9 @@ const Component = ({
             <OptionText>|{option} </OptionText>
           </SmallRowWrap>
           <SmallColumnWrap>
-            <DDayText>{timeLeftIndicator(5, orderDate)}</DDayText>
+            <DDayText orderDate={orderDate}>
+              {timeLeftIndicator(5, orderDate)}
+            </DDayText>
             <ReviewFormWriteButton>
               <Text>리뷰작성</Text>
             </ReviewFormWriteButton>
@@ -140,8 +143,8 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
 
 const DDayText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => {
-    if (false) {
-      return props.theme.colors.grey[5];
+    if (isDueDateClose(5, props.orderDate)) {
+      return props.theme.colors.red[500];
     } else {
       return props.theme.colors.grey[5];
     }
