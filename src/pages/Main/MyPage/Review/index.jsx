@@ -6,6 +6,7 @@ import Typography from '../../../../components/Typography';
 // import QuestionCircleMonoIcon from '../assets/icons/QuestionCircleMono.svg';
 import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
 import Card from './Card';
+import NoOrder from './NoOrder';
 
 // import Card from './Card';
 
@@ -13,53 +14,56 @@ export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
   const ReviewWaitList = [
-    {
-      orderDate: new Date(Date.now()),
-      restaurentName: '세상의 모든 아침',
-      menuName: '맛있는 버섯 그라탕',
-      option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
-      imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-    },
-    {
-      orderDate: new Date(Date.now()),
-      restaurentName: '세상의 모든 저녁',
-      menuName: '맛없는 버섯 그라탕',
-      option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
-      imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-    },
+    // {
+    //   orderDate: new Date(Date.now()),
+    //   restaurentName: '세상의 모든 아침',
+    //   menuName: '맛있는 버섯 그라탕',
+    //   option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
+    //   imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+    // },
+    // {
+    //   orderDate: new Date(Date.now()),
+    //   restaurentName: '세상의 모든 저녁',
+    //   menuName: '맛없는 버섯 그라탕',
+    //   option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
+    //   imageUrl: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+    // },
   ];
 
   return (
     <Container>
       {/* 회색박스 포토후기, 텍스트후기  */}
-      <PlaneGreyBox>
-        <SmallWrap>
-          <PlaneRowView>
-            <MiniWrap>
-              <Typography1 variant="h400">포토후기</Typography1>
-
-              <PointText>100P</PointText>
-            </MiniWrap>
-            <MiniWrap>
-              <Typography1 variant="h400">텍스트 후기</Typography1>
-
-              <PointText>50P</PointText>
-            </MiniWrap>
-          </PlaneRowView>
-          <View>
+      {!!ReviewWaitList.length && (
+        <PlaneGreyBox>
+          <SmallWrap>
             <PlaneRowView>
               <MiniWrap>
-                <Typography2 variant="h400">작성안내</Typography2>
-                <QuestionCircleMonoIcon />
+                <Typography1 variant="h400">포토후기</Typography1>
+
+                <PointText>100P</PointText>
+              </MiniWrap>
+              <MiniWrap>
+                <Typography1 variant="h400">텍스트 후기</Typography1>
+
+                <PointText>50P</PointText>
               </MiniWrap>
             </PlaneRowView>
-          </View>
-        </SmallWrap>
-      </PlaneGreyBox>
-      <View>
-        {/* 카드를 map한다 */}
+            <View>
+              <PlaneRowView>
+                <MiniWrap>
+                  <Typography2 variant="h400">작성안내</Typography2>
+                  <QuestionCircleMonoIcon />
+                </MiniWrap>
+              </PlaneRowView>
+            </View>
+          </SmallWrap>
+        </PlaneGreyBox>
+      )}
 
-        {ReviewWaitList.map((value, index) => {
+      {/* 카드를 map한다 */}
+
+      {!!ReviewWaitList.length ? (
+        ReviewWaitList.map((value, index) => {
           return (
             <Card
               key={index}
@@ -70,10 +74,10 @@ const Pages = () => {
               restaurentName={value.restaurentName}
             />
           );
-        })}
-
-        {/* <Card /> */}
-      </View>
+        })
+      ) : (
+        <NoOrder isArrayEmpty={!ReviewWaitList.length} />
+      )}
     </Container>
   );
 };
@@ -85,6 +89,20 @@ const Container = styled.View`
   height: 100%;
   padding: 24px 25px;
   background-color: #ffffff;
+
+  /* ${props => {
+    if (props.toggleValue) {
+      return `color: ${props.theme.Black};`;
+    } else {
+      return `color: ${props.theme.Gray};`;
+    }
+  }} */
+
+  /* ${({isArrayLength}) => {
+    if (isArrayLength) {
+      return `display: flex; justify-content: center; align-items:center;`;
+    }
+  }} */
 `;
 
 const PlaneGreyBox = styled.View`
