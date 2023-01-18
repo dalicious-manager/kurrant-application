@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
 import {
   formattedMonthDay,
+  timeLeftIndicator,
   timePassIndicator,
 } from '../../../../../utils/dateFormatter';
 
@@ -53,7 +54,7 @@ const Component = ({
             <OptionText>|{option} </OptionText>
           </SmallRowWrap>
           <SmallColumnWrap>
-            <DDayText>기한 D-30</DDayText>
+            <DDayText>{timeLeftIndicator(5, orderDate)}</DDayText>
             <ReviewFormWriteButton>
               <Text>리뷰작성</Text>
             </ReviewFormWriteButton>

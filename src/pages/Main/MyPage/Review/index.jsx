@@ -15,7 +15,7 @@ export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 const Pages = () => {
   const ReviewWaitList = [
     {
-      orderDate: new Date(Date.now()),
+      orderDate: new Date(2023, 0, 15),
       restaurentName: '세상의 모든 아침',
       menuName: '맛있는 버섯 그라탕',
       option: '1옵션 꼬치 소스 꼬치 소스꼬치1',

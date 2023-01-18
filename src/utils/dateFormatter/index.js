@@ -184,6 +184,26 @@ export const timePassIndicator = (criterionDate, compareDate) => {
   }
 };
 
+// '기준일로부터 몇일 남았는가'
+export const timeLeftIndicator = (criterionDayLength, compareDate) => {
+  const subtraction =
+    compareDate.getTime() + criterionDayLength * 1000 * 60 * 60 * 24;
+
+  const deadlineDate = new Date(subtraction);
+
+  const leftDate = deadlineDate.getTime() - new Date(Date.now()).getTime();
+
+  if (leftDate < 0) {
+    return '리뷰 가능한 기한이 지났습니다';
+  } else if (leftDate <= 1000 * 60 * 60 * 24) {
+    return '기한 D-Day';
+  } else {
+    return `기한 D-${Math.floor(leftDate / (1000 * 60 * 60 * 24))}`;
+  }
+};
+
+// '리뷰 가능한 기한이 지났습니다' , '기한 D-Day', '기한 D-1'
+
 // formattedApplicationDate(Date.now()) -> '20230118'
 
 // export function daysLeft(endDate) {
