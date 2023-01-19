@@ -31,6 +31,7 @@ import SkeletonUI from './SkeletonUI';
 
 import {AvatarNon, MembershipJoin} from '~assets';
 import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -160,6 +161,7 @@ const Pages = () => {
               }
               routeName={ReviewScreenName}
             />
+            <ListBox title="조재신 업무파악용" routeName={testPageName} />
             <ListBox
               title="커런트 멤버십"
               routeName={MembershipIntroPageName}

@@ -9,6 +9,8 @@ import Card from './Card';
 import NoOrder from './NoOrder';
 import {ScrollView} from 'react-native-gesture-handler';
 import {orderMealMockData} from '../../../../biz/useOrderMeal/Fetch';
+import {pathFind} from '../../../../components/Modal/component';
+import Modal from '../../../../components/Modal';
 
 // import Card from './Card';
 
@@ -86,7 +88,6 @@ const Pages = () => {
     },
   ];
 
-  console.log(ReviewWaitList);
   return (
     <Container>
       <View
