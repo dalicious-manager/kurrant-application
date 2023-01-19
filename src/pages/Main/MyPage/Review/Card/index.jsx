@@ -60,9 +60,14 @@ const Component = ({
             <DDayText orderDate={orderDate}>
               {timeLeftIndicator(5, orderDate)}
             </DDayText>
-            <ReviewFormWriteButton>
-              <Text>리뷰작성</Text>
-            </ReviewFormWriteButton>
+            {!(
+              timeLeftIndicator(5, orderDate) ===
+              '리뷰 가능한 기한이 지났습니다'
+            ) && (
+              <ReviewFormWriteButton>
+                <Text>리뷰작성</Text>
+              </ReviewFormWriteButton>
+            )}
           </SmallColumnWrap>
         </MetadataWrap>
       </CardContentBox>
