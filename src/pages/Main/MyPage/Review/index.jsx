@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {FlatList, Text, View} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../components/Typography';
@@ -7,10 +7,9 @@ import Typography from '../../../../components/Typography';
 import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
 import Card from './Card';
 import NoOrder from './NoOrder';
-import {ScrollView} from 'react-native-gesture-handler';
-import {orderMealMockData} from '../../../../biz/useOrderMeal/Fetch';
-import {pathFind} from '../../../../components/Modal/component';
-import Modal from '../../../../components/Modal';
+
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import Popup from './Popup';
 
 // import Card from './Card';
 
@@ -88,6 +87,8 @@ const Pages = () => {
     },
   ];
 
+  const [popupShow, setPopupShow] = useState(false);
+
   return (
     <Container>
       <View
@@ -113,7 +114,12 @@ const Pages = () => {
                 <PlaneRowView>
                   <MiniWrap>
                     <Typography2 variant="h400">작성안내</Typography2>
-                    <QuestionCircleMonoIcon />
+                    <Pressable
+                      onPress={() => {
+                        setPopupShow(!popupShow);
+                      }}>
+                      <QuestionCircleMonoIcon />
+                    </Pressable>
                   </MiniWrap>
                 </PlaneRowView>
               </View>
@@ -122,6 +128,8 @@ const Pages = () => {
         )}
 
         {/* 카드를 map한다 */}
+
+        {popupShow && <Popup setPopupShow={setPopupShow} />}
 
         {!!ReviewWaitList.length ? (
           // ReviewWaitList.map((value, index) => {
