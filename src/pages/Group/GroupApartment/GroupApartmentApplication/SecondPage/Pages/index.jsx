@@ -6,6 +6,7 @@ import { SafeAreaView, Text } from "react-native";
 import styled from "styled-components";
 
 import { isApartFullAddressAtom, isApartNameAtom, isApartSendAddressAtom, isApartSendAddressInfoAtom } from '../../../../../../biz/useApartApplication/store';
+import { setStorage } from '../../../../../../utils/asyncStorage';
 
 
 export const PAGE_NAME = 'APARTMENT__APPLICATION__INFORMAION_POSTCODE';
@@ -13,15 +14,16 @@ const Pages = () =>{
 
     const navigation = useNavigation();
     const [,setApartFullAddress] = useAtom(isApartFullAddressAtom); //TextInput 에 보여줄 주소
-    const [aa,setSendAddress] = useAtom(isApartSendAddressInfoAtom); // body에 담을 주소
+    const [isSendAddress,setSendAddress] = useAtom(isApartSendAddressInfoAtom); // body에 담을 주소
 
-    const handleAddress = (data) => {
+    const handleAddress = async (data) => {
         let fullAddress = data.address;
         let extraAddress = ''; 
         const zipcode = data.zonecode;
         const zibunAddress = data.jibunAddress;
+        const autoZibunAddress = data.autoJibunAddress;
         const roadAddress = data.query;
-        
+        console.log(data,'zibun')
         if (data.addressType === 'R') {
           if (data.bname !== '') {
             extraAddress += data.bname;
@@ -33,9 +35,14 @@ const Pages = () =>{
         }
         
         setApartFullAddress(fullAddress);
+        await setStorage('page2-1',JSON.stringify({
+          'zipCode' : Number(zipcode),
+          'address1' : zibunAddress === '' ? autoZibunAddress : zibunAddress,
+          'address2' : roadAddress,
+        }))
         setSendAddress({
           'zipCode' : Number(zipcode),
-          'address1' : zibunAddress,
+          'address1' : zibunAddress === '' ? autoZibunAddress : zibunAddress,
           'address2' : roadAddress,
           
         })

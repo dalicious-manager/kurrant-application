@@ -1,7 +1,7 @@
 import { fetchJson } from '../../utils/fetch';
 
 export async function FoodDetail(foodId) {
-    const fetchRes = await fetchJson(`/foods/${foodId}`,'GET');
+    const fetchRes = await fetchJson(`/dailyfoods/${foodId}`,'GET');
 
     return fetchRes;
 

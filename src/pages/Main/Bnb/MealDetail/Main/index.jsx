@@ -2,9 +2,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
-import { View ,Text, Platform,SafeAreaView, StatusBar, TouchableOpacity,NativeModules, Animated,ScrollView, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Dimensions} from "react-native";
+import { View , StatusBar, Dimensions} from "react-native";
 import styled from "styled-components";
 
+import ModalMessage from "../../../../../components/ModalMessage";
+import InfoIcon from "../../../../../assets/icons/MealDetail/info.svg";
+import FastImage from "react-native-fast-image";
 import StartIcon from '../../../../../assets/icons/star.svg';
 import useFoodDetail from "../../../../../biz/useFoodDetail/hook";
 import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
@@ -26,7 +29,7 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import Skeleton from '../Skeleton';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
-
+const {width} = Dimensions.get('screen');
 const Pages = ({route}) => {
     
     const bodyRef = useRef();
@@ -38,14 +41,12 @@ const Pages = ({route}) => {
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,isFoodDetailLoading,foodDetail} = useFoodDetail();
     const {addMeal,loadMeal,isLoadMeal} = useShoppingBasket();
-    console.log(isFoodDetail)
+    console.log(route.params,'????')
     const headerTitle = isFoodDetail?.name;
     const foodId = route.params.foodId;
     const dailyFoodId = route.params.dailyFoodId;
-    const type = route.params.type;
+    const diningType = route.params.type;
     const day = route.params.date;
-    
-    const diningType = type === 'MORNING' ? 1 : type === 'LUNCH' ? 2 : 3;
     
     const closeModal = () => {
         setModalVisible(false)
@@ -89,7 +90,7 @@ const Pages = ({route}) => {
                      "diningType":diningType
                  });
                  await loadMeal();
-                 await balloonEvent();
+                 balloonEvent();
              } catch(err){
                  console.log(err)
         }
@@ -106,7 +107,7 @@ const Pages = ({route}) => {
                      "diningType":diningType
                  });
                  await loadMeal();
-                 await balloonEvent();
+                 balloonEvent();
                  } catch(err){
                      console.log(err)
                      throw err
@@ -138,6 +139,9 @@ const Pages = ({route}) => {
         setCount(number);
       };
 
+    const totalDiscountRate = (isFoodDetail?.membershipDiscountedRate) + (isFoodDetail?.makersDiscountedRate) + (isFoodDetail?.periodDiscountedRate);
+    console.log(totalDiscountRate)
+
     
     if(isFoodDetailLoading){
         return  <Skeleton/>
@@ -154,19 +158,24 @@ const Pages = ({route}) => {
             >
                 <View style={{marginBottom:150}}>
                     {scroll > 60 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
-                    <MealImage source={{uri:`${isFoodDetail?.img}`}}/>
+                    <FastImage source={{uri:`${isFoodDetail?.img}`,priority:FastImage.priority.high}} 
+                    style={{
+                        maxWidth: width,
+                        height:380,
+                    }}
+                    />
                 <Content>
                     <View>
                         <MakersName>{isFoodDetail?.makers}</MakersName>
                         <MealTitle>{isFoodDetail?.name}</MealTitle>
                         <Line>
-                            <ReviewWrap>
+                            {/* <ReviewWrap>
                                 <StartIcon/>
                                 <ReviewPoint>4.0</ReviewPoint>
                                 <ReviewCount>(132)</ReviewCount>
-                            </ReviewWrap>
+                            </ReviewWrap> */}
                             <InformationWrap
-                            onPress={()=>{navigation.navigate(MealInformationPageName,{data:isFoodDetail?.originList})}}
+                            onPress={()=>{navigation.navigate(MealInformationPageName,{data:isFoodDetail?.origins})}}
                             >
                                 <InformationText>알레르기/원산지</InformationText>
                             </InformationWrap>
@@ -177,14 +186,20 @@ const Pages = ({route}) => {
                         <PriceTitleWrap>
                             <PriceTitle>최종 판매가</PriceTitle>
                             <ModalWrap>
-                                <Modal/>
+                                <Modal price={isFoodDetail?.price} 
+                                membershipDiscountedPrice={isFoodDetail?.membershipDiscountedPrice} 
+                                makersDiscountedPrice={isFoodDetail?.makersDiscountedPrice} 
+                                periodDiscountedPrice={isFoodDetail?.periodDiscountedPrice}
+                                totalDiscountRate={totalDiscountRate}
+                                />
                             </ModalWrap>
                         </PriceTitleWrap>
                         <PriceWrap> 
-                            <Percent>{(isFoodDetail?.discountRate)*100}%</Percent>
-                            <SalePrice>{withCommas(isFoodDetail?.discountedPrice)}원</SalePrice>
-                            {/* <SalePrice>{}원</SalePrice> */}
-                            <Price>{withCommas(isFoodDetail?.price)}원</Price>
+                            {totalDiscountRate !== 0 && <Percent>{(totalDiscountRate)*100}%</Percent>}
+                            {totalDiscountRate !== 0 && <SalePrice>{withCommas(isFoodDetail?.discountedPrice)}원</SalePrice>}
+                            
+                            <NoSalePrice>{withCommas(isFoodDetail?.price)}원</NoSalePrice>
+                            {totalDiscountRate !== 0 && <Price>{withCommas(isFoodDetail?.price)}원</Price>}
                         </PriceWrap>
                     </View>
                 </Content>
@@ -203,7 +218,11 @@ const Pages = ({route}) => {
                                 <Info>15%</Info>
                             </InfoTextWrap>
                             <InfoTextWrap>
+                                <View style={{flexDirection:'row'}}>
+
                                 <Info>기간 할인</Info>
+                                <ModalMessage text={`기간할인이란?\n식단 주문을 빠르게 확정하면 추가로 받을 수 있는 \n할인입니다. (주문 마감 D-1 : 5%, D-3 : 10%할인)`} title={<InfoIcon/>}/>
+                                </View>
                                 <Info>10%</Info>
                             </InfoTextWrap>
                         </InfoTextView>
@@ -316,6 +335,7 @@ border: 1px solid ${props => props.theme.colors.grey[7]};
 border-radius: 7px;
 padding: 5px 12px 4px 12px;
 align-self:flex-start;
+margin-bottom:8px;
 `;
 
 const PriceTitleWrap = styled.View`
@@ -411,6 +431,8 @@ const SalePrice = styled(Typography).attrs({text:'Title03SB'})`
 color:${props => props.theme.colors.grey[2]};
 margin-right:4px;
 `;
+
+const NoSalePrice = styled(SalePrice)``;
 
 export const Price = styled(Typography).attrs({text:'Body06R'})`
 color:${props => props.theme.colors.grey[5]};

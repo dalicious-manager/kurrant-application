@@ -7,7 +7,7 @@ import Apart from "../../../../../assets/icons/Group/apartImg.svg";
 import useGroupSpots from "../../../../../biz/useGroupSpots/hook";
 import Button from "../../../../../components/Button";
 import Typography from "../../../../../components/Typography";
-
+import {PAGE_NAME as MyGroupListPageName} from "../../../GroupManage/index";
 
 export const PAGE_NAME = "P__GROUP__APARTMENT__SEARCH__ADD" ;
 
@@ -24,6 +24,7 @@ const Pages = ({route}) => {
             await userGroupAdd({
                 id:id
             });
+            navigation.navigate(MyGroupListPageName)
         } catch(err) {
             console.log(err)
         }

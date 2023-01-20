@@ -4,11 +4,23 @@ import styled from "styled-components";
 
 import QuestionIcon from "../../assets/icons/MealCart/question.svg";
 import {  Price } from "../../pages/Main/Bnb/MealDetail/Main";
+import withCommas from "../../utils/withCommas";
 import Button from "../Button";
 import Typography from "../Typography";
 
-const Component = () => {
+const Component = ({
+    price,
+    membershipDiscountedPrice,
+    makersDiscountedPrice,
+    periodDiscountedPrice,
+    totalDiscountRate
+}) => {
     const [modalVisible, setModalVisible] = useState(false);
+    console.log(price,
+        membershipDiscountedPrice,
+        makersDiscountedPrice,
+        periodDiscountedPrice,
+        totalDiscountRate)
     return (
         <Wrap>
         <Modal
@@ -23,11 +35,11 @@ const Component = () => {
                         <Title>가격 안내</Title>
                     </TitleView>
                     <ScrollViewWrap showsVerticalScrollIndicator={false}>
-                        <Price>10,000원</Price>
+                        <Price>{withCommas(price)}원</Price>
                         <DscText>오프라인 매장에서 판매되는 가격입니다.</DscText>
                         <View>
                             <PriceWrap>
-                                <Percent>38.8%</Percent>
+                                <Percent>{(totalDiscountRate)*100}%</Percent>
                                 <TotalPrice>6,120원</TotalPrice>
                             </PriceWrap>
                             <DscText>최종 할인율이 적용된 최종 가격입니다.</DscText>
@@ -35,12 +47,12 @@ const Component = () => {
                         </View>
                         <ContentWrap>
                             <Text>[매장가]</Text>
-                            <DscText>10,000원</DscText>
+                            <DscText>{withCommas(price)}원</DscText>
                         </ContentWrap>
                         <ContentWrap>
                             <Text>[최종 판매가]</Text>
                             <DscText>1. 멤버십 할인 적용시</DscText>
-                            <DscText>10,000원 x (100%-20%) = 8,800원</DscText>
+                            <DscText>{withCommas(price)}원 x (100%-20%) = 8,000원</DscText>
                             <DscText>2. 판매자 할인 추가 적용시</DscText>
                             <DscText>8,000원 x (100%-15%) = 6,800원</DscText>
                             <DscText>3. 기간 할인 추가 적용시</DscText>

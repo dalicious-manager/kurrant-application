@@ -76,6 +76,7 @@ const useGroupSpots = () => {
                 const res  = await Fetch.WithdrawGroup({
                     ...body
                 })
+                
                 return res;
             } catch(err){
                 console.log(err)

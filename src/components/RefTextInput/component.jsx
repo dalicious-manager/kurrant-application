@@ -317,6 +317,7 @@ const ControlContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   /* border-radius: 6px; */
+
   border: none;
   ${({isEditable,theme,isError,focus})=> { 
     if(isEditable){
@@ -382,7 +383,9 @@ const StyledTextInput = styled.TextInput`
       `;
     }
   }}
+  padding:${({paddings}) => paddings && paddings};
 `;
+
 
 // Suffix
 const SuffixContainer = styled.View`

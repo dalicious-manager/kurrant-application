@@ -165,7 +165,7 @@ const Screen = () => {
   const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
   const navigation = useNavigation();
   return (
-    <MainRoot.Navigator >
+    <MainRoot.Navigator>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -866,6 +866,7 @@ const Screen = () => {
             name={GroupCreateApartmentPageName}
             component={GroupCreateApartmnet}
             options={{
+              headerTransparent: true,
               headerShown: true,
               headerShadowVisible: false,
               title: '',
@@ -893,7 +894,7 @@ const Screen = () => {
                 lineHeight:22
               },
               
-              headerLeft: () => <BackButton />,
+              // headerLeft: () => <BackButton />,
             }}
           />
           <MainRoot.Screen
@@ -1074,6 +1075,7 @@ const Screen = () => {
           name={GroupCreateCorporationsPageName}
           component={GroupCreateCorporations}
           options={{
+            headerTransparent: true,
             headerShown: true,
             headerShadowVisible: false,
             title:'',
@@ -1167,7 +1169,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton margin={[10,0]}/>
+            // headerLeft: () => <BackButton margin={[10,0]}/>
           }}
           />
           <MainRoot.Screen
@@ -1176,7 +1178,7 @@ const Screen = () => {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title:'식사 정보',
+            title:'스팟 정보 등록',
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',

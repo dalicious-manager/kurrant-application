@@ -5,10 +5,12 @@ import { Text ,View,NativeModules, Platform, Keyboard} from "react-native";
 import styled from "styled-components";
 
 import useApartApplication from "../../../../../../biz/useApartApplication/hook";
+import useUserInfo from "../../../../../../biz/useUserInfo";
 import Button from "../../../../../../components/Button";
 import KeyboardButton from "../../../../../../components/KeyboardButton";
 import RefTextInput from "../../../../../../components/RefTextInput";
 import useKeyboardEvent from "../../../../../../hook/useKeyboardEvent";
+import { setStorage } from "../../../../../../utils/asyncStorage";
 import {PAGE_NAME as GroupManageDetailPageName} from "../../../../GroupManage/DetailPage";
 
 const { StatusBarManager } = NativeModules;
@@ -22,11 +24,12 @@ const Pages = ({route}) => {
     const navigation = useNavigation();
     const keyboardStatus = useKeyboardEvent();
     const [statusBarHeight, setStatusBarHeight] = useState(0);
+    const {userInfo} = useUserInfo()
     const {apartmentRegisterSpot} = useApartApplication();
     const {formState:{errors},watch,handleSubmit} = form;
     const hosuCheck = watch('hosu')
     const isValidation =  (hosuCheck && !errors.hosu)
-    
+    console.log(id)
 
     useEffect(()=>{    
         Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
@@ -39,6 +42,8 @@ const Pages = ({route}) => {
             await apartmentRegisterSpot(id,{
                 'ho':hosuCheck
             });
+            await setStorage('spotStatus','0');
+            userInfo();
             navigation.navigate(GroupManageDetailPageName,{id:id})
         } catch(err){
             throw err

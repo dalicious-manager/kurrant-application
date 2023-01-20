@@ -32,7 +32,6 @@ const Pages = () => {
                         <ArrowRight/>
                     </SubTitleWrap>
                     <ImageWrap>
-                        {/* <Img source={Corporation} /> */}
                         <CorporationIcon/>
                     </ImageWrap>
                 </BoxWrap>
@@ -43,7 +42,6 @@ const Pages = () => {
                         <ArrowRight/>
                     </SubTitleWrap>
                     <ImageWrap>
-                        {/* <Img source={Apartment} /> */}
                         <ApartmentIcon/>
                     </ImageWrap>
                 </BoxWrap>
@@ -54,8 +52,7 @@ const Pages = () => {
                         <ArrowRight/>
                     </SubTitleWrap>
                     <ImageWrap>
-                        <Img source={ApartMeal} />
-                        {/* <AlreadyApartIcon/> */}
+                        <AlreadyApartIcon/>
                     </ImageWrap>
                 </BoxWrap>
                 <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>

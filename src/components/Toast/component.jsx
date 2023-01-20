@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { Animated } from 'react-native';
+import { Animated , Platform} from 'react-native';
 import styled from 'styled-components/native';
 
 import CheckIcon from '../../assets/icons/Toast/CheckIcon.svg';
@@ -60,7 +60,7 @@ const Component = () => {
             return null;
         }
       }
-      return <Wrapper style={{ opacity: fadeToast }}  isBottom={isBottom}>
+      return <Wrapper style={{ opacity: fadeToast }}  isBottom={isBottom} Platform={Platform.OS}>
         <Container icon={icon}>
           <IconWrap icon={icon}>{renderIcon(icon)}</IconWrap>
           <ToastMessage>{message.trim()}</ToastMessage>
@@ -77,8 +77,9 @@ export default Component;
 const Wrapper = styled(Animated.View)`
   position: absolute;
   align-items: center;
-  ${({isBottom})=> isBottom ? 'bottom:35px;' :'top: 8px;'}
-  width: 100%;
+  ${({isBottom,Platform})=> isBottom ? 'bottom:35px;': Platform === 'ios' ? 'top:40px':'top: 8px'}
+  /* width: 100%; */
+  align-self:center;
   border-radius: 100px;
 `;
 const Container = styled.View`

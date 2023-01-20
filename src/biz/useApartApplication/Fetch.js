@@ -1,22 +1,33 @@
 import { fetchJson } from '../../utils/fetch';
 
-
+// 아파트 개설 신청
 export async function ApartmentApplication(body,option) {
+    const req = {
+        ...body,
+        apartmentInfo:{
+            ...body.apartmentInfo,
+            serviceStartDate:body.apartmentInfo.serviceStartDate.replaceAll('.',''),
+        },
+        
+    }
+    
     const fetchRes = await fetchJson('/application-form/apartments', 'POST',{
         ...option,
-        body:JSON.stringify(body)
+        body:JSON.stringify(req)
     });
 
 
     return fetchRes;
 }
 
+// 아파트 신청내역 조회
 export async function ApartmentApplicationCheck(id) {
     const fetchRes = await fetchJson(`/application-form/apartments/${id}`, 'GET');
 
     return fetchRes;
 }
 
+// 아파트 신청서 메모 수정
 export async function ApartmentApplicationMemo(body,id) { 
     const fetchRes = await fetchJson(`/application-form/apartments/${id}/memo`, 'PUT',{
        
