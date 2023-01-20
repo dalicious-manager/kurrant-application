@@ -1,6 +1,6 @@
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from "jotai";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
@@ -12,6 +12,7 @@ import MealButton from "../../../../../components/ButtonMealType";
 import Label from "../../../../../components/Label";
 import ProgressBar from "../../../../../components/ProgressBar2";
 import Typography from "../../../../../components/Typography";
+import { getStorage, setStorage } from "../../../../../utils/asyncStorage";
 import {PAGE_NAME as ApartmentApplicationLastPageName} from '../LastPage';
 import {PAGE_NAME as ApartmentApplicationInformationPageName} from './Pages/index';
 
@@ -20,16 +21,41 @@ const Pages = () => {
     const navigation = useNavigation();
 
     const [touch,setTouch] = useAtom(apartApplicationDiningTypeAtom);
+    
+    const [isMealInfo,setMealInfo] = useAtom(isApartMealInfoAtom);
+    
+  
+    const isValidation = 
+      (touch) && (isMealInfo.length !== 0)
 
-    const mealInfo = useAtomValue(isApartMealInfoAtom);
-    console.log(mealInfo)
-    const inputStyle = {
-        marginBottom:16,
-      }
+    useEffect(()=>{
+        const getData = async () =>{
+            const data = await getStorage('page3');
+            const get = JSON.parse(data);
+            const dataPage = await getStorage('page3-1');
+            const getDataPage = JSON.parse(dataPage);
+           if(dataPage){
+            setTouch(get)
+            setMealInfo({
+                'deliveryTime':getDataPage.deliveryTime,
+                'expectedUserCount':getDataPage.expectedUserCount,
+                'serviceDays':getDataPage.serviceDays,
+                'diningType':1
+            })
+          } else{
+            console.log('no')
+          }
+         }
 
-      const isValidation = 
-      (touch) && (mealInfo.length !== 0)
-      
+         getData()
+    },[]);
+
+    const saveStorage = async() =>{
+        await setStorage('page3',JSON.stringify({
+            'mealType' : touch,
+            
+        }));
+    }
     
 
     return (
@@ -46,10 +72,10 @@ const Pages = () => {
                     </Container>
                     {touch && <Container>
                         <Title>식사 정보</Title>
-                        <InfoBar onPress={()=>{navigation.navigate(ApartmentApplicationInformationPageName)}}>
+                        <InfoBar onPress={()=>{saveStorage();navigation.navigate(ApartmentApplicationInformationPageName)}}>
                             <DiningType>아침</DiningType>
                             <InfoBarView>
-                                {mealInfo.length === 0 ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
+                                {isMealInfo.length === 0 ? <Label type='blue' label='입력하기' size='labelM' /> :<Label type='grey8' label='입력완료' size='labelM' />}
                                 <ArrowIcon/>
                             </InfoBarView>
                         </InfoBar>
@@ -58,7 +84,7 @@ const Pages = () => {
             <ButtonWrap>
                 <Button 
                 label={'다음'} 
-                // disabled={!isValidation}
+                disabled={!isValidation}
                 onPressEvent={()=>{navigation.navigate(ApartmentApplicationLastPageName)}}/>
             </ButtonWrap>
         </Wrap>

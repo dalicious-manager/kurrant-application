@@ -10,7 +10,7 @@ const Component = ({
     touch,
     setTouch,
     apartment,
-    corporation
+    corporation,
 }) => {
     
     const title = ['아침','점심','저녁']
@@ -31,7 +31,7 @@ const Component = ({
         <>
         {corporation && title.map((t,idx) => {
             return (
-                <Wrap key={idx}  onPress={()=>{onPressButton(idx)}} touch={touch?.includes(idx)} idx={idx}>
+                <Wrap key={idx}  onPress={()=>{onPressButton(idx)}} touch={touch?.includes(idx)} idx={idx} >
                     <TextView>
                         <Label touch={touch?.includes(idx)} idx={idx}>{t}</Label>
                     </TextView>

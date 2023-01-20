@@ -52,7 +52,7 @@ const Pages = ({route}) => {
                     </TitleWrap>
                     <TitleWrap>
                         <Title>주소</Title>
-                        <TitleContent>{address?.address}</TitleContent>
+                        <TitleContent>{address?.address1}({address?.address2})</TitleContent>
                     </TitleWrap>
                     <TitleWrap>
                         <Title>단지 총 세대수</Title>

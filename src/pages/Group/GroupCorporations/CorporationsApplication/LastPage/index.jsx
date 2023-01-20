@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from "jotai";
 import React, { useState } from "react";
@@ -11,6 +12,7 @@ import BottomSheet from "../../../../../components/BottomSheet/component";
 import Button from "../../../../../components/Button";
 import RefTextInput from "../../../../../components/RefTextInput";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
+import { getStorage } from "../../../../../utils/asyncStorage";
 import {PAGE_NAME as GroupCompletePageName}  from "../../../GroupCreate/CreateComplete";
 import { Title } from "../ThirdPage";
 import { garbageList, hotStorageList, settingList } from "./Option/option";
@@ -34,7 +36,7 @@ const Pages = () => {
     const [name3,setName3] = useState(); // setting
     const [textValue,setTextValue] = useState('');
     
-    const isMorning = useAtomValue(isCorpMealMorningInfoAtom);
+    const [isMorning,setMorning] = useAtom(isCorpMealMorningInfoAtom);
     const isLunch = useAtomValue(isCorpMealLunchInfoAtom);
     const isDinner = useAtomValue(isCorpMealDinnerInfoAtom);
     const applicant = useAtomValue(isCorporationApplicant);
@@ -45,11 +47,11 @@ const Pages = () => {
     const arr = [];
     arr.push(isMorning,isLunch,isDinner);
     const mealDetails = arr.filter(el => el !== null);
-
+    
     const form = useForm({
         mode:'all'
       });
-    
+    console.log(address)
     const garbagePress = () => {
         setModalVisible(true)
     }
@@ -79,13 +81,13 @@ const Pages = () => {
         marginBottom:16,
       };
 
-    
+
     const applicationPress = async() => {
     
         const garbageType = selected === 0 ? true : false;
         const hotStorageType = selected2 === 0 ? true : false;
         const settingType = selected3 === 0 ? true : false;
-
+        
         const data = {
             'user':applicant,
             'corporationInfo':corporationInfo,
@@ -104,12 +106,21 @@ const Pages = () => {
         console.log(data)
         try{
             await corpApplication(data);
-            // console.log('???')
+            removeStorage()
             navigation.navigate(GroupCompletePageName,{name:'corporation'})
         }catch(err){
             console.log(err)
         }
     }
+
+    const removeStorage = async() => {
+        AsyncStorage.removeItem('page1')
+        AsyncStorage.removeItem('page2')
+        AsyncStorage.removeItem('page2-1')
+        AsyncStorage.removeItem('page3')
+        AsyncStorage.removeItem('page3-1')
+        
+     }
       
    
     

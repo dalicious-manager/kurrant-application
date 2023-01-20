@@ -7,6 +7,7 @@ import { SafeAreaView, Text } from "react-native";
 import styled from "styled-components";
 
 import { isCorpFullAddressAtom, isCorpSendAddressInfoAtom } from '../../../../../../biz/useCorporationApplication/store';
+import { setStorage } from '../../../../../../utils/asyncStorage';
 
 
 
@@ -18,7 +19,7 @@ const Pages = () =>{
     const [,setCorpFullAddress] = useAtom(isCorpFullAddressAtom); //TextInput 에 보여줄 주소
     const [,setSendAddress] = useAtom(isCorpSendAddressInfoAtom); // body에 담을 주소
     
-    const handleAddress = (data) => {
+    const handleAddress = async(data) => {
         let fullAddress = data.address;
         let extraAddress = ''; 
         const zipcode = data.zonecode;
@@ -37,6 +38,10 @@ const Pages = () =>{
 
         
         setCorpFullAddress(fullAddress);
+        await setStorage('corpPage2-1',JSON.stringify({
+          'zipCode' : Number(zipcode),
+          'address1' : fullAddress,
+        }))
         setSendAddress({
           'zipCode' : Number(zipcode),
           'address1' : fullAddress,

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from "jotai";
 import React, { useLayoutEffect, useState } from "react";
@@ -9,6 +10,7 @@ import { apartMemoAtom, isApartMealInfoAtom, isApartmentApplicant, isApartSendAd
 import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar2";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
+import { getStorage } from "../../../../../utils/asyncStorage";
 import {PAGE_NAME as GroupCompletePageName} from '../../../GroupCreate/CreateComplete';
 import { Title } from "../ThirdPage";
 
@@ -26,26 +28,40 @@ const Pages = () => {
     //console.log('user:',user,'address:',address,'apartmentInfo:',apartmentInfo,'mealInfo:',mealInfo,'memo:',memo)
 
     const applicationPress = async() => {
+        const addressData = await getStorage('page2-1');
+        const get = JSON.parse(addressData);
+        const arr = [];
+        arr.push(mealInfo)
         
         const data = {
             'user':user,
-            'address':address,
+            'address':(Object.keys(address).length === 0) ? get : address,
             'apartmentInfo':apartmentInfo,
-            'mealDetails':mealInfo,
+            'mealDetails':(Array.isArray(mealInfo)) ? mealInfo : arr,
             'memo':memo
         }
-        
+
+        console.log(data)
         try{
             await apartApplication(data);
-            // console.log('???')
+            removeStorage()
             navigation.navigate(GroupCompletePageName,{name:'apartment'})
         }catch(err){
-            console.log(err)
+            alert(err)
         }
+        
     }
 
     const keyboardStatus = useKeyboardEvent();
 
+    const removeStorage = async() => {
+        AsyncStorage.removeItem('page1')
+        AsyncStorage.removeItem('page2')
+        AsyncStorage.removeItem('page2-1')
+        AsyncStorage.removeItem('page3')
+        AsyncStorage.removeItem('page3-1')
+        
+     }
     return (
         <Wrap>
             <ProgressBar progress={4}/>

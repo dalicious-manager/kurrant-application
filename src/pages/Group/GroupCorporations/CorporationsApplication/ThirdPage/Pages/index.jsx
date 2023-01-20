@@ -1,7 +1,7 @@
 import DatePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from 'jotai';
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
 import { Keyboard, Platform, SafeAreaView, ScrollView, Text ,View} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
@@ -12,11 +12,15 @@ import { corpApplicationWeek, isCorpMealDinnerInfoAtom, isCorpMealInfoAtom, isCo
 import BottomSheet from '../../../../../../components/BottomSheet/component';
 import Button from "../../../../../../components/Button";
 import WeekButton from "../../../../../../components/ButtonWeek";
+import CloseButton from '../../../../../../components/CloseButton';
 import RefTextInput from "../../../../../../components/RefTextInput";
 import Typography from "../../../../../../components/Typography";
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
+import { getStorage, setStorage } from '../../../../../../utils/asyncStorage';
 import { formattedMealTime, formattedTime } from '../../../../../../utils/dateFormatter';
+import withCommas from '../../../../../../utils/withCommas';
 import { Cancel, Confirm, IosButton } from '../../SecondPage';
+import { priceAverage,surpportPrice } from './function';
 import { foodPriceList , supportPriceList} from './Price/price';
 
 export const PAGE_NAME = 'CORPORATION__APPLICATION__MEAL__INFO';
@@ -39,7 +43,7 @@ const Pages = ({route}) => {
     const [isLunch,setLunch] = useAtom(isCorpMealLunchInfoAtom);
     const [isDinner,setDinner] = useAtom(isCorpMealDinnerInfoAtom);
     const [touch,setTouch] = useState([]); // 요일 선택
-    
+    console.log(selected,name)
     const form = useForm({
         mode:'all'
       });
@@ -57,7 +61,7 @@ const Pages = ({route}) => {
     const supportPriceChk = watch('supportPrice');
     const svcCountChk = watch('svcCount');
     const deliveryTimeChk = watch('deliveryTime');
-
+    
     const isValidation = 
         (priceAverageChk && !errors.priceAverage) &&
         (touch.length !== 0) && (supportPriceChk && !errors.supportPrice)
@@ -69,35 +73,78 @@ const Pages = ({route}) => {
       };
 
     const keyboardStatus = useKeyboardEvent();
-    const saveAtom = () => {
+    const saveAtom = async () => {
+        if(diningType === 1){
+            
+            await setStorage('corpPage3-1',JSON.stringify({
+                'diningType' : 1,
+                'priceAverage':priceAverage(priceAverageChk),
+                'supportPrice': surpportPrice(supportPriceChk),
+                'expectedUserCount' : Number(svcCountChk),
+                'serviceDays':touch,
+                'deliveryTime' : deliveryTimeChk.substr(3),
+                'deliveryTime2':deliveryTimeChk
+            }));
+        }else if(diningType === 2){
+            await setStorage('corpPage3-2',JSON.stringify({
+                'diningType' : 2,
+                'priceAverage':priceAverage(priceAverageChk),
+                'supportPrice': surpportPrice(supportPriceChk),
+                'expectedUserCount' : Number(svcCountChk),
+                'serviceDays':touch,
+                'deliveryTime' : deliveryTimeChk.substr(3),
+                'deliveryTime2':deliveryTimeChk
+            }));
+        }else{
+            await setStorage('corpPage3-3',JSON.stringify({
+                'diningType' : 3,
+                'priceAverage':priceAverage(priceAverageChk),
+                'supportPrice': surpportPrice(supportPriceChk),
+                'expectedUserCount' : Number(svcCountChk),
+                'serviceDays':touch,
+                'deliveryTime' : deliveryTimeChk.substr(3),
+                'deliveryTime2':deliveryTimeChk
+            }));
+        }
+        const price = foodPriceList?.filter(el => el.text === priceAverageChk);
+        const support = supportPriceList?.filter(el => el.text === supportPriceChk);
+        const supportPrice = Number(support[0].text.replace(/,/g, "").replace(/[^0-9]/g, ""));
+        const atomSupportPrice = Number(name2?.replace(/,/g, "").replace(/[^0-9]/g, ""));
+        const data = await getStorage('corpPage3-1');
+        const data2 = await getStorage('corpPage3-2');
+        const data3 = await getStorage('corpPage3-3');
+        const get = JSON.parse(data);
+        const get2 = JSON.parse(data2);
+        const get3 = JSON.parse(data3);
         if(diningType === 1){
             setMorning({
                 'diningType':1,
-                'priceAverage':selected,
-                'supportPrice':Number(name2?.replace(/,/g, "").replace(/[^0-9]/g, "")),
+                'priceAverage':selected === undefined ? price[0].id: selected,
+                'supportPrice':atomSupportPrice === NaN ? supportPrice : supportPrice,
                 'expectedUserCount':Number(svcCountChk),
                 'serviceDays':touch,
-                'deliveryTime':formattedTime(time)
+                'deliveryTime':(Object.keys(get).length !== 0) ? get.deliveryTime :formattedTime(time)
                 });
         }else if (diningType === 2){
             setLunch({
                 'diningType':2,
-                'priceAverage':selected,
-                'supportPrice':Number(name2?.replace(/,/g, "").replace(/[^0-9]/g, "")),
+                'priceAverage':selected === undefined ? price[0].id: selected,
+                'supportPrice':atomSupportPrice === NaN ? supportPrice : supportPrice,
                 'expectedUserCount':Number(svcCountChk),
                 'serviceDays':touch,
-                'deliveryTime':formattedTime(time)
+                'deliveryTime':(Object.keys(get2).length !== 0) ? get2.deliveryTime :formattedTime(time)
             })
         }else{
             setDinner({
                 'diningType':3,
-                'priceAverage':selected,
-                'supportPrice':Number(name2?.replace(/,/g, "").replace(/[^0-9]/g, "")),
+                'priceAverage':selected === undefined ? price[0].id: selected,
+                'supportPrice':atomSupportPrice === NaN ? supportPrice : supportPrice,
                 'expectedUserCount':Number(svcCountChk),
                 'serviceDays':touch,
-                'deliveryTime':formattedTime(time)
+                'deliveryTime':(Object.keys(get3).length !== 0) ? get3.deliveryTime : formattedTime(time)
             })
         }
+        navigation.goBack();
     }
     
     const showTimePicker = () => {
@@ -121,6 +168,57 @@ const Pages = ({route}) => {
         setValue('supportPrice',text)
       }
     
+      useEffect(()=>{
+        const getData = async () =>{
+            const data1 = await getStorage('corpPage3-1');
+            const data2 = await getStorage('corpPage3-2');
+            const data3 = await getStorage('corpPage3-3');
+            if (data1 !== null || data2 !== null || data3 !==null){
+                
+           
+            const get = JSON.parse(data1);
+            const get2 = JSON.parse(data2);
+            const get3 = JSON.parse(data3);
+            
+           if(get !== null && diningType === 1){
+            
+            setValue('priceAverage',priceAverage(get.priceAverage))
+            setValue('supportPrice',surpportPrice(get.supportPrice))
+            setValue('svcCount',get.expectedUserCount.toString())
+            setTouch(get.serviceDays)
+            setValue('deliveryTime',get.deliveryTime2)
+
+          } else if ( get2 !== null && diningType === 2 ){
+            setValue('priceAverage',priceAverage(get2.priceAverage))
+            setValue('supportPrice',surpportPrice(get2.supportPrice))
+            setValue('svcCount',get2.expectedUserCount.toString())
+            setTouch(get2.serviceDays)
+            setValue('deliveryTime',get2.deliveryTime2)
+
+          }else{
+            setValue('priceAverage',priceAverage(get3.priceAverage))
+            setValue('supportPrice',surpportPrice(get3.supportPrice))
+            setValue('svcCount',get3.expectedUserCount.toString())
+            setTouch(get3.serviceDays)
+            setValue('deliveryTime',get3.deliveryTime2)
+          }
+
+        }
+         }
+
+         getData()
+     },[])
+     const type = diningType === 1 ? '아침' : diningType === 2 ? '점심' : '저녁'
+     useLayoutEffect(()=>{
+        navigation.setOptions({   
+            
+            headerTitle:`${type} 식사 정보`,
+            headerLeft: () => <CloseButton margin={[10,0]}/>
+            
+          });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
     
 
     return (
@@ -164,6 +262,7 @@ const Pages = ({route}) => {
                             }
                           }
                         />
+                        <DaysText>서비스 이용 요일</DaysText>
                         <WeekButton 
                         touch={touch} setTouch={setTouch}
                         />
@@ -241,7 +340,7 @@ const Pages = ({route}) => {
             {(!show && !keyboardStatus.isKeyboardActivate) && 
             <ButtonWrap>
                 <Button 
-                    // disabled={!isValidation}
+                    disabled={!isValidation}
                     label={'저장'} 
                     onPressEvent={()=>{saveAtom();}}/>
             </ButtonWrap>}
@@ -314,4 +413,8 @@ bottom:12px;
 const InfoWrap = styled.View`
 margin:24px;
 margin-bottom:80px;
+`;
+const DaysText = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme}) => theme.colors.grey[2]};
+margin-bottom:8px;
 `;

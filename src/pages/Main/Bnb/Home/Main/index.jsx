@@ -7,7 +7,6 @@ import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable, Alert} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
-
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
@@ -33,6 +32,12 @@ import SkeletonUI from "../../Home/Skeleton";
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import { getStorage } from '../../../../../utils/asyncStorage';
+import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
+import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
+import Toast from '../../../../../components/Toast';
+import {PAGE_NAME as ApartRegisterSpotPageName } from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
+import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
@@ -42,12 +47,14 @@ const Pages = () => {
     const [isVisible, setIsVisible] = useState(true);
     const weekly = useAtomValue(weekAtom);
     const {isUserInfo, userInfo , isUserInfoLoading,isUserSpotStatus} = useUserInfo();
-    const {userGroupSpotCheck,isUserGroupSpotCheck} = useGroupSpots();
+    const {userGroupSpotCheck,isUserGroupSpotCheck,userSpotRegister,groupSpotDetail} = useGroupSpots();
     const {isOrderMeal,orderMeal} = useOrderMeal();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
     const [selected,setSelected] = useState();
+    const toast = Toast();
+
   useEffect(() => {
     
     const start = weekly.map((s) => {
@@ -63,6 +70,19 @@ const Pages = () => {
             endData
         )
     });
+
+    const status = async () => {
+       const userStatus = await getStorage('spotStatus');
+       const getUserStatus = Number(userStatus);
+       console.log(getUserStatus,'userStatus')
+      
+      if(getUserStatus === 1){
+        navigation.navigate(GroupSelectPageName)
+      }
+      if(getUserStatus === 2){
+        navigation.navigate(GroupCreateMainPageName)
+      }
+    }
   
     async function loadUser(){
         await userInfo();     
@@ -87,7 +107,7 @@ const Pages = () => {
       }
       
     }
-    
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -119,10 +139,27 @@ const Pages = () => {
   //   balloonEvent()
   // // eslint-disable-next-line react-hooks/exhaustive-deps
   // },[])
-  console.log(isUserSpotStatus,'스팟 상태')
+  const anotherSpot = async (id) =>{
+    try {
+
+      const res = await userSpotRegister({
+        'id':id
+      })
+      if(res.data === null){
+        navigation.navigate(ApartRegisterSpotPageName,{id:id})
+      }else{
+        
+        await userInfo();
+        toast.toastEvent();
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
-
+  const userSpotId = isUserInfo?.spotId;
+  const clientId = isUserInfo?.groupId
   const date = formattedWeekDate(new Date());
   const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
@@ -134,6 +171,15 @@ const Pages = () => {
     setIsVisible(false)
   }
 
+  const groupManagePress = async() =>{
+    try {
+      await groupSpotDetail(userSpotId)
+      navigation.navigate(GroupManagePageName,{id:userSpotId,clientId:clientId})
+    }catch(err){
+      console.log(err)
+    }
+  }
+
 if(isUserInfoLoading){
   return <SkeletonUI/>
 }
@@ -142,9 +188,10 @@ if(isUserInfoLoading){
 
   return (
     <SafeView>
-      <Pressable onPress={() => {navigation.navigate(GroupCreateMainPageName)}}>
+      {/* <Pressable onPress={() => {navigation.navigate(GroupCreateMainPageName)}}>
         <Text> 임시버튼(그룹/스팟) </Text>
-      </Pressable>
+        
+      </Pressable> */}
       <View>
         <BarWrap>
           <SpotName>
@@ -163,7 +210,6 @@ if(isUserInfoLoading){
       </View>
       <ScrollViewWrap scrollEventThrottle={0} showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
-        
         <MainWrap>
           {todayMeal?.length === 0 ? (
           <NoMealInfo>
@@ -236,7 +282,7 @@ if(isUserInfoLoading){
             <Calendar onPressEvent={()=>navigation.navigate(MealMainPageName)} />
           </MealCalendar>
 
-          {!isUserInfo?.isMembership && <MenbershipBanner>
+          {!isUserInfo?.isMembership && <MenbershipBanner onPress={()=>navigation.navigate(MembershipIntro)}>
             <MembershipImage source={require('../../../../../assets/images/membership.png')} resizeMode='stretch'/>
             <MembershipText>멤버십 가입하고 <PointText>20%할인</PointText> 받기</MembershipText>
           </MenbershipBanner>}
@@ -286,9 +332,12 @@ if(isUserInfoLoading){
           </Button>
       </ButtonWrap>
       <BottomSheetSpot modalVisible={modalVisible} setModalVisible={setModalVisible} 
-            title='스팟 선택' data={isUserGroupSpotCheck} selected={selected} setSelected={setSelected} 
-            // onPressEvent={(id)=>{anotherSpot(id)}}
+            title='스팟 선택' data={isUserGroupSpotCheck} selected={selected} setSelected={setSelected} userSpotId={userSpotId}
+             onPressEvent={(id)=>{anotherSpot(id)}}
+             onPressEvent2={()=>{groupManagePress()}}
+             booleanValue
             />
+      <toast.ToastWrap message={"스팟이 설정됐어요"} icon={'checked'}/>
     </SafeView>
   )
 };
@@ -443,7 +492,7 @@ flex-direction:row;
 
 `;
 
-const MenbershipBanner = styled.View`
+const MenbershipBanner = styled.Pressable`
 width:100%;
 height:64px;
 margin-bottom:16px;

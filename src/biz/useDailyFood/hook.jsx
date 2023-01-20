@@ -5,7 +5,7 @@ import { isDailyFoodAtom, isDailyFoodLoadingAtom, isDinnerFoodAtom, isDinnerFood
 
 const useFoodDaily = () => {
 
-    const [isDailyFood,setDailyFood] = useAtom(isDailyFoodAtom);
+    const [isDiningTypes,setDiningTypes] = useAtom(isDailyFoodAtom);
     const [isMorningFood,setMorning] = useAtom(isMorningFoodAtom);
     const [isLunchFood,setLunch] = useAtom(isLunchFoodAtom);
     const [isDinnerFood,setDinner] = useAtom(isDinnerFoodAtom);
@@ -14,6 +14,7 @@ const useFoodDaily = () => {
     // const [isLunchFoodLoading,setLunchFoodLoading] = useAtom(isLunchFoodLoadingAtom);
     // const [isDinnerFoodLoading,setDinnerFoodLoading] = useAtom(isDinnerFoodLoadingAtom);
     //console.log(isDinnerFood,'ddddd')
+    
     const dailyFood = async (spotId,seletedDate) => {
         
         try {
@@ -26,11 +27,11 @@ const useFoodDaily = () => {
                 setDinner([]);
                 throw new Error('없음');
             }
-    
-            setDailyFood(res.data);
-            setMorning(res.data.filter(x => x.serviceDate === seletedDate && x.diningType === '아침'));
-            setLunch(res.data.filter(x => x.serviceDate === seletedDate && x.diningType === '점심'));
-            setDinner(res.data.filter(x => x.serviceDate === seletedDate && x.diningType === '저녁'));
+            
+            setDiningTypes(res.data.diningTypes);
+            setMorning(res.data.dailyFoodDtos.filter(x => x.serviceDate === seletedDate && x.diningType === 1));
+            setLunch(res.data.dailyFoodDtos.filter(x => x.serviceDate === seletedDate && x.diningType === 2));
+            setDinner(res.data.dailyFoodDtos.filter(x => x.serviceDate === seletedDate && x.diningType === 3));
             
         } catch (err) {
             console.log(err,'err');
@@ -44,7 +45,7 @@ const useFoodDaily = () => {
     }
     return {
         dailyFood,
-        isDailyFood,
+        isDiningTypes,
         isMorningFood,
         isLunchFood,
         isDinnerFood,

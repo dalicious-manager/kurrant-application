@@ -26,7 +26,7 @@ const Component = ({
     
     
 }) =>{
-
+console.log(id,'???')
     
     const {isLoadMeal} = useShoppingBasket();
     
@@ -40,8 +40,11 @@ const Component = ({
           : null;
       }, []);
 
-      const quantity = isLoadMeal.find(x => x.dailyFoodId === id);
-      console.log(quantity)
+      // const quantity = isLoadMeal.find(x => x.dailyFoodId === id);
+      const quantity = isLoadMeal?.cartDailyFoodDtoList?.cartDailyFoods?.find(x => x.dailyFoodId === id);
+      const test = isLoadMeal?.cartDailyFoodDtoList?.map(el => el.cartDailyFoods);
+      console.log(test,'dididid')
+      
     return (
         <React.Fragment>
         { mealCart && <Wrap

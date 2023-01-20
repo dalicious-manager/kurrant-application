@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import {Dimensions,Linking} from "react-native";
+import {Dimensions,Linking,View,Text} from "react-native";
 import styled from "styled-components";
 
 import SkeletonUI from "./Skeleton";
@@ -30,7 +30,6 @@ const Pages = () => {
     const {isApplicationList, applicationList} = useGroupSpots();
     const {corpApplicationCheck, isCorpCheck} = useCorporationApplication();
     const [state,setState] = useState();
-    
 
     const datePress = () => {
         setModalVisible(true)
@@ -52,6 +51,8 @@ const Pages = () => {
     const corpName = corpInfo?.corporationName;
     const propsCorpId = isApplicationList.filter(el => el.name === corpName);
     
+    const phoneNumber = 'tel:1577-9612';
+    const kakaoURL = 'https://pf.kakao.com/_uAxixjxb';
     useEffect(() => {
         async function LoadList(){
             await applicationList();
@@ -92,7 +93,7 @@ const Pages = () => {
 
     return (
         <Wrapper>
-            <ScrollViewWrap showsVerticalScrollIndicator={false} >
+            <ScrollViewWrap>
                 <ApplicationDate>
                     <Heading>신청일</Heading>
                     <DateWrap onPress={datePress}>
@@ -156,11 +157,11 @@ const Pages = () => {
                 </ContentsWrap>
             </ScrollViewWrap>
                 <ButtonWrap>
-                    <CallButton onPress={() => {Linking.openURL(`tel:1577-9612`)}}>
+                    <CallButton onPress={() => {Linking.openURL(`${phoneNumber}`)}}>
                         <CallIcon/>
                         <CallText>전화 문의</CallText>
                     </CallButton>
-                    <ChatButton>
+                    <ChatButton onPress={() => {Linking.openURL(`${kakaoURL}`)}}>
                         <ChatIcon/>
                         <ChatText>1:1 문의</ChatText>
                     </ChatButton>
@@ -174,7 +175,7 @@ const Pages = () => {
 export default Pages;
 
 
-const Wrapper = styled.SafeAreaView`
+const Wrapper = styled.View`
 flex:1;
 background-color:${({theme}) => theme.colors.grey[0]};
 `;
@@ -253,7 +254,7 @@ width:100%;
 
 export const ButtonWrap = styled.View`
 flex-direction:row;
-justify-content:space-between;
+justify-content:space-around;
 position:absolute;
 bottom:35px;
 width:${windowWidth}px;
@@ -262,7 +263,7 @@ padding:0px 20px;
 
 export const CallButton = styled.Pressable`
 background-Color:${({theme}) => theme.colors.grey[0]};
-padding:16px 36px;
+padding:16px 32px;
 border: 1px solid ${({theme}) => theme.colors.grey[5]};
 border-radius:100px;
 flex-direction:row;

@@ -2,7 +2,7 @@ import Postcode from '@actbase/react-daum-postcode';
 import DatePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from 'jotai';
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
 import { Alert, Keyboard, Modal, Platform, Pressable, SafeAreaView, Text ,View} from "react-native";
 import styled from "styled-components";
@@ -14,6 +14,7 @@ import ProgressBar from "../../../../../components/ProgressBar2";
 import RefTextInput from "../../../../../components/RefTextInput";
 import Typography from '../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import { getStorage, setStorage } from '../../../../../utils/asyncStorage';
 import { formattedApplicationDate, formattedDate, formattedMealTime } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as ApartmentApplicationThirdPageName} from '../ThirdPage';
 import {PAGE_NAME as ApartmentApplicationPostcodePageName} from './Pages';
@@ -28,8 +29,8 @@ const Pages = () => {
     const [text, setText] = useAtom(apartApplicationDate);
     const [isApartAddress,setApartAddress] = useAtom(isApartSendAddressAtom);
     const isApartFullAddress = useAtomValue(isApartFullAddressAtom); // TextInput value
-    //const isSendAddress = useAtomValue(isApartSendAddressInfoAtom); // body에 담을 주소2
-    console.log(isApartFullAddress)
+    const isSendAddress = useAtomValue(isApartSendAddressInfoAtom); // body에 담을 주소2
+    console.log(isSendAddress,'dkdkdk')
     const form = useForm({
         mode:'all'
       });
@@ -37,29 +38,38 @@ const Pages = () => {
     const {formState:{errors},watch,handleSubmit,setValue} = form;
 
     const apartNameChk = watch('apartName');
-    // const apartAddressChk = watch('address');
+    const apartAddressChk = watch('address');
     const apartFamilyCountChk = watch('familyCount');
     const apartDongCountChk = watch('dongCount');
     const apartStartDateChk = watch('startDate');
-    
-    
+    console.log(apartNameChk,apartAddressChk,apartFamilyCountChk,apartDongCountChk,
+        apartStartDateChk)
     const isValidation = 
     (apartNameChk && !errors.apartName) &&
-    (isApartFullAddress !== '') &&
+    (apartAddressChk&&  !errors.address) &&
     (apartFamilyCountChk &&!errors.familyCount) &&
-    (apartDongCountChk &&!errors.dongCount) && (text !== '')
+    (apartDongCountChk &&!errors.dongCount) && (apartStartDateChk && !errors.startDate)
     ;
 
     const inputStyle = {
         marginBottom:16,
       }
 //console.log(isApartAddress)
-    const saveAtom = () => {
+    const saveAtom = async () => {
+        await setStorage('page2',JSON.stringify({
+            'apartmentName' : apartNameChk,
+            'address':apartAddressChk,
+            'familyCount': apartFamilyCountChk,
+            'dongCount' : apartDongCountChk,
+            'serviceStartDate' : apartStartDateChk
+        }));
+        const data = await getStorage('page2');
+        const get = JSON.parse(data);
         setApartAddress({
             'apartmentName' : apartNameChk,
             'familyCount': Number(apartFamilyCountChk),
             'dongCount' : Number(apartDongCountChk),
-            'serviceStartDate' : formattedApplicationDate(date)
+            'serviceStartDate' : (Object.keys(get).length !== 0) ? get.serviceStartDate : formattedApplicationDate(date)
 
         })
     }
@@ -76,7 +86,7 @@ const Pages = () => {
         
         setDate(selectedDate);
         setText(formattedDate(selectedDate));
-        setValue('startDate',formattedMealTime(selectedDate))
+        setValue('startDate',formattedDate(selectedDate))
       };
 
     const confirmPress = () =>{
@@ -87,7 +97,25 @@ const Pages = () => {
     useLayoutEffect(()=>{
         setValue('address',isApartFullAddress)
      // eslint-disable-next-line react-hooks/exhaustive-deps
-     },[isApartFullAddress])
+     },[isApartFullAddress]);
+
+     useEffect(()=>{
+        const getData = async () =>{
+            const data = await getStorage('page2');
+           if(data){
+            const get = JSON.parse(data);
+            setValue('apartName',get.apartmentName)
+            setValue('address',get.address)
+            setValue('familyCount',get.familyCount)
+            setValue('dongCount',get.dongCount)
+            setValue('startDate',get.serviceStartDate)
+          } else{
+            console.log('no')
+          }
+         }
+
+         getData()
+     },[])
     return (
         <Wrap>
             <ProgressBar progress={2}/>
@@ -99,7 +127,7 @@ const Pages = () => {
                         name="apartName"
                         placeholder="아파트명"
                         style={inputStyle}
-                        defaultValue={isApartAddress.apartmentName}
+                        // defaultValue={isApartAddress.apartmentName}
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -116,7 +144,7 @@ const Pages = () => {
                             label="아파트주소"
                             name="address"
                             placeholder="아파트 주소"
-                            value={isApartFullAddress}
+                            defaultValue={isApartFullAddress}
                             onPressIn={()=>navigation.navigate(ApartmentApplicationPostcodePageName)}
                             />
                             <ArrowIcon/>
@@ -129,7 +157,7 @@ const Pages = () => {
                         placeholder="단지 총 세대수"
                         keyboardType="numeric"
                         style={inputStyle}
-                        defaultValue={isApartAddress.familyCount !== undefined && String(isApartAddress.familyCount)}
+                        // defaultValue={isApartAddress.familyCount !== undefined && String(isApartAddress.familyCount)}
                         />
 
                         <RefTextInput
@@ -139,7 +167,7 @@ const Pages = () => {
                         keyboardType="numeric"
                         caption="동 개수를 입력해주세요.(예.101동 - 105동이면 5개)"
                         style={inputStyle}
-                        defaultValue={isApartAddress.dongCount !== undefined && String(isApartAddress.dongCount)}
+                        // defaultValue={isApartAddress.dongCount !== undefined && String(isApartAddress.dongCount)}
                         />
 
                         <View>
@@ -147,7 +175,7 @@ const Pages = () => {
                             label="이용 시작 예정일"
                             name="startDate"
                             placeholder="이용 시작 예정일"
-                            value={text}
+                            // value={text}
                             showSoftInputOnFocus={false}
                             onPressIn={showDatePicker}
                             />
@@ -183,7 +211,7 @@ const Pages = () => {
             <ButtonWrap>
                 <Button 
                     label={'다음'}  
-                    // disabled={!isValidation}
+                    disabled={!isValidation}
                     onPressEvent={()=>{navigation.navigate(ApartmentApplicationThirdPageName);saveAtom()}}/>
             </ButtonWrap>}
         </Wrap>

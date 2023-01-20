@@ -11,10 +11,8 @@ import {PAGE_NAME as apartApplicationCheckPageName} from '../../GroupApartment/A
 
 export const PAGE_NAME = 'P_CREATE_GROUP_COMPLETE_MODAL';
 
-const Pages = ({route}) => {
-    
-    const name = route.params.name
-    
+const Pages = () => {
+   
     const navigation = useNavigation();
     return (
         <Conotainer>
@@ -24,7 +22,7 @@ const Pages = ({route}) => {
             <ButtonContainer>
                 <Button
                     type='grey7'
-                    label={"스팟 신청 내역 보기"}
+                    label='스팟 신청 내역 보기 '
                     size='half'
                     onPressEvent={()=>navigation.navigate(apartApplicationCheckPageName)}
                 />

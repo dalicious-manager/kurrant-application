@@ -1,15 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import React, {useRef, useState} from "react";
 import {useForm} from 'react-hook-form';
-import { View, Text ,SafeAreaView, ScrollView , Pressable, FlatList, Alert} from "react-native";
+import { View, Alert} from "react-native";
 import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
 import styled from "styled-components";
+
+import FastImage from "react-native-fast-image";
 import ArrowDownIcon from '../../../../../assets/icons/Arrow/arrowDown.svg';
 import ArrowRightIcon from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import PayError from "../../../../../assets/icons/Payment/payError.svg";
 import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
 import useUserInfo from "../../../../../biz/useUserInfo";
-import According from '../../../../../components/Accordion';
 import BottomModal from "../../../../../components/BottomModal";
 import Button from '../../../../../components/Button';
 import Check from "../../../../../components/Check";
@@ -71,7 +72,7 @@ const Pages = ({route}) => {
         }        
       }
 
-    const date = isLoadMeal[0].map(el => el.serviceDate);
+    const date = isLoadMeal.map(el => el.serviceDate);
     
     const deliveryStart = date.reduce((prev,curr) => {
         return new Date(prev).getTime() <= new Date(curr).getTime() ? prev : curr;
@@ -114,8 +115,8 @@ const Pages = ({route}) => {
                     
                 </Container>
                 {show && <ProductInfo> 
-                       {isLoadMeal[0]?.map((meal,idx) => {
-                        console.log(isLoadMeal[0][isLoadMeal[0].length -1])
+                       {isLoadMeal?.map((meal,idx) => {
+                        const borderLast = isLoadMeal[isLoadMeal.length -1];
                          const price = meal.price * meal.count;
                          const mealDiscountPrice = ((meal.price * meal.count) - ((meal.price * meal.count) * meal.discountRate)) - meal.supportPrice;
                         return (
@@ -124,9 +125,15 @@ const Pages = ({route}) => {
                                 <DiningName>{formattedMonthDay(meal.serviceDate)} {meal.diningType}</DiningName>
                             </View>
                             <ContentWrap>
-                                <MealImage source={{
-                                    uri:`${meal.img}`,
-                                    priority: FastImage.priority.high,}}/>
+
+                            <FastImage source={{uri:`${meal.img}`,priority:FastImage.priority.high}}
+                                style={{
+                                    width:45,
+                                    height:45,
+                                    borderRadius:7,
+                                    marginRight:12,
+                                }}
+                                />
                                     <MealNameView>
                                         <MealName numberOfLines={1} ellipsizeMode="tail">[{meal.makers.name}] {meal.name} </MealName>
                                         {/* 할인 적용 되면  */}
@@ -143,6 +150,8 @@ const Pages = ({route}) => {
                                         <CountText>수량: {meal.count}개</CountText>
                                     </CountWrap>
                             </ContentWrap>
+                            {!(borderLast === meal) && <Border/>}
+                            
                             </OrderWrap>
                         )
                        })}
@@ -155,30 +164,39 @@ const Pages = ({route}) => {
                 </PriceTitle>
                     <PaymentView>
                         <PaymentText>총 상품금액</PaymentText>
-                        <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
+                        {/* <PaymentText>{withCommas(totalMealPrice)}원</PaymentText> */}
                     </PaymentView>
                     <PaymentView>
                         <PressableView onPress={fundButton}>
                             <PaymentText>회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
                          </PressableView>
-                         <PaymentText>-{supportPrice === 0 ? 0 : withCommas(supportPrice)}원</PaymentText>
+                         {/* <PaymentText>-{supportPrice === 0 ? 0 : withCommas(supportPrice)}원</PaymentText> */}
                     </PaymentView>
                     <PaymentView>
-                        <PaymentText>멤버십 할인 금액</PaymentText>
-                        <PaymentText>- {membershipPrice === 0 ? 0 : withCommas(membershipPrice)}원</PaymentText>
+                        <PaymentText>총 할인금액</PaymentText>
+                        <PaymentText>-10,000원</PaymentText>
                     </PaymentView>
-                    <PaymentView>
-                        <PaymentText>판매자 할인 금액</PaymentText>
-                        <PaymentText>- {discountPrice === 0 ? 0 : withCommas(discountPrice)}원</PaymentText>
-                    </PaymentView>
-                    <PaymentView>
-                        <PaymentText>기간 할인 금액</PaymentText>
-                        <PaymentText>- {periodDiscountPrice === 0 ? 0 : withCommas(periodDiscountPrice)}원</PaymentText>
-                    </PaymentView>
+                        <DiscountView>
+                            <Bar/>
+                            <DiscountTextWrap>
+                                <DiscountTextView>
+                                    <DiscountText>멤버십 할인금액</DiscountText>
+                                    {/* <DiscountText>{membershipPrice === 0 ? 0 : withCommas(membershipPrice)}원</DiscountText> */}
+                                </DiscountTextView>
+                                <DiscountTextView>
+                                    <DiscountText>판매자 할인금액</DiscountText>
+                                    {/* <DiscountText>{discountPrice === 0 ? 0 : withCommas(discountPrice)}원</DiscountText> */}
+                                </DiscountTextView>
+                                <DiscountTextView>
+                                    <DiscountText>기간 할인금액</DiscountText>
+                                    {/* <DiscountText>{periodDiscountPrice === 0 ? 0 : withCommas(periodDiscountPrice)}원</DiscountText> */}
+                                </DiscountTextView>
+                            </DiscountTextWrap>
+                        </DiscountView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>
-                        <PaymentText>{deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원</PaymentText>
+                        {/* <PaymentText>{deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원</PaymentText> */}
                     </PaymentView>
                     <PaymentView>
                         <PressableView onPress={pointButton}>
@@ -195,13 +213,12 @@ const Pages = ({route}) => {
                             </PointWrap>
                         </KeyboardAvoidingView>
                       </PaymentView>
-
                       <UserPointView>
-                            <UserPointText>잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserPointText>
+                            {/* <UserPointText>잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserPointText> */}
                       </UserPointView>
                       <PaymentView>
                             <TotalPriceTitle>총 결제금액</TotalPriceTitle>
-                            <TotalPrice>{withCommas(totalPrice)} 원</TotalPrice>
+                            {/* <TotalPrice>{withCommas(totalPrice)} 원</TotalPrice> */}
                       </PaymentView>
                 </BorderWrap>
                 <BorderWrap>
@@ -237,7 +254,7 @@ const Pages = ({route}) => {
                 <ButtonWrap>
                     <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{handleEventPayments()}}/>
                 </ButtonWrap>
-                <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. 결제시 사용 가능한 최대 금액으롱 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
+                <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                 <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow'/>
                 <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
         </SafeArea>
@@ -246,14 +263,14 @@ const Pages = ({route}) => {
 
 export default Pages;
 
-const SafeArea = styled.SafeAreaView`
+const SafeArea = styled.View`
 flex:1;
 background-color:${props => props.theme.colors.grey[0]};
-padding-bottom:50px;
+padding-bottom:60px;
 `;
 
 const ViewScroll = styled.ScrollView`
-margin-bottom:35px;
+flex:1;
 
 `;
 const Label = styled(Typography).attrs({ text:'Body06R' })`
@@ -266,11 +283,11 @@ padding:24px 0px;
 `;
 
 const Container = styled.View`
-margin:0px 28px;
+margin:0px 24px;
 `;
 
 const FormWrap = styled.View`
-margin: 24px 28px;
+margin: 24px;
 `;
 
 const DeliveryTextWrap = styled.View`
@@ -311,11 +328,14 @@ color:${props => props.theme.colors.grey[2]};
 
 const OrderWrap = styled.View`
 flex:1;
-padding:24px 0px;
-border-bottom-color: ${props => props.theme.colors.grey[8]};
-border-bottom-width: 1px;
 position:relative;
-margin:0px 28px;
+margin:0px 24px;
+`;
+
+const Border = styled.View`
+background-color:${props => props.theme.colors.grey[8]};
+height:1px;
+margin:24px 0px;
 `;
 
 const CountText = styled(Typography).attrs({text:'Body05R'})`
@@ -331,6 +351,7 @@ align-items:center;
 
 const ProductInfo = styled.View`
 margin-top:16px;
+
 `;
 
 const ArrowRight = styled(ArrowRightIcon)`
@@ -370,10 +391,39 @@ width:80%;
 const UserPointView = styled.View`
 flex-direction:row;
 justify-content:flex-end;
-margin:0px 28px;
+margin:0px 24px;
 `;
 
 const UserPointText = styled(Typography).attrs({text:'SmallLabel'})`
 color:${({theme}) => theme.colors.grey[4]};
 margin-bottom:24px;
+`;
+
+const Bar = styled.View`
+background-color:${({theme}) => theme.colors.grey[7]};
+height:62px;
+width:3px;
+
+`;
+
+const DiscountText = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme}) => theme.colors.grey[5]};
+`;
+
+const DiscountView = styled.View`
+flex-direction:row;
+margin:0px 24px 16px 32px;
+`;
+
+const DiscountTextWrap = styled.View`
+justify-content:space-between;
+padding-left:12px;
+width:100%;
+
+`;
+
+const DiscountTextView = styled.View`
+flex-direction:row;
+justify-content:space-between;
+
 `;

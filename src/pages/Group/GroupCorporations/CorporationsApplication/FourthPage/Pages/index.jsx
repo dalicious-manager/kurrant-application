@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from "jotai";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Keyboard, Text, View } from "react-native";
 import styled from "styled-components";
@@ -11,6 +11,7 @@ import ButtonMealType from "../../../../../../components/ButtonMealType";
 import RefTextInput from "../../../../../../components/RefTextInput";
 import Typography from "../../../../../../components/Typography";
 import useKeyboardEvent from "../../../../../../hook/useKeyboardEvent";
+import { setStorage } from "../../../../../../utils/asyncStorage";
 import { Title } from "../../ThirdPage";
 import {PAGE_NAME as CorporationApplicationSpotPostCodePageName} from "../Pages/map";
 
@@ -21,11 +22,12 @@ const Pages = () => {
     const navigation = useNavigation();
 
     const isMealInfo = useAtomValue(isCorpMealInfoAtom);
-    const [touch,setTouch] = useAtom(corpApplicationUseMealType);
+    // const [touch,setTouch] = useAtom(corpApplicationUseMealType);
+    const [touch,setTouch] = useState([]);
     const [isCorpSpot,setCorpSpot] = useAtom(corpApplicationSpotsAtom);
     const [isSendSpotAddress,setSendSpotAddress] = useAtom(isCorpSendSpotAddressInfoAtom);
     const [isTotalSpot,setTotalSpot] = useAtom(corpApplicationTotalSpotAtom);
-    const isCoprFullSpotAddress = useAtomValue(isCorpFullSpotAddressAtom); // TextInput value
+    const isCorpFullSpotAddress = useAtomValue(isCorpFullSpotAddressAtom); // TextInput value
     // touch 1:아침 2:점심 3: 저녁
     const form = useForm({
         mode:'all'
@@ -48,8 +50,14 @@ const Pages = () => {
         (remainingAddressChk && !errors.remainingAddress);
 
     const keyboardStatus = useKeyboardEvent();
-    const saveAtom = () =>{
-
+    const saveAtom = async () =>{
+        await setStorage('corpPage4-1',JSON.stringify(
+            [...isTotalSpot,{
+                'address': {...isSendSpotAddress,'address2':remainingAddressChk},
+                'spotName' : spotNameChk,
+                'diningTypes' : touch
+            }]
+        ));
         setSendSpotAddress({...isSendSpotAddress,'address2':remainingAddressChk})
         setCorpSpot({
             'spotName' : spotNameChk,
@@ -76,9 +84,9 @@ const Pages = () => {
 
 
   useLayoutEffect(()=>{
-    setValue('address',isCoprFullSpotAddress)
+    setValue('address',isCorpFullSpotAddress)
  // eslint-disable-next-line react-hooks/exhaustive-deps
- },[isCoprFullSpotAddress])
+ },[isCorpFullSpotAddress])
 
     return (
         <Wrap>
@@ -129,7 +137,7 @@ const Pages = () => {
             <ButtonWrap>
                 <Button
                 label={'저장'} 
-                // disabled={!isValidation}
+                disabled={!isValidation}
                 onPressEvent={()=>{saveAtom();navigation.goBack()}} />
             </ButtonWrap>}
         </Wrap>

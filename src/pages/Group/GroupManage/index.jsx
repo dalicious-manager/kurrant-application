@@ -5,9 +5,11 @@ import styled from "styled-components";
 
 import useApartApplication from "../../../biz/useApartApplication/hook";
 import useGroupSpots from "../../../biz/useGroupSpots/hook";
+import useUserInfo from "../../../biz/useUserInfo";
 import BottomSheetSpot from "../../../components/BottomSheetSpot";
 import Button from "../../../components/Button";
 import Typography from "../../../components/Typography"; 
+import { setStorage } from "../../../utils/asyncStorage";
 import {PAGE_NAME as ApartRegisterSpotPageName} from "../GroupApartment/SearchApartment/AddApartment/DetailAddress";
 import {PAGE_NAME as GroupManageDetailPageName} from "../GroupManage/DetailPage";
 export const PAGE_NAME = "P__GROUP__MANAGE" ;
@@ -17,6 +19,7 @@ const Pages = () => {
 
     const [modalVisible,setModalVisible] = useState(false);
     const {userGroupSpotCheck,isUserGroupSpotCheck,groupSpotDetail,userSpotRegister} = useGroupSpots();
+    const {userInfo} = useUserInfo();
     
     const [selected,setSelected] = useState();
  
@@ -40,6 +43,8 @@ const Pages = () => {
             if (res.data === null){
                 navigation.navigate(ApartRegisterSpotPageName,{id:id})
             } else {
+                await setStorage('spotStatus','0');
+                await userInfo()
                 navigation.navigate(GroupManageDetailPageName,{id:id,clientId:clientId})
             }
             
@@ -56,7 +61,7 @@ const Pages = () => {
 
             <MyGroup>내 그룹</MyGroup>
             <GroupNameView>
-                {isUserGroupSpotCheck.map((el,idx) => (
+                {isUserGroupSpotCheck.length !== 0 && isUserGroupSpotCheck.map((el,idx) => (
                      <GroupName key={el.clientId}>{el.clientName}</GroupName>
                 ))}
                 

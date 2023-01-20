@@ -64,9 +64,10 @@ async function json(url, method, options = {}) {
         "spotStatus": token.spotStatus
       }
       await setStorage('token', JSON.stringify(resultData));
-
+      await setStorage('spotStatus', token.spotStatus.toString());
       token = resultData;
     }
+
   }
   let reqUrl = apiHostUrl + url;
 

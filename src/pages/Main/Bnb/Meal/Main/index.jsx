@@ -29,7 +29,7 @@ const Pages = ({route}) => {
   console.log(touchDate,'ee')
   const startDate = formattedWeekDate(weekly[0][0]);
   const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
-
+  console.log(data,'data')
   useEffect(()=>{
     async function loadDailyFood(){
       await orderMeal(startDate,endDate);
@@ -60,7 +60,7 @@ const Pages = ({route}) => {
   // const loadData = weekly.map((w,i) => w.filter(x => console.log(formattedWeekDate(x))));
 
   const pressDay = (day) => {
-    setTouchDate(day);
+    setTouchDate(day??data);
   }
 
   const cancelMealPress = () =>{
@@ -116,7 +116,7 @@ const Pages = ({route}) => {
         (<>
           {selectDate.map((s,index) => 
             <React.Fragment key={index}>
-              {s.orderItemDtoList.map((sm,idx) => 
+              {s.orderItemDtoList?.map((sm,idx) => 
               <React.Fragment key={idx}>
                 <DiningTimeWrap >
                   <DiningTime>{formattedMonthDay(s.serviceDate)} {sm.diningType}・오늘</DiningTime>
@@ -147,7 +147,7 @@ const Pages = ({route}) => {
           <>
           {todayMeal && todayMeal.map((m,i) => 
             <React.Fragment key={i}>
-              {m.orderItemDtoList.map((el,idx) => 
+              {m.orderItemDtoList?.map((el,idx) => 
               <React.Fragment key={idx}>
                 <DiningTimeWrap >
                   <DiningTime>{formattedMonthDay(m.serviceDate)} {el.diningType}・오늘</DiningTime>
