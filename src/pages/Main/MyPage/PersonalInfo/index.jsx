@@ -64,7 +64,22 @@ const Pages = ({route}) => {
     }
   },[toastEvent])
   const getData = useCallback(async()=>{
-    await userMePersonal();   
+    try{
+      await userMePersonal();   
+    } catch (error) {
+      if(error.toString().replace("Error:",'').trim() === '403'){
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: LoginPageName,
+            },
+          ],
+        })
+      }
+      
+    }
+    
   },[userMePersonal])
   const connectSNS = async(social)=>{
     const result = await snsConnectID(social);
@@ -117,7 +132,9 @@ const Pages = ({route}) => {
   useEffect(()=>{
     
     
-    getData();
+      getData();
+    
+    
     const willFocusSubscription = navigation.addListener('focus', () => {
       getDataStorage();
     });
@@ -213,7 +230,17 @@ const Pages = ({route}) => {
                 })
                 });
               } catch (error) {
-                console.log(error.toString());
+                if(error.toString().replace("Error:",'').trim() === '403'){
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
+                  })
+                }
+                
               }
               
               

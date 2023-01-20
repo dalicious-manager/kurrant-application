@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, BackHandler, Dimensions,Platform,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
+import { Settings ,LoginButton,AccessToken} from 'react-native-fbsdk-next';
 
 import {LogoImage , LogoBackground} from '../../../../assets';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
@@ -38,34 +39,27 @@ const Pages = () => {
   const navigation = useNavigation();
   const toast = Toast();
   const [isLoginLoading, setLoginLoading] = useState();
-  const {googleLogin,appleLogin} = snsLogin();
+  const {googleLogin,appleLogin, facebookLogin} = snsLogin();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes:['https://www.googleapis.com/auth/user.phonenumbers.read'],
       webClientId: '872782655273-mhb2jokicsaqb99astkb4hlqr4dndf7o.apps.googleusercontent.com', 
     });
   }
-  const appleSignConfig = ()=>{
+  const appleSignConfiguration = ()=>{
     appleAuthAndroid.configure({
-      // The Service ID you registered with Apple
       clientId: 'kurrant.dalicious.io',
-  
-      // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
-      // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
       redirectUri: 'https://dalicious-v1.firebaseapp.com/__/auth/handler',
-  
-      // The type of response requested - code, id_token, or both.
       responseType: appleAuthAndroid.ResponseType.ALL,
-  
-      // The amount of user information requested from Apple.
       scope: appleAuthAndroid.Scope.ALL,
-  
-      // Random nonce value that will be SHA256 hashed before sending to Apple.
       nonce: rawNonce,
-  
-      // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
       state,
     });
+  }
+  const facebookConfiguration = ()=>{
+    Settings.setAppID('978024843173047');
+    Settings.initializeSDK();
+    
   }
   
 
@@ -98,8 +92,11 @@ const Pages = () => {
     return ()=>BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
   },[ navigation, toast])
   useEffect(()=>{
-    googleSigninConfigure();
-    appleSignConfig();
+    if(Platform.OS === 'android'){
+      googleSigninConfigure();
+      appleSignConfiguration();      
+    }
+    facebookConfiguration();
   },[]);
   useEffect(()=>{
     const isAutoLogin = async()=>{
@@ -148,16 +145,16 @@ const Pages = () => {
         </LogoBox>
         <LoginMain />
         <TouchableOpacity onPress={()=>{
-          navigation.navigate(MembershipJoinPageName)
+          // navigation.navigate(MembershipJoinPageName)
         }}>
-          <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
+          {/* <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping> */}
         </TouchableOpacity>
         <EtcSNSContainer>
 
          <HorizonLine text={`그외 SNS로 로그인`}/>
           {/* <Text style={{flex:1 ,textAlign:'center'}} >───── 그외 SNS로 로그인 ─────</Text> */}
           <EtcSNSBox >
-            <ButtonRoundSns type_sns='facebook' size={32}/>
+            <ButtonRoundSns type_sns='facebook' size={32} onPressEvent={facebookLogin}/>
             <ButtonRoundSns type_sns='google' size={32} onPressEvent={googleLogin}/>
             <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>
           </EtcSNSBox>

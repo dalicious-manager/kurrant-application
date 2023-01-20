@@ -284,7 +284,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     implementation project(':react-native-splash-screen')
-
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-code-push')
     implementation 'com.google.firebase:firebase-analytics'

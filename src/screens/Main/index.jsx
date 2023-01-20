@@ -152,6 +152,8 @@ import NoticeDetail, {PAGE_NAME as NoticeDetailPageName} from '../../pages/Main/
 import { DeleteIcon, NotifySettingIcon, SettingIcon } from '../../components/Icon';
 import { useAtom } from 'jotai';
 import useBoard from '../../biz/useBoard';
+import { useEffect } from 'react';
+import { getStorage } from '../../utils/asyncStorage';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -167,7 +169,7 @@ const Screen = () => {
   const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
   const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
   const {deleteAlarm} = useBoard();
-  const navigation = useNavigation();
+ 
   return (
     <MainRoot.Navigator>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>

@@ -51,7 +51,7 @@ const Pages= ()=>{
                 }
                 navigation.navigate(MembershipJoinPaymentsPageName,{
                     period:period ==="월간구독" ? 'month':'yaers',
-                    membershipData:period ==="월간구독" ? membershipData[0]:membershipData[1],
+                    membershipData:period ==="월간구독" ? membershipData[1]:membershipData[0],
                 });
         }   
     };

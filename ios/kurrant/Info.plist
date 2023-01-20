@@ -50,7 +50,19 @@
 				<string>com.googleusercontent.apps.872782655273-o63k78oq12kquda45db9irfvhqpqva49</string>
 			</array>
 		</dict>
+		<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>fb978024843173047</string>
+		</array>
+	</dict>
 	</array>
+	<key>FacebookAppID</key>
+		<string>978024843173047</string>
+	<key>FacebookClientToken</key>
+		<string>1ff9dad5b56ee756cf2bd55bc75cbd10</string>
+	<key>FacebookDisplayName</key>
+	<string>커런트</string>
 	<key>CFBundleVersion</key>
 	<string>2</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -66,6 +78,10 @@
 		<string>kakaokompassauth</string>
 		<string>storykompassauth</string>
 		<string>kakaolink</string>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -154,7 +170,7 @@ zobqlsBLsVeWxgYOfdEwaZnwA/iBhkYnv/kUgrPBTcI9a8WF5uhXy46QfABd+f8l
 LwIDAQAB
 -----END PUBLIC KEY-----
 </string>
-	<key>CodePushDeploymentKey</key>
-	<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>
+<key>CodePushDeploymentKey</key>
+<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>	
 </dict>
 </plist>

@@ -23,7 +23,7 @@ import { formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
-
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 const windowHeight = Dimensions.get('window').height;
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
@@ -58,11 +58,25 @@ const Pages = () => {
         async function loadCart(){
             try {
                 await loadMeal();
-            }catch(err){
-                console.log(err.toString())
-            }
+            } catch (error) {
+                if(error.toString().replace("Error:",'').trim() === '403'){
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
+                  })
+                }
+                
+              }
         }
+
+        
         loadCart();
+      
+        
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])

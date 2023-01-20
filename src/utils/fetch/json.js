@@ -1,4 +1,6 @@
 /* eslint-disable no-unreachable */
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
@@ -42,7 +44,6 @@ async function json(url, method, options = {}) {
       "accessToken": token.accessToken,
       "refreshToken": token.refreshToken
     }
-    console.log("test1", bodyData)
     const reissue = await fetch(apiHostUrl + "/auth/reissue", {
       headers: { 'content-type': 'application/json', },
       method: "POST",
@@ -50,15 +51,22 @@ async function json(url, method, options = {}) {
     })
     console.log(reissue);
     const result = await reissue.json();
-    console.log("test", result);
-    const resultData = {
-      "accessToken": result.data.accessToken,
-      "expiresIn": result.data.accessTokenExpiredIn,
-      "refreshToken": result.data.refreshToken,
-      "spotStatus": token.spotStatus
+
+    if (result.statusCode === 403) {
+      await AsyncStorage.clear();
+      alert("토큰이 만료되어 로그아웃 됩니다.");
+      throw new Error(result.statusCode);
+    } else {
+      const resultData = {
+        "accessToken": result.data.accessToken,
+        "expiresIn": result.data.accessTokenExpiredIn,
+        "refreshToken": result.data.refreshToken,
+        "spotStatus": token.spotStatus
+      }
+      await setStorage('token', JSON.stringify(resultData));
+
+      token = resultData;
     }
-    await setStorage('token', JSON.stringify(resultData));
-    token = resultData;
   }
   let reqUrl = apiHostUrl + url;
 

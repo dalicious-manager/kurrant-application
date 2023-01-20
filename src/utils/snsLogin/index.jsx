@@ -6,9 +6,18 @@ import { login } from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import { useNavigation } from '@react-navigation/native';
 import { Platform } from 'react-native';
+import {
+  AccessToken,
+  AuthenticationToken,
+  LoginManager,
+} from 'react-native-fbsdk-next';
 
 import useAuth from '../../biz/useAuth';
 import { SCREEN_NAME } from '../../screens/Main/Bnb';
+import 'react-native-get-random-values';
+import { v4 as uuid } from 'uuid'
+const nonce = uuid();
+
 
 const naverData = ()=>{
     const data = {
@@ -157,6 +166,50 @@ export default () => {
             ],
           })
       };     
+      const facebookLogin = async () => {
+        try {
+          const result = await LoginManager.logInWithPermissions(
+            ['public_profile', 'email'],
+            nonce
+          );
+          console.log(result);
+      
+          if (Platform.OS === 'ios') {
+            const result = await AuthenticationToken.getAuthenticationTokenIOS();
+            console.log(result?.authenticationToken);
+            await snsLogin({
+              snsAccessToken:token.accessToken,
+              autoLogin:true,
+            },'KAKAO');
+            navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              })
+          } else {
+            const result = await AccessToken.getCurrentAccessToken();
+            console.log(result?.accessToken);
+            await snsLogin({
+              snsAccessToken:token.accessToken,
+              autoLogin:true,
+            },'KAKAO');
+            navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              })
+          }
+        } catch (error) {
+          console.log(error);
+        }
+       
+      };     
 
-    return {naverLogin,kakaoLogin,googleLogin,appleLogin};
+    return {naverLogin,kakaoLogin,googleLogin,appleLogin,facebookLogin};
 };
