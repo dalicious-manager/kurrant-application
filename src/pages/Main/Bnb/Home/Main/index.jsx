@@ -91,6 +91,7 @@ const Pages = () => {
       await orderMeal(start[0],end[0])
     };
     try {
+      status();
       loadUser();
       loadMeal();
       userGroupSpotCheck();
