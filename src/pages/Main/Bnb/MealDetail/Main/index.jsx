@@ -140,9 +140,9 @@ const Pages = ({route}) => {
       };
 
     const totalDiscountRate = (isFoodDetail?.membershipDiscountedRate) + (isFoodDetail?.makersDiscountedRate) + (isFoodDetail?.periodDiscountedRate);
-    console.log(totalDiscountRate)
-
     
+    const discountPrice = (isFoodDetail?.membershipDiscountedPrice) + (isFoodDetail?.makersDiscountedPrice) + (isFoodDetail?.periodDiscountedPrice)
+    console.log(discountPrice,'iii')
     if(isFoodDetailLoading){
         return  <Skeleton/>
     }
@@ -195,10 +195,10 @@ const Pages = ({route}) => {
                             </ModalWrap>
                         </PriceTitleWrap>
                         <PriceWrap> 
-                            {totalDiscountRate !== 0 && <Percent>{(totalDiscountRate)*100}%</Percent>}
-                            {totalDiscountRate !== 0 && <SalePrice>{withCommas(isFoodDetail?.discountedPrice)}원</SalePrice>}
+                            {totalDiscountRate !== 0 && <Percent>{(totalDiscountRate)}%</Percent>}
+                            {totalDiscountRate !== 0 && <SalePrice>{withCommas((isFoodDetail?.price)-(discountPrice))}원</SalePrice>}
                             
-                            <NoSalePrice>{withCommas(isFoodDetail?.price)}원</NoSalePrice>
+                            {totalDiscountRate === 0 && <NoSalePrice>{withCommas(isFoodDetail?.price)}원</NoSalePrice>}
                             {totalDiscountRate !== 0 && <Price>{withCommas(isFoodDetail?.price)}원</Price>}
                         </PriceWrap>
                     </View>
@@ -273,7 +273,7 @@ const Pages = ({route}) => {
                 { !focus && 
                 <ButtonWrap >
                     <Button 
-                        price={isFoodDetail?.price} 
+                        price={(isFoodDetail?.price)-(discountPrice)} 
                         onPressEvent2={()=>{addCartPress()}}
                         onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
                         count={count} 
