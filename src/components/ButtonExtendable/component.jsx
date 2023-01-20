@@ -13,6 +13,7 @@ import MinusIcon from '../../assets/icons/MealDetail/minus.svg';
 import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
 import Trapezoid from '../../assets/icons/MealDetail/trapezoid.svg';
 import Count from '../../components/Count';
+import withCommas from '../../utils/withCommas';
 import Typography from "../Typography";
 
 
@@ -37,7 +38,7 @@ const Component = ({
   const [rotate, setRotate] = useState('0deg');
 
   const PRICE = price * count
-  const result = PRICE.toLocaleString('ko-KR')
+  //const result = PRICE.toLocaleString('ko-KR')
 
   const handlePress = () => {
     Animated.timing(fadeAnim, {
@@ -86,7 +87,7 @@ const Component = ({
             <Animated.View style={{height: fadeAnim}}>
               <AnimationView>
                 <Inner>
-                    <PriceText>{result}원</PriceText>
+                    <PriceText>{withCommas(PRICE)}원</PriceText>
                   {/* <InnerView>
                     <MinusIcon  onPress={decreasePress} />
                       <Text onPress={onPressEvent}>

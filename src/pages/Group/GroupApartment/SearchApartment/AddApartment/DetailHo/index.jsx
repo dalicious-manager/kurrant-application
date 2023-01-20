@@ -40,7 +40,7 @@ const Pages = ({route}) => {
                 'ho':Number(text)
             });
             setDetailSpot({...isDetailSpot,ho:Number(text)})
-            
+            navigation.goBack();
         } catch(err){
             throw err
         }

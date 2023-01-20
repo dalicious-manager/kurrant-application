@@ -6,6 +6,7 @@ import { ScrollView, View, Pressable,Dimensions, StyleSheet} from "react-native"
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
+import FastImage from "react-native-fast-image";
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
@@ -26,7 +27,6 @@ import SkeletonUI from '../Skeleton';
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
-
 const Pages = () => {
     
     const navigation = useNavigation();
@@ -39,17 +39,18 @@ const Pages = () => {
     const [sliderValue, setSliderValue] = useState(1);
     const [selectFood, setSelectFood] = useState()
     const [currentPage, setCurrentPage] = useState(0);
-    const {isDailyFood, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
+    const {isDiningTypes, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
     const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
-    const userMembership = useAtomValue(isUserInfoAtom);
-    //console.log(isDailyFood,'daily')
+    const userInfo = useAtomValue(isUserInfoAtom);
+    
     const DININGTYPE = ['아침','점심','저녁'];
     const daily = true;
     const date = formattedWeekDate(new Date()); // 오늘
     // const todayMeal = mealInfo?.filter((m) => m.date === date);
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-    const spotId = 1; // 스팟 생성 전 이어서 임의로 줌
+    // const spotId = userInfo.spotId; 
+    const spotId = 1; 
     
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
@@ -67,9 +68,9 @@ const Pages = () => {
             throw err
         }
     }
-    const isDiningType = (type)=>{
-        return type === '아침' ? 1 : type === '점심' ? 2 : 3;
-    }
+    // const isDiningType = (type)=>{
+    //     return type === '아침' ? 1 : type === '점심' ? 2 : 3;
+    // }
     const openModal = async (diningType) =>{
         // console.log(modalVisible,
         //     modalVisible2,
@@ -109,7 +110,7 @@ const Pages = () => {
 
     const addCartPress = async (id,day,type) =>{
         
-        const diningType = isDiningType(type);
+        const diningType = type;
         const duplication = isLoadMeal.some((item) => item.dailyFoodId === id);
         
         if(duplication){
@@ -132,7 +133,7 @@ const Pages = () => {
                      "dailyFoodId":id,
                      "count":1,
                      "serviceDate":day,
-                     "diningType":isDiningType(type)
+                     "diningType":type
                  });
                  await loadMeal();
                  await balloonEvent();
@@ -144,7 +145,7 @@ const Pages = () => {
     }
     
     const BuyMeal = (diningFood) =>{
-        const setModal = (type)=>{        
+        const setModal = (type)=>{   
             if(type === isMorningFood){
                 return setModalVisible
             }            
@@ -157,22 +158,23 @@ const Pages = () => {
         }
         const modal = (type)=>{
             if(type === isMorningFood){
-                console.log("1",modalVisible)
+                // console.log("1",modalVisible)
                 return modalVisible
             }            
             if(type === isLunchFood){
-                console.log("2",modalVisible2)
+                // console.log("2",modalVisible2)
                 return modalVisible2
             }
             if(type === isDinnerFood){
-                console.log("3",modalVisible3)
+                // console.log("3",modalVisible3)
                 return modalVisible3
             }
         }
+        
         return (<View>
             
             {diningFood.length === 0 && <NoServieceView>
-                <NoServiceText>서비스 운영일이 아니예요</NoServiceText>
+                <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
             </NoServieceView>}
             {diningFood.map((m) => {               
             //    console.log(diningFood)
@@ -194,7 +196,13 @@ const Pages = () => {
 
                 <MealImageWrap>
                     {m.isSoldOut && <BlurView/>}
-                    <MealImage source={{uri:`${m.img}`}}/>
+                    <FastImage source={{uri:`${m.image}`,priority:FastImage.priority.high}}
+                    style={{
+                        width:107,
+                        height:107,
+                        borderRadius:7
+                    }}
+                    />
                     
                     {!m.isSoldOut && (
                         <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>
@@ -220,7 +228,7 @@ const Pages = () => {
     return (
         <SafeView>
             
-                {userMembership?.isMembership && <MembershipBar/>}
+                {userInfo?.isMembership && <MembershipBar/>}
                 <ScrollView showsVerticalScrollIndicator={false}>
                 <CalendarWrap>
                     <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={dayPress} daily={daily} margin={'0px 28px'} />
@@ -229,25 +237,37 @@ const Pages = () => {
                 <PagerViewWrap>
                     <ProgressWrap>
                         <ProgressInner>
+                            <Progress>
+                                {DININGTYPE.map((btn,i) => {
+                                     const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
+                                     const typeBoolean = isDiningTypes.includes(type);
+                                    return (
+                                         <DiningPress key={i} 
+                                         disabled={!typeBoolean && true}
+                                         onPress={() => {diningRef.current.setPage(i);setSliderValue(i);setFocus(i)}}>
+                                            <ProgressText type={typeBoolean} index={i}>{btn}</ProgressText>
+                                         </DiningPress>
+                                    )
+                                }
+                               
+                                   
+                                )}
+                            </Progress>
                             <Slider
                                 value={sliderValue}
                                 onValueChange={(e) => setSliderValue(...e)}
                                 minimumValue={0}
                                 maximumValue={2}
-                                maximumTrackTintColor="#343337"
-                                minimumTrackTintColor="#343337"
+                                maximumTrackTintColor="#fff"
+                                minimumTrackTintColor="#fff"
                                 onSlidingComplete={(e) => {diningRef.current.setPage(...e); setFocus(...e)}}
                                 step={1}
                                 trackStyle={styles.trackStyle}
                                 thumbStyle={styles.thumbStyle}
+                                containerStyle={{justifyContent:'flex-start'}}
+                                
                             />
-                            <Progress>
-                                {DININGTYPE.map((btn,i) => 
-                                    <Pressable key={i} onPress={() => {diningRef.current.setPage(i);setSliderValue(i);setFocus(i)}}>
-                                        <ProgressText focus={focus} index={i}>{btn}</ProgressText>
-                                    </Pressable>
-                                )}
-                            </Progress>
+                            
                         </ProgressInner>
                     </ProgressWrap>
 
@@ -271,23 +291,17 @@ const Pages = () => {
 }
 const styles = StyleSheet.create({
     trackStyle:{
-        backgroundColor:'black',
-        width:87,
+        backgroundColor:'white',
+        width:110,
         height:2,
         borderRadius:50
     },
     thumbStyle:{
-        width:16,
-        height:16,
-        backgroundColor:'white',
-        shadowColor: "#000",
-        shadowOffset: {
-        width: 0,
-        height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        width:24,
+        height:2,
+        borderRadius:0,
+        backgroundColor:'black',
+        
     }
 });
 
@@ -312,12 +326,12 @@ height:${screenHeight}px;
 
 const ProgressWrap = styled.View`
 flex-direction:row;
-align-items:center;
 justify-content:center;
+padding-top:12px;
 `;
 
 const ProgressInner = styled.View`
-align-items:center;
+justify-content:center;
 `;
 
 const Progress = styled.View`
@@ -449,7 +463,8 @@ const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
 `;
 
 const ProgressText = styled(Typography).attrs({text:'CaptionSB'})`
-    color:${({theme,focus, index}) => focus === index ? theme.colors.grey[2] : theme.colors.grey[5]};
+    color:${({theme,type, index}) => type ? theme.colors.grey[2] : theme.colors.grey[5]};
+
 `;
 
 const PercentText = styled(Typography).attrs({text:'Body05R'})`
@@ -484,4 +499,8 @@ flex:1; */
 position:absolute;
 top:30%;
 left:30%;
+`;
+
+const DiningPress = styled.Pressable`
+
 `;

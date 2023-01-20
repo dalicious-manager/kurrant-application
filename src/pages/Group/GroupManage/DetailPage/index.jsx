@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { useAtomValue } from "jotai";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Alert, Pressable, SafeAreaView, Text,View } from "react-native";
 import styled from "styled-components";
@@ -7,36 +8,41 @@ import Arrow from "../../../../assets/icons/Group/arrowWhite.svg";
 import Close from "../../../../assets/icons/Group/close.svg";
 import Pen from "../../../../assets/icons/Group/pen.svg";
 import useGroupSpots from "../../../../biz/useGroupSpots/hook";
+import { isUserInfoAtom } from "../../../../biz/useUserInfo/store";
 import BottomSheetSpot from "../../../../components/BottomSheetSpot";
 import TextButton from "../../../../components/TextButton";
+import Toast from "../../../../components/Toast";
 import Typography from "../../../../components/Typography";
 import { SCREEN_NAME } from "../../../../screens/Main/Bnb";
+import { setStorage } from "../../../../utils/asyncStorage";
 import withCommas from "../../../../utils/withCommas";
 import {PAGE_NAME as ApartRegisterSpotPageName} from "../../GroupApartment/SearchApartment/AddApartment/DetailAddress";
 import {PAGE_NAME as ApartModifyAddressHoPageName} from "../../GroupApartment/SearchApartment/AddApartment/DetailHo";
 import {PAGE_NAME as CreateGroupPageName} from "../../GroupCreate";
+import {PAGE_NAME as SelectSpotPageName} from "../../GroupManage";
 
 export const PAGE_NAME = "P__GROUP__MANAGE__DETAIL" ;
 const Pages = ({route}) => {
-    
-    const spotId = route.params.id
-    const clientId = route.params.clientId
-    
+    const routeId = route.params.id
+    const toast = Toast()
     const navigation = useNavigation();
     const {groupSpotDetail,isDetailSpot,userGroupSpotCheck,isUserGroupSpotCheck,userWithdrawGroup,userSpotRegister} = useGroupSpots();
+    const userInfo = useAtomValue(isUserInfoAtom);
     const [modalVisible,setModalVisible] = useState(false);
     const [selected,setSelected] = useState();
-    const [groupState,setGroupState] = useState();
+    //const [groupState,setGroupState] = useState();
     const modalOpen = () => {
         setModalVisible(true);
     }
-    console.log(clientId,groupState)
     const supportPrice = isDetailSpot?.mealTypeInfoList?.map(el => el.supportPrice);
-
-    const anotherSpot = async (id,groupId) => {
-        setGroupState(groupId)
+    const {groupId,spotId} = userInfo;
+    const myGroupList = isUserGroupSpotCheck.filter(el => el.clientId !== groupId);
+    
+    const anotherSpot = async (id) => {
+        // setGroupState(groupId)
         try {
-            await groupSpotDetail(id)
+            await groupSpotDetail(id);
+            toast.toastEvent();
         } catch(err){
             if(err){
                 try{
@@ -45,6 +51,9 @@ const Pages = ({route}) => {
                     });
                     if(res.data === null) {
                         navigation.navigate(ApartRegisterSpotPageName,{id:id})
+                    }else{
+                        toast.toastEvent();
+                        groupSpotDetail(id);
                     }
                 }catch(error){
                     console.log(error,'sisis')
@@ -68,9 +77,21 @@ const Pages = ({route}) => {
               {
                 text:'그룹 탈퇴',
                 onPress: async () => {
-                    await userWithdrawGroup({
-                        'id':clientId
-                    })
+                    try {
+                        const res = await userWithdrawGroup({
+                            'id':groupId
+                        });
+                        await setStorage('spotStatus',res.data.toString());
+                        await userGroupSpotCheck();
+                        if(myGroupList.length === 0){
+                            navigation.navigate(CreateGroupPageName)
+                        }else{
+                            navigation.navigate(SelectSpotPageName)
+                        }
+                    } catch(err){
+                        console.log(err)
+                    }
+                    
                 },
                 style:'destructive'
               }
@@ -83,7 +104,16 @@ const Pages = ({route}) => {
            
             headerLeft: () => 
             
-                <CloseIcon onPress={()=>navigation.navigate(SCREEN_NAME)}/>
+                <CloseIcon onPress={()=> {
+                    navigation.reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: SCREEN_NAME,
+                          },
+                        ],
+                      })
+                }}/>
             
         
            
@@ -105,10 +135,10 @@ const Pages = ({route}) => {
         LoadGroupDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[spotId])
-    console.log(isDetailSpot)
+    
     return (
+        // <SafeView>
         <Wrap>
-            
             <SpotSelect>스팟 선택</SpotSelect>
             <SpotView onPress={modalOpen}>
                 <SpotName>{isDetailSpot?.spotName}</SpotName>
@@ -157,14 +187,19 @@ const Pages = ({route}) => {
             </AddSpotWrap>
             <BottomSheetSpot modalVisible={modalVisible} setModalVisible={setModalVisible} 
             title='스팟 선택' data={isUserGroupSpotCheck} selected={selected} setSelected={setSelected} 
-            onPressEvent={(id,groupId)=>{anotherSpot(id,groupId)}}
+            onPressEvent={(id)=>{anotherSpot(id)}}
             />
+            <toast.ToastWrap message={"스팟이 설정됐어요"} icon={'checked'}/>
         </Wrap>
+        // </SafeView>
     )
 }
 
 export default Pages;
 
+const SafeView = styled.SafeAreaView`
+flex:1
+`;
 const Wrap = styled.View`
 background-color:${({theme}) => theme.colors.grey[0]};
 flex:1;

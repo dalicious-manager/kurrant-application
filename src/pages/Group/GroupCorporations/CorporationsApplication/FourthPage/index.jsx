@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useAtomValue } from "jotai";
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert, Text } from "react-native";
 import styled from "styled-components";
 
@@ -10,6 +10,7 @@ import { corpApplicationSpotsAtom, corpApplicationTotalSpotAtom } from "../../..
 import Button from "../../../../../components/Button";
 import ProgressBar from "../../../../../components/ProgressBar";
 import Typography from "../../../../../components/Typography";
+import { getStorage } from "../../../../../utils/asyncStorage";
 import {PAGE_NAME as CorpApplicationSpotPageName } from "../FourthPage/Pages";
 import {PAGE_NAME as CorporationApplicationLastPageName} from "../LastPage";
 import { Title } from "../ThirdPage";
@@ -20,7 +21,6 @@ const Pages = () => {
     const navigation = useNavigation();
     
     const [isTotalSpot,SetTotalSpot] = useAtom(corpApplicationTotalSpotAtom);
-    console.log(isTotalSpot,'페이지 4')
 
     const spotDelete = (name) => {
             Alert.alert(
@@ -42,6 +42,25 @@ const Pages = () => {
               ]
             )
     }
+
+    useEffect(()=>{
+        const getData = async () =>{
+            const data = await getStorage('corpPage4-1');
+            if(data !== null){
+
+              const get = JSON.parse(data);
+              
+             if(get.length !== 0){
+              SetTotalSpot(get)
+            } else{
+              console.log('no')
+            }
+            }
+         }
+
+         getData()
+    },[]);
+
 
 
     return (

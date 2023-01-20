@@ -26,7 +26,6 @@ const useAuth = () => {
   const [isChangePasswordLoading, setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
   const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
-  const [isUserSpotStatus,setUserSpotStatus] = useAtom(isUserSpotStatusAtom);
 
   const requestEmailAuth = async (body,type,option = {}) => {
     try {
@@ -164,7 +163,8 @@ const useAuth = () => {
       console.log(res.data.accessToken);
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
-      setUserSpotStatus(res.data.spotStatus)
+      await setStorage('spotStatus',res.data.spotStatus.toString());
+      
       return res;
     } catch (err) {
       throw err
@@ -188,7 +188,7 @@ const useAuth = () => {
       console.log(res);
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
-      setUserSpotStatus(res.data.spotStatus)
+      await setStorage('spotStatus',res.data.spotStatus.toString());
       return res;
     } catch (err) {
       throw err
@@ -225,7 +225,6 @@ const useAuth = () => {
       isChangePasswordLoading,
       isEmailLoading,
       isLoginLoading,
-      isUserSpotStatus
     },
   };
 };

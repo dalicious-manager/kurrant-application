@@ -14,7 +14,7 @@ import Typography from '../Typography';
 
 
 const BottomSheet = props => {
-  const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected,onPressEvent=()=>{}} = props;
+  const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected,onPressEvent=()=>{},userSpotId,booleanValue,onPressEvent2=()=>{}} = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
   
@@ -131,15 +131,14 @@ const BottomSheet = props => {
             scrollEnabled={up > 500}
             renderItem={({ item }) => (
               <>
-              <ItemContainer>
-              {/* <ContentItemContainer onPress={()=>onSelect(item.id, item.text)}> */}
-                
+               <ItemContainer>
                 <GroupName>{item.clientName}</GroupName>
-                
-              </ItemContainer>
+                <Border/>
+               </ItemContainer>
+               
               {item.spots.map((el,idx) => (
-                <ContentItemContainer onPress={()=>{onSelect(el.spotId);onPressEvent(el.spotId,item.clientId)}} key={el.spotId}>
-                  {selected === el.spotId ?
+                <ContentItemContainer onPress={()=>{onSelect(el.spotId);onPressEvent(el.spotId)}} key={el.spotId}>
+                  {(el.spotId === userSpotId) ?
                 <ContentItemBox>
                   <ContentItemText>{el.spotName}</ContentItemText>
                   <CheckedIcon />
@@ -149,10 +148,16 @@ const BottomSheet = props => {
                 </ContentItemText>}
                 </ContentItemContainer>
                 ))}
+                
+                
               </>
             )}
              keyExtractor={item => item.clientId.toString()}
           />
+          {booleanValue &&
+                <ManagePressView onPress={()=>{onPressEvent2(setModalVisible(false))}}>
+                  <ContentItemText>그룹/스팟 관리하기</ContentItemText>
+                </ManagePressView>}
         </AnimatedView>
       </Overlay>
     </Modal>
@@ -233,7 +238,20 @@ const ContentItemBox = styled.View`
 const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``
 
 const GroupName = styled(Typography).attrs({text: 'Body06R'})`
-color:${({theme}) => theme.colors.grey[4]}
+color:${({theme}) => theme.colors.grey[4]};
+`;
+
+const Border = styled.View`
+width:100%;
+height:1px;
+margin-top:12px;
+background-color:${({theme}) => theme.colors.grey[8]};
+`;
+
+const ManagePressView = styled.Pressable`
+  width: ${Dimensions.get('screen').width}px;
+  height: 60px;
+  padding: 19px 24px;
 `;
 
 

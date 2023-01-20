@@ -1,7 +1,7 @@
 import DatePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from 'jotai';
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
 import { Keyboard, Platform, SafeAreaView, Text ,View} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
@@ -14,6 +14,7 @@ import WeekButton from "../../../../../../components/ButtonWeek";
 import RefTextInput from "../../../../../../components/RefTextInput";
 import Typography from "../../../../../../components/Typography";
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
+import { getStorage, setStorage } from '../../../../../../utils/asyncStorage';
 import { formattedMealTime, formattedTime } from '../../../../../../utils/dateFormatter';
 import { Cancel, Confirm, IosButton } from '../../SecondPage';
 
@@ -26,7 +27,7 @@ const Pages = () => {
     const [show, setShow] = useState(false);
     const [infoShow,setInfoShow] = useState(false);
     const [text, setText] = useAtom(apartDeliveryAtom);
-    
+    console.log(text,'ddd')
     const [touch,setTouch] = useAtom(apartApplicationWeek);
 
     const form = useForm({
@@ -47,12 +48,23 @@ const Pages = () => {
         marginBottom:16,
       };
 
-    const saveAtom = () => {
+    const saveAtom = async () => {
+        await setStorage('page3-1',JSON.stringify({
+            'expectedUserCount' : Number(svcDongCountChk),
+            'serviceDays':touch,
+            'deliveryTime':deliveryTimeChk.substr(3),
+            'deliveryTime2':deliveryTimeChk,
+            
+        }));
+        
+        const data = await getStorage('page3-1');
+        const get = JSON.parse(data);
+        
         setMealInfo([{
             'diningType':1,
             'expectedUserCount':Number(svcDongCountChk),
             'serviceDays':touch,
-            'deliveryTime':formattedTime(time)
+            'deliveryTime':(Object.keys(get).length !== 0) ? get.deliveryTime : formattedTime(time)
         }]);
     }
     
@@ -70,6 +82,23 @@ const Pages = () => {
         setText(formattedMealTime(selectedTime));
         setValue('deliveryTime',formattedMealTime(selectedTime));
       };
+
+    useEffect(()=>{
+        const getData = async () =>{
+            const data = await getStorage('page3-1');
+           if(data){
+            const get = JSON.parse(data);
+            setValue('svcDongCount',get.expectedUserCount.toString())
+            setTouch(get.serviceDays)
+            setValue('deliveryTime',get.deliveryTime2)
+            
+          } else{
+            console.log('no')
+          }
+         }
+
+         getData()
+     },[])
     
     
 
@@ -86,6 +115,7 @@ const Pages = () => {
                         style={inputStyle}
                         defaultValue={isApartMealInfo[0]?.expectedUserCount !== undefined && String(isApartMealInfo[0]?.expectedUserCount)}
                         />
+                        <DaysText>서비스 이용 요일</DaysText>
                         <WeekButton 
                         touch={touch} setTouch={setTouch}
                         />
@@ -96,7 +126,7 @@ const Pages = () => {
                             placeholder="배송 시간"
                             onPressIn={showTimePicker}
                             showSoftInputOnFocus={false}
-                            
+                            minuteInterval={5}
                             />
                             <ArrowIcon/>
                         </View>
@@ -151,6 +181,7 @@ const Pages = () => {
                         onChange={onChange}
                         locale='ko-KR'
                         mode="time"
+                        minuteInterval={5}
                         />
                 </DatePickerWrap>
                    
@@ -158,7 +189,7 @@ const Pages = () => {
             )}
             {(!show && !keyboardStatus.isKeyboardActivate)&& <ButtonWrap>
                 <Button 
-                    // disabled={!isValidation}
+                    disabled={!isValidation}
                     label={'저장'} 
                     onPressEvent={()=>{saveAtom();navigation.goBack()}}/>
             </ButtonWrap>}
@@ -223,4 +254,9 @@ bottom:12px;
 
 const InfoWrap = styled.View`
 margin:24px;
+`;
+
+const DaysText = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme}) => theme.colors.grey[2]};
+margin-bottom:8px;
 `;

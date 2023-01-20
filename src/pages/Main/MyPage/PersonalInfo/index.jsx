@@ -37,6 +37,7 @@ import { PAGE_NAME as  LoginPageName} from '../../../Main/Login/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import useAuth from '../../../../biz/useAuth';
+import useGroupSpots from '../../../../biz/useGroupSpots/hook';
 
 
 export const PAGE_NAME = "P__MY_PAGE__PERSONAL_INFO"
@@ -47,6 +48,7 @@ const Pages = ({route}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const { userMePersonal, readableAtom:{myInfoPerson,isMyInfoPersonalLoading, isSNSConnectLoading,isSNSDisconnectLoading}} = useUserMe();
+  const {isApplicationList,applicationList} = useGroupSpots();
   const isUserInfo = useAtomValue(isUserInfoAtom);
   const [isConnected , ] = useAtom(isSNSConnectAtom);
   const [message , setMessage] = useState("계정이 연결됐어요");
@@ -116,7 +118,7 @@ const Pages = ({route}) => {
   
   useEffect(()=>{
     
-    
+    applicationList()
     getData();
     const willFocusSubscription = navigation.addListener('focus', () => {
       getDataStorage();
@@ -190,7 +192,7 @@ const Pages = ({route}) => {
           routeName={!myInfoPerson.hasGeneralProvider ? EmailSettingPageName:PasswordSettingPageName}/>
           <ListBox title='결제수단 관리' routeName={PaymentManagePageName} />
           <ListBox title='그룹/스팟 관리' onPressEvent={() =>{navigation.navigate(GroupManagePageName,{id:spotId,clientId:groupId})}}/>
-          <ListBox title='스팟 개설 요청 내역' routeName={GroupApplicationCheckPageName}/>
+          {isApplicationList.length !== 0 && <ListBox title='스팟 개설 요청 내역' routeName={GroupApplicationCheckPageName}/>}
           <ListBox title='알림 설정' routeName={NotificationSettingPageName}/>
           <Line />
           <TextButtonBox>

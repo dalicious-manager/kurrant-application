@@ -141,7 +141,7 @@ const Pages = ({route}) => {
                             </TitleWrap>
                             <TitleWrap>
                                 <Title>일일 회사 지원금</Title>
-                                <TitleContent>{withCommas(m.supportPrice)}원</TitleContent>
+                                <TitleContent>{m.supportPrice === 0 ? '없음' : withCommas(m.supportPrice)+'원'}</TitleContent>
                             </TitleWrap>
                             <TitleWrap>
                                 <Title>쓰레기 수거 서비스</Title>

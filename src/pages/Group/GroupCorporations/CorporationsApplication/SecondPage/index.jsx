@@ -15,6 +15,7 @@ import ProgressBar from "../../../../../components/ProgressBar";
 import RefTextInput from "../../../../../components/RefTextInput";
 import Typography from '../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import { getStorage, setStorage } from '../../../../../utils/asyncStorage';
 import { formattedApplicationDate, formattedDate } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as corpApplicationThirdPageName} from '../ThirdPage';
 import {PAGE_NAME as corpApplicationPostcodePageName} from './Pages';
@@ -26,13 +27,10 @@ const Pages = () => {
     
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    // const [text, setText] = useAtom(corpApplicationDate); // 지워도될지도
     const [isCorpAddress,setCorpAddress] = useAtom(isCorpSendAddressAtom); // corporationInfo
     const [isSendAddress,setSendAddress] = useAtom(isCorpSendAddressInfoAtom); // 나머지 주소 추가
     const isCoprFullAddress = useAtomValue(isCorpFullAddressAtom); // TextInput value
-    //const isSendAddress = useAtomValue(isCorpSendAddressInfoAtom); // body에 담을 주소2
     
-    console.log(isSendAddress,'아아')
     const form = useForm({
         mode:'all'
       });
@@ -47,7 +45,7 @@ const Pages = () => {
     
     const isValidation = 
     (corpNameChk && !errors.corpName) &&
-    (isCoprFullAddress !== '') &&
+    (corpAddresschk && !errors.address) &&
     (corpRemainingAddressChk &&!errors.corpRemainingAddressChk) &&
     (corpemployeeCountChk &&!errors.employeeCount) && (corpStartDateChk &&!errors.corpStartDateChk)
     ;
@@ -56,17 +54,27 @@ const Pages = () => {
         marginBottom:16,
       }
     const keyboardStatus = useKeyboardEvent();
-    const saveAtom =  () => {
-        // AsyncStorage.setItem('corpPage2',JSON.stringify({
-        //     'corporationName' : corpNameChk,
-        //     'employeeCount':corpemployeeCountChk,
-        //     'startDate': corpStartDateChk
-        // }))
-        setSendAddress({...isSendAddress,'address2':corpRemainingAddressChk})
+    const saveAtom =  async () => {
+        await setStorage('corpPage2',JSON.stringify({
+            'corporationName' : corpNameChk,
+            'address':corpAddresschk,
+            'address2':corpRemainingAddressChk,
+            'employeeCount':corpemployeeCountChk,
+            'startDate' : corpStartDateChk
+        }))
+        const storageData = await getStorage('corpPage2-1');
+        if(storageData!==null){
+            const storageGet = JSON.parse(storageData);
+            setSendAddress({'zipCode':storageGet.zipCode,'address1':storageGet.address1,'address2':corpRemainingAddressChk})
+        }else{
+            setSendAddress({...isSendAddress,'address2':corpRemainingAddressChk})
+        }
+        const data = await getStorage('corpPage2');
+        const get = JSON.parse(data);
         setCorpAddress({
             'corporationName' : corpNameChk,
             'employeeCount':Number(corpemployeeCountChk),
-            'startDate' : formattedApplicationDate(date)
+            'startDate' : (Object.keys(get).length !== 0) ? get.startDate : formattedApplicationDate(date)
 
         });
         
@@ -86,26 +94,31 @@ const Pages = () => {
       };
 
     const confirmPress = () =>{
-        
         setShow(false);
     }
 
-    // useEffect(()=>{
-    //     AsyncStorage.getItem('corpPage2',(_err,result) => {
-    //         const page2 = JSON.parse(result);
-    //         setCorpAddress({
-    //             'corporationName' : page2.corporationName,
-    //             'employeeCount': page2.employeeCount,
-    //             'startDate' : page2.startDate
-    
-    //         });
-    //         console.log(page2,'??@')
-    //     })
-    // },[setCorpAddress])
      useLayoutEffect(()=>{
         setValue('address',isCoprFullAddress)
      // eslint-disable-next-line react-hooks/exhaustive-deps
      },[isCoprFullAddress])
+
+     useEffect(()=>{
+        const getData = async () =>{
+            const data = await getStorage('corpPage2');
+           if(data){
+            const get = JSON.parse(data);
+            setValue('corpName',get.corporationName)
+            setValue('address',get.address)
+            setValue('address2',get.address2)
+            setValue('employeeCount',get.employeeCount)
+            setValue('startDate',get.startDate)
+          } else{
+            console.log('no')
+          }
+         }
+
+         getData()
+     },[])
     return (
         <Wrap>
             <ProgressBar progress={2}/>
@@ -208,7 +221,7 @@ const Pages = () => {
             {(!show&&!keyboardStatus.isKeyboardActivate) &&<ButtonWrap>
                 <Button 
                     label={'다음'}  
-                    // disabled={!isValidation}
+                    disabled={!isValidation}
                     onPressEvent={()=>{navigation.navigate(corpApplicationThirdPageName);saveAtom()}}/>
             </ButtonWrap>}
         </Wrap>
