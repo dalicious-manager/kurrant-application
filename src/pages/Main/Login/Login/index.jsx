@@ -92,10 +92,10 @@ const Pages = () => {
     return ()=>BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
   },[ navigation, toast])
   useEffect(()=>{
-    if(Platform.OS === 'android'){
-      googleSigninConfigure();
+    if(Platform.OS === 'android'){      
       appleSignConfiguration();      
     }
+    googleSigninConfigure();
     facebookConfiguration();
   },[]);
   useEffect(()=>{
