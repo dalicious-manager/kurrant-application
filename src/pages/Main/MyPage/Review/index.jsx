@@ -132,31 +132,10 @@ const Pages = () => {
         {popupShow && <Popup setPopupShow={setPopupShow} />}
 
         {!!ReviewWaitList.length ? (
-          // ReviewWaitList.map((value, index) => {
-          //   return (
-          //     <View key={index}>
-          //       {value.orderItemDtoList.map((value2, index2) => {
-          //         return (
-          //           <Card
-          //             key={index2}
-          //             orderDate={value.orderDate}
-          //             menuName={value2.menuName}
-          //             option={value2.option}
-          //             imageUrl={value2.imageUrl}
-          //             diningType={value2.diningType}
-          //             restaurentName={value2.restaurentName}
-          //           />
-          //         );
-          //       })}
-          //     </View>
-          //   );
-          // })
-
           <FlatList
             data={ReviewWaitList}
             scrollEnabled={true}
             renderItem={({item}) => {
-              console.log(item);
               return (
                 <View>
                   {item.orderItemDtoList.map((value2, index2) => {
