@@ -30,6 +30,7 @@ import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreat
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from "../../Home/Skeleton";
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
 import { getStorage } from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
@@ -84,15 +85,29 @@ const Pages = () => {
     }
   
     async function loadUser(){
-      await userInfo();
+        await userInfo();     
     }    
     async function loadMeal(){
       await orderMeal(start[0],end[0])
     };
-    status();
-    loadUser();
-    loadMeal();
-    userGroupSpotCheck();
+    try {
+      loadUser();
+      loadMeal();
+      userGroupSpotCheck();
+    } catch (error) {
+      if(error.toString().replace("Error:",'').trim() === '403'){
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: LoginPageName,
+            },
+          ],
+        })
+      }
+      
+    }
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 

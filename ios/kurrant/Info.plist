@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>1.0.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -50,9 +50,21 @@
 				<string>com.googleusercontent.apps.872782655273-o63k78oq12kquda45db9irfvhqpqva49</string>
 			</array>
 		</dict>
+		<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>fb978024843173047</string>
+		</array>
+	</dict>
 	</array>
+	<key>FacebookAppID</key>
+		<string>978024843173047</string>
+	<key>FacebookClientToken</key>
+		<string>1ff9dad5b56ee756cf2bd55bc75cbd10</string>
+	<key>FacebookDisplayName</key>
+	<string>커런트</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>KAKAO_APP_KEY</key>
@@ -66,6 +78,10 @@
 		<string>kakaokompassauth</string>
 		<string>storykompassauth</string>
 		<string>kakaolink</string>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -73,11 +89,8 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
+			<key>codepush.appcenter.ms</key>
+			<dict/>
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -146,15 +159,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
-	<key>NSAppTransportSecurity</key>
-    <dict>
-      <key>NSExceptionDomains</key>
-      <dict>
-        <key>codepush.appcenter.ms</key>
-        <dict><!-- read the ATS Apple Docs for available options --></dict>
-      </dict>
-    </dict>
 	<key>CodePushPublicKey</key>
 	<string>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwEUb8X7m0QmhKr8ZQi2z
@@ -167,6 +171,6 @@ LwIDAQAB
 -----END PUBLIC KEY-----
 </string>
 <key>CodePushDeploymentKey</key>
-<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>
+<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>	
 </dict>
 </plist>

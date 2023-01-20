@@ -1,22 +1,19 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, Text, View ,Image, Pressable, Alert} from "react-native";
-import { makeShareable } from "react-native-reanimated/lib/reanimated2/core";
+import { ScrollView, View ,Alert} from "react-native";
 import styled from "styled-components";
 
 import Plus from "../../../../../assets/icons/Home/plus.svg";
 import { weekAtom } from "../../../../../biz/useBanner/store";
 import useOrderMeal from "../../../../../biz/useOrderMeal";
-import { isOrderDinnerAtom, isOrderLunchAtom, isOrderMealAtom, isOrderMorningAtom } from "../../../../../biz/useOrderMeal/store";
-import Button from "../../../../../components/Button";
 import LabelButton from "../../../../../components/ButtonMeal";
 import Calendar from "../../../../../components/Calendar";
 import Typography from "../../../../../components/Typography";
-import { formattedDate, formattedDateBtn, formattedMonthDay, formattedWeekDate } from "../../../../../utils/dateFormatter";
+import { formattedMonthDay, formattedWeekDate } from "../../../../../utils/dateFormatter";
 import { CalendarWrap, MakersName, MealName } from "../../BuyMeal/Main";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
-
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
@@ -37,7 +34,22 @@ const Pages = ({route}) => {
     async function loadDailyFood(){
       await orderMeal(startDate,endDate);
   }
-  loadDailyFood();
+  try {
+    loadDailyFood();
+  } catch (error) {
+    if(error.toString().replace("Error:",'').trim() === '403'){
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: LoginPageName,
+          },
+        ],
+      })
+    }
+    
+  }
+  
   
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
@@ -165,7 +177,7 @@ const Pages = ({route}) => {
         )}
         </MealWrap>
       </ScrollView>
-        { (todayMeal.length === 0 && selectDate.length === 0) && <NoMealWrap><NoMealText>주문한 메뉴가 없어요</NoMealText></NoMealWrap>}
+        { (todayMeal?.length === 0 && selectDate?.length === 0) && <NoMealWrap><NoMealText>주문한 메뉴가 없어요</NoMealText></NoMealWrap>}
       <ButtonWrap>
         <PlusButton onPress={()=>{navigation.navigate(BuyMealPageName)}}>
             <PlusIcon/>

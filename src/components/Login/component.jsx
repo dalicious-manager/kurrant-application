@@ -31,7 +31,6 @@ const Component = ({userId}) => {
   const passwordRef = useRef(null);
   const emailRef = useRef(null);
   const {handleSubmit,formState:{errors,dirtyFields}} = useFormContext();
-  const {userInfo, isUserInfo} = useUserInfo();
   const keyboardStatus = useKeyboardEvent();
   const handleRoutePress = () => {
     navigation.navigate(FindUserPageName ?? '');

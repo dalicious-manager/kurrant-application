@@ -125,6 +125,7 @@ const Pages = ({route}) => {
                                 <DiningName>{formattedMonthDay(meal.serviceDate)} {meal.diningType}</DiningName>
                             </View>
                             <ContentWrap>
+
                             <FastImage source={{uri:`${meal.img}`,priority:FastImage.priority.high}}
                                 style={{
                                     width:45,

@@ -58,6 +58,7 @@ const Pages = ()=>{
     try {
         await auth.requestEmailAuth({ receivers: [email] }, 5);
         if(progress < 2) setProgress(progressed => progressed+1);
+        navigation.goBack(null);
     }catch(err){
         Alert.alert(
         "메일 인증 요청 실패",

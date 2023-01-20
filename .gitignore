@@ -43,11 +43,13 @@ yarn-error.log
 # BUCK
 buck-out/
 \.buckd/
-# *.keystore
+*.keystore
 !debug.keystore
-# google-services.json
-
+google-services.json
+GoogleService-Info.plist
 package-lock.json
+yarn.lock
+AppCenter-Config.plist
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the

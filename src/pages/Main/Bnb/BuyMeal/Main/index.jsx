@@ -6,6 +6,7 @@ import { ScrollView, View, Pressable,Dimensions, StyleSheet} from "react-native"
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
+
 import FastImage from "react-native-fast-image";
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -22,6 +23,7 @@ import { formattedWeekDate } from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import SkeletonUI from '../Skeleton';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
@@ -99,9 +101,19 @@ const Pages = () => {
             try {
                 await dailyFood(spotId,date);
                 await loadMeal();
-            }catch (err) {
-                console.log(err.toString())
-            }
+            } catch (error) {
+                if(error.toString().replace("Error:",'').trim() === '403'){
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
+                  })
+                }
+                
+              }
         }
         loadDailyFood();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,6 +208,7 @@ const Pages = () => {
 
                 <MealImageWrap>
                     {m.isSoldOut && <BlurView/>}
+
                     <FastImage source={{uri:`${m.image}`,priority:FastImage.priority.high}}
                     style={{
                         width:107,

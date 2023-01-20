@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, BackHandler, Dimensions,Platform,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
+import { Settings ,LoginButton,AccessToken} from 'react-native-fbsdk-next';
 
 import {LogoImage , LogoBackground} from '../../../../assets';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
@@ -12,7 +13,7 @@ import HorizonLine from '../../../../components/HorizonLine';
 import Image from '../../../../components/Image';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
-
+import { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
 import { getStorage } from '../../../../utils/asyncStorage';
 import snsLogin from '../../../../utils/snsLogin';
@@ -21,10 +22,13 @@ import {
 } from '../../../Membership/MembershipIntro';
 import LoginMain from './LoginMain';
 
+import 'react-native-get-random-values';
+import { v4 as uuid } from 'uuid'
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
-
+const rawNonce = uuid();
+const state = uuid();
 
 
 const screenHeight = Dimensions.get('screen').height;
@@ -35,14 +39,28 @@ const Pages = () => {
   const navigation = useNavigation();
   const toast = Toast();
   const [isLoginLoading, setLoginLoading] = useState();
-  const {googleLogin,appleLogin} = snsLogin();
+  const {googleLogin,appleLogin, facebookLogin} = snsLogin();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes:['https://www.googleapis.com/auth/user.phonenumbers.read'],
       webClientId: '872782655273-mhb2jokicsaqb99astkb4hlqr4dndf7o.apps.googleusercontent.com', 
     });
   }
-
+  const appleSignConfiguration = ()=>{
+    appleAuthAndroid.configure({
+      clientId: 'kurrant.dalicious.io',
+      redirectUri: 'https://dalicious-v1.firebaseapp.com/__/auth/handler',
+      responseType: appleAuthAndroid.ResponseType.ALL,
+      scope: appleAuthAndroid.Scope.ALL,
+      nonce: rawNonce,
+      state,
+    });
+  }
+  const facebookConfiguration = ()=>{
+    Settings.setAppID('978024843173047');
+    Settings.initializeSDK();
+    
+  }
   
 
   
@@ -74,7 +92,11 @@ const Pages = () => {
     return ()=>BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
   },[ navigation, toast])
   useEffect(()=>{
-    googleSigninConfigure();
+    if(Platform.OS === 'android'){
+      googleSigninConfigure();
+      appleSignConfiguration();      
+    }
+    facebookConfiguration();
   },[]);
   useEffect(()=>{
     const isAutoLogin = async()=>{
@@ -123,18 +145,18 @@ const Pages = () => {
         </LogoBox>
         <LoginMain />
         <TouchableOpacity onPress={()=>{
-          navigation.navigate(MembershipJoinPageName)
+          // navigation.navigate(MembershipJoinPageName)
         }}>
-          <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
+          {/* <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping> */}
         </TouchableOpacity>
         <EtcSNSContainer>
 
          <HorizonLine text={`그외 SNS로 로그인`}/>
           {/* <Text style={{flex:1 ,textAlign:'center'}} >───── 그외 SNS로 로그인 ─────</Text> */}
           <EtcSNSBox >
-            <ButtonRoundSns type_sns='facebook' size={32}/>
+            <ButtonRoundSns type_sns='facebook' size={32} onPressEvent={facebookLogin}/>
             <ButtonRoundSns type_sns='google' size={32} onPressEvent={googleLogin}/>
-            {Platform.OS !== 'android' && <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>}
+            <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>
           </EtcSNSBox>
         </EtcSNSContainer>
       </LoginBox>

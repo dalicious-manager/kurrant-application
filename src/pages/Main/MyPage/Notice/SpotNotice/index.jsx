@@ -1,10 +1,11 @@
 import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled, { useTheme } from "styled-components/native";
 
 import Button from "~components/Button";
 import Typography from "~components/Typography";
 import Wrapper from "~components/Wrapper";
+import useBoard from "../../../../../biz/useBoard";
 
 
 import ListBox from "../ListBox";
@@ -17,6 +18,7 @@ const Pages =  ()=>{
     const themeApp = useTheme();
     const navigation = useNavigation();
     const isFocused = useIsFocused();
+    const {getNotice,readableAtom:{spotNotice,isGetNoticeLoading}}=useBoard();
     useFocusEffect(
         useCallback(() => {
             navigation.setOptions({
@@ -29,13 +31,20 @@ const Pages =  ()=>{
         }
         }, [])
       );
+      useEffect(()=>{
+        const getUseNotice = async()=>{
+            await getNotice(1);
+        }
+        getUseNotice();
+      },[])
     return(
         <Wrapper>
-           <ListBox title="신규 기능 안내 - 코끼리 샐러드 판매가 조정 공지사항" description="2022.12.05" onPressEvent={()=>navigation.navigate(NoticeDetailPageName)}/>
-            <ListBox title="신규 기능 안내 - 코끼리 샐러드 판매가 조정 공지사항" description="2022.12.05" onPressEvent={()=>navigation.navigate(NoticeDetailPageName)}/>
-            <ListBox title="코끼리 샐러드 판매가 조정 공지사항" description="2022.12.05" onPressEvent={()=>navigation.navigate(NoticeDetailPageName)}/>
-            <ListBox title="원할머니보쌈 도시락 구성" description="2022.12.05" onPressEvent={()=>navigation.navigate(NoticeDetailPageName)}/>
-            <ListBox title="조식 관련 공지사항" description="2022.12.05" onPressEvent={()=>navigation.navigate(NoticeDetailPageName)}/>
+            {spotNotice?.map((v)=>{
+                return <ListBox key={v.id} title={v.title} description="2022.12.05" onPressEvent={()=>navigation.navigate(NoticeDetailPageName,{
+                    noticeData:v
+                })}/>
+            })}
+           
         </Wrapper>
     )
 }

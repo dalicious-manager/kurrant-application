@@ -33,7 +33,7 @@ const Pages = ({ route }) => {
     const navigation = useNavigation();
     const Infomation = () => {
         if (progress === 1 && type === 'email') return '이메일로 발송된 인증번호를\n입력해주세요.'
-        if (progress === 1) return 'SNS로 발송된 인증번호를\n입력해 주세요.'
+        if (progress === 1) return '휴대폰 SMS로 발송된 인증번호를\n확인해주세요.'
         if (progress >= 2) return '새 비밀번호를 입력해주세요.'
     }
     const auth = useAuth();

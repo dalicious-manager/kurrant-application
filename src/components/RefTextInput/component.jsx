@@ -2,7 +2,7 @@
 import cardValidator from 'card-validator';
 import React, {useState, useEffect,forwardRef} from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
-import {TouchableOpacity} from 'react-native';
+import {Image, TouchableOpacity} from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 
 import { VISA ,AMEX,DISCOVER,JCB,UNKOWN,MASTERCARD,UNION, MAESTRO, DINERS } from '../../assets';
@@ -11,7 +11,6 @@ import EyeOn from '../../assets/icons/TextInput/eyeOn.svg';
 import { cardNumberFormatter, cardSerialNumberFormatter, expirationDateFormatter } from '../../utils/cardFormatter';
 import {formattedTimer} from '../../utils/dateFormatter';
 import {AntDesignIcon} from '../Icon';
-import Image from '../Image';
 import Typography from '../Typography';
 import { textStyles } from './styles';
 
@@ -183,9 +182,10 @@ const Component = forwardRef(({
               break;
           }
           if (!source) return null;
-          return <Image imagePath={source} scale={1.0} resizeMode={'stretch'}  styles={{
+          return <Image source={source} scale={1.0} resizeMode={'stretch'}  style={{
             width:29,
-            height:18
+            height:18,
+            alignSelf:'center'
           }}/>;
         }
         
