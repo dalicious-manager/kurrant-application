@@ -36,6 +36,8 @@ const Component = ({
 
 const Typography = styled.Text`
   font-style: normal;
+  margin: 0px;
+  padding: 0px;
   font-family: ${({theme}) => theme.font.fontFamily};
 
   ${({variant}) => variant && variantStyles[variant]};

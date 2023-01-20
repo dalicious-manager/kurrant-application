@@ -19,6 +19,7 @@ import { PAGE_NAME as PersonalInfoPageName } from '../../../MyPage/PersonalInfo'
 import { PAGE_NAME as MealPageName } from '../../Meal/Main';
 import { PAGE_NAME as MealCartPageName } from '../../MealCart/Main';
 import { SCREEN_NAME as NoticeScreenName } from '../../../../../screens/Main/Notice';
+import { SCREEN_NAME as PurchaseHistoryName } from '../../../../../screens/Main/PurchaseHistory';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
@@ -93,7 +94,7 @@ const Pages = () => {
             <ListBox title='장바구니(식사)' routeName={MealCartPageName} />
             {/* <ListBox title='장바구니(마켓)' /> */}
             {/* <ListBox title='찜목록' /> */}
-            <ListBox title='구매 내역' />
+            <ListBox title='구매 내역' routeName={PurchaseHistoryName}/>
             {/* <ListBox title='리뷰 관리' description={`모두 작성시 최대 `} effect={<Typography test={'CaptionR'} textColor={themeApp.colors.blue[500]}>500P</Typography>} /> */}
             <ListBox title='커런트 멤버십' routeName={MembershipIntroPageName}/>
             {/* <ListBox title='커런트 포인트' /> */}

@@ -1,4 +1,5 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { el } from 'date-fns/locale';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Modal,
@@ -16,82 +17,78 @@ import styled from 'styled-components/native';
  * @param {function} props.setModalVisible
  * @param {function} props.setTime
  * @param {date} props.time
+ * @param {type} props.type
  * @returns
  */
 const Component = props => {
-  const { modalVisible, setModalVisible ,setTime,time} = props;
+  const { modalVisible, setModalVisible ,setTime,time,type} = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
   function onTimeSelected(event, value) {
-    console.log(value.toLocaleTimeString('en-US'))
+    // console.log(value.toLocaleTimeString('en-US'))
+    if(Platform.OS === 'android' ){
+      setModalVisible(false);
+    }
     setTime(value);
+    
   };
 
-
   const screenHeight = Dimensions.get('screen').height;
-  const panY = useRef(new Animated.Value(screenHeight)).current;
-  const upY = useRef(new Animated.Value(0)).current;
-  const [up, setUP] = useState(0);
-  const translateY = panY.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: [0, 0, 1],
-  });
-  const resetBottomSheet = Animated.timing(panY, {
-    toValue: 0,
-    duration: 300,
-    useNativeDriver: true,
-  });
-  const closeBottomSheet = Animated.timing(panY, {
-    toValue: screenHeight,
-    duration: 300,
-    useNativeDriver: true,
-  });
+  // const panY = useRef(new Animated.Value(screenHeight)).current;
+  // const upY = useRef(new Animated.Value(0)).current;
+  // const [up, setUP] = useState(0);
+  // const translateY = panY.interpolate({
+  //   inputRange: [-1, 0, 1],
+  //   outputRange: [0, 0, 1],
+  // });
+  // const resetBottomSheet = Animated.timing(panY, {
+  //   toValue: 0,
+  //   duration: 300,
+  //   useNativeDriver: true,
+  // });
+  // const closeBottomSheet = Animated.timing(panY, {
+  //   toValue: screenHeight,
+  //   duration: 300,
+  //   useNativeDriver: true,
+  // });
 
 
-  useEffect(() => {
-    if (props.modalVisible) {
-      resetBottomSheet.start();
-    }
-  }, [props.modalVisible, resetBottomSheet]);
-  useEffect(() => {
-    const id = upY.addListener(state => {
-      setUP(state.value);
-    });
-    return () => {
-      upY.removeListener(id);
-    };
-  }, [up, upY]);
+  // useEffect(() => {
+  //   if (props.modalVisible && Platform.OS === 'ios' ) {
+  //     resetBottomSheet.start();
+  //   }
+  // }, [props.modalVisible, resetBottomSheet]);
+  // useEffect(() => {
+  //   if(Platform.OS === 'ios' ){
+  //     const id = upY.addListener(state => {
+  //       setUP(state.value);
+  //     });
+  //     return () => {
+  //       upY.removeListener(id);
+  //     };
+  //   }
+    
+  // }, [up, upY]);
   const closeModal = () => {
-    closeBottomSheet.start(() => {
+    console.log("test")
+    if(Platform.OS === 'android' ){
       setModalVisible(false);
-    });
+    }else{
+      closeBottomSheet.start(() => {
+        setModalVisible(false);
+      });
+    }
+    
   };
   return (
     <Modal visible={modalVisible} animationType={'slide'} transparent>
-      {Platform.OS === 'ios' ? <Overlay>
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <Background />
-        </TouchableWithoutFeedback>
-        <AnimatedView
-          style={{
-            transform: [{ translateY: translateY }],
-            width: Dimensions.get('screen').width,
-          }}>
-         <DateTimePicker
-            value={time}
-            mode={'time'}
+      <DateTimePicker
+            value={new Date()}
+            mode={type}
             display={Platform.OS === 'ios' ? 'spinner' : 'spinner'}
             is24Hour={false}
             onChange={onTimeSelected}
           />
-        </AnimatedView>
-      </Overlay> : <DateTimePicker
-            value={new Date()}
-            mode={'time'}
-            display={Platform.OS === 'ios' ? 'spinner' : 'spinner'}
-            is24Hour={false}
-            onChange={onTimeSelected}
-          />}
     </Modal>
   );
 };

@@ -23,4 +23,5 @@ export { default as CommentsIcon } from './_components/CommentsIcon';
 export { default as SocialIcons } from './_components/SocialIcons';
 export { default as SocialConnectIcons } from './_components/SocialConnectIcons';
 export { default as DeleteIcon } from './_components/DeleteIcon';
+export { default as CalendarIcon } from './_components/CalendarIcon';
 export { default as NotificationIcon } from './_components/NotificationIcon';

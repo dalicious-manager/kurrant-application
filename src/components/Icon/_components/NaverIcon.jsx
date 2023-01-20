@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {NaverImage} from '../../../assets';
-import Image from '../../Image';
+import { Image } from 'react-native';
 import IconWrapper from '../component';
 /**
  *
@@ -12,7 +12,7 @@ import IconWrapper from '../component';
 const Component = ({scale = 1.4}) => {
   return (
     <IconWrapper>
-      <Image imagePath={NaverImage} scale={scale} />
+      <Image source={NaverImage} scale={scale} />
     </IconWrapper>
   );
 };

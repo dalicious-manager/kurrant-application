@@ -1,4 +1,4 @@
-import { appleAuth } from '@invertase/react-native-apple-authentication';
+import { appleAuth,appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import Clipboard from '@react-native-clipboard/clipboard';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -6,9 +6,18 @@ import { login } from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import { useNavigation } from '@react-navigation/native';
 import { Platform } from 'react-native';
+import {
+  AccessToken,
+  AuthenticationToken,
+  LoginManager,
+} from 'react-native-fbsdk-next';
 
 import useAuth from '../../biz/useAuth';
 import { SCREEN_NAME } from '../../screens/Main/Bnb';
+import 'react-native-get-random-values';
+import { v4 as uuid } from 'uuid'
+const nonce = uuid();
+
 
 const naverData = ()=>{
     const data = {
@@ -84,24 +93,60 @@ export default () => {
         
       }
       const appleLogin  = async() =>{
+        try {
         // Start the sign-in request
-        const appleAuthRequestResponse = await appleAuth.performRequest({
-          requestedOperation: appleAuth.Operation.LOGIN,
-          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME,appleAuth.Scope.PHONE],
-        });
+        if(Platform.OS === "android"){
+          const {id_token} = await appleAuthAndroid.signIn();
+          console.log(id_token);
+          await snsLogin({
+            snsAccessToken:id_token,
+            autoLogin:true,
+          },'APPLE');
+          avigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: SCREEN_NAME,
+              },
+            ],
+          })
+        }else{
+            const appleAuthRequestResponse = await appleAuth.performRequest({
+              requestedOperation: appleAuth.Operation.LOGIN,
+              requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+            });
 
 
-        // Ensure Apple returned a user identityToken
-        if (!appleAuthRequestResponse.identityToken) {
-          throw new Error('Apple Sign-In failed - no identify token returned');
-        }
-      
+            // // Ensure Apple returned a user identityToken
+            if (!appleAuthRequestResponse.identityToken) {
+              throw new Error('Apple Sign-In failed - no identify token returned');
+            }
+          
 
-        // Create a Firebase credential from the response
-        const { identityToken, nonce } = appleAuthRequestResponse;
-        const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
-        // Sign the user in with the credential
-        return auth().signInWithCredential(appleCredential);
+            // // Create a Firebase credential from the response
+            const { identityToken, nonce } = appleAuthRequestResponse;
+            console.log(identityToken)
+            Clipboard.setString(identityToken)
+
+            await snsLogin({
+                snsAccessToken:identityToken,
+                autoLogin:true,
+            },'APPLE');
+            avigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: SCREEN_NAME,
+                },
+              ],
+            })
+          }
+          } catch (error) {
+            console.log("err",error.toString());
+          }
+        // const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+        // // Sign the user in with the credential
+        // return auth().signInWithCredential(appleCredential);
       }
     
       const kakaoLogin = async () => {
@@ -121,6 +166,50 @@ export default () => {
             ],
           })
       };     
+      const facebookLogin = async () => {
+        try {
+          const result = await LoginManager.logInWithPermissions(
+            ['public_profile', 'email'],
+            nonce
+          );
+          console.log(result);
+      
+          if (Platform.OS === 'ios') {
+            const result = await AuthenticationToken.getAuthenticationTokenIOS();
+            console.log(result?.authenticationToken);
+            await snsLogin({
+              snsAccessToken:token.accessToken,
+              autoLogin:true,
+            },'KAKAO');
+            navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              })
+          } else {
+            const result = await AccessToken.getCurrentAccessToken();
+            console.log(result?.accessToken);
+            await snsLogin({
+              snsAccessToken:token.accessToken,
+              autoLogin:true,
+            },'KAKAO');
+            navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              })
+          }
+        } catch (error) {
+          console.log(error);
+        }
+       
+      };     
 
-    return {naverLogin,kakaoLogin,googleLogin,appleLogin};
+    return {naverLogin,kakaoLogin,googleLogin,appleLogin,facebookLogin};
 };

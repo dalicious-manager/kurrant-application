@@ -23,6 +23,7 @@
 		B068103B2966B4E700A4D3AB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B068103A2966B4E700A4D3AB /* GoogleService-Info.plist */; };
 		B4D2137514CC45B88DE9C20C /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89AB231CA7C14416B4894EA1 /* Pretendard-Regular.otf */; };
 		B7DB5E91EEE741959BCEC57C /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 027BC5742DEB44B788FDCD2A /* OFL.txt */; };
+		D3F9877D297916AE00B61198 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F9877C297916AE00B61198 /* File.swift */; };
 		E24E198112A94BC68F5DE259 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F9589E007B8423BA705319B /* Pretendard-Medium.otf */; };
 		EB1E3C52F14B4D8597275DB8 /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = C0A217AEDFE0481FB9F3985D /* Pretendard-Light.otf */; };
 		F1AE8E106A9E4FFBB1860ED2 /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BB88AAD1C21847FB868A3C00 /* Pretendard-ExtraBold.otf */; };
@@ -108,6 +109,9 @@
 		BB88AAD1C21847FB868A3C00 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraBold.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
 		C0A217AEDFE0481FB9F3985D /* Pretendard-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Light.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-Light.otf"; sourceTree = "<group>"; };
 		D35B52932963C45A00368C90 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D3B3EB672977DB7A000B91E6 /* kurrant.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = kurrant.entitlements; path = kurrant/kurrant.entitlements; sourceTree = "<group>"; };
+		D3F9877B297916AD00B61198 /* kurrant-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "kurrant-Bridging-Header.h"; sourceTree = "<group>"; };
+		D3F9877C297916AE00B61198 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		D6DCF50CF739E20A8CA31AEC /* Pods_kurrant.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kurrant.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCA932196CC34D13A6907957 /* Pretendard-ExtraLight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraLight.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-ExtraLight.otf"; sourceTree = "<group>"; };
 		DE29E860C41A91EAB5D08AB4 /* Pods-kurrant-kurrantTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant-kurrantTests.release.xcconfig"; path = "Target Support Files/Pods-kurrant-kurrantTests/Pods-kurrant-kurrantTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -201,6 +205,7 @@
 		13B07FAE1A68108700A75B9A /* kurrant */ = {
 			isa = PBXGroup;
 			children = (
+				D3B3EB672977DB7A000B91E6 /* kurrant.entitlements */,
 				D35B52932963C45A00368C90 /* GoogleService-Info.plist */,
 				FF1331DC28E17BDC00D27A78 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -233,6 +238,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				D3F9877C297916AE00B61198 /* File.swift */,
 				B00511192930A11C0035F28D /* Fonts */,
 				FF090BDC28E2ECD900666784 /* AntDesign.ttf */,
 				FF090BE428E2ECD900666784 /* Entypo.ttf */,
@@ -260,6 +266,7 @@
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				D12D4AE88C0F415484ECEB94 /* Resources */,
 				D3DB00FC2970EB6500652E32 /* Recovered References */,
+				D3F9877B297916AD00B61198 /* kurrant-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -422,7 +429,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1410;
 					};
 				};
 			};
@@ -682,6 +689,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				D3F9877D297916AE00B61198 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -757,7 +765,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = kurrant/kurrant.entitlements;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = P98WMV6993;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = kurrant/Info.plist;
@@ -767,7 +776,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -775,6 +784,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.dalicious.kurrant;
 				PRODUCT_NAME = kurrant;
+				SWIFT_OBJC_BRIDGING_HEADER = "kurrant-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -789,7 +799,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = kurrant/kurrantRelease.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = P98WMV6993;
 				INFOPLIST_FILE = kurrant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "커런트";
@@ -798,7 +808,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -806,6 +816,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.dalicious.kurrant;
 				PRODUCT_NAME = kurrant;
+				SWIFT_OBJC_BRIDGING_HEADER = "kurrant-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

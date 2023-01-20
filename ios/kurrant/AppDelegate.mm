@@ -14,6 +14,9 @@
 #import <AppCenterReactNative.h>
 #import <AppCenterReactNativeAnalytics.h>
 #import <AppCenterReactNativeCrashes.h>
+#import <React/RCTLinkingManager.h> // <- Add This Import
+#import <FBSDKCoreKit/FBSDKCoreKit-swift.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -46,7 +49,10 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
     if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
         return [RNKakaoLogins handleOpenUrl: url];
     }    
-    
+    if ([[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options]) {
+      return [[FBSDKApplicationDelegate sharedInstance]application:application openURL:url options:options];
+    }
+     
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 
@@ -57,10 +63,16 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   [[NaverThirdPartyLoginConnection getSharedInstance] setIsNaverAppOauthEnable:YES];
 	[[NaverThirdPartyLoginConnection getSharedInstance] setIsInAppOauthEnable:YES];
+  // [FBSDKApplicationDelegate.sharedInstance initializeSDK];
+  // [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+  [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
   [FIRApp configure];
   [AppCenterReactNative register];
   [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
   [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
+  // [[FBSDKApplicationDelegate sharedInstance] application:application launchOptions:launchOptions];
+  //                      didFinishLaunchingWithOptions:launchOptions];
+  // [[FBSDKApplicationDelegate sharedInstance] initializeSDK];
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
   _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
@@ -156,6 +168,9 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
                                                          (const facebook::react::ObjCTurboModule::InitParams &)params
 {
   return nullptr;
+}
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [FBSDKAppEvents activateApp];
 }
 
 - (id<RCTTurboModule>)getModuleInstanceFromClass:(Class)moduleClass

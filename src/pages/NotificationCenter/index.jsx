@@ -1,16 +1,18 @@
 
 import React, { useEffect, useState } from "react";
 import styled, { useTheme } from "styled-components/native";
+import useBoard from "../../biz/useBoard";
 import { NotificationIcon } from "../../components/Icon";
 import Typography from "../../components/Typography";
 import Wrapper from "../../components/Wrapper";
 
 
 export const PAGE_NAME = "P__NOTIFICATION_CENTER"
+
 const alramData =[
     {
         id:0,
-        title:"콥샐러드 주문시 1+1",
+        title:"콥샐러드 주문시 1+10",
         type:"promotion",
         description:"커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
         dateTime:"07. 21 13:30"
@@ -28,13 +30,28 @@ const alramData =[
       type:"coupon",
       description:"커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
       dateTime:"07. 21 13:30"
+    },
+    {
+      id:3,
+      title:"생일 축하 쿠폰이 발행됐어요.",
+      type:"coupon",
+      description:"커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
+      dateTime:"07. 21 13:30"
+    },
+    {
+      id:4,
+      title:"생일 축하 쿠폰이 발행됐어요.",
+      type:"coupon",
+      description:"커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
+      dateTime:"07. 21 13:30"
     }
 ]
 
 const Pages= ()=>{
     const themeApp = useTheme();
+    const {getAlarm,readableAtom:{alarm}} = useBoard();
     const typeName = (type)=>{
-        switch (type) {
+        switch (type.toLowerCase()) {
             case "promotion":
               return "프로모션"
             case "order":
@@ -54,12 +71,15 @@ const Pages= ()=>{
           }
     }
     useEffect(()=>{
-
+      const getUseAlarm=async()=>{
+        await getAlarm();
+      }
+      getUseAlarm();
     },[])
+    console.log(alarm);
     return(
         <Wrapper>
-            {alramData.map((v)=>{
-                
+            {alramData.map((v)=>{                
               return(
                 <NotificationBox key={v.id}>
                 <TitleBox>
@@ -72,7 +92,7 @@ const Pages= ()=>{
                     <Typography text={"CaptionR"} textColor={themeApp.colors.grey[4]}>{typeName(v.type)}</Typography>
                 </TitleBox>
                 <ContentBox>
-                    <Typography text={"Body06R"} textColor={themeApp.colors.grey[4]}>{v.description}</Typography>
+                    <Typography text={"Body06R"} textColor={themeApp.colors.grey[4]}>{v.content}</Typography>
                 </ContentBox>
                 <Typography text={"CaptionR"} textColor={themeApp.colors.grey[5]}>{v.dateTime}</Typography>
             </NotificationBox>        

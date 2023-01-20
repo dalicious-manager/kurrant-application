@@ -4,7 +4,8 @@ import { Alert, Dimensions, Image, KeyboardAvoidingView, Pressable, SafeAreaView
 import { TextInput } from "react-native-gesture-handler";
 import styled from "styled-components";
 
-import FastImage from "react-native-fast-image";
+import FastImage from 'react-native-fast-image';
+
 import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
 import X from "../../../../../assets/icons/MealCart/x.svg";
@@ -24,6 +25,8 @@ import { formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
+
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import { el } from "date-fns/locale";
 
 const windowHeight = Dimensions.get('window').height;
@@ -65,11 +68,25 @@ const Pages = () => {
         async function loadCart(){
             try {
                 await loadMeal();
-            }catch(err){
-                console.log(err.toString())
-            }
+            } catch (error) {
+                if(error.toString().replace("Error:",'').trim() === '403'){
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
+                  })
+                }
+                
+              }
         }
+
+        
         loadCart();
+      
+        
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
@@ -276,6 +293,7 @@ const Pages = () => {
                                 <Pressable onPress={()=>{deleteButton(l.dailyFoodId)}}><DeleteIcon/></Pressable>
                             </ContentHeader>
                             <ContentWrap>
+
                                 <FastImage source={{uri:`${l.img}`,priority:FastImage.priority.high}}
                                 style={{
                                     width:45,
@@ -284,6 +302,7 @@ const Pages = () => {
                                     marginRight:12,
                                 }}
                                 />
+
                                 <MealNameView>
                                     <MealName numberOfLines={1} ellipsizeMode="tail">[{l.makers.name}] {l.name}</MealName>
                                     
@@ -422,7 +441,7 @@ position:relative;
 margin:0px 24px;
 `;
 
-export const MealImage = styled.Image`
+export const MealImage = styled(FastImage)`
 width:45px;
 height:45px;
 border-radius:7px;

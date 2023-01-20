@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {KaKaoImage} from '../../../assets';
-import Image from '../../Image';
+import { Image } from 'react-native';
 import IconWrapper from '../component';
 /**
  *
@@ -12,7 +12,7 @@ import IconWrapper from '../component';
 const Component = ({scale = 1.4}) => {
   return (
     <IconWrapper>
-      <Image imagePath={KaKaoImage} scale={scale} />
+      <Image  source={KaKaoImage} scale={scale}/>
     </IconWrapper>
   );
 };

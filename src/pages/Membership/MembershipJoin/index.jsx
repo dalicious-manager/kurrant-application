@@ -37,7 +37,7 @@ const Pages= ()=>{
     };
     const getMembershipData = useCallback(async()=>{
         const {data} = await membershipProduct.getMembershipProduct();
-        setMembershipData(data);
+        setMembershipData(data.reverse());
     },[membershipProduct])
     console.log(signUpCheck.watch());
 
@@ -51,7 +51,7 @@ const Pages= ()=>{
                 }
                 navigation.navigate(MembershipJoinPaymentsPageName,{
                     period:period ==="월간구독" ? 'month':'yaers',
-                    membershipData:period ==="월간구독" ? membershipData[0]:membershipData[1],
+                    membershipData:period ==="월간구독" ? membershipData[1]:membershipData[0],
                 });
         }   
     };
