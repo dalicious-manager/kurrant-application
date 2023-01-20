@@ -54,7 +54,7 @@ const Pages = () => {
     const [data,setData] = useState(null);
     const [selected,setSelected] = useState();
     const toast = Toast();
-
+    
   useEffect(() => {
     
     const start = weekly.map((s) => {
