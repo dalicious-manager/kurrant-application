@@ -640,6 +640,7 @@ const Screen = () => {
             headerLeft: () => <BackButton />,
           }}
         />
+
         <MainRoot.Screen
           name={TermPageName}
           component={Term}
