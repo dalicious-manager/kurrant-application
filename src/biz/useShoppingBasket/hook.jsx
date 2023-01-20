@@ -2,13 +2,15 @@ import {useAtom} from 'jotai';
 import react from 'react';
 
 import * as Fetch from './Fetch';
-import { isLoadMealCartAtom, isQuantityAtom } from './store';
+import { deliveryFeeAtom, isLoadMealCartAtom, isQuantityAtom, userPointAtom } from './store';
 
 const useShoppingBasket = () => {
 
     const [isLoadMeal,setLoadMeal] = useAtom(isLoadMealCartAtom);
     const [isquantity,setQuantity] = useAtom(isQuantityAtom)
-    
+    const [deliveryFee,setDeliveryFee] = useAtom(deliveryFeeAtom);
+    const [userPoint,setUserPoint] = useAtom(userPointAtom);
+
     const loadMeal = async () => {
         try {
             const res = await Fetch.loadMealCart();
@@ -16,7 +18,8 @@ const useShoppingBasket = () => {
                 throw new Error ('에러')
             }
             setLoadMeal(res.data.cartDailyFoodDtoList);
-            
+            setDeliveryFee(res.data.deliveryFee);
+            setUserPoint(res.data.userPoint)
             setQuantity(res.data.cartDailyFoodDtoList.length);
         } catch (err) {
             throw err;
@@ -83,6 +86,8 @@ const useShoppingBasket = () => {
         updateMeal,
         setLoadMeal,
         isLoadMeal,
+        deliveryFee,
+        userPoint,
         isquantity
         
     };
