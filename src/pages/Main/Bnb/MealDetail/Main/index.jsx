@@ -55,7 +55,7 @@ const Pages = ({route}) => {
     // foodId 넘겨줘야함 
     useEffect(()=>{
         async function loadFoodDetail(){
-            await foodDetail(foodId);
+            await foodDetail(dailyFoodId);
             await loadMeal();
         }
         loadFoodDetail();
@@ -158,7 +158,7 @@ const Pages = ({route}) => {
             >
                 <View style={{marginBottom:150}}>
                     {scroll > 60 ? <StatusBar /> : <StatusBar barStyle='light-content'/>}
-                    <FastImage source={{uri:`${isFoodDetail?.img}`,priority:FastImage.priority.high}} 
+                    <FastImage source={{uri:`${isFoodDetail?.image}`,priority:FastImage.priority.high}} 
                     style={{
                         maxWidth: width,
                         height:380,
@@ -186,11 +186,16 @@ const Pages = ({route}) => {
                         <PriceTitleWrap>
                             <PriceTitle>최종 판매가</PriceTitle>
                             <ModalWrap>
-                                <Modal price={isFoodDetail?.price} 
+                                <Modal 
+                                price={isFoodDetail?.price} 
                                 membershipDiscountedPrice={isFoodDetail?.membershipDiscountedPrice} 
-                                makersDiscountedPrice={isFoodDetail?.makersDiscountedPrice} 
+                                membershipDiscountedRate={isFoodDetail?.membershipDiscountedRate}
+                                makersDiscountedPrice={isFoodDetail?.makersDiscountedPrice}
+                                makersDiscountedRate={isFoodDetail?.makersDiscountedRate}
                                 periodDiscountedPrice={isFoodDetail?.periodDiscountedPrice}
+                                periodDiscountedRate={isFoodDetail?.periodDiscountedRate}
                                 totalDiscountRate={totalDiscountRate}
+                                discountPrice={discountPrice}
                                 />
                             </ModalWrap>
                         </PriceTitleWrap>
@@ -218,11 +223,10 @@ const Pages = ({route}) => {
                                 <Info>15%</Info>
                             </InfoTextWrap>
                             <InfoTextWrap>
-                                <View style={{flexDirection:'row'}}>
-
-                                <Info>기간 할인</Info>
-                                <ModalMessage text={`기간할인이란?\n식단 주문을 빠르게 확정하면 추가로 받을 수 있는 \n할인입니다. (주문 마감 D-1 : 5%, D-3 : 10%할인)`} title={<InfoIcon/>}/>
-                                </View>
+                                <MessageView>
+                                    <Info>기간 할인</Info>
+                                    <ModalMessage text={`기간할인이란?\n식단 주문을 빠르게 확정하면 추가로 받을 수 있는 \n할인입니다. (주문 마감 D-1 : 5%, D-3 : 10%할인)`} title={<InfoIcon/>}/>
+                                </MessageView>
                                 <Info>10%</Info>
                             </InfoTextWrap>
                         </InfoTextView>
@@ -448,4 +452,11 @@ color:${props => props.theme.colors.grey[3]};
 const Info = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[4]};
 margin-bottom:4px;
+text-align:justify;
+
+`;
+
+const MessageView = styled.View`
+flex-direction:row;
+align-items:center;
 `;

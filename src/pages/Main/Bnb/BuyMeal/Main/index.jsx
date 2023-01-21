@@ -188,8 +188,10 @@ const Pages = () => {
             {diningFood.length === 0 && <NoServieceView>
                 <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
             </NoServieceView>}
-            {diningFood.map((m) => {               
-            //    console.log(diningFood)
+            {diningFood.map((m) => {    
+                const totalRate = m.membershipDiscountRate + m.makersDiscountRate + m.periodDiscountRate;
+                const totalDiscount = m.membershipDiscountPrice + m.makersDiscountPrice + m.periodDiscountPrice;
+                
             return <Contents key={m.id}
             spicy={m.spicy}
             disabled={m.isSoldOut}
@@ -198,7 +200,11 @@ const Pages = () => {
                     <MakersName soldOut={m.isSoldOut}>[{m.makersName}]</MakersName>
                     <MealName soldOut={m.isSoldOut}  numberOfLines={1} ellipsizeMode="tail">{m.foodName}</MealName>
                     <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
-                    <Price soldOut={m.isSoldOut}>{withCommas(m.price)}원</Price>
+                    <PriceWrap>
+                        {totalRate !== 0 && <PercentText soldOut={m.isSoldOut}>{totalRate}%</PercentText>}
+                        <Price soldOut={m.isSoldOut}>{withCommas((m.price)-(totalDiscount))}원</Price>
+                        {totalRate !== 0 && <OriginPrice>{withCommas(m.price)}원</OriginPrice>}
+                    </PriceWrap>
                     {m.spicy !== 'NULL' && 
                     <LabelWrap>
                         {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
@@ -250,6 +256,20 @@ const Pages = () => {
                 <PagerViewWrap>
                     <ProgressWrap>
                         <ProgressInner>
+                             <Slider
+                                value={sliderValue}
+                                onValueChange={(e) => setSliderValue(...e)}
+                                minimumValue={0}
+                                maximumValue={2}
+                                maximumTrackTintColor="#fff"
+                                minimumTrackTintColor="#fff"
+                                onSlidingComplete={(e) => {diningRef.current.setPage(...e); setFocus(...e)}}
+                                step={1}
+                                trackStyle={styles.trackStyle}
+                                thumbStyle={styles.thumbStyle}
+                                containerStyle={{height:12}}
+                                
+                            />
                             <Progress>
                                 {DININGTYPE.map((btn,i) => {
                                      const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
@@ -266,20 +286,7 @@ const Pages = () => {
                                    
                                 )}
                             </Progress>
-                            <Slider
-                                value={sliderValue}
-                                onValueChange={(e) => setSliderValue(...e)}
-                                minimumValue={0}
-                                maximumValue={2}
-                                maximumTrackTintColor="#fff"
-                                minimumTrackTintColor="#fff"
-                                onSlidingComplete={(e) => {diningRef.current.setPage(...e); setFocus(...e)}}
-                                step={1}
-                                trackStyle={styles.trackStyle}
-                                thumbStyle={styles.thumbStyle}
-                                containerStyle={{justifyContent:'flex-start'}}
-                                
-                            />
+                            
                             
                         </ProgressInner>
                     </ProgressWrap>
@@ -305,15 +312,15 @@ const Pages = () => {
 const styles = StyleSheet.create({
     trackStyle:{
         backgroundColor:'white',
-        width:110,
+        width:93,
         height:2,
         borderRadius:50
     },
     thumbStyle:{
-        width:24,
+        width:20,
         height:2,
-        borderRadius:0,
-        backgroundColor:'black',
+        borderRadius:10,
+        backgroundColor:'#343337',
         
     }
 });
@@ -350,7 +357,7 @@ justify-content:center;
 const Progress = styled.View`
 flex-direction:row;
 justify-content:space-between;
-width:111px;
+width:93px;
 `;
 
 const ProgressBar = styled.View`
@@ -358,14 +365,6 @@ width:87px;
 height:2px;
 margin:9px 0px;
 background-color:${props => props.theme.colors.grey[2]};
-`;
-
-const ProgressCircle = styled.View`
-width:16px;
-height:16px;
-border-radius:50px;
-background-color:${props => props.theme.colors.grey[0]};
-position:absolute;
 `;
 
 const Pager = styled(PagerView)`
