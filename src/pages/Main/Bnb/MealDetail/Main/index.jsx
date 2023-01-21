@@ -452,7 +452,6 @@ color:${props => props.theme.colors.grey[3]};
 const Info = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[4]};
 margin-bottom:4px;
-background-color:gold;
 text-align:justify;
 
 `;

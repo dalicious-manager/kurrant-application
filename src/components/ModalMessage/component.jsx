@@ -59,7 +59,6 @@ const Wrap = styled.View`
 `;
 const TitleWrap = styled.Pressable`
 position:relative;
-background-color:red;
 `;
 const InnerWrap = styled.View`
 background-color:#fff;
