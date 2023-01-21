@@ -13,14 +13,22 @@ const Component = ({
     membershipDiscountedPrice,
     makersDiscountedPrice,
     periodDiscountedPrice,
-    totalDiscountRate
+    totalDiscountRate,
+    discountPrice,
+    membershipDiscountedRate,
+    makersDiscountedRate,
+    periodDiscountedRate
 }) => {
     const [modalVisible, setModalVisible] = useState(false);
+    const firstDiscount = price - membershipDiscountedPrice;
+    const secondDiscount = firstDiscount - makersDiscountedPrice;
+    const lastDiscount = secondDiscount - periodDiscountedPrice
     console.log(price,
         membershipDiscountedPrice,
         makersDiscountedPrice,
         periodDiscountedPrice,
-        totalDiscountRate)
+        totalDiscountRate,
+        discountPrice)
     return (
         <Wrap>
         <Modal
@@ -39,8 +47,8 @@ const Component = ({
                         <DscText>오프라인 매장에서 판매되는 가격입니다.</DscText>
                         <View>
                             <PriceWrap>
-                                <Percent>{(totalDiscountRate)*100}%</Percent>
-                                <TotalPrice>6,120원</TotalPrice>
+                                <Percent>{(totalDiscountRate)}%</Percent>
+                                <TotalPrice>{withCommas(price-discountPrice)}원</TotalPrice>
                             </PriceWrap>
                             <DscText>최종 할인율이 적용된 최종 가격입니다.</DscText>
                             <DscText>할인이 중첩되는 경우 멤버십 할인&gt;판매자 할인&gt;기간 할인순으로 순차 적용됩니다.</DscText>
@@ -49,19 +57,23 @@ const Component = ({
                             <Text>[매장가]</Text>
                             <DscText>{withCommas(price)}원</DscText>
                         </ContentWrap>
-                        <ContentWrap>
+                        {membershipDiscountedRate === 0 && <ContentWrap>
+                            <Text>[멤버십 가입시 판매가]</Text>
+                            <DscText>{withCommas(price)}원 x (100%-20%) = {withCommas(price - (price*0.2))}원</DscText>
+                        </ContentWrap>}
+                        {totalDiscountRate !== 0 && <ContentWrap>
                             <Text>[최종 판매가]</Text>
-                            <DscText>1. 멤버십 할인 적용시</DscText>
-                            <DscText>{withCommas(price)}원 x (100%-20%) = 8,000원</DscText>
-                            <DscText>2. 판매자 할인 추가 적용시</DscText>
-                            <DscText>8,000원 x (100%-15%) = 6,800원</DscText>
-                            <DscText>3. 기간 할인 추가 적용시</DscText>
-                            <DscText>6,800원 x (100%-10%) = 6,120원</DscText>
-                        </ContentWrap>
+                            {membershipDiscountedRate !== 0 && <DscText>1. 멤버십 할인 적용시</DscText>}
+                            {membershipDiscountedRate !== 0 && <DscText>{withCommas(price)}원 x (100%-20%) = {withCommas(firstDiscount)}원</DscText>}
+                            {makersDiscountedRate !== 0 && <DscText>2. 판매자 할인 추가 적용시</DscText>}
+                            {makersDiscountedRate !== 0 && <DscText>{withCommas(firstDiscount)}원 x (100%-15%) = {withCommas(secondDiscount)}원</DscText>}
+                            {periodDiscountedRate !== 0 && <DscText>3. 기간 할인 추가 적용시</DscText>}
+                            {periodDiscountedRate !== 0 && <DscText>{withCommas(secondDiscount)}원 x (100%-10%) = {withCommas(lastDiscount)}원</DscText>}
+                        </ContentWrap>}
                         <ContentWrap>
                              <Text>[최종 할인율]</Text>
-                             <DscText>= 할인 가격/매장가</DscText>
-                             <DscText>(10,000원 - 6,120원)/10,000원 = 38.8%</DscText>
+                             <DscText>= 할인 가격 / 매장가</DscText>
+                             <DscText>({withCommas(price)}원 - {withCommas(lastDiscount)}원) / {withCommas(price)} = {totalDiscountRate}%</DscText>
                         </ContentWrap>
                     </ScrollViewWrap>
                     <ButtonWrap>

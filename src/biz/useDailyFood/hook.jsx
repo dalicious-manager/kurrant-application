@@ -35,7 +35,7 @@ const useFoodDaily = () => {
             
         } catch (err) {
             console.log(err,'err');
-            setDailyFood([]);
+            
             setMorning([]);
             setLunch([]);
             setDinner([]);
