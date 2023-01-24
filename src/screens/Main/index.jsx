@@ -231,6 +231,7 @@ import {
 } from '../../components/Icon';
 import {useAtom} from 'jotai';
 import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+import test, {PAGE_NAME as testPageName} from '../../jaesin/test';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -639,6 +640,7 @@ const Screen = () => {
             headerLeft: () => <BackButton />,
           }}
         />
+
         <MainRoot.Screen
           name={TermPageName}
           component={Term}
@@ -1516,6 +1518,26 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 조재신 업무 파악용(맘대로 지워도 됩니다) */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={testPageName}
+          component={test}
+          options={{
+            headerShown: true,
+            title: '조재신 엄무파학용',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
           }}
         />
       </MainRoot.Group>

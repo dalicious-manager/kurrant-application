@@ -29,7 +29,7 @@ const Yoyoyo = () => {
   return (
     <Container>
       <Yoyo>
-        <SmallWrap>
+        {/* <SmallWrap>
           <PlaneRowView>
             <MiniWrap>
               <Typography1 variant="h400">포토후기</Typography1>
@@ -50,7 +50,7 @@ const Yoyoyo = () => {
               </MiniWrap>
             </PlaneRowView>
           </View>
-        </SmallWrap>
+        </SmallWrap> */}
       </Yoyo>
       <View>
         {/* thin text box */}

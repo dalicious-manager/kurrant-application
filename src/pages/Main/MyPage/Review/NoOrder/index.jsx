@@ -3,8 +3,6 @@ import {Dimensions, Text, View} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
 
-export const pathFind = 'yo';
-
 const Component = isArrayEmpty => {
   return (
     <NoOrderText isArrayEmpty={isArrayEmpty}>

@@ -1,12 +1,15 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import React, {useLayoutEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';
+import useMypageReview from '../../../biz/useMypageReview/hook';
 
-import Yoyoyo, {hi1, hi2} from '../../../jaesin/Yoyoyo';
 export const SCREEN_NAME = 'S_MAIN__REVIEW';
 import Review, {
   PAGE_NAME as ReviewPageName,
 } from '../../../pages/Main/MyPage/Review';
+import WrittenReview, {
+  PAGE_NAME as WrittenReviewPageName,
+} from '../../../pages/Main/MyPage/WrittenReview';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -28,7 +31,7 @@ const Screen = () => {
         name={ReviewPageName}
         component={Review}
         options={{
-          tabBarLabel: '리뷰 작성(7)',
+          tabBarLabel: `리뷰 작성(7)`,
           tabBarLabelStyle: {
             fontSize: 15,
             lineHeight: 21,
@@ -36,9 +39,10 @@ const Screen = () => {
           },
         }}
       />
+
       <Tab.Screen
-        name={'Yoyoyo2'}
-        component={Yoyoyo}
+        name={WrittenReviewPageName}
+        component={WrittenReview}
         options={{
           tabBarLabel: '작성한 리뷰(1)',
           tabBarLabelStyle: {
