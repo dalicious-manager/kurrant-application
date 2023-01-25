@@ -56,10 +56,16 @@ const Pages = () => {
     
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
-        
+            
             setSliderValue(position);
             setFocus(position);
          } 
+
+    const test = (e) => {
+        const { position } = e.nativeEvent;
+        console.log(position,'111')
+    }
+        
     
     const dayPress = async (selectedDate) =>{
         
@@ -94,8 +100,6 @@ const Pages = () => {
         setModalVisible3(false)
         
     }
-    
-   
     useEffect(()=>{
         async function loadDailyFood(){
             try {
@@ -118,7 +122,6 @@ const Pages = () => {
         loadDailyFood();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
-
 
     const addCartPress = async (id,day,type) =>{
         
@@ -292,7 +295,11 @@ const Pages = () => {
                     </ProgressWrap>
 
                     {isDailyFoodLoading ? <SkeletonUI/>: 
-                     <Pager ref={diningRef} initialPage={1} onPageSelected={(e) => {onPageScroll(e)}}>
+                     <Pager ref={diningRef} 
+                     initialPage={0} 
+                     onPageSelected={(e) => {onPageScroll(e)}} 
+                    
+                     >
 
                         {BuyMeal(isMorningFood)}
                         {BuyMeal(isLunchFood)}

@@ -1,8 +1,8 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
-import { View , StatusBar, Dimensions} from "react-native";
+import React, { useState, useRef, useEffect, useLayoutEffect} from "react";
+import { View , StatusBar, Dimensions,Text} from "react-native";
 import styled from "styled-components";
 
 import ModalMessage from "../../../../../components/ModalMessage";
@@ -96,7 +96,6 @@ const Pages = ({route}) => {
         }
     }
 }
-
     const addToCart = async () =>{
         
             try {
@@ -142,12 +141,11 @@ const Pages = ({route}) => {
     const totalDiscountRate = (isFoodDetail?.membershipDiscountedRate) + (isFoodDetail?.makersDiscountedRate) + (isFoodDetail?.periodDiscountedRate);
     
     const discountPrice = (isFoodDetail?.membershipDiscountedPrice) + (isFoodDetail?.makersDiscountedPrice) + (isFoodDetail?.periodDiscountedPrice)
-    console.log(discountPrice,'iii')
+    
     if(isFoodDetailLoading){
         return  <Skeleton/>
     }
  
-
     return (
         <>
         <Wrap >
@@ -216,18 +214,18 @@ const Pages = ({route}) => {
                         <InfoTextView>
                             <InfoTextWrap>
                                 <Info>멤버십 할인</Info>
-                                <Info>20%</Info>
+                                <InfoText>{isFoodDetail?.membershipDiscountedRate}%</InfoText>
                             </InfoTextWrap>
                             <InfoTextWrap>
                                 <Info>판매자 할인</Info>
-                                <Info>15%</Info>
+                                <InfoText>{isFoodDetail?.makersDiscountedRate}%</InfoText>
                             </InfoTextWrap>
                             <InfoTextWrap>
                                 <MessageView>
-                                    <Info>기간 할인</Info>
+                                    <Test numberOfLines={1}>기간 할인</Test>
                                     <ModalMessage text={`기간할인이란?\n식단 주문을 빠르게 확정하면 추가로 받을 수 있는 \n할인입니다. (주문 마감 D-1 : 5%, D-3 : 10%할인)`} title={<InfoIcon/>}/>
                                 </MessageView>
-                                <Info>10%</Info>
+                                <InfoText>{isFoodDetail?.periodDiscountedRate}%</InfoText>
                             </InfoTextWrap>
                         </InfoTextView>
                     </InfoWrap>
@@ -238,16 +236,16 @@ const Pages = ({route}) => {
                         </InfoTitleView>
                         <InfoTextView>
                             <InfoTextWrap>
-                                <Info>단체 배송</Info>
-                                <Info>15,000(50개 마다 부과)</Info>
+                                <Info numberOfLines={1} >단체 배송</Info>
+                                <InfoText>15,000(50개 마다 부과)</InfoText>
                             </InfoTextWrap>
                             <InfoTextWrap>
-                                <Info>개별 배송</Info>
-                                <Info>2,200원(5개 마다 부과)</Info>
+                                <Info numberOfLines={1}>개별 배송</Info>
+                                <InfoText>2,200원(5개 마다 부과)</InfoText>
                             </InfoTextWrap>
                             <InfoTextWrap>
-                                <Info>멤버십 회원</Info>
-                                <Info>무료 배송</Info>
+                                <Info  numberOfLines={1}>멤버십 회원</Info>
+                                <InfoText>무료 배송</InfoText>
                             </InfoTextWrap>
                         </InfoTextView>
                     </InfoWrap>
@@ -367,6 +365,9 @@ width:80%;
 const InfoTextWrap = styled.View`
 flex-direction:row;
 justify-content:space-between;
+/* width:100%; */
+align-items:center;
+
 `;
 
 const ButtonWrap = styled.View`
@@ -452,11 +453,24 @@ color:${props => props.theme.colors.grey[3]};
 const Info = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[4]};
 margin-bottom:4px;
-text-align:justify;
-
+width:30%;
 `;
 
 const MessageView = styled.View`
 flex-direction:row;
 align-items:center;
+width:40%;
+text-align:center;
+`;
+
+const InfoText = styled(Typography).attrs({text:'CaptionR'})`
+color:${props => props.theme.colors.grey[4]};
+margin-bottom:4px;
+width:50%;
+text-align:right;
+`;
+
+const Test = styled(Typography).attrs({text:'CaptionR'})`
+color:${props => props.theme.colors.grey[4]};
+width:50%;
 `;

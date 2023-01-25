@@ -6,7 +6,7 @@ export async function ApartmentApplication(body,option) {
         ...body,
         apartmentInfo:{
             ...body.apartmentInfo,
-            serviceStartDate:body.apartmentInfo.serviceStartDate.replaceAll('.',''),
+            serviceStartDate:body.apartmentInfo.serviceStartDate.split(".").join(""),
         },
         
     }

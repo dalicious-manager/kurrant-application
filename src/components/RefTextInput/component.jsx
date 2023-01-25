@@ -86,7 +86,7 @@ const Component = forwardRef(({
   let suffixContent = '';
   let timerContent = '';
 
-  if (suffix.isNeedDelete && data) {
+  if (suffix.isNeedDelete && data && focus) {
     suffixContent = <TouchableOpacity onPress={()=>{
       resetField(name)
       ref?.current?.focus();

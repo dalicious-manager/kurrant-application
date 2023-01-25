@@ -51,9 +51,9 @@ const Pages = () => {
     const {name,phone,email} = userInfo;
 
     const isValidation = 
-        (nameChk !== '' ) &&
-        (phoneChk !== '') &&
-        (emailChk !== '');
+        (nameChk && nameChk !== '' ) &&
+        (phoneChk && phoneChk !== '') &&
+        (emailChk && emailChk !== '');
 
     const saveAtom = async () =>{
         
@@ -177,6 +177,11 @@ const Pages = () => {
                         onSubmitEditing={() => phoneRef.current.focus()}
                         defaultValue={name}
                         ref={nameRef}
+                        suffix={
+                          {
+                            isNeedDelete : true,
+                          }
+                        }
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -197,6 +202,11 @@ const Pages = () => {
                         defaultValue={phone}
                         onEndEditing={() => emailRef.current.focus()}
                         ref={phoneRef}
+                        suffix={
+                          {
+                            isNeedDelete : true,
+                          }
+                        }
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -217,8 +227,12 @@ const Pages = () => {
                         autoCapitalize = "none"
                         style={inputStyle}
                         defaultValue={email}
-                        
                         ref={emailRef}
+                        suffix={
+                          {
+                            isNeedDelete : true,
+                          }
+                        }
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',

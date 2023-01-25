@@ -127,7 +127,11 @@ const Pages = () => {
                         name="apartName"
                         placeholder="아파트명"
                         style={inputStyle}
-                        // defaultValue={isApartAddress.apartmentName}
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                            }
+                          }
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -157,7 +161,20 @@ const Pages = () => {
                         placeholder="단지 총 세대수"
                         keyboardType="numeric"
                         style={inputStyle}
-                        // defaultValue={isApartAddress.familyCount !== undefined && String(isApartAddress.familyCount)}
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                              
+                            }
+                          }
+                        rules={
+                            {
+                                pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: '숫자만 입력해 주세요.',
+                                }
+                            }
+                        }
                         />
 
                         <RefTextInput
@@ -167,7 +184,20 @@ const Pages = () => {
                         keyboardType="numeric"
                         caption="동 개수를 입력해주세요.(예.101동 - 105동이면 5개)"
                         style={inputStyle}
-                        // defaultValue={isApartAddress.dongCount !== undefined && String(isApartAddress.dongCount)}
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                              
+                            }
+                          }
+                          rules={
+                            {
+                                pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: '숫자만 입력해 주세요.',
+                                }
+                            }
+                        }
                         />
 
                         <View>

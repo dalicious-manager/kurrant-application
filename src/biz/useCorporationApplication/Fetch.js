@@ -6,7 +6,7 @@ export async function CorporationApplication(body,option) {
         ...body,
         corporationInfo:{
             ...body.corporationInfo,
-            startDate:body.corporationInfo.startDate.replaceAll('.',''),
+            startDate:body.corporationInfo.startDate.split(".").join(""),
         },
     }
     

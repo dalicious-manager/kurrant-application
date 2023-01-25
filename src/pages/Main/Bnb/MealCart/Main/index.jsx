@@ -40,9 +40,7 @@ const Pages = () => {
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
     const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal, deliveryFee,userPoint} = useShoppingBasket();
-    // const [quantity ,setQuantity] = useState([]);
     const [ modalVisible, setModalVisible ] = useState(false);
-    const [ modalVisible2, setModalVisible2 ] = useState(false);
     const {isUserInfo} = useUserInfo();
 
     // console.log(isLoadMeal,'장바구니')
@@ -53,13 +51,8 @@ const Pages = () => {
         
 
     //         return  () => {
-    //         // Do something when the screen is unfocused
-    //             if(quantity?.length > 0){
-    //                 console.log("나감")
-    //                 updateMeal({"updateCartList":quantity});
-    //                 // setQuantity({})
-    //             }
-            
+    //             console.log("나감")
+    //             updateMeal({"updateCartList":quantity});
     //         };
     
     // // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,20 +84,19 @@ const Pages = () => {
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
-  
-    // const quantity = isLoadMeal?.map((v)=>{
-    //     return {...v , ...v.cartDailyFoods?.map(m => {
-    //         return{
-    //             dailyFoodId: m.dailyFoodId,
-    //             count: m.count
-    //         }
-    //      })};
-    // })
-    const pointButton = () => {
-        setModalVisible(true);
-    }
+
+    const quantityArr = isLoadMeal?.map(el => el.cartDailyFoods.map(v => {
+        return {
+            dailyFoodId:v.dailyFoodId,
+            count:v.count,
+            cartItemId:v.id
+        }
+    }));
+
+    const quantity = quantityArr.reduce((acc, val) => [ ...acc, ...val ], []);
+
     const fundButton = () => {
-        setModalVisible2(true);
+        setModalVisible(true);
     }
     
     const addHandle = (productId) => {
@@ -118,7 +110,7 @@ const Pages = () => {
             })]
             }
         })
-        // console.log(test,'didididi')
+        
         setLoadMeal(addQty);
     }
 
@@ -134,15 +126,10 @@ const Pages = () => {
             })]
             }
         })
-        // const substracQty = isLoadMeal.map(p => {
-        //     if (productId === p.dailyFoodId){
-        //         return {...p, count:( p.count <= 1? 1:p.count - 1)}
-        // } else return p ; 
-        // });
-    
         setLoadMeal(substracQty);
      
     }
+
     // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
     const arr = isLoadMeal?.map(p => p.cartDailyFoods).flat()
 
@@ -155,12 +142,12 @@ const Pages = () => {
     },0);
   
     // 멤버십 할인 금액
-    const membershipPrice = arr?.map(p => (p.membershipDiscountPrice * p.count)).reduce((acc,cur) => {
+    const membershipDiscountPrice = arr?.map(p => (p.membershipDiscountPrice * p.count)).reduce((acc,cur) => {
         return acc + cur
     },0);
     
     // 판매자 할인 금액
-    const discountPrice = arr?.map(p => (p.makersDiscountPrice * p.count )).reduce((acc,cur) => {
+    const makersDiscountPrice = arr?.map(p => (p.makersDiscountPrice * p.count )).reduce((acc,cur) => {
         return acc + cur
     },0);
     
@@ -175,7 +162,7 @@ const Pages = () => {
     },0);
 
     // 총 결제금액
-    const totalPrice = totalMealPrice - supportPrice - ( membershipPrice + discountPrice + periodDiscountPrice) + deliveryFee
+    const totalPrice = totalMealPrice - supportPrice - ( membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice) + deliveryFee
     
     const focusPress = () => {
         setFocus(true);
@@ -198,15 +185,20 @@ const Pages = () => {
 
     const closeModal = () => {
         setModalVisible(false);
-        setModalVisible2(false);
-        
     };
 
     const deleteButton = async (foodId) => {
-    
+
+        const arr = isLoadMeal.map((v)=> {
+            return {...v, cartDailyFoods:[...v.cartDailyFoods.filter((food)=> food.id !== foodId)]
+            }
+        })
+       
+        const deleteArr = arr.filter(el=>el.cartDailyFoods.length !== 0)
+       
         try {
             await deleteMeal(foodId);
-            setLoadMeal(isLoadMeal.filter(t => t.dailyFoodId !== foodId));
+            setLoadMeal(deleteArr)
             
         } catch(err) {
             console.log(err)
@@ -225,11 +217,6 @@ const Pages = () => {
         //     throw new Error ('에러남')
         // }
     }
-
-    const clearInput = () => {
-        inputRef.current.setNativeProps({ text: ''  }); 
-    }
-    // console.log(isLoadMeal)
     return (
         <SafeView>
             {isLoadMeal?.length === 0 && <EmptyView>
@@ -244,7 +231,6 @@ const Pages = () => {
                     <Wrap key={idx}>
                         <ContentHeader>
                             <DiningName>{formattedMonthDay(el.serviceDate)} {el.diningType}</DiningName>
-                            {/* <Pressable onPress={()=>{deleteButton(l.dailyFoodId)}}><DeleteIcon/></Pressable> */}
                         </ContentHeader>
                         {el.cartDailyFoods.map((food,i) => {
                             const rate = food.membershipDiscountRate + food.makersDiscountRate + food.periodDiscountRate;
@@ -254,7 +240,9 @@ const Pages = () => {
                             const discountPrice = membership + markers + period;
                             
                             return (
-                                <ContentWrap key={i}>
+                                <React.Fragment key={i}>
+                                    <Pressable onPress={()=>{deleteButton(food.id)}}><DeleteIcons/></Pressable>
+                                <ContentWrap >
                                     <FastImage source={{uri:`${food.image}`,priority:FastImage.priority.high}}
                                     style={{
                                         width:45,
@@ -285,6 +273,7 @@ const Pages = () => {
                                         />
                                     </CountWrap>
                                 </ContentWrap>
+                                </React.Fragment>
                             )
                         })}
                     </Wrap>
@@ -309,7 +298,7 @@ const Pages = () => {
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>총 할인금액</PaymentText>
-                        <PaymentText>- {withCommas(membershipPrice + discountPrice + periodDiscountPrice)}원</PaymentText>
+                        <PaymentText>- {withCommas(membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice)}원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>
@@ -341,15 +330,19 @@ const Pages = () => {
            
             {isLoadMeal?.length !== 0 && <ButtonWrap focus={focus}>
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} 
-                // onPressEvent={()=>{navigation.navigate(PaymentPageName,{
-                //     totalCount,totalMealPrice,deliveryFee,periodDiscountPrice,membershipPrice,discountPrice,supportPrice,totalPrice
-                // })}}
+                onPressEvent={()=>{navigation.navigate(PaymentPageName,{
+                    totalCount,
+                    totalMealPrice,
+                    membershipDiscountPrice,
+                    makersDiscountPrice,
+                    periodDiscountPrice,
+                    supportPrice,
+                    totalPrice
+                })}}
                 />
             </ButtonWrap>}
              
-            <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
-            <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
-                    
+            <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
             </SafeView>
     )
 
@@ -409,6 +402,8 @@ export const ContentWrap = styled.View`
 flex-direction:row;
 padding-top:12px;
 padding:24px 0;
+position:relative;
+
 `;
 
 export const Price = styled(Typography).attrs({text:'Body05R'})`
@@ -571,4 +566,10 @@ background-color:${({theme}) => theme.colors.grey[8]};
 height:1px;
 margin:0px 24px;
 
+`;
+
+const DeleteIcons = styled(DeleteIcon)`
+position:absolute;
+top:-15px;
+right:0;
 `;
