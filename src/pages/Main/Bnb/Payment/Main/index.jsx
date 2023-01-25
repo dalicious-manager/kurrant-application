@@ -1,8 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import React, {useRef, useState} from "react";
+import React, {useRef, useState,useEffect} from "react";
 import {useForm} from 'react-hook-form';
-import { View, Alert,Text} from "react-native";
-import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
+import { View, Alert,Text, Platform,KeyboardAvoidingView,NativeModules} from "react-native";
 import styled from "styled-components";
 
 import FastImage from "react-native-fast-image";
@@ -19,17 +18,20 @@ import Typography from "../../../../../components/Typography";
 import { formattedDate, formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
 import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, Wrap, XIcon } from "../../MealCart/Main";
+import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
 const Pages = ({route}) => {
   
+    const { StatusBarManager } = NativeModules;
     const navigation = useNavigation();
     const agreeCheck = useForm();
     const [show,setShow] = useState(false);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     const [ modalVisible3, setModalVisible3 ] = useState(false);
+    const [statusBarHeight, setStatusBarHeight] = useState(0);
     const {isLoadMeal} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
     const inputRef = useRef();
@@ -59,7 +61,7 @@ const Pages = ({route}) => {
         
     };
 
-
+    const keyboardStatus = useKeyboardEvent();
     const handleEventPayments = ()=>{
         console.log(agreeCheck.watch(agreeCheck).agreeCheck);
         if(agreeCheck.watch(agreeCheck).agreeCheck){
@@ -93,8 +95,18 @@ const Pages = ({route}) => {
         inputRef.current.setNativeProps({ text: ''  }); 
     }
 
+        
+    useEffect(()=>{
+        Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
+            setStatusBarHeight(statusBarFrameData.height)
+        }) : null
+    }, []);
+
     return (
         <SafeArea>
+            <KeyContainer
+              keyboardVerticalOffset={Platform.OS === "ios" && statusBarHeight+44}
+              behavior={Platform.OS === "ios" ? "padding" : "height"} >
             <ViewScroll>
             <BorderWrap>
                 <Container>
@@ -216,16 +228,16 @@ const Pages = ({route}) => {
                             <PaymentText>포인트 사용금액</PaymentText>
                             <QuestionIcon />
                         </PressableView>
-                        <KeyboardAvoidingView>
+                        
                             <PointWrap>
                                 <Text>- </Text>
                                 <PointInputWrap>
-                                    <PointInput keyboardType="number-pad" ref={inputRef} defaultValue={isUserInfo.point === 0 ? '0' : withCommas(isUserInfo.point).toString()}/>
+                                    <PointInput keyboardType="number-pad" ref={inputRef} defaultValue={isUserInfo.point === 0 ? '0' : withCommas(isUserInfo.point.toString())}/>
                                     <XIcon onPress={clearInput}/>
                                 </PointInputWrap>
                                 <PointUnitText>P</PointUnitText>
                             </PointWrap>
-                        </KeyboardAvoidingView>
+                        
                       </PaymentView>
                       <UserPointView>
                             <UserPointText>잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserPointText>
@@ -265,9 +277,10 @@ const Pages = ({route}) => {
                     </Form>
                 </FormWrap>
                 </ViewScroll>
-                <ButtonWrap>
+                </KeyContainer>
+                {!keyboardStatus.isKeyboardActivate && <ButtonWrap>
                     <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{handleEventPayments()}}/>
-                </ButtonWrap>
+                </ButtonWrap>}
                 <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                 <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow'/>
                 <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
@@ -280,7 +293,7 @@ export default Pages;
 const SafeArea = styled.View`
 flex:1;
 background-color:${props => props.theme.colors.grey[0]};
-padding-bottom:60px;
+
 `;
 
 const ViewScroll = styled.ScrollView`
@@ -441,3 +454,8 @@ flex-direction:row;
 justify-content:space-between;
 
 `;
+
+const KeyContainer = styled.KeyboardAvoidingView`
+  flex: 1;
+  position: relative;
+`

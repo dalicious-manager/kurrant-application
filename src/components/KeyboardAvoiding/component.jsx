@@ -62,7 +62,7 @@ const Component = ({
                         //onPress={focusPress}
                         ref={bodyRef}
                         onChangeText={(text)=>{changeText(text,id)}}
-                        value={quantity?.count.toString()}
+                        defaultValue={quantity?.count.toString()}
                         />  
                     <PressableView onPress={()=>{addHandle(id)}}>
                         <PlusIcon />
@@ -74,7 +74,7 @@ const Component = ({
             {mealDetail && <Wrap
                 onBlur={blurPress}
                 focus={focus}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'heigth'}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 10 }
                 platform={Platform.OS}
                 >
@@ -121,7 +121,6 @@ const Wrap = styled.KeyboardAvoidingView`
 ${({focus}) => !focus && 'height:0px'};
 ${({platform}) => platform === 'ios' && 'height:0px'};
 opacity:${({focus}) => !focus ? 0 : 1};
-
 `;
 
 const MinusIcon = styled(Minus)`
@@ -132,5 +131,6 @@ const InnerTextInput = styled.TextInput`
 font-weight:600;
 font-size:16px;
 line-height:22px;
+
 `;
 

@@ -123,18 +123,21 @@ const Pages = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
+
     const addCartPress = async (id,day,type) =>{
         
         const diningType = type;
-        const duplication = isLoadMeal.some((item) => item.dailyFoodId === id);
+        //const duplication = isLoadMeal.some((item) => item.dailyFoodId === id);
+        const duplication = isLoadMeal.map((v)=> v.cartDailyFoods.some((food)=>food.dailyFoodId  === id))
         
-        if(duplication){
+        
+        if(duplication.includes(true)){
+            await openModal(diningType)
             await setSelectFood({
                 id:id,
                 serviceDate:day,
                 diningType:type
             })
-            await openModal(diningType)
         }else {
             await addToCart(id,day,type)
         }

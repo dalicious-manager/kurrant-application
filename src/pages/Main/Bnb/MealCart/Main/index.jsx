@@ -27,6 +27,7 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import { el } from "date-fns/locale";
+import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 
 
 const windowHeight = Dimensions.get('window').height;
@@ -58,6 +59,8 @@ const Pages = () => {
     // // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [updateMeal])
     // );
+
+    const keyboardStatus = useKeyboardEvent();
     useEffect(()=>{
         async function loadCart(){
             try {
@@ -172,15 +175,20 @@ const Pages = () => {
       };
 
     const changeText = (number,pi) => {
-        
-        const addQty = isLoadMeal.map(p => {
-            if (pi === p.dailyFoodId){
-                return {...p, count:Number(number)}
-        } else return p ; 
-        });
- 
-        setLoadMeal(addQty);
+       
+        const addQty = isLoadMeal.map((v)=> {
+            return {...v, cartDailyFoods:[...v.cartDailyFoods.map((food)=>{
+                if(food.dailyFoodId  === pi){
+                    return {...food,count:Number(number)}
+                }else{
+                    return {...food}
+                }
+            })]
+            }
+        })
 
+        setLoadMeal(addQty);
+        
       };
 
     const closeModal = () => {
@@ -328,7 +336,7 @@ const Pages = () => {
             />
             
            
-            {isLoadMeal?.length !== 0 && <ButtonWrap focus={focus}>
+            {(isLoadMeal?.length !== 0 && !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} 
                 onPressEvent={()=>{navigation.navigate(PaymentPageName,{
                     totalCount,
@@ -353,7 +361,7 @@ export default Pages;
 const SafeView = styled.View`
 background-color:${props => props.theme.colors.grey[0]};
 flex:1;
-padding-bottom:60px;
+
 
 `;
 const ScrollViewWrap = styled.ScrollView`

@@ -41,13 +41,13 @@ const Pages = ({route}) => {
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,isFoodDetailLoading,foodDetail} = useFoodDetail();
     const {addMeal,loadMeal,isLoadMeal} = useShoppingBasket();
-    console.log(route.params,'????')
+
     const headerTitle = isFoodDetail?.name;
     const foodId = route.params.foodId;
     const dailyFoodId = route.params.dailyFoodId;
     const diningType = route.params.type;
     const day = route.params.date;
-    
+    console.log(dailyFoodId,'22222')
     const closeModal = () => {
         setModalVisible(false)
     }
@@ -77,9 +77,9 @@ const Pages = ({route}) => {
     },[headerTitle,navigation, scroll]);
 
     const addCartPress = async () =>{
-        const duplication = isLoadMeal.some((item) => item.dailyFoodId === dailyFoodId)
-
-        if(duplication){
+        const duplication = isLoadMeal.map((v)=> v.cartDailyFoods.some((food)=>food.dailyFoodId  === dailyFoodId))
+        
+        if(duplication.includes(true)){
             setModalVisible(true);
         }else{
             try {
@@ -461,6 +461,7 @@ flex-direction:row;
 align-items:center;
 width:40%;
 text-align:center;
+position: relative;
 `;
 
 const InfoText = styled(Typography).attrs({text:'CaptionR'})`
