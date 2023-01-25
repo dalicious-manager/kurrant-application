@@ -13,6 +13,7 @@ const useBanner = () => {
   const [isMembershipJoinLoading, setMembershipJoinLoading] = useAtom(isMembershipJoinAtom);
   const [isMembershipTerminateLoading, setMembershipTerminateLoading] = useAtom(isMembershipTerminateAtom);
   const [isMembershipHistoryLoading, setMembershipHistoryLoading] = useAtom(isMembershipHistoryAtom);
+  const [isMembershipTypeLoading, setMembershipTypeLoading] = useAtom(isMembershipHistoryAtom);
 
   const getMembershipProduct = async (option = {}) => {
     try {
@@ -25,10 +26,15 @@ const useBanner = () => {
       setMembershipProductLoading(false);
     }
   };
-  const membershipJoin = async (option = {}) => {
+  const membershipJoin = async (body,option = {}) => {
     try {
       setMembershipJoinLoading(true);
-      const fetchRes = await Fetch.membershipJoin(option);
+      const fetchRes = await Fetch.membershipJoin(
+        {
+          ...body
+        }
+        ,option
+        );
       return fetchRes;
     } catch (err) {
       throw err;
@@ -39,7 +45,7 @@ const useBanner = () => {
   const membershipTerminate = async (option = {}) => {
     try {
       setMembershipTerminateLoading(true);
-      const fetchRes = await Fetch.membershipTerminate(option);
+      const fetchRes = await Fetch.membershipTerminate({tpye:1},option);
       return fetchRes;
     } catch (err) {
       throw err;
@@ -58,17 +64,30 @@ const useBanner = () => {
       setMembershipHistoryLoading(false);
     }
   };
+  const getMembershipType = async (type,option = {}) => {
+    try {
+      setMembershipTypeLoading(true);
+      const fetchRes = await Fetch.getMembershipType(type,option);
+      return fetchRes;
+    } catch (err) {
+      throw err;
+    } finally {
+      setMembershipTypeLoading(false);
+    }
+  };
 
   return {
     getMembershipProduct,
     membershipJoin,
     membershipTerminate,
     getMembershipHistory,
+    getMembershipType,
     readableAtom: {
       isMembershipProductLoading,
       isMembershipJoinLoading,
       isMembershipTerminateLoading,
       isMembershipHistoryLoading,
+      isMembershipTypeLoading,
     },
   };
 };

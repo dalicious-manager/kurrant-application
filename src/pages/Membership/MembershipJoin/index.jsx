@@ -6,6 +6,7 @@ import {  ScrollView } from "react-native";
 import styled from "styled-components/native";
 
 import useMembership from "../../../biz/useMembership";
+import useUserInfo from "../../../biz/useUserInfo";
 import Check from "../../../components/Check";
 import Form from "../../../components/Form";
 import { CommentsIcon, DeliveryFreeIcon, DiscountIcon, PointIcon } from "../../../components/Icon";
@@ -21,7 +22,7 @@ const Pages= ()=>{
     const signUpCheck = useForm();
     const navigation = useNavigation();
     const membershipProduct = useMembership();
-
+    const {isUserInfo} = useUserInfo();
     const [membershipData, setMembershipData] = useState();
 
     const signUpCheck1 = signUpCheck.watch('signUpCheck1')
@@ -69,6 +70,7 @@ const Pages= ()=>{
         signUpCheck3 ;
     useEffect(()=>{
         getMembershipData()
+        console.log(isUserInfo)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     return(
@@ -76,7 +78,7 @@ const Pages= ()=>{
             <ScrollView>
             <TitleContainer>
                 <Title>
-                    김달리님을 위한 특별한 혜택
+                    {isUserInfo.name}님을 위한 특별한 혜택
                 </Title>
                 <Description>
                     지금 신청하면 다양한 혜택을 누릴 수 있어요!

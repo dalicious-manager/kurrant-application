@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {View} from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
@@ -10,7 +11,8 @@ import { MembershipJoin } from '../../../../../../assets';
 import { ArrowRightBoxIcon } from '../../../../../../components/Icon';
 import withCommas from '../../../../../../utils/withCommas';
 
-
+import {PAGE_NAME as MembershipInfoPageName } from '../../../../../Membership/MembershipInfo'
+import {PAGE_NAME as MembershipIntroPageName } from '../../../../../Membership/MembershipIntro'
 
 /**
  * @param {object} props
@@ -20,14 +22,16 @@ import withCommas from '../../../../../../utils/withCommas';
 
 const Component = ({point,isMembership}) => {
   const themeApp = useTheme();
+  const navigation = useNavigation();
+  
   return (
     <>
-    {!isMembership ? <MembershipBox source={MembershipJoin} resizeMode={'stretch'}>
+    {!isMembership ? <MembershipJoinPage onPress={()=>navigation.navigate(MembershipIntroPageName)}><MembershipBox source={MembershipJoin} resizeMode={'stretch'} >
             <MembershipText text={'Body05SB'} textColor={themeApp.colors.neutral[0]}>멤버십 가입하고 
             <MembershipEffectText text={'Body05SB'} textColor={themeApp.colors.yellow[500]}> 20%할인</MembershipEffectText> 받기</MembershipText>            
-          </MembershipBox>
+          </MembershipBox></MembershipJoinPage>
           :
-          <Container>
+          <Container onPress={()=>navigation.navigate(MembershipInfoPageName)}>
     <TitleBox>
       <MembershipBadge style={{marginRight:8}}/>
       <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>멤버십</Title>
@@ -52,7 +56,7 @@ const TitleBox = styled.View`
   align-items: center;
   height: 56px;
 `
-const Container = styled.View`
+const Container = styled.Pressable`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -71,7 +75,9 @@ const PointText = styled(Typography)`
 const PointNumberText = styled(Typography)`
 
 `
+const MembershipJoinPage = styled.Pressable`
 
+`
 const MembershipBox = styled.ImageBackground`
   margin-bottom: 7px;
   margin-left: 24px;

@@ -16,7 +16,7 @@ import {
     alarmAtom
 } from './store';
 
-const useUserInfo = () => {
+const useUserMe = () => {
 
     const [myInfo,setMyInfo] = useAtom(isMyInfoAtom);
     const [myInfoPerson,setMyInfoPerson] = useAtom(isMyInfoAtom);
@@ -227,4 +227,4 @@ const useUserInfo = () => {
 
 
 
-export default useUserInfo;
+export default useUserMe;

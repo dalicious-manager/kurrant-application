@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import React from "react"
 import styled from "styled-components";
 import { useTheme } from "styled-components/native";
@@ -8,31 +8,36 @@ import Image from '~components/Image';
 import Typography from "~components/Typography";
 
 import { PAGE_NAME as MembershipInfoPage } from "../../../Membership/MembershipInfo";
-
+import { PAGE_NAME as MoreMainPageName } from "../../../Main/Bnb/More";
+import { PAGE_NAME as MainPageName } from "../../../Main/Bnb/Home";
+import {SCREEN_NAME as BnbScreenName} from '../../../../screens/Main/Bnb';
 import { MembershipJoinComplateImage } from "~assets"
+import useUserInfo from "../../../../biz/useUserInfo";
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_COMPLATE';
 
-const Pages = ({route}) => {
-    console.log(route)
-    const {params}=route;
+const Pages = () => {
     const themeApp = useTheme();
+    const {isUserInfo} = useUserInfo();
     const navigation = useNavigation();
     return (
         <Conotainer>
             <Image imagePath={MembershipJoinComplateImage} scale={1.0}/>
-            <Title textColor={themeApp.colors.grey[2]}>{params?.useName}님, 축하드려요!</Title>
+            <Title textColor={themeApp.colors.grey[2]}>{isUserInfo?.name}님, 축하드려요!</Title>
             <CaptionText textColor={themeApp.colors.grey[4]}>멤버십 가입이 완료되었어요.{'\n'}이제 다양한 혜택을 누릴 수 있어요.</CaptionText>
             <ButtonContainer>
                 <Button
                     type='yellow'
                     label={"확인"}
                     onPressEvent={() => {
-                        navigation.navigate(MembershipInfoPage)
-                        // navigation.reset({
+                        const resetAction =  StackActions.pop(2);;
+                        navigation.dispatch(resetAction);
+                        // navigations.navigate(BnbScreenName,{screen:MoreMainPageName})
+                        // navigations.reset({
                         //     index: 0,
                         //     routes: [
                         //       {
-                        //         name: SCREEN_NAME,
+                        //         name: BnbScreenName,
+                        //         screen:MoreMainPageName
                         //       },
                         //     ],
                         //   })

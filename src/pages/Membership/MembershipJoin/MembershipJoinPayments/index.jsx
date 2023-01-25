@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Animated,    ScrollView } from "react-native";
@@ -12,6 +12,7 @@ import Typography from "~components/Typography";
 
 
 import { MembershipIconImage } from "../../../../assets";
+import useMembership from "../../../../biz/useMembership";
 import BottomModal from "../../../../components/BottomModal";
 import Check from "../../../../components/Check";
 import Form from "../../../../components/Form";
@@ -27,12 +28,20 @@ const Pages= ({route})=>{
     const [fadeIn, setFadeIn] = useState(false);
     const [rotate, setRotate] = useState('0deg');
     const [ modalVisible, setModalVisible ] = useState(false);
+    const [membershipTypeData, setMembershipTypeData] = useState();
     const fadeAnim = useRef(new Animated.Value(period ==='month' ? 86 :108)).current;
     const rotateAnim = useRef(new Animated.Value(1)).current;
     const themeApp = useTheme();
+    const {getMembershipType, membershipJoin} = useMembership();
+    const getMembershipInfo = async()=>{
+      const membership = period ==='month' ? 1 :2;
+      const {data} = await getMembershipType(membership);
+      console.log(data)
+      setMembershipTypeData(data);
+    }
     const handlePress = () => {
       Animated.timing(fadeAnim, {
-        toValue: fadeIn ? period ==='month' ? 86 :108 : 0,
+        toValue: fadeIn ? membershipTypeData?.subscriptionType ===1 ? 86 :108 : 0,
         duration: 300,
         useNativeDriver: false,
       }).start();
@@ -44,22 +53,41 @@ const Pages= ({route})=>{
       }).start();
     };
 
-    const handleEventPayments = ()=>{
+    const handleEventPayments = async()=>{
       console.log(agreeCheck.watch(agreeCheck).agreeCheck);
       if(agreeCheck.watch(agreeCheck).agreeCheck){
+        // 
+      const req=   {
+          "paymentType": 1,
+          "subscriptionType": membershipTypeData?.subscriptionType,
+          "defaultPrice": membershipTypeData?.defaultPrice,
+          "yearDescriptionDiscountPrice": membershipTypeData?.yearDescriptionDiscountPrice,
+          "periodDiscountPrice": membershipTypeData?.periodDiscountPrice,
+          "totalPrice": membershipTypeData.totalPrice
+      }
+      console.log(req);
+      const result = await membershipJoin(req);
+      console.log(result);
+      if(result.statusCode === 200) {
+        const resetAction =  StackActions.pop(3);;
+        navigation.dispatch(resetAction);
         navigation.navigate(MembershipJoinComplatePageName)
+      };
       }else{
 
       }        
     }
+    useEffect(()=>{
+      getMembershipInfo();
+    },[])
     const ProductInfoBlock = ()=>{
-      if(period === 'month'){
+      if(membershipTypeData?.subscriptionType ===1){
         return (
           <Inner>
             <Image imagePath={MembershipIconImage} scale={1.0}/>
             <InnerTextView>
               <MembershipText textColor={themeApp.colors.grey[2]}>커런트 월간 멤버십 정기결제</MembershipText>
-              <PriceText textColor={themeApp.colors.grey[4]}>{withCommas(membershipData.price)}원</PriceText>    
+              <PriceText textColor={themeApp.colors.grey[4]}>{withCommas(membershipTypeData?.totalPrice)}원</PriceText>    
             </InnerTextView>
           </Inner>
         )
@@ -71,9 +99,9 @@ const Pages= ({route})=>{
             <MembershipText textColor={themeApp.colors.grey[2]}>커런트 연간 멤버십 정기결제</MembershipText>
             <PriceSaleBox>
               <PriceTextSale textColor={themeApp.colors.green[500]}>20%</PriceTextSale>
-              <PriceText textColor={themeApp.colors.grey[4]}>115,200원</PriceText>
+              <PriceText textColor={themeApp.colors.grey[4]}>{withCommas(membershipTypeData?.totalPrice)}</PriceText>
             </PriceSaleBox>
-            <PriceTextMid textColor={themeApp.colors.grey[4]}>144,000원</PriceTextMid>    
+            <PriceTextMid textColor={themeApp.colors.grey[4]}>{withCommas(membershipTypeData?.defaultPrice)}</PriceTextMid>    
           </InnerTextView>
         </Inner>
       )
@@ -116,8 +144,8 @@ const Pages= ({route})=>{
                 <InnerContainer>
                   <Animated.View style={{height: fadeAnim}}>
                       {ProductInfoBlock()}
-                  </Animated.View>                  
-                </InnerContainer>                
+                  </Animated.View>
+                </InnerContainer>
               </ProductInfoContainer>
 
               <Line />
@@ -126,7 +154,7 @@ const Pages= ({route})=>{
                 <PaymentPriceTitle textColor={themeApp.colors.grey[2]}>최종 결제금액</PaymentPriceTitle>
                 <PaymentPriceTotalBox mb={24}>
                   <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>총 상품금액</PaymentPriceText>
-                  <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>{withCommas(membershipData.price)} 원</PaymentPriceText>
+                  <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>{withCommas(membershipTypeData?.defaultPrice)} 원</PaymentPriceText>
                 </PaymentPriceTotalBox>
                 <PaymentPriceTotalBox mb={16}>
                   <PaymentPriceText text={'Body05R'} textColor={themeApp.colors.grey[4]}>할인금액</PaymentPriceText>
@@ -136,13 +164,13 @@ const Pages= ({route})=>{
                     textColor={period === 'month' 
                     ? themeApp.colors.grey[4]
                     :  themeApp.colors.green[500]}>
-                      {withCommas(membershipData.price-membershipData.discountedPrice) || 0}
+                      {withCommas(membershipTypeData?.yearDescriptionDiscountPrice)|| 0}
                       </PaymentPriceText> 원
                   </PaymentPriceText>
                 </PaymentPriceTotalBox>
                 <PaymentPriceTotalBox mb={24}>
                   <PaymentPriceText text={'Title03SB'} textColor={themeApp.colors.grey[4]}>총 결제금액</PaymentPriceText>
-                  <PaymentPriceText text={'Title03SB'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipData.discountedPrice)} 원</PaymentPriceText>
+                  <PaymentPriceText text={'Title03SB'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipTypeData?.totalPrice)} 원</PaymentPriceText>
                 </PaymentPriceTotalBox>
               </PaymentPriceContainer>
               <Line />
@@ -166,14 +194,12 @@ const Pages= ({route})=>{
                     
                 </BorderWrap>
                 <FormWrap>
-                    
-                        <Form form={agreeCheck}>
-                            <Check name="agreeCheck" >
-                                <Label>구매 조건 확인 및 결제 진행 필수 동의</Label>
-                            </Check>
-                        </Form>
+                  <Form form={agreeCheck}>
+                    <Check name="agreeCheck" >
+                        <Label>구매 조건 확인 및 결제 진행 필수 동의</Label>
+                    </Check>
+                  </Form>
                 </FormWrap>
-                
                 </Container>
             </ScrollView>
             <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow'/>

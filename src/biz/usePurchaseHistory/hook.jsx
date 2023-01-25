@@ -8,7 +8,7 @@ import { isPurchaseLoadingAtom ,purchaseAtom,purchaseMealAtom,
   isCatorPurchaseLoadingAtom,
   isMealPurchaseLoadingAtom,} from './store';
 
-const useUserInfo = () => {
+const usePurchaseHistory = () => {
   
   
   
@@ -76,4 +76,4 @@ const useUserInfo = () => {
 
 
 
-export default useUserInfo;
+export default usePurchaseHistory;

@@ -10,18 +10,20 @@ export async function getMembershipProduct(option) {
 }
 
 
-export async function membershipJoin(type, option) {
-  const fetchRes = await fetchJson(`/users/membership/YEAR`, 'POST', {
+export async function membershipJoin(body, option) {
+  const fetchRes = await fetchJson(`/users/membership`, 'POST', {
     ...option,
+    body: JSON.stringify(body),
   });
 
   return fetchRes;
 }
 
 
-export async function membershipTerminate(option) {
+export async function membershipTerminate(body, option) {
   const fetchRes = await fetchJson(`/users/membership/unsubscribing`, 'POST', {
     ...option,
+    body: JSON.stringify(body)
   });
 
   return fetchRes;
@@ -29,6 +31,13 @@ export async function membershipTerminate(option) {
 
 export async function getMembershipHistory(option) {
   const fetchRes = await fetchJson(`/users/membership`, 'GET', {
+    ...option,
+  });
+
+  return fetchRes;
+}
+export async function getMembershipType(type, option) {
+  const fetchRes = await fetchJson(`/users/membership/${type}`, 'GET', {
     ...option,
   });
 

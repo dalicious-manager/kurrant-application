@@ -154,16 +154,16 @@ const Pages = ({route}) => {
         <ScrollView>
           <LoginBox>
             <LoginIdBox>
-              <GourmetTestButton>
+              {/* <GourmetTestButton>
                 <Typography text='CaptionSB' textColor={themeApp.colors.blue[500]}>나의 미식타입 테스트 </Typography>
                 <ArrowRight/>
-              </GourmetTestButton>            
+              </GourmetTestButton>             */}
               <Typography text='Title02SB' textColor={themeApp.colors.grey[2]}>{myInfoPerson?.name}님</Typography>
               {myInfoPerson.hasGeneralProvider && <Typography text='Body06R' textColor={themeApp.colors.grey[2]}>{myInfoPerson?.email}</Typography>}
             </LoginIdBox>
-            <AvatarBackground source={AvatarNon} resizeMode={'cover'}>
+            {/* <AvatarBackground source={AvatarNon} resizeMode={'cover'}>
               <Image imagePath={{uri:'https://asset.kurrant.co/img/common/soup.png'}} scale={1.0} styles={{width:55.05,height:48.47}}/>
-            </AvatarBackground>
+            </AvatarBackground> */}
           </LoginBox>
         
           {/* 포인트 활성시

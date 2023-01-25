@@ -1,7 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation ,StackActions} from "@react-navigation/native";
 import React from "react";
 import { ScrollView } from "react-native";
 import styled, { useTheme } from "styled-components/native";
+import useMembership from "../../../biz/useMembership";
+import useUserInfo from "../../../biz/useUserInfo";
 
 import Button from "../../../components/Button";
 import { CommentsIcon, DeliveryFreeIcon, DiscountIcon, PointIcon } from "../../../components/Icon";
@@ -15,11 +17,19 @@ export const PAGE_NAME = "P__MEMBERSHIP__TERMINATE";
 const Pages =()=>{
     const themeApp = useTheme();
     const navigation = useNavigation();
+    const {isUserInfo} = useUserInfo();
+    const {membershipTerminate}= useMembership()
+    const terminate = async()=>{
+        await membershipTerminate();
+        const reset = StackActions.pop(2);
+        navigation.dispatch(reset);
+        navigation.navigate(MembershipTerminateComplatePageName)
+    }
     return(
         <Wrapper>
             <ScrollView>
             <TitleTextBox>
-            <Title text="Title02SB" textColor={themeApp.colors.grey[2]}>김달리님, 잠시만요!{'\n'}멤버십을 해지하면 혜택이 사라져요!</Title>
+            <Title text="Title02SB" textColor={themeApp.colors.grey[2]}>{isUserInfo.name}님, 잠시만요!{'\n'}멤버십을 해지하면 혜택이 사라져요!</Title>
             </TitleTextBox>
             <SubTitle>
                     멤버십 혜택
@@ -65,7 +75,7 @@ const Pages =()=>{
             </NoticeBox>
             <ButtonContainer>
                 <ButtonBox>
-                    <Button size="half" type="grey7" label='해지하기' onPressEvent={()=>navigation.navigate(MembershipTerminateComplatePageName)}/>
+                    <Button size="half" type="grey7" label='해지하기' onPressEvent={terminate}/>
                 </ButtonBox>
                 <ButtonBox>
                     <Button size="half" type="yellow" label='유지하기'/>

@@ -6,6 +6,7 @@ import styled, { useTheme } from "styled-components/native";
 import Typography from "~components/Typography";
 
 import useMembership from "../../../../biz/useMembership";
+import useUserInfo from "../../../../biz/useUserInfo";
 import Label from "../../../../components/Label";
 import withCommas from "../../../../utils/withCommas";
 
@@ -15,10 +16,12 @@ export const PAGE_NAME = "P__MEMBERSHIP__USAGE__DETAIL"
 const Pages= ()=>{
     const themeApp = useTheme();
     const {getMembershipHistory} = useMembership();
+    const {isUserInfo} = useUserInfo();
     const [membershipHistory ,setMebershipHistory] = useState();
     const getData = async()=>{
       const {statusCode,data} = await getMembershipHistory();
       if(statusCode === 200){
+        // console.log(data);
         setMebershipHistory(data);
       }
       
@@ -33,7 +36,7 @@ const Pages= ()=>{
               <Container>
               {/** 타이틀 영역 */}
               <MembershipTitleBox>
-                <MembershipTitle text={'Title03SB'} textColor={themeApp.colors.grey[2]}>김달리님의 멤버십 이용내역</MembershipTitle>
+                <MembershipTitle text={'Title03SB'} textColor={themeApp.colors.grey[2]}>{isUserInfo.name}님의 멤버십 이용내역</MembershipTitle>
                 <MembershipDescription text={'Body06R'} textColor={themeApp.colors.grey[4]}>커런트 멤버십 이용에 감사드립니다.
                 </MembershipDescription>
               </MembershipTitleBox>
@@ -45,7 +48,7 @@ const Pages= ()=>{
                   return (
                     <SubscriptionBox key={index}>
                         <TextBox>
-                            <Label size="labelM" type="blue" label="월간구독"/>
+                            <Label size="labelM" type={membership.membershipSubscriptionType === "월간구독" ? "blue": "green"} label={membership.membershipSubscriptionType}/>
                             <Typography text={'Body05SB'} textColor={themeApp.colors.grey[2]}>{withCommas(membership.price)} 원</Typography>
                         </TextBox>
                         <TextBox>
@@ -60,9 +63,7 @@ const Pages= ()=>{
                   )
                 })}
               </ProductInfoContainer>
-
-             
-                </Container>
+              </Container>
             </ScrollView>
            
           </>

@@ -791,15 +791,16 @@ const Screen = () => {
         <MainRoot.Screen
           name={MembershipIntroPageName}
           component={MembershipIntro}
-          options={{headerShown: false,
-            title:'멤버십 가입',
+          options={{headerShown: true,
+            title:'',
             headerShadowVisible: false,
+            headerTransparent:true,
             headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
+            // headerTitleStyle:{
+            //   fontFamily:'Pretendard-SemiBold',
+            //   fontSize:14,
+            //   lineHeight:22
+            // },
             headerLeft: () => <BackButton />,
           }}
         />

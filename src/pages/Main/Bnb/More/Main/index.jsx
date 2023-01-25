@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/native';
+import {getFocusedRouteNameFromRoute, useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, { useEffect, useLayoutEffect } from "react";
 import { Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import styled, { useTheme } from 'styled-components/native';
@@ -14,6 +14,7 @@ import Wrapper from '~components/Wrapper';
 import {PAGE_NAME as TermOfServicePageName } from '~pages/Main/MyPage/TermOfService'
 
 import { PAGE_NAME as MembershipIntroPageName } from '../../../../Membership/MembershipIntro';
+import { PAGE_NAME as MembershipInfoPageName } from '../../../../Membership/MembershipInfo';
 import { PAGE_NAME as FAQPageName } from '../../../MyPage/FAQ';
 import { PAGE_NAME as PersonalInfoPageName } from '../../../MyPage/PersonalInfo';
 import { PAGE_NAME as MealPageName } from '../../Meal/Main';
@@ -27,6 +28,8 @@ import PointBox from './PointBox';
 import SkeletonUI from './SkeletonUI';
 
 import { AvatarNon, MembershipJoin } from '~assets';
+import { useCallback } from 'react';
+import useUserInfo from '../../../../../biz/useUserInfo';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -34,32 +37,34 @@ const Pages = () => {
   const themeApp = useTheme();
   const navigation = useNavigation();
   const { userMe, readableAtom:{myInfo,isMyInfoLoading}} = useUserMe();
+  const { isUserInfo} = useUserInfo();
   const getData = async()=>{
     await userMe();
   }
 
-
-  useEffect(()=>{
-    getData();
-  },[])
-  if(isMyInfoLoading){
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
+  if(isMyInfoLoading && !myInfo){
     return <SkeletonUI />
   }
   return (
     <Container>
       <Wrapper paddingTop={24}>
         <ScrollView>
-          <GourmetTestButton>
+          {/* <GourmetTestButton>
             <Typography text='CaptionSB' textColor={themeApp.colors.blue[500]}>나의 미식타입 테스트 </Typography>
             <ArrowRight/>
-          </GourmetTestButton>
+          </GourmetTestButton> */}
           {myInfo 
           ? <LoginBox>
               <LoginIdBox>              
-                <AvatarBackground source={AvatarNon} resizeMode={'stretch'}>
+                {/* <AvatarBackground source={AvatarNon} resizeMode={'stretch'}>
                   {myInfo.gourmetType !== null && <Image imagePath={{uri:'https://asset.kurrant.co/img/common/soup.png'}} scale={1.0} styles={{width:25,height:22}}/>}
-                </AvatarBackground>
-                <Typography text='Title02SB' textColor={themeApp.colors.grey[2]}>{myInfo.name}님</Typography>
+                </AvatarBackground> */}
+                <Typography text='Title02SB' textColor={themeApp.colors.grey[2]}>{isUserInfo.name}님</Typography>
               </LoginIdBox>
               <Pressable onPress={()=> navigation.navigate(PersonalInfoPageName)}>
                 <SettingIcon height={16} width={8}/>
@@ -70,18 +75,26 @@ const Pages = () => {
               <ArrowRightLogin height={16} width={8}/>
             </LoginBox>}
         
-            <MembershipBox isMembership={false}/>
+            <MembershipBox isMembership={isUserInfo?.isMembership}/>
           {/* 포인트 활성시
             <PointBox point={41030}/> 
           */}
           <InfomationContainer>
-            <InfomationBox>
+            {/* <InfomationBox>
               <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>7</InfomationText>
               <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[2]}>구매후기</InfomationLabel>
             </InfomationBox>
             <InfomationBox>
               <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>0</InfomationText>
               <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[2]}>찜목록<InfomationCaption textColor={themeApp.colors.grey[5]}>(준비중)</InfomationCaption></InfomationLabel>
+            </InfomationBox> */}
+            <InfomationBox>
+              <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[5]}>0</InfomationText>
+              <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[5]}>준비중</InfomationLabel>
+            </InfomationBox>
+            <InfomationBox>
+              <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[5]}>0</InfomationText>
+              <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[5]}>준비중</InfomationLabel>
             </InfomationBox>
             <InfomationBox>
               <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>10</InfomationText>
@@ -96,7 +109,7 @@ const Pages = () => {
             {/* <ListBox title='찜목록' /> */}
             <ListBox title='구매 내역' routeName={PurchaseHistoryName}/>
             {/* <ListBox title='리뷰 관리' description={`모두 작성시 최대 `} effect={<Typography test={'CaptionR'} textColor={themeApp.colors.blue[500]}>500P</Typography>} /> */}
-            <ListBox title='커런트 멤버십' routeName={MembershipIntroPageName}/>
+            <ListBox title='커런트 멤버십' routeName={isUserInfo?.isMembership ?MembershipInfoPageName : MembershipIntroPageName}/>
             {/* <ListBox title='커런트 포인트' /> */}
           </ListContainer>
           <ListContainer title='알림'>

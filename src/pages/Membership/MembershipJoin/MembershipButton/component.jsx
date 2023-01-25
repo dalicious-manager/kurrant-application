@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 
 import ArrowRight from "~assets/icons/Arrow/btnArrowRight.svg";
-
+import {View} from 'react-native';
 import Label from "../../../../components/Label";
 import Typography from "../../../../components/Typography";
 import withCommas from "../../../../utils/withCommas";
@@ -23,16 +23,18 @@ const Component = ({label,payments, isSale,dicountPayments ,onPressEvent, ...res
             <TitleBox>
                 <MembershipText>
                     {label}                
-                </MembershipText>         
+                </MembershipText>  
+                <View>       
                 {isSale > 0 && <Label size="labelS" label={`${isSale}%`} type="green"/> }
+                </View>
             </TitleBox>
             <PaymentsBox>
                 <PaymentsTextBox>
                     <PaymentsText>
-                        {pay}원
+                        {pay|| 0}원
                     </PaymentsText>
                     {isSale> 0  && <CaptionText>
-                        (월 {withCommas((payments === dicountPayments ? payments : dicountPayments)/12)}원)
+                        (월 {withCommas((payments === dicountPayments ? payments : dicountPayments )/12)|| 0}원)
                     </CaptionText>}
                 </PaymentsTextBox>
                 <ArrowIcon />
