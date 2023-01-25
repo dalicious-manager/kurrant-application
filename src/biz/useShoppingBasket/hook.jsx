@@ -69,7 +69,7 @@ const useShoppingBasket = () => {
             const res = await Fetch.updateMealCart({
                 ...body
             });
-            
+            console.log(res.message)
             return res;
 
         }catch(err){

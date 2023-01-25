@@ -6,6 +6,7 @@ import Typography from "../Typography";
 import XIcon from "./icon/x.svg";
 
 const windowWidth = Dimensions.get('window').width;
+
 const Component = ({
     text,
     title
@@ -18,11 +19,13 @@ const Component = ({
         <Wrap >
             <Modal animationType="fade" transparent={true} visible={modalVisible}>
                 <InnerWrap style={styles.container}>
-                    <Pressable
-                        onPress={() => setModalVisible(!modalVisible)}>
-                        <Icon/>
-                    </Pressable>
-                    <TextType>{text}</TextType>
+                    <IconWrap
+                        onPress={() => {setModalVisible(!modalVisible)}}>
+                        <XIcon/>
+                    </IconWrap>
+                    <View>
+                        <TextType>{text}</TextType>
+                    </View>
                 </InnerWrap>
             </Modal>
             <TitleWrap
@@ -58,26 +61,27 @@ const Wrap = styled.View`
 
 `;
 const TitleWrap = styled.Pressable`
-position:relative;
+
 `;
 const InnerWrap = styled.View`
 background-color:#fff;
-/* width:100%; */
 padding:12px 16px;
 position:absolute;
-top:200px;
+top:600px;
 border-radius:7px;
 margin:0px 24px;
-
+/* width:80%; */
+padding-right:40px;
 `;
 
 const TextType = styled(Typography).attrs({text:'CaptionR'})`
 color:${({theme}) => theme.colors.grey[2]};
 `;
 
-const Icon = styled(XIcon)`
-align-self:flex-end;
-/* position:absolute;
-right:0px; */
-
+const IconWrap = styled.Pressable`
+position:absolute;
+right:10px;
+top:12px;
+width:15px;
+height:15px;
 `;

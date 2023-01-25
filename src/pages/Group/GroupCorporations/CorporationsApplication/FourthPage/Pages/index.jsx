@@ -99,6 +99,11 @@ const Pages = () => {
                         placeholder="스팟명"
                         style={inputStyle}
                         caption="건물 이름 + 층으로 입력해주세요."
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                            }
+                          }
                         />
 
                         <RefTextInput
@@ -115,6 +120,11 @@ const Pages = () => {
                         name="remainingAddress"
                         placeholder="나머지 주소"
                         style={inputStyle}     
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                            }
+                          }
                         />
 
                     <Title>이 스팟에서 이용할 식사 타입</Title>

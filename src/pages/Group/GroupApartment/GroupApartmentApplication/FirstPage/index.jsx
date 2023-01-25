@@ -169,6 +169,12 @@ const Pages = () => {
                         style={inputStyle}
                         defaultValue={name}
                         ref={nameRef}
+                        suffix={
+                          {
+                            isNeedDelete : true,
+                            
+                          }
+                        }
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -188,6 +194,12 @@ const Pages = () => {
                         style={inputStyle}
                         defaultValue={phone}
                         ref={phoneRef}
+                        suffix={
+                          {
+                            isNeedDelete : true,
+                            
+                          }
+                        }
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -208,7 +220,12 @@ const Pages = () => {
                         autoCapitalize = "none"
                         style={inputStyle}
                         defaultValue={email}
-                        
+                        suffix={
+                          {
+                            isNeedDelete : true,
+                            
+                          }
+                        }
                         ref={emailRef}
                         rules={
                             {

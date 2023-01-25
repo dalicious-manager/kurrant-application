@@ -131,6 +131,11 @@ const Pages = () => {
                         placeholder="기업명"
                         style={inputStyle}
                         defaultValue={isCorpAddress.corporationName}
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                            }
+                          }
                         rules={
                             {
                               required: '필수 입력 항목 입니다.',
@@ -158,7 +163,11 @@ const Pages = () => {
                         name="address2"
                         placeholder="나머지 주소"
                         style={inputStyle}
-                        // defaultValue={isCorpAddress.familyCount !== undefined && String(isCorpAddress.familyCount)}
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                            }
+                          }
                         />
 
                         <RefTextInput
@@ -168,7 +177,11 @@ const Pages = () => {
                         keyboardType="numeric"
                         style={inputStyle}
                         defaultValue={isCorpAddress.corporationName}
-
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                            }
+                          }
                         rules={
                             {
                             //   required: '필수 입력 항목 입니다.',

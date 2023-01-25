@@ -1,4 +1,3 @@
-import { arMA } from "date-fns/locale";
 import React ,{ useEffect,useState }from "react";
 import { KeyboardAvoidingView, NativeModules, Platform,TouchableWithoutFeedback,TextInput, Pressable } from "react-native";
 import styled from "styled-components";
@@ -26,7 +25,6 @@ const Component = ({
     
     
 }) =>{
-console.log(id,'???')
     
     const {isLoadMeal} = useShoppingBasket();
     
@@ -40,10 +38,10 @@ console.log(id,'???')
           : null;
       }, []);
 
-      // const quantity = isLoadMeal.find(x => x.dailyFoodId === id);
-      const quantity = isLoadMeal?.cartDailyFoodDtoList?.cartDailyFoods?.find(x => x.dailyFoodId === id);
-      const test = isLoadMeal?.cartDailyFoodDtoList?.map(el => el.cartDailyFoods);
-      console.log(test,'dididid')
+      
+      const arr = isLoadMeal?.map(el => el.cartDailyFoods);
+      const quantityArr = arr.reduce((acc, val) => [ ...acc, ...val ], []);
+      const quantity = quantityArr.find(v => v.dailyFoodId === id);
       
     return (
         <React.Fragment>
@@ -55,7 +53,7 @@ console.log(id,'???')
             >
             <TouchableWithoutFeedback onBlur={blurPress} >  
                  <KeypadInput focus={focus}>
-                    <PressableView onPress={()=>{substractHandle(id)}}>
+                    <PressableView onPress={()=>{substractHandle(id)}} disabled={quantity?.count === 1 && true}>
                         <MinusIcon disabled={quantity?.count}/>
                     </PressableView>
                     <InnerTextInput
@@ -82,7 +80,7 @@ console.log(id,'???')
                 >
                 <TouchableWithoutFeedback onBlur={blurPress} >
                  <KeypadInput focus={focus}>
-                        <PressableView onPress={decreasePress}>
+                        <PressableView onPress={decreasePress} disabled={count === 1 && true}>
                             <MinusIcon />
                         </PressableView>
                         <TextInput

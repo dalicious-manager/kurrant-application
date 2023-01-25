@@ -36,7 +36,7 @@ const Component = ({
     <>
       {detail && <View>
         <InnerView>
-          <PressableView onPress={decreasePress}>
+          <PressableView onPress={decreasePress} disabled={count === 1 && true}>
             <MinusIcon/>
           </PressableView>
             <CountText onPress={onPressEvent}>
@@ -51,7 +51,7 @@ const Component = ({
 
       {cart && <View>
         <InnerView>
-          <PressableView onPress={()=>substractHandle(id)}>
+          <PressableView onPress={()=>substractHandle(id)} disabled={quantity === 1 && true}>
             <MinusIcon disabled={quantity}/>
           </PressableView>
           <Pressable onPress={onPressEvent}>

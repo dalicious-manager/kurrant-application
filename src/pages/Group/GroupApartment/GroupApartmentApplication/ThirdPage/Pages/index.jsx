@@ -114,7 +114,22 @@ const Pages = () => {
                         placeholder="서비스 이용 예상 세대수"
                         style={inputStyle}
                         defaultValue={isApartMealInfo[0]?.expectedUserCount !== undefined && String(isApartMealInfo[0]?.expectedUserCount)}
+                        suffix={
+                            {
+                              isNeedDelete : true,
+                              
+                            }
+                          }
+                          rules={
+                            {
+                                pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: '숫자만 입력해 주세요.',
+                                }
+                            }
+                        }
                         />
+
                         <DaysText>서비스 이용 요일</DaysText>
                         <WeekButton 
                         touch={touch} setTouch={setTouch}
@@ -124,7 +139,7 @@ const Pages = () => {
                             label="배송 시간"
                             name="deliveryTime"
                             placeholder="배송 시간"
-                            onPressIn={showTimePicker}
+                            onPressIn={()=>{showTimePicker();setInfoShow(infoShow(false))}}
                             showSoftInputOnFocus={false}
                             minuteInterval={5}
                             />
