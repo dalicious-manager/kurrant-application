@@ -2,7 +2,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 import { useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
 import React, { useRef, useState, useEffect } from 'react';
-import { ScrollView, View, Pressable,Dimensions, StyleSheet} from "react-native";
+import { ScrollView, View, Pressable,Dimensions, StyleSheet, SafeAreaView, Alert} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
@@ -53,19 +53,12 @@ const Pages = () => {
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
     // const spotId = userInfo.spotId; 
     const spotId = 1; 
-    
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
             
             setSliderValue(position);
             setFocus(position);
-         } 
-
-    const test = (e) => {
-        const { position } = e.nativeEvent;
-        console.log(position,'111')
-    }
-        
+         }
     
     const dayPress = async (selectedDate) =>{
         
@@ -127,9 +120,7 @@ const Pages = () => {
     const addCartPress = async (id,day,type) =>{
         
         const diningType = type;
-        //const duplication = isLoadMeal.some((item) => item.dailyFoodId === id);
-        const duplication = isLoadMeal.map((v)=> v.cartDailyFoods.some((food)=>food.dailyFoodId  === id))
-        
+        const duplication = isLoadMeal.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === id))).flat()
         
         if(duplication.includes(true)){
             await openModal(diningType)
@@ -156,8 +147,8 @@ const Pages = () => {
                  await loadMeal();
                  await balloonEvent();
                  } catch(err){
-                     console.log(err)
-                     throw err
+                    Alert.alert(err.message)
+                    
                  }
                closeModal();    
     }
@@ -217,7 +208,7 @@ const Pages = () => {
                     </LabelWrap>
                     }
                 </ContentsText>
-
+                    
                 <MealImageWrap>
                     {m.isSoldOut && <BlurView/>}
 
@@ -312,7 +303,7 @@ const Pages = () => {
                 
             </ScrollView>
             <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'8px', right:'14px'}}/>
-            <ButtonWrap>
+            <ButtonWrap membership={userInfo?.isMembership}>
                 <Button label={'장바구니 보기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(MealCartPageName)}}/>
             </ButtonWrap>
         </SafeView>
@@ -370,13 +361,6 @@ justify-content:space-between;
 width:93px;
 `;
 
-const ProgressBar = styled.View`
-width:87px;
-height:2px;
-margin:9px 0px;
-background-color:${props => props.theme.colors.grey[2]};
-`;
-
 const Pager = styled(PagerView)`
 flex:1;
 `;
@@ -385,7 +369,6 @@ const Contents = styled.Pressable`
 padding: ${({spicy}) => spicy ? '24px 0px 12px 0px': '24px 0px 28px 0px'};
 margin: 0px 28px;
 flex-direction:row;
-/* padding:24px 0px 28px 0px; */
 justify-content:space-between;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
@@ -456,7 +439,7 @@ z-index:1000;
 `;
 const ButtonWrap = styled.View`
 position:absolute;
-bottom:35px;
+bottom:${({membership}) => membership ? '70px': '35px'};
 margin:0px 48px;
 `;
 
@@ -515,9 +498,7 @@ color:${({theme}) => theme.colors.grey[5]};
 `;
 
 const NoServieceView = styled.View`
-/* justify-content:center;
-align-items:center;
-flex:1; */
+
 position:absolute;
 top:30%;
 left:30%;

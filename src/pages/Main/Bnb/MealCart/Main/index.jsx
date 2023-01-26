@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import FastImage from 'react-native-fast-image';
 
+import Arrow from '../../../../../assets/icons/MealCart/arrow.svg';
 import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
 import X from "../../../../../assets/icons/MealCart/x.svg";
@@ -28,7 +29,7 @@ import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import { el } from "date-fns/locale";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
-
+import BottomSheet from "../../../../../components/BottomSheet";
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -40,25 +41,32 @@ const Pages = () => {
     const inputRef = useRef();
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
-    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal, deliveryFee,userPoint} = useShoppingBasket();
+    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal,allDeleteMeal, deliveryFee,userPoint, mealCartSpot} = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
+    const [ modalVisible2, setModalVisible2 ] = useState(false);
     const {isUserInfo} = useUserInfo();
-
-    // console.log(isLoadMeal,'장바구니')
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         // Do something when the screen is focused
-    //         console.log('들어옴')
+    const [selected,setSelected] = useState(isUserInfo.spotId);
+    const [name,setName] = useState();
+    
+    useFocusEffect(
+        useCallback(() => {
+            // Do something when the screen is focused
+            console.log('들어옴')
         
 
-    //         return  () => {
-    //             console.log("나감")
-    //             updateMeal({"updateCartList":quantity});
-    //         };
+            return  () => {
+                console.log("나감")
+                updateMeal({"updateCartList":modifyQty});
+            };
     
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [updateMeal])
-    // );
+    
+    }, [updateMeal])
+    );
+
+
+    const PressSpotButton = () => {
+        setModalVisible2(true);
+      }
 
     const keyboardStatus = useKeyboardEvent();
     useEffect(()=>{
@@ -88,58 +96,72 @@ const Pages = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
-    const quantityArr = isLoadMeal?.map(el => el.cartDailyFoods.map(v => {
+    const quantityArr = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods.map(c => {
         return {
-            dailyFoodId:v.dailyFoodId,
-            count:v.count,
-            cartItemId:v.id
+            dailyFoodId:c.dailyFoodId,
+            count:c.count,
+            cartItemId:c.id
         }
-    }));
-
+    })));
     const quantity = quantityArr.reduce((acc, val) => [ ...acc, ...val ], []);
-
+    const modifyQty = quantity.reduce((acc,cur) => [...acc, ... cur], []);
+    
     const fundButton = () => {
         setModalVisible(true);
     }
     
     const addHandle = (productId) => {
-        const addQty = isLoadMeal.map((v)=> {
-            return {...v, cartDailyFoods:[...v.cartDailyFoods.map((food)=>{
-                if(food.dailyFoodId  === productId){
-                    return {...food,count:food.count+1}
-                }else{
-                    return {...food}
+
+        const addQty = isLoadMeal.map(el => {
+            return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
+                return {
+                    ...v, cartDailyFoods:[...v.cartDailyFoods.map(food => {
+                        if(food.dailyFoodId === productId){
+                            return {...food,count:food.count + 1}
+                        }else{
+                            return {...food}
+                        }
+                    })
+                    ]
                 }
-            })]
-            }
+            })]}
         })
         
         setLoadMeal(addQty);
+     
     }
 
     const substractHandle = (productId) => {
-        const substracQty = isLoadMeal.map((v)=> {
-        
-            return {...v, cartDailyFoods:[...v.cartDailyFoods.map((food)=>{
-                if(food.dailyFoodId  === productId){
-                    return {...food,count:( food.count <= 1? 1:food.count - 1)}
-                }else{
-                    return {...food}
+        const substracQty = isLoadMeal.map(el => {
+            return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
+                return {
+                    ...v, cartDailyFoods:[...v.cartDailyFoods.map(food => {
+                        if(food.dailyFoodId === productId){
+                            return {...food,count:( food.count <= 1? 1:food.count - 1)}
+                        }else{
+                            return {...food}
+                        }
+                    })
+                    ]
                 }
-            })]
-            }
+            })]}
         })
+
         setLoadMeal(substracQty);
      
     }
 
     // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
-    const arr = isLoadMeal?.map(p => p.cartDailyFoods).flat()
-
+    
+    const arrs = isLoadMeal?.filter(p => p.spotId === (selected ?? isUserInfo.spotId))?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods)).flat()
+    const arr = arrs.reduce((acc, val) => [ ...acc, ...val ], []);
+    
+    // 총 개수
     const totalCount = arr?.map(p => p.count).reduce((acc,cur) => {
         return acc + cur
     },0);
 
+    // (할인전)총 금액
     const totalMealPrice = arr?.map(p => p.count * p.price).reduce((acc,cur) => {
         return acc + cur
     },0);
@@ -159,11 +181,12 @@ const Pages = () => {
         return acc + cur
     },0);
 
-    // // 회사 지원금
-    const supportPrice = isLoadMeal?.map(p => p.supportPrice).reduce((acc,cur) => {
+    // 회사 지원금
+    const support = isLoadMeal?.filter(p => p.spotId === (selected ?? isUserInfo.spotId)).map(el => el.cartDailyFoodDtoList).flat()
+    const supportPrice = support.map(el => el.supportPrice).reduce((acc,cur) => {
         return acc + cur
-    },0);
-
+    },0)
+    
     // 총 결제금액
     const totalPrice = totalMealPrice - supportPrice - ( membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice) + deliveryFee
     
@@ -175,19 +198,22 @@ const Pages = () => {
       };
 
     const changeText = (number,pi) => {
-       
-        const addQty = isLoadMeal.map((v)=> {
-            return {...v, cartDailyFoods:[...v.cartDailyFoods.map((food)=>{
-                if(food.dailyFoodId  === pi){
-                    return {...food,count:Number(number)}
-                }else{
-                    return {...food}
+        const changeQty = isLoadMeal.map(el => {
+            return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
+                return {
+                    ...v, cartDailyFoods:[...v.cartDailyFoods.map(food => {
+                        if(food.dailyFoodId === pi){
+                            return {...food,count:Number(number)}
+                        }else{
+                            return {...food}
+                        }
+                    })
+                    ]
                 }
-            })]
-            }
-        })
+            })]}
+        });
 
-        setLoadMeal(addQty);
+        setLoadMeal(changeQty);
         
       };
 
@@ -196,14 +222,22 @@ const Pages = () => {
     };
 
     const deleteButton = async (foodId) => {
-
-        const arr = isLoadMeal.map((v)=> {
-            return {...v, cartDailyFoods:[...v.cartDailyFoods.filter((food)=> food.id !== foodId)]
-            }
+    
+        const arr = isLoadMeal.map(el => {
+            return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
+                return {
+                    ...v, cartDailyFoods:[...v.cartDailyFoods.filter(food => food.id !== foodId)]
+                }
+            })]}
         })
-       
-        const deleteArr = arr.filter(el=>el.cartDailyFoods.length !== 0)
-       
+        
+        const deleteArr = arr.map(el=>{
+            return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.filter(v => 
+                v.cartDailyFoods.length !== 0 
+                
+            )]}
+        })
+        console.log(deleteArr,'333')
         try {
             await deleteMeal(foodId);
             setLoadMeal(deleteArr)
@@ -225,6 +259,32 @@ const Pages = () => {
         //     throw new Error ('에러남')
         // }
     }
+
+    const allDelete = () => {
+       Alert.alert(
+            '전체 삭제',
+            '메뉴를 모두 삭제하시겠어요?',
+            [
+              {
+                text:'아니요',
+                onPress:() => console.log('cancel pressed'),
+                style:'destructive'
+              },
+              {
+                text:'삭제',
+                onPress:() => {
+                  try {
+                    allDeleteMeal();
+                    setLoadMeal([]);
+                  }catch(err){
+                    console.log(err)
+                  }
+                }
+              }
+            ]
+          )
+    }
+    
     return (
         <SafeView>
             {isLoadMeal?.length === 0 && <EmptyView>
@@ -233,60 +293,76 @@ const Pages = () => {
                     <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
                 </NoMealButtonWrap>
             </EmptyView>}
-            <ScrollViewWrap showsVerticalScrollIndicator={false}>
+            <ScrollViewWrap>
+                {isLoadMeal?.length !== 0 && <SpotView>
+                    <SpotPress onPress={PressSpotButton}>
+                        <SpotName>{name === undefined ? isUserInfo.spot : name }</SpotName>
+                        <ArrowIcon/>
+                    </SpotPress>
+                    <Pressable onPress={allDelete}>
+                        <Text>전체삭제</Text>
+                    </Pressable>
+                </SpotView>}
                 {isLoadMeal?.map((el,idx) => {
-                   return (
-                    <Wrap key={idx}>
-                        <ContentHeader>
-                            <DiningName>{formattedMonthDay(el.serviceDate)} {el.diningType}</DiningName>
-                        </ContentHeader>
-                        {el.cartDailyFoods.map((food,i) => {
-                            const rate = food.membershipDiscountRate + food.makersDiscountRate + food.periodDiscountRate;
-                            const membership = food.membershipDiscountPrice === null ? 0 : food.membershipDiscountPrice ;
-                            const markers = food.makersDiscountPrice === null ? 0 : food.makersDiscountPrice;
-                            const period = food.periodDiscountPrice === null ? 0 : food.periodDiscountPrice ;
-                            const discountPrice = membership + markers + period;
-                            
-                            return (
-                                <React.Fragment key={i}>
-                                    <Pressable onPress={()=>{deleteButton(food.id)}}><DeleteIcons/></Pressable>
-                                <ContentWrap >
-                                    <FastImage source={{uri:`${food.image}`,priority:FastImage.priority.high}}
-                                    style={{
-                                        width:45,
-                                        height:45,
-                                        borderRadius:7,
-                                        marginRight:12,
-                                    }}
-                                    />
-                                    <MealNameView>
-                                        <MealName numberOfLines={1} ellipsizeMode="tail">[{food.makers}] {food.name}</MealName>
-                                        
-                                        <SalePriceWrap>
-                                            <PointBoldText>{rate}%</PointBoldText>
-                                        <Price>{withCommas(((food.price)-(discountPrice))*food.count)}원</Price>
-                                        </SalePriceWrap>
-                                        <SalePrice>{withCommas((food.price)*food.count)}원</SalePrice>
-                                        
-                                        
-                                    </MealNameView>
-                                    <CountWrap>                                
-                                            <Count
-                                                cart
-                                                onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(food.dailyFoodId)}} 
-                                                addHandle={addHandle}
-                                                substractHandle={substractHandle}
-                                                quantity={food.count}
-                                                id={food.dailyFoodId}
-                                        />
-                                    </CountWrap>
-                                </ContentWrap>
-                                </React.Fragment>
-                            )
-                        })}
-                    </Wrap>
-                   )
-                })}
+                        return (
+                            <React.Fragment key={idx}>
+                                {(selected === el.spotId) && el.cartDailyFoodDtoList.map((v,idx) => {
+                                    return (
+                                        <Wrap key={idx}>
+                                            <ContentHeader>
+                                                <DiningName>{formattedMonthDay(v.serviceDate)} {v.diningType}</DiningName>
+                                            </ContentHeader>
+                                            {v.cartDailyFoods.map((food,i) => {
+                                                    const rate = food.membershipDiscountRate + food.makersDiscountRate + food.periodDiscountRate;
+                                                    const membership = food.membershipDiscountPrice === null ? 0 : food.membershipDiscountPrice ;
+                                                    const markers = food.makersDiscountPrice === null ? 0 : food.makersDiscountPrice;
+                                                    const period = food.periodDiscountPrice === null ? 0 : food.periodDiscountPrice ;
+                                                    const discountPrice = membership + markers + period;
+                                                    
+                                                return (
+                                                    <React.Fragment key={i}>
+                                                    <Pressable onPress={()=>{deleteButton(food.id)}}><DeleteIcons/></Pressable>
+                                                    <ContentWrap >
+                                                        <FastImage source={{uri:`${food.image}`,priority:FastImage.priority.high}}
+                                                        style={{
+                                                            width:45,
+                                                            height:45,
+                                                            borderRadius:7,
+                                                            marginRight:12,
+                                                        }}
+                                                        />
+                                                        <MealNameView>
+                                                            <MealName numberOfLines={1} ellipsizeMode="tail">[{food.makers}] {food.name}</MealName>
+                                                            
+                                                            <SalePriceWrap>
+                                                                <PointBoldText>{rate}%</PointBoldText>
+                                                                <Price>{withCommas(((food.price)-(discountPrice))*food.count)}원</Price>
+                                                            </SalePriceWrap>
+                                                            <SalePrice>{withCommas((food.price)*food.count)}원</SalePrice>
+                                                            
+                                                            
+                                                        </MealNameView>
+                                                        <CountWrap>                                
+                                                                <Count
+                                                                    cart
+                                                                    onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(food.dailyFoodId)}} 
+                                                                    addHandle={addHandle}
+                                                                    substractHandle={substractHandle}
+                                                                    quantity={food.count}
+                                                                    id={food.dailyFoodId}
+                                                                />
+                                                        </CountWrap>
+                                                    </ContentWrap>
+                                                    </React.Fragment>
+                                                )
+                                            })}
+                                        </Wrap>
+
+                                    )
+                            })}
+                        </React.Fragment>
+                        )
+                    })}
 
                 {isLoadMeal?.length !== 0 && 
                 <View >
@@ -345,12 +421,15 @@ const Pages = () => {
                     makersDiscountPrice,
                     periodDiscountPrice,
                     supportPrice,
-                    totalPrice
+                    totalPrice,
+                    selected,
+                    name
                 })}}
                 />
             </ButtonWrap>}
              
             <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
+            <BottomSheet modalVisible={modalVisible2} setModalVisible={setModalVisible2}  title='스팟 선택' data={mealCartSpot} selected={selected} setSelected={setSelected} setName={setName}/>
             </SafeView>
     )
 
@@ -580,4 +659,32 @@ const DeleteIcons = styled(DeleteIcon)`
 position:absolute;
 top:-15px;
 right:0;
+`;
+
+const SpotName = styled(Typography).attrs({text:'Button10SB'})`
+color:${({theme}) => theme.colors.grey[2]};
+
+`;
+
+const SpotPress = styled.Pressable`
+flex-direction:row;
+align-items:center;
+padding:10px 0px;
+
+`;
+
+const ArrowIcon =styled(Arrow)`
+margin-left:10px;
+`;
+
+const SpotView = styled.View`
+
+border-top-color:${({theme}) => theme.colors.grey[8]};
+border-top-width:1px;
+border-bottom-color:${({theme}) => theme.colors.grey[8]};
+border-bottom-width:1px;
+flex-direction:row;
+justify-content:space-between;
+align-items:center;
+padding:0px 24px;
 `;

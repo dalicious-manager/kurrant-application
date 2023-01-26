@@ -33,8 +33,8 @@ const useFoodDaily = () => {
             setLunch(res.data.dailyFoodDtos.filter(x => x.serviceDate === seletedDate && x.diningType === 2));
             setDinner(res.data.dailyFoodDtos.filter(x => x.serviceDate === seletedDate && x.diningType === 3));
             
-        } catch (err) {
-            console.log(err,'err');
+        } catch (error) {
+            throw error
             
             setMorning([]);
             setLunch([]);

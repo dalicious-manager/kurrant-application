@@ -167,11 +167,10 @@ const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
   const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
-  const {allDeleteMeal,setLoadMeal} = useShoppingBasket();
   const {deleteAlarm} = useBoard();
  
   return (
-    <MainRoot.Navigator>
+    <MainRoot.Navigator >
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -530,28 +529,7 @@ const Screen = () => {
             headerShadowVisible: false,
             
             headerLeft: () => <BackButton margin={[10,0]}/>,
-            headerRight: () => <DeleteTxt onPress={()=>{Alert.alert(
-              '전체 삭제',
-              '메뉴를 모두 삭제하시겠어요?',
-              [
-                {
-                  text:'아니요',
-                  onPress:() => console.log('cancel pressed'),
-                  style:'destructive'
-                },
-                {
-                  text:'삭제',
-                  onPress:() => {
-                    try {
-                      allDeleteMeal();
-                      setLoadMeal([]);
-                    }catch(err){
-                      console.log(err)
-                    }
-                  }
-                }
-              ]
-            )}}>전체삭제</DeleteTxt>
+            
           }}
         />
       </MainRoot.Group>

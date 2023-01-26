@@ -2,7 +2,7 @@ import {useAtom} from 'jotai';
 import react from 'react';
 
 import * as Fetch from './Fetch';
-import { deliveryFeeAtom, isLoadMealCartAtom, isQuantityAtom, userPointAtom } from './store';
+import { deliveryFeeAtom, isLoadMealCartAtom, isQuantityAtom, mealCartSpotAtom, userPointAtom } from './store';
 
 const useShoppingBasket = () => {
 
@@ -10,17 +10,29 @@ const useShoppingBasket = () => {
     const [isquantity,setQuantity] = useAtom(isQuantityAtom)
     const [deliveryFee,setDeliveryFee] = useAtom(deliveryFeeAtom);
     const [userPoint,setUserPoint] = useAtom(userPointAtom);
-
+    const [mealCartSpot,setMealCartSpot] = useAtom(mealCartSpotAtom);
+    
     const loadMeal = async () => {
         try {
             const res = await Fetch.loadMealCart();
-            if(res.data === null){
-                throw new Error ('에러')
-            }
-            setLoadMeal(res.data.cartDailyFoodDtoList);
+            
+            const spot = res.data.spotCarts.map(m => {
+                return {
+                    id:m.spotId,
+                    text: m.groupName + m.spotName
+                }
+            });
+            
+            const qty = res.data.spotCarts.map(m => m.cartDailyFoodDtoList.length)
+            const badgeQty = qty.reduce((acc,cur) => {
+                return acc + cur
+            },0)
+            
+            setMealCartSpot(spot)
+            setLoadMeal(res.data.spotCarts);
             setDeliveryFee(res.data.deliveryFee);
             setUserPoint(res.data.userPoint)
-            setQuantity(res.data.cartDailyFoodDtoList.length);
+            setQuantity(badgeQty);
         } catch (err) {
             throw err;
         }
@@ -88,7 +100,8 @@ const useShoppingBasket = () => {
         isLoadMeal,
         deliveryFee,
         userPoint,
-        isquantity
+        isquantity,
+        mealCartSpot
         
     };
 

@@ -7,6 +7,7 @@ import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable, Alert} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
+import MembersIcon from '../../../../../assets/icons/Home/members.svg';
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
@@ -298,7 +299,7 @@ if(isUserInfoLoading){
               <CountText>건</CountText>
             </CountWrap>
           </CatorWrap>
-          {isUserInfo?.isMembership && <MembershipWrap>
+          {/* {isUserInfo?.isMembership && <MembershipWrap>
             <Membership>
               <MembershipIcon/>
               <TitleText>멤버십</TitleText>
@@ -307,6 +308,19 @@ if(isUserInfoLoading){
               <Count>2</Count>
               <CountText>건</CountText>
             </CountWrap>
+          </MembershipWrap>} */}
+          {isUserInfo?.isMembership && <MembershipWrap>
+            <Membership>
+              <MembershipIcon/>
+              <TitleText>멤버십</TitleText>
+            </Membership>
+            <View>
+              <MembershipUsing>N개월째 이용중</MembershipUsing>
+              <MembersWrap>
+                <MembersIcon/>
+                <MembersText>n번째 파운더스멤버</MembersText>
+              </MembersWrap>
+            </View>
           </MembershipWrap>}
           <MarketWrap>
             <Market>
@@ -364,7 +378,6 @@ export default Pages;
 
 const BoxWrap = css`
   width:100%;
-  //height:64px;
   border-radius:14px;
   background-color:${props => props.theme.colors.grey[0]};
   margin-bottom:16px;
@@ -483,8 +496,12 @@ ${Display};
 `;
 
 const MembershipWrap = styled.View`
-${BoxWrap};
 ${Display};
+width:100%;
+border-radius:14px;
+background-color:${props => props.theme.colors.grey[0]};
+margin-bottom:16px;
+padding: 10px 16px 16px 16px;
 justify-content:space-between;
 `;
 
@@ -598,6 +615,9 @@ color:${props => props.theme.colors.grey[5]};
 margin-left:4px;
 `;
 
+const MembershipUsing = styled(CountText)`
+align-self:flex-end;
+`;
 const MembershipText = styled(SemiBoldTxt)`
 position:absolute;
 left:24px;
@@ -634,3 +654,18 @@ position:absolute;
 bottom:80px;
 left:28%;
 `;
+
+const MembersWrap = styled.View`
+flex-direction:row;
+align-items:center;
+background-color:${({theme}) => theme.colors.green[100]};
+border:0.5px solid ${({theme}) => theme.colors.green[500]};
+border-radius:7px;
+padding:2px 6px ;
+`;
+
+const MembersText = styled(Typography).attrs({text:'SmallLabel'})`
+color:${({theme}) => theme.colors.green[500]};
+margin-left:2px;
+`;
+

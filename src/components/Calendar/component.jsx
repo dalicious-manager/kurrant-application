@@ -125,7 +125,7 @@ const Component = ({
                               {/* onPressEvent: Home, onPressEvent2: BuyMeal, onPressEvent3: Meal  */}
                               {onPressEvent && 
                                 // <Pressable onPress={()=>navigation.reset({ routes: [{name:MealMainPageName,params:{data:pressDay}}]})}>
-                                <Pressable onPress={()=>navigation.navigate(MealMainPageName,{data:pressDay})} disabled={lastDay && true}>
+                                <Pressable onPress={()=>console.log('누름')} disabled={lastDay && true}>
                                 <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
                                 </Pressable>
                               }
