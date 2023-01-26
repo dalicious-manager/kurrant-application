@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import {StatusBar, LogBox} from 'react-native';
+import {StatusBar, LogBox, Text,TextInput} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 import {ThemeProvider} from 'styled-components';
@@ -9,6 +9,10 @@ import codePush from "react-native-code-push";
 import Screen from './screens';
 import Theme from './theme';
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.allowFontScaling=false; 
+TextInput.defaultProps = TextInput.defaultProps || {};
+TextInput.defaultProps.allowFontScaling=false; 
 const App = () => {
   
   useEffect(()=>{

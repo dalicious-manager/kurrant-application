@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react"
+import React, { useEffect } from "react"
 import styled from "styled-components";
 import { useTheme } from "styled-components/native";
 
@@ -10,23 +10,31 @@ import Typography from "~components/Typography";
 import { PAGE_NAME as LoginPage } from "../../../Main/Login/EmailLogin";
 
 import { Terminate } from "~assets"
+import useUserInfo from "../../../../biz/useUserInfo";
 export const PAGE_NAME = 'P__MEMBERSHIP__TERMINATE_COMPLATE';
 
-const Pages = ({route}) => {
-    console.log(route)
-    const {params}=route;
+const Pages = () => {
+
+    const {userInfo,isUserInfo} = useUserInfo();
     const themeApp = useTheme();
     const navigation = useNavigation();
+    useEffect(()=>{
+        const getUser = async()=>{
+            await userInfo();
+        }
+        getUser()
+    },[])
     return (
         <Conotainer>
             <Image imagePath={Terminate} scale={1.0}/>
-            <Title textColor={themeApp.colors.grey[2]}>{params?.useName}님,{'\n'}멤버십이 해지 됐어요.</Title>
+            <Title textColor={themeApp.colors.grey[2]}>{isUserInfo?.name}님,{'\n'}멤버십이 해지 됐어요.</Title>
             <CaptionText textColor={themeApp.colors.grey[4]}>그동안 커런트밀 정기구독 서비스를 이용해{'\n'}주셔서 감사해요. 다음에 또 만나요!</CaptionText>
             <ButtonContainer>
                 <Button
                     type='yellow'
                     label={"확인"}
                     onPressEvent={() => {
+                        
                         navigation.popToTop()
                         navigation.navigate(LoginPage)
                         // navigation.reset({

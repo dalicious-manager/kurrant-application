@@ -42,6 +42,13 @@ export async function snsConnect(body, type, option) {
   });
   return fetchRes
 }
+export async function cardRegisted(body, option) {
+  const fetchRes = await fetchJson(`/users/me/cards`, 'POST', {
+    ...option,
+    body: JSON.stringify(body)
+  });
+  return fetchRes
+}
 
 export async function snsDisconnect(type) {
   const fetchRes = await fetchJson(`/users/me/disconnecting/${type}`, 'DELETE');

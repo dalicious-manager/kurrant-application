@@ -32,15 +32,15 @@ const Component = ({point,isMembership}) => {
           </MembershipBox></MembershipJoinPage>
           :
           <Container onPress={()=>navigation.navigate(MembershipInfoPageName)}>
-    <TitleBox>
-      <MembershipBadge style={{marginRight:8}}/>
-      <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>멤버십</Title>
-    </TitleBox>
-    <TailBox>
-      <PointText text={'Body06R'} textColor={themeApp.colors.grey[2]}>N개월째 이용중</PointText>
-      <ArrowRightBoxIcon style={{width:24,height:24}} size={36} color={themeApp.colors.grey[4]}/>
-    </TailBox>
-  </Container>}
+            <TitleBox>
+              <MembershipBadge style={{marginRight:8}}/>
+              <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>멤버십</Title>
+            </TitleBox>
+            <TailBox>
+              <PointText text={'Body06R'} textColor={themeApp.colors.grey[2]}>N개월째 이용중</PointText>
+              <ArrowRightBoxIcon style={{width:24,height:24}} size={36} color={themeApp.colors.grey[4]}/>
+            </TailBox>
+          </Container>}
     </>
    
   )

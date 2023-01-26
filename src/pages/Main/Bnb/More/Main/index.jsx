@@ -37,7 +37,7 @@ const Pages = () => {
   const themeApp = useTheme();
   const navigation = useNavigation();
   const { userMe, readableAtom:{myInfo,isMyInfoLoading}} = useUserMe();
-  const { isUserInfo} = useUserInfo();
+  const {isUserInfo} = useUserInfo();
   const getData = async()=>{
     await userMe();
   }
@@ -47,6 +47,9 @@ const Pages = () => {
       getData();
     }, [])
   );
+  useEffect(()=>{
+    getData();
+  },[])
   if(isMyInfoLoading && !myInfo){
     return <SkeletonUI />
   }

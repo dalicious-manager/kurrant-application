@@ -1,5 +1,5 @@
 import { StackActions, useNavigation } from "@react-navigation/native";
-import React from "react"
+import React, { useEffect } from "react"
 import styled from "styled-components";
 import { useTheme } from "styled-components/native";
 
@@ -17,8 +17,14 @@ export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_COMPLATE';
 
 const Pages = () => {
     const themeApp = useTheme();
-    const {isUserInfo} = useUserInfo();
+    const {userInfo,isUserInfo} = useUserInfo();
     const navigation = useNavigation();
+    useEffect(()=>{
+        const getUser = async()=>{
+            await userInfo();
+        }
+        getUser()
+    },[])
     return (
         <Conotainer>
             <Image imagePath={MembershipJoinComplateImage} scale={1.0}/>
@@ -28,7 +34,7 @@ const Pages = () => {
                 <Button
                     type='yellow'
                     label={"확인"}
-                    onPressEvent={() => {
+                    onPressEvent={async() => {
                         const resetAction =  StackActions.pop(2);;
                         navigation.dispatch(resetAction);
                         // navigations.navigate(BnbScreenName,{screen:MoreMainPageName})

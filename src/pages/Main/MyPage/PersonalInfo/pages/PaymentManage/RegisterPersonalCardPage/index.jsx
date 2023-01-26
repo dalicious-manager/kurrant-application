@@ -12,6 +12,7 @@ import Wrapper from "~components/Wrapper";
 import useKeyboardEvent from '~hook/useKeyboardEvent';
 
 import { PAGE_NAME as PaymentManagePage } from '..';
+import useUserMe from '../../../../../../../biz/useUserMe';
 import { isValidCardNumber } from '../../../../../../../utils/cardFormatter';
 export const PAGE_NAME = "P__MY_PAGE__PAYMENT_MANAGE__REGISTER_PERSONAL_CARD";
 
@@ -22,12 +23,26 @@ const Pages = ()=>{
     });
     const keyboardEvent = useKeyboardEvent();
     const [modalVisible, setModalVisible]=useState(false);
-
+    const {cardRegisted}=useUserMe();
     const card = form.watch('cardNumber')
     const navigation = useNavigation();
-    const onSubmit=(data)=>{
-      console.log(data);
-      navigation.navigate(PaymentManagePage)
+    const onSubmit=async(data)=>{
+      
+      const exp = data.cardExpDate.split('/');
+      const req ={
+        
+          "cardNumber": data.cardNumber.replace(/\W/gi, ''),
+          "expirationYear": exp[1],
+          "expirationMonth": exp[0],
+          "cardPassword": data.cardPass,
+          "identityNumber": data.cardBirthDay,
+          "cardVaildationCode": data.cardSecret
+        
+      }
+      console.log(req);
+      const result = await cardRegisted(req);
+      console.log(result);
+      // navigation.navigate(PaymentManagePage)
     }
     useFocusEffect(
       useCallback(() => {
@@ -107,15 +122,9 @@ const Pages = ()=>{
                               required: '필수 입력 항목 입니다.',
                               validate: {
                                 isValid: (value) => {
-                                  const {card:{type}}= cardValidator.number(card.replace(/\W/gi, ''))
-                                  if(type ==="american-express"){
-                                    return (
-                                      cardValidator.cvv(value,4).isValid ||
-                                      '올바른 보안코드를 입력해주세요'
-                                    );
-                                  }
+                                  // const {card:{type}}= cardValidator.number(card.replace(/\W/gi, ''))
                                   return (
-                                    cardValidator.cvv(value).isValid ||
+                                    cardValidator.cvv(value).isValid || cardValidator.cvv(value,4).isValid ||
                                     '올바른 보안코드를 입력해주세요'
                                   );
                                 },

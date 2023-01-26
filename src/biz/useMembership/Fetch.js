@@ -20,10 +20,9 @@ export async function membershipJoin(body, option) {
 }
 
 
-export async function membershipTerminate(body, option) {
-  const fetchRes = await fetchJson(`/users/membership/unsubscribing`, 'POST', {
+export async function membershipTerminate(option) {
+  const fetchRes = await fetchJson(`/users/membership/unsubscribing`, 'GET', {
     ...option,
-    body: JSON.stringify(body)
   });
 
   return fetchRes;

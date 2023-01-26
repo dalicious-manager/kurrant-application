@@ -45,7 +45,7 @@ const useBanner = () => {
   const membershipTerminate = async (option = {}) => {
     try {
       setMembershipTerminateLoading(true);
-      const fetchRes = await Fetch.membershipTerminate({tpye:1},option);
+      const fetchRes = await Fetch.membershipTerminate(option);
       return fetchRes;
     } catch (err) {
       throw err;

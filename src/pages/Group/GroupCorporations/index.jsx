@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, Text ,View,Image,Dimensions, ScrollView, ActivityIndicator} from "react-native";
 import styled from "styled-components";
 
-import Images from "../../../components/Image";
 import Button from "../../../components/Button";
 import FastImage from "react-native-fast-image";
 import {PAGE_NAME as CorpApplicationPageName} from './CorporationsApplication/FirstPage';

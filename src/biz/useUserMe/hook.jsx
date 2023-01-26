@@ -13,6 +13,7 @@ import {
     isChangePasswordLoadingAtom,
     isSettingEmailLoadingAtom,
     isSettingPhoneNumberLoadingAtom,
+    isCardRegistedLoadingAtom,
     alarmAtom
 } from './store';
 
@@ -31,6 +32,7 @@ const useUserMe = () => {
     const [isChangePasswordLoading,setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
     const [isSettingEmailLoading,setSettingEmailLoading] = useAtom(isSettingEmailLoadingAtom);
     const [isSettingPhoneNumberLoading,setSettingPhoneNumberLoading] = useAtom(isSettingPhoneNumberLoadingAtom);
+    const [isCardRegistedLoading,setCardRegistedLoading] = useAtom(isCardRegistedLoadingAtom);
 
     const userMe = async () => {
         
@@ -196,7 +198,22 @@ const useUserMe = () => {
             setSettingPhoneNumberLoading(false)
         }
     };
-
+    const cardRegisted = async (body,option={}) => {
+        
+        try {
+            setCardRegistedLoading(true)
+            const res = await Fetch.cardRegisted({
+                ...body
+              },
+              option
+            );
+            return res;
+        } catch (err) {
+            throw err;
+        }finally{
+            setCardRegistedLoading(false)
+        }
+    };
     return {
         userMe,
         snsConnect,
@@ -207,6 +224,7 @@ const useUserMe = () => {
         changePassword,
         settingEmail,
         settingPhoneNumber,
+        cardRegisted,
         readableAtom: {
             myInfo,
             myInfoPerson,
@@ -219,6 +237,7 @@ const useUserMe = () => {
             isChangePasswordLoading,
             isSettingEmailLoading,
             isSettingPhoneNumberLoading,
+            isCardRegistedLoading,
             alarm
         } 
     }
