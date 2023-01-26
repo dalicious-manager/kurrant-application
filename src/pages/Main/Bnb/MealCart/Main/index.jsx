@@ -48,20 +48,20 @@ const Pages = () => {
     const [selected,setSelected] = useState(isUserInfo.spotId);
     const [name,setName] = useState();
     
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         // Do something when the screen is focused
-    //         console.log('들어옴')
+    useFocusEffect(
+        useCallback(() => {
+            // Do something when the screen is focused
+            console.log('들어옴')
         
 
-    //         return  () => {
-    //             console.log("나감")
-    //             updateMeal({"updateCartList":modifyQty});
-    //         };
+            return  () => {
+                console.log("나감")
+                updateMeal({"updateCartList":modifyQty});
+            };
     
     
-    // }, [updateMeal])
-    // );
+    }, [updateMeal])
+    );
 
 
     const PressSpotButton = () => {
