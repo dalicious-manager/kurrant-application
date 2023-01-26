@@ -51,8 +51,8 @@ const Pages = () => {
     const date = formattedWeekDate(new Date()); // 오늘
     // const todayMeal = mealInfo?.filter((m) => m.date === date);
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-    // const spotId = userInfo.spotId; 
-    const spotId = 1; 
+    const spotId = userInfo.spotId; 
+    // const spotId = 1; 
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
             
