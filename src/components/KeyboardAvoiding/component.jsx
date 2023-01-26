@@ -39,10 +39,10 @@ const Component = ({
       }, []);
 
       
-      const arr = isLoadMeal?.map(el => el.cartDailyFoods);
-      const quantityArr = arr.reduce((acc, val) => [ ...acc, ...val ], []);
-      const quantity = quantityArr.find(v => v.dailyFoodId === id);
-      
+    const arr = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods)).flat();
+    const quantityArr = arr.reduce((acc, val) => [ ...acc, ...val ], []);
+    const quantity = quantityArr.find(v => v.dailyFoodId === id);
+    
     return (
         <React.Fragment>
         { mealCart && <Wrap
@@ -59,7 +59,6 @@ const Component = ({
                     <InnerTextInput
                         min={1}
                         keyboardType="number-pad"
-                        //onPress={focusPress}
                         ref={bodyRef}
                         onChangeText={(text)=>{changeText(text,id)}}
                         defaultValue={quantity?.count.toString()}
@@ -85,7 +84,6 @@ const Component = ({
                         </PressableView>
                         <TextInput
                             keyboardType="number-pad"
-                            //onPress={focusPress}
                             ref={bodyRef}
                             onChangeText={changeText}
                             value={count.toString()}

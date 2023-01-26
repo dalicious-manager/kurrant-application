@@ -1,11 +1,9 @@
 
 import { useNavigation } from "@react-navigation/native";
-import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect, useLayoutEffect} from "react";
 import { View , StatusBar, Dimensions,Text} from "react-native";
 import styled from "styled-components";
 
-import ModalMessage from "../../../../../components/ModalMessage";
 import InfoIcon from "../../../../../assets/icons/MealDetail/info.svg";
 import FastImage from "react-native-fast-image";
 import StartIcon from '../../../../../assets/icons/star.svg';
@@ -23,7 +21,6 @@ import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from "../../../../../components/Typography";
-import { formattedWeekDate } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import Skeleton from '../Skeleton';
@@ -77,7 +74,7 @@ const Pages = ({route}) => {
     },[headerTitle,navigation, scroll]);
 
     const addCartPress = async () =>{
-        const duplication = isLoadMeal.map((v)=> v.cartDailyFoods.some((food)=>food.dailyFoodId  === dailyFoodId))
+        const duplication = isLoadMeal.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === id))).flat()
         
         if(duplication.includes(true)){
             setModalVisible(true);
@@ -221,10 +218,7 @@ const Pages = ({route}) => {
                                 <InfoText>{isFoodDetail?.makersDiscountedRate}%</InfoText>
                             </InfoTextWrap>
                             <InfoTextWrap>
-                                <MessageView>
-                                    <Test numberOfLines={1}>기간 할인</Test>
-                                    <ModalMessage text={`기간할인이란?\n식단 주문을 빠르게 확정하면 추가로 받을 수 있는 \n할인입니다. (주문 마감 D-1 : 5%, D-3 : 10%할인)`} title={<InfoIcon/>}/>
-                                </MessageView>
+                                <Test numberOfLines={1}>기간 할인</Test>
                                 <InfoText>{isFoodDetail?.periodDiscountedRate}%</InfoText>
                             </InfoTextWrap>
                         </InfoTextView>
@@ -353,6 +347,7 @@ text-align:center;
 
 const InfoWrap = styled.View`
 flex-direction:row;
+margin-bottom:12px;
 `;
 
 const InfoTitleView = styled.View`

@@ -8,7 +8,7 @@ import Typography from "../Typography";
 const Component = () =>{
 
     const {isquantity} = useShoppingBasket();
-
+    
     return (
         <>
          { isquantity !== 0 &&<Wrap>

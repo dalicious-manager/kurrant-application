@@ -32,6 +32,7 @@ const Component = ({
   addHandle,
   substractHandle
 }) => {
+  
   return (
     <>
       {detail && <View>

@@ -32,6 +32,7 @@ const Pages = ({route}) => {
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     const [ modalVisible3, setModalVisible3 ] = useState(false);
     const [statusBarHeight, setStatusBarHeight] = useState(0);
+    const [point,setPoint] = useState(0);
     const {isLoadMeal} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
     const inputRef = useRef();
@@ -41,8 +42,8 @@ const Pages = ({route}) => {
         makersDiscountPrice,
         periodDiscountPrice,
         supportPrice,
-        totalPrice} = route.params
-    
+        totalPrice,selected,name} = route.params
+    console.log(selected,name,'545')
     const PressButton = () => {
         setModalVisible(true);
     }
@@ -135,21 +136,16 @@ const Pages = ({route}) => {
                 </Container>
                 {show && <ProductInfo>
                 {isLoadMeal?.map((el,idx) => {
-                    const borderLast = isLoadMeal[isLoadMeal.length - 1]
                     
-                   return (
-                    <OrderWrap key={idx}>
-                        <View>
-                            <DiningName>{formattedMonthDay(el.serviceDate)} {el.diningType}</DiningName>
-                        </View>
-                        {el.cartDailyFoods.map((meal,i) => {
-                            const price = meal.price * meal.count;
-                            const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
-                            const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
-                            
-                            return (
-                                <ContentWrap key={i}>
-                                    <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
+                    return (
+                        <React.Fragment key={idx}>
+                            {(selected === el.spotId) && el.cartDailyFoodDtoList.map((meal,i) => {
+                                const price = meal.price * meal.count;
+                                const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
+                                const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
+                                return (
+                                    <OrderWrap key={i}>
+                                        <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
                                     style={{
                                         width:45,
                                         height:45,
@@ -172,14 +168,11 @@ const Pages = ({route}) => {
                                     <CountWrap>
                                         <CountText>수량: {meal.count}개</CountText>
                                     </CountWrap>
-                                </ContentWrap>
-                                
-                            )
-                        })}
-                        {!(borderLast === el) && <Border/>}
-                    </OrderWrap>
-                    
-                   )
+                                    </OrderWrap>
+                                )
+                            })}
+                        </React.Fragment>
+                    )
                 })}
                 </ProductInfo>}
             </BorderWrap>
@@ -232,7 +225,10 @@ const Pages = ({route}) => {
                             <PointWrap>
                                 <Text>- </Text>
                                 <PointInputWrap>
-                                    <PointInput keyboardType="number-pad" ref={inputRef} defaultValue={isUserInfo.point === 0 ? '0' : withCommas(isUserInfo.point.toString())}/>
+                                    <PointInput keyboardType="number-pad" ref={inputRef} 
+                                    defaultValue={isUserInfo.point === 0 ? '0' : withCommas(isUserInfo.point.toString())}
+                                    onChange={(text)=>setPoint(text)}
+                                    />
                                     <XIcon onPress={clearInput}/>
                                 </PointInputWrap>
                                 <PointUnitText>P</PointUnitText>

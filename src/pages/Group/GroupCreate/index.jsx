@@ -4,7 +4,6 @@ import { View,Text, SafeAreaView ,Image} from "react-native";
 import styled from "styled-components";
 
 import { AlreadyApartment, Apartment, Corporation ,ApartMeal } from "../../../assets";
-import AlreadyApartIcon from "../../../assets/icons/Group/alreadyApart.svg";
 import ApartmentIcon from "../../../assets/icons/Group/apartment.svg";
 import ArrowRight from "../../../assets/icons/Group/arrowRight.svg";
 import CloseIcon from "../../../assets/icons/Group/close.svg";
@@ -14,7 +13,6 @@ import { SCREEN_NAME } from "../../../screens/Main/Bnb";
 import {PAGE_NAME as GroupCreateApartmentPageName} from '../GroupApartment';
 import {PAGE_NAME as ApartmentSearchPageName} from '../GroupApartment/SearchApartment';
 import {PAGE_NAME as GroupCreateCorporationsPageName} from '../GroupCorporations';
-
 export const PAGE_NAME = "P__GROUP__CREATE" ;
 const Pages = () => {
 
@@ -52,7 +50,8 @@ const Pages = () => {
                         <ArrowRight/>
                     </SubTitleWrap>
                     <ImageWrap>
-                        <AlreadyApartIcon/>
+                        {/* <AlreadyApartIcon/> */}
+                        <Image source={AlreadyApartment} style={{width:124,height:86}} />
                     </ImageWrap>
                 </BoxWrap>
                 <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>
