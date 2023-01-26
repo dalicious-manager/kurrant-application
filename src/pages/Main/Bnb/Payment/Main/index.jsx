@@ -82,7 +82,8 @@ const Pages = ({route}) => {
         }        
       }
 
-    const date = isLoadMeal.map(el => el.serviceDate);
+    
+    const date = isLoadMeal.map(el => el.cartDailyFoodDtoList.map(v => v.serviceDate)).flat();
     
     const deliveryStart = date.reduce((prev,curr) => {
         return new Date(prev).getTime() <= new Date(curr).getTime() ? prev : curr;
@@ -139,35 +140,48 @@ const Pages = ({route}) => {
                     
                     return (
                         <React.Fragment key={idx}>
-                            {(selected === el.spotId) && el.cartDailyFoodDtoList.map((meal,i) => {
-                                const price = meal.price * meal.count;
-                                const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
-                                const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
+                            {(selected === el.spotId) && el.cartDailyFoodDtoList.map((m,i) => {
+                                  
                                 return (
                                     <OrderWrap key={i}>
-                                        <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
-                                    style={{
-                                        width:45,
-                                        height:45,
-                                        borderRadius:7,
-                                        marginRight:12,
-                                    }}
-                                    />
-                                    <MealNameView>
-                                        <MealName numberOfLines={1} ellipsizeMode="tail">[{meal.makers}] {meal.name} </MealName>
-                                        {/* 할인 적용 되면  */}
-                                        <SalePriceWrap>
-                                            <PointBoldText>{(mealDiscountRate)}%</PointBoldText>
-                                        <Price>{withCommas(meal.price - mealDiscountPrice)}원</Price>
-                                        </SalePriceWrap>
-                                        {/* 할인 전 가격 */}
-                                        <SalePrice>{withCommas(price)}원</SalePrice>
-                                        {/* 할인 하나도 없을 때 */}
-                                        {/* <Price>{withCommas(price)}원</Price> */}
-                                    </MealNameView>
-                                    <CountWrap>
-                                        <CountText>수량: {meal.count}개</CountText>
-                                    </CountWrap>
+                                        {m.cartDailyFoods.map((meal,index) => {
+                                            const borderLast = meal
+                                            console.log(borderLast)
+                                            const price = meal.price * meal.count;
+                                            const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
+                                            const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
+                                            return (
+                                                <ContentWrap key={index}>
+                                                    
+                                                        <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
+                                                        style={{
+                                                            width:45,
+                                                            height:45,
+                                                            borderRadius:7,
+                                                            marginRight:12,
+                                                        }}
+                                                        />
+                                                        <MealNameView>
+                                                            <MealName numberOfLines={1} ellipsizeMode="tail">[{meal.makers}] {meal.name} </MealName>
+                                                            {/* 할인 적용 되면  */}
+                                                            <SalePriceWrap>
+                                                                <PointBoldText>{(mealDiscountRate)}%</PointBoldText>
+                                                            <Price>{withCommas(meal.price - mealDiscountPrice)}원</Price>
+                                                            </SalePriceWrap>
+                                                            {/* 할인 전 가격 */}
+                                                            <SalePrice>{withCommas(price)}원</SalePrice>
+                                                            {/* 할인 하나도 없을 때 */}
+                                                            {/* <Price>{withCommas(price)}원</Price> */}
+                                                        </MealNameView>
+                                                    
+                                                    <CountWrap>
+                                                        <CountText>수량: {meal.count}개</CountText>
+                                                    </CountWrap>
+                                                    
+                                                </ContentWrap>
+                                            )
+                                        })}
+                                        {/* {!(borderLast === el.cartDailyFoodDtoList) && <Border/>} */}
                                     </OrderWrap>
                                 )
                             })}
@@ -289,11 +303,12 @@ export default Pages;
 const SafeArea = styled.View`
 flex:1;
 background-color:${props => props.theme.colors.grey[0]};
-
+padding-bottom:60px;
 `;
 
 const ViewScroll = styled.ScrollView`
 flex:1;
+
 
 `;
 const Label = styled(Typography).attrs({ text:'Body06R' })`
@@ -455,3 +470,7 @@ const KeyContainer = styled.KeyboardAvoidingView`
   flex: 1;
   position: relative;
 `
+
+const InnerView = styled.View`
+flex-direction:row;
+`;

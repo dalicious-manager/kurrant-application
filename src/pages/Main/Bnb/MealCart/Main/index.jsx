@@ -237,10 +237,13 @@ const Pages = () => {
                 
             )]}
         })
-        console.log(deleteArr,'333')
+        const deleteArrs = deleteArr.filter(el=>{
+            return el.cartDailyFoodDtoList.length !== 0 
+        })
+        console.log(deleteArrs,'333')
         try {
             await deleteMeal(foodId);
-            setLoadMeal(deleteArr)
+            setLoadMeal(deleteArrs)
             
         } catch(err) {
             console.log(err)
@@ -284,17 +287,10 @@ const Pages = () => {
             ]
           )
     }
-    
+   
     return (
         <SafeView>
-            {isLoadMeal?.length === 0 && <EmptyView>
-                <NoMealText>아직 담은 식사가 없어요!</NoMealText>
-                <NoMealButtonWrap>
-                    <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
-                </NoMealButtonWrap>
-            </EmptyView>}
-            <ScrollViewWrap>
-                {isLoadMeal?.length !== 0 && <SpotView>
+             <SpotView>
                     <SpotPress onPress={PressSpotButton}>
                         <SpotName>{name === undefined ? isUserInfo.spot : name }</SpotName>
                         <ArrowIcon/>
@@ -302,11 +298,21 @@ const Pages = () => {
                     <Pressable onPress={allDelete}>
                         <Text>전체삭제</Text>
                     </Pressable>
-                </SpotView>}
+                </SpotView>
+            {totalCount === 0 && <EmptyView>
+                <NoMealText>아직 담은 식사가 없어요!</NoMealText>
+                <NoMealButtonWrap>
+                    <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
+                </NoMealButtonWrap>
+            </EmptyView>}
+            <ScrollViewWrap>
+                
                 {isLoadMeal?.map((el,idx) => {
+                    console.log(el,'333')
                         return (
                             <React.Fragment key={idx}>
                                 {(selected === el.spotId) && el.cartDailyFoodDtoList.map((v,idx) => {
+                                    console.log(v,'222')
                                     return (
                                         <Wrap key={idx}>
                                             <ContentHeader>
@@ -364,10 +370,10 @@ const Pages = () => {
                         )
                     })}
 
-                {isLoadMeal?.length !== 0 && 
+                {totalCount !== 0 && 
                 <View >
 
-                
+            
                 <PaymentWrap>
                     <PaymentView>
                         <PaymentText>총 상품금액</PaymentText>
@@ -412,7 +418,7 @@ const Pages = () => {
             />
             
            
-            {(isLoadMeal?.length !== 0 && !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
+            {(totalCount !== 0 && !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} 
                 onPressEvent={()=>{navigation.navigate(PaymentPageName,{
                     totalCount,
