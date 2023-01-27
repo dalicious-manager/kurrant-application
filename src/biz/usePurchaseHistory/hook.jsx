@@ -66,7 +66,9 @@ const usePurchaseHistory = () => {
             isCatorPurchaseLoading,
             isMealPurchaseLoading,
             allPurchase,
-            mealPurchase
+            mealPurchase,
+            marketPurchase,
+            catorPurchase
         }
         
         

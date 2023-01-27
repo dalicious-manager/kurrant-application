@@ -77,6 +77,9 @@ import MembershipInfo, {
 import MembershipUsagedetails, {
   PAGE_NAME as MembershipUsagedetailsPageName,
 } from '~pages/Membership/MembershipInfo/MembershipUsageDetails';
+import MemebershipPaymentManage, {
+  PAGE_NAME as MemebershipPaymentManagePageName,
+} from '~pages/Membership/MembershipJoin/MemebershipPaymentManage';
 import MembershipIntro, {
   PAGE_NAME as MembershipIntroPageName,
 } from '~pages/Membership/MembershipIntro';
@@ -847,6 +850,21 @@ const Screen = () => {
           component={MembershipUsagedetails}
           options={{headerShown: true,
             title:'멤버십 이용내역',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={MemebershipPaymentManagePageName}
+          component={MemebershipPaymentManage}
+          options={{headerShown: true,
+            title:'멤버십 결제수단',
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerTitleStyle:{

@@ -96,20 +96,21 @@ export default () => {
         try {
         // Start the sign-in request
         if(Platform.OS === "android"){
-          const {id_token} = await appleAuthAndroid.signIn();
-          console.log(id_token);
-          await snsLogin({
-            snsAccessToken:id_token,
-            autoLogin:true,
-          },'APPLE');
-          avigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: SCREEN_NAME,
-              },
-            ],
-          })
+          const test = await appleAuthAndroid.signIn();
+          Clipboard.setString(test.id_token);
+          console.log(test);
+          // await snsLogin({
+          //   snsAccessToken:id_token,
+          //   autoLogin:true,
+          // },'APPLE');
+          // navigation.reset({
+          //   index: 0,
+          //   routes: [
+          //     {
+          //       name: SCREEN_NAME,
+          //     },
+          //   ],
+          // })
         }else{
             const appleAuthRequestResponse = await appleAuth.performRequest({
               requestedOperation: appleAuth.Operation.LOGIN,
@@ -128,18 +129,18 @@ export default () => {
             console.log(identityToken)
             Clipboard.setString(identityToken)
 
-            await snsLogin({
-                snsAccessToken:identityToken,
-                autoLogin:true,
-            },'APPLE');
-            avigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: SCREEN_NAME,
-                },
-              ],
-            })
+            // await snsLogin({
+            //     snsAccessToken:identityToken,
+            //     autoLogin:true,
+            // },'APPLE');
+            // avigation.reset({
+            //   index: 0,
+            //   routes: [
+            //     {
+            //       name: SCREEN_NAME,
+            //     },
+            //   ],
+            // })
           }
           } catch (error) {
             console.log("err",error.toString());
@@ -177,33 +178,36 @@ export default () => {
           if (Platform.OS === 'ios') {
             const result = await AuthenticationToken.getAuthenticationTokenIOS();
             console.log(result?.authenticationToken);
-            await snsLogin({
-              snsAccessToken:token.accessToken,
-              autoLogin:true,
-            },'KAKAO');
-            navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              })
+            Clipboard.setString(result?.authenticationToken);
+
+            // await snsLogin({
+            //   snsAccessToken:token.accessToken,
+            //   autoLogin:true,
+            // },'FACEBOOK');
+            // navigation.reset({
+            //     index: 0,
+            //     routes: [
+            //       {
+            //         name: SCREEN_NAME,
+            //       },
+            //     ],
+            //   })
           } else {
             const result = await AccessToken.getCurrentAccessToken();
             console.log(result?.accessToken);
-            await snsLogin({
-              snsAccessToken:token.accessToken,
-              autoLogin:true,
-            },'KAKAO');
-            navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              })
+            Clipboard.setString(result?.accessToken);
+            // await snsLogin({
+            //   snsAccessToken:token.accessToken,
+            //   autoLogin:true,
+            // },'FACEBOOK');
+            // navigation.reset({
+            //     index: 0,
+            //     routes: [
+            //       {
+            //         name: SCREEN_NAME,
+            //       },
+            //     ],
+            //   })
           }
         } catch (error) {
           console.log(error);

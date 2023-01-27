@@ -1,14 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {getFocusedRouteNameFromRoute, useFocusEffect, useNavigation} from '@react-navigation/native';
-import React, { useEffect, useLayoutEffect } from "react";
-import { Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import { Pressable, ScrollView } from "react-native";
 import styled, { useTheme } from 'styled-components/native';
 
 import ArrowRightIcon from "~assets/icons/Arrow/arrowRight.svg";
 import useUserMe from '~biz/useUserMe';
 import { SettingIcon } from '~components/Icon';
-import Image from '~components/Image';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {PAGE_NAME as TermOfServicePageName } from '~pages/Main/MyPage/TermOfService'
@@ -24,10 +23,8 @@ import { SCREEN_NAME as PurchaseHistoryName } from '../../../../../screens/Main/
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
-import PointBox from './PointBox';
 import SkeletonUI from './SkeletonUI';
-
-import { AvatarNon, MembershipJoin } from '~assets';
+import VersionCheck from "react-native-version-check";
 import { useCallback } from 'react';
 import useUserInfo from '../../../../../biz/useUserInfo';
 
@@ -37,22 +34,24 @@ const Pages = () => {
   const themeApp = useTheme();
   const navigation = useNavigation();
   const { userMe, readableAtom:{myInfo,isMyInfoLoading}} = useUserMe();
+  const [versionChecked ,setVersionChecked] = useState(false);
+  const currentVersion =VersionCheck.getCurrentVersion();
   const {isUserInfo} = useUserInfo();
   const getData = async()=>{
+    VersionCheck.getLatestVersion().then((latestVersion)=>{
+      if(currentVersion === latestVersion) setVersionChecked(true);
+      else setVersionChecked(false);
+    }); 
     await userMe();
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      getData();
-    }, [])
-  );
   useEffect(()=>{
     getData();
   },[])
   if(isMyInfoLoading && !myInfo){
     return <SkeletonUI />
   }
+  console.log(isUserInfo);
   return (
     <Container>
       <Wrapper paddingTop={24}>
@@ -78,19 +77,11 @@ const Pages = () => {
               <ArrowRightLogin height={16} width={8}/>
             </LoginBox>}
         
-            <MembershipBox isMembership={isUserInfo?.isMembership}/>
+            <MembershipBox isMembership={isUserInfo?.isMembership} membershipPeriod={myInfo?.membershipPeriod}/>
           {/* 포인트 활성시
             <PointBox point={41030}/> 
           */}
-          <InfomationContainer>
-            {/* <InfomationBox>
-              <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>7</InfomationText>
-              <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[2]}>구매후기</InfomationLabel>
-            </InfomationBox>
-            <InfomationBox>
-              <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>0</InfomationText>
-              <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[2]}>찜목록<InfomationCaption textColor={themeApp.colors.grey[5]}>(준비중)</InfomationCaption></InfomationLabel>
-            </InfomationBox> */}
+          <InfomationContainer>            
             <InfomationBox>
               <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[5]}>0</InfomationText>
               <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[5]}>준비중</InfomationLabel>
@@ -99,20 +90,20 @@ const Pages = () => {
               <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[5]}>0</InfomationText>
               <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[5]}>준비중</InfomationLabel>
             </InfomationBox>
-            <InfomationBox>
-              <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>10</InfomationText>
+            <InfomationBox onPress={()=>navigation.navigate(MealPageName)}>
+              <InfomationText text={'Title02SB'} textColor={themeApp.colors.grey[2]}>{myInfo?.dailyMealCount || 0}</InfomationText>
               <InfomationLabel text={'CaptionR'} textColor={themeApp.colors.grey[2]}>식사일정</InfomationLabel>
             </InfomationBox>
           </InfomationContainer>
           <Line />
           <ListContainer title='이용 내역'>
             <ListBox title='식사 일정' routeName={MealPageName}/>
-            <ListBox title='장바구니(식사)' routeName={MealCartPageName} />
+            <ListBox title='장바구니' routeName={MealCartPageName} />
             {/* <ListBox title='장바구니(마켓)' /> */}
             {/* <ListBox title='찜목록' /> */}
             <ListBox title='구매 내역' routeName={PurchaseHistoryName}/>
             {/* <ListBox title='리뷰 관리' description={`모두 작성시 최대 `} effect={<Typography test={'CaptionR'} textColor={themeApp.colors.blue[500]}>500P</Typography>} /> */}
-            <ListBox title='커런트 멤버십' routeName={isUserInfo?.isMembership ?MembershipInfoPageName : MembershipIntroPageName}/>
+            <ListBox title='커런트 멤버십' routeName={!isUserInfo?.isMembership ? MembershipInfoPageName : MembershipIntroPageName}/>
             {/* <ListBox title='커런트 포인트' /> */}
           </ListContainer>
           <ListContainer title='알림'>
@@ -123,7 +114,7 @@ const Pages = () => {
             <ListBox title='고객센터'  routeName={FAQPageName}/>
           </ListContainer>
           <ListContainer title='버전 정보'>
-            <ListBox title='앱 버전' isVersion={true} isArrow={false}/>
+            <ListBox title='앱 버전' isVersion={true} isArrow={false} latestVersion={versionChecked} currentVersion={currentVersion}/>
           </ListContainer>
         </ScrollView>
       </Wrapper>
@@ -184,7 +175,7 @@ const InfomationContainer = styled.View`
   align-items: center;
   justify-content: space-between;
 `
-const InfomationBox = styled.View`
+const InfomationBox = styled.Pressable`
   align-items: center;
   justify-content: center;
   

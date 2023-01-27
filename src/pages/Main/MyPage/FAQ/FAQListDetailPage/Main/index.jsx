@@ -1,18 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useLayoutEffect } from "react";
 import styled, { useTheme } from "styled-components/native";
-
+import {Linking} from "react-native";
 import Typography from "~components/Typography";
 import Wrapper from "~components/Wrapper";
 import Button from "../../../../../../components/Button";
 
 export const PAGE_NAME = "P__MY_PAGE__FAQ_DETAIL"
 
-
-
-
-
-
+const kakaoURL = 'https://pf.kakao.com/_uAxixjxb';
 const Pages =  ({route})=>{
     const themeApp = useTheme();
     const {FAQData} = route?.params;
@@ -31,7 +27,7 @@ const Pages =  ({route})=>{
             <InquiryBox>
                 <Typography text={"Button10R"} textColor={themeApp.colors.grey[4]}>직접 문의를 원하시나요?</Typography>
                 <TitleBtnBox>
-                    <Button size="button38" label={'1:1문의하기  '} type={'grey7'} text={'Button09SB'} />
+                    <Button size="button38" label={'1:1문의하기  '} type={'grey7'} text={'Button09SB'} onPressEvent={() => {Linking.openURL(`${kakaoURL}`)}} />
                 </TitleBtnBox>
             </InquiryBox>
         </Wrapper>

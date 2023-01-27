@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {View} from 'react-native';
+
 import styled, { useTheme } from 'styled-components/native';
 
 import ArrowRightIcon from "~assets/icons/Arrow/arrowRight.svg";
@@ -23,21 +23,24 @@ const Component = ({
   description,
   effect,
   routeName,
+  latestVersion,
+  currentVersion,
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+  
   return (
     <TitleContainer onPress ={()=> routeName && navigation.navigate(routeName)}>
       <TitleBox>
         <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>{title}</Title>
-        {isVersion &&<VersionInfo textColor={themeApp.colors.grey[4]}>1.0.0</VersionInfo> }
+        {isVersion &&<VersionInfo textColor={themeApp.colors.grey[4]}>{currentVersion}</VersionInfo> }
       </TitleBox>
       <TailBox>
         <TailTextBox>
           {description && <Description>{description}</Description>}
           {effect && effect}
         </TailTextBox>
-        {isVersion &&<Description textColor={themeApp.colors.grey[4]}>최신버전</Description> }
+        {isVersion && latestVersion && <Description textColor={themeApp.colors.grey[4]}>최신버전</Description> }
         {isArrow && <ArrowIcon />}
       </TailBox>
     </TitleContainer>

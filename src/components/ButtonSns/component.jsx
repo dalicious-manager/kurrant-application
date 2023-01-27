@@ -31,7 +31,7 @@ const Component = ({ type_sns = 'email', onPressEvent = () => { console.log('sns
   return (
     <ButtonWrap type_sns={type_sns} onPress={onPressEvent}>
       <SnsButton type_sns={type_sns}>
-        <Label type_sns={type_sns}>{snsButtonLabel[type_sns]}</Label>
+        <Label text={"BottomButtonSB"} type_sns={type_sns}>{snsButtonLabel[type_sns]}</Label>
       </SnsButton>
       <IconWrap type_sns={type_sns}>{renderButton(type_sns)}</IconWrap>
     </ButtonWrap>
@@ -71,10 +71,8 @@ const IconWrap = styled.View`
     
 `;
 
-const Label = styled(Typography).attrs({ variant: 'h600', weight: 'B' })`
-  color: ${({ theme }) => theme.colors.neutral[900]};
-  font-size: 17px;
-  line-height: 20px;
+const Label = styled(Typography)`
+  color: ${({ theme }) => theme.colors.grey[1]};
   display: flex;
   padding: 17px 0px;
   justify-content: center;
