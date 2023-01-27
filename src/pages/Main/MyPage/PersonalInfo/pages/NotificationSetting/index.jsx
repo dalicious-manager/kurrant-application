@@ -7,12 +7,12 @@ import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ActivityIndicator } from "react-native";
 import styled, { useTheme } from 'styled-components/native';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "~components/Toast";
 import Wrapper from "~components/Wrapper";
-
+import { getStorage,setStorage } from "../../../../../../utils/asyncStorage";
 import useUserMe from "../../../../../../biz/useUserMe";
-import { alarmAtom } from "../../../../../../biz/useUserMe/store";
+import { formattedDate } from "../../../../../../utils/dateFormatter";
 import ListBox from "../../ListBox";
 import { PAGE_NAME as MarketingAgreePageName} from "../MarketingAgree";
 export const PAGE_NAME = "P__MY_PAGE__NOTIFICATION_SETTING"
@@ -24,7 +24,9 @@ const Pages = ()=>{
    const [agree,setAgree] = useState(false)
     const {watch}= form;
     const themeApp = useTheme();
-    const {toastEvent, ToastWrap} = Toast();
+    const toast = Toast();
+    const toast2 = Toast();
+    const toast3 = Toast();
 
     
    const alarmAgree = useCallback(async()=>{
@@ -32,12 +34,31 @@ const Pages = ()=>{
         const orderAlarm = watch('orderAlarm');
         await alarmSetting({'isMarketingAlarmAgree':marketingAlarm,'isOrderAlarmAgree' : orderAlarm ,"isMarketingInfoAgree": false,})
         setAgree(marketingAlarm || orderAlarm);
-        if(marketingAlarm || orderAlarm){
-            toastEvent()
+        if(marketingAlarm && orderAlarm){
+            toast.toastEvent()
+        }else if(!marketingAlarm && !orderAlarm){
+            toast.toastEvent()
+        }else{       
+            toast2.toastEvent()    
         }
         // await getAlarm();
    // eslint-disable-next-line react-hooks/exhaustive-deps
    },[])
+   const alarmAgree3 = useCallback(async()=>{
+        const marketingAlarm = watch('marketingAlarm');
+        const orderAlarm = watch('orderAlarm');
+        await alarmSetting({'isMarketingAlarmAgree':marketingAlarm,'isOrderAlarmAgree' : orderAlarm ,"isMarketingInfoAgree": false,})
+        setAgree(marketingAlarm || orderAlarm);
+        if(marketingAlarm && orderAlarm){
+            toast.toastEvent()
+        }else if(!marketingAlarm && !orderAlarm){
+            toast.toastEvent()
+        }else{       
+            toast3.toastEvent()    
+        }
+        // await getAlarm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
    const getAlarm = useCallback(async()=>{
     
     const result = await alarmLookup();
@@ -48,23 +69,30 @@ const Pages = ()=>{
        },{
         isToggle:true,
         toggleName:'orderAlarm',
-        toggleEvent:(name)=>alarmAgree(name)
+        toggleEvent:(name)=>alarmAgree3(name)
        },{
         isToggle:true,
         toggleName:'marketingAgree',
         toggleEvent:(name)=>alarmAgree(name)
        }])
        setAgree(result.data.marketingAgree || result.data.orderAlarm);
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-   },[])
-   const isLoading = isAlarmSettingLoading
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+    const isLoading = isAlarmSettingLoading
     useEffect(()=>{        
-        const willFocusSubscription = navigation.addListener('focus', () => {
-            toastEvent();
-            getAlarm();
+        AsyncStorage
+        const willFocusSubscription = navigation.addListener('focus', async() => {
+            // 
+            
+            await getAlarm();
+            const checked = await getStorage("isMarketing");
+            if(checked === 'true' || checked === 'false' ){
+                toast.toastEvent();
+                await setStorage("isMarketing", '');
+            }
         });    
         return willFocusSubscription; 
-    },[getAlarm, navigation, toastEvent])
+    },[getAlarm, navigation])
     return(
         <Wrapper paddingTop={24}>
             <FormProvider {...form}>
@@ -72,7 +100,9 @@ const Pages = ()=>{
                 <ListBox title="주문 알림" toggle={toggleData[1]} toggleAgree={alarm.isOrderAlarmAgree}  isArrow={false}/>
                 <ListBox title="마케팅 정보 수신 동의" description={ agree ? "동의함": "철회함"} routeName={MarketingAgreePageName}/>
             </FormProvider>
-            <ToastWrap message={`${alarm.marketingAgreedDateTime}\n커런트 마케팅 정보 수신에 동의했어요.`} isBottom={true}/>
+            <toast.ToastWrap message={`${formattedDate(new Date(),"년월일")}\n${agree ? '커런트 마케팅 정보 수신에 동의했어요.' :'커런트 마케팅 정보 수신 동의를 철회했어요.'}`} isBottom={true}/>
+            <toast2.ToastWrap message={`${formattedDate(new Date(),"년월일")}\n${watch('marketingAlarm') ? '혜택 및 소식 알림 정보 수신에 동의했어요.' :'혜택 및 소식 정보 수신 동의를 철회했어요.'}`} isBottom={true}/>
+            <toast3.ToastWrap message={`${formattedDate(new Date(),"년월일")}\n${watch('orderAlarm') ? '주문 알림 정보 수신에 동의했어요.' :'주문 알림 정보 수신 동의를 철회했어요.'}`} isBottom={true}/>
             {isLoading && <LoadingBox>
         <ActivityIndicator size={'large'} color={themeApp.colors.yellow[500]}/>
       </LoadingBox>}

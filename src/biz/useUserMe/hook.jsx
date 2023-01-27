@@ -14,7 +14,9 @@ import {
     isSettingEmailLoadingAtom,
     isSettingPhoneNumberLoadingAtom,
     isCardRegistedLoadingAtom,
-    alarmAtom
+    isCardListLoadingAtom,
+    alarmAtom,
+    cardListAtom
 } from './store';
 
 const useUserMe = () => {
@@ -29,10 +31,12 @@ const useUserMe = () => {
     const [isAlarmSettingLoading,setAlarmSettingLoading] = useAtom(isAlarmSettingLoadingAtom);
     const [isAlarmLookUpLoading,setAlarmLookUpLoading] = useAtom(isAlarmLookUpLoadingAtom);
     const [alarm,setAlarm] = useAtom(alarmAtom);
+    const [cardList,setCardList] = useAtom(cardListAtom);
     const [isChangePasswordLoading,setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
     const [isSettingEmailLoading,setSettingEmailLoading] = useAtom(isSettingEmailLoadingAtom);
     const [isSettingPhoneNumberLoading,setSettingPhoneNumberLoading] = useAtom(isSettingPhoneNumberLoadingAtom);
     const [isCardRegistedLoading,setCardRegistedLoading] = useAtom(isCardRegistedLoadingAtom);
+    const [isCardListLoading,setCardListLoading] = useAtom(isCardListLoadingAtom);
 
     const userMe = async () => {
         
@@ -214,6 +218,19 @@ const useUserMe = () => {
             setCardRegistedLoading(false)
         }
     };
+    const getCardList = async () => {
+        
+        try {
+            setCardListLoading(true);
+            const res = await Fetch.getCardList();
+            setCardList(res.data);
+            return res;
+        } catch (err) {
+            throw err;
+        }finally{
+            setCardListLoading(false);
+        }
+    };
     return {
         userMe,
         snsConnect,
@@ -225,6 +242,8 @@ const useUserMe = () => {
         settingEmail,
         settingPhoneNumber,
         cardRegisted,
+        getCardList,
+        setCardList,
         readableAtom: {
             myInfo,
             myInfoPerson,
@@ -238,6 +257,8 @@ const useUserMe = () => {
             isSettingEmailLoading,
             isSettingPhoneNumberLoading,
             isCardRegistedLoading,
+            isCardListLoading,
+            cardList,
             alarm
         } 
     }

@@ -19,6 +19,7 @@ import Form from "../../../../components/Form";
 import Image from "../../../../components/Image";
 import withCommas from "../../../../utils/withCommas";
 import { PAGE_NAME as MembershipJoinComplatePageName } from "../MembershipJoinComplate";
+import { PAGE_NAME as MemebershipPaymentManagePageName } from "../MemebershipPaymentManage";
 
 export const PAGE_NAME = "P__MEMBERSHIP__JOIN_PAYMENTS"
 const Pages= ({route})=>{
@@ -174,7 +175,7 @@ const Pages= ({route})=>{
                 </PaymentPriceTotalBox>
               </PaymentPriceContainer>
               <Line />
-              <BorderWrap>
+              <BorderWrap onPress={()=>navigation.navigate(MemebershipPaymentManagePageName)}>
                     <CardContainer>
                         <Title>결제 수단</Title>
                         <DeliveryTitle>카드 결제시 등록한 카드로 결제가 진행됩니다.</DeliveryTitle>
@@ -301,7 +302,7 @@ const PaymentPriceTotalBox = styled.View`
 const Label = styled(Typography).attrs({ text:'Body06R' })`
   color: ${({ theme }) => theme.colors.grey[4]};
 `;
-const BorderWrap = styled.View`
+const BorderWrap = styled.Pressable`
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 6px;
 padding:24px;

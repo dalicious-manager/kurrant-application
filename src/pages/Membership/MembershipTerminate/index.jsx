@@ -46,12 +46,12 @@ const Pages =()=>{
                     </SubtractBox>
                 </SubtractView>
                 <SubtractView>
-                    <SubtractBox text={"정기식사, 마켓 상품 리뷰 등록 시\n추가 포인트 적립"}>
+                    <SubtractBox text={"정기식사, 마켓 상품 리뷰 등록 시\n추가 포인트 적립(준비중)"} disabled={true}>
                         <CommentsIcon />
                     </SubtractBox>
                 </SubtractView>
                 <SubtractView>
-                    <SubtractBox text={"마켓 상품 구매 시 포인트 적립"}>
+                    <SubtractBox text={"마켓 상품 구매 시 포인트 적립(준비중)"} disabled={true}>
                         <PointIcon />
                     </SubtractBox>
                 </SubtractView>

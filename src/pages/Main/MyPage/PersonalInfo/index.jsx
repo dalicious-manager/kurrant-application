@@ -58,7 +58,6 @@ const Pages = ({route}) => {
   const getDataStorage =useCallback(async()=>{
     const data = await getStorage('isChange');
     
-    console.log("test",data);
     if(data !== null && data !==''){
       setMessage(data);        
       await setStorage('isChange','');
@@ -85,7 +84,6 @@ const Pages = ({route}) => {
   },[userMePersonal])
   const connectSNS = async(social)=>{
     const result = await snsConnectID(social);
-    console.log(result);
     if(result?.statusCode === 200){
       await getData();
       setMessage("계정이 연결됐어요");
@@ -106,7 +104,6 @@ const Pages = ({route}) => {
             try {
               const result = await snsDisconnectID(social);
               if(result?.statusCode !== 200){
-                console.log(result)
                 setModalVisible(true);
               }else{
                 await getData();
@@ -114,7 +111,6 @@ const Pages = ({route}) => {
                 toastEvent();
               }
             } catch (error) {
-              console.log(error.toString());
               setModalVisible(true);
             }
             
@@ -201,7 +197,7 @@ const Pages = ({route}) => {
             </SNSBox>
           </SNSContainer>
           <Line />
-          <ListBox title='휴대폰번호 변경' routeName={PhoneNumberSettingPageName}/>
+          <ListBox title={isUserInfo?.phone ? '휴대폰번호 변경':'휴대폰번호 등록'} routeName={PhoneNumberSettingPageName}/>
           <ListBox 
           title={!myInfoPerson.hasGeneralProvider ? '이메일/비밀번호 설정' : '비밀번호 변경'}  
           description={!myInfoPerson.hasGeneralProvider && '설정하기'} 

@@ -10,6 +10,7 @@ import Typography from "~components/Typography";
 import Wrapper from "~components/Wrapper";
 
 import useUserMe from "../../../../../../biz/useUserMe";
+import { setStorage } from "../../../../../../utils/asyncStorage";
 
 export const PAGE_NAME = "P__MY_PAGE__MARKETING_AGREE"
 const Pages = ()=>{
@@ -23,6 +24,7 @@ const Pages = ()=>{
     }
     const onSetAlarm = async()=>{
         await alarmSetting({'isMarketingAlarmAgree':!(alarm.isMarketingAlarmAgree || alarm.isOrderAlarmAgree),'isOrderAlarmAgree' : !(alarm.isMarketingAlarmAgree || alarm.isOrderAlarmAgree) ,"isMarketingInfoAgree": false,});
+        await setStorage("isMarketing",`${!(alarm.isMarketingAlarmAgree || alarm.isOrderAlarmAgree)}`)
         navigation.goBack();
     }
     useEffect(()=>{

@@ -49,6 +49,10 @@ export async function cardRegisted(body, option) {
   });
   return fetchRes
 }
+export async function getCardList() {
+  const fetchRes = await fetchJson(`/users/me/cards`, 'GET');
+  return fetchRes
+}
 
 export async function snsDisconnect(type) {
   const fetchRes = await fetchJson(`/users/me/disconnecting/${type}`, 'DELETE');
@@ -67,3 +71,4 @@ export async function alarmLookup() {
   const fetchRes = await fetchJson(`/users/me/setting`, 'GET');
   return fetchRes
 }
+
