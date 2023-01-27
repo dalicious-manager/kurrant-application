@@ -16,7 +16,8 @@ import useUserMe from '../../../../../../../biz/useUserMe';
 import { checkCorporateRegiNumber, isValidCardNumber } from '../../../../../../../utils/cardFormatter';
 export const PAGE_NAME = "P__MY_PAGE__PAYMENT_MANAGE__REGISTER_CORP_CARD";
 
-const Pages = ()=>{
+const Pages = ({route})=>{
+    const params = route.params;
     const themeApp = useTheme();
     const form = useForm({
         mode:'all'
@@ -36,14 +37,15 @@ const Pages = ()=>{
           "expirationMonth": exp[0],
           "cardPassword": data.cardPass,
           "identityNumber": data.cardCorpNumber,
-          "cardVaildationCode": data.cardSecret
+          "cardVaildationCode": data.cardSecret,
+          "defaultType":params?.defaultType || 0
         
       }
       console.log(req);
       const result = await cardRegisted(req);
       console.log(result);
       // navigation.navigate(PaymentManagePage)
-      navigation.navigate(PaymentManagePage)
+      navigation.goBack();
     }
     useFocusEffect(
       useCallback(() => {

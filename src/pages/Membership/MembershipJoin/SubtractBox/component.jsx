@@ -5,13 +5,13 @@ import { Subtract } from "../../../../assets";
 import Image from "../../../../components/Image";
 import Typography from "../../../../components/Typography";
 
-const Component = ({children,text})=>{
+const Component = ({children,text,disabled = false})=>{
     return(
         <Container>
             <BoxImage imagePath={Subtract} scale={1.0} />
             <ContentsBox>
                 {children}
-                <MembershipText>
+                <MembershipText disabled={disabled}>
                     {text}
                 </MembershipText>
             </ContentsBox>            
@@ -41,7 +41,7 @@ const ContentsBox = styled.View`
 
 const MembershipText = styled(Typography).attrs({text:'Body05R'})`
     margin-left: 14px;
-    color:${({theme})=> theme.colors.grey[2]};
+    color:${({theme,disabled})=> disabled ?theme.colors.grey[5] :theme.colors.grey[2]};
 `;
 
 const BoxImage = styled(Image).attrs({styles:{

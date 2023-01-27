@@ -16,7 +16,8 @@ import useUserMe from '../../../../../../../biz/useUserMe';
 import { isValidCardNumber } from '../../../../../../../utils/cardFormatter';
 export const PAGE_NAME = "P__MY_PAGE__PAYMENT_MANAGE__REGISTER_PERSONAL_CARD";
 
-const Pages = ()=>{
+const Pages = ({route})=>{
+    const params = route.params;
     const themeApp = useTheme();
     const form = useForm({
         mode:'all'
@@ -26,8 +27,7 @@ const Pages = ()=>{
     const {cardRegisted}=useUserMe();
     const card = form.watch('cardNumber')
     const navigation = useNavigation();
-    const onSubmit=async(data)=>{
-      
+    const onSubmit=async(data)=>{      
       const exp = data.cardExpDate.split('/');
       const req ={
         
@@ -36,13 +36,13 @@ const Pages = ()=>{
           "expirationMonth": exp[0],
           "cardPassword": data.cardPass,
           "identityNumber": data.cardBirthDay,
-          "cardVaildationCode": data.cardSecret
+          "cardVaildationCode": data.cardSecret,
+          "defaultType":params?.defaultType || 0
         
       }
-      console.log(req);
       const result = await cardRegisted(req);
       console.log(result);
-      // navigation.navigate(PaymentManagePage)
+      navigation.goBack();
     }
     useFocusEffect(
       useCallback(() => {

@@ -140,8 +140,8 @@ android {
         applicationId "com.dalicious.kurrant"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.0.7"
+        versionCode 8
+        versionName "1.0.8"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
@@ -287,6 +287,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-code-push')
+    implementation project(':react-native-version-check')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

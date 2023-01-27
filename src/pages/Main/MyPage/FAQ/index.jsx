@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import styled, { useTheme } from "styled-components/native";
-
+import {Linking} from "react-native";
 import Button from "~components/Button";
 import Typography from "~components/Typography";
 import Wrapper from "~components/Wrapper";
@@ -11,7 +11,7 @@ import {PAGE_NAME as FAQListPageName } from "./FAQListPage"
 import ListBox from "./ListBox";
 
 export const PAGE_NAME = "P__MY_PAGE__FAQ"
-
+const kakaoURL = 'https://pf.kakao.com/_uAxixjxb';
 const Pages =  ()=>{
     const themeApp = useTheme();
     const navigation = useNavigation();
@@ -28,11 +28,11 @@ const Pages =  ()=>{
             <TitleBox>
                 <Typography text={'Title02SB'} textColor={themeApp.colors.grey[2]}>커런트 고객센터</Typography>
                 <TitleBtnBox>
-                    <Button size="button38" label={'1:1문의하기  '} type={'grey7'} text={'Button09SB'} />
+                    <Button size="button38" label={'1:1문의하기  '} type={'grey7'} text={'Button09SB'} onPressEvent={() => {Linking.openURL(`${kakaoURL}`)}}/>
                 </TitleBtnBox>
             </TitleBox>
             <DescriptionBox>
-                <Typography text={'Body06R'} textColor={themeApp.colors.grey[4]}>고객센터는 08:00~17:00 운영됩니다.{'\n'}접수된 문의는 평균 n분 이내 답변드립니다.</Typography>
+                <Typography text={'Body06R'} textColor={themeApp.colors.grey[4]}>고객센터는 08:00~17:00 운영됩니다.{'\n'}접수된 문의는 평균 30분 이내 답변드립니다.</Typography>
             </DescriptionBox>
             <Line /> 
             <FAQBox>
