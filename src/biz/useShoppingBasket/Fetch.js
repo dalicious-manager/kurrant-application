@@ -14,6 +14,7 @@ export async function loadMealCart() {
     const fetchRes = await fetchJson('/users/me/order/cart','GET');
 
     return fetchRes;
+
     // return {
     //     data: [
     //         {
@@ -86,6 +87,12 @@ export async function allDeleteMealCart() {
 
 export async function deleteMealCart(foodId) {
     const fetchRes = await fetchJson(`/users/me/order/cart/${foodId}`, 'DELETE');
+
+    return fetchRes;
+}
+
+export async function loadSoldOutMealCart(spotId,date,type) {
+    const fetchRes = await fetchJson(`/dailyfoods?spotId=${spotId}&selectedDate=${date}&diningType=${type}`,'GET');
 
     return fetchRes;
 }

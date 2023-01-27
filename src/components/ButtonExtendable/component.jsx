@@ -88,13 +88,6 @@ const Component = ({
               <AnimationView>
                 <Inner>
                     <PriceText>{withCommas(PRICE)}원</PriceText>
-                  {/* <InnerView>
-                    <MinusIcon  onPress={decreasePress} />
-                      <Text onPress={onPressEvent}>
-                          {count}
-                      </Text>
-                      <PlusIcon onPress={increasePress}/>
-                  </InnerView> */}
                   <Count
                   detail
                   count={count}

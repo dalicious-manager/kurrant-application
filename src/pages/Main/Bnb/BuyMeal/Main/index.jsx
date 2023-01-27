@@ -34,13 +34,15 @@ const Pages = () => {
     const navigation = useNavigation();
     const diningRef = useRef();
 
-    const [focus,setFocus] = useState(1);
+    const [focus,setFocus] = useState();
     const [modalVisible,setModalVisible] = useState(false);
     const [modalVisible2,setModalVisible2] = useState(false);
     const [modalVisible3,setModalVisible3] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
     const [selectFood, setSelectFood] = useState()
     const [currentPage, setCurrentPage] = useState(0);
+    const [first,setFirst] = useState();
+    const [show,setShow] = useState(false);
     const {isDiningTypes, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
     const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
@@ -53,6 +55,7 @@ const Pages = () => {
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
     const spotId = userInfo.spotId; 
     // const spotId = 1; 
+    
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
             
@@ -145,7 +148,11 @@ const Pages = () => {
                      "diningType":type
                  });
                  await loadMeal();
+                 setShow(true)
                  await balloonEvent();
+                 setTimeout(()=>{
+                    setShow(false)
+                 },3000)
                  } catch(err){
                     Alert.alert(err.message)
                     
@@ -179,38 +186,47 @@ const Pages = () => {
                 return modalVisible3
             }
         }
+
+        const firstPage = isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : 2;
+        
+
         
         return (<View>
             
             {diningFood.length === 0 && <NoServieceView>
                 <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
             </NoServieceView>}
+            { spotId === null && <NoSpotView>
+                <NoServiceText>메뉴는 스팟 선택 또는 </NoServiceText>
+                <NoServiceText>스팟 개설 신청 승인후 확인할 수 있어요 </NoServiceText>
+            </NoSpotView>}
+
             {diningFood.map((m) => {    
                 const totalRate = m.membershipDiscountRate + m.makersDiscountRate + m.periodDiscountRate;
                 const totalDiscount = m.membershipDiscountPrice + m.makersDiscountPrice + m.periodDiscountPrice;
                 
             return <Contents key={m.id}
             spicy={m.spicy}
-            disabled={m.isSoldOut}
+            disabled={m.status === 0 || m.status === 2}
             onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dailyFoodId:m.id});e.stopPropagation()}}>
                 <ContentsText>
-                    <MakersName soldOut={m.isSoldOut}>[{m.makersName}]</MakersName>
-                    <MealName soldOut={m.isSoldOut}  numberOfLines={1} ellipsizeMode="tail">{m.foodName}</MealName>
-                    <MealDsc soldOut={m.isSoldOut} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
+                    <MakersName soldOut={m.status}>[{m.makersName}]</MakersName>
+                    <MealName soldOut={m.status}  numberOfLines={1} ellipsizeMode="tail">{m.foodName}</MealName>
+                    <MealDsc soldOut={m.status} numberOfLines={2} ellipsizeMode="tail">{m.description}</MealDsc>
                     <PriceWrap>
-                        {totalRate !== 0 && <PercentText soldOut={m.isSoldOut}>{totalRate}%</PercentText>}
-                        <Price soldOut={m.isSoldOut}>{withCommas((m.price)-(totalDiscount))}원</Price>
+                        {totalRate !== 0 && <PercentText soldOut={m.status}>{totalRate}%</PercentText>}
+                        <Price soldOut={m.status}>{withCommas((m.price)-(totalDiscount))}원</Price>
                         {totalRate !== 0 && <OriginPrice>{withCommas(m.price)}원</OriginPrice>}
                     </PriceWrap>
                     {m.spicy !== 'NULL' && 
                     <LabelWrap>
-                        {m.isSoldOut ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
+                        {m.status === 0 ? <Label label={`${m.spicy}`} type={'soldOut'}/> : <Label label={`${m.spicy}`}/>}
                     </LabelWrap>
                     }
                 </ContentsText>
                     
                 <MealImageWrap>
-                    {m.isSoldOut && <BlurView/>}
+                    {(m.status === 0 || m.status === 2) && <BlurView/>}
 
                     <FastImage source={{uri:`${m.image}`,priority:FastImage.priority.high}}
                     style={{
@@ -220,13 +236,14 @@ const Pages = () => {
                     }}
                     />
                     
-                    {!m.isSoldOut && (
+                    {(m.status !== 0 || m.status === 2 ) && (
                         <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>
                             <CartIcon/>
                         </CartIconWrap>
                     )}
                 </MealImageWrap>
-                {m.isSoldOut && <SoldOut soldOut={m.isSoldOut}>품절됐어요</SoldOut>}
+                {m.status === 0 && <SoldOut soldOut={m.status}>품절됐어요</SoldOut>}
+                {m.status === 2 && <SoldOut soldOut={m.status}>마감됐어요</SoldOut>}
                 
             </Contents>
             })}     
@@ -290,7 +307,7 @@ const Pages = () => {
 
                     {isDailyFoodLoading ? <SkeletonUI/>: 
                      <Pager ref={diningRef} 
-                     initialPage={0} 
+                     initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : 2} 
                      onPageSelected={(e) => {onPageScroll(e)}} 
                     
                      >
@@ -302,7 +319,7 @@ const Pages = () => {
                 </PagerViewWrap>
                 
             </ScrollView>
-            <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'8px', right:'14px'}}/>
+            {show && <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'8px', right:'14px'}}/>}
             <ButtonWrap membership={userInfo?.isMembership}>
                 <Button label={'장바구니 보기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(MealCartPageName)}}/>
             </ButtonWrap>
@@ -452,19 +469,19 @@ text-align:center;
 
 
 export const MakersName = styled(Typography).attrs({text:'Body05R'})`
-    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
+    color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 export const MealName = styled(Typography).attrs({text:'Body05SB'})`
-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
+color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const Price = styled(MakersName)`
-    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[2]};
+    color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const MealDsc = styled(Typography).attrs({text:'CaptionR'})`
-    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[4]};
+    color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
 `;
 
 const ProgressText = styled(Typography).attrs({text:'CaptionSB'})`
@@ -473,24 +490,24 @@ const ProgressText = styled(Typography).attrs({text:'CaptionSB'})`
 `;
 
 const PercentText = styled(Typography).attrs({text:'Body05R'})`
-    color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] :'#DD5257'};
+    color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] :'#DD5257'};
     margin-right:4px;
 `;
 
 const OriginPrice = styled(Typography).attrs({text:'Body06R'})`
- color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[5]};
+ color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[5]};
 text-decoration:line-through;
-text-decoration-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] : theme.colors.grey[5]};
+text-decoration-color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[5]};
 margin-left:6px;
 `;
 
 const ReviewText =styled(Typography).attrs({text:'SmallLabel'})`
-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] :theme.colors.grey[2]};
+color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] :theme.colors.grey[2]};
 
 `;
 
 const ReviewCount =styled(Typography).attrs({text:'SmallLabel'})`
-color:${({theme,soldOut}) => soldOut? theme.colors.grey[6] :theme.colors.grey[4]};
+color:${({theme,soldOut}) => soldOut === 0 ? theme.colors.grey[6] :theme.colors.grey[4]};
 `;
 
 const NoServiceText = styled(Typography).attrs({text:'Body05R'})`
@@ -502,6 +519,12 @@ const NoServieceView = styled.View`
 position:absolute;
 top:30%;
 left:30%;
+`;
+
+const NoSpotView = styled(NoServieceView)`
+justify-content:center;
+align-items:center;
+left:20%;
 `;
 
 const DiningPress = styled.Pressable`

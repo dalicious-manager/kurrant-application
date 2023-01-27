@@ -6,7 +6,7 @@ import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/Key
 import styled from 'styled-components';
 
 import Minus from '../../assets/icons/MealDetail/minus.svg';
-import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
+import Plus from '../../assets/icons/MealDetail/plus.svg';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import { isQuantityAtom } from '../../biz/useShoppingBasket/store';
 import Typography from '../Typography';
@@ -28,14 +28,16 @@ const Component = ({
   quantity,
   detail,
   cart,
+  soldOut,
   id,
   addHandle,
-  substractHandle
+  substractHandle,
+  status
 }) => {
   
   return (
     <>
-      {detail && <View>
+      {(detail || soldOut) && <View>
         <InnerView>
           <PressableView onPress={decreasePress} disabled={count === 1 && true}>
             <MinusIcon/>
@@ -52,19 +54,35 @@ const Component = ({
 
       {cart && <View>
         <InnerView>
-          <PressableView onPress={()=>substractHandle(id)} disabled={quantity === 1 && true}>
-            <MinusIcon disabled={quantity}/>
+          <PressableView onPress={()=>substractHandle(id)} disabled={quantity === 1 && true || status === 0}>
+            <MinusIcon disabled={quantity} status={status}/>
           </PressableView>
           <Pressable onPress={onPressEvent}>
-            <CountText>
+            <CountText status={status}>
               {quantity}
             </CountText>
           </Pressable>
-            <PressableView onPress={()=>addHandle(id)}>
-              <PlusIcon />
+            <PressableView onPress={()=>addHandle(id)} disabled={status === 0 && true}>
+              <PlusIcon status={status}/>
             </PressableView>
         </InnerView>
       </View>}
+
+      {/* {soldOut && <View>
+        <InnerView>
+          <PressableView onPress={()=>console.log('11')} >
+            <MinusIcon />
+          </PressableView>
+          <Pressable onPress={onPressEvent}>
+            <CountText>
+              0
+            </CountText>
+          </Pressable>
+            <PressableView onPress={()=>console.log('2')} >
+              <PlusIcon />
+            </PressableView>
+        </InnerView>
+      </View>} */}
     </>
   )
 }; 
@@ -89,9 +107,13 @@ justify-content:center;
 `;
 
 const MinusIcon = styled(Minus)`
-color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]};
+color:${({disabled,theme,status}) => disabled === 1 ? theme.colors.grey[6]: status === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
+`;
+
+const PlusIcon = styled(Plus)`
+color:${({disabled,theme,status}) => disabled === 1 ? theme.colors.grey[6]: status === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const CountText = styled(Typography).attrs({text:'Body05SB'})`
-color:${({theme}) => theme.colors.grey[2]};
+color:${({theme,status}) => status === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;

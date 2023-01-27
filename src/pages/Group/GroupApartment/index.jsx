@@ -44,17 +44,17 @@ const Pages = () => {
                 }}
             />
 
+            </ScrollView>
             <ButtonWrap>
                 <Button label={'스팟 개설 신청하기'} onPressEvent={()=>navigation.navigate(GroupCreateApartmentApplicationPageName)}/>
             </ButtonWrap>
-            </ScrollView>
         </Wrap>
     )
 }
 
 export default Pages;
 
-const Wrap = styled.SafeAreaView`
+const Wrap = styled.View`
 background-color:${({theme}) => theme.colors.grey[0]};
 flex:1;
 `;
