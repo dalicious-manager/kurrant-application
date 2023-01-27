@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import React, {useRef, useState,useEffect} from "react";
+import React, {useRef, useState,useEffect, forwardRef} from "react";
 import {useForm} from 'react-hook-form';
-import { View, Alert,Text, Platform,KeyboardAvoidingView,NativeModules} from "react-native";
+import { View, Alert,Text, Platform,KeyboardAvoidingView,NativeModules,TouchableWithoutFeedback} from "react-native";
 import styled from "styled-components";
 
 import FastImage from "react-native-fast-image";
@@ -17,8 +17,9 @@ import Form from "../../../../../components/Form";
 import Typography from "../../../../../components/Typography";
 import { formattedDate, formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
-import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, Wrap, XIcon } from "../../MealCart/Main";
+import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, XIcon } from "../../MealCart/Main";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -27,23 +28,28 @@ const Pages = ({route}) => {
     const { StatusBarManager } = NativeModules;
     const navigation = useNavigation();
     const agreeCheck = useForm();
+    const pointRef = useRef();
     const [show,setShow] = useState(false);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     const [ modalVisible3, setModalVisible3 ] = useState(false);
     const [statusBarHeight, setStatusBarHeight] = useState(0);
     const [point,setPoint] = useState(0);
+    const [pointShow,setPointShow] = useState(false)
     const {isLoadMeal} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
-    const inputRef = useRef();
+    const inputRef = useRef(null);
     const {totalCount,
         totalMealPrice,
         membershipDiscountPrice,
         makersDiscountPrice,
         periodDiscountPrice,
         supportPrice,
+        deliveryFee,
+        totalDiscountPrice,
+        discountPrice,
         totalPrice,selected,name} = route.params
-    console.log(selected,name,'545')
+    
     const PressButton = () => {
         setModalVisible(true);
     }
@@ -63,6 +69,7 @@ const Pages = ({route}) => {
     };
 
     const keyboardStatus = useKeyboardEvent();
+    
     const handleEventPayments = ()=>{
         console.log(agreeCheck.watch(agreeCheck).agreeCheck);
         if(agreeCheck.watch(agreeCheck).agreeCheck){
@@ -104,12 +111,20 @@ const Pages = ({route}) => {
         }) : null
     }, []);
 
+    const confirmPress = () =>{
+        
+        setPointShow(false);
+    }
+
+    const onBlurPress = (e)=> {
+        e.preventDefault();
+        console.log(inputRef.current.value,'111')
+      };
+      
     return (
         <SafeArea>
-            <KeyContainer
-              keyboardVerticalOffset={Platform.OS === "ios" && statusBarHeight+44}
-              behavior={Platform.OS === "ios" ? "padding" : "height"} >
-            <ViewScroll>
+            
+            <ViewScroll onBlur={onBlurPress}>
             <BorderWrap>
                 <Container>
                     <DeliveryTextWrap>
@@ -122,7 +137,7 @@ const Pages = ({route}) => {
                     </DeliveryTextWrap>
                     <View>
                         <DeliveryTitle>주문자 정보</DeliveryTitle>
-                        <DeliveryText>{isUserInfo?.name}(01012345678)</DeliveryText>
+                        <DeliveryText>{isUserInfo?.name}{isUserInfo.phone === null ? '' : `(${isUserInfo.phone})`}</DeliveryText>
                     </View>
                 </Container>
                 
@@ -141,17 +156,18 @@ const Pages = ({route}) => {
                     return (
                         <React.Fragment key={idx}>
                             {(selected === el.spotId) && el.cartDailyFoodDtoList.map((m,i) => {
+                                const borderLast = el.cartDailyFoodDtoList[el.cartDailyFoodDtoList.length - 1];
                                   
                                 return (
                                     <OrderWrap key={i}>
                                         {m.cartDailyFoods.map((meal,index) => {
-                                            const borderLast = meal
-                                            console.log(borderLast)
+                                           
                                             const price = meal.price * meal.count;
                                             const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
                                             const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
                                             return (
-                                                <ContentWrap key={index}>
+                                                <React.Fragment key={index}>
+                                                <ContentWrap >
                                                     
                                                         <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
                                                         style={{
@@ -163,15 +179,12 @@ const Pages = ({route}) => {
                                                         />
                                                         <MealNameView>
                                                             <MealName numberOfLines={1} ellipsizeMode="tail">[{meal.makers}] {meal.name} </MealName>
-                                                            {/* 할인 적용 되면  */}
-                                                            <SalePriceWrap>
-                                                                <PointBoldText>{(mealDiscountRate)}%</PointBoldText>
+                                                            
+                                                           <PriceView>
                                                             <Price>{withCommas(meal.price - mealDiscountPrice)}원</Price>
-                                                            </SalePriceWrap>
-                                                            {/* 할인 전 가격 */}
-                                                            <SalePrice>{withCommas(price)}원</SalePrice>
-                                                            {/* 할인 하나도 없을 때 */}
-                                                            {/* <Price>{withCommas(price)}원</Price> */}
+                                                            {mealDiscountPrice !== 0 && <SalePrice>{withCommas(price)}원</SalePrice>}
+                                                           </PriceView>
+                                                            
                                                         </MealNameView>
                                                     
                                                     <CountWrap>
@@ -179,9 +192,10 @@ const Pages = ({route}) => {
                                                     </CountWrap>
                                                     
                                                 </ContentWrap>
+                                                    {(borderLast !== meal) && <Border/>}
+                                                </React.Fragment>
                                             )
                                         })}
-                                        {/* {!(borderLast === el.cartDailyFoodDtoList) && <Border/>} */}
                                     </OrderWrap>
                                 )
                             })}
@@ -203,34 +217,34 @@ const Pages = ({route}) => {
                             <PaymentText>회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
                          </PressableView>
-                         <PaymentText> {supportPrice === 0 ? 0 : `-${withCommas(supportPrice)}`}원</PaymentText>
+                         <PaymentText> {supportPrice === 0 ? 0 : discountPrice < supportPrice ? `-${withCommas(discountPrice)}` : `-${withCommas(supportPrice)}`} 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>총 할인금액</PaymentText>
-                        <PaymentText>-{withCommas(membershipDiscountPrice+makersDiscountPrice+periodDiscountPrice)}원</PaymentText>
+                        <PaymentText>{totalDiscountPrice === 0 ? 0 : `- ${withCommas(totalDiscountPrice)}`} 원</PaymentText>
                     </PaymentView>
                         <DiscountView>
                             <Bar/>
                             <DiscountTextWrap>
                                 <DiscountTextView>
                                     <DiscountText>멤버십 할인금액</DiscountText>
-                                    <DiscountText>{membershipDiscountPrice === 0 ? 0 : withCommas(membershipDiscountPrice)}원</DiscountText>
+                                    <DiscountText>{membershipDiscountPrice === 0 ? 0 : withCommas(membershipDiscountPrice)} 원</DiscountText>
                                 </DiscountTextView>
                                 <DiscountTextView>
                                     <DiscountText>판매자 할인금액</DiscountText>
-                                    <DiscountText>{makersDiscountPrice === 0 ? 0 : withCommas(makersDiscountPrice)}원</DiscountText>
+                                    <DiscountText>{makersDiscountPrice === 0 ? 0 : withCommas(makersDiscountPrice)} 원</DiscountText>
                                 </DiscountTextView>
                                 <DiscountTextView>
                                     <DiscountText>기간 할인금액</DiscountText>
-                                    <DiscountText>{periodDiscountPrice === 0 ? 0 : withCommas(periodDiscountPrice)}원</DiscountText>
+                                    <DiscountText>{periodDiscountPrice === 0 ? 0 : withCommas(periodDiscountPrice) }원</DiscountText>
                                 </DiscountTextView>
                             </DiscountTextWrap>
                         </DiscountView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>
-                        {/* <PaymentText>{deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원</PaymentText> */}
+                        <PaymentText>{deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원</PaymentText>
                     </PaymentView>
-                    <PaymentView>
+                    {/* <PaymentView>
                         <PressableView onPress={pointButton}>
                             <PaymentText>포인트 사용금액</PaymentText>
                             <QuestionIcon />
@@ -248,10 +262,10 @@ const Pages = ({route}) => {
                                 <PointUnitText>P</PointUnitText>
                             </PointWrap>
                         
-                      </PaymentView>
-                      <UserPointView>
+                      </PaymentView> */}
+                      {/* <UserPointView>
                             <UserPointText>잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserPointText>
-                      </UserPointView>
+                      </UserPointView> */}
                       <PaymentView>
                             <TotalPriceTitle>총 결제금액</TotalPriceTitle>
                             <TotalPrice>{withCommas(totalPrice)} 원</TotalPrice>
@@ -287,6 +301,16 @@ const Pages = ({route}) => {
                     </Form>
                 </FormWrap>
                 </ViewScroll>
+                <KeyContainer
+                    keyboardVerticalOffset={Platform.OS === "ios" && statusBarHeight+44}
+                    behavior={Platform.OS === "ios" ? "padding" : "height"} >
+                    {keyboardStatus.isKeyboardActivate && <TouchableWithoutFeedback>
+                        <KeyboardInner ref={pointRef}>
+                            <Pressable onPress={()=>console.log('3343')}>
+                                <PointApply>완료</PointApply>
+                            </Pressable>
+                        </KeyboardInner>
+                    </TouchableWithoutFeedback>}
                 </KeyContainer>
                 {!keyboardStatus.isKeyboardActivate && <ButtonWrap>
                     <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{handleEventPayments()}}/>
@@ -467,10 +491,26 @@ justify-content:space-between;
 `;
 
 const KeyContainer = styled.KeyboardAvoidingView`
-  flex: 1;
+  /* flex: 1; */
   position: relative;
 `
 
 const InnerView = styled.View`
+flex-direction:row;
+`;
+
+const KeyboardInner = styled.View`
+width:100%;
+padding:8px 20px;
+flex-direction:row;
+background-color:${({theme}) => theme.colors.grey[8]};
+justify-content:flex-end;
+`;
+
+const PointApply = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.blue[500]};
+`;
+
+const PriceView = styled.View`
 flex-direction:row;
 `;

@@ -24,6 +24,8 @@ const Component = ({
     const secondDiscount = firstDiscount - makersDiscountedPrice;
     const lastDiscount = secondDiscount - periodDiscountedPrice
     const discount = membershipDiscountedRate + makersDiscountedRate + periodDiscountedRate;
+    console.log((price - (price*0.2)) - ((price - (price*0.2)) * (periodDiscountedRate*0.01)),'11')
+    const [test,setTest] = useState();
     return (
         <Wrap>
         <Modal
@@ -52,17 +54,20 @@ const Component = ({
                             <Text>[매장가]</Text>
                             <DscText>{withCommas(price)}원</DscText>
                         </ContentWrap>
-                        {discount === 0 && <ContentWrap>
+                        {membershipDiscountedRate === 0 && <ContentWrap>
                             <Text>[멤버십 가입시 판매가]</Text>
+                            <DscText> &#183; 멤버십 할인 적용시</DscText>
                             <DscText>{withCommas(price)}원 x (100%-20%) = {withCommas(price - (price*0.2))}원</DscText>
+                            {periodDiscountedRate !== 0 && <DscText> &#183; 기간 할인 추가 적용시</DscText>}
+                            {periodDiscountedRate !== 0 && <DscText>{withCommas(price - (price*0.2))}원 x (100%-{periodDiscountedRate}%) = {withCommas((price - (price*0.2)) - ((price - (price*0.2)) * (periodDiscountedRate*0.01)))}원</DscText>}
                         </ContentWrap>}
                         {totalDiscountRate !== 0 && <ContentWrap>
                             <Text>[최종 판매가]</Text>
-                            {membershipDiscountedRate !== 0 && <DscText>1. 멤버십 할인 적용시</DscText>}
+                            {membershipDiscountedRate !== 0 && <DscText> &#183; 멤버십 할인 적용시</DscText>}
                             {membershipDiscountedRate !== 0 && <DscText>{withCommas(price)}원 x (100%-{membershipDiscountedRate}%) = {withCommas(firstDiscount)}원</DscText>}
-                            {makersDiscountedRate !== 0 && <DscText>2. 판매자 할인 추가 적용시</DscText>}
+                            {makersDiscountedRate !== 0 && <DscText> &#183; 판매자 할인 추가 적용시</DscText>}
                             {makersDiscountedRate !== 0 && <DscText>{withCommas(firstDiscount)}원 x (100%-{makersDiscountedRate}%) = {withCommas(secondDiscount)}원</DscText>}
-                            {periodDiscountedRate !== 0 && <DscText>3. 기간 할인 추가 적용시</DscText>}
+                            {periodDiscountedRate !== 0 && <DscText> &#183; 기간 할인 추가 적용시</DscText>}
                             {periodDiscountedRate !== 0 && <DscText>{withCommas(secondDiscount)}원 x (100%-{periodDiscountedRate}%) = {withCommas(lastDiscount)}원</DscText>}
                         </ContentWrap>}
                         <ContentWrap>

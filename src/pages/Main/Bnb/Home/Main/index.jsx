@@ -289,7 +289,7 @@ if(isUserInfoLoading){
             <MembershipText>멤버십 가입하고 <PointText>20%할인</PointText> 받기</MembershipText>
           </MenbershipBanner>}
           
-          <CatorWrap>
+          {/* <CatorWrap>
             <Cator>
               <CatorIcon/>
               <TitleText>케이터링</TitleText>
@@ -298,7 +298,7 @@ if(isUserInfoLoading){
               <Count>2</Count>
               <CountText>건</CountText>
             </CountWrap>
-          </CatorWrap>
+          </CatorWrap> */}
           {/* {isUserInfo?.isMembership && <MembershipWrap>
             <Membership>
               <MembershipIcon/>
@@ -322,7 +322,7 @@ if(isUserInfoLoading){
               </MembersWrap>
             </View>
           </MembershipWrap>}
-          <MarketWrap>
+          {/* <MarketWrap>
             <Market>
               <MarketIcon/>
               <TitleText>마켓 상품</TitleText>
@@ -331,7 +331,7 @@ if(isUserInfoLoading){
               <Count>2</Count>
               <CountText>건</CountText>
             </CountWrap>
-          </MarketWrap>
+          </MarketWrap> */}
         </MainWrap>
         </Wrap>   
           </ScrollViewWrap>

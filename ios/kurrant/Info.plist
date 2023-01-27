@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.6</string>
+	<string>1.0.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -51,20 +51,33 @@
 			</array>
 		</dict>
 		<dict>
-		<key>CFBundleURLSchemes</key>
-		<array>
-		<string>fb978024843173047</string>
-		</array>
-	</dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb978024843173047</string>
+			</array>
+		</dict>
 	</array>
-	<key>FacebookAppID</key>
-		<string>978024843173047</string>
-	<key>FacebookClientToken</key>
-		<string>1ff9dad5b56ee756cf2bd55bc75cbd10</string>
-	<key>FacebookDisplayName</key>
-	<string>커런트</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>CodePushDeploymentKey</key>
+	<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>
+	<key>CodePushPublicKey</key>
+	<string>-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwEUb8X7m0QmhKr8ZQi2z
+DSgaGLojKcY2wSnJtXkN7PgIMaV+gl3sZ2BjVwEWcCT0HXwnvVUtTz1IzGGXiuQS
+NIy734z8i9i5SPca+93Q70fz6DyprIMkpFjJe3CC38NfqUYtNGwq+SJ9S2aKp2FI
+KkQwWu2cMyuuS4KmEk/A93CuuB1HLjFIaaE7Q2BqXtrp6itblFjjAYP4bcl5UI00
+g24CvXprqPE/ZyQRigC7IaZC18Ns4K4j5uL4d16W3hqK5wT4m6yEbVAx1fuhbcwu
+zobqlsBLsVeWxgYOfdEwaZnwA/iBhkYnv/kUgrPBTcI9a8WF5uhXy46QfABd+f8l
+LwIDAQAB
+-----END PUBLIC KEY-----
+</string>
+	<key>FacebookAppID</key>
+	<string>978024843173047</string>
+	<key>FacebookClientToken</key>
+	<string>1ff9dad5b56ee756cf2bd55bc75cbd10</string>
+	<key>FacebookDisplayName</key>
+	<string>커런트</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>KAKAO_APP_KEY</key>
@@ -159,18 +172,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CodePushPublicKey</key>
-	<string>-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwEUb8X7m0QmhKr8ZQi2z
-DSgaGLojKcY2wSnJtXkN7PgIMaV+gl3sZ2BjVwEWcCT0HXwnvVUtTz1IzGGXiuQS
-NIy734z8i9i5SPca+93Q70fz6DyprIMkpFjJe3CC38NfqUYtNGwq+SJ9S2aKp2FI
-KkQwWu2cMyuuS4KmEk/A93CuuB1HLjFIaaE7Q2BqXtrp6itblFjjAYP4bcl5UI00
-g24CvXprqPE/ZyQRigC7IaZC18Ns4K4j5uL4d16W3hqK5wT4m6yEbVAx1fuhbcwu
-zobqlsBLsVeWxgYOfdEwaZnwA/iBhkYnv/kUgrPBTcI9a8WF5uhXy46QfABd+f8l
-LwIDAQAB
------END PUBLIC KEY-----
-</string>
-<key>CodePushDeploymentKey</key>
-<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>	
 </dict>
 </plist>

@@ -5,7 +5,7 @@ import { TextInput } from "react-native-gesture-handler";
 import styled from "styled-components";
 
 import FastImage from 'react-native-fast-image';
-
+import SoldOut from '../../../../../assets/icons/MealCart/soldOut.svg';
 import Arrow from '../../../../../assets/icons/MealCart/arrow.svg';
 import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
@@ -30,7 +30,7 @@ import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import { el } from "date-fns/locale";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import BottomSheet from "../../../../../components/BottomSheet";
-
+import BottomMenu from "../../../../../components/BottomSheetMenu";
 const windowHeight = Dimensions.get('window').height;
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
@@ -41,27 +41,30 @@ const Pages = () => {
     const inputRef = useRef();
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
-    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal,allDeleteMeal, deliveryFee,userPoint, mealCartSpot} = useShoppingBasket();
+    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal,allDeleteMeal,userPoint, mealCartSpot,loadSoldOutMeal,soldOutMeal} = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
+    const [ modalVisible3, setModalVisible3 ] = useState(false);
     const {isUserInfo} = useUserInfo();
     const [selected,setSelected] = useState(isUserInfo.spotId);
     const [name,setName] = useState();
+    const [date,setDate] = useState();
+    const [type,setType] = useState();
     
-    useFocusEffect(
-        useCallback(() => {
-            // Do something when the screen is focused
-            console.log('들어옴')
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         // Do something when the screen is focused
+    //         console.log('들어옴')
         
 
-            return  () => {
-                console.log("나감")
-                updateMeal({"updateCartList":modifyQty});
-            };
+    //         return  () => {
+    //             console.log("나감")
+    //             updateMeal({"updateCartList":modifyQty});
+    //         };
     
     
-    }, [updateMeal])
-    );
+    // }, [updateMeal])
+    // );
 
 
     const PressSpotButton = () => {
@@ -186,10 +189,30 @@ const Pages = () => {
     const supportPrice = support.map(el => el.supportPrice).reduce((acc,cur) => {
         return acc + cur
     },0)
+
+    // 지원금 계산
+    const discountPrice = arr?.map(p => (p.discountedPrice * p.count)).reduce((acc,cur) => {
+        return acc + cur
+    },0);
+
+    // 사용한 회사 지원금
+    const usedSupportPrice =  (discountPrice < supportPrice) ? discountPrice : supportPrice;
+
+    // 배송비
+    const delivery = isLoadMeal?.filter(p => p.spotId === (selected ?? isUserInfo.spotId)).map(el => el.cartDailyFoodDtoList).flat()
+    const deliveryFee = delivery.map(el => el.deliveryFee).reduce((acc,cur) => {
+        return acc + cur
+    },0)
     
+    // 총 할인금액
+    const totalDiscountPrice = membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
+
     // 총 결제금액
-    const totalPrice = totalMealPrice - supportPrice - ( membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice) + deliveryFee
+    const totalPrice = totalMealPrice - usedSupportPrice - totalDiscountPrice + deliveryFee
+   
+
     
+
     const focusPress = () => {
         setFocus(true);
       };
@@ -240,7 +263,7 @@ const Pages = () => {
         const deleteArrs = deleteArr.filter(el=>{
             return el.cartDailyFoodDtoList.length !== 0 
         })
-        console.log(deleteArrs,'333')
+        
         try {
             await deleteMeal(foodId);
             setLoadMeal(deleteArrs)
@@ -287,7 +310,39 @@ const Pages = () => {
             ]
           )
     }
-   
+
+    const changeMealPress = () =>{
+        // console.log(date,id,type)
+        Alert.alert(
+          "메뉴 변경",
+          "현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?(수량:n)",
+          
+    
+          [
+            {
+              text:'아니요',
+              onPress:() => {},
+              
+            },
+            {
+              text:'메뉴 취소',
+              onPress:() => {
+                setModalVisible3(true)
+              },
+              style:'destructive'
+            }
+          ]
+        )
+      }
+
+    const changMealList = async (date,id,type) =>{
+        try {
+           await loadSoldOutMeal(date,id,type)
+        } catch(err){
+            console.log(err)
+        }
+    }
+
     return (
         <SafeView>
              <SpotView>
@@ -308,16 +363,13 @@ const Pages = () => {
             <ScrollViewWrap>
                 
                 {isLoadMeal?.map((el,idx) => {
-                    console.log(el,'333')
+                    
                         return (
                             <React.Fragment key={idx}>
                                 {(selected === el.spotId) && el.cartDailyFoodDtoList.map((v,idx) => {
-                                    console.log(v,'222')
+                                    const diningType = v.diningType === '아침' ? 1 : v.diningType === '점심' ? 2 : 3
                                     return (
-                                        <Wrap key={idx}>
-                                            <ContentHeader>
-                                                <DiningName>{formattedMonthDay(v.serviceDate)} {v.diningType}</DiningName>
-                                            </ContentHeader>
+                                        <React.Fragment key={idx} >
                                             {v.cartDailyFoods.map((food,i) => {
                                                     const rate = food.membershipDiscountRate + food.makersDiscountRate + food.periodDiscountRate;
                                                     const membership = food.membershipDiscountPrice === null ? 0 : food.membershipDiscountPrice ;
@@ -326,7 +378,10 @@ const Pages = () => {
                                                     const discountPrice = membership + markers + period;
                                                     
                                                 return (
-                                                    <React.Fragment key={i}>
+                                                    <Wrap key={i} status={food.status}>
+                                                    <ContentHeader>
+                                                        <DiningName>{formattedMonthDay(v.serviceDate)} {v.diningType}</DiningName>
+                                                    </ContentHeader>
                                                     <Pressable onPress={()=>{deleteButton(food.id)}}><DeleteIcons/></Pressable>
                                                     <ContentWrap >
                                                         <FastImage source={{uri:`${food.image}`,priority:FastImage.priority.high}}
@@ -339,15 +394,28 @@ const Pages = () => {
                                                         />
                                                         <MealNameView>
                                                             <MealName numberOfLines={1} ellipsizeMode="tail">[{food.makers}] {food.name}</MealName>
-                                                            
                                                             <SalePriceWrap>
-                                                                <PointBoldText>{rate}%</PointBoldText>
                                                                 <Price>{withCommas(((food.price)-(discountPrice))*food.count)}원</Price>
+                                                                {rate !== 0 && <SalePrice>{withCommas((food.price)*food.count)}원</SalePrice>}
                                                             </SalePriceWrap>
-                                                            <SalePrice>{withCommas((food.price)*food.count)}원</SalePrice>
-                                                            
-                                                            
+                                                            {food.status === 0 && <SoldOutView>
+                                                                <SoldOutIcon/>
+                                                                <SoldOutText>품절</SoldOutText>
+                                                            </SoldOutView>}
                                                         </MealNameView>
+                                                        {food.status === 0 && <MenuChangeView 
+                                                        onPress={()=>{
+                                                            changeMealPress();
+                                                            changMealList(el.spotId,v.serviceDate,diningType);
+                                                            setDate(v.serviceDate);
+                                                            setType(v.diningType)}}>
+                                                            <MenuChangeText>메뉴 변경</MenuChangeText>
+                                                        </MenuChangeView>}
+                                                        <BottomMenu modalVisible={modalVisible3} setModalVisible={setModalVisible3} 
+                                                        title={formattedMonthDay(date) + type} 
+                                                        btn='변경완료'
+                                                        data={soldOutMeal}
+                                                        />
                                                         <CountWrap>                                
                                                                 <Count
                                                                     cart
@@ -356,13 +424,14 @@ const Pages = () => {
                                                                     substractHandle={substractHandle}
                                                                     quantity={food.count}
                                                                     id={food.dailyFoodId}
+                                                                    status={food.status}
                                                                 />
                                                         </CountWrap>
                                                     </ContentWrap>
-                                                    </React.Fragment>
+                                                    </Wrap>
                                                 )
                                             })}
-                                        </Wrap>
+                                        </React.Fragment>
 
                                     )
                             })}
@@ -377,31 +446,31 @@ const Pages = () => {
                 <PaymentWrap>
                     <PaymentView>
                         <PaymentText>총 상품금액</PaymentText>
-                        <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
+                        <PaymentText>{withCommas(totalMealPrice)} 원</PaymentText>
                     </PaymentView>
                     <PaymentView >
                         <PressableView onPress={fundButton}>
                             <PaymentText >회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
                          </PressableView>
-                            <PaymentText> {supportPrice === 0 ? 0 : `-${withCommas(supportPrice)}`}원</PaymentText>
+                            <PaymentText> {supportPrice === 0 ? 0 : discountPrice < supportPrice ? `-${withCommas(discountPrice)}` : `-${withCommas(supportPrice)}`} 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>총 할인금액</PaymentText>
-                        <PaymentText>- {withCommas(membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice)}원</PaymentText>
+                        <PaymentText> {totalDiscountPrice === 0 ? 0 : `-${withCommas(totalDiscountPrice)}`} 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <PaymentText>배송비</PaymentText>
-                        <PaymentText>{deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원</PaymentText>
+                        <PaymentText>{deliveryFee === 0 ? 0 : withCommas(deliveryFee)} 원</PaymentText>
                     </PaymentView>
                     <PaymentView>
                         <TotalPriceTitle>총 결제금액</TotalPriceTitle>
                         <TotalPrice>{withCommas(totalPrice)} 원</TotalPrice>
                     </PaymentView>
                     <Border/>
-                    <UserPointView>
+                    {/* <UserPointView>
                         <UserPointText>보유포인트 <UserHavePoint>{isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserHavePoint>(결제시 적용가능)</UserPointText>
-                    </UserPointView>
+                    </UserPointView> */}
                 </PaymentWrap>
                 </View>
                 }
@@ -426,16 +495,21 @@ const Pages = () => {
                     membershipDiscountPrice,
                     makersDiscountPrice,
                     periodDiscountPrice,
+                    totalDiscountPrice,
                     supportPrice,
                     totalPrice,
+                    deliveryFee,
                     selected,
-                    name
+                    name,
+                    discountPrice
                 })}}
+
                 />
             </ButtonWrap>}
              
             <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
             <BottomSheet modalVisible={modalVisible2} setModalVisible={setModalVisible2}  title='스팟 선택' data={mealCartSpot} selected={selected} setSelected={setSelected} setName={setName}/>
+            
             </SafeView>
     )
 
@@ -470,13 +544,13 @@ align-items:center;
 
 `;
 
-export const Wrap = styled.View`
+const Wrap = styled.View`
 flex:1;
-padding:24px 0px;
+padding:16px 24px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
 position:relative;
-margin:0px 24px;
+background-color:${({theme,status}) => status === 0 ?  theme.colors.grey[8] : theme.colors.grey[0]};
 `;
 
 export const MealImage = styled(FastImage)`
@@ -507,10 +581,12 @@ export const SalePrice = styled(Typography).attrs({text:'Body06R'})`
 text-decoration:line-through;
 text-decoration-color:${props => props.theme.colors.grey[5]};
 color:${props => props.theme.colors.grey[5]};
+margin-left:4px;
 `;
 
 export const SalePriceWrap = styled.View`
 flex-direction:row;
+align-items:center;
 `;
 
 export const CountWrap = styled.View`
@@ -556,6 +632,7 @@ color:${props => props.theme.colors.grey[2]};
 `;
 export const MealName = styled(Typography).attrs({text:'Body05SB'})`
 color:${props => props.theme.colors.grey[2]};
+margin-bottom:2px;
 `;
 
 export const PaymentText = styled(Typography).attrs({text:'Body05R'})`
@@ -636,6 +713,7 @@ margin-left:8px;
 
 const MealNameView = styled.View`
 width:80%;
+margin-bottom:32px;
 `;
 
 const UserPointView = styled.View`
@@ -693,4 +771,37 @@ flex-direction:row;
 justify-content:space-between;
 align-items:center;
 padding:0px 24px;
+`;
+
+const MenuChangeText = styled(Typography).attrs({text:'Body05SB'})`
+color:${({theme}) => theme.colors.grey[2]};
+`;
+
+const MenuChangeView = styled.Pressable`
+border:1px solid ${({theme}) => theme.colors.grey[6]};
+background-color:#fff;
+position:absolute;
+right:104px;
+bottom:0;
+flex-direction:row;
+align-items:center;
+justify-content:space-around;
+width:98px;
+height:38px;
+border-radius:7px;
+`;
+
+const SoldOutIcon = styled(SoldOut)`
+color:${({theme}) => theme.colors.red[500]};
+margin-right:4px;
+`;
+
+const SoldOutText = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme}) => theme.colors.red[500]};
+`;
+
+const SoldOutView = styled.View`
+flex-direction:row;
+align-items:center;
+margin-top:2px;
 `;
