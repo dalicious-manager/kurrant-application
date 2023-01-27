@@ -7,7 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 import { Settings ,LoginButton,AccessToken} from 'react-native-fbsdk-next';
 
-import {LogoImage , LogoBackground} from '../../../../assets';
+import {LogoImage , LogoBackground, LogoImage2} from '../../../../assets';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
 import Image from '../../../../components/Image';
@@ -24,6 +24,9 @@ import LoginMain from './LoginMain';
 
 import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid'
+
+import LogoImageSvg from '../../../../assets/icons/Logo.svg'
+
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -141,7 +144,11 @@ const Pages = () => {
       </BackgroundContainer>
       <LoginBox>
         <LogoBox>
-          <Image imagePath={LogoImage} scale={1.0}/>
+          {/* <Image imagePath={LogoImage} scale={1.0}/> */}
+          
+          
+          <LogoImageSvg/>
+          
         </LogoBox>
         <LoginMain />
         <TouchableOpacity onPress={()=>{
@@ -152,6 +159,7 @@ const Pages = () => {
         <EtcSNSContainer>
 
          <HorizonLine text={`그외 SNS로 로그인`}/>
+         
           {/* <Text style={{flex:1 ,textAlign:'center'}} >───── 그외 SNS로 로그인 ─────</Text> */}
           <EtcSNSBox >
             <ButtonRoundSns type_sns='facebook' size={32} onPressEvent={facebookLogin}/>

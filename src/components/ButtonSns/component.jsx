@@ -2,6 +2,9 @@ import React from 'react';
 import styled, { css } from 'styled-components/native';
 
 import { KaKaoIcon, NaverIcon} from '../Icon';
+import KakaoTalk from '../../assets/icons/KakaoTalk.svg'
+import NaverLogo from '../../assets/icons/NaverLogo.svg'
+
 import Typography from '../Typography';
 import { getSnsButtonColor, getSnsButtonBorder } from './style';
 
@@ -22,9 +25,11 @@ const Component = ({ type_sns = 'email', onPressEvent = () => { console.log('sns
   const renderButton = () => {
     switch (type_sns) {
       case 'kakao':
-        return <KaKaoIcon />;
+        // return <KaKaoIcon />;
+        return <KakaoTalk />;
       case 'naver':
-        return <NaverIcon />;
+        // return <NaverIcon />;
+        return <NaverLogo />;
     }
   };
 
