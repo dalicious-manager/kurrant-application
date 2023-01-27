@@ -7,6 +7,7 @@ import styled from "styled-components/native";
 
 import useMembership from "../../../biz/useMembership";
 import useUserInfo from "../../../biz/useUserInfo";
+import useUserMe from "../../../biz/useUserMe";
 import Check from "../../../components/Check";
 import Form from "../../../components/Form";
 import { CommentsIcon, DeliveryFreeIcon, DiscountIcon, PointIcon } from "../../../components/Icon";
@@ -24,6 +25,7 @@ const Pages= ()=>{
     const membershipProduct = useMembership();
     const {isUserInfo} = useUserInfo();
     const [membershipData, setMembershipData] = useState();
+    const {alarmLookup,alarmSetting,readableAtom:{alarm,isAlarmSettingLoading}} = useUserMe();
 
     const signUpCheck1 = signUpCheck.watch('signUpCheck1')
     const signUpCheck2 = signUpCheck.watch('signUpCheck2')
@@ -48,7 +50,9 @@ const Pages= ()=>{
             signUpCheck2&&
             signUpCheck3){
                 if(signUpCheck4){
-                    console.log("알람 동의");
+                    await alarmSetting({'isMarketingAlarmAgree':true,'isOrderAlarmAgree' : alarm.isOrderAlarmAgree ,"isMarketingInfoAgree": alarm.isMarketingInfoAgree,})
+                }else if (!signUpCheck4){
+                    await alarmSetting({'isMarketingAlarmAgree':false,'isOrderAlarmAgree' : alarm.isOrderAlarmAgree ,"isMarketingInfoAgree": alarm.isMarketingInfoAgree,})
                 }
                 navigation.navigate(MembershipJoinPaymentsPageName,{
                     period:period ==="월간구독" ? 'month':'yaers',

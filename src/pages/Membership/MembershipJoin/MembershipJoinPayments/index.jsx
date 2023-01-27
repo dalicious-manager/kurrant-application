@@ -1,7 +1,7 @@
 import { StackActions, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Animated,    ScrollView } from "react-native";
+import { Animated,    ScrollView,Alert } from "react-native";
 import styled, { useTheme } from "styled-components/native";
 
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
@@ -75,7 +75,7 @@ const Pages= ({route})=>{
         navigation.navigate(MembershipJoinComplatePageName)
       };
       }else{
-
+        Alert.alert("결제 진행 을 동의해주세요")
       }        
     }
     useEffect(()=>{

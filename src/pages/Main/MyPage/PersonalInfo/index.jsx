@@ -24,7 +24,7 @@ import { PAGE_NAME as  ConnectedSNSPageName} from './pages/ConnectedSNS';
 import { PAGE_NAME as  EmailSettingPageName} from './pages/EmailSetting';
 import { PAGE_NAME as  NotificationSettingPageName} from './pages/NotificationSetting';
 import { PAGE_NAME as  PasswordSettingPageName} from './pages/PasswordSetting';
-import {PAGE_NAME as PaymentManagePageName} from './pages/PaymentManage';
+import {SCREEN_NAME as PaymentsManageScreenName} from '../../../../screens/Main/PaymentsManage';
 import { PAGE_NAME as  PhoneNumberSettingPageName} from './pages/PhoneNumberSetting';
 
 import { isUserInfoAtom } from '../../../../biz/useUserInfo/store';
@@ -202,7 +202,7 @@ const Pages = ({route}) => {
           title={!myInfoPerson.hasGeneralProvider ? '이메일/비밀번호 설정' : '비밀번호 변경'}  
           description={!myInfoPerson.hasGeneralProvider && '설정하기'} 
           routeName={!myInfoPerson.hasGeneralProvider ? EmailSettingPageName:PasswordSettingPageName}/>
-          <ListBox title='결제수단 관리' routeName={PaymentManagePageName} />
+          <ListBox title='결제수단 관리' routeName={PaymentsManageScreenName} />
           <ListBox title='그룹/스팟 관리' onPressEvent={() =>{navigation.navigate(GroupManagePageName,{id:spotId,clientId:groupId})}}/>
           {isApplicationList.length !== 0 && <ListBox title='스팟 개설 요청 내역' routeName={GroupApplicationCheckPageName}/>}
           <ListBox title='알림 설정' routeName={NotificationSettingPageName}/>

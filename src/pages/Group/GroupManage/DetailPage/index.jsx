@@ -198,7 +198,7 @@ const Pages = ({route}) => {
 export default Pages;
 
 const SafeView = styled.SafeAreaView`
-flex:1
+    flex:1;
 `;
 const Wrap = styled.View`
 background-color:${({theme}) => theme.colors.grey[0]};

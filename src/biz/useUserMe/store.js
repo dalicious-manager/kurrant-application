@@ -23,7 +23,9 @@ export const alarmAtom = atomWithReset({
 });
 export const isChangePasswordLoadingAtom = atomWithReset(false);
 export const cardListAtom = atomWithReset([]);
+export const cardSimpleListAtom = atomWithReset([]);
 export const isSettingEmailLoadingAtom = atomWithReset(false);
 export const isSettingPhoneNumberLoadingAtom = atomWithReset(false);
 export const isCardRegistedLoadingAtom = atomWithReset(false);
 export const isCardListLoadingAtom = atomWithReset(false);
+export const isCardSettingLoadingAtom = atomWithReset(false);

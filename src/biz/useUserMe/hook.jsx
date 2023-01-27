@@ -15,8 +15,10 @@ import {
     isSettingPhoneNumberLoadingAtom,
     isCardRegistedLoadingAtom,
     isCardListLoadingAtom,
+    isCardSettingLoadingAtom,
     alarmAtom,
-    cardListAtom
+    cardListAtom,
+    cardSimpleListAtom
 } from './store';
 
 const useUserMe = () => {
@@ -32,11 +34,13 @@ const useUserMe = () => {
     const [isAlarmLookUpLoading,setAlarmLookUpLoading] = useAtom(isAlarmLookUpLoadingAtom);
     const [alarm,setAlarm] = useAtom(alarmAtom);
     const [cardList,setCardList] = useAtom(cardListAtom);
+    const [cardSimpleList,setCardSimpleList] = useAtom(cardSimpleListAtom);
     const [isChangePasswordLoading,setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
     const [isSettingEmailLoading,setSettingEmailLoading] = useAtom(isSettingEmailLoadingAtom);
     const [isSettingPhoneNumberLoading,setSettingPhoneNumberLoading] = useAtom(isSettingPhoneNumberLoadingAtom);
     const [isCardRegistedLoading,setCardRegistedLoading] = useAtom(isCardRegistedLoadingAtom);
     const [isCardListLoading,setCardListLoading] = useAtom(isCardListLoadingAtom);
+    const [isCardSettingLoading,setCardSettingLoading] = useAtom(isCardSettingLoadingAtom);
 
     const userMe = async () => {
         
@@ -224,11 +228,33 @@ const useUserMe = () => {
             setCardListLoading(true);
             const res = await Fetch.getCardList();
             setCardList(res.data);
+            setCardSimpleList(res.data.map((v,idx)=>{
+                return {
+                    id:v.id,
+                    text:`${v.cardCompany}카드(${v.cardNumber?.toString().slice(-4)})`
+                }
+            }));
             return res;
         } catch (err) {
             throw err;
         }finally{
             setCardListLoading(false);
+        }
+    };
+    const cardSetting = async (body,option={}) => {
+        
+        try {
+            setCardSettingLoading(true);
+            const res = await Fetch.cardSetting({
+                ...body
+              },
+              option
+            );
+            return res;
+        } catch (err) {
+            throw err;
+        }finally{
+            setCardSettingLoading(false);
         }
     };
     return {
@@ -243,6 +269,7 @@ const useUserMe = () => {
         settingPhoneNumber,
         cardRegisted,
         getCardList,
+        cardSetting,
         setCardList,
         readableAtom: {
             myInfo,
@@ -258,7 +285,9 @@ const useUserMe = () => {
             isSettingPhoneNumberLoading,
             isCardRegistedLoading,
             isCardListLoading,
+            isCardSettingLoading,
             cardList,
+            cardSimpleList,
             alarm
         } 
     }

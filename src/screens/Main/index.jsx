@@ -103,6 +103,7 @@ import { isLoginLoadingAtom } from '../../biz/useAuth/store';
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import RegisterCard, {SCREEN_NAME as RegisterCardScreenName} from './RegisterCard';
+import PaymentsManage, {SCREEN_NAME as PaymentsManageScreenName} from './PaymentsManage';
 import PurchaseHistory, {SCREEN_NAME as PurchaseHistoryScreenName} from './PurchaseHistory';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import BackButton from '../../components/BackButton';
@@ -331,6 +332,24 @@ const Screen = () => {
           name={RegisterCardScreenName}
           component={RegisterCard}
           options={{headerShown: true,title:"카드 등록",
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          headerTitleStyle:{
+            fontFamily:'Pretendard-SemiBold',
+            fontSize:14,
+            lineHeight:22,
+          },
+          headerLeft: () => <BackButton />,
+        }}
+        />
+       
+      </MainRoot.Group>
+      {/* 결제수단 관리 */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PaymentsManageScreenName}
+          component={PaymentsManage}
+          options={{headerShown: true,title:"결제수단 관리",
           headerTitleAlign: 'center',
           headerShadowVisible: false,
           headerTitleStyle:{

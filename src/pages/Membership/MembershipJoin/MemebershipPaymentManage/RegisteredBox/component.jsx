@@ -20,7 +20,7 @@ const Component = ({
                 <Typography text={'CaptionR'} textColor={themeApp.colors.grey[2]}>********{cardNumber?.toString().slice(-4)}</Typography>
                 <LabelContainer>
                     {isMembership && <LabelBox>
-                        <Label label="멤버쉽 결제수단" type="blue"/>
+                        <Label label="멤버십 결제수단" type="blue"/>
                     </LabelBox>}
                     {isDefault && <LabelBox>
                         <Label label="기본 결제수단" type="blue"/>

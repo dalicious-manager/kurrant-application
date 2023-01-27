@@ -49,6 +49,13 @@ export async function cardRegisted(body, option) {
   });
   return fetchRes
 }
+export async function cardSetting(body, option) {
+  const fetchRes = await fetchJson(`/users/me/cards/setting`, 'PATCH', {
+    ...option,
+    body: JSON.stringify(body)
+  });
+  return fetchRes
+}
 export async function getCardList() {
   const fetchRes = await fetchJson(`/users/me/cards`, 'GET');
   return fetchRes

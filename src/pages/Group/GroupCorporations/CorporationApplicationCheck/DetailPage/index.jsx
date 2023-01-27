@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Text ,View,Dimensions} from "react-native"
+import { Text ,View,Dimensions,Linking} from "react-native"
 import styled from "styled-components";
 
 import CallIcon from "../../../../../assets/icons/Group/call.svg";
@@ -13,6 +13,8 @@ import {PAGE_NAME as CorporationEtcPageName} from "./EtcPage";
 
 const windowWidth = Dimensions.get('window').width;
 export const PAGE_NAME = "P__GROUP__CREATE__CORPORATION__APPLICATION__DETAIL" ;
+const phoneNumber = 'tel:1577-9612';
+const kakaoURL = 'https://pf.kakao.com/_uAxixjxb';
 
 const Pages = ({route}) => {
     
@@ -168,11 +170,11 @@ const Pages = ({route}) => {
                     })}
             </ScrollWrap>
                 <ButtonWrap>
-                    <CallButton>
+                    <CallButton onPress={() => {Linking.openURL(`${phoneNumber}`)}}>
                         <CallIcon/>
                         <CallText>전화 문의</CallText>
                     </CallButton>
-                    <ChatButton>
+                    <ChatButton onPress={() => {Linking.openURL(`${kakaoURL}`)}}>
                         <ChatIcon/>
                         <ChatText>1:1 문의</ChatText>
                     </ChatButton>
