@@ -12,6 +12,10 @@ import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {PAGE_NAME as TermOfServicePageName } from '~pages/Main/MyPage/TermOfService'
 
+
+import { PAGE_NAME as CompanyInfoPageName } from '../../../MyPage/CompanyInfo';
+
+
 import { PAGE_NAME as MembershipIntroPageName } from '../../../../Membership/MembershipIntro';
 import { PAGE_NAME as MembershipInfoPageName } from '../../../../Membership/MembershipInfo';
 import { PAGE_NAME as FAQPageName } from '../../../MyPage/FAQ';
@@ -27,6 +31,7 @@ import SkeletonUI from './SkeletonUI';
 import VersionCheck from "react-native-version-check";
 import { useCallback } from 'react';
 import useUserInfo from '../../../../../biz/useUserInfo';
+
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -112,6 +117,7 @@ const Pages = () => {
           </ListContainer>
           <ListContainer title='문의하기'>
             <ListBox title='고객센터'  routeName={FAQPageName}/>
+            <ListBox title='회사 정보'  routeName={CompanyInfoPageName}/>
           </ListContainer>
           <ListContainer title='버전 정보'>
             <ListBox title='앱 버전' isVersion={true} isArrow={false} latestVersion={versionChecked} currentVersion={currentVersion}/>
