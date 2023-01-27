@@ -154,6 +154,7 @@ import { useAtom } from 'jotai';
 import useBoard from '../../biz/useBoard';
 import { useEffect } from 'react';
 import { getStorage } from '../../utils/asyncStorage';
+import CompanyInfo, { PAGE_NAME as CompanyInfoPageName } from '../../pages/Main/MyPage/CompanyInfo';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -603,6 +604,22 @@ const Screen = () => {
           component={FAQ}
           options={{headerShown: true,
             title:'고객센터',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:17,
+              lineHeight:21
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        
+        <MainRoot.Screen
+          name={CompanyInfoPageName}
+          component={CompanyInfo}
+          options={{headerShown: true,
+            title:'회사 정보',
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerTitleStyle:{
