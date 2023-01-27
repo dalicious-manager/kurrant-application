@@ -12,6 +12,7 @@ import styled, {css} from 'styled-components/native';
  * @param {string} props.resizeMode
  * @returns
  */
+
 const Component = ({
   imagePath,
   scale,
