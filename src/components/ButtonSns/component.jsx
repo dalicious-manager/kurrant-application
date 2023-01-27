@@ -25,16 +25,15 @@ const Component = ({ type_sns = 'email', onPressEvent = () => { console.log('sns
   const renderButton = () => {
     switch (type_sns) {
       case 'kakao':
-        // return <KaKaoIcon />;
+        
         return <KakaoTalk />;
       case 'naver':
-        // return <NaverIcon />;
+        
         return <NaverLogo />;
     }
   };
 
-  return (
-    <ButtonWrap type_sns={type_sns} onPress={onPressEvent}>
+  return (    <ButtonWrap type_sns={type_sns} onPress={onPressEvent}>
       <SnsButton type_sns={type_sns}>
         <Label type_sns={type_sns}>{snsButtonLabel[type_sns]}</Label>
       </SnsButton>
