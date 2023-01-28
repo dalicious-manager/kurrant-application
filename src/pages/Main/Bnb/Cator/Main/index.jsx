@@ -6,10 +6,27 @@ import Typography from '../../../../../components/Typography';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 
 import {Pressable, SafeAreaView} from 'react-native';
+import URLButton from '../../../../../components/UrlButton/UrlButton';
+import {Linking} from 'react-native';
 
 export const PAGE_NAME = 'P_MAIN__BNB__CATOR';
 
 const Pages = () => {
+  const url = 'https://kurrant.co/catering-home-view';
+
+  const handlePress = async () => {
+    // Checking if the link is supported for links with custom URL scheme.
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+      // by some browser in the mobile
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`해당 URL에 접속할 수 없습니다: ${url}`);
+    }
+  };
+
   return (
     <SafeAreaView style={{backgroundColor: '#ffffff'}}>
       <SafeAreaContainer>
@@ -28,7 +45,7 @@ const Pages = () => {
             <TypoBody05R>
               케이터링 안내 및 신청 페이지로 이동합니다{' '}
             </TypoBody05R>
-            <BlueWrap>
+            <BlueWrap onPress={() => handlePress()}>
               <LinkBody05R>https://kurrant.co/catering-home-view</LinkBody05R>
             </BlueWrap>
 
@@ -94,7 +111,7 @@ const LargeTitle = styled(Typography).attrs({text: 'LargeTitle'})`
 const TypoBody05R = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[4]};
 `;
-const BlueWrap = styled.View`
+const BlueWrap = styled.Pressable`
   border-radius: 6px;
   background-color: ${({theme}) => theme.colors.blue[100]};
   height: 54px;
