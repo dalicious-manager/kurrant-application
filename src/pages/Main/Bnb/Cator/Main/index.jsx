@@ -78,8 +78,6 @@ const SafeAreaContainer = styled.SafeAreaView`
 const Container = styled.View`
   align-items: center;
 
-  position: absolute;
-  top: 135px;
   width: 100%;
 
   /* border: 1px solid black; */
