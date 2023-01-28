@@ -90,21 +90,21 @@ const Screen = () => {
         component={CatorMainPage}
         options={{
           title: '케이터링',
-          headerShown: true,
+          headerShown: false,
           tabBarIcon: ({focused}) => (
             <TabBarIconWrap>
               {focused ? <ActiveCator /> : <Cator />}
             </TabBarIconWrap>
           ),
-
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontFamily: 'Pretendard-SemiBold',
-            fontSize: 14,
-            lineHeight: 22,
-            // marginRight: 60,
-          },
-          headerRight: () => <Cs />,
+          // tabBarShowLabel: true,
+          // headerTitleAlign: 'center',
+          // headerTitleStyle: {
+          //   fontFamily: 'Pretendard-SemiBold',
+          //   fontSize: 14,
+          //   lineHeight: 22,
+          //   // marginRight: 60,
+          // },
+          // headerRight: () => <Cs />,
         }}
       />
       <BottomTab.Screen
