@@ -5,8 +5,8 @@ import Typography from '../../../../../components/Typography';
 
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 
-import {Pressable, SafeAreaView} from 'react-native';
-import URLButton from '../../../../../components/UrlButton/UrlButton';
+import {SafeAreaView} from 'react-native';
+
 import {Linking} from 'react-native';
 
 export const PAGE_NAME = 'P_MAIN__BNB__CATOR';
