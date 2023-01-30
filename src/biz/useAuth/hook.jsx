@@ -195,6 +195,27 @@ const useAuth = () => {
       setLoginLoading(false);
     }
   };
+  const snsAppleLogin = async (body,type,option = {}) => {
+    try {
+      setLoginLoading(true);
+      const res = await Fetch.snsAppleLogin(
+        {
+          ...body
+        },
+        type,
+        option
+      );
+      console.log(res);
+      await setStorage('token',JSON.stringify(res.data));
+      await setStorage('isLogin',body.autoLogin.toString());
+      await setStorage('spotStatus',res.data.spotStatus.toString());
+      return res;
+    } catch (err) {
+      throw err
+    } finally {
+      setLoginLoading(false);
+    }
+  };
   const logout =async (body,option={})=>{
     const res = await Fetch.logout(     
       {
@@ -214,6 +235,7 @@ const useAuth = () => {
     changePassword,
     login,
     snsLogin,
+    snsAppleLogin,
     logout,
     readableAtom: {
       isPhoneAuthLoading,

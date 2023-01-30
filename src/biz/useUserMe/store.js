@@ -7,7 +7,7 @@ export const isSNSConnectAtom = atomWithReset([
     { social: 'KAKAO', email: '', isConnect: false },
     { social: 'GOOGLE', email: '', isConnect: false },
     { social: 'FACEBOOK', email: '', isConnect: false },
-    // { social: 'APPLE', email: '', isConnect: false }
+    { social: 'APPLE', email: '', isConnect: false }
 ]);
 export const isMyInfoLoadingAtom = atomWithReset(false);
 export const isMyInfoPersonalLoadingAtom = atomWithReset(false);
@@ -29,3 +29,4 @@ export const isSettingPhoneNumberLoadingAtom = atomWithReset(false);
 export const isCardRegistedLoadingAtom = atomWithReset(false);
 export const isCardListLoadingAtom = atomWithReset(false);
 export const isCardSettingLoadingAtom = atomWithReset(false);
+export const isCardDeleteLoadingAtom = atomWithReset(false);

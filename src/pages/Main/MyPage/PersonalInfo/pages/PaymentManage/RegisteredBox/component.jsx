@@ -10,7 +10,8 @@ const Component = ({
     cardName,
     cardNumber,
     isMembership=false,
-    isDefault=false
+    isDefault=false,
+    onPressEvent=()=>{}
 }) =>{
     const themeApp = useTheme();
     return (
@@ -27,7 +28,7 @@ const Component = ({
                     </LabelBox>}
                 </LabelContainer>
             </TextBox>
-            <Button>
+            <Button onPress={onPressEvent}>
                 <Typography text={'Button10SB'} textColor={themeApp.colors.grey[3]}>삭제</Typography>
             </Button>
         </Wrap>

@@ -73,7 +73,13 @@ export async function snsLogin(body, type, option) {
   });
   return fetchRes;
 }
-
+export async function snsAppleLogin(body, type, option) {
+  const fetchRes = await fetchJson(`/auth/loginApple`, 'POST', {
+    ...option,
+    body: JSON.stringify(body)
+  });
+  return fetchRes;
+}
 
 export async function logout(body, option) {
   console.log("로그아웃")

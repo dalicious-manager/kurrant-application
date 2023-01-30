@@ -18,7 +18,8 @@ import {
     isCardSettingLoadingAtom,
     alarmAtom,
     cardListAtom,
-    cardSimpleListAtom
+    cardSimpleListAtom,
+    isCardDeleteLoadingAtom
 } from './store';
 
 const useUserMe = () => {
@@ -41,6 +42,7 @@ const useUserMe = () => {
     const [isCardRegistedLoading,setCardRegistedLoading] = useAtom(isCardRegistedLoadingAtom);
     const [isCardListLoading,setCardListLoading] = useAtom(isCardListLoadingAtom);
     const [isCardSettingLoading,setCardSettingLoading] = useAtom(isCardSettingLoadingAtom);
+    const [isCardDeleteLoading,setCardDeleteLoading] = useAtom(isCardDeleteLoadingAtom);
 
     const userMe = async () => {
         
@@ -257,6 +259,23 @@ const useUserMe = () => {
             setCardSettingLoading(false);
         }
     };
+    const cardDelete = async (body,option={}) => {
+        
+        try {
+            setCardDeleteLoading(true)
+            const res = await Fetch.cardDelete({
+                ...body
+            },option);
+            setCardList(cardList.filter((v)=>{
+                return v.id !== body.cardId
+            }))
+            return res;
+        } catch (err) {
+            throw err;
+        }finally{
+            setCardDeleteLoading(false)
+        }
+    };
     return {
         userMe,
         snsConnect,
@@ -271,6 +290,7 @@ const useUserMe = () => {
         getCardList,
         cardSetting,
         setCardList,
+        cardDelete,
         readableAtom: {
             myInfo,
             myInfoPerson,
@@ -286,6 +306,7 @@ const useUserMe = () => {
             isCardRegistedLoading,
             isCardListLoading,
             isCardSettingLoading,
+            isCardDeleteLoading,
             cardList,
             cardSimpleList,
             alarm

@@ -34,7 +34,7 @@ const naverData = ()=>{
     return data;
   }
 export default () => {
-    const {snsLogin} =useAuth();
+    const {snsLogin,snsAppleLogin} =useAuth();
     const navigation = useNavigation();
     const naverLogin = async () => {
         console.log('로그인')
@@ -99,18 +99,18 @@ export default () => {
           const test = await appleAuthAndroid.signIn();
           Clipboard.setString(test.id_token);
           console.log(test);
-          // await snsLogin({
-          //   snsAccessToken:id_token,
-          //   autoLogin:true,
-          // },'APPLE');
-          // navigation.reset({
-          //   index: 0,
-          //   routes: [
-          //     {
-          //       name: SCREEN_NAME,
-          //     },
-          //   ],
-          // })
+          await snsAppleLogin({
+            ...test,
+            autoLogin:true,
+          },'APPLE');
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: SCREEN_NAME,
+              },
+            ],
+          })
         }else{
             const appleAuthRequestResponse = await appleAuth.performRequest({
               requestedOperation: appleAuth.Operation.LOGIN,
@@ -123,24 +123,19 @@ export default () => {
               throw new Error('Apple Sign-In failed - no identify token returned');
             }
           
-
-            // // Create a Firebase credential from the response
-            const { identityToken, nonce } = appleAuthRequestResponse;
-            console.log(identityToken)
-            Clipboard.setString(identityToken)
-
-            // await snsLogin({
-            //     snsAccessToken:identityToken,
-            //     autoLogin:true,
-            // },'APPLE');
-            // avigation.reset({
-            //   index: 0,
-            //   routes: [
-            //     {
-            //       name: SCREEN_NAME,
-            //     },
-            //   ],
-            // })
+            const appleData = appleAuthRequestResponse;
+            await snsAppleLogin({
+                ...appleData,
+                autoLogin:true,
+            },'APPLE');
+            avigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: SCREEN_NAME,
+                },
+              ],
+            })
           }
           } catch (error) {
             console.log("err",error.toString());

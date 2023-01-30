@@ -12,6 +12,7 @@ import Typography from '~components/Typography';
 
 import {MembershipIconImage} from '../../../../assets';
 import useMembership from '../../../../biz/useMembership';
+import useUserMe from '../../../../biz/useUserMe';
 import BottomModal from '../../../../components/BottomModal';
 import Check from '../../../../components/Check';
 import Form from '../../../../components/Form';
@@ -35,6 +36,7 @@ const Pages = ({route}) => {
   const rotateAnim = useRef(new Animated.Value(1)).current;
   const themeApp = useTheme();
   const {getMembershipType, membershipJoin} = useMembership();
+  const {getCardList,readableAtom:{cardList}}= useUserMe();
   const getMembershipInfo = async () => {
     const membership = period === 'month' ? 1 : 2;
     const {data} = await getMembershipType(membership);
@@ -62,7 +64,10 @@ const Pages = ({route}) => {
   const handleEventPayments = async () => {
     console.log(agreeCheck.watch(agreeCheck).agreeCheck);
     if (agreeCheck.watch(agreeCheck).agreeCheck) {
-      //
+      if(!cardList.find((card)=> card.defaultType ===2 ||card.defaultType ===3)){
+        setModalVisible(true);
+        return
+      }
       const req = {
         paymentType: 1,
         subscriptionType: membershipTypeData?.subscriptionType,
@@ -86,6 +91,7 @@ const Pages = ({route}) => {
   };
   useEffect(() => {
     getMembershipInfo();
+    getCardList();
   }, []);
   const ProductInfoBlock = () => {
     if (membershipTypeData?.subscriptionType === 1) {
@@ -244,17 +250,24 @@ const Pages = ({route}) => {
               <DeliveryTitle>
                 카드 결제시 등록한 카드로 결제가 진행됩니다.
               </DeliveryTitle>
-              <Card>
-                {/* <CardText>결제 카드 등록</CardText> */}
-                <CardText>현대카드(1234)</CardText>
-                <PayInfoWrap>
-                  <PayInfo>
-                    <PayError />
-                    <PayText>결제불가</PayText>
-                  </PayInfo>
-                  <ArrowRight />
-                </PayInfoWrap>
-              </Card>
+              {cardList.map((card)=>{
+                if(card.defaultType ===2 ||card.defaultType ===3 ){
+                  return (
+                    <Card key={card.id}>
+                      {/* <CardText>결제 카드 등록</CardText> */}
+                      <CardText>{card.cardCompany}카드({card.cardNumber?.toString().slice(-4)})</CardText>
+                      {/* <PayInfoWrap>
+                        <PayInfo>
+                          <PayError />
+                          <PayText>결제불가</PayText>
+                        </PayInfo>
+                        <ArrowRight />
+                      </PayInfoWrap> */}
+                    </Card>
+                  )
+                }
+              })}
+              
             </CardContainer>
           </BorderWrap>
           <FormWrap>

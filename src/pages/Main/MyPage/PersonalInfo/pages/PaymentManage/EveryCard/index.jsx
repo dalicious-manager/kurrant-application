@@ -9,26 +9,33 @@ import Typography from '~components/Typography';
 import Wrapper from "~components/Wrapper";
 import { SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
 import RegisteredBox from '../RegisteredBox';
+import Skeleton from '../SelectedDefaultCard/Skeleton';
 
 export const PAGE_NAME = "P__MY_PAGE__EVERY_CARD";
 
 const Pages = ()=>{
-    const themeApp = useTheme();
    
     const navigation = useNavigation();
-    const {getCardList,readableAtom:{cardList}} = useUserMe();
+    const {getCardList,cardDelete,readableAtom:{cardList,isCardListLoading}} = useUserMe();
     const onSelectEvent=()=>{
         navigation.navigate(RegisterCardScreenName)
     }
     console.log(cardList);
-    useEffect(()=>{
-        const getData  = async()=>{
-            await getCardList();
-        }
-        getData();
-    },[])
+    const deleteCard = async(id)=>{
+        await cardDelete({
+            cardId:id
+        });
+        
+    }
+    // useEffect(()=>{
+        
+    // },[])
     useFocusEffect(
         useCallback(() => {
+            const getData  = async()=>{
+                await getCardList();
+            }
+            getData();
             navigation.setOptions({
                 tabBarLabelStyle:{fontSize:15,lineHeight:21,fontFamily:'Pretendard-SemiBold',}
             })
@@ -39,6 +46,9 @@ const Pages = ()=>{
         }
         }, [])
       );
+    // if(isCardListLoading){
+    //     return <Skeleton/>
+    // }
     return(
         <Wrapper paddingTop={24} paddingHorizontal={24} >
             
@@ -47,7 +57,12 @@ const Pages = ()=>{
                 {cardList.map((v)=>{
                     return (
                         <RegiteredView key={v.id}>
-                            <RegisteredBox cardName={`${v.cardCompany}카드`} cardNumber={v.cardNumber} isMembership={v.defaultType === 2 || v.defaultType===3} isDefault={v.defaultType === 1 || v.defaultType===3}/>
+                            <RegisteredBox 
+                            cardName={`${v.cardCompany}카드`} 
+                            onPressEvent={()=>deleteCard(v.id)} 
+                            cardNumber={v.cardNumber} 
+                            isMembership={v.defaultType === 2 || v.defaultType===3} 
+                            isDefault={v.defaultType === 1 || v.defaultType===3}/>
                         </RegiteredView>
                     )
                 })}
