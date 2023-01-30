@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
+import { appleAuth,appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { login ,getProfile } from '@react-native-seoul/kakao-login';
@@ -57,6 +58,54 @@ export default () => {
             autoLogin:true,
           },'GOOGLE');
           return res;  
+        }else if(social ==='APPLE'){
+          try {
+            // Start the sign-in request
+            if(Platform.OS === "android"){
+              const appleData = await appleAuthAndroid.signIn();
+              console.log(appleData);
+              await snsConnect({
+                ...appleData,
+              },'APPLE');
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              })
+            }else{
+                const appleAuthRequestResponse = await appleAuth.performRequest({
+                  requestedOperation: appleAuth.Operation.LOGIN,
+                  requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+                });
+    
+    
+                // // Ensure Apple returned a user identityToken
+                if (!appleAuthRequestResponse.identityToken) {
+                  throw new Error('Apple Sign-In failed - no identify token returned');
+                }
+              
+    
+                // // Create a Firebase credential from the response
+                const appleData = appleAuthRequestResponse;
+    
+                await snsConnect({
+                    ...appleData,
+                },'APPLE');
+                avigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: SCREEN_NAME,
+                    },
+                  ],
+                })
+              }
+              } catch (error) {
+                console.log("err",error.toString());
+              }
         }
       } catch (error) {
         Alert.alert(

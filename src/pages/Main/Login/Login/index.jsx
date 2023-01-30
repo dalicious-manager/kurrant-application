@@ -164,7 +164,7 @@ const Pages = () => {
           <EtcSNSBox >
             <ButtonRoundSns type_sns='facebook' size={32} onPressEvent={facebookLogin}/>
             <ButtonRoundSns type_sns='google' size={32} onPressEvent={googleLogin}/>
-            {/* <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/> */}
+            <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>
           </EtcSNSBox>
         </EtcSNSContainer>
       </LoginBox>

@@ -56,9 +56,6 @@ import NotificationSetting, {
 import PasswordSetting, {
   PAGE_NAME as PasswordSettingPageName,
 } from '~pages/Main/MyPage/PersonalInfo/pages/PasswordSetting';
-import PaymentManage, {
-  PAGE_NAME as PaymentManagePageName,
-} from '~pages/Main/MyPage/PersonalInfo/pages/PaymentManage';
 import PhoneNumberSetting, {
   PAGE_NAME as PhoneNumberSettingPageName,
 } from '~pages/Main/MyPage/PersonalInfo/pages/PhoneNumberSetting';
@@ -772,21 +769,7 @@ const Screen = () => {
             headerLeft: () => <BackButton />,
           }}
         />
-        <MainRoot.Screen
-          name={PaymentManagePageName}
-          component={PaymentManage}
-          options={{headerShown: true,
-            title:'결제수단 관리',
-            headerShadowVisible: false,
-            headerTitleAlign: 'center',
-            headerTitleStyle:{
-              fontFamily:'Pretendard-SemiBold',
-              fontSize:14,
-              lineHeight:22
-            },
-            headerLeft: () => <BackButton />,
-          }}
-        />
+        
         <MainRoot.Screen
           name={MarketingAgreePageName}
           component={MarketingAgree}

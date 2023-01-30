@@ -56,13 +56,20 @@ export async function cardSetting(body, option) {
   });
   return fetchRes
 }
+export async function snsDisconnect(type) {
+  const fetchRes = await fetchJson(`/users/me/disconnecting/${type}`, 'DELETE');
+  return fetchRes
+}
 export async function getCardList() {
   const fetchRes = await fetchJson(`/users/me/cards`, 'GET');
   return fetchRes
 }
 
-export async function snsDisconnect(type) {
-  const fetchRes = await fetchJson(`/users/me/disconnecting/${type}`, 'DELETE');
+export async function cardDelete(body, option) {
+  const fetchRes = await fetchJson(`/users/me/cards`, 'DELETE', {
+    ...option,
+    body: JSON.stringify(body)
+  });
   return fetchRes
 }
 

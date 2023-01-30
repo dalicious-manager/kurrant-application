@@ -72,9 +72,7 @@ const Pages = ()=>{
     const onSelectOpenModal2=()=>{
         setModalVisible2(true)
     }
-    const getSelectCard = (type)=>{
-       return 
-    }
+   
     const onPageRegistedCard=()=>{
 
         navigation.navigate( RegisterCardScreenName)
@@ -101,9 +99,9 @@ const Pages = ()=>{
         }
         }, [])
       );
-    if(isCardListLoading){
-        return <Skeleton />
-    }
+    // if(isCardListLoading){
+    //     return <Skeleton />
+    // }
     return(
         <Wrapper paddingTop={24} paddingHorizontal={24} >
             
@@ -129,9 +127,9 @@ const Pages = ()=>{
                     <SpotView onPress={onSelectOpenModal2}>
                         <SpotName>
                             {cardList.map((card)=>{
-                                if(card.defaultType ===2 || card.defaultType ===3) return `${card.cardCompany}카드(${card.cardNumber?.toString().slice(-4)})`
+                                if(card.defaultType === 2 || card.defaultType === 3) return `${card.cardCompany}카드(${card.cardNumber?.toString().slice(-4)})`
                             })?.join().replace(",","").toString().length > 1 ? cardList.map((card)=>{
-                                if(card.defaultType ===2 || card.defaultType ===3) return `${card.cardCompany}카드(${card.cardNumber?.toString().slice(-4)})`
+                                if(card.defaultType === 2 || card.defaultType === 3) return `${card.cardCompany}카드(${card.cardNumber?.toString().slice(-4)})`
                             }).join().replace(",","").toString(): "선택" }
                         </SpotName>
                         <Arrow/>
