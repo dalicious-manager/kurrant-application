@@ -91,7 +91,10 @@ const Pages = ({route}) => {
     if (membershipTypeData?.subscriptionType === 1) {
       return (
         <Inner>
-          <Image imagePath={MembershipIconImage} scale={1.0} />
+          <ImageWrap>
+            <Image imagePath={MembershipIconImage} width={45} height={45} />
+          </ImageWrap>
+
           <InnerTextView>
             <MembershipText textColor={themeApp.colors.grey[2]}>
               커런트 월간 멤버십 정기결제
@@ -105,7 +108,10 @@ const Pages = ({route}) => {
     }
     return (
       <Inner>
-        <Image imagePath={MembershipIconImage} scale={1.0} />
+        <ImageWrap>
+          <Image imagePath={MembershipIconImage} width={45} height={45} />
+        </ImageWrap>
+
         <InnerTextView>
           <MembershipText textColor={themeApp.colors.grey[2]}>
             커런트 연간 멤버십 정기결제
@@ -283,6 +289,11 @@ export default Pages;
 
 const Container = styled.View`
   background-color: white;
+`;
+
+const ImageWrap = styled.View`
+  width: 45px;
+  height: 45px;
 `;
 
 const MembershipTitle = styled(Typography)`
