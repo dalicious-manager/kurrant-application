@@ -98,7 +98,6 @@ export default () => {
         if(Platform.OS === "android"){
           const test = await appleAuthAndroid.signIn();
           // Clipboard.setString(test.id_token);
-          console.log(test);
           await snsAppleLogin({
             ...test,
             autoLogin:true,
@@ -172,7 +171,6 @@ export default () => {
       
           if (Platform.OS === 'ios') {
             const result = await AuthenticationToken.getAuthenticationTokenIOS();
-            console.log(result?.authenticationToken);
             // Clipboard.setString(result?.authenticationToken);
 
             await snsLogin({
@@ -189,7 +187,6 @@ export default () => {
               })
           } else {
             const result = await AccessToken.getCurrentAccessToken();
-            console.log(result?.accessToken);
             // Clipboard.setString(result?.accessToken);
             await snsLogin({
               snsAccessToken:result?.accessToken,

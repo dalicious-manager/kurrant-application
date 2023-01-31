@@ -2,7 +2,7 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, BackHandler, Dimensions,Platform,TouchableOpacity} from 'react-native';
+import { ActivityIndicator, Alert, BackHandler, Dimensions,Platform,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 import { Settings ,LoginButton,AccessToken} from 'react-native-fbsdk-next';
@@ -37,8 +37,8 @@ const state = uuid();
 const screenHeight = Dimensions.get('screen').height;
 
 
-const Pages = () => {  
- 
+const Pages = ({route}) => {  
+  const params = route?.params;
   const navigation = useNavigation();
   const toast = Toast();
   const [isLoginLoading, setLoginLoading] = useState();
@@ -95,6 +95,9 @@ const Pages = () => {
     return ()=>BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
   },[ navigation, toast])
   useEffect(()=>{
+    if(params?.token === "end"){
+      Alert.alert("토큰만료", "토큰이 만료되었습니다 다시 로그인 해주세요.")
+    }
     if(Platform.OS === 'android'){      
       appleSignConfiguration();      
     }

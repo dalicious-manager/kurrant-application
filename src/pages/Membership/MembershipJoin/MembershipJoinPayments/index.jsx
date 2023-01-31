@@ -37,6 +37,7 @@ const Pages = ({route}) => {
   const themeApp = useTheme();
   const {getMembershipType, membershipJoin} = useMembership();
   const {getCardList,readableAtom:{cardList,selectMembershipCard}}= useUserMe();
+  
   const getMembershipInfo = async () => {
     const membership = period === 'month' ? 1 : 2;
     const {data} = await getMembershipType(membership);
@@ -63,6 +64,7 @@ const Pages = ({route}) => {
 
   const handleEventPayments = async () => {
     console.log(agreeCheck.watch(agreeCheck).agreeCheck);
+    console.log(selectMembershipCard);
     if (agreeCheck.watch(agreeCheck).agreeCheck) {
       if(!cardList.find((card)=> card.defaultType ===2 ||card.defaultType ===3)){
         setModalVisible(true);
@@ -76,6 +78,7 @@ const Pages = ({route}) => {
           membershipTypeData?.yearDescriptionDiscountPrice,
         periodDiscountPrice: membershipTypeData?.periodDiscountPrice,
         totalPrice: membershipTypeData.totalPrice,
+        cardId:selectMembershipCard[0]?.id || -1
       };
       console.log(req);
       const result = await membershipJoin(req);

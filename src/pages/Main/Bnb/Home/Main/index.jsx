@@ -1,8 +1,8 @@
 
 import messaging from '@react-native-firebase/messaging';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useAtom, useAtomValue } from 'jotai';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable, Alert} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -40,6 +40,7 @@ import Toast from '../../../../../components/Toast';
 import {PAGE_NAME as ApartRegisterSpotPageName } from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import useUserMe from '../../../../../biz/useUserMe';
+import { PAGE_NAME as FAQListDetailPageName } from '../../../MyPage/FAQ';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
@@ -57,23 +58,36 @@ const Pages = () => {
     const [data,setData] = useState(null);
     const [selected,setSelected] = useState();
     const toast = Toast();
-    
+    useFocusEffect(
+      useCallback(()=>{
+        try {
+          const start = weekly.map((s) => {
+            const startData = formattedWeekDate(s[0]);
+            return (
+                startData
+            )
+          });
+      
+          const end = weekly.map((e) => {
+              const endData =  formattedWeekDate(e.slice(-1)[0]);
+              return (
+                  endData
+              )
+          });
+          async function loadUser(){
+            await userInfo();     
+          }    
+          async function loadMeal(){
+            await orderMeal(start[0],end[0])
+          };
+          loadMeal();
+          loadUser();
+        }catch (e){
+          console.log(e.toString());
+        }
+      },[])
+    )
   useEffect(() => {
-    
-    const start = weekly.map((s) => {
-      const startData = formattedWeekDate(s[0]);
-      return (
-          startData
-      )
-    });
-
-    const end = weekly.map((e) => {
-        const endData =  formattedWeekDate(e.slice(-1)[0]);
-        return (
-            endData
-        )
-    });
-
     const status = async () => {
        const userStatus = await getStorage('spotStatus');
        const getUserStatus = Number(userStatus);
@@ -86,17 +100,8 @@ const Pages = () => {
         navigation.navigate(GroupCreateMainPageName)
       }
     }
-  
-    async function loadUser(){
-        await userInfo();     
-    }    
-    async function loadMeal(){
-      await orderMeal(start[0],end[0])
-    };
     try {
       status();
-      loadUser();
-      loadMeal();
       userGroupSpotCheck();
     } catch (error) {
       if(error.toString().replace("Error:",'').trim() === '403'){
@@ -208,7 +213,9 @@ if(isUserInfoLoading){
             <Pressable onPress={()=>{ navigation.navigate(NotificationCenterName)}}>
               <BellIcon/>
             </Pressable>
-            <CsIcon/>
+            <Pressable onPress={()=>{ navigation.navigate(FAQListDetailPageName)}}>
+              <CsIcon/>
+            </Pressable>
           </Icons>
         </BarWrap>
       </View>
@@ -219,17 +226,18 @@ if(isUserInfoLoading){
           <NoMealInfo>
             <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
           </NoMealInfo>  
-        ) : todayMeal?.map(m => {
+        ) : todayMeal?.map((m,idx) => {
+          console.log(m)
             return (
-              <React.Fragment key={m.id}>
-                {m.orderItemDtoList.map(meal => {
+              <React.Fragment key={`${m.id} ${idx}`}>
+                {m.orderItemDtoList.map((meal) => {
                   return (
-                    <MealInfoWrap key={meal.name}>
+                    <MealInfoWrap key={meal.id}>
                     <MealInfo >
-                      <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                      <MealImage source={{uri:meal.image}}/>
                         <MealText>
                           <View>
-                            <DiningType>{meal.diningType}</DiningType>
+                            <DiningType>{m.diningType}</DiningType>
                             <View>
                               <MealTxt>{meal.name}</MealTxt>
                             </View>
@@ -407,7 +415,7 @@ background-color:${props => props.theme.colors.grey[8]};
 const ScrollViewWrap = styled.ScrollView`
 `;
 const Wrap = styled.View`
-//padding-bottom:100px;
+margin-bottom:100px;
 
 `;
 const BarWrap = styled.View`

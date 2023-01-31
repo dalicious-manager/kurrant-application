@@ -1,6 +1,7 @@
 /* eslint-disable no-unreachable */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
@@ -30,7 +31,6 @@ const buildQuery = queryObj => {
 };
 
 async function json(url, method, options = {}) {
-  console.log(options);
   const storage = await getStorage('token');
   let token = JSON.parse(storage);
   if (method === 'POST' || method === 'PATCH') {
@@ -38,6 +38,7 @@ async function json(url, method, options = {}) {
       throw new Error('body is empty');
     }
   }
+
   // console.log(token?.expiresIn, new Date().getTime(), token?.expiresIn < new Date().getTime())
   if (token?.expiresIn < new Date().getTime()) {
     const bodyData = {
@@ -54,8 +55,7 @@ async function json(url, method, options = {}) {
 
     if (result.statusCode === 403) {
       await AsyncStorage.clear();
-      alert("토큰이 만료되어 로그아웃 됩니다.");
-      throw new Error(result.statusCode);
+      throw new Error(result.statusCode.toString());
     } else {
       const resultData = {
         "accessToken": result.data.accessToken,

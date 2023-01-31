@@ -160,7 +160,7 @@ const Pages = ({route}) => {
                 </DiningTimeWrap>
                 <MealContentWrap >
                   <View>
-                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                    <MealImage source={{uri:el.image}}/>
                   </View>
                   <Content>
                     <MakersName>[{el.makers}]</MakersName>
