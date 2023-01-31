@@ -10,6 +10,7 @@ import Arrow from '../../../../../assets/icons/MealCart/arrow.svg';
 import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
 import X from "../../../../../assets/icons/MealCart/x.svg";
+import WarningIcon from "../../../../../assets/icons/MealCart/warning.svg";
 import Minus from "../../../../../assets/icons/MealDetail/minus.svg";
 import PlusIcon from "../../../../../assets/icons/MealDetail/plus.svg";
 import { loadMealCart } from "../../../../../biz/useShoppingBasket/Fetch";
@@ -27,21 +28,21 @@ import withCommas from "../../../../../utils/withCommas";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import { el } from "date-fns/locale";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import BottomSheet from "../../../../../components/BottomSheet";
 import BottomMenu from "../../../../../components/BottomSheetMenu";
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
 
     const navigation = useNavigation();
     const bodyRef = useRef();
-    const inputRef = useRef();
+    const scrollRef = useRef();
+    const boxRef = useRef();
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
-    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal,allDeleteMeal,userPoint, mealCartSpot,loadSoldOutMeal,soldOutMeal} = useShoppingBasket();
+    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal,allDeleteMeal,userPoint, mealCartSpot,loadSoldOutMeal,soldOutMeal ,clientStatus,} = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     const [ modalVisible3, setModalVisible3 ] = useState(false);
@@ -156,8 +157,16 @@ const Pages = () => {
 
     // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
     
-    const arrs = isLoadMeal?.filter(p => p.spotId === (selected ?? isUserInfo.spotId))?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods)).flat()
+    
+    const arrs = isLoadMeal?.filter(p => p.spotId === selected )?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods.filter(c => c.status !== 2))).flat()
     const arr = arrs.reduce((acc, val) => [ ...acc, ...val ], []);
+
+    // 주문 마감
+    const deadlineArrs = isLoadMeal?.filter(p => p.spotId === selected )?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods.filter(c => c.status === 2))).flat()
+    const deadlineArr = deadlineArrs.reduce((acc, val) => [ ...acc, ...val ], []);
+    const deadline = deadlineArr.map(p => p.count).reduce((acc, cur) => {
+        return acc + cur
+    },0);
     
     // 총 개수
     const totalCount = arr?.map(p => p.count).reduce((acc,cur) => {
@@ -210,8 +219,17 @@ const Pages = () => {
     // 총 결제금액
     const totalPrice = totalMealPrice - usedSupportPrice - totalDiscountPrice + deliveryFee
    
+    // 품절
+    const soldout = arr.filter(el => el.status === 0);
 
+    // 클라 타입
+    const clientType = clientStatus.filter(p => p.spotId === selected);
     
+    // 스팟 이름
+
+    const spotName = mealCartSpot.filter(p => p.id === selected);
+
+  
 
     const focusPress = () => {
         setFocus(true);
@@ -286,7 +304,7 @@ const Pages = () => {
         // }
     }
 
-    const allDelete = () => {
+    const allDelete = (spotId) => {
        Alert.alert(
             '전체 삭제',
             '메뉴를 모두 삭제하시겠어요?',
@@ -300,7 +318,7 @@ const Pages = () => {
                 text:'삭제',
                 onPress:() => {
                   try {
-                    allDeleteMeal();
+                    allDeleteMeal(spotId);
                     setLoadMeal([]);
                   }catch(err){
                     console.log(err)
@@ -311,11 +329,11 @@ const Pages = () => {
           )
     }
 
-    const changeMealPress = () =>{
+    const changeMealPress = (count) =>{
         // console.log(date,id,type)
         Alert.alert(
           "메뉴 변경",
-          "현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?(수량:n)",
+          `현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?(수량:${count})`,
           
     
           [
@@ -335,108 +353,158 @@ const Pages = () => {
         )
       }
 
+      const isSoldOut = () => {
+        if(soldout.length !== 0) {
+
+            Alert.alert(
+                 '품절된 상품이 있어요',
+                 '메뉴를 변경하시겠어요?',
+                 [
+                   {
+                     text:'메뉴변경',
+                     onPress:() => {},
+                     style:'destructive'
+                   }
+                 ]
+               )
+        }else{
+            return
+        }
+     }
+
+     const isDeadline = () => {
+        if(totalCount === 0) {
+
+            Alert.alert(
+                 '주문할 수 있는 상품이 없어요',
+                 '모든 상품의 주문 마감시간이 종료되었습니다.',
+                 
+                 [
+                   {
+                     text:'삭제하기',
+                     onPress:() => {
+                     }
+                   }
+                 ]
+               )
+        }else{
+            return
+        }
+     }
+
     const changMealList = async (date,id,type) =>{
         try {
            await loadSoldOutMeal(date,id,type)
         } catch(err){
             console.log(err)
         }
-    }
+    };
+
+    
 
     return (
         <SafeView>
              <SpotView>
                     <SpotPress onPress={PressSpotButton}>
-                        <SpotName>{name === undefined ? isUserInfo.spot : name }</SpotName>
+                        <SpotName>{name === undefined ? spotName[0]?.text : name }</SpotName>
                         <ArrowIcon/>
                     </SpotPress>
-                    <Pressable onPress={allDelete}>
+                    <Pressable onPress={()=>{allDelete(selected)}}>
                         <Text>전체삭제</Text>
                     </Pressable>
                 </SpotView>
-            {totalCount === 0 && <EmptyView>
+            {(totalCount === 0 && deadline.length === 0 )&& <EmptyView>
                 <NoMealText>아직 담은 식사가 없어요!</NoMealText>
                 <NoMealButtonWrap>
                     <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
                 </NoMealButtonWrap>
             </EmptyView>}
-            <ScrollViewWrap>
-                
+            <ScrollViewWrap ref={scrollRef}>
                 {isLoadMeal?.map((el,idx) => {
-                    
-                        return (
-                            <React.Fragment key={idx}>
-                                {(selected === el.spotId) && el.cartDailyFoodDtoList.map((v,idx) => {
-                                    const diningType = v.diningType === '아침' ? 1 : v.diningType === '점심' ? 2 : 3
-                                    return (
-                                        <React.Fragment key={idx} >
-                                            {v.cartDailyFoods.map((food,i) => {
-                                                    const rate = food.membershipDiscountRate + food.makersDiscountRate + food.periodDiscountRate;
-                                                    const membership = food.membershipDiscountPrice === null ? 0 : food.membershipDiscountPrice ;
-                                                    const markers = food.makersDiscountPrice === null ? 0 : food.makersDiscountPrice;
-                                                    const period = food.periodDiscountPrice === null ? 0 : food.periodDiscountPrice ;
-                                                    const discountPrice = membership + markers + period;
+                    return (
+                        <React.Fragment key={idx}>
+                            {(selected === el.spotId) && el.cartDailyFoodDtoList.map((v,idx) => {
+                                const diningType = v.diningType === '아침' ? 1 : v.diningType === '점심' ? 2 : 3
+                                return (
+                                    <React.Fragment key={idx} >
+                                        {v.cartDailyFoods.map((food,i) => {
+                                                const rate = food.membershipDiscountRate + food.makersDiscountRate + food.periodDiscountRate;
+                                                const membership = food.membershipDiscountPrice === null ? 0 : food.membershipDiscountPrice ;
+                                                const markers = food.makersDiscountPrice === null ? 0 : food.makersDiscountPrice;
+                                                const period = food.periodDiscountPrice === null ? 0 : food.periodDiscountPrice ;
+                                                const discountPrice = membership + markers + period;
+                                            return (
+                                                <Wrap key={i} status={food.status} >
+                                                <ContentHeader>
+                                                    <DiningName>{formattedMonthDay(v.serviceDate)} {v.diningType}</DiningName>
+                                                </ContentHeader>
+                                                <DeleteIcons onPress={()=>{deleteButton(food.id)}}>
+                                                    <DeleteIcon/>
+                                                </DeleteIcons>
+                                                <ContentWrap >
                                                     
-                                                return (
-                                                    <Wrap key={i} status={food.status}>
-                                                    <ContentHeader>
-                                                        <DiningName>{formattedMonthDay(v.serviceDate)} {v.diningType}</DiningName>
-                                                    </ContentHeader>
-                                                    <Pressable onPress={()=>{deleteButton(food.id)}}><DeleteIcons/></Pressable>
-                                                    <ContentWrap >
-                                                        <FastImage source={{uri:`${food.image}`,priority:FastImage.priority.high}}
-                                                        style={{
-                                                            width:45,
-                                                            height:45,
-                                                            borderRadius:7,
-                                                            marginRight:12,
-                                                        }}
-                                                        />
-                                                        <MealNameView>
-                                                            <MealName numberOfLines={1} ellipsizeMode="tail">[{food.makers}] {food.name}</MealName>
-                                                            <SalePriceWrap>
-                                                                <Price>{withCommas(((food.price)-(discountPrice))*food.count)}원</Price>
-                                                                {rate !== 0 && <SalePrice>{withCommas((food.price)*food.count)}원</SalePrice>}
-                                                            </SalePriceWrap>
-                                                            {food.status === 0 && <SoldOutView>
-                                                                <SoldOutIcon/>
-                                                                <SoldOutText>품절</SoldOutText>
-                                                            </SoldOutView>}
-                                                        </MealNameView>
-                                                        {food.status === 0 && <MenuChangeView 
-                                                        onPress={()=>{
-                                                            changeMealPress();
-                                                            changMealList(el.spotId,v.serviceDate,diningType);
-                                                            setDate(v.serviceDate);
-                                                            setType(v.diningType)}}>
-                                                            <MenuChangeText>메뉴 변경</MenuChangeText>
-                                                        </MenuChangeView>}
-                                                        <BottomMenu modalVisible={modalVisible3} setModalVisible={setModalVisible3} 
-                                                        title={formattedMonthDay(date) + type} 
-                                                        btn='변경완료'
-                                                        data={soldOutMeal}
-                                                        />
-                                                        <CountWrap>                                
-                                                                <Count
-                                                                    cart
-                                                                    onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(food.dailyFoodId)}} 
-                                                                    addHandle={addHandle}
-                                                                    substractHandle={substractHandle}
-                                                                    quantity={food.count}
-                                                                    id={food.dailyFoodId}
-                                                                    status={food.status}
-                                                                />
-                                                        </CountWrap>
-                                                    </ContentWrap>
-                                                    </Wrap>
-                                                )
-                                            })}
-                                        </React.Fragment>
-
-                                    )
-                            })}
-                        </React.Fragment>
-                        )
+                                                    <FastImage source={{uri:`${food.image}`,priority:FastImage.priority.high}}
+                                                    style={{
+                                                        width:45,
+                                                        height:45,
+                                                        borderRadius:7,
+                                                        marginRight:12,
+                                                    }}
+                                                    >
+                                                        {food.status === 2 && <BlurView/>}
+                                                    </FastImage>
+                                                    <MealNameView>
+                                                        <MealName numberOfLines={1} ellipsizeMode="tail" status={food.status}>[{food.makers}] {food.name}</MealName>
+                                                        <SalePriceWrap>
+                                                            <Price status={food.status}>{withCommas(((food.price)-(discountPrice))*food.count)}원</Price>
+                                                            {rate !== 0 && <SalePrice status={food.status}>{withCommas((food.price)*food.count)}원</SalePrice>}
+                                                        </SalePriceWrap>
+                                                        {food.status === 0 && <SoldOutView>
+                                                            <SoldOutIcon status={food.status}/>
+                                                            <SoldOutText status={food.status}>품절</SoldOutText>
+                                                        </SoldOutView>}
+                                                        { food.status === 2 && <SoldOutView>
+                                                            <SoldOutIcon status={food.status}/>
+                                                            <SoldOutText status={food.status}>주문마감</SoldOutText>
+                                                        </SoldOutView>}
+                                                        { (food.status === 1 && food.capacity < food.count) && <SoldOutView>
+                                                            <WarningIcon/>
+                                                            <ShortageText>재고부족(재고 수량:{food.capacity})</ShortageText>
+                                                        </SoldOutView>}
+                                                    </MealNameView>
+                                                    {food.status === 0 && <MenuChangeView 
+                                                    onPress={()=>{
+                                                        changeMealPress(food.count);
+                                                        changMealList(el.spotId,v.serviceDate,diningType);
+                                                        setDate(v.serviceDate);
+                                                        setType(v.diningType)}}>
+                                                        <MenuChangeText>메뉴 변경</MenuChangeText>
+                                                    </MenuChangeView>}
+                                                    <BottomMenu modalVisible={modalVisible3} setModalVisible={setModalVisible3} 
+                                                    title={formattedMonthDay(date)+ "\u00a0" + type}
+                                                    btn='변경완료'
+                                                    data={soldOutMeal}
+                                                    />
+                                                    <CountWrap>                                
+                                                            {food.status !== 2 && <Count
+                                                                onPressEvent={() => {bodyRef.current.focus(); focusPress();propsId(food.dailyFoodId)}} 
+                                                                increasePress={addHandle}
+                                                                decreasePress={substractHandle}
+                                                                count={food.count}
+                                                                id={food.dailyFoodId}
+                                                                status={food.status}
+                                                            />}
+                                                    </CountWrap>
+                                                </ContentWrap>
+                                                </Wrap>
+                                            )
+                                        })}
+                                    </React.Fragment>
+                                
+                                )
+                        })}
+                    </React.Fragment>
+                    )
                     })}
 
                 {totalCount !== 0 && 
@@ -448,13 +516,13 @@ const Pages = () => {
                         <PaymentText>총 상품금액</PaymentText>
                         <PaymentText>{withCommas(totalMealPrice)} 원</PaymentText>
                     </PaymentView>
-                    <PaymentView >
+                    {clientType[0]?.clientStatus === 1 && <PaymentView >
                         <PressableView onPress={fundButton}>
                             <PaymentText >회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
                          </PressableView>
                             <PaymentText> {supportPrice === 0 ? 0 : discountPrice < supportPrice ? `-${withCommas(discountPrice)}` : `-${withCommas(supportPrice)}`} 원</PaymentText>
-                    </PaymentView>
+                    </PaymentView>}
                     <PaymentView>
                         <PaymentText>총 할인금액</PaymentText>
                         <PaymentText> {totalDiscountPrice === 0 ? 0 : `-${withCommas(totalDiscountPrice)}`} 원</PaymentText>
@@ -473,8 +541,10 @@ const Pages = () => {
                     </UserPointView> */}
                 </PaymentWrap>
                 </View>
-                }
+                } 
+                {!keyboardStatus.isKeyboardActivate && <View style={{height:150}}/>}
             </ScrollViewWrap>
+           
             <KeyboardAvoiding
                 mealCart
                 blurPress={blurPress}
@@ -486,10 +556,14 @@ const Pages = () => {
                 id={id}
             />
             
-           
-            {(totalCount !== 0 && !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
+           {/*  */}
+            {((totalCount !== 0 || deadline.length !== 0) && !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
+                {deadlineArr.length !== 0 && <EndView>
+                    <EndText>주문 마감된 상품이 있어요<EndPointText>({deadline}개)</EndPointText></EndText>
+                    <EndQuestionText>해당 상품을 제외하고 결제하시겠어요?</EndQuestionText>
+                </EndView>}
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} 
-                onPressEvent={()=>{navigation.navigate(PaymentPageName,{
+                onPressEvent={()=>{totalCount === 0 && isDeadline();soldout.length !== 0 && isSoldOut();(soldout.length === 0 && totalCount !== 0) && navigation.navigate(PaymentPageName,{
                     totalCount,
                     totalMealPrice,
                     membershipDiscountPrice,
@@ -501,8 +575,14 @@ const Pages = () => {
                     deliveryFee,
                     selected,
                     name,
-                    discountPrice
-                })}}
+                    discountPrice,
+                    spotName,
+                    clientType,
+                    arr,
+                    
+
+                })
+}}
 
                 />
             </ButtonWrap>}
@@ -517,15 +597,19 @@ const Pages = () => {
 
 export default Pages;
 
-const SafeView = styled.View`
+const SafeView = styled.SafeAreaView`
 background-color:${props => props.theme.colors.grey[0]};
 flex:1;
+
 
 
 `;
 const ScrollViewWrap = styled.ScrollView`
  flex:1;
- //margin-bottom:80px;
+
+`;
+
+const BottomView = styled.View`
 `;
 
 export const PressableView = styled.Pressable`
@@ -544,7 +628,7 @@ align-items:center;
 
 `;
 
-const Wrap = styled.View`
+const Wrap = styled.Pressable`
 flex:1;
 padding:16px 24px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
@@ -574,13 +658,13 @@ position:relative;
 `;
 
 export const Price = styled(Typography).attrs({text:'Body05R'})`
-color:${props => props.theme.colors.grey[4]};
+color:${({theme,status}) => status === 2 ? theme.colors.grey[6] : theme.colors.grey[4]};
 `;
 
 export const SalePrice = styled(Typography).attrs({text:'Body06R'})`
 text-decoration:line-through;
-text-decoration-color:${props => props.theme.colors.grey[5]};
-color:${props => props.theme.colors.grey[5]};
+text-decoration-color:${({theme,status}) => status === 2 ? theme.colors.grey[6] : theme.colors.grey[5]};
+color:${({theme,status}) => status === 2 ? theme.colors.grey[6] : theme.colors.grey[5]};
 margin-left:4px;
 `;
 
@@ -597,9 +681,12 @@ bottom:0;
 
 export const ButtonWrap = styled.View`
 position:absolute;
-bottom:35px;
-margin: 0px 24px;
+bottom:0px;
+padding: 0px 24px;
+padding-bottom:35px;
 opacity:${({focus}) => focus ? 0 : 1};
+background-color:#fff;
+
 `;
 
 const PaymentWrap = styled.View`
@@ -631,7 +718,7 @@ export const DiningName = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[2]};
 `;
 export const MealName = styled(Typography).attrs({text:'Body05SB'})`
-color:${props => props.theme.colors.grey[2]};
+color:${({theme,status}) => status === 2 ? theme.colors.grey[6] : theme.colors.grey[2]};
 margin-bottom:2px;
 `;
 
@@ -704,6 +791,7 @@ width:100%;
 export const XIcon = styled(X)`
 position:absolute;
 right:6px;
+
 `;
 
 export const PointUnitText = styled(Typography).attrs({text:'Title04R'})`
@@ -739,10 +827,12 @@ margin:0px 24px;
 
 `;
 
-const DeleteIcons = styled(DeleteIcon)`
+const DeleteIcons = styled.Pressable`
 position:absolute;
-top:-15px;
-right:0;
+top:16px;
+right:24px;
+padding:4px;
+
 `;
 
 const SpotName = styled(Typography).attrs({text:'Button10SB'})`
@@ -792,16 +882,50 @@ border-radius:7px;
 `;
 
 const SoldOutIcon = styled(SoldOut)`
-color:${({theme}) => theme.colors.red[500]};
+color:${({theme,status}) => status === 0 ?theme.colors.red[500]:theme.colors.grey[4]};
 margin-right:4px;
 `;
 
 const SoldOutText = styled(Typography).attrs({text:'CaptionR'})`
-color:${({theme}) => theme.colors.red[500]};
+color:${({theme,status}) => status === 0 ? theme.colors.red[500]:theme.colors.grey[4]};
 `;
 
 const SoldOutView = styled.View`
 flex-direction:row;
 align-items:center;
 margin-top:2px;
+`;
+
+const EndText = styled(Typography).attrs({text:'CaptionSB'})`
+color:${({theme}) => theme.colors.grey[2]};
+`;
+
+const EndPointText = styled(Typography).attrs({text:'CaptionSB'})`
+color:${({theme}) => theme.colors.red[500]};
+`;
+
+const EndQuestionText = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme}) => theme.colors.grey[3]};
+`;
+
+const EndView = styled.View`
+background-color:#fff;
+align-items:center;
+padding:12px 0px;
+
+`;
+
+const BlurView = styled.View`
+position:absolute;
+width:45px;
+height:45px;
+border-radius:7px;
+left:0px;
+background-color:#ffffffCC;
+z-index:999;
+`;
+
+const ShortageText = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme}) => theme.colors.red[500]};
+margin-left:4px;
 `;

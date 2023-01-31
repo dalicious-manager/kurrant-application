@@ -25,6 +25,7 @@ export const PAGE_NAME = 'PAYMENT_PAGE';
 
 const Pages = ({route}) => {
   
+    const [test,setTest] = useState();
     const { StatusBarManager } = NativeModules;
     const navigation = useNavigation();
     const agreeCheck = useForm();
@@ -36,7 +37,7 @@ const Pages = ({route}) => {
     const [statusBarHeight, setStatusBarHeight] = useState(0);
     const [point,setPoint] = useState(0);
     const [pointShow,setPointShow] = useState(false)
-    const {isLoadMeal} = useShoppingBasket();
+    const {isLoadMeal,orderMeal} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
     const inputRef = useRef(null);
     const {totalCount,
@@ -48,8 +49,13 @@ const Pages = ({route}) => {
         deliveryFee,
         totalDiscountPrice,
         discountPrice,
-        totalPrice,selected,name} = route.params
-    
+        totalPrice,
+        selected,
+        name,
+        spotName,
+        clientType,
+        } = route.params
+    console.log(totalPrice,supportPrice,deliveryFee)
     const PressButton = () => {
         setModalVisible(true);
     }
@@ -120,7 +126,36 @@ const Pages = ({route}) => {
         e.preventDefault();
         console.log(inputRef.current.value,'111')
       };
-      
+
+    
+    const arr = isLoadMeal.map(el => {
+        return {cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
+            return {
+                ...v, cartDailyFoods:[...v.cartDailyFoods.filter(food => {
+                    return (
+                        food.status !== 2
+                    )
+                })
+                ]
+            }
+        })]}
+    })
+
+    const arrs = arr.reduce((acc,cur) => {
+        return acc.concat(cur)
+    })
+   
+    const lastArr = arrs.cartDailyFoodDtoList.filter(el => el.cartDailyFoods.length !== 0);
+    console.log(lastArr)
+    
+    const orderPress = async (spotId) => {
+        // try {
+        //     await orderMeal(spotId,{
+
+        //     })
+        // }
+    }
+
     return (
         <SafeArea>
             
@@ -129,7 +164,7 @@ const Pages = ({route}) => {
                 <Container>
                     <DeliveryTextWrap>
                         <DeliveryTitle>배송지</DeliveryTitle>
-                        <DeliveryText>{isUserInfo?.spot}</DeliveryText>
+                        <DeliveryText>{spotName[0]?.text}</DeliveryText>
                     </DeliveryTextWrap>
                     <DeliveryTextWrap>
                         <DeliveryTitle>배송 일시</DeliveryTitle>
@@ -157,45 +192,47 @@ const Pages = ({route}) => {
                         <React.Fragment key={idx}>
                             {(selected === el.spotId) && el.cartDailyFoodDtoList.map((m,i) => {
                                 const borderLast = el.cartDailyFoodDtoList[el.cartDailyFoodDtoList.length - 1];
-                                  
+                                
                                 return (
                                     <OrderWrap key={i}>
-                                        {m.cartDailyFoods.map((meal,index) => {
+                                        {m.cartDailyFoods.filter(v => v.status !== 2).map((meal,index) => {
                                            
-                                            const price = meal.price * meal.count;
-                                            const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
-                                            const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
-                                            return (
-                                                <React.Fragment key={index}>
-                                                <ContentWrap >
-                                                    
-                                                        <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
-                                                        style={{
-                                                            width:45,
-                                                            height:45,
-                                                            borderRadius:7,
-                                                            marginRight:12,
-                                                        }}
-                                                        />
-                                                        <MealNameView>
-                                                            <MealName numberOfLines={1} ellipsizeMode="tail">[{meal.makers}] {meal.name} </MealName>
-                                                            
-                                                           <PriceView>
-                                                            <Price>{withCommas(meal.price - mealDiscountPrice)}원</Price>
-                                                            {mealDiscountPrice !== 0 && <SalePrice>{withCommas(price)}원</SalePrice>}
-                                                           </PriceView>
-                                                            
-                                                        </MealNameView>
-                                                    
-                                                    <CountWrap>
-                                                        <CountText>수량: {meal.count}개</CountText>
-                                                    </CountWrap>
-                                                    
-                                                </ContentWrap>
-                                                    {(borderLast !== meal) && <Border/>}
-                                                </React.Fragment>
-                                            )
-                                        })}
+                                           const price = meal.price * meal.count;
+                                           const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
+                                           const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
+                                           return (
+                                               <React.Fragment key={index}>
+                                                   <ContentHeader>
+                                                       <DiningName>{formattedMonthDay(m.serviceDate)} {m.diningType}</DiningName>
+                                                   </ContentHeader>
+                                               <ContentWrap >
+                                                   <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
+                                                   style={{
+                                                       width:45,
+                                                       height:45,
+                                                       borderRadius:7,
+                                                       marginRight:12,
+                                                   }}
+                                                   />
+                                                   <MealNameView>
+                                                       <MealName numberOfLines={1} ellipsizeMode="tail">[{meal.makers}] {meal.name} </MealName>
+                                                       
+                                                       <PriceView>
+                                                       <Price>{withCommas(meal.price - mealDiscountPrice)}원</Price>
+                                                       {mealDiscountPrice !== 0 && <SalePrice>{withCommas(price)}원</SalePrice>}
+                                                       </PriceView>
+                                                       
+                                                   </MealNameView>
+                                                   
+                                                   <CountWrap>
+                                                       <CountText>수량: {meal.count}개</CountText>
+                                                   </CountWrap>
+                                                   
+                                               </ContentWrap>
+                                                   {(borderLast !== m) && <Border/>}
+                                               </React.Fragment>
+                                           )
+                                       })}
                                     </OrderWrap>
                                 )
                             })}
@@ -212,13 +249,13 @@ const Pages = ({route}) => {
                         <PaymentText>총 상품금액</PaymentText>
                         <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
                     </PaymentView>
-                    <PaymentView>
+                    {clientType[0]?.clientStatus === 1 && <PaymentView>
                         <PressableView onPress={fundButton}>
                             <PaymentText>회사 지원금 사용 금액</PaymentText>
                             <QuestionIcon/>
                          </PressableView>
                          <PaymentText> {supportPrice === 0 ? 0 : discountPrice < supportPrice ? `-${withCommas(discountPrice)}` : `-${withCommas(supportPrice)}`} 원</PaymentText>
-                    </PaymentView>
+                    </PaymentView>}
                     <PaymentView>
                         <PaymentText>총 할인금액</PaymentText>
                         <PaymentText>{totalDiscountPrice === 0 ? 0 : `- ${withCommas(totalDiscountPrice)}`} 원</PaymentText>
@@ -312,8 +349,9 @@ const Pages = ({route}) => {
                         </KeyboardInner>
                     </TouchableWithoutFeedback>}
                 </KeyContainer>
+                {/* ;handleEventPayments() */}
                 {!keyboardStatus.isKeyboardActivate && <ButtonWrap>
-                    <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{handleEventPayments()}}/>
+                    <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{orderPress(selected)}}/>
                 </ButtonWrap>}
                 <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                 <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow'/>
@@ -513,4 +551,11 @@ color:${({theme}) => theme.colors.blue[500]};
 
 const PriceView = styled.View`
 flex-direction:row;
+`;
+
+const ContentHeader = styled.View`
+flex-direction:row;
+justify-content:space-between;
+align-items:center;
+
 `;

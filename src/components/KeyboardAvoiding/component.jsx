@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, NativeModules, Platform,TouchableWithoutFeedback,
 import styled from "styled-components";
 
 import Minus from '../../assets/icons/MealDetail/minus.svg';
-import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
+import Plus from '../../assets/icons/MealDetail/plus.svg';
 import useShoppingBasket from "../../biz/useShoppingBasket/hook";
 import { PressableView } from "../Count/component";
 
@@ -80,7 +80,7 @@ const Component = ({
                 <TouchableWithoutFeedback onBlur={blurPress} >
                  <KeypadInput focus={focus}>
                         <PressableView onPress={decreasePress} disabled={count === 1 && true}>
-                            <MinusIcon />
+                            <MinusIcon disabled={count}/>
                         </PressableView>
                         <TextInput
                             keyboardType="number-pad"
@@ -123,6 +123,10 @@ opacity:${({focus}) => !focus ? 0 : 1};
 
 const MinusIcon = styled(Minus)`
 color:${({disabled,theme}) => disabled === 1 ? theme.colors.grey[6]: theme.colors.grey[2]};
+`;
+
+const PlusIcon = styled(Plus)`
+color:${({theme}) => theme.colors.grey[2]};
 `;
 
 const InnerTextInput = styled.TextInput`

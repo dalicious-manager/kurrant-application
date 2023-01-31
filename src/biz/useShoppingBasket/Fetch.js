@@ -1,9 +1,8 @@
 import { fetchJson } from "../../utils/fetch";
 
-export async function addMealCart(body, option) {
+export async function addMealCart(body) {
 
-    const fetchRes = await fetchJson('/users/me/order/cart', 'POST', {
-        ...option,
+    const fetchRes = await fetchJson('/users/me/carts', 'POST', {
         body: JSON.stringify(body)
     });
 
@@ -11,7 +10,7 @@ export async function addMealCart(body, option) {
 }
 
 export async function loadMealCart() {
-    const fetchRes = await fetchJson('/users/me/order/cart','GET');
+    const fetchRes = await fetchJson('/users/me/carts','GET');
 
     return fetchRes;
 
@@ -71,7 +70,7 @@ export async function loadMealCart() {
 }
 
 export async function updateMealCart(body) {
-    const fetchRes = await fetchJson('/users/me/order/cart', 'PATCH',{
+    const fetchRes = await fetchJson('/users/me/carts', 'PATCH',{
         body: JSON.stringify(body)
         
     });
@@ -79,14 +78,14 @@ export async function updateMealCart(body) {
     return fetchRes;
 }
 
-export async function allDeleteMealCart() {
-    const fetchRes = await fetchJson('/users/me/order/cart/all', 'DELETE');
+export async function allDeleteMealCart(spotId) {
+    const fetchRes = await fetchJson(`/users/me/carts/spots/${spotId}`, 'DELETE');
 
     return fetchRes;
 }
 
 export async function deleteMealCart(foodId) {
-    const fetchRes = await fetchJson(`/users/me/order/cart/${foodId}`, 'DELETE');
+    const fetchRes = await fetchJson(`/users/me/carts/${foodId}`, 'DELETE');
 
     return fetchRes;
 }
@@ -94,5 +93,12 @@ export async function deleteMealCart(foodId) {
 export async function loadSoldOutMealCart(spotId,date,type) {
     const fetchRes = await fetchJson(`/dailyfoods?spotId=${spotId}&selectedDate=${date}&diningType=${type}`,'GET');
 
+    return fetchRes;
+}
+
+export async function ordrMealCart(spotId,body){
+    const fetchRes = await fetchJson(`users/me/orders/${spotId}`,'POST',{
+        body:JSON.stringify(body)
+    });
     return fetchRes;
 }

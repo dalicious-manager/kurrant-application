@@ -40,10 +40,7 @@ const Pages = ({route}) => {
     const {addMeal,loadMeal,isLoadMeal} = useShoppingBasket();
 
     const headerTitle = isFoodDetail?.name;
-    const foodId = route.params.foodId;
     const dailyFoodId = route.params.dailyFoodId;
-    const diningType = route.params.type;
-    const day = route.params.date;
     console.log(dailyFoodId,'22222')
     const closeModal = () => {
         setModalVisible(false)
@@ -83,8 +80,6 @@ const Pages = ({route}) => {
                 await addMeal({
                      "dailyFoodId":dailyFoodId,
                      "count":count,
-                     "serviceDate":day,
-                     "diningType":diningType
                  });
                  await loadMeal();
                  balloonEvent();
@@ -99,8 +94,6 @@ const Pages = ({route}) => {
                 await addMeal({
                      "dailyFoodId":dailyFoodId,
                      "count":count,
-                     "serviceDate":day,
-                     "diningType":diningType
                  });
                  await loadMeal();
                  balloonEvent();
@@ -161,7 +154,7 @@ const Pages = ({route}) => {
                     />
                 <Content>
                     <View>
-                        <MakersName>{isFoodDetail?.makers}</MakersName>
+                        <MakersName>{isFoodDetail?.makersName}</MakersName>
                         <MealTitle>{isFoodDetail?.name}</MealTitle>
                         <Line>
                             {/* <ReviewWrap>
@@ -182,6 +175,7 @@ const Pages = ({route}) => {
                             <PriceTitle>최종 판매가</PriceTitle>
                             <ModalWrap>
                                 <Modal 
+                                id={dailyFoodId}
                                 price={isFoodDetail?.price} 
                                 membershipDiscountedPrice={isFoodDetail?.membershipDiscountedPrice} 
                                 membershipDiscountedRate={isFoodDetail?.membershipDiscountedRate}
@@ -218,7 +212,7 @@ const Pages = ({route}) => {
                                 <InfoText>{isFoodDetail?.makersDiscountedRate}%</InfoText>
                             </InfoTextWrap>
                             <InfoTextWrap>
-                                <Test numberOfLines={1}>기간 할인</Test>
+                                <Info>기간 할인</Info>
                                 <InfoText>{isFoodDetail?.periodDiscountedRate}%</InfoText>
                             </InfoTextWrap>
                         </InfoTextView>
@@ -230,15 +224,15 @@ const Pages = ({route}) => {
                         </InfoTitleView>
                         <InfoTextView>
                             <InfoTextWrap>
-                                <Info numberOfLines={1} >단체 배송</Info>
+                                <Info>단체 배송</Info>
                                 <InfoText>15,000(50개 마다 부과)</InfoText>
                             </InfoTextWrap>
                             <InfoTextWrap>
-                                <Info numberOfLines={1}>개별 배송</Info>
+                                <Info>개별 배송</Info>
                                 <InfoText>2,200원(5개 마다 부과)</InfoText>
                             </InfoTextWrap>
                             <InfoTextWrap>
-                                <Info  numberOfLines={1}>멤버십 회원</Info>
+                                <Info>멤버십 회원</Info>
                                 <InfoText>무료 배송</InfoText>
                             </InfoTextWrap>
                         </InfoTextView>

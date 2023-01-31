@@ -29,7 +29,8 @@ const Pages = ({route}) => {
   console.log(touchDate,'ee')
   const startDate = formattedWeekDate(weekly[0][0]);
   const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
-  console.log(data,'data')
+  console.log(startDate,endDate,'밀')
+  
   useEffect(()=>{
     async function loadDailyFood(){
       await orderMeal(startDate,endDate);
@@ -86,8 +87,6 @@ const Pages = ({route}) => {
     Alert.alert(
       "메뉴 변경",
       "현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?",
-      
-
       [
         {
           text:'아니요',
@@ -108,7 +107,7 @@ const Pages = ({route}) => {
     <SafeView>
       <ScrollView>
         <CalendarView>
-          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent3={pressDay}  meal={meal} margin={'0px 28px'}/>
+          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={pressDay}  meal={meal} margin={'0px 28px'}/>
         </CalendarView>
         
         <MealWrap>
