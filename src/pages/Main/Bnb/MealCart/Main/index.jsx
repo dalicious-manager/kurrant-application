@@ -161,12 +161,34 @@ const Pages = () => {
     const arrs = isLoadMeal?.filter(p => p.spotId === selected )?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods.filter(c => c.status !== 2))).flat()
     const arr = arrs.reduce((acc, val) => [ ...acc, ...val ], []);
 
-    // 주문 마감
+    // 주문 마감 수량
     const deadlineArrs = isLoadMeal?.filter(p => p.spotId === selected )?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods.filter(c => c.status === 2))).flat()
     const deadlineArr = deadlineArrs.reduce((acc, val) => [ ...acc, ...val ], []);
     const deadline = deadlineArr.map(p => p.count).reduce((acc, cur) => {
         return acc + cur
     },0);
+
+    // 주문 마감 제외 시킨 배열 
+    const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
+    const newArr = spotFilter.map(el => {
+        return {cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
+            return {
+                ...v, cartDailyFoods:[...v.cartDailyFoods.filter(food => {
+                    return (
+                        food.status !== 2
+                    )
+                })
+                ]
+            }
+        })]}
+    })
+
+    const newArrs = newArr.reduce((acc,cur) => {
+        
+        return acc.concat(cur)
+    })
+   
+    const lastArr = newArrs.cartDailyFoodDtoList.filter(el => el.cartDailyFoods.length !== 0);
     
     // 총 개수
     const totalCount = arr?.map(p => p.count).reduce((acc,cur) => {
@@ -194,10 +216,14 @@ const Pages = () => {
     },0);
 
     // 회사 지원금
-    const support = isLoadMeal?.filter(p => p.spotId === (selected ?? isUserInfo.spotId)).map(el => el.cartDailyFoodDtoList).flat()
-    const supportPrice = support.map(el => el.supportPrice).reduce((acc,cur) => {
+    const supportPrice = lastArr.map(el => el.supportPrice).reduce((acc,cur) => {
         return acc + cur
     },0)
+    console.log(supportPrice,'22')
+      // 배송비
+    const deliveryFee = lastArr.map(el => el.deliveryFee).reduce((acc,cur) => {
+        return acc + cur
+    },0);
 
     // 지원금 계산
     const discountPrice = arr?.map(p => (p.discountedPrice * p.count)).reduce((acc,cur) => {
@@ -207,11 +233,7 @@ const Pages = () => {
     // 사용한 회사 지원금
     const usedSupportPrice =  (discountPrice < supportPrice) ? discountPrice : supportPrice;
 
-    // 배송비
-    const delivery = isLoadMeal?.filter(p => p.spotId === (selected ?? isUserInfo.spotId)).map(el => el.cartDailyFoodDtoList).flat()
-    const deliveryFee = delivery.map(el => el.deliveryFee).reduce((acc,cur) => {
-        return acc + cur
-    },0)
+  
     
     // 총 할인금액
     const totalDiscountPrice = membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
@@ -229,8 +251,10 @@ const Pages = () => {
 
     const spotName = mealCartSpot.filter(p => p.id === selected);
 
-  
+    
+    
 
+    
     const focusPress = () => {
         setFocus(true);
       };
