@@ -21,7 +21,8 @@ import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, Pa
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import useUserMe from "../../../../../biz/useUserMe";
-
+import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
+import { SCREEN_NAME as HomePageName } from "../../../../../screens/Main/Bnb";
 import { PAGE_NAME as DefaultPaymentManagePageName } from "../DefaultPaymentManage";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
@@ -59,7 +60,7 @@ const Pages = ({route}) => {
         spotName,
         clientType,
         } = route.params
-    
+    console.log(selectDefaultCard,'11')
     const PressButton = () => {
         setModalVisible(true);
     }
@@ -83,9 +84,12 @@ const Pages = ({route}) => {
     const handleEventPayments = ()=>{
         console.log(agreeCheck.watch(agreeCheck).agreeCheck);
         if(agreeCheck.watch(agreeCheck).agreeCheck){
-            console.log('동의함');
-            PressButton();
-          //navigation.navigate(MembershipJoinComplatePageName)
+            if(selectDefaultCard.length === 0){
+                PressButton();
+            }else{
+                orderPress(selected)
+            }
+          
         }else{
             Alert.alert(
                 '동의가 필요합니다',
@@ -131,7 +135,10 @@ const Pages = ({route}) => {
         console.log(inputRef.current.value,'111')
       };
 
-    
+    const registerCard = () =>{
+        navigation.navigate(RegisterCardPageName,{defaultType:1});
+        setModalVisible(false);
+    }
     const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
     
     const arr = spotFilter.map(el => {
@@ -157,7 +164,7 @@ const Pages = ({route}) => {
     const orderPress = async (spotId) => {
         const data = {
             'spotId':spotId,
-            "cardId": 11,
+            "cardId": selectDefaultCard[0]?.id,
             'cartDailyFoodDtoList':lastArr,
             'totalPrice':totalPrice,
             'supportPrice':supportPrice,
@@ -165,9 +172,10 @@ const Pages = ({route}) => {
             'userPoint': isUserInfo.point
 
         }
-    
+        
         try {
-            await orderMeal(spotId,data)
+            await orderMeal(spotId,data);
+            navigation.navigate(HomePageName)
         }catch (err){
             console.log(err)
         }
@@ -385,10 +393,10 @@ const Pages = ({route}) => {
                 </KeyContainer>
                 {/* ;handleEventPayments() */}
                 {!keyboardStatus.isKeyboardActivate && <ButtonWrap>
-                    <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{orderPress(selected)}}/>
+                    <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{handleEventPayments()}}/>
                 </ButtonWrap>}
                 <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
-                <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow'/>
+                <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow' onPressEvent1={registerCard}/>
                 <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
         </SafeArea>
     )

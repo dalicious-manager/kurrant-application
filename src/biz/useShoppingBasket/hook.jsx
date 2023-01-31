@@ -17,6 +17,7 @@ const useShoppingBasket = () => {
     const loadMeal = async () => {
         try {
             const res = await Fetch.loadMealCart();
+            
             const clientType = res.data.spotCarts.map(el => {
                 
                 return {
@@ -36,7 +37,7 @@ const useShoppingBasket = () => {
             const badgeQty = qty.reduce((acc,cur) => {
                 return acc + cur
             },0)
-
+           
             setClientStatus(clientType)
             setMealCartSpot(spot)
             setLoadMeal(res.data.spotCarts);
@@ -50,11 +51,9 @@ const useShoppingBasket = () => {
     const addMeal = async (body) => {
         
         try {
-            const res = await Fetch.addMealCart([{
+            const res = await Fetch.addMealCart([
                 ...body
-            }]
-           
-            );
+        ]);
            return res
 
         }catch(err){
