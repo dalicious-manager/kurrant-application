@@ -24,7 +24,7 @@ import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/M
 import { useNavigation } from '@react-navigation/native';
 
 const BottomSheet = props => {
-  const { modalVisible, setModalVisible ,title={}, description='', data={} = ()=>{}, height=500 ,btn='버튼이름'} = props;
+  const { modalVisible, setModalVisible ,title={}, description='', data={} = ()=>{}, height=500 ,btn='버튼이름',toast} = props;
   //멀티 셀렉터시 이용
   const [selected, setSelected] = useState();
   
@@ -135,17 +135,18 @@ const BottomSheet = props => {
   
     const meal = data.filter(el => el.count !== 0).map(v => {
       return {
-        id:v.id,
+        dailyFoodId:v.id,
         count:v.count
       }
     });
-    console.log(meal)
-    // try {
-    //   await addMeal(meal)
-    //   setModalVisible(false)
-    // }catch(err){
-    //   console.log(err)
-    // }
+  
+    try {
+      await addMeal(meal)
+      setModalVisible(false)
+      toast.toastEvent();
+    }catch(err){
+      console.log(err)
+    }
   };
 
   const disabledList = data.filter(el => el.count !== 0);
@@ -225,6 +226,7 @@ const BottomSheet = props => {
           />
         </AnimatedView>
       </Overlay>
+      
     </Modal>
   );
 };

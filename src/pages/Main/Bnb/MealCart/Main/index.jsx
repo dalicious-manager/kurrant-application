@@ -31,9 +31,9 @@ import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import BottomSheet from "../../../../../components/BottomSheet";
 import BottomMenu from "../../../../../components/BottomSheetMenu";
-const windowWidth = Dimensions.get('window').width;
+import Toast from '../../../../../components/Toast';
 import useUserMe from "../../../../../biz/useUserMe";
-const windowHeight = Dimensions.get('window').height;
+
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
@@ -54,7 +54,7 @@ const Pages = () => {
     const [name,setName] = useState();
     const [date,setDate] = useState();
     const [type,setType] = useState();
-    
+    const toast = Toast();
     // useFocusEffect(
     //     useCallback(() => {
     //         // Do something when the screen is focused
@@ -165,7 +165,7 @@ const Pages = () => {
 
     // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
     
-    
+    console.log(isLoadMeal)
     const arrs = isLoadMeal?.filter(p => p.spotId === selected )?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods.filter(c => c.status !== 2))).flat()
     const arr = arrs.reduce((acc, val) => [ ...acc, ...val ], []);
 
@@ -178,6 +178,7 @@ const Pages = () => {
 
     // 주문 마감 제외 시킨 배열 
     const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
+ 
     const newArr = spotFilter.map(el => {
         return {cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
             return {
@@ -190,13 +191,13 @@ const Pages = () => {
             }
         })]}
     })
-
+    
     const newArrs = newArr.reduce((acc,cur) => {
         
         return acc.concat(cur)
-    })
-   
-    const lastArr = newArrs.cartDailyFoodDtoList.filter(el => el.cartDailyFoods.length !== 0);
+    },[])
+    
+    const lastArr = newArrs[0]?.cartDailyFoodDtoList?.filter(el => el.cartDailyFoods.length !== 0);
     
     // 총 개수
     const totalCount = arr?.map(p => p.count).reduce((acc,cur) => {
@@ -224,15 +225,15 @@ const Pages = () => {
     },0);
 
     // 회사 지원금
-    const supportPrice = lastArr.map(el => el.supportPrice).reduce((acc,cur) => {
+    const supportPrice = lastArr?.map(el => el.supportPrice).reduce((acc,cur) => {
         return acc + cur
     },0)
-    console.log(supportPrice,'22')
+    
       // 배송비
-    const deliveryFee = lastArr.map(el => el.deliveryFee).reduce((acc,cur) => {
+    const deliveryFee = lastArr?.map(el => el.deliveryFee).reduce((acc,cur) => {
         return acc + cur
     },0);
-
+    console.log(selected,'22')
     // 지원금 계산
     const discountPrice = arr?.map(p => (p.discountedPrice * p.count)).reduce((acc,cur) => {
         return acc + cur
@@ -259,6 +260,7 @@ const Pages = () => {
 
     const spotName = mealCartSpot.filter(p => p.id === selected);
 
+    
     
     
 
@@ -414,8 +416,10 @@ const Pages = () => {
                  [
                    {
                      text:'삭제하기',
-                     onPress:() => {
-                     }
+                     onPress: async() => {
+                        await allDeleteMeal(selected);
+                     },
+                     style: 'destructive'
                    }
                  ]
                )
@@ -432,13 +436,13 @@ const Pages = () => {
         }
     };
 
-    
+    console.log(spotName[0]?.text)
 
     return (
         <SafeView>
              <SpotView>
                     <SpotPress onPress={PressSpotButton}>
-                        <SpotName>{name === undefined ? spotName[0]?.text : name }</SpotName>
+                        <SpotName>{spotName[0]?.text ?? isUserInfo.spot }</SpotName>
                         <ArrowIcon/>
                     </SpotPress>
                     <Pressable onPress={()=>{allDelete(selected)}}>
@@ -516,6 +520,7 @@ const Pages = () => {
                                                     title={formattedMonthDay(date)+ "\u00a0" + type}
                                                     btn='변경완료'
                                                     data={soldOutMeal}
+                                                    toast={toast}
                                                     />
                                                     <CountWrap>                                
                                                             {food.status !== 2 && <Count
@@ -525,6 +530,7 @@ const Pages = () => {
                                                                 count={food.count}
                                                                 id={food.dailyFoodId}
                                                                 status={food.status}
+                                                                capacity={food.capacity}
                                                             />}
                                                     </CountWrap>
                                                 </ContentWrap>
@@ -611,8 +617,6 @@ const Pages = () => {
                     spotName,
                     clientType,
                     arr,
-                    
-
                 })
 }}
 
@@ -621,7 +625,7 @@ const Pages = () => {
              
             <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
             <BottomSheet modalVisible={modalVisible2} setModalVisible={setModalVisible2}  title='스팟 선택' data={mealCartSpot} selected={selected} setSelected={setSelected} setName={setName}/>
-            
+            <toast.ToastWrap message={"메뉴가 변경됐어요"} icon={'checked'}/>
             </SafeView>
     )
 

@@ -71,16 +71,16 @@ const Pages = ({route}) => {
     },[headerTitle,navigation, scroll]);
 
     const addCartPress = async () =>{
-        const duplication = isLoadMeal.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === id))).flat()
+        const duplication = isLoadMeal.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === dailyFoodId))).flat()
         
         if(duplication.includes(true)){
             setModalVisible(true);
         }else{
             try {
-                await addMeal({
+                await addMeal([{
                      "dailyFoodId":dailyFoodId,
                      "count":count,
-                 });
+                 }]);
                  await loadMeal();
                  balloonEvent();
              } catch(err){
@@ -91,10 +91,10 @@ const Pages = ({route}) => {
     const addToCart = async () =>{
         
             try {
-                await addMeal({
+                await addMeal([{
                      "dailyFoodId":dailyFoodId,
                      "count":count,
-                 });
+                 }]);
                  await loadMeal();
                  balloonEvent();
                  } catch(err){

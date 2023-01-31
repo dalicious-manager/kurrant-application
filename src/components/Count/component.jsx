@@ -14,7 +14,8 @@ const Component = ({
   count,
   quantity,
   id,
-  status
+  status,
+  capacity
 }) => {
   
   return (
@@ -25,7 +26,7 @@ const Component = ({
             <MinusIcon disabled={count} status={status} disable={quantity}/>
           </PressableView>
           <Pressable onPress={onPressEvent}>
-            <CountText status={status}>
+            <CountText status={status} capacity={capacity} count={count}>
                 {count}{quantity}
             </CountText>
           </Pressable>
@@ -66,5 +67,5 @@ color:${({disabled,theme,status}) => disabled === 1 ? theme.colors.grey[6]: (sta
 `;
 
 const CountText = styled(Typography).attrs({text:'Body05SB'})`
-color:${({theme,status}) => (status === 0 || status === 2) ? theme.colors.grey[6] : theme.colors.grey[2]};
+color:${({theme,status,capacity,count}) => (status === 0 || status === 2) ? theme.colors.grey[6] : (capacity < count) ? theme.colors.red[500] : theme.colors.grey[2]};
 `;

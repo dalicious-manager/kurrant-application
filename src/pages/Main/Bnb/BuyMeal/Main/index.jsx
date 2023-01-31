@@ -141,10 +141,10 @@ const Pages = () => {
     const addToCart = async (id) =>{
         
             try {
-                    await addMeal({
+                    await addMeal([{
                         "dailyFoodId":id,
                         "count":1,
-                    });
+                    }]);
                     await loadMeal();
                     setShow(true)
                     await balloonEvent();
@@ -152,7 +152,7 @@ const Pages = () => {
                         setShow(false)
                     },3000)
                  } catch(err){
-                    console.log(err)
+                    console.log(err,'8')
                     
                  }
                closeModal();    

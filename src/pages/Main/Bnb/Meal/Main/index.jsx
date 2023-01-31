@@ -14,6 +14,7 @@ import { formattedMonthDay, formattedWeekDate } from "../../../../../utils/dateF
 import { CalendarWrap, MakersName, MealName } from "../../BuyMeal/Main";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
+import FastImage from "react-native-fast-image";
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
@@ -29,7 +30,7 @@ const Pages = ({route}) => {
   console.log(touchDate,'ee')
   const startDate = formattedWeekDate(weekly[0][0]);
   const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
-  console.log(startDate,endDate,'밀')
+  
   
   useEffect(()=>{
     async function loadDailyFood(){
@@ -122,11 +123,17 @@ const Pages = ({route}) => {
                 </DiningTimeWrap>
                 <MealContentWrap >
                   <View>
-                    <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
+                  <FastImage source={{uri:`${sm.image}`,priority:FastImage.priority.high}}
+                    style={{
+                        width:45,
+                        height:45,
+                        borderRadius:7
+                    }}
+                    />
                   </View>
                   <Content>
                     {/* <MakersName>[{sm.makers}]</MakersName> */}
-                    <MakersName>[메이커스]</MakersName>
+                    <MakersName>[{sm.makers}]</MakersName>
                     <MealName>{sm.name}</MealName>
                     <CountText>{sm.count}개</CountText>
                   </Content>
