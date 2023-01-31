@@ -12,10 +12,10 @@ import RegisteredBox from './RegisteredBox';
 import Check from '~components/Check';
 import Form from '~components/Form';
 import { useForm } from 'react-hook-form';
-import { ScrollView } from 'react-native';
+import { Dimensions, ScrollView } from 'react-native';
 
 export const PAGE_NAME = "P__DEFAULT__PAYMENT_MANAGE";
-
+const windowHeight = Dimensions.get('window').height;
 const Pages = ()=>{
     const themeApp = useTheme();
     const [modalVisible, setModalVisible]=useState(false);
@@ -26,6 +26,7 @@ const Pages = ()=>{
     const agreeCheck = useForm();
     const navigation = useNavigation();
     const {cardSetting,setSelectDefaultCard,readableAtom:{cardList,selectDefaultCard}} = useUserMe();
+    const [selectNowCard ,setNowCard] = useState(selectDefaultCard)
     const onSelectEvent=()=>{
         navigation.navigate(RegisterCardScreenName,{
             defaultType:1
@@ -33,8 +34,9 @@ const Pages = ()=>{
     }
     const onSelectComplateEvent=async()=>{;
         if(agreeCheck.watch(agreeCheck).agreeCheck){
-            await onSelectCard(selectDefaultCard[0]?.id)
+            await onSelectCard(selectNowCard[0]?.id)
         }
+        setSelectDefaultCard(selectNowCard);
         navigation.goBack()
     }
     const onSelectCard = async(id)=>{
@@ -59,16 +61,19 @@ const Pages = ()=>{
                         </Typography>
                     </RegisterCardButton>
                 </RegisteredTitleBox>
-                <CardListView>
+                {cardList?.length > 0 ?  <CardListView>
                 {cardList.map((v)=>{
                     return (
-                        <RegiteredView key={v.id} onPress={()=>setSelectDefaultCard([v])}>
-                            <RegisteredBox cardName={`${v.cardCompany}카드`}  cardNumber={v.cardNumber} isMembership={false} isDefault={v.defaultType === 1 || v.defaultType===3} isSelected={v.id === selectDefaultCard[0]?.id}/>
+                        <RegiteredView key={v.id} onPress={()=>setNowCard([v])}>
+                            <RegisteredBox cardName={`${v.cardCompany}카드`}  cardNumber={v.cardNumber} isMembership={false} isDefault={v.defaultType === 1 || v.defaultType===3} isSelected={v.id === selectNowCard[0]?.id}/>
                         </RegiteredView>
                     )
                 })}
                 
-                </CardListView>
+                </CardListView>:<NonCard>
+                        <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>아직 등록된 결제 수단이 없어요</Typography>
+                    </NonCard>
+                    }
             </CardRegisteredBox>
             
             <ButtonBox>
@@ -84,8 +89,7 @@ const Pages = ()=>{
                     onPressEvent={onSelectComplateEvent}
                 />
             </ButtonBox>
-            <BottomSheet 
-                modalVisible={modalVisible} setModalVisible={setModalVisible} title="결제수단 추가" data={data} setValue={onSelectEvent} height={200}/>
+            <BottomSheet modalVisible={modalVisible} setModalVisible={setModalVisible} title="결제수단 추가" data={data} setValue={onSelectEvent} height={200}/>
         </Wrapper>
     )
 }
@@ -143,4 +147,10 @@ const RegisterCardButton = styled.Pressable`
     border-radius :100px;
     border: 1px solid ${({theme})=> theme.colors.grey[7]};
     padding: 6.5px 16px;
+`
+
+const NonCard = styled.View`
+    height: ${windowHeight/2}px;
+    justify-content: center;
+    align-items: center;
 `

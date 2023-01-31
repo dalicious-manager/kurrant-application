@@ -144,8 +144,9 @@ const Pages = ({route}) => {
             }
         })]}
     })
-
+    console.log(arr);
     const arrs = arr.reduce((acc,cur) => {
+        console.log(acc,"test");
         return acc.concat(cur)
     })
    

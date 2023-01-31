@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { useTheme } from "styled-components/native";
-
+import { css, useTheme } from "styled-components/native";
+import Checkicon from '~assets/icons/check.svg';
 import Label from "~components/Label";
 import Typography from "~components/Typography";
 
@@ -30,7 +30,7 @@ const Component = ({
                 </LabelContainer>
             </TextBox>
             {isSelected && <Button >
-                <Typography text={'Button10SB'} textColor={themeApp.colors.grey[3]}>선택</Typography>
+                <CheckIcon checked={true} type="white"/>
             </Button>}
             
         </Wrap>
@@ -66,3 +66,18 @@ const Button = styled.Pressable`
     border-width: 1px;
     border-radius: 50px;
 `
+const CheckIcon = styled(Checkicon)`
+  color: ${({ checked }) =>
+      checked
+        ? css`
+             ${({ type,theme }) => type === 'yellow' 
+          ? theme.colors.grey[1] 
+          : type === 'grey' ? theme.colors.grey[0] 
+          : type ==='login' ? theme.colors.neutral[0] :theme.colors.grey[2]};
+          `
+        : css`
+            ${({ type,theme }) => type === 'white' ? theme.colors.grey[7] : theme.colors.grey[0]};
+          `};
+         
+
+  `;
