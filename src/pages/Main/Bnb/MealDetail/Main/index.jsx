@@ -71,9 +71,9 @@ const Pages = ({route}) => {
     },[headerTitle,navigation, scroll]);
 
     const addCartPress = async () =>{
-        const duplication = isLoadMeal.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === dailyFoodId))).flat()
+        const duplication = isLoadMeal?.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === dailyFoodId))).flat()
         
-        if(duplication.includes(true)){
+        if(duplication?.includes(true)){
             setModalVisible(true);
         }else{
             try {

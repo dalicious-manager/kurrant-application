@@ -72,7 +72,7 @@ export default () => {
           const googleCredential = auth.GoogleAuthProvider.credential(idToken);
           console.log(scopes);
           console.log(accessToken);
-          Clipboard.setString(accessToken)
+          // Clipboard.setString(accessToken)
           // Sign-in the user with the credential
           await auth().signInWithCredential(googleCredential);
           await snsLogin({
@@ -97,7 +97,7 @@ export default () => {
         // Start the sign-in request
         if(Platform.OS === "android"){
           const test = await appleAuthAndroid.signIn();
-          Clipboard.setString(test.id_token);
+          // Clipboard.setString(test.id_token);
           console.log(test);
           await snsAppleLogin({
             ...test,
@@ -147,7 +147,7 @@ export default () => {
     
       const kakaoLogin = async () => {
         const token = await login();
-        Clipboard.setString(token.accessToken);
+        // Clipboard.setString(token.accessToken);
         console.log(token.accessToken)
         await snsLogin({
             snsAccessToken:token.accessToken,
@@ -173,7 +173,7 @@ export default () => {
           if (Platform.OS === 'ios') {
             const result = await AuthenticationToken.getAuthenticationTokenIOS();
             console.log(result?.authenticationToken);
-            Clipboard.setString(result?.authenticationToken);
+            // Clipboard.setString(result?.authenticationToken);
 
             await snsLogin({
               snsAccessToken:result?.authenticationToken,

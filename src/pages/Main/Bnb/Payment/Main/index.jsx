@@ -104,7 +104,7 @@ const Pages = ({route}) => {
       }
 
     
-    const date = isLoadMeal.map(el => el.cartDailyFoodDtoList.map(v => v.serviceDate)).flat();
+    const date = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.serviceDate)).flat();
     
     const deliveryStart = date.reduce((prev,curr) => {
         return new Date(prev).getTime() <= new Date(curr).getTime() ? prev : curr;
@@ -164,7 +164,7 @@ const Pages = ({route}) => {
     const orderPress = async (spotId) => {
         const data = {
             'spotId':spotId,
-            "cardId": selectDefaultCard[0]?.id,
+            "cardId": 12,
             'cartDailyFoodDtoList':lastArr,
             'totalPrice':totalPrice,
             'supportPrice':supportPrice,

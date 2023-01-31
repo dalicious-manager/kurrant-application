@@ -124,7 +124,7 @@ const Pages = () => {
     
     const addHandle = (productId) => {
 
-        const addQty = isLoadMeal.map(el => {
+        const addQty = isLoadMeal?.map(el => {
             return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
                 return {
                     ...v, cartDailyFoods:[...v.cartDailyFoods.map(food => {
@@ -144,7 +144,7 @@ const Pages = () => {
     }
 
     const substractHandle = (productId) => {
-        const substracQty = isLoadMeal.map(el => {
+        const substracQty = isLoadMeal?.map(el => {
             return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
                 return {
                     ...v, cartDailyFoods:[...v.cartDailyFoods.map(food => {
@@ -273,7 +273,7 @@ const Pages = () => {
       };
 
     const changeText = (number,pi) => {
-        const changeQty = isLoadMeal.map(el => {
+        const changeQty = isLoadMeal?.map(el => {
             return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
                 return {
                     ...v, cartDailyFoods:[...v.cartDailyFoods.map(food => {
@@ -298,7 +298,7 @@ const Pages = () => {
 
     const deleteButton = async (foodId) => {
     
-        const arr = isLoadMeal.map(el => {
+        const arr = isLoadMeal?.map(el => {
             return {...el,cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
                 return {
                     ...v, cartDailyFoods:[...v.cartDailyFoods.filter(food => food.id !== foodId)]

@@ -2,10 +2,10 @@ import {useAtom} from 'jotai';
 import react from 'react';
 
 import * as Fetch from './Fetch';
-import { isLoadMealCartAtom, isQuantityAtom, mealCartSpotAtom, userPointAtom,loadSoldOutMealAtom, soldOutChangeAtom, clientStatusAtom } from './store';
+import { isLoadMealCartAtom, isQuantityAtom, mealCartSpotAtom, userPointAtom,loadSoldOutMealAtom, soldOutChangeAtom, clientStatusAtom ,isLoadMealLoadingAtom} from './store';
 
 const useShoppingBasket = () => {
-
+    const  [isLoadMealLoading, setLoadMealLoading] = useAtom(isLoadMealLoadingAtom)
     const [isLoadMeal,setLoadMeal] = useAtom(isLoadMealCartAtom);
     const [isquantity,setQuantity] = useAtom(isQuantityAtom)
     const [userPoint,setUserPoint] = useAtom(userPointAtom);
@@ -16,6 +16,12 @@ const useShoppingBasket = () => {
 
     const loadMeal = async () => {
         try {
+            setLoadMealLoading(true);
+            setClientStatus([])
+            setMealCartSpot([])
+            setLoadMeal([]);
+            setUserPoint([])
+            setQuantity(0);
             const res = await Fetch.loadMealCart();
             
             const clientType = res.data.spotCarts.map(el => {
@@ -45,6 +51,8 @@ const useShoppingBasket = () => {
             setQuantity(badgeQty);
         } catch (err) {
             throw err;
+        } finally{
+            setLoadMealLoading(false);
         }
     }
 
@@ -150,7 +158,8 @@ const useShoppingBasket = () => {
         mealCartSpot,
         soldOutMeal,
         soldOutChange,
-        clientStatus
+        clientStatus,
+        isLoadMealLoading
         
     };
 

@@ -39,16 +39,16 @@ android/local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
-
+*.pem
 # BUCK
 buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
-google-services.json
+
 GoogleService-Info.plist
 package-lock.json
-yarn.lock
+*.lock
 AppCenter-Config.plist
 # fastlane
 #
@@ -68,3 +68,5 @@ AppCenter-Config.plist
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+
+android/app/google-services.json

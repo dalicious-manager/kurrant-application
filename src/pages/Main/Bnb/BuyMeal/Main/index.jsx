@@ -1,7 +1,7 @@
 import {Slider} from '@miblanchard/react-native-slider';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, Pressable,Dimensions, StyleSheet, SafeAreaView, Alert} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
@@ -44,7 +44,7 @@ const Pages = () => {
     const [first,setFirst] = useState();
     const [show,setShow] = useState(false);
     const {isDiningTypes, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
-    const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
+    const {addMeal ,isLoadMeal, loadMeal , setLoadMeal,isLoadMealLoading} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
     const userInfo = useAtomValue(isUserInfoAtom);
     
@@ -96,36 +96,37 @@ const Pages = () => {
         setModalVisible3(false)
         
     }
-    useEffect(()=>{
-        async function loadDailyFood(){
-            try {
-                await dailyFood(spotId,date);
-                await loadMeal();
-            } catch (error) {
-                if(error.toString().replace("Error:",'').trim() === '403'){
-                  navigation.reset({
-                    index: 0,
-                    routes: [
-                      {
-                        name: LoginPageName,
-                      },
-                    ],
-                  })
-                }
-                
-              }
-        }
-        loadDailyFood();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+    useFocusEffect(
+        useCallback(()=>{
+            async function loadDailyFood(){
+                try {
+                    await loadMeal();
+                    await dailyFood(spotId,date);                    
+                } catch (error) {
+                    if(error.toString().replace("Error:",'').trim() === '403'){
+                      navigation.reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: LoginPageName,
+                          },
+                        ],
+                      })
+                    }
+                    
+                  }
+            }
+            loadDailyFood();
+        },[])
+    )
 
 
     const addCartPress = async (id,day,type) =>{
         
         const diningType = type;
-        const duplication = isLoadMeal.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === id))).flat()
+        const duplication = isLoadMeal?.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === id))).flat()
         
-        if(duplication.includes(true)){
+        if(duplication?.includes(true)){
             await openModal(diningType)
             await setSelectFood({
                 id:id,
@@ -299,7 +300,7 @@ const Pages = () => {
                         </ProgressInner>
                     </ProgressWrap>
 
-                    {isDailyFoodLoading ? <SkeletonUI/>: 
+                    {isDailyFoodLoading || isLoadMealLoading ? <SkeletonUI/>: 
                      <Pager ref={diningRef} 
                      initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
                      onPageSelected={(e) => {onPageScroll(e)}} 

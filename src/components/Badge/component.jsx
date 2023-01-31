@@ -7,11 +7,11 @@ import Typography from "../Typography";
 
 const Component = () =>{
 
-    const {isquantity} = useShoppingBasket();
+    const {isquantity,isLoadMealLoading} = useShoppingBasket();
     
     return (
         <>
-         { isquantity !== 0 &&<Wrap>
+         {!isLoadMealLoading &&  isquantity !== 0 &&<Wrap>
             <Count>{isquantity}</Count>
         </Wrap>}
         </>
