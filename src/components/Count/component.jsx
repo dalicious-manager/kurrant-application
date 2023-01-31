@@ -1,23 +1,10 @@
-import { atom, useAtom } from 'jotai';
-import { atomWithReset } from 'jotai/utils';
-import React, { useState,useRef, useEffect,  } from 'react';
-import { View, Text,TextInput, TouchableWithoutFeedback, Dimensions, Pressable} from 'react-native';
-import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
+import React from 'react';
+import { View, Pressable} from 'react-native';
 import styled from 'styled-components';
 
 import Minus from '../../assets/icons/MealDetail/minus.svg';
 import Plus from '../../assets/icons/MealDetail/plus.svg';
-import useShoppingBasket from '../../biz/useShoppingBasket/hook';
-import { isQuantityAtom } from '../../biz/useShoppingBasket/store';
 import Typography from '../Typography';
-
-/**
- * @param {} props
- * @param {} props.size
- * @param {} props.type
-
- * @returns
- */
 
 
 const Component = ({
@@ -26,67 +13,31 @@ const Component = ({
   onPressEvent,
   count,
   quantity,
-  detail,
-  cart,
-  soldOut,
   id,
-  addHandle,
-  substractHandle,
   status
 }) => {
   
   return (
-    <>
-      {(detail || soldOut) && <View>
+    
+      <View>
         <InnerView>
-          <PressableView onPress={decreasePress} disabled={count === 1 && true}>
-            <MinusIcon/>
-          </PressableView>
-            <CountText onPress={onPressEvent}>
-                {count}
-            </CountText>
-            <PressableView onPress={increasePress}>
-              <PlusIcon />
-            </PressableView>
-        </InnerView>
-      </View>}
-
-
-      {cart && <View>
-        <InnerView>
-          <PressableView onPress={()=>substractHandle(id)} disabled={quantity === 1 && true || status === 0}>
-            <MinusIcon disabled={quantity} status={status}/>
+          <PressableView onPress={() => decreasePress(id)} disabled={count === 1 || status === 0 || status === 2 || quantity === 0}>
+            <MinusIcon disabled={count} status={status} disable={quantity}/>
           </PressableView>
           <Pressable onPress={onPressEvent}>
             <CountText status={status}>
-              {quantity}
+                {count}{quantity}
             </CountText>
           </Pressable>
-            <PressableView onPress={()=>addHandle(id)} disabled={status === 0 && true}>
+            <PressableView onPress={() => increasePress(id)} disabled={status === 0 || status === 2}>
               <PlusIcon status={status}/>
             </PressableView>
         </InnerView>
-      </View>}
-
-      {/* {soldOut && <View>
-        <InnerView>
-          <PressableView onPress={()=>console.log('11')} >
-            <MinusIcon />
-          </PressableView>
-          <Pressable onPress={onPressEvent}>
-            <CountText>
-              0
-            </CountText>
-          </Pressable>
-            <PressableView onPress={()=>console.log('2')} >
-              <PlusIcon />
-            </PressableView>
-        </InnerView>
-      </View>} */}
-    </>
+      </View>
+    
   )
 }; 
-// onPress={() => {bodyRef.current.focus(); testPress()}}
+
 export default Component;
 const InnerView = styled.View`
 flex-direction:row;
@@ -107,13 +58,13 @@ justify-content:center;
 `;
 
 const MinusIcon = styled(Minus)`
-color:${({disabled,theme,status}) => disabled === 1 ? theme.colors.grey[6]: status === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
+color:${({disabled,theme,status,disable}) => disabled === 1 ? theme.colors.grey[6]: (status === 0 || disable === 0 || status === 2) ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const PlusIcon = styled(Plus)`
-color:${({disabled,theme,status}) => disabled === 1 ? theme.colors.grey[6]: status === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
+color:${({disabled,theme,status}) => disabled === 1 ? theme.colors.grey[6]: (status === 0 || status === 2) ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const CountText = styled(Typography).attrs({text:'Body05SB'})`
-color:${({theme,status}) => status === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
+color:${({theme,status}) => (status === 0 || status === 2) ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;

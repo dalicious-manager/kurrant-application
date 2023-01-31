@@ -12,33 +12,32 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 
+import WarningIcon from '../../assets/icons/MealCart/warning.svg';
 import Count from '../Count';
 import FastImage from "react-native-fast-image";
 import Label from '../Label';
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
 import Typography from '../Typography';
 import withCommas from '../../utils/withCommas';
-
+import useShoppingBasket from '../../biz/useShoppingBasket/hook';
+import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
+import { useNavigation } from '@react-navigation/native';
 
 const BottomSheet = props => {
-  const { modalVisible, setModalVisible ,title={}, description='', data={},selected ,setSelected,setName, setValue = ()=>{}, height=500 ,btn='버튼이름' , onPressEvent=()=>{console.log('버튼누름')}, spotId , date, diningType} = props;
+  const { modalVisible, setModalVisible ,title={}, description='', data={} = ()=>{}, height=500 ,btn='버튼이름'} = props;
   //멀티 셀렉터시 이용
-  // const [selected, setSelected] = useState(new Map());
+  const [selected, setSelected] = useState();
   
   const onSelect = useCallback(
-    (id,text) => {
-      //멀티 셀렉터시 이용
-      // const newSelected = new Map(selected);
-      // newSelected.set(id, !selected.get(id));
-      setValue(text,id)
-      if(setSelected)setSelected(id);
-      if(setName) setName(text)
-      setModalVisible(false)
+    (id) => {
+      setSelected(id)
+      //setModalVisible(false)
     },
-    [setModalVisible, setName, setSelected, setValue],
+    [setModalVisible, setSelected],
   );
 
-  const [count, setCount] = useState(0);
+  const navigation = useNavigation();
+  const { addMeal,soldOutChange,setSoldOutChange,setSoldOutMeal } = useShoppingBasket();
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const upY = useRef(new Animated.Value(0)).current;
@@ -110,12 +109,51 @@ const BottomSheet = props => {
     });
   };
 
-  const increasePress = () => {
-    setCount(prev => Number(prev) + 1);
+  const increasePress = (id) => {
+    const addData = data.map(el => {
+      if(el.id === id){
+        return{...el,count:el.count+1}
+      }else{
+        return{...el}
+      }
+    });
+    setSoldOutMeal(addData)
+    
   };
-  const decreasePress = () => {
-      setCount(prev => (prev <= 1 ? 1 : prev - 1));
-    };
+  const decreasePress = (id) => {
+    const decrease = data.map(el => {
+      if(el.id === id){
+        return {...el,count:(el.count <= 0 ? 0 :el.count - 1)}
+      }else {
+        return {...el}
+      }
+    });
+    setSoldOutMeal(decrease)
+  };
+
+  const addCart = async () => {
+  
+    const meal = data.filter(el => el.count !== 0).map(v => {
+      return {
+        id:v.id,
+        count:v.count
+      }
+    });
+    console.log(meal)
+    // try {
+    //   await addMeal(meal)
+    //   setModalVisible(false)
+    // }catch(err){
+    //   console.log(err)
+    // }
+  };
+
+  const disabledList = data.filter(el => el.count !== 0);
+
+  const detailPagePress = (id) =>{
+    setModalVisible(false);
+    navigation.navigate(mealDetailPageName,{dailyFoodId:id})
+  }
 
   return (
     <Modal visible={modalVisible} animationType={'slide'} transparent>
@@ -139,8 +177,8 @@ const BottomSheet = props => {
             <BottomSheetTitle>
               {title}
             </BottomSheetTitle>
-            <Pressable onPress={onPressEvent}>
-              <BottomSheetButton>
+            <Pressable onPress={addCart} disabled={disabledList.length === 0}>
+              <BottomSheetButton count={disabledList.length}>
                 {btn}
               </BottomSheetButton>
             </Pressable>
@@ -153,9 +191,8 @@ const BottomSheet = props => {
             ref={list}
             scrollEnabled={up > 500}
             renderItem={({ item }) => (
-             
-              <ScrollView>
-                <Wrap>
+              
+                <Wrap onPress={()=>{detailPagePress(item.id)}}>
                   <MealImageWrap>
                     <FastImage source={{uri:`${item.image}`,priority:FastImage.priority.high}}
                       style={{
@@ -170,29 +207,19 @@ const BottomSheet = props => {
                         <Name>{item.foodName}</Name>
                         <Price>{withCommas(item.price)}원</Price>
                         {item.spicy !== 'NULL' && <Label label={`${item.spicy}`}/>}
-                        <Text>dfdfd</Text>
-                        <Text>dfdfd</Text>
-                        <Text>dfdfd</Text>
-                        <Text>dfdfd</Text>
-                        <Text>dfdfd</Text>
+                        {/* {<SoldOutView>
+                          <WarningIcon/>
+                          <ShortageText>재고부족(재고 수량:1)</ShortageText>
+                         </SoldOutView>} */}
                     </ContentsText>
                     <CountWrap>
-                      <Count soldOut 
-                      count={count}
-                      increasePress={increasePress}
-                      decreasePress={decreasePress}
-                      //onPressEvent={onPressEvent}
+                      <Count
+                      quantity={item.count}
+                      increasePress={()=>increasePress(item.id)}
+                      decreasePress={()=>decreasePress(item.id)}
                       />
                     </CountWrap>
                 </Wrap>
-              </ScrollView>
-              // <ContentItemContainer onPress={()=>onSelect(item.id, item.text)}>
-              //   {selected === item.id ?<ContentItemBox><ContentItemText>
-              //     {item.text}
-              //   </ContentItemText><CheckedIcon /></ContentItemBox>:<ContentItemText>
-              //     {item.text}
-              //   </ContentItemText>}
-              // </ContentItemContainer>
             )}
             keyExtractor={item => item.id.toString()}
           />
@@ -270,7 +297,8 @@ const ContentItemBox = styled.View`
 const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``
 
 const BottomSheetButton = styled(Typography).attrs({text:'CaptionSB'})`
-color:${({theme}) => theme.colors.blue[500]};
+color:${({theme,count}) => count === 0 ? theme.colors.grey[6] :theme.colors.blue[500]};
+
 `;
 
 export default BottomSheet;
@@ -295,22 +323,36 @@ const MealImageWrap = styled.View`
 
 `;
 
-const Wrap = styled.View`
+const Wrap = styled.Pressable`
 flex-direction:row;
 padding:16px 24px;
 justify-content:space-between;
-width:100%;
+/* width:100%; */
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
+
 `;
 
 
 const ContentsText = styled.View`
-width:63%;
+width:60%;
 `;
 
 const CountWrap = styled.View`
 position: absolute;
 bottom:16px;
 right:24px;
+`;
+
+const SoldOutView = styled.View`
+flex-direction:row;
+justify-content:flex-end;
+align-items:center;
+margin-top:2px;
+padding-bottom:44px;
+`;
+
+const ShortageText = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme}) => theme.colors.red[500]};
+margin-left:4px;
 `;

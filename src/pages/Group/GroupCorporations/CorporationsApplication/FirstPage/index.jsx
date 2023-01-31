@@ -51,9 +51,9 @@ const Pages = () => {
     const {name,phone,email} = userInfo;
 
     const isValidation = 
-        (nameChk && nameChk !== '' ) &&
-        (phoneChk && phoneChk !== '') &&
-        (emailChk && emailChk !== '');
+        (nameChk || nameChk !== '' ) &&
+        (phoneChk || phoneChk !== '') &&
+        (emailChk || emailChk !== '');
 
     const saveAtom = async () =>{
         

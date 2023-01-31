@@ -1,12 +1,13 @@
 import {useAtom} from 'jotai';
 
 import * as Fetch from './Fetch';
-import { isFoodDetailAtom, isFoodDetailLoadingAtom } from './store';
+import { isFoodDetailAtom, isFoodDetailDiscountAtom, isFoodDetailLoadingAtom } from './store';
 
 const useFoodDetail = () => {
 
     const [isFoodDetail,setFoodDetail] = useAtom(isFoodDetailAtom);
     const [isFoodDetailLoading,setFoodDetailLoading] = useAtom(isFoodDetailLoadingAtom);
+    const [isfoodDetailDiscount,setFoodDetailDiscount] = useAtom(isFoodDetailDiscountAtom);
 
     const foodDetail = async (foodId) => {
         try {
@@ -19,9 +20,20 @@ const useFoodDetail = () => {
             setFoodDetailLoading(false);
         }
     }
+
+    const foodDetailDiscount = async (foodId) => {
+        try {
+            const res = await Fetch.FoodDetailDiscount(foodId);
+            setFoodDetailDiscount(res.data);
+        }catch(err){
+            throw err;
+        }
+    }
     return {
         foodDetail,
+        foodDetailDiscount,
         isFoodDetail,
+        isfoodDetailDiscount,
         isFoodDetailLoading
     }
 };

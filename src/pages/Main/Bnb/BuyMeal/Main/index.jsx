@@ -129,32 +129,30 @@ const Pages = () => {
             await openModal(diningType)
             await setSelectFood({
                 id:id,
-                serviceDate:day,
-                diningType:type
+                
             })
         }else {
-            await addToCart(id,day,type)
+            await addToCart(id)
         }
         
     }
 
-    const addToCart = async (id,day,type) =>{
+
+    const addToCart = async (id) =>{
         
             try {
-                await addMeal({
-                     "dailyFoodId":id,
-                     "count":1,
-                     "serviceDate":day,
-                     "diningType":type
-                 });
-                 await loadMeal();
-                 setShow(true)
-                 await balloonEvent();
-                 setTimeout(()=>{
-                    setShow(false)
-                 },3000)
+                    await addMeal({
+                        "dailyFoodId":id,
+                        "count":1,
+                    });
+                    await loadMeal();
+                    setShow(true)
+                    await balloonEvent();
+                    setTimeout(()=>{
+                        setShow(false)
+                    },3000)
                  } catch(err){
-                    Alert.alert(err.message)
+                    console.log(err)
                     
                  }
                closeModal();    
@@ -186,10 +184,6 @@ const Pages = () => {
                 return modalVisible3
             }
         }
-
-        const firstPage = isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : 2;
-        
-
         
         return (<View>
             
@@ -208,7 +202,7 @@ const Pages = () => {
             return <Contents key={m.id}
             spicy={m.spicy}
             disabled={m.status === 0 || m.status === 2}
-            onPress={(e)=>{navigation.navigate(MealDetailPageName,{foodId:m.foodId,type:m.diningType,date:m.serviceDate,dailyFoodId:m.id});e.stopPropagation()}}>
+            onPress={(e)=>{navigation.navigate(MealDetailPageName,{dailyFoodId:m.id});e.stopPropagation()}}>
                 <ContentsText>
                     <MakersName soldOut={m.status}>[{m.makersName}]</MakersName>
                     <MealName soldOut={m.status}  numberOfLines={1} ellipsizeMode="tail">{m.foodName}</MealName>
@@ -252,7 +246,7 @@ const Pages = () => {
                 description={'그래도 추가하시겠어요?'} 
                 buttonTitle1={'아니요'} buttonType1='grey7' 
                 buttonTitle2={'추가'} buttonType2='yellow' 
-                onPressEvent1={closeModal} onPressEvent2={()=>addToCart(selectFood.id,selectFood.serviceDate,selectFood.diningType)}/>
+                onPressEvent1={closeModal} onPressEvent2={()=>addToCart(selectFood.id)}/>
         </View>)
                         
 
@@ -307,7 +301,7 @@ const Pages = () => {
 
                     {isDailyFoodLoading ? <SkeletonUI/>: 
                      <Pager ref={diningRef} 
-                     initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : 2} 
+                     initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
                      onPageSelected={(e) => {onPageScroll(e)}} 
                     
                      >

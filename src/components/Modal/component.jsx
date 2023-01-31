@@ -3,12 +3,14 @@ import { Modal, Text, Pressable, View, StyleSheet, Alert, ScrollView } from "rea
 import styled from "styled-components";
 
 import QuestionIcon from "../../assets/icons/MealCart/question.svg";
+import useFoodDetail from "../../biz/useFoodDetail/hook";
 import {  Price } from "../../pages/Main/Bnb/MealDetail/Main";
 import withCommas from "../../utils/withCommas";
 import Button from "../Button";
 import Typography from "../Typography";
 
 const Component = ({
+    id,
     price,
     membershipDiscountedPrice,
     makersDiscountedPrice,
@@ -20,12 +22,17 @@ const Component = ({
     periodDiscountedRate
 }) => {
     const [modalVisible, setModalVisible] = useState(false);
+    const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail();
     const firstDiscount = price - membershipDiscountedPrice;
     const secondDiscount = firstDiscount - makersDiscountedPrice;
     const lastDiscount = secondDiscount - periodDiscountedPrice
     const discount = membershipDiscountedRate + makersDiscountedRate + periodDiscountedRate;
     console.log((price - (price*0.2)) - ((price - (price*0.2)) * (periodDiscountedRate*0.01)),'11')
-    const [test,setTest] = useState();
+    
+    const getData = async () => {
+        await foodDetailDiscount(id);
+    };
+
     return (
         <Wrap>
         <Modal
@@ -57,9 +64,11 @@ const Component = ({
                         {membershipDiscountedRate === 0 && <ContentWrap>
                             <Text>[멤버십 가입시 판매가]</Text>
                             <DscText> &#183; 멤버십 할인 적용시</DscText>
-                            <DscText>{withCommas(price)}원 x (100%-20%) = {withCommas(price - (price*0.2))}원</DscText>
+                            <DscText>{withCommas(price)}원 x (100%-{isfoodDetailDiscount.membershipDiscountRate}%) = {withCommas(isfoodDetailDiscount.membershipDiscountedPrice)}원</DscText>
+                            {makersDiscountedRate !== 0 && <DscText> &#183; 판매자 할인 추가 적용시</DscText>}
+                            {makersDiscountedRate !== 0 && <DscText>{withCommas(isfoodDetailDiscount.membershipDiscountedPrice)}원 x (100%-{isfoodDetailDiscount.membershipDiscountRate}%) = {withCommas(isfoodDetailDiscount.makersDiscountedPrice)}원</DscText>}
                             {periodDiscountedRate !== 0 && <DscText> &#183; 기간 할인 추가 적용시</DscText>}
-                            {periodDiscountedRate !== 0 && <DscText>{withCommas(price - (price*0.2))}원 x (100%-{periodDiscountedRate}%) = {withCommas((price - (price*0.2)) - ((price - (price*0.2)) * (periodDiscountedRate*0.01)))}원</DscText>}
+                            {periodDiscountedRate !== 0 && <DscText>{withCommas(isfoodDetailDiscount.makersDiscountedPrice === 0 ? isfoodDetailDiscount.membershipDiscountedPrice : isfoodDetailDiscount.makersDiscountedPrice)}원 x (100%-{isfoodDetailDiscount.periodDiscountRate}%) = {withCommas(isfoodDetailDiscount.periodDiscountedPrice)}원</DscText>}
                         </ContentWrap>}
                         {totalDiscountRate !== 0 && <ContentWrap>
                             <Text>[최종 판매가]</Text>
@@ -84,7 +93,7 @@ const Component = ({
             </View>
         </Modal>
         
-            <QuestionIcon onPress={() => setModalVisible(true)}/>
+            <QuestionIcon onPress={() => {getData();setModalVisible(true)}}/>
        
         </Wrap>
     )
