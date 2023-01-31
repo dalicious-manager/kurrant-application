@@ -16,11 +16,12 @@ const Page = () => {
       <LogoWrap>
         <CompanyLogo />
       </LogoWrap>
-
       <MetadataWrap>
         <CompanyName>달리셔스주식회사</CompanyName>
         <Metadata>서울특별시 강남구 테헤란로 51길 21, 3층 상경빌딩</Metadata>
         <Metadata>대표 : 이강용 | 사업자등록번호 : 376-87-00441</Metadata>
+        <Metadata>통신판매신고번호 : 제 2019-서울강남-02792 호</Metadata>
+        <Metadata>대표전화번호 : 1577-9612 (평일 9:00 ~ 18:00)</Metadata>
         <Metadata>2016-2023 @ Dalicious company</Metadata>
       </MetadataWrap>
     </Container>

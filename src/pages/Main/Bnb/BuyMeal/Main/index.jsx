@@ -44,7 +44,7 @@ const Pages = () => {
     const [first,setFirst] = useState();
     const [show,setShow] = useState(false);
     const {isDiningTypes, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
-    const {addMeal ,isLoadMeal, loadMeal , setLoadMeal,isLoadMealLoading} = useShoppingBasket();
+    const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
     const userInfo = useAtomValue(isUserInfoAtom);
     
@@ -119,7 +119,26 @@ const Pages = () => {
             loadDailyFood();
         },[])
     )
-
+        useEffect(()=>{
+            async function loadDailyFood(){
+                try {
+                    await dailyFood(spotId,date);                    
+                } catch (error) {
+                    if(error.toString().replace("Error:",'').trim() === '403'){
+                      navigation.reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: LoginPageName,
+                          },
+                        ],
+                      })
+                    }
+                    
+                  }
+            }
+            loadDailyFood();
+        },[])
 
     const addCartPress = async (id,day,type) =>{
         
@@ -300,7 +319,7 @@ const Pages = () => {
                         </ProgressInner>
                     </ProgressWrap>
 
-                    {isDailyFoodLoading || isLoadMealLoading ? <SkeletonUI/>: 
+                    {isDailyFoodLoading  ? <SkeletonUI/>: 
                      <Pager ref={diningRef} 
                      initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
                      onPageSelected={(e) => {onPageScroll(e)}} 

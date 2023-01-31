@@ -17,13 +17,13 @@ const useShoppingBasket = () => {
     const loadMeal = async () => {
         try {
             setLoadMealLoading(true);
+            
+            const res = await Fetch.loadMealCart();
             setClientStatus([])
             setMealCartSpot([])
-            setLoadMeal([]);
+            setLoadMeal(res.data ? res.data.spotCarts : []);
             setUserPoint([])
             setQuantity(0);
-            const res = await Fetch.loadMealCart();
-            
             const clientType = res.data.spotCarts.map(el => {
                 
                 return {
@@ -46,7 +46,6 @@ const useShoppingBasket = () => {
            
             setClientStatus(clientType)
             setMealCartSpot(spot)
-            setLoadMeal(res.data.spotCarts);
             setUserPoint(res.data.userPoint)
             setQuantity(badgeQty);
         } catch (err) {

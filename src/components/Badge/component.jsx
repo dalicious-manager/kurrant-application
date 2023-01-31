@@ -11,7 +11,7 @@ const Component = () =>{
     
     return (
         <>
-         {!isLoadMealLoading &&  isquantity !== 0 &&<Wrap>
+         { isquantity !== 0 &&<Wrap>
             <Count>{isquantity}</Count>
         </Wrap>}
         </>
