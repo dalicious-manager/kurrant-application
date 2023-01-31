@@ -55,20 +55,20 @@ const Pages = () => {
     const [date,setDate] = useState();
     const [type,setType] = useState();
     const toast = Toast();
-    useFocusEffect(
-        useCallback(() => {
-            // Do something when the screen is focused
-            console.log('들어옴')
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         // Do something when the screen is focused
+    //         console.log('들어옴')
         
 
-            return  () => {
-                console.log("나감")
-                updateMeal({"updateCartList":modifyQty});
-            };
+    //         return  () => {
+    //             console.log("나감")
+    //             updateMeal({"updateCartList":modifyQty});
+    //         };
     
     
-    }, [updateMeal])
-    );
+    // }, [updateMeal])
+    // );
 
 
     const PressSpotButton = () => {
@@ -165,7 +165,7 @@ const Pages = () => {
 
     // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
     
-    console.log(isLoadMeal)
+    
     const arrs = isLoadMeal?.filter(p => p.spotId === selected )?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods.filter(c => c.status !== 2))).flat()
     const arr = arrs.reduce((acc, val) => [ ...acc, ...val ], []);
 
@@ -233,7 +233,7 @@ const Pages = () => {
     const deliveryFee = lastArr?.map(el => el.deliveryFee).reduce((acc,cur) => {
         return acc + cur
     },0);
-    console.log(selected,'22')
+    
     // 지원금 계산
     const discountPrice = arr?.map(p => (p.discountedPrice * p.count)).reduce((acc,cur) => {
         return acc + cur
@@ -381,7 +381,7 @@ const Pages = () => {
               onPress:async () => {
                 try {
 
-                    await deleteButton(id)
+                   //await deleteButton(id)
                     setModalVisible3(true)
                 } catch(err) {
                     console.log(err)
@@ -442,7 +442,7 @@ const Pages = () => {
         }
     };
 
-    console.log(spotName[0]?.text)
+    
 
     return (
         <SafeView>
