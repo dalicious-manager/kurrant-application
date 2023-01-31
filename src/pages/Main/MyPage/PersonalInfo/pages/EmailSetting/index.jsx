@@ -57,8 +57,8 @@ const Pages = ()=>{
     const callMailAuth = async()=>{
     try {
         await auth.requestEmailAuth({ receivers: [email] }, 5);
-        if(progress < 2) setProgress(progressed => progressed+1);
-        navigation.goBack(null);
+        if(progress < 2) return setProgress(progressed => progressed+1);
+        navigation.goBack();
     }catch(err){
         Alert.alert(
         "메일 인증 요청 실패",
@@ -85,7 +85,7 @@ const Pages = ()=>{
             }
             console.log(datas);
             const result = await settingEmail(datas);
-            console.log(result);
+            navigation.goBack();
         }catch(err){
             console.log(err)
         }
@@ -266,6 +266,7 @@ const Pages = ()=>{
                                     if(progress<=2){
                                         await auth.confirmEmailAuth(emailAuth, 5);
                                         return setProgress(progress+1);
+                                        
                                     }                   
                                     
                                 } catch (err) {

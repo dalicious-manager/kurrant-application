@@ -39,6 +39,7 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/De
 import Toast from '../../../../../components/Toast';
 import {PAGE_NAME as ApartRegisterSpotPageName } from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
+import useUserMe from '../../../../../biz/useUserMe';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
@@ -48,6 +49,7 @@ const Pages = () => {
     const [isVisible, setIsVisible] = useState(true);
     const weekly = useAtomValue(weekAtom);
     const {isUserInfo, userInfo , isUserInfoLoading,isUserSpotStatus} = useUserInfo();
+   
     const {userGroupSpotCheck,isUserGroupSpotCheck,userSpotRegister,groupSpotDetail} = useGroupSpots();
     const {isOrderMeal,orderMeal} = useOrderMeal();
     const mealInfo = useAtomValue(isOrderMealAtom);

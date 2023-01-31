@@ -1,8 +1,8 @@
 
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {  ScrollView } from "react-native";
+import {  Alert, ScrollView } from "react-native";
 import styled from "styled-components/native";
 
 import useMembership from "../../../biz/useMembership";
@@ -25,7 +25,7 @@ const Pages= ()=>{
     const membershipProduct = useMembership();
     const {isUserInfo} = useUserInfo();
     const [membershipData, setMembershipData] = useState();
-    const {alarmLookup,alarmSetting,readableAtom:{alarm,isAlarmSettingLoading}} = useUserMe();
+    const {alarmLookup,getCardList,alarmSetting,readableAtom:{alarm,isAlarmSettingLoading}} = useUserMe();
 
     const signUpCheck1 = signUpCheck.watch('signUpCheck1')
     const signUpCheck2 = signUpCheck.watch('signUpCheck2')
@@ -58,6 +58,8 @@ const Pages= ()=>{
                     period:period ==="월간구독" ? 'month':'yaers',
                     membershipData:period ==="월간구독" ? membershipData[1]:membershipData[0],
                 });
+        }else{
+            Alert.alert("필수동의사항에 동의해주세요.");
         }   
     };
     const handleSubmitError = () => {
@@ -72,11 +74,22 @@ const Pages= ()=>{
         signUpCheck1 &&
         signUpCheck2 &&
         signUpCheck3 ;
-    useEffect(()=>{
-        getMembershipData()
-        console.log(isUserInfo)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+
+    useFocusEffect(  
+        useCallback(() => {
+            getMembershipData()
+            getCardList();
+            navigation.setOptions({
+                tabBarLabelStyle:{fontSize:15,lineHeight:21,fontFamily:'Pretendard-SemiBold',}
+            })
+        return () => {
+            navigation.setOptions({
+                tabBarLabelStyle:{fontSize:15,lineHeight:21,fontFamily: 'Pretendard-Regular',}
+            })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
+    );
     return(
         <Wrapper>
             <ScrollView>

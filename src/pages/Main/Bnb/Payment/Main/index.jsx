@@ -20,6 +20,9 @@ import withCommas from "../../../../../utils/withCommas";
 import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, XIcon } from "../../MealCart/Main";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import useUserMe from "../../../../../biz/useUserMe";
+
+import { PAGE_NAME as DefaultPaymentManagePageName } from "../DefaultPaymentManage";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -39,6 +42,7 @@ const Pages = ({route}) => {
     const [pointShow,setPointShow] = useState(false)
     const {isLoadMeal,orderMeal} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
+    const {readableAtom:{selectDefaultCard}}= useUserMe();
     const inputRef = useRef(null);
     const {totalCount,
         totalMealPrice,
@@ -312,20 +316,37 @@ const Pages = ({route}) => {
                     <Container>
                         <Title>결제 수단</Title>
                         <DeliveryTitle>카드 결제시 등록한 카드로 결제가 진행됩니다.</DeliveryTitle>
-                    <Card>
-                        <NoPayInfoWrap>
-                            <CardText>결제 카드 등록</CardText>
-                            <ArrowRight/>
-                        </NoPayInfoWrap>
-                        {/* <CardText>현대카드(1234)</CardText> */}
-                        {/* <PayInfoWrap>
-                            <PayInfo>
-                                <PayError/>
-                                <PayText>결제불가</PayText>
-                            </PayInfo>
-                            <ArrowRight/>
-                        </PayInfoWrap> */}
-                    </Card>
+                        {selectDefaultCard[0]?.id  ? 
+                            selectDefaultCard.map((card)=>{
+                            return (
+                                <Card 
+                                key={card.id}
+                                onPress={() =>
+                                    navigation.navigate(DefaultPaymentManagePageName)
+                                  }
+                                  >
+                                {/* <CardText>결제 카드 등록</CardText> */}
+                                <CardText>{card.cardCompany}카드({card.cardNumber?.toString().slice(-4)})</CardText>
+                                {/* <PayInfoWrap>
+                                    <PayInfo>
+                                    <PayError />
+                                    <PayText>결제불가</PayText>
+                                    </PayInfo>
+                                    <ArrowRight />
+                                </PayInfoWrap> */}
+                                <ArrowRight />
+                                </Card>
+                            )
+                            }) : 
+                            <Card
+                                onPress={() =>
+                                    navigation.navigate(DefaultPaymentManagePageName)
+                                }
+                            >
+                                <CardText>결제 카드 등록</CardText>              
+                                <ArrowRight />
+                            </Card>
+                        }
                     
                     </Container>
                     
@@ -410,7 +431,7 @@ const PriceTitle = styled(PaymentView)`
 margin-bottom:24px;
 `;
 
-const Card = styled.View`
+const Card = styled.Pressable`
 width:100%;
 border:1px solid ${props => props.theme.colors.grey[7]};
 border-radius:14px;

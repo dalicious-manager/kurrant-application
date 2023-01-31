@@ -19,6 +19,8 @@ import {
     alarmAtom,
     cardListAtom,
     cardSimpleListAtom,
+    selectDefaultCardAtom,
+    selectMembershipCardAtom,
     isCardDeleteLoadingAtom
 } from './store';
 
@@ -35,6 +37,8 @@ const useUserMe = () => {
     const [isAlarmLookUpLoading,setAlarmLookUpLoading] = useAtom(isAlarmLookUpLoadingAtom);
     const [alarm,setAlarm] = useAtom(alarmAtom);
     const [cardList,setCardList] = useAtom(cardListAtom);
+    const [selectMembershipCard,setSelectMembershipCard] = useAtom(selectMembershipCardAtom);
+    const [selectDefaultCard,setSelectDefaultCard] = useAtom(selectDefaultCardAtom);
     const [cardSimpleList,setCardSimpleList] = useAtom(cardSimpleListAtom);
     const [isChangePasswordLoading,setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
     const [isSettingEmailLoading,setSettingEmailLoading] = useAtom(isSettingEmailLoadingAtom);
@@ -236,6 +240,8 @@ const useUserMe = () => {
                     text:`${v.cardCompany}카드(${v.cardNumber?.toString().slice(-4)})`
                 }
             }));
+            setSelectMembershipCard(res.data?.filter((v)=> v.defaultType === 2 || v.defaultType === 3))
+            setSelectDefaultCard(res.data?.filter((v)=> v.defaultType === 1 || v.defaultType === 3))
             return res;
         } catch (err) {
             throw err;
@@ -252,6 +258,39 @@ const useUserMe = () => {
               },
               option
             );
+            if(body.defaultType === 1){
+                setCardList(cardList.map((v)=>{
+                    if(v.id === body.cardId){
+                        let defaultType = 1;
+                        if(v.defaultType === 2)defaultType = 3;
+                        if(v.defaultType !== 3) return {...v ,defaultType:defaultType}
+                        return v                
+                    }
+                    if(v.defaultType === 3){
+                        return {...v ,defaultType:2}
+                    }
+                    if(v.defaultType === 1){
+                        return {...v ,defaultType:0}
+                    }
+                    return v
+                }))
+            }else if(body.defaultType === 2){
+                setCardList(cardList.map((v)=>{
+                    if(v.id === body.cardId){
+                        let defaultType = 2;
+                        if(v.defaultType === 1)defaultType = 3;
+                        if(v.defaultType !== 3) return {...v ,defaultType:defaultType}
+                        return v       
+                    }
+                    if(v.defaultType === 3){
+                        return {...v ,defaultType:1}
+                    }
+                    if(v.defaultType === 2){
+                        return {...v ,defaultType:0}
+                    }
+                    return v
+                }))
+            }
             return res;
         } catch (err) {
             throw err;
@@ -291,6 +330,8 @@ const useUserMe = () => {
         cardSetting,
         setCardList,
         cardDelete,
+        setSelectMembershipCard,
+        setSelectDefaultCard,
         readableAtom: {
             myInfo,
             myInfoPerson,
@@ -308,6 +349,8 @@ const useUserMe = () => {
             isCardSettingLoading,
             isCardDeleteLoading,
             cardList,
+            selectMembershipCard,
+            selectDefaultCard,
             cardSimpleList,
             alarm
         } 

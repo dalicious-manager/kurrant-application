@@ -44,7 +44,9 @@ const Pages =  ()=>{
                     noticeData:v
                 })}/>
             })}
-           
+           {!notice?.length > 0 && <NonNotice>
+                <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>공지사항 내역이 없어요.</Typography>
+            </NonNotice>}
         </Wrapper>
     )
 }
@@ -52,30 +54,8 @@ const Pages =  ()=>{
 
 export default Pages;
 
-const TitleBox = styled.View`
-    margin: 8px 0px;
-    padding: 0px 24px;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-`
-const TitleBtnBox = styled.View`
-    min-width: 106px;
-    max-width: 110px;
-    margin-left: 82px;
-    align-items: center;
-    text-align: center;
+const NonNotice = styled.View`
+    flex: 1;
     justify-content: center;
-`
-const DescriptionBox = styled.View`
-    margin: 24px;
-    margin-top: 33px;
-`
-const Line = styled.View`
-    width: 100%;
-    height: 12px;
-    background-color: ${({theme})=> theme.colors.grey[8]};
-`
-const FAQBox = styled.View`
-    padding: 16px 24px;
+    align-items: center;
 `
