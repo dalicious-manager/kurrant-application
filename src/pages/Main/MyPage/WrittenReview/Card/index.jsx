@@ -4,6 +4,7 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
 import ArrowRight from '../../../../../assets/icons/Arrow/arrowRight.svg';
+import StarRating from '../../../../../components/StarRating/StarRating';
 
 export const pathFind = 'yo';
 
@@ -32,7 +33,9 @@ const Component = () => {
         </EditWrap>
       </TopWrap>
       <RowWrap>
-        <StarsWrap>{}</StarsWrap>
+        <StarsWrap>
+          <StarRating rating={4.5} width="120px" margin="1px" />
+        </StarsWrap>
 
         <PostDateText>2022. 02. 11 작성</PostDateText>
       </RowWrap>
