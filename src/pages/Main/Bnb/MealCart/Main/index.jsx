@@ -55,20 +55,20 @@ const Pages = () => {
     const [date,setDate] = useState();
     const [type,setType] = useState();
     const toast = Toast();
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         // Do something when the screen is focused
-    //         console.log('들어옴')
+    useFocusEffect(
+        useCallback(() => {
+            // Do something when the screen is focused
+            console.log('들어옴')
         
 
-    //         return  () => {
-    //             console.log("나감")
-    //             updateMeal({"updateCartList":modifyQty});
-    //         };
+            return  () => {
+                console.log("나감")
+                updateMeal({"updateCartList":modifyQty});
+            };
     
     
-    // }, [updateMeal])
-    // );
+    }, [updateMeal])
+    );
 
 
     const PressSpotButton = () => {
