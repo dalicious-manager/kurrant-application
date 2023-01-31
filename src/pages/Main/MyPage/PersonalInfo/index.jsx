@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import { useAtom, useAtomValue } from 'jotai';
 import React, { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView } from "react-native";
@@ -66,7 +66,7 @@ const Pages = ({route}) => {
   },[toastEvent])
   const getData = useCallback(async()=>{
     try{
-      await userMePersonal();   
+      await userMePersonal();
     } catch (error) {
       if(error.toString().replace("Error:",'').trim() === '403'){
         navigation.reset({
@@ -126,12 +126,13 @@ const Pages = ({route}) => {
 
   const spotId = isUserInfo.spotId;
   const groupId = isUserInfo.groupId;
-  
+  useFocusEffect(
+    useCallback(()=>{
+      applicationList()
+      getData();
+    },[])
+  )
   useEffect(()=>{
-    
-
-    applicationList()
-    getData();
     const willFocusSubscription = navigation.addListener('focus', () => {
       getDataStorage();
     });
@@ -259,7 +260,7 @@ const Pages = ({route}) => {
           buttonType1='grey7' 
           buttonType2='yellow'  
           onPressEvent1={()=> setModalVisible(false)}
-          onPressEvent2={()=>console.log("설정하러 가기")}
+          onPressEvent2={()=>navigation.navigate(EmailSettingPageName)}
         />
       </Wrapper>
       {isLoading && <LoadingBox>

@@ -64,17 +64,11 @@ export default () => {
             if(Platform.OS === "android"){
               const appleData = await appleAuthAndroid.signIn();
               console.log(appleData);
-              await snsConnect({
+              const res =await snsConnect({
                 ...appleData,
+                autoLogin:true
               },'APPLE');
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              })
+              return res;
             }else{
                 const appleAuthRequestResponse = await appleAuth.performRequest({
                   requestedOperation: appleAuth.Operation.LOGIN,
@@ -91,17 +85,11 @@ export default () => {
                 // // Create a Firebase credential from the response
                 const appleData = appleAuthRequestResponse;
     
-                await snsConnect({
-                    ...appleData,
+                const res =await snsConnect({
+                  ...appleData,
+                  autoLogin:true
                 },'APPLE');
-                avigation.reset({
-                  index: 0,
-                  routes: [
-                    {
-                      name: SCREEN_NAME,
-                    },
-                  ],
-                })
+                return res;
               }
               } catch (error) {
                 console.log("err",error.toString());

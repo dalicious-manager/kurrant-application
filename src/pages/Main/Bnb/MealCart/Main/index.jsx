@@ -32,6 +32,8 @@ import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import BottomSheet from "../../../../../components/BottomSheet";
 import BottomMenu from "../../../../../components/BottomSheetMenu";
 const windowWidth = Dimensions.get('window').width;
+import useUserMe from "../../../../../biz/useUserMe";
+const windowHeight = Dimensions.get('window').height;
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
@@ -47,6 +49,7 @@ const Pages = () => {
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     const [ modalVisible3, setModalVisible3 ] = useState(false);
     const {isUserInfo} = useUserInfo();
+    const {getCardList}= useUserMe();
     const [selected,setSelected] = useState(isUserInfo.spotId);
     const [name,setName] = useState();
     const [date,setDate] = useState();
@@ -73,6 +76,11 @@ const Pages = () => {
       }
 
     const keyboardStatus = useKeyboardEvent();
+    useFocusEffect(
+        useCallback(()=>{
+            getCardList();
+        },[])
+    )
     useEffect(()=>{
         async function loadCart(){
             try {

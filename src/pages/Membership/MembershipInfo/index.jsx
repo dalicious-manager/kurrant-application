@@ -11,9 +11,6 @@ import { PAGE_NAME as MembershipJoinPageName} from "../MembershipJoin";
 import { PAGE_NAME as MembershipTerminatePageName} from "../MembershipTerminate";
 import { PAGE_NAME as MembershipUsagedetailsPageName} from "./MembershipUsageDetails";
 import { PAGE_NAME as MemebershipPaymentManagePageName} from "../MembershipJoin/MemebershipPaymentManage";
-// import  {
-//   PAGE_NAME as PaymentManagePageName,
-// } from '~pages/Main/MyPage/PersonalInfo/pages/PaymentManage';
 export const PAGE_NAME = "P__MEMBERSHIP__INFO"
 const Pages= ()=>{
   const themeApp = useTheme();
@@ -84,11 +81,11 @@ const Pages= ()=>{
                   navigation.navigate(MembershipUsagedetailsPageName);
                 }}/>
             </ButtonBox>
-            {/* <ButtonBox>
+            <ButtonBox>
               <Button type='yellow' label="멤버십 결제수단"  onPressEvent={()=>{
-                navigation.navigate(PaymentManagePageName)
+                navigation.navigate(MemebershipPaymentManagePageName)
               }}/>
-            </ButtonBox> */}
+            </ButtonBox>
             <Terminate onPress={()=>{
                 navigation.navigate(MembershipTerminatePageName);
               }}>

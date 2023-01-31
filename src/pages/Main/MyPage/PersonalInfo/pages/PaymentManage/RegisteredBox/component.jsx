@@ -24,7 +24,7 @@ const Component = ({
                         <Label label="멤버십 결제수단" type="blue"/>
                     </LabelBox>}
                     {isDefault && <LabelBox>
-                        <Label label="기본 결제수단" type="blue"/>
+                        <Label label="기본 구매 결제수단" type="blue"/>
                     </LabelBox>}
                 </LabelContainer>
             </TextBox>

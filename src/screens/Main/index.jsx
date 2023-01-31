@@ -146,6 +146,7 @@ import MealCart, {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/Meal
 import MealDetail, {PAGE_NAME as MealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main'; 
 import MealDetailInformation, {PAGE_NAME as MealInformationPageName} from '../../pages/Main/Bnb/MealDetail/Page';
 import Payment, {PAGE_NAME as PaymentPageName} from '../../pages/Main/Bnb/Payment/Main';
+import DefaultPaymentManage, {PAGE_NAME as DefaultPaymentManagePageName} from '../../pages/Main/Bnb/Payment/DefaultPaymentManage';
 import {PurchaseDetailPage, PurchaseDetailPageName} from '../../pages/Main/MyPage/PurchaseHistory/Detail';
 import { SCREEN_NAME } from "../Main/Bnb";
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
@@ -560,6 +561,21 @@ const Screen = () => {
           component={Payment}
           options={{headerShown: true,
             title:'주문',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => <BackButton margin={[10,0]}/>,
+          }}
+        />
+        <MainRoot.Screen
+          name={DefaultPaymentManagePageName}
+          component={DefaultPaymentManage}
+          options={{headerShown: true,
+            title:'기본 결제수단',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
               fontSize:14,
