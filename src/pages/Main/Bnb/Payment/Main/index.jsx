@@ -59,7 +59,7 @@ const Pages = ({route}) => {
         spotName,
         clientType,
         } = route.params
-    console.log(totalPrice,supportPrice,deliveryFee)
+    
     const PressButton = () => {
         setModalVisible(true);
     }
@@ -132,7 +132,9 @@ const Pages = ({route}) => {
       };
 
     
-    const arr = isLoadMeal.map(el => {
+    const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
+    
+    const arr = spotFilter.map(el => {
         return {cartDailyFoodDtoList:[...el.cartDailyFoodDtoList.map(v => {
             return {
                 ...v, cartDailyFoods:[...v.cartDailyFoods.filter(food => {
@@ -146,19 +148,29 @@ const Pages = ({route}) => {
     })
     console.log(arr);
     const arrs = arr.reduce((acc,cur) => {
-        console.log(acc,"test");
+
         return acc.concat(cur)
     })
    
     const lastArr = arrs.cartDailyFoodDtoList.filter(el => el.cartDailyFoods.length !== 0);
-    console.log(lastArr)
     
     const orderPress = async (spotId) => {
-        // try {
-        //     await orderMeal(spotId,{
+        const data = {
+            'spotId':spotId,
+            "cardId": 11,
+            'cartDailyFoodDtoList':lastArr,
+            'totalPrice':totalPrice,
+            'supportPrice':supportPrice,
+            'deliveryFee':deliveryFee,
+            'userPoint': isUserInfo.point
 
-        //     })
-        // }
+        }
+    
+        try {
+            await orderMeal(spotId,data)
+        }catch (err){
+            console.log(err)
+        }
     }
 
     return (

@@ -97,7 +97,7 @@ export async function loadSoldOutMealCart(spotId,date,type) {
 }
 
 export async function ordrMealCart(spotId,body){
-    const fetchRes = await fetchJson(`users/me/orders/${spotId}`,'POST',{
+    const fetchRes = await fetchJson(`/users/me/orders/${spotId}`,'POST',{
         body:JSON.stringify(body)
     });
     return fetchRes;

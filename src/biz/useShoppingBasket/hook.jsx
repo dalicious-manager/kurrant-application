@@ -122,6 +122,7 @@ const useShoppingBasket = () => {
     }
 
     const orderMeal = async (spotId,body) => {
+
         try {
             const res = await Fetch.ordrMealCart(spotId,{
                 ...body
@@ -137,6 +138,7 @@ const useShoppingBasket = () => {
         addMeal,
         allDeleteMeal,
         deleteMeal,
+        orderMeal,
         setQuantity,
         updateMeal,
         setLoadMeal,
