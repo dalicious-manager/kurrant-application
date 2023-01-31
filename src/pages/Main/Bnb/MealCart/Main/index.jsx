@@ -363,7 +363,7 @@ const Pages = () => {
           )
     }
 
-    const changeMealPress = (count) =>{
+    const changeMealPress = (count,id) =>{
         // console.log(date,id,type)
         Alert.alert(
           "메뉴 변경",
@@ -378,8 +378,14 @@ const Pages = () => {
             },
             {
               text:'메뉴 취소',
-              onPress:() => {
-                setModalVisible3(true)
+              onPress:async () => {
+                try {
+
+                    await deleteButton(id)
+                    setModalVisible3(true)
+                } catch(err) {
+                    console.log(err)
+                }
               },
               style:'destructive'
             }
@@ -510,7 +516,7 @@ const Pages = () => {
                                                     </MealNameView>
                                                     {food.status === 0 && <MenuChangeView 
                                                     onPress={()=>{
-                                                        changeMealPress(food.count);
+                                                        changeMealPress(food.count,food.id);
                                                         changMealList(el.spotId,v.serviceDate,diningType);
                                                         setDate(v.serviceDate);
                                                         setType(v.diningType)}}>
