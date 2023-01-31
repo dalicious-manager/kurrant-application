@@ -50,6 +50,7 @@ const Pages = ({route}) => {
   const { userMePersonal, readableAtom:{myInfoPerson,isMyInfoPersonalLoading, isSNSConnectLoading,isSNSDisconnectLoading}} = useUserMe();
   const {isApplicationList,applicationList} = useGroupSpots();
   const isUserInfo = useAtomValue(isUserInfoAtom);
+  const {getCardList}= useUserMe();
   const [isConnected , ] = useAtom(isSNSConnectAtom);
   const [message , setMessage] = useState("계정이 연결됐어요");
   const {snsConnectID,snsDisconnectID} = snsConnected();
@@ -133,6 +134,7 @@ const Pages = ({route}) => {
     },[])
   )
   useEffect(()=>{
+    getCardList();
     const willFocusSubscription = navigation.addListener('focus', () => {
       getDataStorage();
     });

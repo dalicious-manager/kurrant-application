@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+import { ScrollView } from "react-native";
 import styled, { useTheme } from "styled-components/native";
 import useBoard from "../../biz/useBoard";
 import { NotificationIcon } from "../../components/Icon";
@@ -50,26 +51,7 @@ const alramData =[
 const Pages= ()=>{
     const themeApp = useTheme();
     const {getAlarm,readableAtom:{alarm}} = useBoard();
-    const typeName = (type)=>{
-        switch (type.toLowerCase()) {
-            case "promotion":
-              return "프로모션"
-            case "order":
-              return "주문상태"
-            case "notice":
-              return "공지사항"
-            case "event":
-              return "이벤트"
-            case "coupon":
-              return "쿠폰"
-            case "buymeal":
-              return "정기식사"
-            case "spot":
-              return "스팟공지"
-            default:
-              break;
-          }
-    }
+  
     useEffect(()=>{
       const getUseAlarm=async()=>{
         await getAlarm();
@@ -79,7 +61,11 @@ const Pages= ()=>{
     console.log(alarm);
     return(
         <Wrapper>
-            {alramData.map((v)=>{                
+          {!alarm?.length > 0 ? <NonNotice>
+                <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>알림 내역이 없어요.</Typography>
+            </NonNotice>:
+          <ScrollView>
+            {alarm?.map((v)=>{                
               return(
                 <NotificationBox key={v.id}>
                 <TitleBox>
@@ -89,7 +75,7 @@ const Pages= ()=>{
                         </IconBox>
                         <Typography text={"Body05SB"} textColor={themeApp.colors.grey[2]}>{v.title}</Typography>
                     </TitleBoxFront>
-                    <Typography text={"CaptionR"} textColor={themeApp.colors.grey[4]}>{typeName(v.type)}</Typography>
+                    <Typography text={"CaptionR"} textColor={themeApp.colors.grey[4]}>{v.type}</Typography>
                 </TitleBox>
                 <ContentBox>
                     <Typography text={"Body06R"} textColor={themeApp.colors.grey[4]}>{v.content}</Typography>
@@ -98,7 +84,9 @@ const Pages= ()=>{
             </NotificationBox>        
               )  
             })}
-               
+            </ScrollView>}
+            
+
         </Wrapper>
     )
 }
@@ -124,4 +112,9 @@ const TitleBoxFront = styled.View`
 `
 const IconBox = styled.View`
     margin-right: 8px;
+`
+const NonNotice = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
 `

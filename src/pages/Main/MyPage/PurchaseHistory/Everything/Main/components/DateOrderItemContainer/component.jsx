@@ -10,22 +10,20 @@ import { css, useTheme } from "styled-components/native";
 import { formattedDateAndDay, formattedDateType, formattedDateWeekBtn } from "../../../../../../../../utils/dateFormatter";
 import withCommas from "../../../../../../../../utils/withCommas";
 import { formattedMealFoodStatus } from "../../../../../../../../utils/statusFormatter";
-import { useNavigation } from "@react-navigation/native";
 import TextButton from "../../../../../../../../components/TextButton";
-
+import { useNavigation } from "@react-navigation/native";
 import { PurchaseDetailPageName } from "../../../../Detail";
-
 const {width} =Dimensions.get('screen');
 const Component = ({
   purchase,
   date,
-  index,
   itemIndex
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+  console.log(purchase,"test1234");
     return (
-        <DateOrderItemListContainer isFirst={index ===0 && itemIndex === 0}>
+        <DateOrderItemListContainer isFirst={itemIndex === 0}>
         <DateDetailBox>
           <Typography text={"CaptionR"} textColor={themeApp.colors.grey[4]}>{date} 결제</Typography>
           <DetailWrap>
@@ -37,9 +35,9 @@ const Component = ({
         <DateOrderItemListBox>
           <DateBar />
           <DateOrderItemList>
-            {purchase.orderItem.map((order,i)=>{
+            {purchase?.orderItems.map((order,i)=>{
               const statusColor = ()=>{
-                switch (order.foodStatus) {
+                switch (order.orderStatus) {
                   case 7:
                     return themeApp.colors.red[500]
                   case 11:
@@ -54,7 +52,7 @@ const Component = ({
                 <DateOrderItemBox key={order.id} isFirst={i ===0}>
                   <StatusBox>
                     <StatusText>
-                      <Typography text="Title04SB" textColor={statusColor()}>{formattedMealFoodStatus(order.foodStatus)}</Typography>
+                      <Typography text="Title04SB" textColor={statusColor()}>{formattedMealFoodStatus(order.orderStatus)}</Typography>
                     </StatusText>
                     {order?.cancelDate && <Typography text="Samlllabel" textColor={themeApp.colors.grey[5]}>{formattedDateWeekBtn(order?.cancelDate)} 취소</Typography>}
                   </StatusBox>
@@ -63,7 +61,7 @@ const Component = ({
                       <FastImage
                         style={{ width: '100%', height: '100%', borderRadius:7 }}
                         source={{
-                            uri: order.Image,
+                            uri: order.image,
                             priority: FastImage.priority.high,
                         }}
                         resizeMode={FastImage.resizeMode.cover}
@@ -78,12 +76,12 @@ const Component = ({
                           <Typography  text="Body06SB" textColor={themeApp.colors.grey[2]}>{withCommas(order.price)}원</Typography>
                         </PriceBox>
                       </TextBox>
-                      {order.foodStatus === 5 && <ButtonContainer>
+                      {order.orderStatus === 5 && <ButtonContainer>
                         <ButtonMeal label={"취소"}/>
                         <ButtonMeal label={"메뉴변경"}/>                      
                       </ButtonContainer>}
                     </DateOrderItemContent>
-                        
+                
                   </DateOrderItemContentBox>
                 </DateOrderItemBox>           
               )
@@ -173,7 +171,6 @@ const StatusBox = styled.View`
 const StatusText = styled.View`
   margin-right: 5px;
 `
-
 
 const DateDetailBox = styled.View`
   flex-direction: row;

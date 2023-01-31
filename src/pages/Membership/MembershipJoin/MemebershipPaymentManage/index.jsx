@@ -26,6 +26,7 @@ const Pages = ()=>{
     const agreeCheck = useForm();
     const navigation = useNavigation();
     const {getCardList,cardSetting,setSelectMembershipCard,readableAtom:{cardList,selectMembershipCard}} = useUserMe();
+    const [selectNowCard ,setNowCard] = useState(selectMembershipCard)
     const onSelectEvent=()=>{
         navigation.navigate(RegisterCardScreenName,{
             defaultType:2
@@ -33,8 +34,9 @@ const Pages = ()=>{
     }
     const onSelectComplateEvent=async()=>{;
         if(agreeCheck.watch(agreeCheck).agreeCheck){
-            await onSelectCard(selectMembershipCard[0]?.id)
+            await onSelectCard(selectNowCard[0]?.id)
         }
+        setSelectMembershipCard(selectNowCard);
         navigation.goBack()
     }
     const onSelectCard = async(id)=>{
@@ -67,8 +69,8 @@ const Pages = ()=>{
                 {cardList?.length > 0 ? <CardListView>
                     {cardList.map((v)=>{
                         return (
-                            <RegiteredView key={v.id} onPress={()=>setSelectMembershipCard([v])}>
-                                <RegisteredBox cardName={`${v.cardCompany}카드`}  cardNumber={v.cardNumber} isMembership={v.defaultType === 2 || v.defaultType===3} isDefault={false} isSelected={v.id === selectMembershipCard[0]?.id}/>
+                            <RegiteredView key={v.id} onPress={()=>setNowCard([v])}>
+                                <RegisteredBox cardName={`${v.cardCompany}카드`}  cardNumber={v.cardNumber} isMembership={v.defaultType === 2 || v.defaultType===3} isDefault={false} isSelected={v.id === selectNowCard[0]?.id}/>
                             </RegiteredView>
                         )
                     })}

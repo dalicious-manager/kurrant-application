@@ -22,6 +22,7 @@ import { PAGE_NAME as FAQPageName } from '../../../MyPage/FAQ';
 import { PAGE_NAME as PersonalInfoPageName } from '../../../MyPage/PersonalInfo';
 import { PAGE_NAME as MealPageName } from '../../Meal/Main';
 import { PAGE_NAME as MealCartPageName } from '../../MealCart/Main';
+import { PAGE_NAME as LoginPageName } from '../../../Login/Login';
 import { SCREEN_NAME as NoticeScreenName } from '../../../../../screens/Main/Notice';
 import { SCREEN_NAME as PurchaseHistoryName } from '../../../../../screens/Main/PurchaseHistory';
 import ListBox from './ListBox';
@@ -31,6 +32,7 @@ import SkeletonUI from './SkeletonUI';
 import VersionCheck from "react-native-version-check";
 import { useCallback } from 'react';
 import useUserInfo from '../../../../../biz/useUserInfo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
@@ -77,7 +79,19 @@ const Pages = () => {
                 <SettingIcon height={16} width={8}/>
               </Pressable>
             </LoginBox>
-          : <LoginBox>
+          : <LoginBox onPress={async()=>
+              {
+                await AsyncStorage.clear();
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: LoginPageName,
+                    },
+                  ],
+                })
+              }
+            }>
               <Typography text='Title02SB' textColor={themeApp.colors.grey[2]}>로그인 </Typography>
               <ArrowRightLogin height={16} width={8}/>
             </LoginBox>}
@@ -108,7 +122,7 @@ const Pages = () => {
             {/* <ListBox title='찜목록' /> */}
             <ListBox title='구매 내역' routeName={PurchaseHistoryName}/>
             {/* <ListBox title='리뷰 관리' description={`모두 작성시 최대 `} effect={<Typography test={'CaptionR'} textColor={themeApp.colors.blue[500]}>500P</Typography>} /> */}
-            <ListBox title='커런트 멤버십' routeName={!isUserInfo?.isMembership ? MembershipInfoPageName : MembershipIntroPageName}/>
+            <ListBox title='커런트 멤버십' routeName={isUserInfo?.isMembership ? MembershipInfoPageName : MembershipIntroPageName}/>
             {/* <ListBox title='커런트 포인트' /> */}
           </ListContainer>
           <ListContainer title='알림'>

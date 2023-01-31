@@ -9,9 +9,6 @@ import { isPurchaseLoadingAtom ,purchaseAtom,purchaseMealAtom,
   isMealPurchaseLoadingAtom,} from './store';
 
 const usePurchaseHistory = () => {
-  
-  
-  
     const [isAllPurchaseLoading,setAllPurchaseLoading] = useAtom(isPurchaseLoadingAtom);
     const [isMarketPurchaseLoading,setMarketPurchaseLoading] = useAtom(isMarketPurchaseLoadingAtom);
     const [isCatorPurchaseLoading,setCatorPurchaseLoading] = useAtom(isCatorPurchaseLoadingAtom);
@@ -30,7 +27,7 @@ const usePurchaseHistory = () => {
             },
             option
           );        
-          setAllPurchase(res);
+          setAllPurchase(res.data);
           return res;
         } catch (err) {
           throw err
@@ -42,14 +39,14 @@ const usePurchaseHistory = () => {
       const getPurchaseHistoryMeal = async (body,option = {}) => {
         try {
           setMealPurchaseLoading(true);
-          setAllPurchase([]);
+          setMealPurchase([]);
           const res = await Fetch.getPurchaseHistoryMeal(     
             {
               ...body
             },
             option
           );        
-          setMealPurchase(res);
+          setMealPurchase(res.data);
           return res;
         } catch (err) {
           throw err

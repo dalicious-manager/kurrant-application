@@ -17,13 +17,13 @@ const {width} =Dimensions.get('screen');
 const Component = ({
   purchase,
   date,
-  index,
   itemIndex
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+  console.log(purchase,"test1234");
     return (
-        <DateOrderItemListContainer isFirst={index ===0 && itemIndex === 0}>
+        <DateOrderItemListContainer isFirst={itemIndex === 0}>
         <DateDetailBox>
           <Typography text={"CaptionR"} textColor={themeApp.colors.grey[4]}>{date} 결제</Typography>
           <DetailWrap>
@@ -35,9 +35,9 @@ const Component = ({
         <DateOrderItemListBox>
           <DateBar />
           <DateOrderItemList>
-            {purchase.orderItem.map((order,i)=>{
+            {purchase?.orderItems.map((order,i)=>{
               const statusColor = ()=>{
-                switch (order.foodStatus) {
+                switch (order.orderStatus) {
                   case 7:
                     return themeApp.colors.red[500]
                   case 11:
@@ -52,7 +52,7 @@ const Component = ({
                 <DateOrderItemBox key={order.id} isFirst={i ===0}>
                   <StatusBox>
                     <StatusText>
-                      <Typography text="Title04SB" textColor={statusColor()}>{formattedMealFoodStatus(order.foodStatus)}</Typography>
+                      <Typography text="Title04SB" textColor={statusColor()}>{formattedMealFoodStatus(order.orderStatus)}</Typography>
                     </StatusText>
                     {order?.cancelDate && <Typography text="Samlllabel" textColor={themeApp.colors.grey[5]}>{formattedDateWeekBtn(order?.cancelDate)} 취소</Typography>}
                   </StatusBox>
@@ -61,7 +61,7 @@ const Component = ({
                       <FastImage
                         style={{ width: '100%', height: '100%', borderRadius:7 }}
                         source={{
-                            uri: order.Image,
+                            uri: order.image,
                             priority: FastImage.priority.high,
                         }}
                         resizeMode={FastImage.resizeMode.cover}
@@ -76,9 +76,12 @@ const Component = ({
                           <Typography  text="Body06SB" textColor={themeApp.colors.grey[2]}>{withCommas(order.price)}원</Typography>
                         </PriceBox>
                       </TextBox>
-                      {order.foodStatus === 5 && <ButtonContainer>
+                      {order.orderStatus === 5 && <ButtonContainer>
                         <ButtonMeal label={"취소"}/>
                         <ButtonMeal label={"메뉴변경"}/>                      
+                      </ButtonContainer>}
+                      {order.orderStatus === 7 || order.orderStatus === 11 && <ButtonContainer>
+                        <ButtonMeal label={"수령확인"}/>                 
                       </ButtonContainer>}
                     </DateOrderItemContent>
                 

@@ -317,7 +317,7 @@ if(isUserInfoLoading){
               <TitleText>멤버십</TitleText>
             </Membership>
             <View>
-              <MembershipUsing>N개월째 이용중</MembershipUsing>
+              <MembershipUsing>{isUserInfo?.membershipUsingPeriod}개월째 이용중</MembershipUsing>
               <MembersWrap>
                 <MembersIcon/>
                 <MembersText>n번째 파운더스</MembersText>

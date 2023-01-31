@@ -27,7 +27,6 @@ const Pages = ({route})=>{
     const {cardRegisted,readableAtom:{cardList}}=useUserMe();
     const card = form.watch('cardNumber')
     const navigation = useNavigation();
-    console.log(cardList,"list");
     const onSubmit=async(data)=>{      
       const exp = data.cardExpDate.split('/');
       const req ={

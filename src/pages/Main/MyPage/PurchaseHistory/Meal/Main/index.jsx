@@ -133,14 +133,17 @@ const confirmPress = (setModal) =>{
               </Typography>
             </SubmitButton>
           </ConditionSearch>}
-        {isMealPurchaseLoading ? <Skeleton />:
-        <ScrollViewBox>
-        {mealPurchase?.data?.map((v,i)=>{
-          return v?.orderData?.map((data, index)=>{
-            return <DateOrderItemContainer key={`${v.orderDate}${index}`} index={i} itemIndex={index} purchase={data} date={v.orderDate} />
-          })
+        {isMealPurchaseLoading ? <Skeleton />:mealPurchase?.length > 0
+        ? <ScrollViewBox>
+        {mealPurchase?.map((v,i)=>{
+          console.log(v);
+          return <DateOrderItemContainer key={`${v.orderDate}${i}`} itemIndex={i} purchase={v} date={v.orderDate} />
         })}
-        </ScrollViewBox>}
+        </ScrollViewBox> 
+        : <NothingContainer>
+            <Typography text={"Body05R"} textColor={themeApp.colors.grey[5]}>주문 내역이 없어요</Typography>
+          </NothingContainer>}
+        
       </Wrapper>
       {showDateModal && (
           ShowCalendar(startDate,onChangeDate,confirmPress,setShowDateModal,setStartDate)
@@ -208,7 +211,11 @@ const DateText = styled(Typography)`
     }
   }}
 `
-
+const NothingContainer  = styled.View`
+  flex:1;
+  align-items: center;
+  justify-content: center;
+`
 const Container = styled(SafeAreaView)`
   flex: 1;
 `;

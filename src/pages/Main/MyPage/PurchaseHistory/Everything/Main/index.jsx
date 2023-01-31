@@ -134,10 +134,8 @@ const confirmPress = (setModal) =>{
           </ConditionSearch>}
         {isAllPurchaseLoading ? <Skeleton />:
         <Wrapper>
-        {allPurchase?.data ? <ScrollViewBox>{allPurchase?.data?.map((v,i)=>{
-          return v?.orderData?.map((data, index)=>{
-            return <DateOrderItemContainer key={`${v.orderDate}${index}`} index={i} itemIndex={index} purchase={data} date={v.orderDate} />
-          })
+        {allPurchase ? <ScrollViewBox>{allPurchase?.map((v,i)=>{
+          return <DateOrderItemContainer key={`${v.orderDate}${i}`} itemIndex={i} purchase={v} date={v.orderDate} />
         }) }</ScrollViewBox>:
             <NothingContainer>
               <Typography text={"Body05R"} textColor={themeApp.colors.grey[5]}>주문 내역이 없어요</Typography>

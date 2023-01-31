@@ -18,19 +18,19 @@ import IconWrapper from '../component';
 const Component = ({name, size = 16, color}) => {
   const getNotifiIcon = ()=>{
     switch (name) {
-      case "promotion":
+      case "프로모션":
         return <PromotionIcon name={name} size={size} color={color} />
-      case "order":
+      case "주문상태":
         return <OrderIcon name={name} size={size} color={color} />
-      case "notice":
+      case "공지":
         return <NoticeIcon name={name} size={size} color={color} />
-      case "event":
+      case "이벤트":
         return <EventIcon name={name} size={size} color={color} />
-      case "coupon":
+      case "쿠폰":
         return <CouponIcon name={name} size={size} color={color} />
-      case "buymeal":
+      case "정기식사":
         return <BuymealIcon name={name} size={size} color={color} />
-      case "spot":
+      case "스팟공지":
         return <SpotIcon name={name} size={size} color={color} />
       default:
         break;

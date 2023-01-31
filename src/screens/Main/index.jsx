@@ -171,7 +171,7 @@ const MainRoot = createNativeStackNavigator();
 const Screen = () => {
   const [isLoginLoading, ] = useAtom(isLoginLoadingAtom);
   const {deleteAlarm} = useBoard();
- 
+  const navigation = useNavigation();
   return (
     <MainRoot.Navigator >
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
@@ -464,9 +464,9 @@ const Screen = () => {
                 }
               ]
             )}}><DeleteIcon /></DeleteTxt>             
-              <View>
-              <NotifySettingIcon />
-              </View>
+              <DeleteTxt >
+                <NotifySettingIcon onPressEvent={()=>navigation.navigate(NotificationSettingPageName)}/>
+              </DeleteTxt>
               </>
             )
           }}
