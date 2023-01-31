@@ -36,7 +36,7 @@ const Pages = ({route}) => {
   const rotateAnim = useRef(new Animated.Value(1)).current;
   const themeApp = useTheme();
   const {getMembershipType, membershipJoin} = useMembership();
-  const {getCardList,readableAtom:{cardList}}= useUserMe();
+  const {getCardList,readableAtom:{cardList,selectMembershipCard}}= useUserMe();
   const getMembershipInfo = async () => {
     const membership = period === 'month' ? 1 : 2;
     const {data} = await getMembershipType(membership);
@@ -90,8 +90,11 @@ const Pages = ({route}) => {
     }
   };
   useEffect(() => {
-    getMembershipInfo();
-    getCardList();
+    const getData = async()=>{
+        await getMembershipInfo();
+        await getCardList();
+    }
+    getData();
   }, []);
   const ProductInfoBlock = () => {
     if (membershipTypeData?.subscriptionType === 1) {
@@ -241,19 +244,21 @@ const Pages = ({route}) => {
             </PaymentPriceTotalBox>
           </PaymentPriceContainer>
           <Line />
-          <BorderWrap
-            onPress={() =>
-              navigation.navigate(MemebershipPaymentManagePageName)
-            }>
+          <BorderWrap>
             <CardContainer>
               <Title>결제 수단</Title>
               <DeliveryTitle>
                 카드 결제시 등록한 카드로 결제가 진행됩니다.
               </DeliveryTitle>
-              {cardList.map((card)=>{
-                if(card.defaultType ===2 ||card.defaultType ===3 ){
+              {selectMembershipCard[0]?.id  ? 
+                selectMembershipCard.map((card)=>{
                   return (
-                    <Card key={card.id}>
+                    <Card 
+                      key={card.id} 
+                      onPress={() =>
+                        navigation.navigate(MemebershipPaymentManagePageName)
+                      }
+                    >
                       {/* <CardText>결제 카드 등록</CardText> */}
                       <CardText>{card.cardCompany}카드({card.cardNumber?.toString().slice(-4)})</CardText>
                       {/* <PayInfoWrap>
@@ -263,10 +268,17 @@ const Pages = ({route}) => {
                         </PayInfo>
                         <ArrowRight />
                       </PayInfoWrap> */}
+                      <ArrowRight />
                     </Card>
                   )
-                }
-              })}
+                }) : 
+                <Card onPress={() =>
+                  navigation.navigate(MemebershipPaymentManagePageName)
+                }>
+                  <CardText>결제 카드 등록</CardText>              
+                  <ArrowRight />
+                </Card>
+              }
               
             </CardContainer>
           </BorderWrap>
@@ -402,7 +414,7 @@ const DeliveryTitle = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[4]};
 `;
 
-const Card = styled.View`
+const Card = styled.Pressable`
   width: 100%;
   border: 1px solid ${props => props.theme.colors.grey[7]};
   border-radius: 14px;
