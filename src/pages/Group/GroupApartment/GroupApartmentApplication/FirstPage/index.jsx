@@ -47,9 +47,9 @@ const Pages = () => {
     const {name,phone,email} = userInfo;
     console.log(nameChk,name,'dkdkdkdkdk')
     const isValidation = 
-        (nameChk && nameChk !== '' ) &&
-        (phoneChk && phoneChk !== '') &&
-        (emailChk && emailChk !== '');
+        (nameChk || nameChk !== '' ) &&
+        (phoneChk || phoneChk !== '') &&
+        (emailChk || emailChk !== '');
 
     const keyboardStatus = useKeyboardEvent();
     const saveAtom = async () =>{

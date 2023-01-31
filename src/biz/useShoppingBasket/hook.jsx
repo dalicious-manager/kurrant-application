@@ -2,7 +2,7 @@ import {useAtom} from 'jotai';
 import react from 'react';
 
 import * as Fetch from './Fetch';
-import { isLoadMealCartAtom, isQuantityAtom, mealCartSpotAtom, userPointAtom,loadSoldOutMealAtom } from './store';
+import { isLoadMealCartAtom, isQuantityAtom, mealCartSpotAtom, userPointAtom,loadSoldOutMealAtom, soldOutChangeAtom, clientStatusAtom } from './store';
 
 const useShoppingBasket = () => {
 
@@ -11,15 +11,24 @@ const useShoppingBasket = () => {
     const [userPoint,setUserPoint] = useAtom(userPointAtom);
     const [mealCartSpot,setMealCartSpot] = useAtom(mealCartSpotAtom);
     const [soldOutMeal,setSoldOutMeal] = useAtom(loadSoldOutMealAtom);
-    
+    const [soldOutChange,setSoldOutChange] = useAtom(soldOutChangeAtom);
+    const [clientStatus,setClientStatus] = useAtom(clientStatusAtom);
+
     const loadMeal = async () => {
         try {
             const res = await Fetch.loadMealCart();
+            const clientType = res.data.spotCarts.map(el => {
+                
+                return {
+                    spotId:el.spotId,
+                    clientStatus:el.clientStatus
+                }
+            });
             
             const spot = res.data.spotCarts.map(m => {
                 return {
                     id:m.spotId,
-                    text: m.groupName + m.spotName
+                    text: m.groupName + "\u00a0" + m.spotName
                 }
             });
             
@@ -27,7 +36,8 @@ const useShoppingBasket = () => {
             const badgeQty = qty.reduce((acc,cur) => {
                 return acc + cur
             },0)
-            
+
+            setClientStatus(clientType)
             setMealCartSpot(spot)
             setLoadMeal(res.data.spotCarts);
             setUserPoint(res.data.userPoint)
@@ -37,12 +47,13 @@ const useShoppingBasket = () => {
         }
     }
 
-    const addMeal = async (body,option ={}) => {
+    const addMeal = async (body) => {
+        
         try {
-            const res = await Fetch.addMealCart({
+            const res = await Fetch.addMealCart([{
                 ...body
-            },
-            option
+            }]
+           
             );
            return res
 
@@ -51,9 +62,9 @@ const useShoppingBasket = () => {
         }
     };
 
-    const allDeleteMeal = async () => {
+    const allDeleteMeal = async (spotId) => {
         try {
-            const res = await Fetch.allDeleteMealCart();
+            const res = await Fetch.allDeleteMealCart(spotId);
             setQuantity(0)
             return res;
 
@@ -91,10 +102,33 @@ const useShoppingBasket = () => {
     const loadSoldOutMeal = async (spotId,date,type) => {
         try {
             const res = await Fetch.loadSoldOutMealCart(spotId,date,type);
+           
+            const data = res.data.dailyFoodDtos.map(el => {
+                return {...el, count:0}
+            });
+            const list = data.map(el => {
+                return {
+                    id:el.id,
+                    count:el.count
+                }
+            })
+
             
-            setSoldOutMeal(res.data.dailyFoodDtos)
+            setSoldOutChange(list)
+            setSoldOutMeal(data)
         } catch(err){
-            console.log(err,'444')
+            console.log(err)
+        }
+    }
+
+    const orderMeal = async (spotId,body) => {
+        try {
+            const res = await Fetch.ordrMealCart(spotId,{
+                ...body
+            });
+            return res
+        } catch(err){
+            console.log(err)
         }
     }
 
@@ -107,11 +141,15 @@ const useShoppingBasket = () => {
         updateMeal,
         setLoadMeal,
         loadSoldOutMeal,
+        setSoldOutMeal,
+        setSoldOutChange,
         isLoadMeal,
         userPoint,
         isquantity,
         mealCartSpot,
-        soldOutMeal
+        soldOutMeal,
+        soldOutChange,
+        clientStatus
         
     };
 

@@ -130,13 +130,13 @@ export const textStyles = {
     font-size: 13px;
     line-height: 19px;
     font-family: 'Pretendard-Regular';
-    letter-spacing:-0.4px;
+    letter-spacing:-0.2px;
     `,
   CaptionSB: css`
     font-size: 13px;
     line-height: 19px;
     font-family: 'Pretendard-SemiBold';
-    letter-spacing:-0.4px;
+    letter-spacing:-0.2px;
   `,
   BottomButtonR: css`
     font-size: 17px;

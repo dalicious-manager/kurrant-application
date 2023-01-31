@@ -320,7 +320,7 @@ if(isUserInfoLoading){
               <MembershipUsing>N개월째 이용중</MembershipUsing>
               <MembersWrap>
                 <MembersIcon/>
-                <MembersText>n번째 파운더스멤버</MembersText>
+                <MembersText>n번째 파운더스</MembersText>
               </MembersWrap>
             </View>
           </MembershipWrap>}
