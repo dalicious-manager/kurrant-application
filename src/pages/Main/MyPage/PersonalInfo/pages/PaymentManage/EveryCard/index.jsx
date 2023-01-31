@@ -17,6 +17,7 @@ const Pages = ()=>{
    
     const navigation = useNavigation();
     const {getCardList,cardDelete,readableAtom:{cardList,isCardListLoading}} = useUserMe();
+    const themeApp = useTheme();
     const onSelectEvent=()=>{
         navigation.navigate(RegisterCardScreenName)
     }
@@ -52,25 +53,30 @@ const Pages = ()=>{
     return(
         <Wrapper paddingTop={24} paddingHorizontal={24} >
             
-            <CardRegisteredBox>
+            {cardList.length > 0 ?<CardRegisteredBox>
                
-                {cardList.map((v)=>{
+                { cardList.map((v)=>{
                     return (
                         <RegiteredView key={v.id}>
                             <RegisteredBox 
-                            cardName={`${v.cardCompany}카드`} 
-                            onPressEvent={()=>deleteCard(v.id)} 
-                            cardNumber={v.cardNumber} 
-                            isMembership={v.defaultType === 2 || v.defaultType===3} 
-                            isDefault={v.defaultType === 1 || v.defaultType===3}/>
+                                cardName={`${v.cardCompany}카드`} 
+                                onPressEvent={()=>deleteCard(v.id)} 
+                                cardNumber={v.cardNumber} 
+                                isMembership={v.defaultType === 2 || v.defaultType===3} 
+                                isDefault={v.defaultType === 1 || v.defaultType===3}/>
                         </RegiteredView>
                     )
-                })}
+                }) 
+                }
                 
                 {/* <RegiteredView>
                     <RegisteredBox  cardName="국민카드" cardNumber="2222222222225473" />
                 </RegiteredView> */}
             </CardRegisteredBox>
+            : 
+            <NoneCardContainer>
+                <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>아직 등록된 결제 수단이 없어요</Typography>
+            </NoneCardContainer>}
             <ButtonBox>
             <Button
             label='결제수단 추가' 
@@ -86,7 +92,12 @@ export default Pages;
 
 const CardRegisteredBox = styled.View`
 `
-
+const NoneCardContainer = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
+`
 const RegiteredView = styled.View`
     margin-top: 6px;
     margin-bottom: 6px;

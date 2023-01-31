@@ -175,34 +175,34 @@ export default () => {
             console.log(result?.authenticationToken);
             Clipboard.setString(result?.authenticationToken);
 
-            // await snsLogin({
-            //   snsAccessToken:token.accessToken,
-            //   autoLogin:true,
-            // },'FACEBOOK');
-            // navigation.reset({
-            //     index: 0,
-            //     routes: [
-            //       {
-            //         name: SCREEN_NAME,
-            //       },
-            //     ],
-            //   })
+            await snsLogin({
+              snsAccessToken:result?.authenticationToken,
+              autoLogin:true,
+            },'FACEBOOK');
+            navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              })
           } else {
             const result = await AccessToken.getCurrentAccessToken();
             console.log(result?.accessToken);
-            Clipboard.setString(result?.accessToken);
-            // await snsLogin({
-            //   snsAccessToken:token.accessToken,
-            //   autoLogin:true,
-            // },'FACEBOOK');
-            // navigation.reset({
-            //     index: 0,
-            //     routes: [
-            //       {
-            //         name: SCREEN_NAME,
-            //       },
-            //     ],
-            //   })
+            // Clipboard.setString(result?.accessToken);
+            await snsLogin({
+              snsAccessToken:result?.accessToken,
+              autoLogin:true,
+            },'FACEBOOK');
+            navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              })
           }
         } catch (error) {
           console.log(error);

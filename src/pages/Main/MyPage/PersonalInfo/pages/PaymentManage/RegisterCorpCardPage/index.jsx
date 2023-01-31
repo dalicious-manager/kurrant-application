@@ -26,24 +26,20 @@ const Pages = ({route})=>{
 
     const card = form.watch('cardNumber')
     const keyboardEvent = useKeyboardEvent();
-    const {cardRegisted}=useUserMe();
+    const {cardRegisted,readableAtom:{cardList}}=useUserMe();
     const navigation = useNavigation();
     const onSubmit=async(data)=>{
       const exp = data.cardExpDate.split('/');
-      const req ={
-        
+      const req ={        
           "cardNumber": data.cardNumber.replace(/\W/gi, ''),
           "expirationYear": exp[1],
           "expirationMonth": exp[0],
           "cardPassword": data.cardPass,
           "identityNumber": data.cardCorpNumber,
           "cardVaildationCode": data.cardSecret,
-          "defaultType":params?.defaultType || 0
-        
+          "defaultType":cardList.length > 0 ? 0 :params?.defaultType || 0        
       }
-      console.log(req);
       const result = await cardRegisted(req);
-      console.log(result);
       // navigation.navigate(PaymentManagePage)
       navigation.goBack();
     }
@@ -56,7 +52,7 @@ const Pages = ({route})=>{
           navigation.setOptions({
               tabBarLabelStyle:{fontSize:15,lineHeight:21,fontFamily: 'Pretendard-Regular',}
           })
-      }
+        }
       }, [])
     );
     return(

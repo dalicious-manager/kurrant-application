@@ -62,9 +62,6 @@ const LabelBox = styled.View`
 
 const Button = styled.Pressable`
     padding: 6.5px 16px;
-    border-color:${({theme})=>theme.colors.grey[7]};
-    border-width: 1px;
-    border-radius: 50px;
 `
 const CheckIcon = styled(Checkicon)`
   color: ${({ checked }) =>

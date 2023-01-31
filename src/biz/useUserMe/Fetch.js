@@ -36,11 +36,19 @@ export async function settingPhoneNumber(body, option) {
 }
 
 export async function snsConnect(body, type, option) {
+  if (type === "APPLE") {
+    const fetchRes = await fetchJson(`/users/me/connectingApple/`, 'POST', {
+      ...option,
+      body: JSON.stringify(body)
+    });
+    return fetchRes
+  }
   const fetchRes = await fetchJson(`/users/me/connecting/${type}`, 'POST', {
     ...option,
     body: JSON.stringify(body)
   });
   return fetchRes
+
 }
 export async function cardRegisted(body, option) {
   const fetchRes = await fetchJson(`/users/me/cards`, 'POST', {

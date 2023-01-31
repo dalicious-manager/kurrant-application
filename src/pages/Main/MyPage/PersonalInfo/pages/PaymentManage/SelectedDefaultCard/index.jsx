@@ -25,22 +25,7 @@ const Pages = ()=>{
             "cardId": id,
             "defaultType": 1
         }
-        await cardSetting(req);
-        setCardList(cardList.map((v)=>{
-            if(v.id === id){
-                let defaultType = 1;
-                if(v.defaultType === 2)defaultType = 3;
-                if(v.defaultType !== 3) return {...v ,defaultType:defaultType}
-                return v                
-            }
-            if(v.defaultType === 3){
-                return {...v ,defaultType:2}
-            }
-            if(v.defaultType === 1){
-                return {...v ,defaultType:0}
-            }
-            return v
-        }))
+        await cardSetting(req);        
         
     }
     const onSelectEvent2=async (text,id)=>{
@@ -48,22 +33,7 @@ const Pages = ()=>{
             "cardId": id,
             "defaultType": 2
         }
-        await cardSetting(req);
-        setCardList(cardList.map((v)=>{
-            if(v.id === id){
-                let defaultType = 2;
-                if(v.defaultType === 1)defaultType = 3;
-                if(v.defaultType !== 3) return {...v ,defaultType:defaultType}
-                return v       
-            }
-            if(v.defaultType === 3){
-                return {...v ,defaultType:1}
-            }
-            if(v.defaultType === 2){
-                return {...v ,defaultType:0}
-            }
-            return v
-        }))
+        await cardSetting(req);        
         
     }
     const onSelectOpenModal=()=>{

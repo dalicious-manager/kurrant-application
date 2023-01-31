@@ -14,9 +14,9 @@ export const SCREEN_NAME = 'S_MAIN__REGISTER_CARD';
 
 const Tab = createMaterialTopTabNavigator();
 
-const Screen = () => {
+const Screen = ({route}) => {
   const theme = useTheme();
-  
+  const params = route.params;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -30,11 +30,17 @@ const Screen = () => {
       <Tab.Screen 
         name={RegisterPersonalCardPageName}
         component={RegisterPersonalCard}
+        initialParams={{
+          defaultType:params?.defaultType|| 0
+        }}        
         options={{ tabBarLabel: '개인카드' ,tabBarLabelStyle:{fontSize:15,lineHeight:21,fontFamily:'Pretendard-Regular',}}}
       />
       <Tab.Screen 
         name={RegisterCorpCardPageName}
         component={RegisterCorpCard}
+        initialParams={{
+          defaultType:params?.defaultType|| 0
+        }}        
         options={{ tabBarLabel: '법인카드'  ,tabBarLabelStyle:{fontSize:15,lineHeight:21,fontFamily:'Pretendard-Regular',}}}
       />
     </Tab.Navigator>
