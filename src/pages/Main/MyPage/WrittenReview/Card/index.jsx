@@ -32,6 +32,12 @@ const Component = () => {
           </Pressable>
         </EditWrap>
       </TopWrap>
+
+      <OptionWrap>
+        <MiniGreyBlock />
+        <OptionText>추가옵션 : 꼬치소스</OptionText>
+      </OptionWrap>
+
       <RowWrap>
         <StarsWrap>
           <StarRating rating={3} width="66px" margin="1px" />
@@ -100,8 +106,8 @@ export default Component;
 const Container = styled.View`
   width: 100%;
   /* height: 60px; */
-  background-color: azure;
-  margin: 24px 0;
+  /* background-color: azure; */
+  margin: 12px 0;
   margin-bottom: 40px;
 `;
 
@@ -109,6 +115,7 @@ const TopWrap = styled.View`
   flex-direction: row;
 
   justify-content: space-between;
+  margin-bottom: 5px;
 `;
 const TitleWrap = styled.View`
   flex-direction: row;
@@ -186,4 +193,20 @@ const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
 `;
 const CommentWrap = styled.View`
   width: 100%;
+`;
+
+const OptionWrap = styled.View`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 4px;
+  align-items: center;
+`;
+const MiniGreyBlock = styled.View`
+  height: 12px;
+  width: 3px;
+  background-color: ${props => props.theme.colors.grey[7]};
+`;
+const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${props => props.theme.colors.grey[5]};
+  margin-left: 4px;
 `;
