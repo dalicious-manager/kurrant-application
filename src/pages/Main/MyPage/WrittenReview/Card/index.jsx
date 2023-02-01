@@ -138,6 +138,7 @@ const RowWrap = styled.View`
   flex-direction: row;
 
   align-items: center;
+  margin-bottom: 11px;
 `;
 const StarsWrap = styled.View`
   flex-direction: row;
@@ -149,6 +150,7 @@ const PostDateText = styled(Typography).attrs({text: 'Body05R'})`
 `;
 const ImagesWrap = styled.View`
   flex-direction: row;
+  margin-bottom: 9px;
 `;
 
 const ImageWrap = styled.View`
@@ -178,8 +180,10 @@ const DefaultImage = styled.View`
 
 const ReviewWrap = styled.View``;
 
-const ReviewText = styled.Text``;
-
+const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 6px;
+`;
 const CommentWrap = styled.View`
   width: 100%;
 `;
