@@ -14,7 +14,6 @@ const Component = () => {
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText>
-            {' '}
             {'['}
             폴어스
             {']'}
