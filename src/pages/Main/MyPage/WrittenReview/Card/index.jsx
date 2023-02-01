@@ -3,7 +3,7 @@ import {Dimensions} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
-import ArrowRight from '../../../../../assets/icons/Arrow/arrowRight.svg';
+import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
 import StarRating from '../../../../../components/StarRating/StarRating';
 
 export const pathFind = 'yo';
@@ -20,7 +20,7 @@ const Component = () => {
             {']'}
             리코타 치즈 샐러드
           </RestaurentNameText>
-          <ArrowRight />
+          <ArrowRightGrey4 />
         </TitleWrap>
 
         <EditWrap>
@@ -39,7 +39,7 @@ const Component = () => {
 
         <PostDateText>2022. 02. 11 작성</PostDateText>
       </RowWrap>
-      {/* <ImagesWrap>
+      <ImagesWrap>
         <ImageWrap>
           <MealImage
             source={{
@@ -76,13 +76,9 @@ const Component = () => {
           />
         </ImageWrap>
         <ImageWrap>
-          <MealImage
-            source={{
-              uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-            }}
-          />
+          <DefaultImage />
         </ImageWrap>
-      </ImagesWrap> */}
+      </ImagesWrap>
       <ReviewWrap></ReviewWrap>
       <CommentWrap></CommentWrap>
     </Container>
@@ -115,13 +111,14 @@ const RestaurentNameText = styled(Typography).attrs({text: 'Body05SB'})`
 
 const EditWrap = styled.View`
   flex-direction: row;
+  align-items: center;
 `;
 
 const EditText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.blue[500]};
   margin-right: 6px;
 `;
-const DeleteText = styled(Typography).attrs({text: 'SmallLabel'})`
+const DeleteText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
 `;
@@ -159,6 +156,13 @@ const MealImage = styled.Image`
   width: 100%;
   height: 100%;
   border-radius: 7.5px;
+`;
+
+const DefaultImage = styled.View`
+  width: 100%;
+  height: 100%;
+  border-radius: 7.5px;
+  background-color: #d9d9d9;
 `;
 
 const ReviewWrap = styled.View``;
