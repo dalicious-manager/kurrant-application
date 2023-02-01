@@ -101,7 +101,7 @@ const Pages = () => {
             async function loadDailyFood(){
                 try {
                     await loadMeal();
-                    await dailyFood(spotId,date);                    
+                                   
                 } catch (error) {
                     if(error.toString().replace("Error:",'').trim() === '403'){
                       navigation.reset({

@@ -27,7 +27,7 @@ const Pages = ({route}) => {
   const [touchDate,setTouchDate] = useState(data);
   const weekly = useAtomValue(weekAtom);
   const {isOrderMeal,orderMeal} = useOrderMeal();
-  console.log(touchDate,'ee')
+  
   const startDate = formattedWeekDate(weekly[0][0]);
   const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
   
@@ -116,17 +116,17 @@ const Pages = ({route}) => {
         (<>
           {selectDate.map((s,index) => 
             <React.Fragment key={index}>
+                <DiningTimeWrap >
+                  <DiningTime>{formattedMonthDay(s.serviceDate)} {s.diningType}</DiningTime>
+                </DiningTimeWrap>
               {s.orderItemDtoList?.map((sm,idx) => 
               <React.Fragment key={idx}>
-                <DiningTimeWrap >
-                  <DiningTime>{formattedMonthDay(s.serviceDate)} {sm.diningType}・오늘</DiningTime>
-                </DiningTimeWrap>
                 <MealContentWrap >
                   <View>
                   <FastImage source={{uri:`${sm.image}`,priority:FastImage.priority.high}}
                     style={{
-                        width:45,
-                        height:45,
+                        width:107,
+                        height:107,
                         borderRadius:7
                     }}
                     />
@@ -153,15 +153,19 @@ const Pages = ({route}) => {
           <>
           {todayMeal && todayMeal.map((m,i) => 
             <React.Fragment key={i}>
+                <DiningTimeWrap >
+                  <DiningTime>{formattedMonthDay(m.serviceDate)} {m.diningType}・오늘</DiningTime>
+                </DiningTimeWrap>
               {m.orderItemDtoList?.map((el,idx) => 
               <React.Fragment key={idx}>
-                <DiningTimeWrap >
-                  <DiningTime>{formattedMonthDay(m.serviceDate)} {el.diningType}・오늘</DiningTime>
-                </DiningTimeWrap>
                 <MealContentWrap >
-                  <View>
-                    <MealImage source={{uri:el.image}}/>
-                  </View>
+                  <FastImage source={{uri:`${el.image}`,priority:FastImage.priority.high}}
+                    style={{
+                        width:107,
+                        height:107,
+                        borderRadius:7
+                    }}
+                    />
                   <Content>
                     <MakersName>[{el.makers}]</MakersName>
                     <MealName>{el.name}</MealName>
@@ -219,7 +223,8 @@ const MealContentWrap = styled.View`
 flex-direction:row;
 border-bottom-color:${props => props.theme.colors.grey[8]};
 border-bottom-width:1px;
-padding:28px 0px;
+padding:24px 0px;
+min-height:131px;
 `;
 const DiningTimeWrap = styled.View`
 padding-top:22px;
@@ -236,7 +241,7 @@ margin-left:16px;
 const MealChangeWrap = styled.Pressable`
 position:absolute;
 right:0;
-bottom:28px;
+bottom:24px;
 `;
 
 const CancleBtnWrap = styled(MealChangeWrap)`

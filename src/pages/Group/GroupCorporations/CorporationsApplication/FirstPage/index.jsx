@@ -52,8 +52,8 @@ const Pages = () => {
 
     const isValidation = 
         (nameChk || nameChk !== '' ) &&
-        (phoneChk || phoneChk !== '') &&
-        (emailChk || emailChk !== '');
+        (emailChk || emailChk !== '')&&
+        (phone === null ? (phoneChk !== '' && phoneChk !== undefined) : (phoneChk !== '') ) ;
 
     const saveAtom = async () =>{
         

@@ -102,7 +102,7 @@ const Component = ({
      <PagerViewWrap ref={pager} initialPage={0} pageMargin={22} onPageScroll={(e) => {onPageScroll(e)}} margins={margin}>
     {weekly.map((week,i) => {
         return (
-            <View key={i}>
+            <View key={i} >
                 <Wrap>
                     {week.map((day) => {
                       
@@ -111,32 +111,24 @@ const Component = ({
                         const pressDay = (formattedDate(day));
                         const propsDay = (formattedWeekDate(day));
                         const lastDay = ( formattedDate(day,'/') < formattedDate(today,'/'));
-                        const order = isOrderMeal?.find(x => x.serviceDate === propsDay); 
-                        const orderCount = order && order.orderItemDtoList;
-                        const set = new Set(orderCount?.map((x) => x.diningType));
-                        const newArr = [...set].length;
-                        
+                        const order = isOrderMeal?.filter(x => x.serviceDate === propsDay).map(el => {
+                          return el.diningType
+                        });
+                        const orderCount = order.length
+                        const events =()=>{
+                          selectedPress(day); onPressEvent2(propsDay)
+                        }
                         return (
-                        <DaysWrap key={day}>
+                        <DaysWrap
+                         key={day} 
+                         onPress={ ()=>{onPressEvent  ? console.log('누름') : onPressEvent2 && events()} } >
                             <Day lastDay={lastDay} color={color} size={size}>{txt}</Day>
                             <TodayCircle now={now} type={type} currentPress={currentPress} day={day}>
-                              {/* onPressEvent: Home  */}
-                              {onPressEvent && 
-                                // <Pressable onPress={()=>navigation.reset({ routes: [{name:MealMainPageName,params:{data:pressDay}}]})}>
-                                <Pressable onPress={()=>console.log('누름')} disabled={lastDay && true}>
-                                <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
-                                </Pressable>
-                              }
-                              {onPressEvent2 && 
-                                <Pressable onPress={()=>{ selectedPress(day); onPressEvent2(propsDay)}} disabled={lastDay && true}>
-                                <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
-                                </Pressable>
-                              }
-                              
+                              <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
                             </TodayCircle>
                             {order && (
                               <DotWrap>
-                                {Array.from(Array(newArr),(x,idx) => (
+                                {Array.from(Array(orderCount),(x,idx) => (
                                   <Dot key={idx} lastDay={lastDay}/>
                                 )) }
                               </DotWrap>
@@ -166,7 +158,9 @@ justify-content:space-between;
 padding:16px 0px;
 `;
 
-const DaysWrap = styled.View`
+const DaysWrap = styled.Pressable`
+padding-left: 10px;
+padding-right: 10px;
 align-items:center;
 `;
 

@@ -227,7 +227,7 @@ if(isUserInfoLoading){
             <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
           </NoMealInfo>  
         ) : todayMeal?.map((m,idx) => {
-          console.log(m)
+          
             return (
               <React.Fragment key={`${m.id} ${idx}`}>
                 {m.orderItemDtoList.map((meal) => {

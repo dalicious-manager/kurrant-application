@@ -193,7 +193,7 @@ const BottomSheet = props => {
             scrollEnabled={up > 500}
             renderItem={({ item }) => (
               
-                <Wrap onPress={()=>{detailPagePress(item.id)}}>
+                <Wrap>
                   
                   <MealImageWrap>
                     <FastImage source={{uri:`${item.image}`,priority:FastImage.priority.high}}
@@ -204,7 +204,7 @@ const BottomSheet = props => {
                       }}
                       />
                   </MealImageWrap>
-                    <ContentsText>
+                    <ContentsText onPress={()=>{detailPagePress(item.id)}}>
                       
                         <Name>[{item.makersName}]</Name>
                         <Name>{item.foodName}</Name>
@@ -331,19 +331,19 @@ const MealImageWrap = styled.View`
 
 const Wrap = styled.View`
 flex-direction:row;
-/* padding:16px 24px; */
+padding:16px 0px;
 //justify-content:space-between;
-
+min-height:184px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
 
 `;
 
 
-const ContentsText = styled.View`
+const ContentsText = styled.Pressable`
 width:60%;
 padding-left:12px;
-
+margin-bottom:60px;
 `;
 
 const CountWrap = styled.View`
@@ -354,17 +354,14 @@ right:0px;
 
 const SoldOutView = styled.View`
 flex-direction:row;
-justify-content:flex-end;
 align-items:center;
 margin-top:2px;
-padding-bottom:44px;
+position:absolute;
+bottom:-20px;
+right:-22px;
 `;
 
 const ShortageText = styled(Typography).attrs({text:'CaptionR'})`
 color:${({theme}) => theme.colors.red[500]};
 margin-left:4px;
-`;
-
-const PressView = styled.Pressable`
-width:100%
 `;
