@@ -100,8 +100,7 @@ const Pages = () => {
         useCallback(()=>{
             async function loadDailyFood(){
                 try {
-                    await loadMeal();
-                    await dailyFood(spotId,date);                    
+                    await loadMeal();                  
                 } catch (error) {
                     if(error.toString().replace("Error:",'').trim() === '403'){
                       navigation.reset({
@@ -319,7 +318,7 @@ const Pages = () => {
                         </ProgressInner>
                     </ProgressWrap>
 
-                    {isDailyFoodLoading  ? <SkeletonUI/>: 
+            
                      <Pager ref={diningRef} 
                      initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
                      onPageSelected={(e) => {onPageScroll(e)}} 
@@ -329,7 +328,7 @@ const Pages = () => {
                         {BuyMeal(isMorningFood)}
                         {BuyMeal(isLunchFood)}
                         {BuyMeal(isDinnerFood)}
-                    </Pager> }
+                    </Pager> 
                 </PagerViewWrap>
                 
             </ScrollView>

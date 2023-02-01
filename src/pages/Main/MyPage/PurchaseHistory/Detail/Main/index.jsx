@@ -2,55 +2,69 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect } from "react";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import styled, { useTheme } from "styled-components/native";
+import usePurchaseHistory from "../../../../../../biz/usePurchaseHistory";
 import Typography from "../../../../../../components/Typography";
 import Wrapper from "../../../../../../components/Wrapper";
 import { formattedDateAndDay } from "../../../../../../utils/dateFormatter";
+import withCommas from "../../../../../../utils/withCommas";
 import OrderItem from "./components/orderItem";
 
 export const PAGE_NAME = 'P_MAIN__PURCHASE_DETAIL';
 
 const Pages = ({route}) => {
-  const {code,date} = route.params;
+  const {id,date} = route.params;
   const navigation = useNavigation();
   const themeApp = useTheme();
+  const {getPurchaseDetail,readAbleAtom:{purchaseDetail}} = usePurchaseHistory();
   useEffect(()=>{
-    console.log(code);
+    const getData = async()=>{
+      const req = {
+        purchaseId:id
+      }
+      const data = await getPurchaseDetail(req);
+      console.log(data);
+    }
+    getData();
   },[])
   return (
     <SafeView>
       <ScrollView>
         <Wrapper paddingTop={14}>
           <CodeBlock>
-            <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>{code}</Typography>
-            <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>{formattedDateAndDay(date)}</Typography>
+            <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>{purchaseDetail.code}</Typography>
+            <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>{formattedDateAndDay(purchaseDetail.orderDate)}</Typography>
           </CodeBlock>
           <PurchaseInfoBox>
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>상품 타입</Typography>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>정기식사</Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.orderType}</Typography>
             </PurchaseInfoList>
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>주문자</Typography>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>홍길동</Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.userName}</Typography>
             </PurchaseInfoList>
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>그룹/스팟</Typography>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>달리셔스주식회사 / 달리타운3층</Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.groupName} / {purchaseDetail?.spotName}</Typography>
             </PurchaseInfoList>
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>세부 주소</Typography>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>-</Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.ho || "-"}</Typography>
             </PurchaseInfoList>
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>배송지</Typography>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>서울 강남구 역삼로 168 5층 1011호</Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.address}</Typography>
             </PurchaseInfoList>
           </PurchaseInfoBox>
           <OrderItemBox>
             <OrderTitleBox>
               <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}>주문한 제품</Typography>
             </OrderTitleBox>
-            <OrderItem serviceDate={"2022-02-12"} makersName={"폴어스"} name={"리코타 치즈 샐러드"} count={1} price={8500} diningType={1} foodStatus={5}/>
+            {purchaseDetail?.orderItems?.map((v)=>{
+              console.log(v);
+              return <OrderItem key={v.id} orderItem={v}/>
+            })}
+            
           </OrderItemBox>
           <PaymentsBox>
             <PaymentsTitle>
@@ -58,15 +72,15 @@ const Pages = ({route}) => {
             </PaymentsTitle>
             <PaymentsList>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>총 상품금액</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>10,000 원</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>{withCommas(purchaseDetail?.defaultPrice)} 원</Typography>
             </PaymentsList>
             <PaymentsList>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>회사 지원금 사용금액</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>- 10,000 원</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>- {withCommas(purchaseDetail?.supportPrice)} 원</Typography>
             </PaymentsList>
             <PaymentsList>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>총 할인금액</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>- 10,000 원</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>- {withCommas(purchaseDetail?.discountPrice)} 원</Typography>
             </PaymentsList>
             <SaleContainer>
               <DateBarBox>
@@ -75,29 +89,29 @@ const Pages = ({route}) => {
               <SaleBox>
                 <SaleItem>
                   <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>멤버십 할인금액</Typography>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>0 원</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.membershipDiscountPrice)} 원</Typography>
                 </SaleItem>
                 <SaleCenterItem>
                   <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>판매자 할인 금액</Typography>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>10,000 원</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.makersDiscountPrice)} 원</Typography>
                 </SaleCenterItem>
                 <SaleItem>
                   <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>기간 할인 금액</Typography>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>10,000 원</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.periodDiscountPrice)} 원</Typography>
                 </SaleItem>
               </SaleBox>
             </SaleContainer>
             <PaymentsList>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>배송비</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>0 원</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>{withCommas(purchaseDetail?.deliveryFee)} 원</Typography>
             </PaymentsList>
             <PaymentsList>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>포인트 사용금액</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>- 20,000 P</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>- {withCommas(purchaseDetail?.point)} P</Typography>
             </PaymentsList>
             <TotalPriceBox>
               <Typography text="Title03SB" textColor={themeApp.colors.grey[4]}>총 결제금액</Typography>
-              <Typography text="Title03SB" textColor={themeApp.colors.grey[2]}>10,000 원</Typography>
+              <Typography text="Title03SB" textColor={themeApp.colors.grey[2]}>{withCommas(purchaseDetail?.totalPrice)} 원</Typography>
             </TotalPriceBox>
           </PaymentsBox>
           <LineBar />
@@ -154,7 +168,7 @@ const Pages = ({route}) => {
           </PaymentsBox>
           <PaymentsMethodBox>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>결제수단</Typography>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>현대카드(1234)</Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.paymentInfo}</Typography>
           </PaymentsMethodBox>
           <CancelBox>
             <CancelButton>

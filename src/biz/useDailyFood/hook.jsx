@@ -23,23 +23,23 @@ const useFoodDaily = () => {
         
         try {
             setDailyFoodLoading(true)
+            console.log(new Date().getSeconds(),"시작");
             const res = await Fetch.DailyFood(spotId,seletedDate);
             
             if(res.data === null){
                
                 throw new Error('없음');
             }
-            
+            console.log(res.data.dailyFoodDtos);
             setDiningTypes(res.data.diningTypes);
-            setMorning(res.data.dailyFoodDtos.filter(x => x.serviceDate === seletedDate && x.diningType === 1));
-            setLunch(res.data.dailyFoodDtos.filter(x => x.serviceDate === seletedDate && x.diningType === 2));
-            setDinner(res.data.dailyFoodDtos.filter(x => x.serviceDate === seletedDate && x.diningType === 3));
+            setMorning(res.data.dailyFoodDtos.filter(x => x.diningType === 1));
+            setLunch(res.data.dailyFoodDtos.filter(x =>  x.diningType === 2));
+            setDinner(res.data.dailyFoodDtos.filter(x =>  x.diningType === 3));
             
         } catch (error) {
             setMorning([]);
             setLunch([]);
             setDinner([]);
-            console.log(err.toString().replace("Error:",''),"123456")
             if(err.toString().replace("Error:",'').trim() === '403'){
                 AsyncStorage.clear();
                 navigation.reset({
@@ -55,6 +55,7 @@ const useFoodDaily = () => {
                 })
               }
         } finally {
+          console.log(new Date().getSeconds(),"끝");
             setDailyFoodLoading(false)
         }
     }

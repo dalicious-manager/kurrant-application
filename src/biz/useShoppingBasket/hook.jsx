@@ -21,10 +21,10 @@ const useShoppingBasket = () => {
             const res = await Fetch.loadMealCart();
             setClientStatus([])
             setMealCartSpot([])
-            setLoadMeal(res.data ? res.data.spotCarts : []);
+            setLoadMeal(res.data && res.data?.spotCarts ? res.data.spotCarts : []);
             setUserPoint([])
             setQuantity(0);
-            const clientType = res.data.spotCarts.map(el => {
+            const clientType = res.data?.spotCarts.map(el => {
                 
                 return {
                     spotId:el.spotId,
@@ -32,21 +32,21 @@ const useShoppingBasket = () => {
                 }
             });
             
-            const spot = res.data.spotCarts.map(m => {
+            const spot = res.data?.spotCarts.map(m => {
                 return {
                     id:m.spotId,
                     text: m.groupName + "\u00a0" + m.spotName
                 }
             });
             
-            const qty = res.data.spotCarts.map(m => m.cartDailyFoodDtoList.length)
-            const badgeQty = qty.reduce((acc,cur) => {
+            const qty = res.data?.spotCarts.map(m => m.cartDailyFoodDtoList.length)
+            const badgeQty = qty?.reduce((acc,cur) => {
                 return acc + cur
-            },0)
+            },0)  || 0
            
             setClientStatus(clientType)
             setMealCartSpot(spot)
-            setUserPoint(res.data.userPoint)
+            setUserPoint(res.data && res.data?.userPoint && res.data.userPoint)
             setQuantity(badgeQty);
         } catch (err) {
             throw err;

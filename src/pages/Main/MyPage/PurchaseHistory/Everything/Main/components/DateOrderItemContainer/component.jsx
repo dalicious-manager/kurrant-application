@@ -21,14 +21,13 @@ const Component = ({
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
-  console.log(purchase,"test1234");
     return (
         <DateOrderItemListContainer isFirst={itemIndex === 0}>
         <DateDetailBox>
           <Typography text={"CaptionR"} textColor={themeApp.colors.grey[4]}>{date} 결제</Typography>
           <DetailWrap>
               <TextButton size='label13R' label='주문상세' type='blue' 
-              onPressEvent={()=>{navigation.navigate(PurchaseDetailPageName,{code:purchase.code,date:date})}}/>
+              onPressEvent={()=>{navigation.navigate(PurchaseDetailPageName,{id:purchase.id,date:date})}}/>
               <ArrowRightIcon/>
           </DetailWrap>
         </DateDetailBox>
