@@ -34,12 +34,12 @@ const Component = () => {
       </TopWrap>
       <RowWrap>
         <StarsWrap>
-          <StarRating rating={4.5} width="120px" margin="1px" />
+          <StarRating rating={4.5} width="66px" margin="1px" />
         </StarsWrap>
 
         <PostDateText>2022. 02. 11 작성</PostDateText>
       </RowWrap>
-      <ImagesWrap>
+      {/* <ImagesWrap>
         <ImageWrap>
           <MealImage
             source={{
@@ -82,7 +82,7 @@ const Component = () => {
             }}
           />
         </ImageWrap>
-      </ImagesWrap>
+      </ImagesWrap> */}
       <ReviewWrap></ReviewWrap>
       <CommentWrap></CommentWrap>
     </Container>
@@ -121,20 +121,24 @@ const EditText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.blue[500]};
   margin-right: 6px;
 `;
-const DeleteText = styled(Typography).attrs({text: 'Body05R'})`
+const DeleteText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
 `;
 
 const RowWrap = styled.View`
   flex-direction: row;
+
+  align-items: center;
 `;
 const StarsWrap = styled.View`
   flex-direction: row;
 `;
 
-const PostDateText = styled.Text``;
-
+const PostDateText = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${props => props.theme.colors.grey[4]};
+  margin-left: 6px;
+`;
 const ImagesWrap = styled.View`
   flex-direction: row;
 `;

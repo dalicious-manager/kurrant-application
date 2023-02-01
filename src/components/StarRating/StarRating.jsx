@@ -33,41 +33,56 @@ const StarRating = ({rating, width, margin}) => {
   return (
     <Container>
       <GreyStarDiv>
-        {/* <IconWrapper
+        <IconWrapper
           width={widthAndHeight}
           height={widthAndHeight}
           margin={onlyNumbersMargin}
           unitMargin={unitMargin}>
-          <GreyStarIcon resizeMode="contain" />
+          <StarIconImage
+            source={require('../../assets/images/StarRating/GreyStar.png')}
+            resizeMode="contain"
+          />
         </IconWrapper>
         <IconWrapper
           width={widthAndHeight}
           height={widthAndHeight}
           margin={onlyNumbersMargin}
           unitMargin={unitMargin}>
-          <GreyStarIcon resizeMode="contain" />
+          <StarIconImage
+            source={require('../../assets/images/StarRating/GreyStar.png')}
+            resizeMode="contain"
+          />
         </IconWrapper>
         <IconWrapper
           width={widthAndHeight}
           height={widthAndHeight}
           margin={onlyNumbersMargin}
           unitMargin={unitMargin}>
-          <GreyStarIcon resizeMode="contain" />
+          <StarIconImage
+            source={require('../../assets/images/StarRating/GreyStar.png')}
+            resizeMode="contain"
+          />
         </IconWrapper>
         <IconWrapper
           width={widthAndHeight}
           height={widthAndHeight}
           margin={onlyNumbersMargin}
           unitMargin={unitMargin}>
-          <GreyStarIcon resizeMode="contain" />
+          <StarIconImage
+            source={require('../../assets/images/StarRating/GreyStar.png')}
+            resizeMode="contain"
+          />
         </IconWrapper>
         <IconWrapper
           width={widthAndHeight}
           height={widthAndHeight}
           margin={onlyNumbersMargin}
           unitMargin={unitMargin}>
-          <GreyStarIcon resizeMode="contain" />
-        </IconWrapper> */}
+          <StarIconImage
+            source={require('../../assets/images/StarRating/GreyStar.png')}
+            resizeMode="contain"
+          />
+        </IconWrapper>
       </GreyStarDiv>
 
       <YellowStarDiv rating={rating} width={onlyNumbersWidth} unit={unitWidth}>
@@ -76,10 +91,47 @@ const StarRating = ({rating, width, margin}) => {
           height={widthAndHeight}
           margin={onlyNumbersMargin}
           unitMargin={unitMargin}>
-          {/* <YellowStarIcon resizeMode="contain" /> */}
-
           <StarIconImage
-            // source={{uri: '../../assets/images/StarRating/YellowStar.png'}}
+            source={require('../../assets/images/StarRating/YellowStar.png')}
+            resizeMode="contain"
+          />
+        </IconWrapper>
+        <IconWrapper
+          width={widthAndHeight}
+          height={widthAndHeight}
+          margin={onlyNumbersMargin}
+          unitMargin={unitMargin}>
+          <StarIconImage
+            source={require('../../assets/images/StarRating/YellowStar.png')}
+            resizeMode="contain"
+          />
+        </IconWrapper>
+        <IconWrapper
+          width={widthAndHeight}
+          height={widthAndHeight}
+          margin={onlyNumbersMargin}
+          unitMargin={unitMargin}>
+          <StarIconImage
+            source={require('../../assets/images/StarRating/YellowStar.png')}
+            resizeMode="contain"
+          />
+        </IconWrapper>
+        <IconWrapper
+          width={widthAndHeight}
+          height={widthAndHeight}
+          margin={onlyNumbersMargin}
+          unitMargin={unitMargin}>
+          <StarIconImage
+            source={require('../../assets/images/StarRating/YellowStar.png')}
+            resizeMode="contain"
+          />
+        </IconWrapper>
+        <IconWrapper
+          width={widthAndHeight}
+          height={widthAndHeight}
+          margin={onlyNumbersMargin}
+          unitMargin={unitMargin}>
+          <StarIconImage
             source={require('../../assets/images/StarRating/YellowStar.png')}
             resizeMode="contain"
           />
@@ -117,8 +169,11 @@ const IconWrapper = styled.View`
   height: ${({height}) => height};
   flex: 0 0 auto;
   margin: ${({margin, unitMargin}) => `${margin}${unitMargin}`};
-  border: 1px solid black;
+
   justify-content: center;
 `;
 
-const StarIconImage = styled.Image``;
+const StarIconImage = styled.Image`
+  width: 100%;
+  height: 100%;
+`;
