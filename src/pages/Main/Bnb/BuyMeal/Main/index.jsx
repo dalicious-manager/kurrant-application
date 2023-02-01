@@ -100,7 +100,8 @@ const Pages = () => {
         useCallback(()=>{
             async function loadDailyFood(){
                 try {
-                    await loadMeal();                  
+                    await loadMeal();
+                                   
                 } catch (error) {
                     if(error.toString().replace("Error:",'').trim() === '403'){
                       navigation.reset({
@@ -249,7 +250,7 @@ const Pages = () => {
                     }}
                     />
                     
-                    {(m.status !== 0 || m.status === 2 ) && (
+                    {m.status === 1 && (
                         <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>
                             <CartIcon/>
                         </CartIconWrap>

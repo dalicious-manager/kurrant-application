@@ -152,8 +152,8 @@ const BottomSheet = props => {
   const disabledList = data.filter(el => el.count !== 0);
 
   const detailPagePress = (id) =>{
-    setModalVisible(false);
-    navigation.navigate(mealDetailPageName,{dailyFoodId:id})
+    // setModalVisible(false);
+    // navigation.navigate(mealDetailPageName,{dailyFoodId:id})
   }
 
   return (
@@ -193,7 +193,8 @@ const BottomSheet = props => {
             scrollEnabled={up > 500}
             renderItem={({ item }) => (
               
-                <Wrap onPress={()=>{detailPagePress(item.id)}}>
+                <Wrap>
+                  
                   <MealImageWrap>
                     <FastImage source={{uri:`${item.image}`,priority:FastImage.priority.high}}
                       style={{
@@ -203,16 +204,19 @@ const BottomSheet = props => {
                       }}
                       />
                   </MealImageWrap>
-                    <ContentsText>
+                    <ContentsText onPress={()=>{detailPagePress(item.id)}}>
+                      
                         <Name>[{item.makersName}]</Name>
                         <Name>{item.foodName}</Name>
                         <Price>{withCommas(item.price)}원</Price>
                         {item.spicy !== 'NULL' && <Label label={`${item.spicy}`}/>}
-                        {/* {<SoldOutView>
+                        {(item.capacity < item.count) && <SoldOutView>
                           <WarningIcon/>
-                          <ShortageText>재고부족(재고 수량:1)</ShortageText>
-                         </SoldOutView>} */}
+                          <ShortageText>재고부족(재고 수량:{item.capacity})</ShortageText>
+                         </SoldOutView>}
+                         
                     </ContentsText>
+                    
                     <CountWrap>
                       <Count
                       quantity={item.count}
@@ -325,33 +329,36 @@ const MealImageWrap = styled.View`
 
 `;
 
-const Wrap = styled.Pressable`
+const Wrap = styled.View`
 flex-direction:row;
-padding:16px 24px;
-justify-content:space-between;
-/* width:100%; */
+padding:16px 0px;
+//justify-content:space-between;
+min-height:184px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
 
 `;
 
 
-const ContentsText = styled.View`
+const ContentsText = styled.Pressable`
 width:60%;
+padding-left:12px;
+margin-bottom:60px;
 `;
 
 const CountWrap = styled.View`
 position: absolute;
 bottom:16px;
-right:24px;
+right:0px;
 `;
 
 const SoldOutView = styled.View`
 flex-direction:row;
-justify-content:flex-end;
 align-items:center;
 margin-top:2px;
-padding-bottom:44px;
+position:absolute;
+bottom:-20px;
+right:-22px;
 `;
 
 const ShortageText = styled(Typography).attrs({text:'CaptionR'})`

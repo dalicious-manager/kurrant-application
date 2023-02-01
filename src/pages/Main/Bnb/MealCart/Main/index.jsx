@@ -165,17 +165,21 @@ const Pages = () => {
 
     // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
     
-    console.log(isLoadMeal)
+    // 주문 마감 제외 배열
     const arrs = isLoadMeal?.filter(p => p.spotId === selected )?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods.filter(c => c.status !== 2))).flat()
     const arr = arrs.reduce((acc, val) => [ ...acc, ...val ], []);
 
+    // 장바구니 배열(마감,품절 포함)
+    const cartArrs = isLoadMeal?.filter(p => p.spotId === selected)?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods)).flat();
+    const cartArr = cartArrs.reduce((acc, val) => [ ...acc, ...val ], []);
+    
     // 주문 마감 수량
     const deadlineArrs = isLoadMeal?.filter(p => p.spotId === selected )?.map(el => el.cartDailyFoodDtoList?.map(v => v.cartDailyFoods.filter(c => c.status === 2))).flat()
     const deadlineArr = deadlineArrs.reduce((acc, val) => [ ...acc, ...val ], []);
     const deadline = deadlineArr.map(p => p.count).reduce((acc, cur) => {
         return acc + cur
     },0);
-
+    
     // 주문 마감 제외 시킨 배열 
     const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
  
@@ -233,7 +237,7 @@ const Pages = () => {
     const deliveryFee = lastArr?.map(el => el.deliveryFee).reduce((acc,cur) => {
         return acc + cur
     },0);
-    console.log(selected,'22')
+    
     // 지원금 계산
     const discountPrice = arr?.map(p => (p.discountedPrice * p.count)).reduce((acc,cur) => {
         return acc + cur
@@ -260,10 +264,15 @@ const Pages = () => {
 
     const spotName = mealCartSpot.filter(p => p.id === selected);
 
-    
-    
-    
+    // 재고 부족
+    const isLack = cartArr.map(el => {
+        return (
+            el.capacity < el.count
+        )
+    });
 
+    
+    
     
     const focusPress = () => {
         setFocus(true);
@@ -381,7 +390,7 @@ const Pages = () => {
               onPress:async () => {
                 try {
 
-                    await deleteButton(id)
+                   //await deleteButton(id)
                     setModalVisible3(true)
                 } catch(err) {
                     console.log(err)
@@ -403,13 +412,30 @@ const Pages = () => {
                    {
                      text:'메뉴변경',
                      onPress:() => {},
-                     style:'destructive'
+                     
                    }
                  ]
                )
         }else{
             return
         }
+     }
+
+     const isShortage = () => {
+       
+
+        Alert.alert(
+                '재고가 부족한 상품이 있어요',
+                '수량을 조절하시겠어요?',
+                [
+                {
+                    text:'수량조절',
+                    onPress:() => {},
+                    
+                }
+                ]
+            )
+      
      }
 
      const isDeadline = () => {
@@ -442,7 +468,7 @@ const Pages = () => {
         }
     };
 
-    console.log(spotName[0]?.text)
+    
 
     return (
         <SafeView>
@@ -455,7 +481,7 @@ const Pages = () => {
                         <Text>전체삭제</Text>
                     </Pressable>
                 </SpotView>
-            {(totalCount === 0 && deadline.length === 0 )&& <EmptyView>
+            {(cartArr.length === 0 )&& <EmptyView>
                 <NoMealText>아직 담은 식사가 없어요!</NoMealText>
                 <NoMealButtonWrap>
                     <NoMealButton size={'button38'} label={'식사 담으러가기'} type={'white'} text={'Button09SB'} onPressEvent={()=>{navigation.navigate(BuyMealPageName)}}/>
@@ -601,13 +627,13 @@ const Pages = () => {
             />
             
            {/*  */}
-            {((totalCount !== 0 || deadline.length !== 0) && !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
+            {( !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
                 {deadlineArr.length !== 0 && <EndView>
                     <EndText>주문 마감된 상품이 있어요<EndPointText>({deadline}개)</EndPointText></EndText>
                     <EndQuestionText>해당 상품을 제외하고 결제하시겠어요?</EndQuestionText>
                 </EndView>}
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} 
-                onPressEvent={()=>{totalCount === 0 && isDeadline();soldout.length !== 0 && isSoldOut();(soldout.length === 0 && totalCount !== 0) && navigation.navigate(PaymentPageName,{
+                onPressEvent={()=>{deadline === 0 && isDeadline();soldout.length !== 0 && isSoldOut();isLack.includes(true) && isShortage();(soldout.length === 0 && totalCount !== 0 && !isLack.includes(true)) && navigation.navigate(PaymentPageName,{
                     totalCount,
                     totalMealPrice,
                     membershipDiscountPrice,
@@ -624,7 +650,7 @@ const Pages = () => {
                     clientType,
                     arr,
                 })
-}}
+            }}
 
                 />
             </ButtonWrap>}
