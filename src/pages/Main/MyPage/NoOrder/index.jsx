@@ -1,14 +1,10 @@
 import React from 'react';
 import {Dimensions, Text, View} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
+import Typography from '../../../../components/Typography';
 
-const Component = isArrayEmpty => {
-  return (
-    <NoOrderText isArrayEmpty={isArrayEmpty}>
-      주문 후 리뷰를 작성해 보세요.
-    </NoOrderText>
-  );
+const Component = ({isArrayEmpty, message}) => {
+  return <NoOrderText isArrayEmpty={isArrayEmpty}>{message}</NoOrderText>;
 };
 
 export default Component;

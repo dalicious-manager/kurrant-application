@@ -6,18 +6,14 @@ import Typography from '../../../../components/Typography';
 // import QuestionCircleMonoIcon from '../assets/icons/QuestionCircleMono.svg';
 import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
 import Card from './Card';
-import NoOrder from './NoOrder';
+import NoOrder from '../NoOrder';
 
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import Popup from './Popup';
 
-// import Card from './Card';
-
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
-  // const ReviewWaitList = orderMealMockData();
-
   const ReviewWaitList = [
     {
       id: 1,
@@ -156,7 +152,10 @@ const Pages = () => {
             }}
           />
         ) : (
-          <NoOrder isArrayEmpty={!ReviewWaitList.length} />
+          <NoOrder
+            isArrayEmpty={!ReviewWaitList.length}
+            message={`주문 후 리뷰를 작성해 보세요.`}
+          />
         )}
       </View>
     </Container>

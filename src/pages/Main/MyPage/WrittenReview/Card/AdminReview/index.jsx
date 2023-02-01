@@ -1,29 +1,22 @@
 import React from 'react';
-import {Text} from 'react-native';
+
 import styled from 'styled-components';
 import Typography from '../../../../../../components/Typography';
 
-const Component = () => {
+const Component = ({pngLink, adminName, writtenDate, message}) => {
   return (
     <Container>
       <AdminImageWrap>
-        <AdminImage
-          source={require('../../../../../../assets/images/DefaultProfile.png')}
-          resizeMode="cover"
-        />
+        <AdminImage source={pngLink} resizeMode="cover" />
       </AdminImageWrap>
 
       <MessageWrap>
         <TitleWrap>
-          <AdminName>일품만찬</AdminName>
-          <WrittenDate> 2022.02.11 작성</WrittenDate>
+          <AdminName>{adminName}</AdminName>
+          <WrittenDate> {writtenDate}</WrittenDate>
         </TitleWrap>
 
-        <Message>
-          맛있게 드셨다니 정말 기뻐요. 다음에는 더 맛있는 메뉴를
-          준비해보겠습니다. 이용해주셔서 다시한번 감사드리고 새해에는 더더더더더
-          복 많이 받으세요 사랑합니다.
-        </Message>
+        <Message>{message}</Message>
       </MessageWrap>
     </Container>
   );

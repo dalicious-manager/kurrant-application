@@ -28,5 +28,4 @@ export const UNION = require('../assets/images/card/union-pay.png');
 export const MAESTRO = require('../assets/images/card/maestro.png');
 export const DINERS = require('../assets/images/card/diners-club.png');
 
-
-
+export const DefaultProfile = require('../assets/images/DefaultProfile.png');

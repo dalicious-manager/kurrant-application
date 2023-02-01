@@ -8,16 +8,24 @@ import StarRating from '../../../../../components/StarRating/StarRating';
 
 import AdminReview from './AdminReview';
 
-const Component = () => {
+const Component = ({
+  makersName,
+  menuName,
+  writtenDate,
+  option,
+  rating,
+  reviewText,
+  adminReview,
+}) => {
   return (
     <Container>
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText>
             {'['}
-            폴어스
+            {makersName}
             {']'}
-            리코타 치즈 샐러드
+            {menuName}
           </RestaurentNameText>
           <ArrowRightGrey4 />
         </TitleWrap>
@@ -32,17 +40,21 @@ const Component = () => {
         </EditWrap>
       </TopWrap>
 
-      <OptionWrap>
-        <MiniGreyBlock />
-        <OptionText>추가옵션 : 꼬치소스</OptionText>
-      </OptionWrap>
+      {option ? (
+        <OptionWrap>
+          <MiniGreyBlock />
+          <OptionText>추가옵션 : {option}</OptionText>
+        </OptionWrap>
+      ) : (
+        <></>
+      )}
 
       <RowWrap>
         <StarsWrap>
-          <StarRating rating={3} width="66px" margin="1px" />
+          <StarRating rating={rating} width="66px" margin="1px" />
         </StarsWrap>
 
-        <PostDateText>2022. 02. 11 작성</PostDateText>
+        <PostDateText>{writtenDate} 작성</PostDateText>
       </RowWrap>
       <ImagesWrap>
         <ImageWrap>
@@ -85,16 +97,15 @@ const Component = () => {
         </ImageWrap>
       </ImagesWrap>
       <ReviewWrap>
-        <ReviewText>
-          예전보다 짠맛이 적어서 좋습니다! 맛있긴 했는데 젓가락 끝이
-          썩어있었어요 ㅠㅠ 한 입 먹고 맛이 쓰길래 왜지? 예전보다 짠맛이 적어서
-          좋습니다! 맛있긴 했는데 젓가락 끝이 썩어있었어요 ㅠㅠ 한 입 먹고 맛이
-          쓰길래 왜지? 어있었어요 ㅠㅠ 한 입 먹고 맛이 쓰길래 왜지? ㅠ 한 입
-          먹고 맛이 쓰길래
-        </ReviewText>
+        <ReviewText>{reviewText}</ReviewText>
       </ReviewWrap>
       <CommentWrap>
-        <AdminReview />
+        <AdminReview
+          pngLink={adminReview.pngLink}
+          adminName={adminReview.adminName}
+          writtenDate={adminReview.writtenDate}
+          message={adminReview.message}
+        />
       </CommentWrap>
     </Container>
   );
@@ -104,8 +115,6 @@ export default Component;
 
 const Container = styled.View`
   width: 100%;
-  /* height: 60px; */
-  /* background-color: azure; */
   margin: 12px 0;
   margin-bottom: 40px;
 `;
