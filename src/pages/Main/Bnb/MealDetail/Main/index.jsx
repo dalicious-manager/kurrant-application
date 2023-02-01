@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useLayoutEffect} from "react";
 import { View , StatusBar, Dimensions,Text} from "react-native";
 import styled from "styled-components";
 
+import LinearGradient from "react-native-linear-gradient";
 import InfoIcon from "../../../../../assets/icons/MealDetail/info.svg";
 import FastImage from "react-native-fast-image";
 import StartIcon from '../../../../../assets/icons/star.svg';
@@ -41,7 +42,7 @@ const Pages = ({route}) => {
 
     const headerTitle = isFoodDetail?.name;
     const dailyFoodId = route.params.dailyFoodId;
-    console.log(dailyFoodId,'22222')
+    
     const closeModal = () => {
         setModalVisible(false)
     }
@@ -150,8 +151,13 @@ const Pages = ({route}) => {
                     style={{
                         maxWidth: width,
                         height:380,
+                        
                     }}
-                    />
+                    >
+                        <FilterImage
+                        colors={["rgba(0, 0, 0, 0.45)",'rgba(7, 7, 8, 0.25)', 'rgba(255, 255, 255, 0)','rgba(255, 255, 255, 0) ']}
+                        />
+                    </FastImage>
                 <Content>
                     <View>
                         <MakersName>{isFoodDetail?.makersName}</MakersName>
@@ -298,6 +304,12 @@ background-color:${props => props.theme.colors.grey[0]};
 
 `;
 
+const FilterImage = styled(LinearGradient)`
+max-width:${width}px;
+height:380px;
+
+
+`;
 const Content = styled.View`
 border-bottom-color:${props => props.theme.colors.grey[8]};
 border-bottom-width:6px;

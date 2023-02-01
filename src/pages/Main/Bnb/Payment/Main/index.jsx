@@ -5,7 +5,8 @@ import { View, Alert,Text, Platform,KeyboardAvoidingView,NativeModules,Touchable
 import styled from "styled-components";
 
 import FastImage from "react-native-fast-image";
-import ArrowDownIcon from '../../../../../assets/icons/Arrow/arrowDown.svg';
+import ArrowUpIcon from '../../../../../assets/icons/Payment/arrow.svg';
+import ArrowDownIcon from '../../../../../assets/icons/Payment/arrowDown.svg';
 import ArrowRightIcon from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import PayError from "../../../../../assets/icons/Payment/payError.svg";
 import useShoppingBasket from "../../../../../biz/useShoppingBasket/hook";
@@ -164,7 +165,7 @@ const Pages = ({route}) => {
     const orderPress = async (spotId) => {
         const data = {
             'spotId':spotId,
-            "cardId": 12,
+            "cardId": selectDefaultCard[0]?.id,
             'cartDailyFoodDtoList':lastArr,
             'totalPrice':totalPrice,
             'supportPrice':supportPrice,
@@ -206,7 +207,8 @@ const Pages = ({route}) => {
                 <Container>
                     <MealInfo onPress={() => setShow(!show)}>
                         <Title>주문 상품 정보</Title>
-                        <ArrowDownIcon/>
+                        {show ?  <ArrowUpIcon/> : <ArrowDownIcon/> }
+                       
                     </MealInfo>
                     
                 </Container>

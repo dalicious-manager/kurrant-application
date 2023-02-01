@@ -45,12 +45,10 @@ const Pages = () => {
     const phoneChk = watch('phone');
     const emailChk = watch('email');
     const {name,phone,email} = userInfo;
-    console.log(nameChk,name,'dkdkdkdkdk')
+    console.log(phoneChk,'dkdkdkdkdk')
     const isValidation = 
-        (nameChk || nameChk !== '' ) &&
-        (phoneChk || phoneChk !== '') &&
-        (emailChk || emailChk !== '');
-
+        (nameChk || nameChk !== '' ) && (emailChk || emailChk !== '') && 
+        (phone === null ? (phoneChk !== '' && phoneChk !== undefined && phoneChk !== null) : (phoneChk !== '') )
     const keyboardStatus = useKeyboardEvent();
     const saveAtom = async () =>{
       
