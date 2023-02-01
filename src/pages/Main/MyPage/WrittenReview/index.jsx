@@ -8,8 +8,7 @@ export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const Pages = () => {
   return (
     <Container>
-      <Text>hihihihihihi</Text>
-
+      <Card />
       <Card />
       <Card />
     </Container>

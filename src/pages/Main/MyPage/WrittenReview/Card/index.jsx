@@ -6,7 +6,7 @@ import Typography from '../../../../../components/Typography';
 import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
 import StarRating from '../../../../../components/StarRating/StarRating';
 
-export const pathFind = 'yo';
+import AdminReview from './AdminReview';
 
 const Component = () => {
   return (
@@ -34,7 +34,7 @@ const Component = () => {
       </TopWrap>
       <RowWrap>
         <StarsWrap>
-          <StarRating rating={4.5} width="66px" margin="1px" />
+          <StarRating rating={3} width="66px" margin="1px" />
         </StarsWrap>
 
         <PostDateText>2022. 02. 11 작성</PostDateText>
@@ -79,8 +79,18 @@ const Component = () => {
           <DefaultImage />
         </ImageWrap>
       </ImagesWrap>
-      <ReviewWrap></ReviewWrap>
-      <CommentWrap></CommentWrap>
+      <ReviewWrap>
+        <ReviewText>
+          예전보다 짠맛이 적어서 좋습니다! 맛있긴 했는데 젓가락 끝이
+          썩어있었어요 ㅠㅠ 한 입 먹고 맛이 쓰길래 왜지? 예전보다 짠맛이 적어서
+          좋습니다! 맛있긴 했는데 젓가락 끝이 썩어있었어요 ㅠㅠ 한 입 먹고 맛이
+          쓰길래 왜지? 어있었어요 ㅠㅠ 한 입 먹고 맛이 쓰길래 왜지? ㅠ 한 입
+          먹고 맛이 쓰길래
+        </ReviewText>
+      </ReviewWrap>
+      <CommentWrap>
+        <AdminReview />
+      </CommentWrap>
     </Container>
   );
 };
@@ -89,9 +99,10 @@ export default Component;
 
 const Container = styled.View`
   width: 100%;
-  height: 60px;
+  /* height: 60px; */
   background-color: azure;
   margin: 24px 0;
+  margin-bottom: 40px;
 `;
 
 const TopWrap = styled.View`
@@ -166,4 +177,9 @@ const DefaultImage = styled.View`
 `;
 
 const ReviewWrap = styled.View``;
-const CommentWrap = styled.View``;
+
+const ReviewText = styled.Text``;
+
+const CommentWrap = styled.View`
+  width: 100%;
+`;
