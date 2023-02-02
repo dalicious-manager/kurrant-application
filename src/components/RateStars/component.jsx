@@ -1,14 +1,23 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text} from 'react-native';
 import styled from 'styled-components';
 
-const Component = ({rating, width, margin}) => {
+const Component = ({ratingInput, width, margin}) => {
+  const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    if (ratingInput) {
+      setRating(ratingInput);
+    }
+  }, [ratingInput]);
+
   const extractNumberOnly = str => {
     const onlyNumbersArray = str.match(/[0-9]/g);
     const onlyNumbers = parseInt(str.match(/[0-9]/g)?.join(''));
 
     let unit = '';
     if (onlyNumbersArray) {
+      1;
       unit = str
         .split('')
         .filter(x => !onlyNumbersArray.includes(x))
@@ -37,6 +46,7 @@ const Component = ({rating, width, margin}) => {
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(1);
               console.log('grey1');
             }}>
             <StarIconImage
@@ -44,13 +54,13 @@ const Component = ({rating, width, margin}) => {
               resizeMode="contain"
             />
           </StarPressable>
-
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(2);
               console.log('grey2');
             }}>
             <StarIconImage
@@ -58,13 +68,13 @@ const Component = ({rating, width, margin}) => {
               resizeMode="contain"
             />
           </StarPressable>
-
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(3);
               console.log('grey3');
             }}>
             <StarIconImage
@@ -72,13 +82,13 @@ const Component = ({rating, width, margin}) => {
               resizeMode="contain"
             />
           </StarPressable>
-
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(4);
               console.log('grey4');
             }}>
             <StarIconImage
@@ -86,13 +96,13 @@ const Component = ({rating, width, margin}) => {
               resizeMode="contain"
             />
           </StarPressable>
-
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(5);
               console.log('grey5');
             }}>
             <StarIconImage
@@ -112,6 +122,7 @@ const Component = ({rating, width, margin}) => {
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(1);
               console.log('yellow 1');
             }}>
             <StarIconImage
@@ -125,6 +136,7 @@ const Component = ({rating, width, margin}) => {
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(2);
               console.log('yellow 2');
             }}>
             <StarIconImage
@@ -138,6 +150,7 @@ const Component = ({rating, width, margin}) => {
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(3);
               console.log('yellow 3');
             }}>
             <StarIconImage
@@ -151,6 +164,7 @@ const Component = ({rating, width, margin}) => {
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(4);
               console.log('yellow 4');
             }}>
             <StarIconImage
@@ -164,6 +178,7 @@ const Component = ({rating, width, margin}) => {
             margin={onlyNumbersMargin}
             unitMargin={unitMargin}
             onPress={() => {
+              setRating(5);
               console.log('yellow 5');
             }}>
             <StarIconImage

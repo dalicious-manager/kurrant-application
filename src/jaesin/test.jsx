@@ -19,7 +19,8 @@ const Pages = () => {
 
       <ReviewPopup /> */}
 
-      <RateStars rating={3.6} width="300px" margin="2px" />
+      <RateStars ratingInput={4} width="300px" margin="2px" />
+      <RateStars ratingInput={0} width="300px" margin="2px" />
     </Container>
   );
 };
