@@ -1,8 +1,8 @@
 import {Slider} from '@miblanchard/react-native-slider';
-import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { ScrollView, View, Pressable,Dimensions, StyleSheet, SafeAreaView, Alert, ActivityIndicator} from "react-native";
+import React, { useRef, useState, useEffect } from 'react';
+import { ScrollView, View, Dimensions, StyleSheet, ActivityIndicator} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
@@ -24,7 +24,6 @@ import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import SkeletonUI from '../Skeleton';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -34,15 +33,12 @@ const Pages = () => {
     const isFocused = useIsFocused();
     const navigation = useNavigation();
     const diningRef = useRef();
-
-    const [focus,setFocus] = useState();
+ 
     const [modalVisible,setModalVisible] = useState(false);
     const [modalVisible2,setModalVisible2] = useState(false);
     const [modalVisible3,setModalVisible3] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
-    const [selectFood, setSelectFood] = useState()
-    const [currentPage, setCurrentPage] = useState(0);
-    const [first,setFirst] = useState();
+    const [selectFood, setSelectFood] = useState();
     const [show,setShow] = useState(false);
     const {isDiningTypes, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
     const {addMeal ,isLoadMeal, isAddMeal,loadMeal , setLoadMeal,updateMeal,setQuantity} = useShoppingBasket();
@@ -66,18 +62,14 @@ const Pages = () => {
             isDiningTypes.includes(2) ? 1 :isDiningTypes.includes(3) ? 2 :0  :
             position ===1 ? isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(3) ? 2 :isDiningTypes.includes(1) ? 0 :1 : 
             position ===2 && isDiningTypes.includes(3) ? 2 : isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(1) ? 0 :2 
-            console.log(position,page,isDiningTypes,"testeteset");
             if(page !== position  ) {
                 diningRef.current.setPage(page)
                 setSliderValue(page);
-                setFocus(page);
             }else{
                 setSliderValue(page);
-                setFocus(page);
             }
         }else{
             setSliderValue(position);
-            setFocus(position);
         }
     }
     
@@ -98,13 +90,13 @@ const Pages = () => {
         //     modalVisible2,
         //     modalVisible3,)
         if(diningType === 1){
-            return await setModalVisible(true)
+            return setModalVisible(true)
         }
         if(diningType === 2){
-            return await setModalVisible2(true)
+            return setModalVisible2(true)
         }
         if(diningType === 3){
-            return await setModalVisible3(true)
+            return setModalVisible3(true)
         }
     }
 
@@ -128,7 +120,6 @@ const Pages = () => {
                     if(data[0]){
                         diningRef.current.setPage(Number(data[0])-1)
                         setSliderValue(Number(data[0])-1);
-                        setFocus(Number(data[0])-1);
                     }
                 } catch (error) {
                     if(error.toString().replace("Error:",'').trim() === '403'){
@@ -158,9 +149,8 @@ const Pages = () => {
         
         if(duplication?.includes(true)){
             await openModal(diningType)
-            await setSelectFood({
-                id:id,
-                
+            setSelectFood({
+                id: id,
             })
         }else {
             await addToCart(id,m)
@@ -179,23 +169,21 @@ const Pages = () => {
     const modifyQty = quantity.reduce((acc,cur) => [...acc, ... cur], []);
     const req = {"updateCartList":modifyQty}
     const addToCart = async (id,m) =>{
+        try {
+            await addMeal([{
+                "dailyFoodId":id,
+                "count":1,
+            }]);             
+            setShow(true)
+            balloonEvent();
+            setTimeout(()=>{
+                setShow(false)
+            },3000)
+        } catch(err){
+        console.log(err,'8')
         
-            try {
-        
-                    await addMeal([{
-                        "dailyFoodId":id,
-                        "count":1,
-                    }]);             
-                    setShow(true)
-                    balloonEvent();
-                    setTimeout(()=>{
-                        setShow(false)
-                    },3000)
-                 } catch(err){
-                    console.log(err,'8')
-                    
-                 }
-               closeModal();    
+        }
+        closeModal();    
     }
     
     const BuyMeal = (diningFood) =>{
@@ -311,7 +299,7 @@ const Pages = () => {
                                 maximumValue={2}
                                 maximumTrackTintColor="#fff"
                                 minimumTrackTintColor="#fff"
-                                onSlidingComplete={(e) => {diningRef.current.setPage(...e); setFocus(...e)}}
+                                onSlidingComplete={(e) => {diningRef.current.setPage(...e);}}
                                 step={1}
                                 trackStyle={styles.trackStyle}
                                 thumbStyle={styles.thumbStyle}
@@ -325,7 +313,7 @@ const Pages = () => {
                                     return (
                                          <DiningPress key={i} 
                                          disabled={!typeBoolean && true}
-                                         onPress={() => {diningRef.current.setPage(i);setSliderValue(i);setFocus(i)}}>
+                                         onPress={() => {diningRef.current.setPage(i);setSliderValue(i);}}>
                                             <ProgressText type={typeBoolean} index={i}>{btn}</ProgressText>
                                          </DiningPress>
                                     )
