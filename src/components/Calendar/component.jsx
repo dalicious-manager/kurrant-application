@@ -57,49 +57,62 @@ const Component = ({
     // 파라미터 보낼 날짜 - 이번주 첫,마지막날 콘솔 찍힘
     const startDate = formattedWeekDate(weekly[0][0]);
     const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
-    
-  
-    // useEffect(()=>{
-    //     async function loadOrderMeal(){
-    //       await orderMeal();
-    //     }
-    //     loadOrderMeal();
-      
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
-    //   },[]);
 
-   const selectedPress = (day) => {
-      setCurrentPress(day)
-   }
+    const selectedPress = (day) => {
+        setCurrentPress(day)
+    }
 
-      // const dayPress = (day) => {
-      //   setFilter(isOrderMeal?.filter(x => x.date === day));
-      // };
-      // console.log(filter)
+    const start = weekly.map((s) => {
+      const startData = formattedWeekDate(s[0]);
+      return (
+          startData
+      )
+    });
 
-      
+    const end = weekly.map((e) => {
+        const endData =  formattedWeekDate(e.slice(-1)[0]);
+        return (
+            endData
+        )
+    });
+
     const onPageScroll = (e) => {
       const { position } = e.nativeEvent;
         setChk(position)
     } 
 
-   const dayPress = async (propsDay) =>{
-        
-        try {
-            await dailyFood('123',propsDay);
-            
-        }catch(err){
-            console.log(err)
-        }
-    }
-      
-    
+    // const scrollCalendar = async (e) => {
+    //   const { position } = e.nativeEvent;
+    //   await mealPress(start[position],end[position])
+    // }
+
+    // const mealPress = async (startdate,enddate) => {
+    //     try {
+    //         await orderMeal(startdate,enddate);
+
+    //     } catch(err) {
+    //         console.log(err)
+    //     }
+    // }
+  useEffect(()=>{
+    if(weekly.length > 0){
+    console.log(weekly[0][0],'2323')
+    console.log(weekly[weekly?.length-1][weekly[0].length-1],'5555')
+  }
+  },[])
   return (
     <React.Fragment>
      {BooleanValue && daily ? <Button pager={pager} daily chk={chk} /> : <></>}
      {BooleanValue && meal ? <Button pager={pager} meal chk={chk}  /> : <></>}
      
-     <PagerViewWrap ref={pager} initialPage={0} pageMargin={22} onPageScroll={(e) => {onPageScroll(e)}} margins={margin}>
+     <PagerViewWrap 
+     ref={pager} 
+     initialPage={0} 
+     pageMargin={22} 
+     onPageScroll={(e) => {onPageScroll(e)}} 
+     margins={margin}
+    //  onPageSelected={(e) => {scrollCalendar(e)}}
+     >
     {weekly.map((week,i) => {
       
         return (

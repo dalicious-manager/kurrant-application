@@ -3,6 +3,7 @@ import { atomWithReset } from 'jotai/utils';
 
 export const isLoadMealCartAtom = atomWithReset([]);
 export const isLoadMealLoadingAtom = atomWithReset(false);
+export const isAddMealCartAtom = atomWithReset(false);
 export const userPointAtom = atomWithReset();
 export const isQuantityAtom = atomWithReset(0);
 export const mealCartSpotAtom = atomWithReset([]);

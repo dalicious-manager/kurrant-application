@@ -45,7 +45,7 @@ const Pages = () => {
     const [first,setFirst] = useState();
     const [show,setShow] = useState(false);
     const {isDiningTypes, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
-    const {addMeal ,isLoadMeal, loadMeal , setLoadMeal,updateMeal,setQuantity} = useShoppingBasket();
+    const {addMeal ,isLoadMeal, isAddMeal,loadMeal , setLoadMeal,updateMeal,setQuantity} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
     const userInfo = useAtomValue(isUserInfoAtom);
     
@@ -240,7 +240,7 @@ const Pages = () => {
                 
             return <Contents key={m.id}
             spicy={m.spicy}
-            disabled={m.status === 0 || m.status === 2}
+            disabled={m.status === 0 || m.status === 2 || isAddMeal}
             onPress={(e)=>{navigation.navigate(MealDetailPageName,{dailyFoodId:m.id});e.stopPropagation()}}>
                 <ContentsText>
                     <MakersName soldOut={m.status}>[{m.makersName}]</MakersName>
@@ -270,7 +270,7 @@ const Pages = () => {
                     />
                     
                     {m.status === 1 && (
-                        <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType,m)}}>
+                        <CartIconWrap disabled={isAddMeal} onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType,m)}}>
                             <CartIcon/>
                         </CartIconWrap>
                     )}

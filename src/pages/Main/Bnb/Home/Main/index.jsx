@@ -54,7 +54,7 @@ const Pages = () => {
     const {isUserInfo, userInfo , isUserInfoLoading,isUserSpotStatus} = useUserInfo();
    
     const {userGroupSpotCheck,isUserGroupSpotCheck,userSpotRegister,groupSpotDetail} = useGroupSpots();
-    const {isOrderMeal,orderMeal} = useOrderMeal();
+    const {isOrderMeal,todayMeal,orderMeal,todayOrderMeal} = useOrderMeal();
     const { loadMeal} = useShoppingBasket();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
@@ -81,7 +81,8 @@ const Pages = () => {
             await userInfo();     
           }    
           async function loadMeal(){
-            await orderMeal(start[0],end[0])
+            await orderMeal(formattedWeekDate(weekly[0][0]),formattedWeekDate(weekly[weekly?.length-1][weekly[0].length-1]))
+            await todayOrderMeal(start[0],end[0])
           };
           loadMeal();
           loadUser();
@@ -174,8 +175,8 @@ const Pages = () => {
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId
-  const date = formattedWeekDate(new Date());
-  const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
+  // const date = formattedWeekDate(new Date());
+  // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
   const PressSpotButton = () => {
     setModalVisible(true);
@@ -207,7 +208,7 @@ if(isUserInfoLoading){
         <BarWrap>
           <SpotName>
             <Pressable onPress={PressSpotButton}>
-              <SpotNameText>{userGroupName}{userSpot}</SpotNameText>
+              <SpotNameText>{userGroupName + "\u00a0" + userSpot}</SpotNameText>
             </Pressable>
           <ArrowIcon/>
           </SpotName>
