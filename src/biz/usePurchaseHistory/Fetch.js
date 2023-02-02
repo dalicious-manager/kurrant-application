@@ -55,9 +55,12 @@ export async function getPurchaseHistory(data, option) {
     ]
   }
 }
-
+export async function getPurchaseDetail(body) {
+  const fetchRes = await fetchJson(`/users/me/orders/${body.purchaseId}`, 'GET');
+  return fetchRes
+}
 export async function getPurchaseHistoryMeal(data, option) {
-  const fetchRes = await fetchJson(`/users/me/orders/histories`, 'GET');
+  const fetchRes = await fetchJson(`/users/me/orders/histories?startDate=${data.startDate}&endDate=${data.endDate}&orderType=${data.orderType}`, 'GET');
 
   // await mSleep(1000);
 
@@ -203,3 +206,4 @@ export async function getPurchaseHistoryMeal(data, option) {
   //   ]
   // }
 }
+

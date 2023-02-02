@@ -1,8 +1,8 @@
 import {Slider} from '@miblanchard/react-native-slider';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { ScrollView, View, Pressable,Dimensions, StyleSheet, SafeAreaView, Alert} from "react-native";
+import { ScrollView, View, Pressable,Dimensions, StyleSheet, SafeAreaView, Alert, ActivityIndicator} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 
@@ -29,8 +29,9 @@ import SkeletonUI from '../Skeleton';
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 const Pages = () => {
-    
+    const isFocused = useIsFocused();
     const navigation = useNavigation();
     const diningRef = useRef();
 
@@ -44,7 +45,7 @@ const Pages = () => {
     const [first,setFirst] = useState();
     const [show,setShow] = useState(false);
     const {isDiningTypes, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
-    const {addMeal ,isLoadMeal, loadMeal , setLoadMeal} = useShoppingBasket();
+    const {addMeal ,isLoadMeal, loadMeal , setLoadMeal,updateMeal,setQuantity} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
     const userInfo = useAtomValue(isUserInfoAtom);
     
@@ -58,10 +59,24 @@ const Pages = () => {
     
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
-            
+        if(isDiningTypes[0] && ((isMorningFood.length === 0 && position === 0) 
+        ||(isLunchFood.length === 0 && position === 1)
+        || (isDinnerFood.length === 0 && position === 2))){            
+            const page = position === 0 ? 
+            isDiningTypes.includes(2) ? 1 :isDiningTypes.includes(3) ? 2 :0  :
+            position ===1 ? isDiningTypes.includes(3) ? 2 :isDiningTypes.includes(1) ? 0 :1 : 
+            position ===2 && isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(1) ? 0 :2 
+            console.log(position,page,isDiningTypes,"testeteset");
+            if(page !== position) {
+                diningRef.current.setPage(page)
+                setSliderValue(page);
+                setFocus(page);
+            }
+        }else{
             setSliderValue(position);
             setFocus(position);
-         }
+        }
+    }
     
     const dayPress = async (selectedDate) =>{
         
@@ -96,33 +111,22 @@ const Pages = () => {
         setModalVisible3(false)
         
     }
-    useFocusEffect(
-        useCallback(()=>{
-            async function loadDailyFood(){
-                try {
-                    await loadMeal();
-                                   
-                } catch (error) {
-                    if(error.toString().replace("Error:",'').trim() === '403'){
-                      navigation.reset({
-                        index: 0,
-                        routes: [
-                          {
-                            name: LoginPageName,
-                          },
-                        ],
-                      })
-                    }
-                    
-                  }
-            }
-            loadDailyFood();
-        },[])
-    )
+    
+    // useFocusEffect(
+    //     useCallback(()=>{
+            
+            
+    //     },[setLoadMeal])
+    // )
         useEffect(()=>{
             async function loadDailyFood(){
                 try {
-                    await dailyFood(spotId,date);                    
+                    const data = await dailyFood(spotId,date);  
+                    if(data[0]){
+                        diningRef.current.setPage(Number(data[0])-1)
+                        setSliderValue(Number(data[0])-1);
+                        setFocus(Number(data[0])-1);
+                    }
                 } catch (error) {
                     if(error.toString().replace("Error:",'').trim() === '403'){
                       navigation.reset({
@@ -138,9 +142,13 @@ const Pages = () => {
                   }
             }
             loadDailyFood();
+            console.log(isMorningFood.length,"test")
         },[])
-
-    const addCartPress = async (id,day,type) =>{
+        useEffect(()=>{
+            
+            updateMeal(req);  
+        },[isFocused])
+    const addCartPress = async (id,day,type,m) =>{
         
         const diningType = type;
         const duplication = isLoadMeal?.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === id))).flat()
@@ -152,22 +160,31 @@ const Pages = () => {
                 
             })
         }else {
-            await addToCart(id)
+            await addToCart(id,m)
         }
         
     }
 
-
-    const addToCart = async (id) =>{
+    const quantityArr = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods.map(c => {
+        return {
+            dailyFoodId:c.dailyFoodId,
+            count:c.count,
+            cartItemId:c.id
+        }
+    })));
+    const quantity = quantityArr.reduce((acc, val) => [ ...acc, ...val ], []);
+    const modifyQty = quantity.reduce((acc,cur) => [...acc, ... cur], []);
+    const req = {"updateCartList":modifyQty}
+    const addToCart = async (id,m) =>{
         
             try {
+        
                     await addMeal([{
                         "dailyFoodId":id,
                         "count":1,
-                    }]);
-                    await loadMeal();
+                    }]);             
                     setShow(true)
-                    await balloonEvent();
+                    balloonEvent();
                     setTimeout(()=>{
                         setShow(false)
                     },3000)
@@ -251,7 +268,7 @@ const Pages = () => {
                     />
                     
                     {m.status === 1 && (
-                        <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType)}}>
+                        <CartIconWrap onPress={()=>{addCartPress(m.id,m.serviceDate,m.diningType,m)}}>
                             <CartIcon/>
                         </CartIconWrap>
                     )}
@@ -271,10 +288,10 @@ const Pages = () => {
                         
 
     }
-
+    
     return (
         <SafeView>
-            
+                {isDailyFoodLoading && <LoadingPage ><ActivityIndicator size={'large'}/></LoadingPage>}
                 {userInfo?.isMembership && <MembershipBar/>}
                 <ScrollView showsVerticalScrollIndicator={false}>
                 <CalendarWrap>
@@ -319,17 +336,15 @@ const Pages = () => {
                         </ProgressInner>
                     </ProgressWrap>
 
-                    {isDailyFoodLoading  ? <SkeletonUI/>: 
-                     <Pager ref={diningRef} 
-                     initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
-                     onPageSelected={(e) => {onPageScroll(e)}} 
-                    
+            
+                    <Pager ref={diningRef} 
+                        initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
+                        onPageSelected={(e) => {onPageScroll(e)}} 
                      >
-
                         {BuyMeal(isMorningFood)}
                         {BuyMeal(isLunchFood)}
-                        { BuyMeal(isDinnerFood)}
-                    </Pager> }
+                        {BuyMeal(isDinnerFood)}
+                    </Pager> 
                 </PagerViewWrap>
                 
             </ScrollView>
@@ -360,18 +375,27 @@ const styles = StyleSheet.create({
 export default Pages;
 
 const SafeView = styled.View` 
-background-color:${props => props.theme.colors.grey[0]};
-
+    background-color:${props => props.theme.colors.grey[0]};
 `;
 
 export const CalendarWrap = styled.View`
 
-height:120px;
-border-bottom-color: ${props => props.theme.colors.grey[8]};
-border-bottom-width: 1px;
-width:100%;
+    height:120px;
+    border-bottom-color: ${props => props.theme.colors.grey[8]};
+    border-bottom-width: 1px;
+    width:100%;
 `;
-
+const LoadingPage = styled.View`
+    position: absolute;
+    background-color: white;
+    opacity: 0.5;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    width: ${screenWidth}px;
+    height: ${screenHeight}px;
+;
+`
 const PagerViewWrap = styled.View`
 height:${screenHeight}px;
 `;

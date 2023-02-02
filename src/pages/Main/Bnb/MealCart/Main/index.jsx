@@ -1,4 +1,4 @@
-import {  useFocusEffect, useNavigation } from "@react-navigation/native";
+import {  useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useLayoutEffect, useRef,useState } from "react";
 import { Alert, Dimensions, Image, KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
@@ -37,14 +37,15 @@ import useUserMe from "../../../../../biz/useUserMe";
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
-
+    const isFocused = useIsFocused();
     const navigation = useNavigation();
     const bodyRef = useRef();
     const scrollRef = useRef();
     const boxRef = useRef();
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
-    const { isLoadMeal,loadMeal, deleteMeal,setLoadMeal,allDeleteMeal,updateMealuserPoint, mealCartSpot,loadSoldOutMeal,soldOutMeal ,clientStatus,updateMeal} = useShoppingBasket();
+    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal,allDeleteMeal,userPoint, mealCartSpot,loadSoldOutMeal,soldOutMeal ,clientStatus,} = useShoppingBasket();
+ 
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     const [ modalVisible3, setModalVisible3 ] = useState(false);
@@ -56,62 +57,43 @@ const Pages = () => {
     const [date,setDate] = useState();
     const [type,setType] = useState();
     const toast = Toast();
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         // Do something when the screen is focused
-    //         console.log('들어옴')
-        
-
-    //         return  () => {
-    //             console.log("나감")
-    //             async function test () {
-
-    //               await  updateMeal({"updateCartList":modifyQty});
-    //             }
-    //             test()
-    //         };
-    
-    
-    // }, [updateMeal])
-    // );
-
 
     const PressSpotButton = () => {
         setModalVisible2(true);
       }
 
     const keyboardStatus = useKeyboardEvent();
+  
     useFocusEffect(
         useCallback(()=>{
-            getCardList();
+            getCardList();            
         },[])
     )
     useEffect(()=>{
-        async function loadCart(){
-            try {
-                await loadMeal();
-            } catch (error) {
-                if(error.toString().replace("Error:",'').trim() === '403'){
-                  navigation.reset({
-                    index: 0,
-                    routes: [
-                      {
-                        name: LoginPageName,
-                      },
-                    ],
-                  })
-                }
+        updateMeal(req);  
+    },[isFocused])
+    // useEffect(()=>{
+    //     async function loadCart(){
+    //         try {
+    //             const res = await loadMeal();
+    //         } catch (error) {
+    //             if(error.toString().replace("Error:",'').trim() === '403'){
+    //               navigation.reset({
+    //                 index: 0,
+    //                 routes: [
+    //                   {
+    //                     name: LoginPageName,
+    //                   },
+    //                 ],
+    //               })
+    //             }
                 
-              }
-        }
+    //           }
+    //     }
 
         
-        loadCart();
-      
-        
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+    //     loadCart();
+    // },[])
 
     const quantityArr = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods.map(c => {
         return {
@@ -119,9 +101,14 @@ const Pages = () => {
             count:c.count,
             cartItemId:c.id
         }
-    })));
+    })))
     const quantity = quantityArr.reduce((acc, val) => [ ...acc, ...val ], []);
     const modifyQty = quantity.reduce((acc,cur) => [...acc, ... cur], []);
+    const req = {"updateCartList":modifyQty}
+    useEffect(
+        () => navigation.addListener('blur', () => console.log(modifyQty,"blur")),
+        [navigation]
+      );
     
     const fundButton = () => {
         setModalVisible(true);
@@ -143,7 +130,6 @@ const Pages = () => {
                 }
             })]}
         })
-        
         setLoadMeal(addQty);
      
     }
@@ -638,7 +624,7 @@ const Pages = () => {
                     <EndQuestionText>해당 상품을 제외하고 결제하시겠어요?</EndQuestionText>
                 </EndView>}
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} 
-                onPressEvent={()=>{deadline === 0 && isDeadline();soldout.length !== 0 && isSoldOut();isLack.includes(true) && isShortage();(soldout.length === 0 && totalCount !== 0 && !isLack.includes(true)) && navigation.navigate(PaymentPageName,{
+                onPressEvent={()=>{deadline === 0 && isDeadline();soldout.length !== 0 && isSoldOut();updateMeal(req);isLack.includes(true) && isShortage();(soldout.length === 0 && totalCount !== 0 && !isLack.includes(true)) && navigation.navigate(PaymentPageName,{
                     totalCount,
                     totalMealPrice,
                     membershipDiscountPrice,

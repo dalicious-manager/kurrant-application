@@ -62,7 +62,6 @@ const Pages = ({route}) => {
         clientType,
         usedSupportPrice
         } = route.params
-    console.log(selectDefaultCard,'11')
     const PressButton = () => {
         setModalVisible(true);
     }
