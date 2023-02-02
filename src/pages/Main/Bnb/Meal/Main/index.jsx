@@ -32,35 +32,33 @@ const Pages = ({route}) => {
   const startDate = formattedWeekDate(weekly[0][0]);
   const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
   
- console.log(touchDate,'touchDate')
-  useEffect(()=>{
-    async function loadDailyFood(){
-      await orderMeal(startDate,endDate);
-  }
-  try {
-    loadDailyFood();
-  } catch (error) {
-    if(error.toString().replace("Error:",'').trim() === '403'){
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: LoginPageName,
-          },
-        ],
-      })
-    }
+  // useEffect(()=>{
+  //   async function loadDailyFood(){
+  //     await orderMeal(startDate,endDate);
+  // }
+  // try {
+  //   loadDailyFood();
+  // } catch (error) {
+  //   if(error.toString().replace("Error:",'').trim() === '403'){
+  //     navigation.reset({
+  //       index: 0,
+  //       routes: [
+  //         {
+  //           name: LoginPageName,
+  //         },
+  //       ],
+  //     })
+  //   }
     
-  }
+  // }
   
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[])
 
   const date = formattedWeekDate(new Date());
   const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter((m) => m.serviceDate === touchDate);
-  const test = isOrderMeal?.filter((m) => console.log(m.serviceDate === touchDate,'22323'));
   // const loadData = weekly.map((w,i) => w.filter(x => console.log(formattedWeekDate(x))));
 
   const pressDay = (day) => {

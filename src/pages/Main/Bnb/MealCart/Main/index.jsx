@@ -166,7 +166,7 @@ const Pages = () => {
     const deadline = deadlineArr.map(p => p.count).reduce((acc, cur) => {
         return acc + cur
     },0);
-    console.log(deadline,'2323')
+    
     // 주문 마감 제외 시킨 배열 
     const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
  
@@ -258,7 +258,6 @@ const Pages = () => {
         )
     });
     
-    const test = isLoadMeal.map(el => console.log(el,'232'))
     const focusPress = () => {
         setFocus(true);
       };
@@ -333,6 +332,7 @@ const Pages = () => {
     }
 
     const allDelete = (spotId) => {
+        const data = isLoadMeal?.filter(el => el.spotId !== selected);
        Alert.alert(
             '전체 삭제',
             '메뉴를 모두 삭제하시겠어요?',
@@ -347,7 +347,7 @@ const Pages = () => {
                 onPress:() => {
                   try {
                     allDeleteMeal(spotId);
-                    setLoadMeal([]);
+                    setLoadMeal(data)
                   }catch(err){
                     console.log(err)
                   }
@@ -425,7 +425,7 @@ const Pages = () => {
      }
 
      const isDeadline = () => {
-         
+        const data = isLoadMeal?.filter(el => el.spotId !== selected);
         if(totalCount === 0) {
             Alert.alert(
                  '주문할 수 있는 상품이 없어요',
@@ -434,8 +434,9 @@ const Pages = () => {
                  [
                    {
                      text:'삭제하기',
-                     onPress: async() => {
-                        //await allDeleteMeal(selected);
+                     onPress: () => {
+                        allDeleteMeal(selected);
+                        setLoadMeal(data)
                      },
                      style: 'destructive'
                    }
@@ -455,6 +456,7 @@ const Pages = () => {
     };
 
     
+   
 
     return (
         <SafeView>
