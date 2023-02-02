@@ -3,8 +3,6 @@ import {Text, View} from 'react-native';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 
-export const yo = 'yo';
-
 const Screen = () => {
   return (
     <>

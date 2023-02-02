@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Text} from 'react-native';
 import styled from 'styled-components';
 
-const Component = ({ratingInput, width, margin}) => {
+const Component = ({ratingInput, width, margin, callback}) => {
   const [rating, setRating] = useState(0);
 
   useEffect(() => {
@@ -48,6 +48,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(1);
               console.log('grey1');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -62,6 +63,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(2);
               console.log('grey2');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -76,6 +78,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(3);
               console.log('grey3');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -90,6 +93,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(4);
               console.log('grey4');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -104,6 +108,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(5);
               console.log('grey5');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -124,6 +129,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(1);
               console.log('yellow 1');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
@@ -138,6 +144,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(2);
               console.log('yellow 2');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
@@ -152,6 +159,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(3);
               console.log('yellow 3');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
@@ -166,6 +174,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(4);
               console.log('yellow 4');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
@@ -180,6 +189,7 @@ const Component = ({ratingInput, width, margin}) => {
             onPress={() => {
               setRating(5);
               console.log('yellow 5');
+              callback && callback();
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
