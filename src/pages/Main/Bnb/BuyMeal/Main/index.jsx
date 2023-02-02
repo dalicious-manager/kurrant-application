@@ -67,16 +67,17 @@ const Pages = () => {
             position ===1 ? isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(3) ? 2 :isDiningTypes.includes(1) ? 0 :1 : 
             position ===2 && isDiningTypes.includes(3) ? 2 : isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(1) ? 0 :2 
             console.log(position,page,isDiningTypes,"testeteset");
-            if(page !== position || isDiningTypes.includes(position+1) ) {
+            if(page !== position  ) {
                 diningRef.current.setPage(page)
+                setSliderValue(page);
+                setFocus(page);
+            }else{
                 setSliderValue(page);
                 setFocus(page);
             }
         }else{
-            if(isDiningTypes.includes(position+1)){
-                setSliderValue(position);
-                setFocus(position);
-            }
+            setSliderValue(position);
+            setFocus(position);
         }
     }
     

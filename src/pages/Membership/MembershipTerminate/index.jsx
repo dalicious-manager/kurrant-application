@@ -9,6 +9,7 @@ import Button from "../../../components/Button";
 import { CommentsIcon, DeliveryFreeIcon, DiscountIcon, PointIcon } from "../../../components/Icon";
 import Typography from "../../../components/Typography";
 import Wrapper from "../../../components/Wrapper";
+import { formattedSameDate } from "../../../utils/dateFormatter";
 import SubtractBox from "../MembershipJoin/SubtractBox";
 import { PAGE_NAME as MembershipTerminateComplatePageName} from "./MembershipTerminateComplate";
 
@@ -18,7 +19,7 @@ const Pages =()=>{
     const themeApp = useTheme();
     const navigation = useNavigation();
     const {isUserInfo} = useUserInfo();
-    const {membershipTerminate}= useMembership()
+    const {membershipTerminate, readableAtom:{membershipInfo}}= useMembership()
     const terminate = async()=>{
         await membershipTerminate();
         const reset = StackActions.pop(2);
@@ -60,25 +61,30 @@ const Pages =()=>{
                 <Title  text="Title02SB" textColor={themeApp.colors.grey[2]}>그래도 
                 <Typography text="Title02SB" textColor={themeApp.colors.green[500]}> 해지 </Typography> 
                 하시겠어요?{'\n'}아직 구독 기간이 
-                <Typography text="Title02SB" textColor={themeApp.colors.green[500]}> 15일 </Typography> 
+                <Typography text="Title02SB" textColor={themeApp.colors.green[500]}> {formattedSameDate(membershipInfo?.nextPayDate, new Date())}일 </Typography> 
                  남았어요.</Title>
             </SubTextBox>
             <MembershipDateBox>
-                <Typography text="Body05R" textColor={themeApp.colors.grey[2]} >멤버십 종료 예정일
-                    <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}> 2022년 10월 31일</Typography>
-                </Typography>
+                <NotiBox>
+                <Typography text="Body05R" textColor={themeApp.colors.grey[2]} >멤버십 종료 예정일</Typography>
+                <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}> {membershipInfo?.nextPayDate}</Typography>
+                </NotiBox>
+                <NotiBox>
+                <Typography text="Body05R" textColor={themeApp.colors.grey[2]} >예상 환불 금액</Typography>
+                <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}> {membershipInfo?.membershipRefundablePrice || 0} 원</Typography>
+                </NotiBox>
             </MembershipDateBox>
             <Line/>
             <NoticeBox>
                 <NoticeTitle text={'Body06SB'} textColor={themeApp.colors.grey[2]}>유의사항</NoticeTitle>
-                <Typography text={'CaptionR'} textColor={themeApp.colors.grey[4]}>2022년 10월 31일 이후 정기결제 청구가 되지 않는 것을 시작으로 구독 서비스는 자동 종료됩니다.</Typography>
+                <Typography text={'CaptionR'} textColor={themeApp.colors.grey[4]}>{membershipInfo?.nextPayDate} 이후 정기결제 청구가 되지 않는 것을 시작으로 구독 서비스는 자동 종료됩니다.</Typography>
             </NoticeBox>
             <ButtonContainer>
                 <ButtonBox>
                     <Button size="half" type="grey7" label='해지하기' onPressEvent={terminate}/>
                 </ButtonBox>
                 <ButtonBox>
-                    <Button size="half" type="yellow" label='유지하기'/>
+                    <Button size="half" type="yellow" label='유지하기' onPressEvent={()=> navigation.goBack()}/>
                 </ButtonBox>
             </ButtonContainer>
             </ScrollView>
@@ -119,7 +125,7 @@ const SubTitle = styled(Typography).attrs({text:'Title04SB'})`
     color:${({theme})=> theme.colors.grey[2]};
 `;
 const MembershipDateBox = styled.View`
-    padding:16px;
+    padding:8px;
     background-color: ${({theme})=>theme.colors.grey[8]};
     margin-bottom: 24px;
     align-self: center;
@@ -131,6 +137,11 @@ const Line = styled.View`
 `;
 const NoticeBox =styled.View`
     margin: 24px;
+`
+const NotiBox = styled.View`
+    padding: 8px 16px;
+    flex-direction: row;
+    justify-content: space-between;
 `
 const NoticeTitle = styled(Typography)`
     margin-bottom: 5px;

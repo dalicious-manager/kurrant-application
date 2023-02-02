@@ -6,6 +6,8 @@ import {
   isMembershipJoinAtom,
 isMembershipTerminateAtom,
 isMembershipHistoryAtom,
+isMembershipInfoLoadingAtom,
+membershipInfoAtom,
 } from './store';
 
 const useBanner = () => {
@@ -14,6 +16,8 @@ const useBanner = () => {
   const [isMembershipTerminateLoading, setMembershipTerminateLoading] = useAtom(isMembershipTerminateAtom);
   const [isMembershipHistoryLoading, setMembershipHistoryLoading] = useAtom(isMembershipHistoryAtom);
   const [isMembershipTypeLoading, setMembershipTypeLoading] = useAtom(isMembershipHistoryAtom);
+  const [membershipInfo, setMembershipInfo] = useAtom(membershipInfoAtom);
+  const [isMembershipInfoLoading, setMembershipInfoLoading] = useAtom(isMembershipInfoLoadingAtom);
 
   const getMembershipProduct = async (option = {}) => {
     try {
@@ -76,18 +80,34 @@ const useBanner = () => {
     }
   };
 
+  const getMembershipInfo = async () => {
+    try {
+      setMembershipInfoLoading(true);
+      const res = await Fetch.getMembershipInfo();
+      setMembershipInfo(res.data)
+      return res.data;
+    } catch (err) {
+      throw err;
+    } finally {
+      setMembershipInfoLoading(false);
+    }
+  };
+
   return {
     getMembershipProduct,
     membershipJoin,
     membershipTerminate,
     getMembershipHistory,
     getMembershipType,
+    getMembershipInfo,
     readableAtom: {
       isMembershipProductLoading,
       isMembershipJoinLoading,
       isMembershipTerminateLoading,
       isMembershipHistoryLoading,
       isMembershipTypeLoading,
+      isMembershipInfoLoading,
+      membershipInfo
     },
   };
 };

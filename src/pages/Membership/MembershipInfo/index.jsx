@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect } from "react";
 import {  ScrollView } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styled, { useTheme } from "styled-components/native";
-
+import {formattedSameDate,} from '../../../utils/dateFormatter'
 import Button from "../../../components/Button";
 import Label from "../../../components/Label";
 import Typography from "../../../components/Typography";
@@ -11,10 +11,24 @@ import { PAGE_NAME as MembershipJoinPageName} from "../MembershipJoin";
 import { PAGE_NAME as MembershipTerminatePageName} from "../MembershipTerminate";
 import { PAGE_NAME as MembershipUsagedetailsPageName} from "./MembershipUsageDetails";
 import { PAGE_NAME as MemebershipPaymentManagePageName} from "../MembershipJoin/MemebershipPaymentManage";
+import useMembership from "../../../biz/useMembership";
+import withCommas from "../../../utils/withCommas";
+import useUserInfo from "../../../biz/useUserInfo";
+import useUserMe from "../../../biz/useUserMe";
 export const PAGE_NAME = "P__MEMBERSHIP__INFO"
 const Pages= ()=>{
   const themeApp = useTheme();
   const navigation = useNavigation();
+  const {getMembershipInfo,readableAtom:{membershipInfo,isMembershipInfoLoading}} = useMembership();
+  const {isUserInfo}=useUserInfo();
+  const {getCardList} = useUserMe();
+  useEffect(()=>{
+    const getMembershipBenefit = async()=>{
+      await getMembershipInfo();
+    }
+    getMembershipBenefit();
+    getCardList();
+  },[])
   return(
       <BackGround
         colors={['rgba(39, 5, 201, 0)', 'rgba(39, 5, 201, 0.55)', 'rgba(39, 5, 201, 0.75)','rgba(39, 5, 201, 0.85)']}
@@ -23,13 +37,18 @@ const Pages= ()=>{
       >
           <ScrollView>
             <TitleBox>
-              <TextCenterField text={'LargeTitle'} textColor={themeApp.colors.neutral[0]}>김달리님은{'\n'}멤버십 이용중</TextCenterField>
-              <LabelBox>
-                <Label type="green" label={'연간구독'}/>
-              </LabelBox>
+              <TextCenterField text={'LargeTitle'} textColor={themeApp.colors.neutral[0]}>{isUserInfo.name}님은{'\n'}멤버십 이용중</TextCenterField>
+              <MembershipLabelBox>
+                <LabelBox>
+                  <Label type={membershipInfo?.membershipSubscriptionType === "연간구독" ?"green" : "blue"} label={membershipInfo?.membershipSubscriptionType || "월간구독"}/>
+                </LabelBox>
+                {membershipInfo?.membershipSubscriptionType && <LabelBox>
+                  <Label type={membershipInfo?.membershipSubscriptionType === "연간" ?"blue" : "green"} label={membershipInfo?.membershipSubscriptionType}/>
+                </LabelBox>}
+              </MembershipLabelBox>
               <NoticeBox>
                 <TextCenterField text={'Body05SB'} textColor={themeApp.colors.neutral[0]}>
-                  다음 결제 예정일은 2023년 10월 23일입니다.
+                  다음 결제 예정일은 {membershipInfo?.nextPayDate}입니다.
                 </TextCenterField>
               </NoticeBox>
             </TitleBox>
@@ -41,39 +60,40 @@ const Pages= ()=>{
               <InfoContainer>
                 <SaleTextBox>
                   <Typography text={'Title04SB'} textColor={themeApp.colors.grey[2]}>할인 혜택</Typography>
-                  <Typography text={'Title04SB'} textColor={themeApp.colors.green[500]}>총 48,260 원</Typography>
+                  <Typography text={'Title04SB'} textColor={themeApp.colors.green[500]}>총 {withCommas(membershipInfo?.totalDiscountBenefitPrice || 0)} 원</Typography>
                 </SaleTextBox>
                 <SaleTextBox>
                   <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>정기식사 무료배송</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>30,000 원</Typography>
+                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.deliveryFee)} 원</Typography>
                 </SaleTextBox>
                 <SaleTextBox>
                   <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>정기식사 할인</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>18,310 원</Typography>
+                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.dailyFoodDiscountPrice)} 원</Typography>
                 </SaleTextBox>
                 <SaleTextBox>
                   <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>마켓 상품 할인</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>23,300 원</Typography>
+                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.productDiscountPrice)} 원</Typography>
                 </SaleTextBox>                
               </InfoContainer>
-              <InfoContainer>
+              {/* 포인트 할인혜택 */}
+              {/* <InfoContainer>
                 <SaleTextBox>
                   <Typography text={'Title04SB'} textColor={themeApp.colors.grey[2]}>포인트 혜택</Typography>
-                  <Typography text={'Title04SB'} textColor={themeApp.colors.green[500]}>총 4,110 점</Typography>
+                  <Typography text={'Title04SB'} textColor={themeApp.colors.green[500]}>총 {withCommas(membershipInfo?.totalPointBenefitPrice || 0} 점</Typography>
                 </SaleTextBox>
                 <SaleTextBox>
                   <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>정기식사 리뷰작성</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>4,000 점</Typography>
+                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.dailyFoodReviewPoint)} 점</Typography>
                 </SaleTextBox>
                 <SaleTextBox>
                   <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>마켓 상품 리뷰작성</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>1,300 점</Typography>
+                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.productReviewPoint)} 점</Typography>
                 </SaleTextBox>
                 <SaleTextBox>
                   <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>마켓 상품 구매</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>1,200 점</Typography>
+                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.productBuyPoint)} 점</Typography>
                 </SaleTextBox>                
-              </InfoContainer>
+              </InfoContainer> */}
             </Container>
             <ButtonContainer>
             <ButtonBox>
@@ -109,7 +129,7 @@ const Container = styled.View`
   background-color: white;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
-  padding-bottom: 20px;
+  flex: 1;
 `
 const TitleBox = styled.View`
   margin-top  : 40px;
@@ -121,6 +141,10 @@ const TextCenterField = styled(Typography)`
 `
 const LabelBox = styled.View`
   margin-top: 6px;
+  padding: 2.5px;
+`
+const MembershipLabelBox = styled.View`
+  flex-direction: row;
 `
 const NoticeBox = styled.View`
   margin-top: 20px;
@@ -147,6 +171,7 @@ const SaleTextBox = styled.View`
 `
 const ButtonContainer = styled.View`
   background-color: white;
+  padding-top: 150px;
   padding-bottom: 35px;
   padding-left: 20px;
   padding-right: 20px;

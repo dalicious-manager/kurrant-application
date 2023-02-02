@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components/native';
 import useUserMe from '~biz/useUserMe';
 
@@ -46,12 +46,14 @@ const Pages = ()=>{
         }
         await cardSetting(req);        
     }
-    useEffect(()=>{
-        const getData  = async()=>{
-            await getCardList();
-        }
-        getData();
-    },[])
+    useFocusEffect(
+        useCallback(()=>{
+            const getData  = async()=>{
+                await getCardList();
+            }
+            getData();
+        },[])
+    )
     return(
         <Wrapper paddingTop={24} >
             <InfoBox>

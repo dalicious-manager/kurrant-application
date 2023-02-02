@@ -133,6 +133,16 @@ export function formattedApplicationDate(data) {
   const day = leftPad(dateTime.getDate());
   return `${[year, month, day]}`.replace(/[^0-9 ^\-]/g, "");
 }
+export function formattedSameDate(startData, endDate) {
+  const dateTime1 = transDateType(startData.replace("년", "-").replace("월", "-").replace("일", "").replace(/\s/gi, ""));
+  const dateTime2 = transDateType(endDate);
+
+  const diffMSec = dateTime1.getTime() - dateTime2.getTime();
+  const diffHour = diffMSec / (60 * 60 * 1000 * 24);
+  console.log(Math.round(diffHour))
+  return Math.round(diffHour)
+
+}
 
 export function formattedDateType(data) {
   switch (data) {

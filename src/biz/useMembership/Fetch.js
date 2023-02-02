@@ -42,3 +42,9 @@ export async function getMembershipType(type, option) {
 
   return fetchRes;
 }
+
+export async function getMembershipInfo() {
+  const fetchRes = await fetchJson(`/users/membership/benefits`, 'GET');
+
+  return fetchRes;
+}
