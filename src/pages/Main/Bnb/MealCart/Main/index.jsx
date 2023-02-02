@@ -72,28 +72,28 @@ const Pages = () => {
     useEffect(()=>{
         updateMeal(req);  
     },[isFocused])
-    // useEffect(()=>{
-    //     async function loadCart(){
-    //         try {
-    //             const res = await loadMeal();
-    //         } catch (error) {
-    //             if(error.toString().replace("Error:",'').trim() === '403'){
-    //               navigation.reset({
-    //                 index: 0,
-    //                 routes: [
-    //                   {
-    //                     name: LoginPageName,
-    //                   },
-    //                 ],
-    //               })
-    //             }
+    useEffect(()=>{
+        async function loadCart(){
+            try {
+                const res = await loadMeal();
+            } catch (error) {
+                if(error.toString().replace("Error:",'').trim() === '403'){
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
+                  })
+                }
                 
-    //           }
-    //     }
+              }
+        }
 
         
-    //     loadCart();
-    // },[])
+        loadCart();
+    },[])
 
     const quantityArr = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods.map(c => {
         return {
@@ -105,11 +105,7 @@ const Pages = () => {
     const quantity = quantityArr.reduce((acc, val) => [ ...acc, ...val ], []);
     const modifyQty = quantity.reduce((acc,cur) => [...acc, ... cur], []);
     const req = {"updateCartList":modifyQty}
-    useEffect(
-        () => navigation.addListener('blur', () => console.log(modifyQty,"blur")),
-        [navigation]
-      );
-    
+
     const fundButton = () => {
         setModalVisible(true);
     }
@@ -170,7 +166,7 @@ const Pages = () => {
     const deadline = deadlineArr.map(p => p.count).reduce((acc, cur) => {
         return acc + cur
     },0);
-    
+    console.log(deadline,'2323')
     // 주문 마감 제외 시킨 배열 
     const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
  
@@ -194,11 +190,11 @@ const Pages = () => {
     
     const lastArr = newArrs[0]?.cartDailyFoodDtoList?.filter(el => el.cartDailyFoods.length !== 0);
     
-    // 총 개수
+    // 총 개수 (주문 마감 미포함)
     const totalCount = arr?.map(p => p.count).reduce((acc,cur) => {
         return acc + cur
     },0);
-
+    console.log(totalCount,'455')
     // (할인전)총 금액
     const totalMealPrice = arr?.map(p => p.count * p.price).reduce((acc,cur) => {
         return acc + cur
@@ -262,7 +258,7 @@ const Pages = () => {
         )
     });
     
-    
+    const test = isLoadMeal.map(el => console.log(el,'232'))
     const focusPress = () => {
         setFocus(true);
       };
@@ -429,8 +425,8 @@ const Pages = () => {
      }
 
      const isDeadline = () => {
+         
         if(totalCount === 0) {
-
             Alert.alert(
                  '주문할 수 있는 상품이 없어요',
                  '모든 상품의 주문 마감시간이 종료되었습니다.',
@@ -439,7 +435,7 @@ const Pages = () => {
                    {
                      text:'삭제하기',
                      onPress: async() => {
-                        await allDeleteMeal(selected);
+                        //await allDeleteMeal(selected);
                      },
                      style: 'destructive'
                    }
@@ -464,7 +460,7 @@ const Pages = () => {
         <SafeView>
              <SpotView>
                     <SpotPress onPress={PressSpotButton}>
-                        <SpotName>{spotName[0]?.text ?? isUserInfo.spot }</SpotName>
+                        <SpotName>{spotName[0]?.text ?? isUserInfo.group + isUserInfo.spot }</SpotName>
                         <ArrowIcon/>
                     </SpotPress>
                     <Pressable onPress={()=>{allDelete(selected)}}>
@@ -618,13 +614,18 @@ const Pages = () => {
             />
             
            {/*  */}
-            {( !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
+            {( cartArr.length !== 0 && !keyboardStatus.isKeyboardActivate) && <ButtonWrap focus={focus}>
                 {deadlineArr.length !== 0 && <EndView>
                     <EndText>주문 마감된 상품이 있어요<EndPointText>({deadline}개)</EndPointText></EndText>
                     <EndQuestionText>해당 상품을 제외하고 결제하시겠어요?</EndQuestionText>
                 </EndView>}
                 <Button label={`총 ${totalCount}개 결제하기`} type={'yellow'} 
-                onPressEvent={()=>{deadline === 0 && isDeadline();soldout.length !== 0 && isSoldOut();updateMeal(req);isLack.includes(true) && isShortage();(soldout.length === 0 && totalCount !== 0 && !isLack.includes(true)) && navigation.navigate(PaymentPageName,{
+                onPressEvent={()=>{
+                    deadline !== 0 && isDeadline();
+                    soldout.length !== 0 && isSoldOut();
+                    updateMeal(req);
+                    isLack.includes(true) && isShortage();
+                    (soldout.length === 0 && totalCount !== 0 && !isLack.includes(true)) && navigation.navigate(PaymentPageName,{
                     totalCount,
                     totalMealPrice,
                     membershipDiscountPrice,

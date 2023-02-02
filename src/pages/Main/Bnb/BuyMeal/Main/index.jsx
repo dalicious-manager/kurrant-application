@@ -62,19 +62,21 @@ const Pages = () => {
         if(isDiningTypes[0] && ((isMorningFood.length === 0 && position === 0) 
         ||(isLunchFood.length === 0 && position === 1)
         || (isDinnerFood.length === 0 && position === 2))){            
-            const page = position === 0 ? 
+            const page = position === 0 ? isDiningTypes.includes(1) ? 0 :
             isDiningTypes.includes(2) ? 1 :isDiningTypes.includes(3) ? 2 :0  :
-            position ===1 ? isDiningTypes.includes(3) ? 2 :isDiningTypes.includes(1) ? 0 :1 : 
-            position ===2 && isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(1) ? 0 :2 
+            position ===1 ? isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(3) ? 2 :isDiningTypes.includes(1) ? 0 :1 : 
+            position ===2 && isDiningTypes.includes(3) ? 2 : isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(1) ? 0 :2 
             console.log(position,page,isDiningTypes,"testeteset");
-            if(page !== position) {
+            if(page !== position || isDiningTypes.includes(position+1) ) {
                 diningRef.current.setPage(page)
                 setSliderValue(page);
                 setFocus(page);
             }
         }else{
-            setSliderValue(position);
-            setFocus(position);
+            if(isDiningTypes.includes(position+1)){
+                setSliderValue(position);
+                setFocus(position);
+            }
         }
     }
     
@@ -338,7 +340,7 @@ const Pages = () => {
 
             
                     <Pager ref={diningRef} 
-                        initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
+                        //initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
                         onPageSelected={(e) => {onPageScroll(e)}} 
                      >
                         {BuyMeal(isMorningFood)}

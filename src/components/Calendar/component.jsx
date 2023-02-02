@@ -125,6 +125,7 @@ const Component = ({
                         <DaysWrap
                          key={day} 
                          idx={idx}
+                         disabled={lastDay && true}
                          onPress={ ()=>{onPressEvent  ? navigation.reset({ routes: [{name:MealMainPageName,params:{data:propsDay}}]}) : onPressEvent2 && events()} } >
                             <Day lastDay={lastDay} color={color} size={size}>{txt}</Day>
                             <TodayCircle now={now} type={type} currentPress={currentPress} day={day}>
