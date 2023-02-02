@@ -16,7 +16,7 @@ const Component = () => {
 export default Component;
 
 const Membership = styled.View`
-background-color:${({ theme }) => theme.colors.green[100]};
+background-color:${({ theme }) => theme.colors.purple[100]};
 justify-content:center;
 flex-direction:row;
 align-items:center;
@@ -25,5 +25,6 @@ margin-bottom:8px;
 `;
 
 const MembershipText = styled(Typography).attrs({text:'CaptionR'})`
-color:${({theme}) => theme.colors.green[500]};
+color:${({theme}) => theme.colors.purple[500]};
+margin-left:5px;
 `;

@@ -7,7 +7,7 @@ import {useForm} from 'react-hook-form';
 import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable, Alert} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
-import MembersIcon from '../../../../../assets/icons/Home/members.svg';
+import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
@@ -40,6 +40,7 @@ import Toast from '../../../../../components/Toast';
 import {PAGE_NAME as ApartRegisterSpotPageName } from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import useUserMe from '../../../../../biz/useUserMe';
+import { Members } from '../../../../../assets';
 import { PAGE_NAME as FAQListDetailPageName } from '../../../MyPage/FAQ';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
@@ -170,6 +171,7 @@ const Pages = () => {
   }
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
+  const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId
   const date = formattedWeekDate(new Date());
@@ -200,15 +202,12 @@ if(isUserInfoLoading){
 
   return (
     <SafeView>
-      {/* <Pressable onPress={() => {navigation.navigate(GroupCreateMainPageName)}}>
-        <Text> 임시버튼(그룹/스팟) </Text>
-        
-      </Pressable> */}
+
       <View>
         <BarWrap>
           <SpotName>
             <Pressable onPress={PressSpotButton}>
-              <SpotNameText>{userSpot}</SpotNameText>
+              <SpotNameText>{userGroupName}{userSpot}</SpotNameText>
             </Pressable>
           <ArrowIcon/>
           </SpotName>
@@ -296,11 +295,15 @@ if(isUserInfoLoading){
             </MealCalendarTitle>
             <Calendar onPressEvent={()=>navigation.navigate(MealMainPageName)} />
           </MealCalendar>
-
-          {!isUserInfo?.isMembership && <MenbershipBanner onPress={()=>navigation.navigate(MembershipIntro)}>
+          {!(isUserInfo?.isMembership) &&<Image source={Members} scale={1.0} resizeMode={'stretch'}  style={{
+            width:327,
+            height:64,
+            alignSelf:'center'
+          }}/>}
+          {/* {!isUserInfo?.isMembership && <MenbershipBanner onPress={()=>navigation.navigate(MembershipIntro)}>
             <MembershipImage source={require('../../../../../assets/images/membership.png')} resizeMode='stretch'/>
             <MembershipText>멤버십 가입하고 <PointText>20%할인</PointText> 받기</MembershipText>
-          </MenbershipBanner>}
+          </MenbershipBanner>} */}
           
           {/* <CatorWrap>
             <Cator>
@@ -331,7 +334,7 @@ if(isUserInfoLoading){
               <MembershipUsing>{isUserInfo?.membershipUsingPeriod}개월째 이용중</MembershipUsing>
               <MembersWrap>
                 <MembersIcon/>
-                <MembersText>n번째 파운더스</MembersText>
+                <MembersText>n번째 커런트파운더스</MembersText>
               </MembersWrap>
             </View>
           </MembershipWrap>}
@@ -487,9 +490,13 @@ const MealCount = styled.View`
 `;
 
 const MealCalendar = styled.View`
-${BoxWrap};
-min-height:130px;
-padding-bottom:10px;
+  width:100%;
+  border-radius:14px;
+  background-color:${props => props.theme.colors.grey[0]};
+  margin-bottom:16px;
+  padding: 16px;
+  min-height:130px;
+  padding-bottom:10px;
 //padding:15px 16px;
 
 `;
@@ -671,14 +678,15 @@ left:28%;
 const MembersWrap = styled.View`
 flex-direction:row;
 align-items:center;
-background-color:${({theme}) => theme.colors.green[100]};
-border:0.5px solid ${({theme}) => theme.colors.green[500]};
+background-color:${({theme}) => theme.colors.purple[100]};
+border:0.5px solid ${({theme}) => theme.colors.purple[500]};
 border-radius:7px;
 padding:2px 6px ;
+margin-top:4px;
 `;
 
 const MembersText = styled(Typography).attrs({text:'SmallLabel'})`
-color:${({theme}) => theme.colors.green[500]};
+color:${({theme}) => theme.colors.purple[500]};
 margin-left:2px;
 `;
 

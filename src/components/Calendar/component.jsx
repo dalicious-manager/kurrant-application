@@ -45,7 +45,7 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
     const pager = useRef();
-    const today = new Date()
+    const today = new Date();
     const weekly = useAtomValue(weekAtom);
     const {isDailyFood,dailyFood} = useFoodDaily();
     const {isOrderMeal,orderMeal} = useOrderMeal();
@@ -101,27 +101,31 @@ const Component = ({
      
      <PagerViewWrap ref={pager} initialPage={0} pageMargin={22} onPageScroll={(e) => {onPageScroll(e)}} margins={margin}>
     {weekly.map((week,i) => {
+      
         return (
             <View key={i} >
                 <Wrap>
-                    {week.map((day) => {
+                    {week.map((day,idx) => {
                       
                         const txt = format(day,'EEE',{locale:ko});
                         const now = (day.toDateString() === today.toDateString());
                         const pressDay = (formattedDate(day));
                         const propsDay = (formattedWeekDate(day));
+                        
                         const lastDay = ( formattedDate(day,'/') < formattedDate(today,'/'));
-                        const order = isOrderMeal?.filter(x => x.serviceDate === propsDay).map(el => {
-                          return el.diningType
-                        });
-                        const orderCount = order.length
+                        const order = isOrderMeal?.filter(x => x.serviceDate === propsDay)
+                        const set = new Set(order?.map((x) => x.diningType));
+                        const orderCount = [...set].length;
+                        
+                        
                         const events =()=>{
                           selectedPress(day); onPressEvent2(propsDay)
                         }
                         return (
                         <DaysWrap
                          key={day} 
-                         onPress={ ()=>{onPressEvent  ? console.log('누름') : onPressEvent2 && events()} } >
+                         idx={idx}
+                         onPress={ ()=>{onPressEvent  ? navigation.reset({ routes: [{name:MealMainPageName,params:{data:propsDay}}]}) : onPressEvent2 && events()} } >
                             <Day lastDay={lastDay} color={color} size={size}>{txt}</Day>
                             <TodayCircle now={now} type={type} currentPress={currentPress} day={day}>
                               <Day color={color} lastDay={lastDay} now={now} size={size}>{day.getDate()}</Day>
@@ -159,8 +163,10 @@ padding:16px 0px;
 `;
 
 const DaysWrap = styled.Pressable`
-padding-left: 10px;
-padding-right: 10px;
+/* padding-left: 10px;
+padding-right: 10px; */
+padding-left:${({idx}) => (idx === 0) ? '0px' : '6px'};
+padding-right:${({idx}) => (idx === 6) ? '0px' : '6px'};
 align-items:center;
 `;
 

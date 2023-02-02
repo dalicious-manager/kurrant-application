@@ -18,7 +18,7 @@ import Form from "../../../../../components/Form";
 import Typography from "../../../../../components/Typography";
 import { formattedDate, formattedMonthDay } from "../../../../../utils/dateFormatter";
 import withCommas from "../../../../../utils/withCommas";
-import { ButtonWrap, ContentWrap, CountWrap, DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, XIcon } from "../../MealCart/Main";
+import { ButtonWrap, ContentWrap,DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, XIcon } from "../../MealCart/Main";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import useUserMe from "../../../../../biz/useUserMe";
@@ -60,6 +60,7 @@ const Pages = ({route}) => {
         name,
         spotName,
         clientType,
+        usedSupportPrice
         } = route.params
     const PressButton = () => {
         setModalVisible(true);
@@ -104,15 +105,7 @@ const Pages = ({route}) => {
       }
 
     
-    const date = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.serviceDate)).flat();
     
-    const deliveryStart = date.reduce((prev,curr) => {
-        return new Date(prev).getTime() <= new Date(curr).getTime() ? prev : curr;
-    });
-
-    const deliveryEnd = date.reduce((prev,curr) => {
-        return new Date(prev).getTime() <= new Date(curr).getTime() ? curr : prev;
-    });
 
     const clearInput = () => {
         inputRef.current.setNativeProps({ text: ''  }); 
@@ -153,13 +146,24 @@ const Pages = ({route}) => {
             }
         })]}
     })
-    console.log(arr);
+    
     const arrs = arr.reduce((acc,cur) => {
 
         return acc.concat(cur)
     })
-   
+   // body 값 최종
     const lastArr = arrs.cartDailyFoodDtoList.filter(el => el.cartDailyFoods.length !== 0);
+
+    // 배송일자 계산
+    const date = spotFilter?.map(el => el.cartDailyFoodDtoList.map(v => v.serviceDate)).flat();
+    
+    const deliveryStart = date.reduce((prev,curr) => {
+        return new Date(prev).getTime() <= new Date(curr).getTime() ? prev : curr;
+    });
+
+    const deliveryEnd = date.reduce((prev,curr) => {
+        return new Date(prev).getTime() <= new Date(curr).getTime() ? curr : prev;
+    });
     
     const orderPress = async (spotId) => {
         const data = {
@@ -167,7 +171,7 @@ const Pages = ({route}) => {
             "cardId": selectDefaultCard[0]?.id,
             'cartDailyFoodDtoList':lastArr,
             'totalPrice':totalPrice,
-            'supportPrice':supportPrice,
+            'supportPrice':usedSupportPrice,
             'deliveryFee':deliveryFee,
             'userPoint': isUserInfo.point
 
@@ -231,7 +235,7 @@ const Pages = ({route}) => {
                                                    <ContentHeader>
                                                        <DiningName>{formattedMonthDay(m.serviceDate)} {m.diningType}</DiningName>
                                                    </ContentHeader>
-                                               <ContentWrap >
+                                               <ContentsWrap >
                                                    <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
                                                    style={{
                                                        width:45,
@@ -254,7 +258,7 @@ const Pages = ({route}) => {
                                                        <CountText>수량: {meal.count}개</CountText>
                                                    </CountWrap>
                                                    
-                                               </ContentWrap>
+                                               </ContentsWrap>
                                                    {(borderLast !== m) && <Border/>}
                                                </React.Fragment>
                                            )
@@ -601,4 +605,14 @@ flex-direction:row;
 justify-content:space-between;
 align-items:center;
 
+`;
+
+const ContentsWrap = styled(ContentWrap)`
+padding-bottom:24px;
+`;
+
+const CountWrap = styled.View`
+position:absolute;
+right:0px;
+bottom:0px;
 `;
