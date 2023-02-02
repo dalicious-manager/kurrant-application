@@ -17,7 +17,7 @@ const Pages= ()=>{
   const navigation = useNavigation();
   return(
       <BackGround
-        colors={['rgba(39, 5, 201, 0)', 'rgba(39, 5, 201, 0.8)']}
+        colors={['rgba(39, 5, 201, 0)', 'rgba(39, 5, 201, 0.55)', 'rgba(39, 5, 201, 0.75)','rgba(39, 5, 201, 0.85)']}
         useAngle={true}
         angle={270}
       >

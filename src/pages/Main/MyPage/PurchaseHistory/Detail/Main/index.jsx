@@ -114,7 +114,7 @@ const Pages = ({route}) => {
               <Typography text="Title03SB" textColor={themeApp.colors.grey[2]}>{withCommas(purchaseDetail?.totalPrice)} 원</Typography>
             </TotalPriceBox>
           </PaymentsBox>
-          <LineBar />
+          {/* <LineBar />
           <PaymentsBox>
             <PaymentsTitle>
               <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}>최종 환불금액</Typography>
@@ -165,16 +165,16 @@ const Pages = ({route}) => {
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>신용카드 환불</Typography>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>19,000원</Typography>
             </PaymentsList>           
-          </PaymentsBox>
+          </PaymentsBox>*/}
           <PaymentsMethodBox>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>결제수단</Typography>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.paymentInfo}</Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{`${purchaseDetail?.cardCompany}카드(${purchaseDetail?.cardNumber})`}</Typography>
           </PaymentsMethodBox>
           <CancelBox>
             <CancelButton>
               <Typography text="Body05SB" textColor={themeApp.colors.grey[3]}>전체 주문 취소</Typography>
             </CancelButton>
-          </CancelBox>
+          </CancelBox> 
         </Wrapper>
       </ScrollView>
     </SafeView>
