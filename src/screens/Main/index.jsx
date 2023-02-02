@@ -221,9 +221,12 @@ import Payment, {
 import {SCREEN_NAME} from '../Main/Bnb';
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 
-import CreateReview, {
-  SCREEN_NAME as CreateReviewScreenName,
-} from './CreateReview';
+import CreateReviewPage1, {
+  SCREEN_NAME as CreateReviewPage1ScreenName,
+} from './CreateReview/Page1';
+import CreateReviewPage2, {
+  SCREEN_NAME as CreateReviewPage2ScreenName,
+} from './CreateReview/Page2';
 
 import NoticeDetail, {
   PAGE_NAME as NoticeDetailPageName,
@@ -1530,8 +1533,24 @@ const Screen = () => {
 
       <MainRoot.Group>
         <MainRoot.Screen
-          name={CreateReviewScreenName}
-          component={CreateReview}
+          name={CreateReviewPage1ScreenName}
+          component={CreateReviewPage1}
+          options={{
+            headerShown: true,
+            title: '리뷰 작성',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={CreateReviewPage2ScreenName}
+          component={CreateReviewPage2}
           options={{
             headerShown: true,
             title: '리뷰 작성',

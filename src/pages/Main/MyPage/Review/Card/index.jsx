@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 
 import {Line} from 'react-native-svg';
@@ -5,6 +6,7 @@ import styled from 'styled-components';
 import {isDueDateClose} from '../../../../../biz/useMypageReview';
 
 import Typography from '../../../../../components/Typography';
+import {SCREEN_NAME as CreateReviewScreenName} from '../../../../../screens/Main/CreateReview/Page1';
 import {
   formattedMonthDay,
   timeLeftIndicator,
@@ -30,6 +32,7 @@ const Component = ({
   diningType,
   ...rest
 }) => {
+  const navigation = useNavigation();
   return (
     <Container>
       <DateText>
@@ -64,7 +67,10 @@ const Component = ({
               timeLeftIndicator(5, orderDate) ===
               '리뷰 가능한 기한이 지났습니다'
             ) && (
-              <ReviewFormWriteButton>
+              <ReviewFormWriteButton
+                onPress={() => {
+                  navigation.navigate(CreateReviewScreenName);
+                }}>
                 <Text>리뷰작성</Text>
               </ReviewFormWriteButton>
             )}
