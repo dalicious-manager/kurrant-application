@@ -1,11 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import { useAtomValue } from "jotai";
-import React, { useEffect, useState } from "react";
-import { ScrollView, View ,Alert, Pressable} from "react-native";
+import React, { useState } from "react";
+import { ScrollView, View ,Alert} from "react-native";
 import styled from "styled-components";
 
 import Plus from "../../../../../assets/icons/Home/plus.svg";
-import { weekAtom } from "../../../../../biz/useBanner/store";
 import useOrderMeal from "../../../../../biz/useOrderMeal";
 import LabelButton from "../../../../../components/ButtonMeal";
 import Calendar from "../../../../../components/Calendar";
@@ -23,43 +21,13 @@ const Pages = ({route}) => {
   
   const data = route?.params?.data === undefined ? '' : route.params.data;
   const navigation = useNavigation();
-  // const mealInfo = useAtomValue(isOrderMealAtom);
   const meal = true;
   const [touchDate,setTouchDate] = useState(data);
-  const weekly = useAtomValue(weekAtom);
-  const {isOrderMeal,orderMeal} = useOrderMeal();
-  
-  const startDate = formattedWeekDate(weekly[0][0]);
-  const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
-  
-  // useEffect(()=>{
-  //   async function loadDailyFood(){
-  //     await orderMeal(startDate,endDate);
-  // }
-  // try {
-  //   loadDailyFood();
-  // } catch (error) {
-  //   if(error.toString().replace("Error:",'').trim() === '403'){
-  //     navigation.reset({
-  //       index: 0,
-  //       routes: [
-  //         {
-  //           name: LoginPageName,
-  //         },
-  //       ],
-  //     })
-  //   }
-    
-  // }
-  
-  
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[])
+  const {isOrderMeal} = useOrderMeal();
 
   const date = formattedWeekDate(new Date());
   const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter((m) => m.serviceDate === touchDate);
-  // const loadData = weekly.map((w,i) => w.filter(x => console.log(formattedWeekDate(x))));
 
   const pressDay = (day) => {
     setTouchDate(day??data);
