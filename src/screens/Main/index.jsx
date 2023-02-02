@@ -221,6 +221,10 @@ import Payment, {
 import {SCREEN_NAME} from '../Main/Bnb';
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 
+import CreateReview, {
+  SCREEN_NAME as CreateReviewScreenName,
+} from './CreateReview';
+
 import NoticeDetail, {
   PAGE_NAME as NoticeDetailPageName,
 } from '../../pages/Main/MyPage/Notice/NoticeDetail';
@@ -1518,6 +1522,27 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 리뷰작성 */}
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={CreateReviewScreenName}
+          component={CreateReview}
+          options={{
+            headerShown: true,
+            title: '리뷰 작성',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
           }}
         />
       </MainRoot.Group>
