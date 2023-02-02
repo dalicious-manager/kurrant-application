@@ -7,7 +7,7 @@ import styled, { useTheme } from 'styled-components/native';
 import { MembershipBadge } from '~components/Icon';
 import Typography from '~components/Typography';
 
-import { MembershipJoin } from '../../../../../../assets';
+import { MembershipJoin,NewMembers } from '../../../../../../assets';
 import { ArrowRightBoxIcon } from '../../../../../../components/Icon';
 import withCommas from '../../../../../../utils/withCommas';
 
@@ -26,9 +26,14 @@ const Component = ({point,isMembership,membershipPeriod= 0}) => {
   
   return (
     <>
-    {!isMembership ? <MembershipJoinPage onPress={()=>navigation.navigate(MembershipIntroPageName)}><MembershipBox source={MembershipJoin} resizeMode={'stretch'} >
-            <MembershipText text={'Body05SB'} textColor={themeApp.colors.neutral[0]}>멤버십 가입하고 
-            <MembershipEffectText text={'Body05SB'} textColor={themeApp.colors.yellow[500]}> 20%할인</MembershipEffectText> 받기</MembershipText>            
+    {!isMembership ? <MembershipJoinPage onPress={()=>navigation.navigate(MembershipIntroPageName)}><MembershipBox source={NewMembers} resizeMode={'stretch'} >
+            <MembershipText text={'Body05SB'} textColor={themeApp.colors.neutral[0]}>
+              {/* 멤버십 가입하고  */}
+            <MembershipEffectText text={'Body05SB'} textColor={themeApp.colors.yellow[500]}> 
+            {/* 20%할인 */}
+            </MembershipEffectText> 
+            {/* 받기 */}
+            </MembershipText>            
           </MembershipBox></MembershipJoinPage>
           :
           <Container onPress={()=>navigation.navigate(MembershipInfoPageName)}>

@@ -328,7 +328,7 @@ const Pages = () => {
 
                         {BuyMeal(isMorningFood)}
                         {BuyMeal(isLunchFood)}
-                        {BuyMeal(isDinnerFood)}
+                        { BuyMeal(isDinnerFood)}
                     </Pager> }
                 </PagerViewWrap>
                 

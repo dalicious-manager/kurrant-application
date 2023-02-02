@@ -33,5 +33,5 @@ right:3px;
 const Count = styled(Typography).attrs({text:'Badge'})`
 color:${({theme}) => theme.colors.grey[1]};
 text-align:center;
-
+justify-content:center;
 `;

@@ -44,10 +44,11 @@ const Pages = () => {
     const boxRef = useRef();
     const [focus,setFocus] = useState(false);
     const [id, setId] = useState(null);
-    const { isLoadMeal,isQuantity,loadMeal, deleteMeal,setLoadMeal,updateMeal,allDeleteMeal,userPoint, mealCartSpot,loadSoldOutMeal,soldOutMeal ,clientStatus,} = useShoppingBasket();
+    const { isLoadMeal,loadMeal, deleteMeal,setLoadMeal,allDeleteMeal,updateMealuserPoint, mealCartSpot,loadSoldOutMeal,soldOutMeal ,clientStatus,updateMeal} = useShoppingBasket();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     const [ modalVisible3, setModalVisible3 ] = useState(false);
+    const [ show,setShow ] = useState(false);
     const {isUserInfo} = useUserInfo();
     const {getCardList}= useUserMe();
     const [selected,setSelected] = useState(isUserInfo.spotId);
@@ -55,20 +56,24 @@ const Pages = () => {
     const [date,setDate] = useState();
     const [type,setType] = useState();
     const toast = Toast();
-    useFocusEffect(
-        useCallback(() => {
-            // Do something when the screen is focused
-            console.log('들어옴')
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         // Do something when the screen is focused
+    //         console.log('들어옴')
         
 
-            return  () => {
-                console.log("나감")
-                updateMeal({"updateCartList":modifyQty});
-            };
+    //         return  () => {
+    //             console.log("나감")
+    //             async function test () {
+
+    //               await  updateMeal({"updateCartList":modifyQty});
+    //             }
+    //             test()
+    //         };
     
     
-    }, [updateMeal])
-    );
+    // }, [updateMeal])
+    // );
 
 
     const PressSpotButton = () => {
@@ -267,11 +272,9 @@ const Pages = () => {
     // 재고 부족
     const isLack = cartArr.map(el => {
         return (
-            el.capacity < el.count
+            (el.status === 1) &&  (el.capacity < el.count) 
         )
     });
-
-    
     
     
     const focusPress = () => {
@@ -390,8 +393,9 @@ const Pages = () => {
               onPress:async () => {
                 try {
 
-                   //await deleteButton(id)
+                   await deleteButton(id)
                     setModalVisible3(true)
+                    
                 } catch(err) {
                     console.log(err)
                 }
@@ -502,7 +506,7 @@ const Pages = () => {
                                                 const period = food.periodDiscountPrice === null ? 0 : food.periodDiscountPrice ;
                                                 const discountPrice = membership + markers + period;
                                             return (
-                                                <Wrap key={i} status={food.status} >
+                                                <Wrap key={i} status={food.status} count={food.count} capacity={food.capacity}>
                                                 <ContentHeader>
                                                     <DiningName>{formattedMonthDay(v.serviceDate)} {v.diningType}</DiningName>
                                                 </ContentHeader>
@@ -540,6 +544,7 @@ const Pages = () => {
                                                             <ShortageText>재고부족(재고 수량:{food.capacity})</ShortageText>
                                                         </SoldOutView>}
                                                     </MealNameView>
+                                                </ContentWrap>
                                                     {food.status === 0 && <MenuChangeView 
                                                     onPress={()=>{
                                                         changeMealPress(food.count,food.id);
@@ -553,6 +558,7 @@ const Pages = () => {
                                                     btn='변경완료'
                                                     data={soldOutMeal}
                                                     toast={toast}
+                                                    setShow={setShow}
                                                     />
                                                     <CountWrap>                                
                                                             {food.status !== 2 && <Count
@@ -565,7 +571,6 @@ const Pages = () => {
                                                                 capacity={food.capacity}
                                                             />}
                                                     </CountWrap>
-                                                </ContentWrap>
                                                 </Wrap>
                                             )
                                         })}
@@ -649,6 +654,7 @@ const Pages = () => {
                     spotName,
                     clientType,
                     arr,
+                    usedSupportPrice
                 })
             }}
 
@@ -657,7 +663,7 @@ const Pages = () => {
              
             <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
             <BottomSheet modalVisible={modalVisible2} setModalVisible={setModalVisible2}  title='스팟 선택' data={mealCartSpot} selected={selected} setSelected={setSelected} setName={setName}/>
-            <toast.ToastWrap message={"메뉴가 변경됐어요"} icon={'checked'}/>
+            {show && <toast.ToastWrap message={"메뉴가 변경됐어요"} icon={'checked'}/>}
             </SafeView>
     )
 
@@ -696,14 +702,16 @@ align-items:center;
 
 `;
 
-const Wrap = styled.Pressable`
+const Wrap = styled.View`
 flex:1;
 padding:16px 24px;
 border-bottom-color: ${props => props.theme.colors.grey[8]};
 border-bottom-width: 1px;
 position:relative;
-background-color:${({theme,status}) => status === 0 ?  theme.colors.grey[8] : theme.colors.grey[0]};
+background-color:${({theme,status,count,capacity}) => (status === 0) || (status === 1 && capacity < count) ?  theme.colors.grey[8] : theme.colors.grey[0]};
+min-height:180px;
 `;
+
 
 export const MealImage = styled(FastImage)`
 width:45px;
@@ -720,7 +728,6 @@ padding-right:4px;
 export const ContentWrap = styled.View`
 flex-direction:row;
 padding-top:12px;
-padding:24px 0;
 position:relative;
 
 `;
@@ -743,8 +750,8 @@ align-items:center;
 
 export const CountWrap = styled.View`
 position:absolute;
-right:0;
-bottom:0;
+right:24px;
+bottom:14px;
 `;
 
 export const ButtonWrap = styled.View`
@@ -939,8 +946,8 @@ const MenuChangeView = styled.Pressable`
 border:1px solid ${({theme}) => theme.colors.grey[6]};
 background-color:#fff;
 position:absolute;
-right:104px;
-bottom:0;
+right:128px;
+bottom:14px;
 flex-direction:row;
 align-items:center;
 justify-content:space-around;

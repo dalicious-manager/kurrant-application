@@ -42,7 +42,7 @@ const Pages = ({route}) => {
 
     const headerTitle = isFoodDetail?.name;
     const dailyFoodId = route.params.dailyFoodId;
-    
+    console.log(dailyFoodId,'2323')
     const closeModal = () => {
         setModalVisible(false)
     }

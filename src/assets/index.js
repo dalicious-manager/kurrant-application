@@ -27,6 +27,8 @@ export const JCB = require('../assets/images/card/stp_card_jcb.png');
 export const UNION = require('../assets/images/card/union-pay.png');
 export const MAESTRO = require('../assets/images/card/maestro.png');
 export const DINERS = require('../assets/images/card/diners-club.png');
+export const Members = require('../assets/images/point.png');
+export const NewMembers = require('../assets/images/newMembers.png');
 
 
 

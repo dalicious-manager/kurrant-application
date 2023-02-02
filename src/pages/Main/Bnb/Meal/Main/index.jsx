@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
-import { ScrollView, View ,Alert} from "react-native";
+import { ScrollView, View ,Alert, Pressable} from "react-native";
 import styled from "styled-components";
 
 import Plus from "../../../../../assets/icons/Home/plus.svg";
@@ -15,11 +15,12 @@ import { CalendarWrap, MakersName, MealName } from "../../BuyMeal/Main";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import FastImage from "react-native-fast-image";
+import {PAGE_NAME as MealDetailPageName} from "../../MealDetail/Main";
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
   
-  //console.log(route.params.data)
+  
   const data = route?.params?.data === undefined ? '' : route.params.data;
   const navigation = useNavigation();
   // const mealInfo = useAtomValue(isOrderMealAtom);
@@ -31,7 +32,7 @@ const Pages = ({route}) => {
   const startDate = formattedWeekDate(weekly[0][0]);
   const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
   
-  
+ console.log(touchDate,'touchDate')
   useEffect(()=>{
     async function loadDailyFood(){
       await orderMeal(startDate,endDate);
@@ -59,6 +60,7 @@ const Pages = ({route}) => {
   const date = formattedWeekDate(new Date());
   const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter((m) => m.serviceDate === touchDate);
+  const test = isOrderMeal?.filter((m) => console.log(m.serviceDate === touchDate,'22323'));
   // const loadData = weekly.map((w,i) => w.filter(x => console.log(formattedWeekDate(x))));
 
   const pressDay = (day) => {
@@ -115,14 +117,13 @@ const Pages = ({route}) => {
         {touchDate ? 
         (<>
           {selectDate.map((s,index) => 
-            <React.Fragment key={index}>
+            <View key={index} >
                 <DiningTimeWrap >
                   <DiningTime>{formattedMonthDay(s.serviceDate)} {s.diningType}</DiningTime>
                 </DiningTimeWrap>
               {s.orderItemDtoList?.map((sm,idx) => 
-              <React.Fragment key={idx}>
-                <MealContentWrap >
-                  <View>
+              
+                <MealContentWrap key={idx}>
                   <FastImage source={{uri:`${sm.image}`,priority:FastImage.priority.high}}
                     style={{
                         width:107,
@@ -130,11 +131,10 @@ const Pages = ({route}) => {
                         borderRadius:7
                     }}
                     />
-                  </View>
                   <Content>
-                    {/* <MakersName>[{sm.makers}]</MakersName> */}
                     <MakersName>[{sm.makers}]</MakersName>
                     <MealName>{sm.name}</MealName>
+                    <DeliveryAddress>{sm.groupName}・{sm.spotName}</DeliveryAddress>
                     <CountText>{sm.count}개</CountText>
                   </Content>
                   <CancleBtnWrap >
@@ -144,21 +144,21 @@ const Pages = ({route}) => {
                     <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
                   </MealChangeWrap>
               </MealContentWrap>
-              </React.Fragment>
+              
               )}
-          </React.Fragment>
+          </View>
         )}
         </>) : 
         (
           <>
           {todayMeal && todayMeal.map((m,i) => 
-            <React.Fragment key={i}>
+            <View key={i} >
                 <DiningTimeWrap >
                   <DiningTime>{formattedMonthDay(m.serviceDate)} {m.diningType}・오늘</DiningTime>
                 </DiningTimeWrap>
               {m.orderItemDtoList?.map((el,idx) => 
-              <React.Fragment key={idx}>
-                <MealContentWrap >
+              
+                <MealContentWrap key={idx}>
                   <FastImage source={{uri:`${el.image}`,priority:FastImage.priority.high}}
                     style={{
                         width:107,
@@ -166,9 +166,10 @@ const Pages = ({route}) => {
                         borderRadius:7
                     }}
                     />
-                  <Content>
+                  <Content onPress={()=>navigation.navigate(MealDetailPageName,{dailyFoodId:el.dailyFoodId})}>
                     <MakersName>[{el.makers}]</MakersName>
                     <MealName>{el.name}</MealName>
+                    <DeliveryAddress>{el.groupName}・{el.spotName}</DeliveryAddress>
                     <CountText>{el.count}개</CountText>
                   </Content>
                   <CancleBtnWrap>
@@ -178,10 +179,10 @@ const Pages = ({route}) => {
                     <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
                   </MealChangeWrap>
               </MealContentWrap>
-              </React.Fragment>
+              
               )}
               
-          </React.Fragment>
+          </View>
           )}
           </>
         )}
@@ -213,11 +214,7 @@ margin:0px 24px 24px 24px;
 //padding-bottom:24px;
 position:relative;
 `;
-const MealImage = styled.Image`
-width:107px;
-height:107px;
-border-radius:7px;
-`;
+
 
 const MealContentWrap = styled.View`
 flex-direction:row;
@@ -234,8 +231,10 @@ const DiningTime = styled(Typography).attrs({text:'CaptionR'})`
 color:${props => props.theme.colors.grey[4]};
 `;
 
-const Content = styled.View`
+const Content = styled.Pressable`
 margin-left:16px;
+width:50%;
+align-self:flex-start;
 `;
 
 const MealChangeWrap = styled.Pressable`
@@ -269,8 +268,8 @@ left:18px;
 
 `;
 
-const CountText = styled(Typography).attrs({text:'MealCount'})`
-color:${props => props.theme.colors.grey[4]};
+const CountText = styled(Typography).attrs({text:'CaptionR'})`
+color:${props => props.theme.colors.grey[5]};
 `;
 
 const NoMealWrap = styled.View`
@@ -282,4 +281,8 @@ height:80%;
 
 const NoMealText = styled(Typography).attrs({text:'Body05R'})`
 color:${props => props.theme.colors.grey[5]};
+`;
+
+const DeliveryAddress = styled(Typography).attrs({text:'Button10R'})`
+color:${({theme}) => theme.colors.grey[5]};
 `;

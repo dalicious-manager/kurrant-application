@@ -73,6 +73,11 @@ const Component = ({
         }
       };
 
+      useEffect(()=>{
+        setChecked(chk)
+        
+    },[chk,checked])
+
     return (
         <SafeAreaView >
         <Wrap horizontal={true} showsHorizontalScrollIndicator={false}  ref={scrollViewRef}>

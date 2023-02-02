@@ -24,7 +24,7 @@ import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/M
 import { useNavigation } from '@react-navigation/native';
 
 const BottomSheet = props => {
-  const { modalVisible, setModalVisible ,title={}, description='', data={} = ()=>{}, height=500 ,btn='버튼이름',toast} = props;
+  const { modalVisible, setModalVisible ,title={}, description='', data={} = ()=>{}, height=500 ,btn='버튼이름',toast,setShow} = props;
   //멀티 셀렉터시 이용
   const [selected, setSelected] = useState();
   
@@ -37,7 +37,7 @@ const BottomSheet = props => {
   );
 
   const navigation = useNavigation();
-  const { addMeal,soldOutChange,setSoldOutChange,setSoldOutMeal } = useShoppingBasket();
+  const { addMeal,setSoldOutMeal,loadMeal } = useShoppingBasket();
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const upY = useRef(new Animated.Value(0)).current;
@@ -143,7 +143,12 @@ const BottomSheet = props => {
     try {
       await addMeal(meal)
       setModalVisible(false)
+      await loadMeal()
+        setShow(true)
       toast.toastEvent();
+      setTimeout(()=>{
+        setShow(false)
+    },3000)
     }catch(err){
       console.log(err)
     }
@@ -152,8 +157,8 @@ const BottomSheet = props => {
   const disabledList = data.filter(el => el.count !== 0);
 
   const detailPagePress = (id) =>{
-    // setModalVisible(false);
-    // navigation.navigate(mealDetailPageName,{dailyFoodId:id})
+    setModalVisible(false);
+    navigation.navigate(mealDetailPageName,{dailyFoodId:id})
   }
 
   return (
