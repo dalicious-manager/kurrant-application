@@ -1,19 +1,23 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useRef, useState,useCallback } from 'react';
+import React, { useEffect, useRef, useState,useCallback, useMemo } from 'react';
 import {
   Modal,
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
   FlatList,
+  Pressable,
+  PanResponder,
 } from 'react-native';
 import styled from 'styled-components/native';
+import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg'
 import Typography from '../Typography';
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
-
-const BottomSheet = props => {
+const BottomSheetSpot = props => {
   const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected,onPressEvent=()=>{},userSpotId,booleanValue,onPressEvent2=()=>{}} = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
@@ -30,71 +34,81 @@ const BottomSheet = props => {
     },
     [setModalVisible, setSelected],
   );
-  const screenHeight = Dimensions.get('screen').height;
+
   const panY = useRef(new Animated.Value(screenHeight)).current;
-  const upY = useRef(new Animated.Value(0)).current;
-  const list = useRef();
-  const [up, setUP] = useState(0);
+  const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const translateY = panY.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: [0, 0, 1],
-  });
+  const snapPoints = useMemo(() => [ "35%", "100%"], []);
+  const [contentScroll, setContentScroll] = useState(true);
+  const [scrollStart,setScrollStart] = useState(0)
+  const [scrollEnd,setScrollEnd] = useState(10)
+
   const resetBottomSheet = Animated.timing(panY, {
     toValue: 0,
-    duration: 300,
+    duration: 50,
     useNativeDriver: true,
   });
   const closeBottomSheet = Animated.timing(panY, {
     toValue: screenHeight,
-    duration: 300,
+    duration: 50,
     useNativeDriver: true,
   });
+  const list = useRef(PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponder: () => false,
+    onPanResponderRelease: (event, gestureState) => {
+      console.log(gestureState)
+        if(gestureState.dy > 0 && gestureState.vy > 1.5) {
+            closeModal();
+        }
+        else {
+            resetBottomSheet.start();
+        }
+    }
+}));
+  const handleSheetChange = useCallback((index) => {
+    setSnap(index)
+  }, []);
+  const handleSnapPress = useCallback((index) => {
+    list.current?.snapToIndex(index);
+  }, []);
   const pressOutUp = e => {
+    e.stopPropagation();
     const { pageY } = e.nativeEvent;
     console.log('test : ' + pageY);
-    if (pageY > y + 30) {
-      if (up < 500) {
+    if (pageY > y + 50) {
+      console.log("testtest1")
+      if (snap === 0) {
         closeModal();
-      } else {
-        downSheet.start();
-        list.current.scrollToOffset({ animated: false, y: 0 });
+      } else {        
+        console.log("testtest2")
+        if(contentScroll && scrollStart == 0 && scrollEnd && 0){
+          handleSnapPress(0);
+        }
       }
-    } else if (pageY < y - 30) {
-      upSheet.start();
-    } else {
-      downSheet.start();
-      list.current.scrollToOffset({ animated: false, y: 0 });
+    } else if (pageY < y - 50) {
+      console.log("testtest3",snap, contentScroll)
+      handleSnapPress(1);
+    } else {      
+      if(contentScroll && scrollStart == 0 && scrollEnd && 0){
+        handleSnapPress(0);
+      }
     }
   };
   const pressInUp = e => {
+    e.stopPropagation();
     const { pageY } = e.nativeEvent;
     console.log('test2 : ' + pageY);
     setY(pageY);
   };
-  const upSheet = Animated.timing(upY, {
-    toValue: 600,
-    duration: 300,
-    useNativeDriver: false,
-  });
-  const downSheet = Animated.timing(upY, {
-    toValue: 350,
-    duration: 300,
-    useNativeDriver: false,
-  });
+ 
   useEffect(() => {
     if (props.modalVisible) {
       resetBottomSheet.start();
     }
   }, [props.modalVisible, resetBottomSheet]);
-  useEffect(() => {
-    const id = upY.addListener(state => {
-      setUP(state.value);
-    });
-    return () => {
-      upY.removeListener(id);
-    };
-  }, [up, upY]);
+
+
   const closeModal = () => {
     closeBottomSheet.start(() => {
       setModalVisible(false);
@@ -102,69 +116,103 @@ const BottomSheet = props => {
   };
   return (
     <Modal visible={modalVisible} animationType={'slide'} transparent>
-      <Overlay>
+      <Overlay
+         onPressIn={pressInUp}
+         onPressOut={pressOutUp}
+      >
         <TouchableWithoutFeedback onPress={closeModal}>
           <Background />
         </TouchableWithoutFeedback>
-        <AnimatedView
-          style={{
-            transform: [{ translateY: translateY }],
-            height: up,
-            width: Dimensions.get('screen').width,
-          }}>
-          <DragButton
-            onPressIn={pressInUp}
-            onPressOut={pressOutUp}>
-            <DragButtonView/>
-          </DragButton>
-          <BottomSheetTitleView>
-            <BottomSheetTitle>
-              {title}
-            </BottomSheetTitle>
-            {description !== '' && <BottomSheetDecs>
-              {description}
-            </BottomSheetDecs>}
-          </BottomSheetTitleView>
-          <FlatList
-            data={data}
+        
+          
+          <BottomSheet
             ref={list}
-            scrollEnabled={up > 500}
-            renderItem={({ item }) => (
-              <>
-               <ItemContainer>
-                <GroupName>{item.clientName}</GroupName>
-                <Border/>
-               </ItemContainer>
+            snapPoints={snapPoints}
+            onChange={handleSheetChange}
+            {...list?.current?.panHandlers}
+            style={
+              {
+                marginBottom:50              
+              }
+            }
+          >
+            <BottomSheetTitleView>
+              <BottomSheetTitle>
+                {title}
+              </BottomSheetTitle>
+              {description !== '' && <BottomSheetDecs>
+                {description}
+              </BottomSheetDecs>}
+            </BottomSheetTitleView>
+            <BottomSheetFlatList
+              data={data}             
+              scrollEnabled={snap === 1}             
+              onScrollBeginDrag={(e)=>{
+                setScrollStart(e.nativeEvent.contentOffset.y);
+              }}
+              onMomentumScrollBegin={(e)=>{
+                if(scrollEnd === 0){
+                  handleSnapPress(0);
+                }
+              }}
+              onScrollEndDrag={(e)=>{
+                console.log(e.nativeEvent.contentOffset.y,"test1234");
+                setContentScroll(e.nativeEvent.contentOffset.y === 0);
+                setScrollEnd(e.nativeEvent.contentOffset.y);
+                if(e.nativeEvent.contentOffset.y === 0 ){
+                  if(contentScroll){
+                    handleSnapPress(0);
+                  }
+                  
+                }
+                
                
-              {item.spots.map((el,idx) => (
-                <ContentItemContainer onPress={()=>{onSelect(el.spotId);onPressEvent(el.spotId)}} key={el.spotId}>
-                  {(el.spotId === userSpotId) ?
-                <ContentItemBox>
-                  <ContentItemText>{el.spotName}</ContentItemText>
-                  <CheckedIcon />
-                </ContentItemBox>:
-                <ContentItemText>
-                  {el.spotName}
-                </ContentItemText>}
-                </ContentItemContainer>
-                ))}
-                
-                
-              </>
-            )}
-             keyExtractor={item => item.clientId.toString()}
-          />
+              }}
+              renderItem={({ item }) => (
+                <>
+                 <ItemContainer>
+                  <GroupName>{item.clientName}</GroupName>
+                  <Border/>
+                 </ItemContainer>
+                 
+                {item.spots.map((el,idx) => (
+                  <ContentItemContainer 
+                    onPressIn={pressInUp}
+                    onPressOut={pressOutUp}
+                    onPress={()=>{           
+                      onSelect(el.spotId);
+                      onPressEvent(el.spotId)
+                    }} 
+                    key={el.spotId}>
+                    {(el.spotId === userSpotId) ?
+                  <ContentItemBox>
+                    <ContentItemText>{el.spotName}</ContentItemText>
+                    <CheckedIcon />
+                  </ContentItemBox>:
+                  <ContentItemText>
+                    {el.spotName}
+                  </ContentItemText>}
+                  </ContentItemContainer>
+                  ))}
+                  
+                  
+                </>
+              )}
+               keyExtractor={item => item.clientId.toString()}
+            />
+            <ManagePressView></ManagePressView>
+          </BottomSheet>
+          
           {booleanValue &&
                 <ManagePressView onPress={()=>{onPressEvent2(setModalVisible(false))}}>
                   <ContentItemText>그룹/스팟 관리하기</ContentItemText>
-                </ManagePressView>}
-        </AnimatedView>
+                </ManagePressView>} 
       </Overlay>
     </Modal>
   );
 };
 
-const Overlay =styled.View`
+const Overlay =styled.Pressable`
   position: relative;
   flex: 1;
   justify-content: flex-end;
@@ -176,7 +224,6 @@ const Background = styled.View`
 `;
 
 const AnimatedView = styled(Animated.View)`
-  min-height: 350px;
   justify-content: center;
   align-items: center;
   background-color: white;
@@ -186,14 +233,7 @@ const AnimatedView = styled(Animated.View)`
 `;
 
 const DragButton = styled.TouchableOpacity`
-  width: 100px;
-  height: 50px;
-  border-radius: 50px;
-  position: absolute;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-  top: -33px;
+  flex: 1;
 `;
 
 const DragButtonView = styled.View`
@@ -216,7 +256,7 @@ const BottomSheetDecs = styled(Typography).attrs({text : 'Body06R'})`
 color:${({theme}) => theme.colors.grey[4]};
 `;
 
-const ContentItemContainer = styled.TouchableOpacity`
+const ContentItemContainer = styled.Pressable`
   width: ${Dimensions.get('screen').width}px;
   height: 60px;
   padding: 19px 24px;
@@ -252,7 +292,8 @@ const ManagePressView = styled.Pressable`
   width: ${Dimensions.get('screen').width}px;
   height: 60px;
   padding: 19px 24px;
+  background-color: white;
 `;
 
 
-export default BottomSheet;
+export default BottomSheetSpot;

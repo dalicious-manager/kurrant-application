@@ -19,12 +19,9 @@ const useShoppingBasket = () => {
             setLoadMealLoading(true);
             
             const res = await Fetch.loadMealCart();
-            setClientStatus([])
-            setMealCartSpot([])
-            setLoadMeal(res.data ? res.data.spotCarts : []);
-            setUserPoint([])
+            setLoadMeal(res.data && res.data?.spotCarts ? res.data.spotCarts : []);
             setQuantity(0);
-            const clientType = res.data.spotCarts.map(el => {
+            const clientType = res.data?.spotCarts.map(el => {
                 
                 return {
                     spotId:el.spotId,
@@ -32,22 +29,23 @@ const useShoppingBasket = () => {
                 }
             });
             
-            const spot = res.data.spotCarts.map(m => {
+            const spot = res.data?.spotCarts.map(m => {
                 return {
                     id:m.spotId,
                     text: m.groupName + "\u00a0" + m.spotName
                 }
             });
             
-            const qty = res.data.spotCarts.map(m => m.cartDailyFoodDtoList.length)
-            const badgeQty = qty.reduce((acc,cur) => {
+            const qty = res.data?.spotCarts.map(m => m.cartDailyFoodDtoList.map((v)=>v.cartDailyFoods.length))
+            const badgeQty = qty?.flat().reduce((acc,cur) => {
                 return acc + cur
-            },0)
+            },0) 
            
             setClientStatus(clientType)
             setMealCartSpot(spot)
-            setUserPoint(res.data.userPoint)
+            setUserPoint(res.data && res.data?.userPoint && res.data.userPoint)
             setQuantity(badgeQty);
+            return res.data.spotCarts
         } catch (err) {
             throw err;
         } finally{
@@ -56,12 +54,14 @@ const useShoppingBasket = () => {
     }
 
     const addMeal = async (body) => {
-        
+          
         try {
             const res = await Fetch.addMealCart([
                 ...body
         ]);
-           return res
+        setQuantity(res.data)
+        loadMeal();
+        return res
 
         }catch(err){
             throw err
@@ -92,12 +92,12 @@ const useShoppingBasket = () => {
     };
 
     const updateMeal = async (body) => {
-
+        console.log(isLoadMeal.map(v=>v.cartDailyFoodDtoList.map(s=>console.log(s))));
         try {
             const res = await Fetch.updateMealCart({
                 ...body
             });
-            console.log(res.message)
+            console.log(res.message ,body.updateCartList.map((v)=>v.count))
             return res;
 
         }catch(err){

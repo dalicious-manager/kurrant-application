@@ -12,15 +12,20 @@ import { formattedMealFoodStatus } from "../../../../../../../../utils/statusFor
 
 const {width} =Dimensions.get('screen');
 const Component = ({
-  serviceDate,
-  makersName,
-  diningType,
-  name,
-  count,
-  price,
-  foodStatus,
+  orderItem
 }) => {
   const themeApp = useTheme();
+  const {
+    serviceDate,
+    makers,
+    diningType,
+    image,
+    foodName,
+    count,
+    id,
+    price,
+    orderStatus,
+  } = orderItem;
   const navigation = useNavigation();
     return (
         <OrderItemContainer >
@@ -29,7 +34,7 @@ const Component = ({
               <FastImage
                 style={{ width: '100%', height: '100%', borderRadius:7 }}
                 source={{
-                    uri: "https://recipe1.ezmember.co.kr/cache/recipe/2020/12/17/5dd8b5fc87e0696950f8836f6f50657e1.jpg",
+                    uri: image,
                     priority: FastImage.priority.high,
                 }}
                 resizeMode={FastImage.resizeMode.cover}
@@ -39,16 +44,16 @@ const Component = ({
               <TextBox>
                 <ServiceDateBox>
                   <ServiceDate text="SmallLabel" textColor={themeApp.colors.grey[4]}>식사일 : {formattedDateAndDay(serviceDate)} {formattedDateType(diningType)}</ServiceDate>
-                  {foodStatus === 5  && <TextButton label="주문취소" type="blue" size="label13R" />}
-                  {foodStatus === 10 && <TextButton label="수령확인" type="blue" size="label13R" />}
+                  {orderStatus === 5  && <TextButton label="주문취소" type="blue" size="label13R" />}
+                  {orderStatus === 10 && <TextButton label="수령확인" type="blue" size="label13R" />}
                 </ServiceDateBox>
-                <Body06R19 textColor={themeApp.colors.grey[2]}>[{makersName}]{name}</Body06R19>
+                <Body06R19 textColor={themeApp.colors.grey[2]}>[{makers}] {foodName}</Body06R19>
                 <PriceBox>
                   <Body06R19 textColor={themeApp.colors.grey[4]}>{count}개</Body06R19>
                   <Typography  text="Body06SB" textColor={themeApp.colors.grey[2]}>{withCommas(price)}원</Typography>
                 </PriceBox>
                 <FoodStatusBox>
-                  <Typography  text="Body06SB" textColor={themeApp.colors.grey[2]}>{formattedMealFoodStatus(foodStatus)}</Typography>
+                  <Typography  text="Body06SB" textColor={themeApp.colors.grey[2]}>{formattedMealFoodStatus(orderStatus)}</Typography>
                 </FoodStatusBox>
               </TextBox>              
             </DateOrderItemContent>

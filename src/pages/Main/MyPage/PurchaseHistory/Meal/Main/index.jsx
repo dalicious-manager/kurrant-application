@@ -83,18 +83,46 @@ const confirmPress = (setModal) =>{
    }
   const onPressCondition = async()=>{
     const body = {
-      startDate:startDate, endDate:endDate
+      startDate:formattedWeekDate(startDate), 
+      endDate:formattedWeekDate(endDate),
+      orderType:1
     }
     await getPurchaseHistoryMeal(body);     
   }
   useEffect(()=>{
-    const purchaseHistory =async()=>{
-      await getPurchaseHistoryMeal();     
+    const purchaseHistory =async(date)=>{
+      await getPurchaseHistoryMeal(date);     
     } 
     const selectDate = searchDate.filter((v)=> v.isActive === true);
-    console.log(selectDate[0])
+    // console.log(selectDate[0])
+    const dateArray = ()=>{
+      var now = new Date();
+      if(selectDate[0].id === 0){
+        const starts = new Date(now.setDate(now.getDate() - 7));
+        const ends = new Date();;
+        return [starts,ends];
+      }
+
+      if(selectDate[0].id === 1){
+        const starts = new Date(now.setMonth(now.getMonth() - 1));
+        const ends = new Date();;
+        return [starts,ends];
+      }
+      if(selectDate[0].id === 2){
+        const starts = new Date(now.setMonth(now.getMonth() - 3));
+        const ends = new Date();;
+        return [starts,ends];
+      }
+      
+    }
     if(selectDate[0].id !== 3){
-      purchaseHistory();
+      const [start , end] = dateArray();
+      const req = {
+        startDate :formattedWeekDate(start),
+        endDate:formattedWeekDate(end),
+        orderType:1
+      }
+      purchaseHistory(req);
     }else{
       setMealPurchase({});
     }
@@ -136,7 +164,6 @@ const confirmPress = (setModal) =>{
         {isMealPurchaseLoading ? <Skeleton />:mealPurchase?.length > 0
         ? <ScrollViewBox>
         {mealPurchase?.map((v,i)=>{
-          console.log(v);
           return <DateOrderItemContainer key={`${v.orderDate}${i}`} itemIndex={i} purchase={v} date={v.orderDate} />
         })}
         </ScrollViewBox> 

@@ -41,6 +41,7 @@ import {PAGE_NAME as ApartRegisterSpotPageName } from '../../../../Group/GroupAp
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import useUserMe from '../../../../../biz/useUserMe';
 import { PAGE_NAME as FAQListDetailPageName } from '../../../MyPage/FAQ';
+import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
@@ -53,6 +54,7 @@ const Pages = () => {
    
     const {userGroupSpotCheck,isUserGroupSpotCheck,userSpotRegister,groupSpotDetail} = useGroupSpots();
     const {isOrderMeal,orderMeal} = useOrderMeal();
+    const { loadMeal} = useShoppingBasket();
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
@@ -103,6 +105,7 @@ const Pages = () => {
     try {
       status();
       userGroupSpotCheck();
+      loadMeal();
     } catch (error) {
       if(error.toString().replace("Error:",'').trim() === '403'){
         navigation.reset({
