@@ -53,7 +53,7 @@ const Pages = () => {
     
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
-        console.log(position,isLunchFood);
+        
         if(isDiningTypes[0] && ((isMorningFood.length === 0 && position === 0) 
         ||(isLunchFood.length === 0 && position === 1)
         || (isDinnerFood.length === 0 && position === 2))){            
@@ -130,7 +130,7 @@ const Pages = () => {
                   }
             }
             if(isDiningTypes.length ===0) loadDailyFood();
-            console.log(isMorningFood.length,"test")
+            
         },[])
         useEffect(()=>{
             
