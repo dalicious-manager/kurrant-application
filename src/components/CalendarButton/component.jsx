@@ -14,8 +14,6 @@ import Typography from '../Typography';
 
 const Component = ({
     pager,
-    meal,
-    daily,
     chk
     
 }) =>{
@@ -33,10 +31,7 @@ const Component = ({
     btn[0] = '이번주';
     btn[1] = '다음주';
 
-    const checkedPress = (idx) => {
-        setChecked(idx);
-    }
-
+ 
     const pagerPress = (idx) => {
         pager.current.setPage(idx)
     }
@@ -52,38 +47,28 @@ const Component = ({
 
 
     useEffect(() => {
-        setChecked(chk)
+        //setChecked(chk)
         if(chk === 3){
             scrollViewRef.current.scrollToEnd({animated: true});
         }else if(chk === 1){
             scrollViewRef.current.scrollTo({animated: true});
         }
-    },[chk,checked])
+    },[chk])
 
     return (
         <SafeAreaView >
         <Wrap horizontal={true} showsHorizontalScrollIndicator={false}  ref={scrollViewRef}>
-            {meal && btn.map((week,idx) => 
+            {btn.map((week,idx) => 
                 <Btn key={idx} 
                 idx={idx}
-                onPress={()=> {pagerPress(idx);checkedPress(idx);scrollToPress(idx)}}
-                checked={checked}
-                >
-                    <WeekText checked={checked} idx={idx}>{week}</WeekText>
-                </Btn>
-                )}
-            {daily && btn.map((week,idx) => 
-                <Btn key={idx}
-                idx={idx}
-                onPress={()=> {checkedPress(idx);pagerPress(idx);scrollToPress(idx)}}
-                checked={checked}
+                onPress={()=> {pagerPress(idx);scrollToPress(idx)}}
+                checked={chk}
                 chk={chk}
-                
                 >
-                    <WeekText checked={checked} idx={idx} chk={chk}>{week}</WeekText>
+                    <WeekText checked={chk} idx={idx}>{week}</WeekText>
                 </Btn>
                 )}
-           
+          
         </Wrap>
         </SafeAreaView>
 

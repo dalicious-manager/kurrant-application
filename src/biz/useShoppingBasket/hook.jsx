@@ -137,6 +137,7 @@ const useShoppingBasket = () => {
             const res = await Fetch.ordrMealCart(spotId,{
                 ...body
             });
+            console.log(res.data,'주문완료')
             return res
         } catch(err){
             console.log(err)

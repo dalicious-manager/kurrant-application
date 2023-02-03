@@ -54,10 +54,10 @@ const Pages = () => {
                         <Image source={AlreadyApartment} style={{width:124,height:86}} />
                     </ImageWrap>
                 </BoxWrap>
+            </Wrap>
                 <NextView onPress={() => {navigation.navigate(SCREEN_NAME)}}>
                     <NextText>다음에 하기</NextText>
                 </NextView>
-            </Wrap>
         </Wrapper>
     )
 }
@@ -111,12 +111,12 @@ color:${({theme}) => theme.colors.grey[4]};
 `;
 
 const NextView = styled.Pressable`
-/* position:absolute;
-bottom:0; */
+position:absolute;
+bottom:20px;
 width:100%;
 justify-content:center;
 flex-direction:row;
-margin-top:24px;
+
 `;
 
 const CloseWrap = styled.View`
