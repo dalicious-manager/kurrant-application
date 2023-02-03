@@ -7,7 +7,7 @@ import Button from '~components/Button';
 import Image from '~components/Image';
 import Typography from '~components/Typography';
 
-import {PAGE_NAME as LoginPage} from '../../../Main/Login/EmailLogin';
+import {PAGE_NAME as LoginPage} from '../../../Main/Login/Login';
 
 import {Terminate} from '~assets';
 import useUserInfo from '../../../../biz/useUserInfo';
@@ -54,7 +54,7 @@ const Pages = () => {
           label={'확인'}
           onPressEvent={() => {
             navigation.popToTop();
-            navigation.navigate(LoginPage);
+            // navigation.navigate(LoginPage);
             // navigation.reset({
             //     index: 0,
             //     routes: [

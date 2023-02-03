@@ -55,6 +55,7 @@ const Pages = () => {
     
     const onPageScroll = (e) => {
         const { position } = e.nativeEvent;
+        console.log(position,isLunchFood);
         if(isDiningTypes[0] && ((isMorningFood.length === 0 && position === 0) 
         ||(isLunchFood.length === 0 && position === 1)
         || (isDinnerFood.length === 0 && position === 2))){            
@@ -76,7 +77,7 @@ const Pages = () => {
     const dayPress = async (selectedDate) =>{
         
         try {
-            await dailyFood(spotId,selectedDate);
+            dailyFood(spotId,selectedDate);
         }catch(err){
             console.log(err)
             throw err
@@ -135,7 +136,7 @@ const Pages = () => {
                     
                   }
             }
-            loadDailyFood();
+            if(isDiningTypes.length ===0) loadDailyFood();
             console.log(isMorningFood.length,"test")
         },[])
         useEffect(()=>{
@@ -329,7 +330,7 @@ const Pages = () => {
 
             
                     <Pager ref={diningRef} 
-                        //initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
+                        initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
                         onPageSelected={(e) => {onPageScroll(e)}} 
                      >
                         {BuyMeal(isMorningFood)}

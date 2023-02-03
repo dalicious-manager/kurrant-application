@@ -181,6 +181,7 @@ const Pages = ({route}) => {
             <SNSBox>
             {
               isConnected.map((v)=>{
+                console.log(v);
                 return (
                   <SNSPiece key={v.social} onPress={()=>!v.isConnect ? connectSNS(v.social) : disconnectSNS(v.social)}>                
                     <SocialConnectIcons social={v.social} isConnect={v.isConnect ? true : false}/>
@@ -200,7 +201,7 @@ const Pages = ({route}) => {
             </SNSBox>
           </SNSContainer>
           <Line />
-          <ListBox title={isUserInfo?.phone ? '휴대폰번호 변경':'휴대폰번호 등록'} routeName={PhoneNumberSettingPageName}/>
+          <ListBox title={isUserInfo?.phone ? '휴대폰번호 변경':'휴대폰번호 설정'}  description={!isUserInfo?.phone && '설정하기'}  routeName={PhoneNumberSettingPageName}/>
           <ListBox 
           title={!myInfoPerson.hasGeneralProvider ? '이메일/비밀번호 설정' : '비밀번호 변경'}  
           description={!myInfoPerson.hasGeneralProvider && '설정하기'} 

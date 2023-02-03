@@ -1,5 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import { NavigationContainer } from '@react-navigation/native';
+import analytics from '@react-native-firebase/analytics';
 import React, { useEffect } from 'react';
 import {StatusBar, LogBox, Text,TextInput} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -14,7 +15,8 @@ Text.defaultProps.allowFontScaling=false;
 TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.allowFontScaling=false; 
 const App = () => {
-  
+  const routeNameRef = React.useRef();
+  const navigationRef = React.useRef();
   useEffect(()=>{
     
     SplashScreen.hide();
@@ -34,7 +36,24 @@ const App = () => {
       <ThemeProvider theme={Theme}>
         <SafeAreaProvider>
           <StatusBar />
-          <NavigationContainer>
+          <NavigationContainer
+            ref={navigationRef}
+            onReady={() => {
+              routeNameRef.current = navigationRef.current.getCurrentRoute().name;
+            }}
+            onStateChange={async () => {
+              const previousRouteName = routeNameRef.current;
+              const currentRouteName = navigationRef.current.getCurrentRoute().name;
+      
+              if (previousRouteName !== currentRouteName) {
+                await analytics().logScreenView({
+                  screen_name: currentRouteName,
+                  screen_class: currentRouteName,
+                });
+              }
+              routeNameRef.current = currentRouteName;
+            }}
+          >
           <Screen />
           </NavigationContainer>
         </SafeAreaProvider>

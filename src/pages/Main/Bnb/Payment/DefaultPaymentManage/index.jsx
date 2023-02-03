@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components/native';
 import useUserMe from '~biz/useUserMe';
 
@@ -25,7 +25,7 @@ const Pages = ()=>{
     ]
     const agreeCheck = useForm();
     const navigation = useNavigation();
-    const {cardSetting,setSelectDefaultCard,readableAtom:{cardList,selectDefaultCard}} = useUserMe();
+    const {cardSetting,getCardList,setSelectDefaultCard,readableAtom:{cardList,selectDefaultCard}} = useUserMe();
     const [selectNowCard ,setNowCard] = useState(selectDefaultCard)
     const onSelectEvent=()=>{
         navigation.navigate(RegisterCardScreenName,{
@@ -46,7 +46,14 @@ const Pages = ()=>{
         }
         await cardSetting(req);        
     }
-   
+    useFocusEffect(
+        useCallback(()=>{
+            const getCardListData = async()=>{
+                await getCardList()
+            }
+            getCardListData();
+        },[])
+    )
     return(
         <Wrapper paddingTop={24} >
             <InfoBox>

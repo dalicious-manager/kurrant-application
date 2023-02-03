@@ -7,6 +7,7 @@ import NaverLogin from '@react-native-seoul/naver-login';
 import {  Alert, Platform } from 'react-native';
 
 import useUserMe from '../../biz/useUserMe';
+import { AccessToken, AuthenticationToken, LoginManager } from 'react-native-fbsdk-next';
 
 const naverData = ()=>{
     const data = {
@@ -94,6 +95,49 @@ export default () => {
               } catch (error) {
                 console.log("err",error.toString());
               }
+        }else if(social ==="FACEBOOK"){
+          try {
+            const result = await LoginManager.logInWithPermissions(
+              ['public_profile', 'email'],
+              nonce
+            );
+            console.log(result);
+        
+            if (Platform.OS === 'ios') {
+              const result = await AuthenticationToken.getAuthenticationTokenIOS();
+              // Clipboard.setString(result?.authenticationToken);
+  
+              await snsLogin({
+                snsAccessToken:result?.authenticationToken,
+                autoLogin:true,
+              },'FACEBOOK');
+              navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: SCREEN_NAME,
+                    },
+                  ],
+                })
+            } else {
+              const result = await AccessToken.getCurrentAccessToken();
+              // Clipboard.setString(result?.accessToken);
+              await snsLogin({
+                snsAccessToken:result?.accessToken,
+                autoLogin:true,
+              },'FACEBOOK');
+              navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: SCREEN_NAME,
+                    },
+                  ],
+                })
+            }
+          } catch (error) {
+            console.log(error);
+          }
         }
       } catch (error) {
         Alert.alert(

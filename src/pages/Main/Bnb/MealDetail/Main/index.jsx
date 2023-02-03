@@ -52,6 +52,11 @@ const Pages = ({route}) => {
         async function loadFoodDetail(){
             await foodDetail(dailyFoodId);
             await loadMeal();
+            await analytics().logEvent('food_detail', {
+                id: dailyFoodId,
+                name :isFoodDetail?.name,
+                makers:isFoodDetail?.makersName
+              })
         }
         loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
