@@ -103,8 +103,8 @@ const Pages = ({route}) => {
         navigation.setOptions({   
            
             headerLeft: () => 
-            
-                <CloseIcon onPress={()=> {
+                <Pressable 
+                onPress={()=> {
                     navigation.reset({
                         index: 0,
                         routes: [
@@ -113,7 +113,11 @@ const Pages = ({route}) => {
                           },
                         ],
                       })
-                }}/>
+                }}
+                style={{width:40,height:20 }}>
+
+                    <CloseIcon/>
+                </Pressable>
             
         
            

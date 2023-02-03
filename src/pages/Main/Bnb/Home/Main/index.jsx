@@ -77,16 +77,17 @@ const Pages = () => {
     const intersection = nextWeek.filter(x => mealCheck.includes(x));
   
     useEffect(()=>{
-      const handleShowModal = async () => {
+      const handleShowModal = () => {
     
         if((intersection.length === 0)){
           setIsVisible(true);
-          if (VISITED_BEFORE_DATE === VISITED_NOW_DATE) {
-            setIsVisible(true);
-          } else if (VISITED_BEFORE_DATE !== VISITED_NOW_DATE) {
-            setIsVisible(false);
-          }
         }
+        if ((intersection.length === 0) && (VISITED_BEFORE_DATE === VISITED_NOW_DATE)) {
+          setIsVisible(true);
+        } 
+        if ((intersection.length === 0) && (VISITED_BEFORE_DATE !== VISITED_NOW_DATE)) {
+          setIsVisible(false);
+        } 
        
         };
         handleShowModal();

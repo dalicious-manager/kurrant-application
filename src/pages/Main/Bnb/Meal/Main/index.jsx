@@ -97,7 +97,7 @@ const Pages = ({route}) => {
                         borderRadius:7
                     }}
                     />
-                  <Content>
+                  <Content onPress={()=>navigation.navigate(MealDetailPageName,{dailyFoodId:sm.dailyFoodId})}>
                     <MakersName>[{sm.makers}]</MakersName>
                     <MealName>{sm.name}</MealName>
                     <DeliveryAddress>{sm.groupName}・{sm.spotName}</DeliveryAddress>

@@ -462,7 +462,7 @@ const Pages = () => {
         <SafeView>
              <SpotView>
                     <SpotPress onPress={PressSpotButton}>
-                        <SpotName>{spotName[0]?.text ?? isUserInfo.group + isUserInfo.spot }</SpotName>
+                        <SpotName>{spotName[0]?.text ?? isUserInfo.group + "\u00a0" + isUserInfo.spot }</SpotName>
                         <ArrowIcon/>
                     </SpotPress>
                     <Pressable onPress={()=>{allDelete(selected)}}>

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {BackHandler, NativeModules, Platform} from 'react-native'
+import {BackHandler, NativeModules, Platform , View} from 'react-native'
 import { useTheme } from 'styled-components';
 import styled from 'styled-components/native';
 
@@ -29,12 +29,15 @@ const Component = ({ margin = [0, 0] }) => {
 
   return (
     <Wrpaper margin={margin} onPress={handleBackPress}>
-      <CloseIcon/>
+      
+        <CloseIcon/>
+      
     </Wrpaper>
   );
 };
 
 const Wrpaper = styled.TouchableOpacity`
+
   margin-left: ${({ margin }) => margin[0]}px;
   margin-right: ${({ margin }) => margin[1]}px;
 `;

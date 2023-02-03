@@ -65,8 +65,8 @@ const Component = ({
   
   return (
     <React.Fragment>
-     {BooleanValue && daily ? <Button pager={pager} daily chk={chk} /> : <></>}
-     {BooleanValue && meal ? <Button pager={pager} meal chk={chk}  /> : <></>}
+     {BooleanValue ? <Button pager={pager} daily chk={chk} /> : <></>}
+     
      
      <PagerViewWrap 
      ref={pager} 
