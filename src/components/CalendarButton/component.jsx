@@ -22,7 +22,6 @@ const Component = ({
     
     const [weekly,] = useAtom(weekAtom);
     const [checked,setChecked] = useState(0);
-    const {isOrderMeal,orderMeal} = useOrderMeal();
     const scrollViewRef = useRef(null);
 
     const btn = weekly.map((w) => {
@@ -42,30 +41,7 @@ const Component = ({
         pager.current.setPage(idx)
     }
 
-    const start = weekly.map((s) => {
-        const startData = formattedWeekDate(s[0]);
-        return (
-            startData
-        )
-    });
-
-    const end = weekly.map((e) => {
-        const endData =  formattedWeekDate(e.slice(-1)[0]);
-        return (
-            endData
-        )
-    });
     
-    const mealPress = async (startdate,enddate) => {
-        
-        try {
-            await orderMeal(startdate,enddate);
-
-        } catch(err) {
-            console.log(err)
-        }
-    }
-
     const scrollToPress = (idx) => { 
         if(idx === 3){
             scrollViewRef.current.scrollToEnd({animated: true});
@@ -74,9 +50,14 @@ const Component = ({
         }
       };
 
-      useEffect(()=>{
+
+    useEffect(() => {
         setChecked(chk)
-        
+        if(chk === 3){
+            scrollViewRef.current.scrollToEnd({animated: true});
+        }else if(chk === 1){
+            scrollViewRef.current.scrollTo({animated: true});
+        }
     },[chk,checked])
 
     return (
@@ -85,7 +66,7 @@ const Component = ({
             {meal && btn.map((week,idx) => 
                 <Btn key={idx} 
                 idx={idx}
-                onPress={()=> {pagerPress(idx);checkedPress(idx);mealPress(start[idx],end[idx]);scrollToPress(idx)}}
+                onPress={()=> {pagerPress(idx);checkedPress(idx);scrollToPress(idx)}}
                 checked={checked}
                 >
                     <WeekText checked={checked} idx={idx}>{week}</WeekText>

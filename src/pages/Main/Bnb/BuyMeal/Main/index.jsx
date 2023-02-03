@@ -5,8 +5,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { ScrollView, View, Dimensions, StyleSheet, ActivityIndicator} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
-
-
 import FastImage from "react-native-fast-image";
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -59,11 +57,11 @@ const Pages = () => {
         if(isDiningTypes[0] && ((isMorningFood.length === 0 && position === 0) 
         ||(isLunchFood.length === 0 && position === 1)
         || (isDinnerFood.length === 0 && position === 2))){            
-            const page = position === 0 ? isDiningTypes.includes(1) ? 0 :
+            const page = position === 0 ? (isDiningTypes.includes(1) ) ? 0 :
             isDiningTypes.includes(2) ? 1 :isDiningTypes.includes(3) ? 2 :0  :
             position ===1 ? isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(3) ? 2 :isDiningTypes.includes(1) ? 0 :1 : 
             position ===2 && isDiningTypes.includes(3) ? 2 : isDiningTypes.includes(2) ? 1 : isDiningTypes.includes(1) ? 0 :2 
-            if(page !== position  ) {
+            if(page !== position ) {
                 diningRef.current.setPage(page)
                 setSliderValue(page);
             }else{
@@ -108,12 +106,7 @@ const Pages = () => {
         
     }
     
-    // useFocusEffect(
-    //     useCallback(()=>{
-            
-            
-    //     },[setLoadMeal])
-    // )
+
         useEffect(()=>{
             async function loadDailyFood(){
                 try {

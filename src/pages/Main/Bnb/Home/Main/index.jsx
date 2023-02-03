@@ -33,7 +33,7 @@ import SkeletonUI from "../../Home/Skeleton";
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import { getStorage } from '../../../../../utils/asyncStorage';
+import { getStorage, setStorage } from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import Toast from '../../../../../components/Toast';
@@ -43,7 +43,9 @@ import useUserMe from '../../../../../biz/useUserMe';
 import { Members } from '../../../../../assets';
 import { PAGE_NAME as FAQListDetailPageName } from '../../../MyPage/FAQ';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
+import FastImage from "react-native-fast-image";
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
+
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
@@ -55,7 +57,7 @@ const Pages = () => {
     const {isUserInfo, userInfo , isUserInfoLoading,isUserSpotStatus} = useUserInfo();
    
     const {userGroupSpotCheck,isUserGroupSpotCheck,userSpotRegister,groupSpotDetail} = useGroupSpots();
-    const {isOrderMeal,todayMeal,orderMeal,todayOrderMeal} = useOrderMeal();
+    const {isOrderMeal,todayMeal,orderMeal,todayOrderMeal,isOrderMealLoading} = useOrderMeal();
     const { loadMeal} = useShoppingBasket();
     const {dailyFood} = useFoodDaily()
     const mealInfo = useAtomValue(isOrderMealAtom);
@@ -63,22 +65,47 @@ const Pages = () => {
     const [data,setData] = useState(null);
     const [selected,setSelected] = useState();
     const toast = Toast();
+
+  
+    const VISITED_BEFORE_DATE =  getStorage('balloonTime');
+    const VISITED_NOW_DATE = Math.floor(new Date().getDate())
+    const nextWeek = weekly[1].map(el => formattedWeekDate(el))
+    const mealCheck = isOrderMeal.map(el => {
+      return el.serviceDate
+    });
+    const intersection = nextWeek.filter(x => mealCheck.includes(x));
+  
+    useEffect(()=>{
+      const handleShowModal = async () => {
+    
+        if((intersection.length === 0)){
+          setIsVisible(true);
+          if (VISITED_BEFORE_DATE === VISITED_NOW_DATE) {
+            setIsVisible(true);
+          } else if (VISITED_BEFORE_DATE !== VISITED_NOW_DATE) {
+            setIsVisible(false);
+          }
+        }
+       
+        };
+        handleShowModal();
+      },[])
+
+      const closeBalloon = async () => {
+        setIsVisible(false)
+        const expiry = new Date()
+        // +1일 계산
+        const expiryDate = expiry.getDate() + 1
+        // 로컬스토리지 저장
+        await setStorage('balloonTime', JSON.stringify(expiryDate))
+        
+      }
+    
+     
     useFocusEffect(
       useCallback(()=>{
         try {
-          const start = weekly.map((s) => {
-            const startData = formattedWeekDate(s[0]);
-            return (
-                startData
-            )
-          });
-      
-          const end = weekly.map((e) => {
-              const endData =  formattedWeekDate(e.slice(-1)[0]);
-              return (
-                  endData
-              )
-          });
+          
           async function loadUser(){
             const userData = await userInfo();     
             console.log(userData, "estset134")
@@ -86,7 +113,7 @@ const Pages = () => {
           }    
           async function loadMeal(){
             await orderMeal(formattedWeekDate(weekly[0][0]),formattedWeekDate(weekly[weekly?.length-1][weekly[0].length-1]))
-            await todayOrderMeal(start[0],end[0])
+           
           };
           loadMeal();
           loadUser();
@@ -97,8 +124,23 @@ const Pages = () => {
       },[])
     )
   useEffect(() => {
+    const start = weekly.map((s) => {
+      const startData = formattedWeekDate(s[0]);
+      return (
+          startData
+      )
+    });
+
+    const end = weekly.map((e) => {
+        const endData =  formattedWeekDate(e.slice(-1)[0]);
+        return (
+            endData
+        )
+    });
+    
     const status = async () => {
        const userStatus = await getStorage('spotStatus');
+       await todayOrderMeal(start[0],end[0])
        const getUserStatus = Number(userStatus);
        console.log(getUserStatus,'userStatus')
       
@@ -154,10 +196,7 @@ const Pages = () => {
       return unsubscribe;
     }, [navigation]);
 
-  // useEffect(()=>{
-  //   balloonEvent()
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[])
+
   const anotherSpot = async (id) =>{
     try {
 
@@ -187,9 +226,6 @@ const Pages = () => {
     setModalVisible(true);
   }
 
-  const closeBalloon = () => {
-    setIsVisible(false)
-  }
 
   const groupManagePress = async() =>{
     try {
@@ -200,9 +236,10 @@ const Pages = () => {
     }
   }
 
-if(isUserInfoLoading){
+if(isOrderMealLoading){
   return <SkeletonUI/>
 }
+
 
 
 
@@ -242,7 +279,14 @@ if(isUserInfoLoading){
                   return (
                     <MealInfoWrap key={meal.id}>
                     <MealInfo >
-                      <MealImage source={{uri:meal.image}}/>
+                        <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
+                        style={{
+                          width:64,
+                          height:64,
+                          borderTopLeftRadius: 14,
+                          borderBottomLeftRadius:14
+                        }}
+                        />
                         <MealText>
                           <View>
                             <DiningType>{m.diningType}</DiningType>
