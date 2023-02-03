@@ -12,7 +12,7 @@ import OrderItem from "./components/orderItem";
 export const PAGE_NAME = 'P_MAIN__PURCHASE_DETAIL';
 
 const Pages = ({route}) => {
-  const {id,date} = route.params;
+  const {id} = route.params;
   const navigation = useNavigation();
   const themeApp = useTheme();
   const {getPurchaseDetail,readAbleAtom:{purchaseDetail}} = usePurchaseHistory();

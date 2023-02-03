@@ -18,6 +18,7 @@ const useUserInfo = () => {
             const res = await Fetch.userInfomation();
             console.log(res.data)
             setUserInfo(res.data)
+            return res.data
         } catch (err) {
             console.log(err.toString().replace("Error:",''),"123456")
             if(err.toString().replace("Error:",'').trim() === '403'){

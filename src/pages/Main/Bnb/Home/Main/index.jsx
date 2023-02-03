@@ -44,6 +44,8 @@ import { Members } from '../../../../../assets';
 import { PAGE_NAME as FAQListDetailPageName } from '../../../MyPage/FAQ';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from "react-native-fast-image";
+import useFoodDaily from '../../../../../biz/useDailyFood/hook';
+
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
 const Pages = () => {
@@ -57,6 +59,7 @@ const Pages = () => {
     const {userGroupSpotCheck,isUserGroupSpotCheck,userSpotRegister,groupSpotDetail} = useGroupSpots();
     const {isOrderMeal,todayMeal,orderMeal,todayOrderMeal,isOrderMealLoading} = useOrderMeal();
     const { loadMeal} = useShoppingBasket();
+    const {dailyFood} = useFoodDaily()
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
@@ -104,7 +107,9 @@ const Pages = () => {
         try {
           
           async function loadUser(){
-            await userInfo();     
+            const userData = await userInfo();     
+            console.log(userData, "estset134")
+            dailyFood(userData?.spotId,formattedWeekDate(new Date()));
           }    
           async function loadMeal(){
             await orderMeal(formattedWeekDate(weekly[0][0]),formattedWeekDate(weekly[weekly?.length-1][weekly[0].length-1]))
@@ -112,6 +117,7 @@ const Pages = () => {
           };
           loadMeal();
           loadUser();
+          
         }catch (e){
           console.log(e.toString());
         }
