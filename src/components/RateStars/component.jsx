@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Text} from 'react-native';
 import styled from 'styled-components';
+import {splitNumberAndUnit} from '../../utils/splitNumberAndUnit';
 
 const Component = ({
   ratingInput = 0,
@@ -16,28 +17,10 @@ const Component = ({
     }
   }, [ratingInput]);
 
-  const extractNumberOnly = str => {
-    const onlyNumbersArray = str.match(/[0-9]/g);
-    const onlyNumbers = parseInt(str.match(/[0-9]/g)?.join(''));
+  const {number: widthNum, unit: unitWidth} = splitNumberAndUnit(width);
+  const {number: marginNum, unit: unitMargin} = splitNumberAndUnit(margin);
 
-    let unit = '';
-    if (onlyNumbersArray) {
-      1;
-      unit = str
-        .split('')
-        .filter(x => !onlyNumbersArray.includes(x))
-        .join('');
-    }
-
-    return {onlyNumbers, unit};
-  };
-
-  const {onlyNumbers: onlyNumbersWidth, unit: unitWidth} =
-    extractNumberOnly(width);
-  const {onlyNumbers: onlyNumbersMargin, unit: unitMargin} =
-    extractNumberOnly(margin);
-
-  const widthWithoutMargin = onlyNumbersWidth - 10 * onlyNumbersMargin;
+  const widthWithoutMargin = widthNum - 10 * marginNum;
 
   const widthAndHeight = `${widthWithoutMargin / 5}${unitWidth}`;
 
@@ -48,7 +31,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(1);
@@ -62,7 +45,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(2);
@@ -77,7 +60,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(3);
@@ -92,7 +75,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(4);
@@ -107,7 +90,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(5);
@@ -121,14 +104,11 @@ const Component = ({
           </StarPressable>
         </GreyStarDiv>
 
-        <YellowStarDiv
-          rating={rating}
-          width={onlyNumbersWidth}
-          unit={unitWidth}>
+        <YellowStarDiv rating={rating} width={widthNum} unit={unitWidth}>
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(1);
@@ -143,7 +123,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(2);
@@ -158,7 +138,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(3);
@@ -173,7 +153,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(4);
@@ -188,7 +168,7 @@ const Component = ({
           <StarPressable
             width={widthAndHeight}
             height={widthAndHeight}
-            margin={onlyNumbersMargin}
+            margin={marginNum}
             unitMargin={unitMargin}
             onPress={() => {
               setRating(5);

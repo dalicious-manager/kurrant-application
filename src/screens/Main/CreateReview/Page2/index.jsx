@@ -3,6 +3,7 @@ import {Text, View} from 'react-native';
 import styled from 'styled-components';
 import RateStars from '../../../../components/RateStars';
 import Typography from '../../../../components/Typography';
+import UploadPhoto from '../../../../components/UploadPhoto';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 
@@ -22,7 +23,8 @@ const Screen = () => {
           </Title2Wrap>
 
           <UploadedPhotosWrap>
-            <UploadButton></UploadButton>
+            <UploadPhoto width="80px" height="80px" />
+            {/* <UploadPhoto width={'80px'} /> */}
           </UploadedPhotosWrap>
         </UploadPhotosWrap>
 
