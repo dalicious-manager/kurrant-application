@@ -63,6 +63,7 @@ const Pages = () => {
     const mealInfo = useAtomValue(isOrderMealAtom);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [data,setData] = useState(null);
+    const [show,setShow] = useState(false);
     const [selected,setSelected] = useState();
     const toast = Toast();
 
@@ -208,7 +209,11 @@ const Pages = () => {
       }else{
         
         await userInfo();
+        setShow(true);
         toast.toastEvent();
+        setTimeout(()=>{
+          setShow(false)
+        },2000)
       }
     }catch(err){
       console.log(err)
@@ -249,7 +254,7 @@ if(isOrderMealLoading){
       <View>
         <BarWrap>
           <SpotName>
-            <Pressable onPress={PressSpotButton} style={{backgroundColor:'gold'}}>
+            <Pressable onPress={PressSpotButton} >
               <SpotNameText>{userGroupName === null ? '스팟을 선택해 주세요' : userGroupName + "\u00a0" + userSpot}</SpotNameText>
             </Pressable>
           <ArrowIcon/>
@@ -418,7 +423,7 @@ if(isOrderMealLoading){
              onPressEvent2={()=>{groupManagePress()}}
              booleanValue
             />
-      <toast.ToastWrap message={"스팟이 설정됐어요"} icon={'checked'}/>
+      {show && <toast.ToastWrap message={"스팟이 설정됐어요"} icon={'checked'}/>}
     </SafeView>
   )
 };

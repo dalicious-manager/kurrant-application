@@ -154,6 +154,7 @@ const Pages = ({route}) => {
     const onChange = (event,selectedTime) => {
         if (Platform.OS === 'android') {
             setShow(false);
+            setInfoShow(true)
         }
 
         setTime(selectedTime);
@@ -271,7 +272,7 @@ const Pages = ({route}) => {
                             label="배송 시간"
                             name="deliveryTime"
                             placeholder="배송 시간"
-                            onPressIn={showTimePicker}
+                            onPressIn={()=>{showTimePicker();setInfoShow(false)}}
                             showSoftInputOnFocus={false}
                             />
                             <ArrowIcon/>
@@ -283,7 +284,7 @@ const Pages = ({route}) => {
 
             
 
-            {infoShow && <InfoWrap>
+            {(infoShow && !keyboardStatus.isKeyboardActivate)  && <InfoWrap>
                 <LetterWrap>
                     <Letter>
                         <InfoTitle>🚩아래 내용은 모두 상담시 안내해드립니다.</InfoTitle>
@@ -333,8 +334,6 @@ const Pages = ({route}) => {
                         style={{backgroundColor:'#F5F5F5'}}
                         />
                 </DatePickerWrap>
-                   
-                
             )}
             
             {(!show && !keyboardStatus.isKeyboardActivate) && 
@@ -412,7 +411,7 @@ bottom:12px;
 
 const InfoWrap = styled.View`
 margin:24px;
-margin-bottom:80px;
+margin-bottom:100px;
 `;
 const DaysText = styled(Typography).attrs({text:'CaptionR'})`
 color:${({theme}) => theme.colors.grey[2]};

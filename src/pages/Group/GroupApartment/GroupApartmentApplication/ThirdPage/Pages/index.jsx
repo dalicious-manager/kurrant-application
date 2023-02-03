@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAtom } from 'jotai';
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
-import { Keyboard, Platform, SafeAreaView, Text ,View} from "react-native";
+import { Keyboard, Platform, SafeAreaView, ScrollView, Text ,View} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import styled from "styled-components";
 
@@ -76,6 +76,7 @@ const Pages = () => {
     const onChange = (event,selectedTime) => {
         if (Platform.OS === 'android') {
             setShow(false);
+            setInfoShow(true);
         }
         // const currentDate = selectedDate;
         setTime(selectedTime);
@@ -104,6 +105,7 @@ const Pages = () => {
 
     return (
         <Wrap>
+            <ScrollView>
             <FormProvider {...form}>
                 <KeyDismiss onPress={()=>Keyboard.dismiss()}>
                     <Container>
@@ -139,7 +141,7 @@ const Pages = () => {
                             label="배송 시간"
                             name="deliveryTime"
                             placeholder="배송 시간"
-                            onPressIn={()=>{showTimePicker();setInfoShow(infoShow(false))}}
+                            onPressIn={()=>{showTimePicker();setInfoShow(false)}}
                             showSoftInputOnFocus={false}
                             minuteInterval={5}
                             />
@@ -151,7 +153,7 @@ const Pages = () => {
 
             
 
-            {infoShow && <InfoWrap>
+            {(infoShow && !keyboardStatus.isKeyboardActivate) && <InfoWrap>
                 <LetterWrap>
                     <Letter>
                         <InfoTitle>🚩아래 내용은 모두 상담시 안내해드립니다.</InfoTitle>
@@ -179,6 +181,7 @@ const Pages = () => {
                     </Letter>
                 </LetterWrap>
             </InfoWrap>}
+            </ScrollView>
             {show && (
                 <DatePickerWrap>
                    {Platform.OS === 'ios' && <IosButton>
@@ -197,10 +200,9 @@ const Pages = () => {
                         locale='ko-KR'
                         mode="time"
                         minuteInterval={5}
+                        style={{backgroundColor:'#F5F5F5'}}
                         />
                 </DatePickerWrap>
-                   
-                
             )}
             {(!show && !keyboardStatus.isKeyboardActivate)&& <ButtonWrap>
                 <Button 
@@ -220,7 +222,7 @@ flex:1;
 `;
 
 const KeyDismiss = styled.Pressable`
-flex:1;
+
 `;
 
 const ButtonWrap = styled.View`
@@ -232,6 +234,8 @@ bottom:35px;
 
 const Container = styled.View`
 margin:56px 24px 0px 24px;
+
+
 `;
 
 const Letter = styled.View`
@@ -269,6 +273,7 @@ bottom:12px;
 
 const InfoWrap = styled.View`
 margin:24px;
+margin-bottom:100px;
 `;
 
 const DaysText = styled(Typography).attrs({text:'CaptionR'})`
