@@ -38,7 +38,7 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => [ "35%", "100%"], []);
+  const snapPoints = useMemo(() => [ "35%", "90%"], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart,setScrollStart] = useState(0)
   const [scrollEnd,setScrollEnd] = useState(10)

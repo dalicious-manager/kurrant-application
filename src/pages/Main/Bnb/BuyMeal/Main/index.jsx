@@ -209,7 +209,7 @@ const Pages = () => {
         
         return (<View>
             
-            {diningFood.length === 0 && <NoServieceView>
+            {(diningFood.length === 0 && spotId !== null) && <NoServieceView>
                 <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
             </NoServieceView>}
             { spotId === null && <NoSpotView>
