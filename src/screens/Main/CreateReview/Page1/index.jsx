@@ -28,7 +28,6 @@ const Screens = () => {
           width={'200px'}
           margin={'2px'}
           callback={async () => {
-            // console.log('yes');
             await mSleep(300);
             navigation.navigate(CreateReviewPage2ScreenName);
           }}
