@@ -14,6 +14,7 @@ const useFoodDetail = () => {
             setFoodDetailLoading(true)
             const res = await Fetch.FoodDetail(foodId);
             setFoodDetail(res.data);
+            return res.data;
         } catch (err) {
             throw err;
         } finally {

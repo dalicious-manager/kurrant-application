@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState, useRef, useEffect, useLayoutEffect} from "react";
 import { View , StatusBar, Dimensions,Text} from "react-native";
 import styled from "styled-components";
-
+import analytics from '@react-native-firebase/analytics';
 import LinearGradient from "react-native-linear-gradient";
 import InfoIcon from "../../../../../assets/icons/MealDetail/info.svg";
 import FastImage from "react-native-fast-image";
@@ -50,13 +50,21 @@ const Pages = ({route}) => {
     // foodId 넘겨줘야함 
     useEffect(()=>{
         async function loadFoodDetail(){
-            await foodDetail(dailyFoodId);
+            const foodData = await foodDetail(dailyFoodId);
+            console.log(foodData);
             await loadMeal();
-            await analytics().logEvent('food_detail', {
-                id: dailyFoodId,
-                name :isFoodDetail?.name,
-                makers:isFoodDetail?.makersName
+            const data = await analytics().logSelectContent({
+                content_type: foodData.makersName,
+                item_id: foodData.name,
               })
+              console.log(data);
+            const data2 = await analytics().logEvent('food_detail', {
+                id: dailyFoodId,
+                name :foodData.name,
+                makers:foodData.makersName
+              })
+              console.log(data2);
+            
         }
         loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
