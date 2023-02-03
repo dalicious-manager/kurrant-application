@@ -47,59 +47,22 @@ const Component = ({
     const pager = useRef();
     const today = new Date();
     const weekly = useAtomValue(weekAtom);
-    const {isDailyFood,dailyFood} = useFoodDaily();
     const {isOrderMeal,orderMeal} = useOrderMeal();
-    // const {isDailyfood, dailyFood} = useFoodDetail();
-    // const [touched,setTouched] = useState();
+
     const [currentPress,setCurrentPress] = useState(null);
     const [chk,setChk] = useState(0);
     
-    // 파라미터 보낼 날짜 - 이번주 첫,마지막날 콘솔 찍힘
-    const startDate = formattedWeekDate(weekly[0][0]);
-    const endDate = formattedWeekDate(weekly[0].slice(-1)[0]);
 
     const selectedPress = (day) => {
         setCurrentPress(day)
     }
-
-    const start = weekly.map((s) => {
-      const startData = formattedWeekDate(s[0]);
-      return (
-          startData
-      )
-    });
-
-    const end = weekly.map((e) => {
-        const endData =  formattedWeekDate(e.slice(-1)[0]);
-        return (
-            endData
-        )
-    });
 
     const onPageScroll = (e) => {
       const { position } = e.nativeEvent;
         setChk(position)
     } 
 
-    // const scrollCalendar = async (e) => {
-    //   const { position } = e.nativeEvent;
-    //   await mealPress(start[position],end[position])
-    // }
-
-    // const mealPress = async (startdate,enddate) => {
-    //     try {
-    //         await orderMeal(startdate,enddate);
-
-    //     } catch(err) {
-    //         console.log(err)
-    //     }
-    // }
-  useEffect(()=>{
-    if(weekly.length > 0){
-    console.log(weekly[0][0],'2323')
-    console.log(weekly[weekly?.length-1][weekly[0].length-1],'5555')
-  }
-  },[])
+  
   return (
     <React.Fragment>
      {BooleanValue && daily ? <Button pager={pager} daily chk={chk} /> : <></>}
@@ -111,7 +74,6 @@ const Component = ({
      pageMargin={22} 
      onPageScroll={(e) => {onPageScroll(e)}} 
      margins={margin}
-    //  onPageSelected={(e) => {scrollCalendar(e)}}
      >
     {weekly.map((week,i) => {
       

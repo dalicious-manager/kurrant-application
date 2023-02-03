@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import QuestionIcon from "../../assets/icons/MealCart/question.svg";
 import useFoodDetail from "../../biz/useFoodDetail/hook";
+import useUserInfo from "../../biz/useUserInfo";
 import {  Price } from "../../pages/Main/Bnb/MealDetail/Main";
 import withCommas from "../../utils/withCommas";
 import Button from "../Button";
@@ -27,8 +28,8 @@ const Component = ({
     const secondDiscount = firstDiscount - makersDiscountedPrice;
     const lastDiscount = secondDiscount - periodDiscountedPrice
     const discount = membershipDiscountedRate + makersDiscountedRate + periodDiscountedRate;
-    
-    console.log(isfoodDetailDiscount.membershipDiscountedPrice,'22')
+    const {isUserInfo} = useUserInfo(); 
+    console.log(isUserInfo)
     const getData = async () => {
         await foodDetailDiscount(id);
     };
@@ -61,7 +62,7 @@ const Component = ({
                             <Text>[매장가]</Text>
                             <DscText>{withCommas(price)}원</DscText>
                         </ContentWrap>
-                        {membershipDiscountedRate === 0 && <ContentWrap>
+                        {!isUserInfo.isMembership && <ContentWrap>
                             <Text>[멤버십 가입시 판매가]</Text>
                             <DscText> &#183; 멤버십 할인 적용시</DscText>
                             <DscText>{withCommas(price)}원 x (100%-{isfoodDetailDiscount.membershipDiscountRate}%) = {isfoodDetailDiscount.membershipDiscountedPrice === 0 ? 0 : withCommas(isfoodDetailDiscount.membershipDiscountedPrice)}원</DscText>

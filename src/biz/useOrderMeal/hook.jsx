@@ -4,12 +4,12 @@ import {useAtom} from 'jotai';
 import { PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
 import { formattedWeekDate } from '../../utils/dateFormatter';
 import * as Fetch from './Fetch';
-import { isOrderMealAtom , todayMealAtom} from './store';
+import { isOrderMealAtom , todayMealAtom, isOrderMealLoadingAtom} from './store';
 
 const useOrderMeal = () => {
     const [isOrderMeal,setOrderMeal] = useAtom(isOrderMealAtom);
     const [todayMeal,setTodayMeal] = useAtom(todayMealAtom);
-
+    const [isOrderMealLoading,setOrderMealLoading] = useAtom(isOrderMealLoadingAtom);
     const navigation = useNavigation();
 
     const orderMeal = async (startdate,enddate) => {
@@ -42,6 +42,7 @@ const useOrderMeal = () => {
       const date = formattedWeekDate(new Date());
       
         try {
+          setOrderMealLoading(true)
             const res = await Fetch.OrderMeal(startdate,enddate);
             
             const todayMeal = res.data?.filter((m) => m.serviceDate === date);
@@ -63,6 +64,8 @@ const useOrderMeal = () => {
                   ],
                 })
               }
+        } finally {
+          setOrderMealLoading(false)
         }
     };
 
@@ -70,7 +73,8 @@ const useOrderMeal = () => {
         orderMeal,
         todayOrderMeal,
         isOrderMeal,
-        todayMeal
+        todayMeal,
+        isOrderMealLoading
       
     }
     
