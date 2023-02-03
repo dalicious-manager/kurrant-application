@@ -8,6 +8,8 @@ import {  Alert, Platform } from 'react-native';
 
 import useUserMe from '../../biz/useUserMe';
 import { AccessToken, AuthenticationToken, LoginManager } from 'react-native-fbsdk-next';
+import { v4 as uuid } from 'uuid'
+const nonce = uuid();
 
 const naverData = ()=>{
     const data = {
@@ -107,33 +109,19 @@ export default () => {
               const result = await AuthenticationToken.getAuthenticationTokenIOS();
               // Clipboard.setString(result?.authenticationToken);
   
-              await snsLogin({
+              const res =await snsConnect({
                 snsAccessToken:result?.authenticationToken,
                 autoLogin:true,
               },'FACEBOOK');
-              navigation.reset({
-                  index: 0,
-                  routes: [
-                    {
-                      name: SCREEN_NAME,
-                    },
-                  ],
-                })
+              return res;
             } else {
               const result = await AccessToken.getCurrentAccessToken();
               // Clipboard.setString(result?.accessToken);
-              await snsLogin({
+              const res =await snsConnect({
                 snsAccessToken:result?.accessToken,
                 autoLogin:true,
               },'FACEBOOK');
-              navigation.reset({
-                  index: 0,
-                  routes: [
-                    {
-                      name: SCREEN_NAME,
-                    },
-                  ],
-                })
+              return res;
             }
           } catch (error) {
             console.log(error);

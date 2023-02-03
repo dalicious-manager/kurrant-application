@@ -171,11 +171,11 @@ const Pages = () => {
                                             {
                                                 required: '필수 입력 항목 입니다.',
                                                 minLength: {
-                                                    value: 8,
+                                                    value: 6,
                                                     message: '휴대폰으로 발송된 8자리 인증번호를 입력해주세요.'
                                                 },
                                                 maxLength: {
-                                                    value: 8,
+                                                    value: 6,
                                                     message: '휴대폰으로 발송된 8자리 인증번호를 입력해주세요.'
                                                 },
                                             }

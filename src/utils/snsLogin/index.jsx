@@ -127,7 +127,7 @@ export default () => {
                 ...appleData,
                 autoLogin:true,
             },'APPLE');
-            avigation.reset({
+            navigation.reset({
               index: 0,
               routes: [
                 {

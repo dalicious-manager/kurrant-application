@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, Image, ScrollView } from "react-native";
+import { ActivityIndicator, Dimensions, Image, ScrollView,View } from "react-native";
 import styled from "styled-components/native";
 
 import Button from "../../../components/Button";
@@ -35,13 +35,19 @@ const Pages= ()=>{
                   source={{uri: 'https://asset.kurrant.co/img/common/kurrantmembership.png',
                   priority:FastImage.priority.high}} 
                  />
-                <ButtonContainer>
-                  <Button type='yellow' label="멤버십 가입하기"  onPressEvent={()=>{
+                <ButtonSame>
+                  {/* <Button type='yellow' label="멤버십 가입하기"  onPressEvent={()=>{
                     navigation.navigate(MembershipJoinPageName);
-                  }}/>
-                </ButtonContainer>
+                  }}/> */}
+                  <View style={{width:width , height:150 }}></View>
+                </ButtonSame>
+                
             </ScrollView>
-            
+            <ButtonContainer>
+              <Button type='yellow' label="멤버십 가입하기"  onPressEvent={()=>{
+                navigation.navigate(MembershipJoinPageName);
+              }}/>
+            </ButtonContainer>
         </Container>
     )
 }
@@ -50,10 +56,18 @@ export default Pages;
 
 const Container = styled.View`    
     width: ${width}px;
+    
 `
 
-const ButtonContainer = styled.View`
+const ButtonSame = styled.View`
   margin-bottom: 24px;
   margin-left: 20px;
   margin-right: 20px;
+`;
+const ButtonContainer = styled.View`
+  position: absolute;
+  z-index: 2;
+  bottom: 35px;
+  padding-left: 20px;
+  padding-right: 20px;
 `;

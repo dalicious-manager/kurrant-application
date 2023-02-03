@@ -5,5 +5,18 @@ export async function OrderMeal(startdate, enddate) {
 
 
     return fetchRes;
-   
+
+}
+export async function refundItem(body, option) {
+    const req = {
+        id: body.id
+    }
+    const fetchRes = await fetchJson(`/users/me/orders/${body.orderId}/dailyFoods/refund`, 'POST', {
+        ...option,
+        body: JSON.stringify(req)
+    });
+
+
+    return fetchRes;
+
 }

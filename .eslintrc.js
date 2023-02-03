@@ -85,7 +85,6 @@ module.exports = {
         },
       },
     ],
-    'prettier/prettier': 0,
     "parser": "babel-eslint"
   },
 };

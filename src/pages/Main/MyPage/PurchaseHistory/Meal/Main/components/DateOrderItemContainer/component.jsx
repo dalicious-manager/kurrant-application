@@ -13,6 +13,7 @@ import { formattedMealFoodStatus } from "../../../../../../../../utils/statusFor
 import TextButton from "../../../../../../../../components/TextButton";
 import { useNavigation } from "@react-navigation/native";
 import { PurchaseDetailPageName } from "../../../../Detail";
+import useOrderMeal from "../../../../../../../../biz/useOrderMeal";
 const {width} =Dimensions.get('screen');
 const Component = ({
   purchase,
@@ -21,6 +22,14 @@ const Component = ({
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+  const {refundItem} = useOrderMeal()
+  const cancleItem = async(id)=>{
+    const req = {
+      orderId:purchase.id,
+      id:id
+    }
+    await refundItem(req)
+  }
     return (
         <DateOrderItemListContainer isFirst={itemIndex === 0}>
         <DateDetailBox>
@@ -75,10 +84,10 @@ const Component = ({
                         </PriceBox>
                       </TextBox>
                       {order.orderStatus === 5 && <ButtonContainer>
-                        <ButtonMeal label={"취소"}/>
+                        <ButtonMeal label={"취소"} onPressEvent={()=>cancleItem(order.id)}/>
                         <ButtonMeal label={"메뉴변경"}/>                      
                       </ButtonContainer>}
-                      {order.orderStatus === 7 || order.orderStatus === 11 && <ButtonContainer>
+                      {order.orderStatus === 9 && <ButtonContainer>
                         <ButtonMeal label={"수령확인"}/>                 
                       </ButtonContainer>}
                     </DateOrderItemContent>

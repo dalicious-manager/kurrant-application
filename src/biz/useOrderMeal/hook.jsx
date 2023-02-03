@@ -38,6 +38,35 @@ const useOrderMeal = () => {
         }
     };
 
+    const refundItem = async (body,option={}) => {
+      
+      
+      try {
+        const res = await Fetch.refundItem({
+            ...body
+          },
+          option
+        );
+          
+      } catch(err){
+          console.log(err.toString().replace("Error:",''),"123456")
+          if(err.toString().replace("Error:",'').trim() === '403'){
+              AsyncStorage.clear();
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: LoginPageName,
+                    params:{
+                      token:"end"
+                    }
+                  },
+                ],
+              })
+            }
+      }
+  };
+
     const todayOrderMeal = async (startdate,enddate) => {
       const date = formattedWeekDate(new Date());
       
@@ -72,6 +101,7 @@ const useOrderMeal = () => {
     return {
         orderMeal,
         todayOrderMeal,
+        refundItem,
         isOrderMeal,
         todayMeal,
         isOrderMealLoading

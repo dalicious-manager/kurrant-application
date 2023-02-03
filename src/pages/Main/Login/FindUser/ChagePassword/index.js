@@ -280,14 +280,6 @@ const Pages = ({ route }) => {
                                                 {
                                                     required: '필수 입력 항목 입니다.',
                                                     validate: value => value === password || "비밀번호가 일치하지 않습니다.",
-                                                    minLength: {
-                                                        value: 8,
-                                                        message: '8글자 이상 입력'
-                                                    },
-                                                    maxLength: {
-                                                        value: 31,
-                                                        message: '32글자 이하 입력'
-                                                    },
                                                     pattern: {
                                                         value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,32}$/,
                                                         message: '비밀번호 형식에 맞지 않습니다.',
