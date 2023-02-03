@@ -286,6 +286,7 @@ const Pages = ({route}) => {
                         onPressEvent2={()=>{addCartPress()}}
                         onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
                         count={count} 
+                        capacity={isFoodDetail?.capacity}
                         increasePress={increasePress}
                         decreasePress={decreasePress}
                     />

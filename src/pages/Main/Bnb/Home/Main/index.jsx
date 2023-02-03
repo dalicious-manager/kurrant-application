@@ -249,8 +249,8 @@ if(isOrderMealLoading){
       <View>
         <BarWrap>
           <SpotName>
-            <Pressable onPress={PressSpotButton}>
-              <SpotNameText>{userGroupName + "\u00a0" + userSpot}</SpotNameText>
+            <Pressable onPress={PressSpotButton} style={{backgroundColor:'gold'}}>
+              <SpotNameText>{userGroupName === null ? '스팟을 선택해 주세요' : userGroupName + "\u00a0" + userSpot}</SpotNameText>
             </Pressable>
           <ArrowIcon/>
           </SpotName>
