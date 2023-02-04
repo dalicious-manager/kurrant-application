@@ -5,6 +5,7 @@ import {splitNumberAndUnit} from '../../utils/splitNumberAndUnit';
 
 const Component = ({
   ratingInput = 0,
+
   width = '80px',
   margin = '1px',
   callback,
@@ -24,6 +25,8 @@ const Component = ({
 
   const widthAndHeight = `${widthWithoutMargin / 5}${unitWidth}`;
 
+  // console.log(rating);
+
   return (
     <>
       <Container>
@@ -35,7 +38,7 @@ const Component = ({
             unitMargin={unitMargin}
             onPress={() => {
               setRating(1);
-              callback && callback();
+              callback && callback(1);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -50,7 +53,7 @@ const Component = ({
             onPress={() => {
               setRating(2);
 
-              callback && callback();
+              callback && callback(2);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -65,7 +68,7 @@ const Component = ({
             onPress={() => {
               setRating(3);
 
-              callback && callback();
+              callback && callback(3);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -80,7 +83,7 @@ const Component = ({
             onPress={() => {
               setRating(4);
 
-              callback && callback();
+              callback && callback(4);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -95,7 +98,7 @@ const Component = ({
             onPress={() => {
               setRating(5);
 
-              callback && callback();
+              callback && callback(5);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/GreyStar.png')}
@@ -113,7 +116,7 @@ const Component = ({
             onPress={() => {
               setRating(1);
 
-              callback && callback();
+              callback && callback(1);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
@@ -128,7 +131,7 @@ const Component = ({
             onPress={() => {
               setRating(2);
 
-              callback && callback();
+              callback && callback(2);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
@@ -143,7 +146,7 @@ const Component = ({
             onPress={() => {
               setRating(3);
 
-              callback && callback();
+              callback && callback(3);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
@@ -158,7 +161,7 @@ const Component = ({
             onPress={() => {
               setRating(4);
 
-              callback && callback();
+              callback && callback(4);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}
@@ -173,7 +176,7 @@ const Component = ({
             onPress={() => {
               setRating(5);
 
-              callback && callback();
+              callback && callback(5);
             }}>
             <StarIconImage
               source={require('../../assets/images/StarRating/YellowStar.png')}

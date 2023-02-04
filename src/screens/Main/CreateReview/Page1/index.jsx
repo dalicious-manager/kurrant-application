@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React from 'react';
 import {Text, View} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
@@ -7,11 +8,14 @@ import RateStars from '../../../../components/RateStars';
 import Typography from '../../../../components/Typography';
 import mSleep from '../../../../helpers/mSleep';
 import {SCREEN_NAME as CreateReviewPage2ScreenName} from '../Page2';
+import {starRatingAtom} from '../Page2/store';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_1';
 
 const Screens = () => {
   const navigation = useNavigation();
+
+  const [starRating, setStarRating] = useAtom(starRatingAtom);
   return (
     <Container>
       <Wrap>
@@ -27,7 +31,10 @@ const Screens = () => {
           ratingInput={0}
           width={'200px'}
           margin={'2px'}
-          callback={async () => {
+          callback={async rating => {
+            console.log(rating);
+            setStarRating(rating);
+
             await mSleep(300);
             navigation.navigate(CreateReviewPage2ScreenName);
           }}
