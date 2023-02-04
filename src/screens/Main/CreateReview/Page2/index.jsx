@@ -1,6 +1,9 @@
-import React from 'react';
+import faIR from 'date-fns/esm/locale/fa-IR/index.js';
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
+import Button from '../../../../components/Button';
+import {CheckIcon} from '../../../../components/Icon';
 import RateStars from '../../../../components/RateStars';
 import Typography from '../../../../components/Typography';
 import UploadPhoto from '../../../../components/UploadPhoto';
@@ -8,6 +11,10 @@ import UploadPhoto from '../../../../components/UploadPhoto';
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 
 const Screen = () => {
+  const [photosArray, setPhotosArray] = useState([]);
+
+  const [checked, setChecked] = useState(false);
+  const themeApp = useTheme();
   return (
     <>
       <Container>
@@ -22,10 +29,23 @@ const Screen = () => {
             <NotMandatory>(선택)</NotMandatory>
           </Title2Wrap>
 
-          <UploadedPhotosWrap>
-            <UploadPhoto width="80px" height="80px" />
-            {/* <UploadPhoto width={'80px'} /> */}
-          </UploadedPhotosWrap>
+          <PhotosScrollViewWrap
+            style={{flex: 1}}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}>
+            <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+              <UploadPhoto
+                width="80px"
+                height="80px"
+                photosArray={photosArray}
+                setPhotosArray={setPhotosArray}
+              />
+              {!!photosArray.length &&
+                photosArray.map((value, index) => {
+                  return <PhotoImage key={index} source={{uri: value}} />;
+                })}
+            </View>
+          </PhotosScrollViewWrap>
         </UploadPhotosWrap>
 
         <ReviewWrap>
@@ -38,7 +58,17 @@ const Screen = () => {
             placeholder="최소 10자 이상 입력해주세요"></ReviewInput>
 
           <ShowOnlyToOwnerWrap>
-            <CheckBox />
+            <CheckBox
+              checked={checked}
+              onPress={() => {
+                setChecked(!checked);
+              }}>
+              <CheckIcon
+                style={{width: 15, height: 10}}
+                // size={36}
+                color={'#ffffff'}
+              />
+            </CheckBox>
             <Title4>사장님에게만 보이기 </Title4>
           </ShowOnlyToOwnerWrap>
         </ReviewWrap>
@@ -48,6 +78,17 @@ const Screen = () => {
           서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
           제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
         </Warnings>
+
+        {/* <Button /> */}
+
+        <Button
+          // label={buttonTitle2}
+          size="full"
+          label="완료"
+          // type={buttonType2}
+          text={'Button09SB'}
+          style={{position: 'fixed'}}
+        />
       </Container>
     </>
   );
@@ -74,13 +115,17 @@ const Title1 = styled(Typography).attrs({text: 'Title03SB'})`
 const UploadPhotosWrap = styled.View`
   margin-bottom: 56px;
 `;
-const UploadedPhotosWrap = styled.View``;
-const UploadButton = styled.View`
+const PhotosScrollViewWrap = styled.ScrollView`
+  /* display: flex; */
+  flex-direction: row;
+`;
+
+const PhotoImage = styled.Image`
   width: 80px;
   height: 80px;
-  background-color: ${props => props.theme.colors.grey[8]};
-  border-radius: 7px;
+  margin: 0 8px;
 `;
+
 const Title2Wrap = styled.View`
   display: flex;
   flex-direction: row;
@@ -105,19 +150,32 @@ const ReviewInput = styled.TextInput`
   justify-content: flex-start;
   align-items: flex-start;
   text-align: justify;
+
+  margin-bottom: 19px;
 `;
-const ShowOnlyToOwnerWrap = styled.View``;
+const ShowOnlyToOwnerWrap = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 24px;
+`;
 const CheckBox = styled.Pressable`
   width: 24px;
   height: 24px;
-  background-color: ${props => props.theme.colors.grey[7]};
+  background-color: ${props => {
+    if (props.checked) {
+      return props.theme.colors.grey[2];
+    } else {
+      return props.theme.colors.grey[7];
+    }
+  }};
   border-radius: 7px;
+  margin-right: 8px;
+  justify-content: center;
+  align-items: center;
 `;
-const Title4 = styled(Typography).attrs({text: 'Body05R'})`
+const Title4 = styled(Typography).attrs({text: 'Body06R                  '})`
   color: ${props => props.theme.colors.grey[2]};
 `;
-const Warnings = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 1px;
-  margin: 1px 0;
+const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
+  color: ${props => props.theme.colors.grey[4]};
 `;

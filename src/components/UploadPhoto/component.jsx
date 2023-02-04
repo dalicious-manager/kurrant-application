@@ -4,20 +4,22 @@ import styled from 'styled-components';
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-const Component = () => {
+const Component = ({photosArray, setPhotosArray}) => {
   const widthNum = 80;
   const widthUnit = 'px';
   const heightNum = 80;
   const heightUnit = 'px';
+  const marginNum = 16;
+  const marginUnit = 'px';
 
   const ShowPicker = () => {
     //launchImageLibrary : 사용자 앨범 접근
     launchImageLibrary({}, res => {
-      alert(res.assets[0].uri);
       const formdata = new FormData();
       formdata.append('file', res.assets[0].uri);
-      //   console.log(res);
-      console.log(res.uri);
+      console.log(res);
+      // console.log(res.uri);
+      setPhotosArray([...photosArray, res.assets[0].uri]);
     });
   };
 
@@ -63,7 +65,7 @@ const UploadPhotoPressable = styled.Pressable`
   position: relative;
   align-items: center;
   justify-content: center;
-
+  margin: 0 8px;
   background-color: ${props => props.theme.colors.grey[8]};
 `;
 
