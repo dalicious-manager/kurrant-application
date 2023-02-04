@@ -25,3 +25,4 @@ export {default as SocialConnectIcons} from './_components/SocialConnectIcons';
 export {default as DeleteIcon} from './_components/DeleteIcon';
 export {default as NotificationIcon} from './_components/NotificationIcon';
 export {default as CheckIcon} from './_components/CheckIcon';
+export {default as XCircleIcon} from './_components/XCircle';

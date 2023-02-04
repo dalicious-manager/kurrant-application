@@ -19,7 +19,11 @@ const Component = ({photosArray, setPhotosArray}) => {
       formdata.append('file', res.assets[0].uri);
       console.log(res);
       // console.log(res.uri);
-      setPhotosArray([...photosArray, res.assets[0].uri]);
+      setPhotosArray([
+        ...photosArray,
+        {id: Date.now(), uri: res.assets[0].uri},
+      ]);
+      // setPhotosArray([...photosArray, res.assets[0].uri]);
     });
   };
 

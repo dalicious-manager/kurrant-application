@@ -32,7 +32,6 @@ const Screens = () => {
           width={'200px'}
           margin={'2px'}
           callback={async rating => {
-            console.log(rating);
             setStarRating(rating);
 
             await mSleep(300);

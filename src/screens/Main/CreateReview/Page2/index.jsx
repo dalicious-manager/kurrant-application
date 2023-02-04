@@ -3,8 +3,9 @@ import {useAtom} from 'jotai';
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
+
 import Button from '../../../../components/Button';
-import {CheckIcon} from '../../../../components/Icon';
+import {CheckIcon, XCircleIcon} from '../../../../components/Icon';
 import RateStars from '../../../../components/RateStars';
 import Typography from '../../../../components/Typography';
 import UploadPhoto from '../../../../components/UploadPhoto';
@@ -20,7 +21,13 @@ const Screen = () => {
   const [checked, setChecked] = useState(false);
   const themeApp = useTheme();
 
-  // console.log(starRating);
+  const handlePhotoRemove = photoId => {
+    const thisPhotoArray = [...photosArray];
+
+    const returnArray = thisPhotoArray.filter(value => value.id !== photoId);
+    // console.log(returnArray);
+    setPhotosArray(returnArray);
+  };
 
   return (
     <>
@@ -33,8 +40,6 @@ const Screen = () => {
               margin="2px"
               ratingInput={starRating}
               callback={rating => {
-                console.log('hi');
-                console.log(rating);
                 setStarRating(rating);
               }}
             />
@@ -47,10 +52,10 @@ const Screen = () => {
             </Title2Wrap>
 
             <PhotosScrollViewWrap
-              style={{flex: 1}}
+              // style={{flex: 1}}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}>
-              <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+              <PhotosView>
                 <UploadPhoto
                   width="80px"
                   height="80px"
@@ -59,9 +64,20 @@ const Screen = () => {
                 />
                 {!!photosArray.length &&
                   photosArray.map((value, index) => {
-                    return <PhotoImage key={index} source={{uri: value}} />;
+                    return (
+                      <PhotoImageWrap>
+                        <DeleteButton
+                          onPress={() => {
+                            handlePhotoRemove(value.id);
+                          }}>
+                          <XCircleIcon />
+                        </DeleteButton>
+                        <PhotoImage key={value.id} source={{uri: value.uri}} />
+                      </PhotoImageWrap>
+                    );
+                    // return <PhotoImage key={index} source={{uri: value}} />;
                   })}
-              </View>
+              </PhotosView>
             </PhotosScrollViewWrap>
           </UploadPhotosWrap>
 
@@ -139,12 +155,39 @@ const UploadPhotosWrap = styled.View`
 const PhotosScrollViewWrap = styled.ScrollView`
   /* display: flex; */
   flex-direction: row;
+  height: 100px;
+  /* justify-content: center; */
+  /* align-items: center; */
+`;
+
+const PhotosView = styled.View`
+  /* flex: 1; */
+  height: 100px;
+  /* flex-direction: row; */
+  flex-wrap: wrap;
+
+  justify-content: center;
+`;
+
+const PhotoImageWrap = styled.View`
+  /* position: relative; */
+  /* overflow: hidden; */
+`;
+
+const DeleteButton = styled.Pressable`
+  position: absolute;
+  top: -10px;
+  right: 0px;
+  width: 24px;
+  height: 24px;
+  z-index: 3;
 `;
 
 const PhotoImage = styled.Image`
   width: 80px;
   height: 80px;
   margin: 0 8px;
+  border-radius: 7px;
 `;
 
 const Title2Wrap = styled.View`
@@ -153,7 +196,7 @@ const Title2Wrap = styled.View`
 `;
 const Title2 = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${props => props.theme.colors.grey[2]};
-  margin-bottom: 12px;
+  margin-bottom: 5px;
 `;
 const NotMandatory = styled(Typography).attrs({text: 'Title03R'})`
   color: ${props => props.theme.colors.grey[5]};

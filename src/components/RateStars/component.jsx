@@ -25,8 +25,6 @@ const Component = ({
 
   const widthAndHeight = `${widthWithoutMargin / 5}${unitWidth}`;
 
-  // console.log(rating);
-
   return (
     <>
       <Container>
