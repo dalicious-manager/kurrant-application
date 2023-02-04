@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {Alert} from 'react-native';
 
 const Component = ({photosArray, setPhotosArray}) => {
   const widthNum = 80;
@@ -14,11 +15,16 @@ const Component = ({photosArray, setPhotosArray}) => {
 
   const ShowPicker = () => {
     //launchImageLibrary : 사용자 앨범 접근
+
+    if (photosArray.length >= 5) {
+      Alert.alert('사진 업로드는 5장까지만 가능합니다');
+      return;
+    }
+
     launchImageLibrary({}, res => {
       const formdata = new FormData();
       formdata.append('file', res.assets[0].uri);
-      console.log(res);
-      // console.log(res.uri);
+
       setPhotosArray([
         ...photosArray,
         {id: Date.now(), uri: res.assets[0].uri},

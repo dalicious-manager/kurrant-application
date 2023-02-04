@@ -19,13 +19,12 @@ const Screen = () => {
   const [starRating, setStarRating] = useAtom(starRatingAtom);
 
   const [checked, setChecked] = useState(false);
-  const themeApp = useTheme();
 
   const handlePhotoRemove = photoId => {
     const thisPhotoArray = [...photosArray];
 
     const returnArray = thisPhotoArray.filter(value => value.id !== photoId);
-    // console.log(returnArray);
+
     setPhotosArray(returnArray);
   };
 
@@ -47,7 +46,7 @@ const Screen = () => {
 
           <UploadPhotosWrap>
             <Title2Wrap>
-              <Title2> 사진 업로드 0/5 </Title2>
+              <Title2> 사진 업로드 {photosArray.length}/5 </Title2>
               <NotMandatory>(선택)</NotMandatory>
             </Title2Wrap>
 
@@ -63,7 +62,7 @@ const Screen = () => {
                   setPhotosArray={setPhotosArray}
                 />
                 {!!photosArray.length &&
-                  photosArray.map((value, index) => {
+                  photosArray.reverse().map((value, index) => {
                     return (
                       <PhotoImageWrap>
                         <DeleteButton
