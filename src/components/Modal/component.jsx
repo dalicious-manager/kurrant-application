@@ -62,12 +62,12 @@ const Component = ({
                             <Text>[매장가]</Text>
                             <DscText>{withCommas(price)}원</DscText>
                         </ContentWrap>
-                        {!isUserInfo.isMembership && <ContentWrap>
+                        {(!isUserInfo.isMembership && isfoodDetailDiscount.membershipDiscountRate !== 0) && <ContentWrap>
                             <Text>[멤버십 가입시 판매가]</Text>
                             <DscText> &#183; 멤버십 할인 적용시</DscText>
                             <DscText>{withCommas(price)}원 x (100%-{isfoodDetailDiscount.membershipDiscountRate}%) = {isfoodDetailDiscount.membershipDiscountedPrice === 0 ? 0 : withCommas(isfoodDetailDiscount.membershipDiscountedPrice)}원</DscText>
                             {makersDiscountedRate !== 0 && <DscText> &#183; 판매자 할인 추가 적용시</DscText>}
-                            {makersDiscountedRate !== 0 && <DscText>{isfoodDetailDiscount.membershipDiscountedPrice === 0 ? 0 : withCommas(isfoodDetailDiscount.membershipDiscountedPrice)}원 x (100%-{isfoodDetailDiscount.membershipDiscountRate}%) = {withCommas(isfoodDetailDiscount.makersDiscountedPrice)}원</DscText>}
+                            {makersDiscountedRate !== 0 && <DscText>{isfoodDetailDiscount.membershipDiscountedPrice === 0 ? 0 : withCommas(isfoodDetailDiscount.membershipDiscountedPrice)}원 x (100%-{isfoodDetailDiscount.makersDiscountRate}%) = {withCommas(isfoodDetailDiscount.makersDiscountedPrice)}원</DscText>}
                             {periodDiscountedRate !== 0 && <DscText> &#183; 기간 할인 추가 적용시</DscText>}
                             {periodDiscountedRate !== 0 && <DscText>{withCommas(isfoodDetailDiscount.makersDiscountedPrice === 0 ? isfoodDetailDiscount.membershipDiscountedPrice : isfoodDetailDiscount.makersDiscountedPrice)}원 x (100%-{isfoodDetailDiscount.periodDiscountRate}%) = {withCommas(isfoodDetailDiscount.periodDiscountedPrice)}원</DscText>}
                         </ContentWrap>}
