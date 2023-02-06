@@ -27,6 +27,10 @@ const Screens = () => {
   });
 
   useEffect(() => {
+    console.log(input);
+  }, [input]);
+
+  useEffect(() => {
     setInput({...input, detail: form.watch('report_detail')});
   }, [form.watch('report_detail')]);
 
@@ -58,21 +62,48 @@ const Screens = () => {
           </TitleWrap>
 
           <CheckAndTextWrap>
-            <CheckAndText marginBottom={'24px'} text="주문과 관련없는 내용" />
             <CheckAndText
+              marginBottom={'24px'}
+              text="주문과 관련없는 내용"
+              inputCheck="check1"
+              input={input}
+              setInput={setInput}
+            />
+            <CheckAndText
+              inputCheck="check2"
+              input={input}
+              setInput={setInput}
               marginBottom={'24px'}
               text="주문과 관련없는 사진 게시"
             />
             <CheckAndText
+              inputCheck="check3"
+              input={input}
+              setInput={setInput}
               marginBottom={'24px'}
               text="음란성, 욕설 등 부적절한 내용"
             />
             <CheckAndText
+              inputCheck="check4"
+              input={input}
+              setInput={setInput}
               marginBottom={'24px'}
               text="부적절한 홍보 또는 광고"
             />
-            <CheckAndText marginBottom={'24px'} text="개인정보 유출 위험" />
-            <CheckAndText marginBottom={'24px'} text="기타(하단 내용 작성)" />
+            <CheckAndText
+              inputCheck="check5"
+              input={input}
+              setInput={setInput}
+              marginBottom={'24px'}
+              text="개인정보 유출 위험"
+            />
+            <CheckAndText
+              inputCheck="check6"
+              input={input}
+              setInput={setInput}
+              marginBottom={'24px'}
+              text="기타(하단 내용 작성)"
+            />
           </CheckAndTextWrap>
 
           <ReportDetailView>

@@ -10,17 +10,23 @@ import Typography from '../Typography';
  * @returns
  */
 
-const Component = ({marginBottom = '', text = '텍스트를 입력하세요'}) => {
+const Component = ({
+  marginBottom = '',
+  text = '텍스트를 입력하세요',
+  inputCheck,
+  setInput,
+  input,
+}) => {
   return (
     <ShowOnlyToOwnerWrap marginBottom={marginBottom}>
       <CheckBox
-        checked={false}
-        //   onPress={() => {
-        //     // setChecked(!checked);
-
-        //     setInput({...input, isExclusive: !input.isExclusive});
-        //   }}
-      >
+        checked={input[inputCheck]}
+        onPress={() => {
+          console.log('pressed');
+          const yo = {...input};
+          yo[inputCheck] = !input[inputCheck];
+          setInput(yo);
+        }}>
         <CheckIcon
           style={{width: 15, height: 10}}
           // size={36}
