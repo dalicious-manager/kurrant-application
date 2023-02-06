@@ -26,6 +26,35 @@ const Screens = () => {
     detail: '',
   });
 
+  const [clickAvaliable, setClickAvaliable] = useState(false);
+
+  useEffect(() => {
+    setClickAvaliable(prevVal => false);
+
+    const result =
+      input.check1 ||
+      input.check2 ||
+      input.check3 ||
+      input.check4 ||
+      input.check5 ||
+      input.check6;
+
+    console.log(input);
+    console.log(result);
+
+    if (!result) {
+      return;
+    }
+
+    if (input.check6 && input.detail?.length > 200) {
+      return;
+    }
+    setClickAvaliable(prevVal => true);
+
+    // if (result || input.detail?.length <= 200) return;
+    // console.log(input);
+  }, [input]);
+
   useEffect(() => {
     console.log(input);
   }, [input]);
@@ -40,14 +69,9 @@ const Screens = () => {
     // photos : photosArray | ([{id: number, uri: '이미지uri'}])
     // review : data.review | string
     // isExclusive : input.isExclusive |  boolean
-    console.log({
-      rating: starRating,
-      photos: photosArray,
-      review: data.review,
-      isExclusive: input.isExclusive,
-    });
+    console.log();
 
-    console.log('input registered');
+    console.log('report succefully sent');
   };
 
   return (
@@ -106,16 +130,18 @@ const Screens = () => {
             />
           </CheckAndTextWrap>
 
-          <ReportDetailView>
-            <TextAreaInput />
-            <TextLength>0/200</TextLength>
-          </ReportDetailView>
+          {input.check6 && (
+            <ReportDetailView>
+              <TextAreaInput />
+              <TextLength>{input.detail?.length}/200</TextLength>
+            </ReportDetailView>
+          )}
         </Container>
         <ButtonFinal
           size="full"
           label="신고하기"
           text={'Button09SB'}
-          disabled={true}
+          disabled={!clickAvaliable}
           // onPressEvent={form.handleSubmit(onSignInPressed)}
         />
       </FormProvider>
@@ -166,5 +192,5 @@ const TextLength = styled(Typography).attrs({text: 'Body06R'})`
 
 const ButtonFinal = styled(Button)`
   position: relative;
-  bottom: 20px;
+  bottom: 30px;
 `;

@@ -22,7 +22,6 @@ const Component = ({
       <CheckBox
         checked={input[inputCheck]}
         onPress={() => {
-          console.log('pressed');
           const yo = {...input};
           yo[inputCheck] = !input[inputCheck];
           setInput(yo);
