@@ -1545,7 +1545,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <CloseIcon />,
           }}
         />
         <MainRoot.Screen
@@ -1561,7 +1561,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <CloseIcon />,
           }}
         />
       </MainRoot.Group>
@@ -1585,6 +1585,27 @@ const Screen = () => {
           }}
         />
       </MainRoot.Group>
+
+      {/* 리뷰 신고  */}
+
+      {/* <MainRoot.Group>
+        <MainRoot.Screen
+          name={testPageName}
+          component={test}
+          options={{
+            headerShown: true,
+            title: '신고하기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon/>,
+          }}
+        />
+      </MainRoot.Group> */}
     </MainRoot.Navigator>
   );
 };

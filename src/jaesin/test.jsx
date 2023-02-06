@@ -45,43 +45,7 @@ const Pages = () => {
           setSseTestOpen(!sseTestOpen);
         }}
       />
-      <FormProvider {...form}>
-        {/* <RefTextInput
-          name="email"
-          label="가입한 이메일 주소"
-          ref={emailRef}
-          returnKeyType="next"
-          autoCapitalize="none"
-          onSubmitEditing={() => {
-            console.log('refTextInput');
-          }}
-          defaultValue={'hi'}
-          // blurOnSubmit={false}
-          rules={{
-            required: '필수 입력 항목 입니다.',
-            minLength: {
-              value: 8,
-              message: '8글자 이상 입력',
-            },
-            maxLength: {
-              value: 31,
-              message: '32글자 이하 입력',
-            },
-            pattern: {
-              value:
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,32}$/,
-              message: '비밀번호 형식에 맞지 않습니다.',
-            },
-          }}
-        /> */}
-      </FormProvider>
-      {/* 
-      <Button
-        type="yellow"
-        label="로그인"
-        // disabled={!isValidation}
-        // onPressEvent={handleSubmit(onSubmit)}
-      /> */}
+      <FormProvider {...form}></FormProvider>
 
       <InputYo />
 
