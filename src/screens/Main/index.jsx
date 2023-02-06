@@ -218,7 +218,6 @@ import Payment, {
   PAGE_NAME as PaymentPageName,
 } from '../../pages/Main/Bnb/Payment/Main';
 
-import {SCREEN_NAME} from '../Main/Bnb';
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 
 import CreateReviewPage1, {
@@ -231,14 +230,19 @@ import CreateReviewPage2, {
 import NoticeDetail, {
   PAGE_NAME as NoticeDetailPageName,
 } from '../../pages/Main/MyPage/Notice/NoticeDetail';
+
 import {
   DeleteIcon,
   NotifySettingIcon,
   SettingIcon,
 } from '../../components/Icon';
+
 import {useAtom} from 'jotai';
 import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
 import test, {PAGE_NAME as testPageName} from '../../jaesin/test';
+import ReportReview, {
+  PAGE_NAME as ReportReviewPageName,
+} from './Review/ReportReview';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -1588,10 +1592,10 @@ const Screen = () => {
 
       {/* 리뷰 신고  */}
 
-      {/* <MainRoot.Group>
+      <MainRoot.Group>
         <MainRoot.Screen
-          name={testPageName}
-          component={test}
+          name={ReportReviewPageName}
+          component={ReportReview}
           options={{
             headerShown: true,
             title: '신고하기',
@@ -1602,10 +1606,10 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon/>,
+            headerLeft: () => <CloseIcon />,
           }}
         />
-      </MainRoot.Group> */}
+      </MainRoot.Group>
     </MainRoot.Navigator>
   );
 };
