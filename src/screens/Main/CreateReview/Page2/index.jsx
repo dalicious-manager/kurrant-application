@@ -1,24 +1,34 @@
 import faIR from 'date-fns/esm/locale/fa-IR/index.js';
 import {useAtom} from 'jotai';
-import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {FormProvider, useForm} from 'react-hook-form';
+import {StyleSheet, Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 
 import Button from '../../../../components/Button';
 import {CheckIcon, XCircleIcon} from '../../../../components/Icon';
 import RateStars from '../../../../components/RateStars';
+import RefTextInput from '../../../../components/RefTextInput';
 import Typography from '../../../../components/Typography';
 import UploadPhoto from '../../../../components/UploadPhoto';
+import ReviewInputYo from './ReviewInput';
 import {starRatingAtom} from './store';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 
 const Screen = () => {
+  const reviewRef = useRef(null);
+
   const [photosArray, setPhotosArray] = useState([]);
-
   const [starRating, setStarRating] = useAtom(starRatingAtom);
-
   const [checked, setChecked] = useState(false);
+
+  const [input, setInput] = useState({
+    rating: 3,
+    photos: [],
+    review: '',
+    isExclusive: false,
+  });
 
   const handlePhotoRemove = photoId => {
     const thisPhotoArray = [...photosArray];
@@ -28,99 +38,143 @@ const Screen = () => {
     setPhotosArray(returnArray);
   };
 
+  const form = useForm({
+    mode: 'all',
+  });
+
+  const onSignInPressed = data => {
+    console.log(data.review);
+    console.log('input registered');
+  };
+
   return (
     <>
       <Container2>
-        <Container>
-          <SatisfactionTitle>
-            <Title1>만족도를 알려주세요</Title1>
-            <RateStars
-              width="160px"
-              margin="2px"
-              ratingInput={starRating}
-              callback={rating => {
-                setStarRating(rating);
-              }}
-            />
-          </SatisfactionTitle>
+        <FormProvider {...form}>
+          <Container
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}>
+            <SatisfactionTitle>
+              <Title1>만족도를 알려주세요</Title1>
+              <RateStars
+                width="160px"
+                margin="2px"
+                ratingInput={starRating}
+                callback={rating => {
+                  setStarRating(rating);
+                }}
+              />
+            </SatisfactionTitle>
 
-          <UploadPhotosWrap>
-            <Title2Wrap>
-              <Title2> 사진 업로드 {photosArray.length}/5 </Title2>
-              <NotMandatory>(선택)</NotMandatory>
-            </Title2Wrap>
+            <UploadPhotosWrap>
+              <Title2Wrap>
+                <Title2> 사진 업로드 {photosArray.length}/5 </Title2>
+                <NotMandatory>(선택)</NotMandatory>
+              </Title2Wrap>
 
-            <PhotosScrollViewWrap
-              // style={{flex: 1}}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}>
-              <PhotosView>
-                <UploadPhoto
-                  width="80px"
-                  height="80px"
-                  photosArray={photosArray}
-                  setPhotosArray={setPhotosArray}
-                />
-                {!!photosArray.length &&
-                  photosArray.reverse().map((value, index) => {
-                    return (
-                      <PhotoImageWrap>
-                        <DeleteButton
-                          onPress={() => {
-                            handlePhotoRemove(value.id);
-                          }}>
-                          <XCircleIcon />
-                        </DeleteButton>
-                        <PhotoImage key={value.id} source={{uri: value.uri}} />
-                      </PhotoImageWrap>
-                    );
-                    // return <PhotoImage key={index} source={{uri: value}} />;
-                  })}
-              </PhotosView>
-            </PhotosScrollViewWrap>
-          </UploadPhotosWrap>
+              <PhotosScrollViewWrap
+                // style={{flex: 1}}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}>
+                <PhotosView>
+                  <UploadPhoto
+                    width="80px"
+                    height="80px"
+                    photosArray={photosArray}
+                    setPhotosArray={setPhotosArray}
+                  />
+                  {!!photosArray.length &&
+                    photosArray.reverse().map((value, index) => {
+                      return (
+                        <PhotoImageWrap key={value.id}>
+                          <DeleteButton
+                            onPress={() => {
+                              handlePhotoRemove(value.id);
+                            }}>
+                            <XCircleIcon />
+                          </DeleteButton>
+                          <PhotoImage source={{uri: value.uri}} />
+                        </PhotoImageWrap>
+                      );
+                      // return <PhotoImage key={index} source={{uri: value}} />;
+                    })}
+                </PhotosView>
+              </PhotosScrollViewWrap>
+            </UploadPhotosWrap>
 
-          <ReviewWrap>
-            <Title3>리뷰를 작성해주세요</Title3>
+            <ReviewWrap>
+              <Title3>리뷰를 작성해주세요</Title3>
 
-            <ReviewInput
+              {/* <ReviewInput
               multiline
               numberOfLines={20}
               maxLength={70}
-              placeholder="최소 10자 이상 입력해주세요"></ReviewInput>
+              placeholder="최소 10자 이상 입력해주세요"></ReviewInput> */}
 
-            <ShowOnlyToOwnerWrap>
-              <CheckBox
-                checked={checked}
-                onPress={() => {
-                  setChecked(!checked);
-                }}>
-                <CheckIcon
-                  style={{width: 15, height: 10}}
-                  // size={36}
-                  color={'#ffffff'}
-                />
-              </CheckBox>
-              <Title4>사장님에게만 보이기 </Title4>
-            </ShowOnlyToOwnerWrap>
-          </ReviewWrap>
+              {/* <RefTextInput
+                name="review"
+                label="리뷰를 작성해주세요"
+                ref={reviewRef}
+                // returnKeyType='next'
+                autoCapitalize="none"
+                onSubmitEditing={() => {
+                  console.log('refTextInput');
+                }}
+                placeholder="최소 10자 이상 입력해주세요"
+                rules={{
+                  // required: '필수 입력 항목 입니다.',
+                  minLength: {
+                    value: 10,
+                    message: '8글자 이상 입력',
+                  },
+                  maxLength: {
+                    value: 31,
+                    message: '32글자 이하 입력',
+                  },
+                  pattern: {
+                    value:
+                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,32}$/,
+                    message: '비밀번호 형식에 맞지 않습니다.',
+                  },
+                }}
+              /> */}
+              <ReviewInputYo />
 
-          <Warnings>
-            작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
-            서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
-            제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
-          </Warnings>
+              <ShowOnlyToOwnerWrap>
+                <CheckBox
+                  checked={checked}
+                  onPress={() => {
+                    setChecked(!checked);
+                  }}>
+                  <CheckIcon
+                    style={{width: 15, height: 10}}
+                    // size={36}
+                    color={'#ffffff'}
+                  />
+                </CheckBox>
+                <Title4>사장님에게만 보이기 </Title4>
+              </ShowOnlyToOwnerWrap>
+            </ReviewWrap>
 
-          {/* <Button /> */}
-        </Container>
-        <Button
-          // label={buttonTitle2}
-          size="full"
-          label="완료"
-          // type={buttonType2}
-          text={'Button09SB'}
-          style={{position: 'fixed'}}
-        />
+            <Warnings>
+              작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
+              서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
+              제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
+            </Warnings>
+
+            {/* <Button /> */}
+          </Container>
+
+          <Button
+            // label={buttonTitle2}
+            size="full"
+            label="완료"
+            // type={buttonType2}
+            text={'Button09SB'}
+            style={{position: 'fixed'}}
+            onPressEvent={form.handleSubmit(onSignInPressed)}
+          />
+        </FormProvider>
       </Container2>
     </>
   );
@@ -136,7 +190,7 @@ const Container2 = styled.View`
 
 const Container = styled.ScrollView`
   width: 100%;
-  /* height: 20%; */
+  height: 90%;
   background-color: #ffffff;
 `;
 
@@ -242,3 +296,25 @@ const Title4 = styled(Typography).attrs({text: 'Body06R                  '})`
 const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
 `;
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  input: {
+    marginBottom: 24,
+  },
+
+  buttonContainer: {
+    width: '100%',
+    marginBottom: 24,
+  },
+  label: {
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#424242',
+  },
+});
