@@ -11,7 +11,7 @@ import RateStars from '../../../../components/RateStars';
 import RefTextInput from '../../../../components/RefTextInput';
 import Typography from '../../../../components/Typography';
 import UploadPhoto from '../../../../components/UploadPhoto';
-import ReviewInputYo from './ReviewInput';
+import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
@@ -24,7 +24,7 @@ const Screen = () => {
   const [checked, setChecked] = useState(false);
 
   const [input, setInput] = useState({
-    rating: 3,
+    rating: 0,
     photos: [],
     review: '',
     isExclusive: false,
@@ -105,7 +105,7 @@ const Screen = () => {
             <ReviewWrap>
               <Title3>리뷰를 작성해주세요</Title3>
 
-              <ReviewInputYo />
+              <ReviewInput />
 
               <ShowOnlyToOwnerWrap>
                 <CheckBox
@@ -224,16 +224,16 @@ const Title3 = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-bottom: 12px;
 `;
-const ReviewInput = styled.TextInput`
-  border: 1px solid ${props => props.theme.colors.grey[7]};
-  padding: 17px 20px;
-  height: 168px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: justify;
+// const ReviewInputYo = styled.TextInput`
+//   border: 1px solid ${props => props.theme.colors.grey[7]};
+//   padding: 17px 20px;
+//   height: 168px;
+//   justify-content: flex-start;
+//   align-items: flex-start;
+//   text-align: justify;
 
-  margin-bottom: 19px;
-`;
+//   margin-bottom: 19px;
+// `;
 const ShowOnlyToOwnerWrap = styled.View`
   flex-direction: row;
   align-items: center;
