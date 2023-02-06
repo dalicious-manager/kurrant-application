@@ -2,7 +2,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
 import React, { useRef, useState, useEffect } from 'react';
-import { ScrollView, View, Dimensions, StyleSheet, ActivityIndicator} from "react-native";
+import { ScrollView, View, Dimensions, StyleSheet, ActivityIndicator, Alert} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
 import FastImage from "react-native-fast-image";
@@ -22,6 +22,8 @@ import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
+import useAuth from '../../../../../biz/useAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -38,6 +40,7 @@ const Pages = () => {
     const [sliderValue, setSliderValue] = useState(1);
     const [selectFood, setSelectFood] = useState();
     const [show,setShow] = useState(false);
+    const {readableAtom:{userRole}}= useAuth();
     const {isDiningTypes, isMorningFood,isLunchFood,isDinnerFood, dailyFood, isDailyFoodLoading} = useFoodDaily();
     const {addMeal ,isLoadMeal, isAddMeal,loadMeal , setLoadMeal,updateMeal,setQuantity} = useShoppingBasket();
     const { balloonEvent, BalloonWrap } = Balloon();
@@ -48,7 +51,7 @@ const Pages = () => {
     const date = formattedWeekDate(new Date()); // 오늘
     // const todayMeal = mealInfo?.filter((m) => m.date === date);
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-    const spotId = userInfo.spotId; 
+    const spotId = userRole === "ROLE_GUEST" ? 1: userInfo.spotId; 
     // const spotId = 1; 
     
     const onPageScroll = (e) => {
@@ -163,6 +166,30 @@ const Pages = () => {
     const modifyQty = quantity.reduce((acc,cur) => [...acc, ... cur], []);
     const req = {"updateCartList":modifyQty}
     const addToCart = async (id,m) =>{
+        if (userRole === "ROLE_GUEST") {
+            return  Alert.alert("로그인이 필요합니다", "해당 기능은 로그인 이후 사용할수 있습니다.",[
+              {
+                text:'취소',
+                onPress:() => {},
+                
+              },
+              {
+                text:'확인',
+                onPress:async() => {
+                  await AsyncStorage.clear();
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
+                  })
+                },
+                style:'destructive'
+              }
+            ])
+          }
         try {
             await addMeal([{
                 "dailyFoodId":id,
@@ -335,7 +362,33 @@ const Pages = () => {
             </ScrollView>
             {show && <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'8px', right:'14px'}}/>}
             <ButtonWrap membership={userInfo?.isMembership}>
-                <Button label={'장바구니 보기'} type={'yellow'} onPressEvent={()=>{navigation.navigate(MealCartPageName)}}/>
+                <Button label={'장바구니 보기'} type={'yellow'} onPressEvent={()=>{
+                     if (userRole === "ROLE_GUEST") {
+                        return  Alert.alert("로그인이 필요합니다", "해당 기능은 로그인 이후 사용할수 있습니다.",[
+                          {
+                            text:'취소',
+                            onPress:() => {},
+                            
+                          },
+                          {
+                            text:'확인',
+                            onPress:async() => {
+                              await AsyncStorage.clear();
+                              navigation.reset({
+                                index: 0,
+                                routes: [
+                                  {
+                                    name: LoginPageName,
+                                  },
+                                ],
+                              })
+                            },
+                            style:'destructive'
+                          }
+                        ])
+                      }
+                    navigation.navigate(MealCartPageName)
+                    }}/>
             </ButtonWrap>
         </SafeView>
         

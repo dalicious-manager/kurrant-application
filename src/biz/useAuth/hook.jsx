@@ -10,10 +10,12 @@ import {
   isLoginLoadingAtom,
   isCheckedAuthLoadingAtom,
   isChangePasswordLoadingAtom,
-  isFindEmailLoading
+  isFindEmailLoading,
+  userRoleAtom
 } from './store';
 import { setStorage } from '../../utils/asyncStorage';
 import { isUserSpotStatusAtom } from '../useUserInfo/store';
+import jwtDecode from 'jwt-decode';
 
 
 
@@ -26,6 +28,7 @@ const useAuth = () => {
   const [isChangePasswordLoading, setChangePasswordLoading] = useAtom(isChangePasswordLoadingAtom);
   const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
+  const [userRole, setUserRole] = useAtom(userRoleAtom);
 
   const requestEmailAuth = async (body,type,option = {}) => {
     try {
@@ -147,9 +150,20 @@ const useAuth = () => {
       setChangePasswordLoading(false);
     }
   };
-  const login = async (body,option = {}) => {
+  const login = async (body,isGuest= false,option = {}) => {
     try {
       setLoginLoading(true);
+      if(isGuest){
+        const res = await Fetch.guestLogin();
+        const {roles} = jwtDecode(res.data.accessToken)
+        console.log(roles)
+        setUserRole(roles[0])
+        await setStorage('token',JSON.stringify(res.data));        
+        await setStorage('isLogin',"false");
+        await setStorage('spotStatus',res.data.spotStatus.toString());
+        
+        return res
+      }
       const reqData = {
         email:body.email,
         password:body.password,
@@ -160,10 +174,12 @@ const useAuth = () => {
         },
         option
       );
+      setUserRole("")
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       await setStorage('spotStatus',res.data.spotStatus.toString());
       
+      console.log("여기까지 온다고?")
       return res;
     } catch (err) {
       throw err
@@ -188,6 +204,7 @@ const useAuth = () => {
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       await setStorage('spotStatus',res.data.spotStatus.toString());
+      setUserRole("")
       return res;
     } catch (err) {
       throw err
@@ -209,6 +226,7 @@ const useAuth = () => {
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       await setStorage('spotStatus',res.data.spotStatus.toString());
+      setUserRole("")
       return res;
     } catch (err) {
       throw err
@@ -225,11 +243,20 @@ const useAuth = () => {
     );
     return res;
   }
+  const nameSetting = async(body,option={})=>{
+    const res = await Fetch.nameSetting({
+      ...body
+    },
+    option
+    )
+    return res
+  }
   return {
     requestEmailAuth,
     confirmEmailAuth,
     requestPhoneAuth,
     confirmPhoneAuth,
+    nameSetting,
     checkedAuth,
     findEmail,
     changePassword,
@@ -240,6 +267,7 @@ const useAuth = () => {
     readableAtom: {
       isPhoneAuthLoading,
       isEmailAuthLoading,
+      userRole,
       isConfirmPhoneLoading,
       isConfirmEmailLoading,
       isCheckedAuthLoading,

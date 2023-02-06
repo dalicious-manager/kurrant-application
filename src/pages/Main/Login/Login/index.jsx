@@ -2,7 +2,7 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, BackHandler, Dimensions,Platform,TouchableOpacity} from 'react-native';
+import { ActivityIndicator, Alert, BackHandler, Dimensions,Platform,Pressable,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 import { Settings ,LoginButton,AccessToken} from 'react-native-fbsdk-next';
@@ -20,12 +20,14 @@ import snsLogin from '../../../../utils/snsLogin';
 import {
   PAGE_NAME as MembershipJoinPageName,
 } from '../../../Membership/MembershipIntro';
+import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
 import LoginMain from './LoginMain';
 
 import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid'
 
 import LogoImageSvg from '../../../../assets/icons/Logo.svg'
+import useAuth from '../../../../biz/useAuth';
 
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
@@ -43,6 +45,7 @@ const Pages = ({route}) => {
   const toast = Toast();
   const [isLoginLoading, setLoginLoading] = useState();
   const {googleLogin,appleLogin, facebookLogin} = snsLogin();
+  const {login} = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes:['https://www.googleapis.com/auth/user.phonenumbers.read'],
@@ -157,7 +160,20 @@ const Pages = ({route}) => {
         <TouchableOpacity onPress={()=>{
           // navigation.navigate(MembershipJoinPageName)
         }}>
-          {/* <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping> */}
+          <Pressable onPress={async()=>{
+            const res = await login("",true)
+            console.log(res.data,"로그인 성공");
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: SCREEN_NAME,
+                },
+              ],
+            })
+          }}>
+          <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
+          </Pressable>
         </TouchableOpacity>
         <EtcSNSContainer>
 

@@ -8,4 +8,5 @@ export const isCheckedAuthLoadingAtom = atomWithReset(false);
 export const isChangePasswordLoadingAtom = atomWithReset(false);
 export const isFindEmailLoading = atomWithReset(false);
 export const isLoginLoadingAtom = atomWithReset(false);
+export const userRoleAtom = atomWithReset("");
 

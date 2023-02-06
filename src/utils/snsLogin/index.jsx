@@ -1,11 +1,11 @@
 import { appleAuth,appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import Clipboard from '@react-native-clipboard/clipboard';
-import auth from '@react-native-firebase/auth';
+import auth, { firebase } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { login } from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import { useNavigation } from '@react-navigation/native';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import {
   AccessToken,
   AuthenticationToken,
@@ -16,6 +16,10 @@ import useAuth from '../../biz/useAuth';
 import { SCREEN_NAME } from '../../screens/Main/Bnb';
 import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid'
+
+import { PAGE_NAME as AppleLoginPageName } from '../../pages/Main/Login/AppleSignup';
+import jwtDecode from 'jwt-decode';
+
 const nonce = uuid();
 
 
@@ -92,12 +96,14 @@ export default () => {
         }
         
       }
-      const appleLogin  = async() =>{
+      const appleLogin  = async(name="") =>{
         try {
         // Start the sign-in request
         if(Platform.OS === "android"){
           const test = await appleAuthAndroid.signIn();
           // Clipboard.setString(test.id_token);
+          const appleCredential = firebase.auth.AppleAuthProvider.credential(test.id_token, test.nonce);
+          const userCredential = await firebase.auth().signInWithCredential(appleCredential);
           await snsAppleLogin({
             ...test,
             autoLogin:true,
@@ -111,33 +117,82 @@ export default () => {
             ],
           })
         }else{
+          // await appleAuth.onCredentialRevoked(async () => {
+          //   console.warn('If this function executes, User Credentials have been Revoked');
+          // });
             const appleAuthRequestResponse = await appleAuth.performRequest({
               requestedOperation: appleAuth.Operation.LOGIN,
               requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
             });
 
-
+            
             // // Ensure Apple returned a user identityToken
             if (!appleAuthRequestResponse.identityToken) {
               throw new Error('Apple Sign-In failed - no identify token returned');
             }
-          
+            const {email} = jwtDecode(appleAuthRequestResponse.identityToken);
+            if(!email) throw new Error("이메일이 존재하지 않습니다.")
+
+            const appleCredential = firebase.auth.AppleAuthProvider.credential(appleAuthRequestResponse.identityToken, appleAuthRequestResponse.nonce);
+            const userCredential = await firebase.auth().signInWithCredential(appleCredential);
             const appleData = appleAuthRequestResponse;
+            
+            console.log(userCredential);
             await snsAppleLogin({
                 ...appleData,
                 autoLogin:true,
             },'APPLE');
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: SCREEN_NAME,
-                },
-              ],
-            })
+            console.log(userCredential.additionalUserInfo.isNewUser);
+            if(!userCredential.additionalUserInfo.isNewUser){
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              })
+            }else{
+              if(appleAuthRequestResponse.fullName.familyName){
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: SCREEN_NAME,
+                    },
+                  ],
+                })
+              }else{
+                Alert.alert("신규 유저","이름을 가져올수 없습니다 이름을 등록하시겠습니까? \n이름을 등록 하지 않으면 이름없음으로 자동 등록 됩니다.",[
+                  {
+                    text:'취소',
+                    onPress:() => {
+                      navigation.reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: SCREEN_NAME,
+                          },
+                        ],
+                      })
+                    },
+                    
+                  },
+                  {
+                    text:'확인',
+                    onPress: async () => {
+                        navigation.navigate(AppleLoginPageName)
+                    },
+                    style:'destructive'
+                  }
+                ])
+              }        
+              
+            }
           }
           } catch (error) {
             console.log("err",error.toString());
+            Alert.alert("로그인 에러","이메일을 가져올수 없습니다.\n핸드폰을 재부팅 하시고 이후 문제가 해결되지않는다면 고객센터로 문의 주세요");
           }
         // const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
         // // Sign the user in with the credential
