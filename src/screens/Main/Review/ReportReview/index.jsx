@@ -1,16 +1,139 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {FormProvider, useForm} from 'react-hook-form';
 import {Text, View} from 'react-native';
+import styled from 'styled-components';
+import Button from '../../../../components/Button';
+import CheckAndText from '../../../../components/CheckAndText';
+import Typography from '../../../../components/Typography';
+import TextAreaInput from './TextAreaInput';
 
 export const PAGE_NAME = 'P_MAIN__REPORT_REVIEW';
 
 export const pathfind = 'sfdkl';
 
 const Screens = () => {
+  const form = useForm({
+    mode: 'all',
+  });
+
+  const [input, setInput] = useState({
+    check1: false,
+    check2: false,
+    check3: false,
+    check4: false,
+    check5: false,
+    check6: false,
+    detail: '',
+  });
+
+  useEffect(() => {
+    setInput({...input, detail: form.watch('report_detail')});
+  }, [form.watch('report_detail')]);
+
+  const onSignInPressed = data => {
+    // 서버에 보내는 데이터 구조
+    // rating : starRating | number
+    // photos : photosArray | ([{id: number, uri: '이미지uri'}])
+    // review : data.review | string
+    // isExclusive : input.isExclusive |  boolean
+    console.log({
+      rating: starRating,
+      photos: photosArray,
+      review: data.review,
+      isExclusive: input.isExclusive,
+    });
+
+    console.log('input registered');
+  };
+
   return (
-    <View>
-      <Text>리뷰신고</Text>
-    </View>
+    <Container2>
+      <FormProvider {...form}>
+        <Container>
+          <TitleWrap>
+            <Title1>신고 사유를 알려주세요!</Title1>
+            <Notice1>
+              허위, 왜곡된 신고는 관리자 확인 후 반영되지 않을 수 있어요.
+            </Notice1>
+          </TitleWrap>
+
+          <CheckAndTextWrap>
+            <CheckAndText marginBottom={'24px'} text="주문과 관련없는 내용" />
+            <CheckAndText
+              marginBottom={'24px'}
+              text="주문과 관련없는 사진 게시"
+            />
+            <CheckAndText
+              marginBottom={'24px'}
+              text="음란성, 욕설 등 부적절한 내용"
+            />
+            <CheckAndText
+              marginBottom={'24px'}
+              text="부적절한 홍보 또는 광고"
+            />
+            <CheckAndText marginBottom={'24px'} text="개인정보 유출 위험" />
+            <CheckAndText marginBottom={'24px'} text="기타(하단 내용 작성)" />
+          </CheckAndTextWrap>
+
+          <ReportDetailView>
+            <TextAreaInput />
+            <TextLength>0/200</TextLength>
+          </ReportDetailView>
+        </Container>
+        <ButtonFinal
+          size="full"
+          label="신고하기"
+          text={'Button09SB'}
+          disabled={true}
+          // onPressEvent={form.handleSubmit(onSignInPressed)}
+        />
+      </FormProvider>
+    </Container2>
   );
 };
 
 export default Screens;
+
+const Container2 = styled.View`
+  padding: 0 24px;
+  padding-top: 40px;
+  flex: 1;
+  background-color: #ffffff;
+`;
+
+const Container = styled.ScrollView`
+  width: 100%;
+  /* height: 90%; */
+  background-color: #ffffff;
+`;
+
+const TitleWrap = styled.View`
+  margin-bottom: 41px;
+`;
+
+const Title1 = styled(Typography).attrs({text: 'Title03SB'})`
+  color: #33334a;
+`;
+
+const Notice1 = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${props => props.theme.colors.grey[4]};
+`;
+
+const CheckAndTextWrap = styled.View``;
+
+const ReportDetailView = styled.View`
+  position: relative;
+`;
+
+const TextLength = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[4]};
+  position: absolute;
+  right: 0;
+  bottom: -6px;
+  /* margin-top: 6px; */
+`;
+
+const ButtonFinal = styled(Button)`
+  position: relative;
+  bottom: 20px;
+`;

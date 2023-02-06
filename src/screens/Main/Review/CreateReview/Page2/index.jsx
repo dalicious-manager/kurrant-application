@@ -266,7 +266,7 @@ const CheckBox = styled.Pressable`
   justify-content: center;
   align-items: center;
 `;
-const Title4 = styled(Typography).attrs({text: 'Body06R                  '})`
+const Title4 = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[2]};
 `;
 const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
