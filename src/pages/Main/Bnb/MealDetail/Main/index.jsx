@@ -118,12 +118,8 @@ const Pages = ({route}) => {
             setModalVisible(true);
         }else{
             try {
-                await addMeal([{
-                     "dailyFoodId":dailyFoodId,
-                     "count":count,
-                 }]);
-                 await loadMeal();
-                 balloonEvent();
+                 await addToCart();
+                
              } catch(err){
                  console.log(err)
         }
@@ -136,13 +132,13 @@ const Pages = ({route}) => {
                      "dailyFoodId":dailyFoodId,
                      "count":count,
                  }]);
-                 await loadMeal();
                  balloonEvent();
+                // await loadMeal();
                  } catch(err){
                      console.log(err)
                      throw err
                  }
-               closeModal();    
+               closeModal();  
     }
 
     const increasePress = () => {

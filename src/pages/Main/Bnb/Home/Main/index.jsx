@@ -69,25 +69,24 @@ const Pages = () => {
     const [selected,setSelected] = useState();
     const toast = Toast();
 
-  
-    const VISITED_BEFORE_DATE =  getStorage('balloonTime');
     const VISITED_NOW_DATE = Math.floor(new Date().getDate())
     const nextWeek = weekly[1].map(el => formattedWeekDate(el))
     const mealCheck = isOrderMeal.map(el => {
       return el.serviceDate
     });
     const intersection = nextWeek.filter(x => mealCheck.includes(x));
-  
-    useEffect(()=>{
-      const handleShowModal = () => {
     
+    useEffect(()=>{
+      const handleShowModal = async () => {
+        const VISITED_BEFORE_DATE = await getStorage('balloonTime');
+
         if((intersection.length === 0)){
           setIsVisible(true);
         }
         if ((intersection.length === 0) && (VISITED_BEFORE_DATE === VISITED_NOW_DATE)) {
           setIsVisible(true);
         } 
-        if ((intersection.length === 0) && (VISITED_BEFORE_DATE !== VISITED_NOW_DATE)) {
+        if ((intersection.length === 0) && (VISITED_BEFORE_DATE !== null) && (VISITED_BEFORE_DATE !== VISITED_NOW_DATE)) {
           setIsVisible(false);
         } 
        
@@ -96,12 +95,16 @@ const Pages = () => {
       },[])
 
       const closeBalloon = async () => {
-        setIsVisible(false)
-        const expiry = new Date()
-        // +1일 계산
-        const expiryDate = expiry.getDate() + 1
-        // 로컬스토리지 저장
-        await setStorage('balloonTime', JSON.stringify(expiryDate))
+
+        if((intersection.length === 0)){
+          
+          setIsVisible(false)
+          const expiry = new Date()
+          // +1일 계산
+          const expiryDate = expiry.getDate() + 1
+          // 로컬스토리지 저장
+          await setStorage('balloonTime', JSON.stringify(expiryDate))
+        }
         
       }
     
@@ -112,7 +115,7 @@ const Pages = () => {
         try {
           
           async function loadUser(){
-            const userData = await userInfo();   
+            const userData = await userInfo();     
             dailyFood(userData?.spotId,formattedWeekDate(new Date()));
           }    
           async function loadMeal(){
