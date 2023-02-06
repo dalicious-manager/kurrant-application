@@ -5,12 +5,12 @@ import {FormProvider, useForm} from 'react-hook-form';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 
-import Button from '../../../../components/Button';
-import {CheckIcon, XCircleIcon} from '../../../../components/Icon';
-import RateStars from '../../../../components/RateStars';
-import RefTextInput from '../../../../components/RefTextInput';
-import Typography from '../../../../components/Typography';
-import UploadPhoto from '../../../../components/UploadPhoto';
+import Button from '../../../../../components/Button';
+import {CheckIcon, XCircleIcon} from '../../../../../components/Icon';
+import RateStars from '../../../../../components/RateStars';
+
+import Typography from '../../../../../components/Typography';
+import UploadPhoto from '../../../../../components/UploadPhoto';
 import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
 

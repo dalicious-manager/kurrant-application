@@ -4,9 +4,9 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
-import RateStars from '../../../../components/RateStars';
-import Typography from '../../../../components/Typography';
-import mSleep from '../../../../helpers/mSleep';
+import RateStars from '../../../../../components/RateStars';
+import Typography from '../../../../../components/Typography';
+import mSleep from '../../../../../helpers/mSleep';
 import {SCREEN_NAME as CreateReviewPage2ScreenName} from '../Page2';
 import {starRatingAtom} from '../Page2/store';
 

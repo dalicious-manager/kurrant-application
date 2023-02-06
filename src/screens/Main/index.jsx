@@ -223,10 +223,10 @@ import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 
 import CreateReviewPage1, {
   SCREEN_NAME as CreateReviewPage1ScreenName,
-} from './CreateReview/Page1';
+} from './Review/CreateReview/Page1';
 import CreateReviewPage2, {
   SCREEN_NAME as CreateReviewPage2ScreenName,
-} from './CreateReview/Page2';
+} from './Review/CreateReview/Page2';
 
 import NoticeDetail, {
   PAGE_NAME as NoticeDetailPageName,

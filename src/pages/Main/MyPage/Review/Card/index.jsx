@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import {isDueDateClose} from '../../../../../biz/useMypageReview';
 
 import Typography from '../../../../../components/Typography';
-import {SCREEN_NAME as CreateReviewScreenName} from '../../../../../screens/Main/CreateReview/Page1';
+import {SCREEN_NAME as CreateReviewScreenName} from '../../../../../screens/Main/Review/CreateReview/Page1';
 import {
   formattedMonthDay,
   timeLeftIndicator,
