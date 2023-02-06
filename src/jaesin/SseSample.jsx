@@ -1,46 +1,59 @@
 import RNEventSource from 'react-native-event-source';
 import {useEffect, useMemo, useState} from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import {getStorage, setStorage} from '../utils/asyncStorage';
 
 const SseTestOnSpring = () => {
-  const [data, setData] = useState('');
-  const [eventSourceYo, setEventSourceYo] = useState('');
-  let eventSource;
+  const [eventSource, setEventSource] = useState('');
 
   const setSse = async () => {
     const token = await getStorage('token');
-    setData(token);
-    eventSource = new RNEventSource(
+
+    let yo;
+    if (token) {
+      yo = JSON.parse(token);
+    }
+
+    // console.log(yo?.accessToken);
+
+    let eventSourceYo = new RNEventSource(
       'http://13.125.224.194:8882/v1/notification/subscribe',
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${yo?.accessToken}`,
         },
         withCredentials: true,
       },
     );
+
+    setEventSource(eventSourceYo);
   };
 
   useEffect(() => {
     setSse();
   }, []);
 
-  // 동기적으로 실행해보기 : 실패
-  //   const token = getStorage('token');
+  // useEffect(() => {
+  //   console.log(eventSource);
+  // }, [eventSource]);
 
-  //   const eventSource = useMemo(() => {
-  //     new RNEventSource('http://13.125.224.194:8882/v1/notification/subscribe', {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       withCredentials: true,
-  //     });
-  //   }, []);
+  // console.log(eventSource);
 
-  console.log(eventSource);
+  useEffect(() => {
+    return () => {
+      // console.log(eventSource);
+      console.log(`server closed connection`);
+      // eventSource.close();
+    };
+  }, []);
 
-  if (!eventSource) return;
+  if (!eventSource) {
+    return (
+      <View>
+        <Text>이벤트 소스 연결안됨</Text>
+      </View>
+    );
+  }
 
   console.log('들어옴');
   eventSource.addEventListener('message', e => {
@@ -64,14 +77,11 @@ const SseTestOnSpring = () => {
     eventSource.close();
   };
 
-  useEffect(() => {
-    return () => {
-      console.log(`server closed connection`);
-      //   eventSource.close();
-    };
-  }, []);
-
-  return <View></View>;
+  return (
+    <View>
+      <Text>이벤트 소스 연결됨 ㅋㅋ</Text>
+    </View>
+  );
 };
 
 export default SseTestOnSpring;

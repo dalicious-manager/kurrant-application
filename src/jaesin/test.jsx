@@ -39,11 +39,12 @@ const Pages = () => {
       {sseTestOpen && <SseTestOnSpring />}
 
       <Button
+        label="sse test"
         onPressEvent={() => {
           setSseTestOpen(!sseTestOpen);
         }}
       />
-      <FormProvider {...form}>
+      {/* <FormProvider {...form}>
         <RefTextInput
           name="email"
           label="가입한 이메일 주소"
@@ -81,7 +82,7 @@ const Pages = () => {
         // onPressEvent={handleSubmit(onSubmit)}
       />
 
-      <InputYo />
+      <InputYo /> */}
 
       <RateStars ratingInput={4} width="300px" margin="2px" />
       <RateStars ratingInput={0} width="300px" margin="2px" />
