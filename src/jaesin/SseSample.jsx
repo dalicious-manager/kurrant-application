@@ -43,7 +43,7 @@ const SseTestOnSpring = () => {
     return () => {
       // console.log(eventSource);
       console.log(`server closed connection`);
-      // eventSource.close();
+      eventSource.close();
     };
   }, []);
 

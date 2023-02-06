@@ -19,7 +19,7 @@ const ReviewInputYo = () => {
           minLength: {value: 10, message: '최소 10자 이상 입력해주세요'},
         }}
         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
-          <InputYo
+          <InputYoYo
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
@@ -35,7 +35,7 @@ const ReviewInputYo = () => {
 
 export default ReviewInputYo;
 
-const InputYo = styled.TextInput`
+const InputYoYo = styled.TextInput`
   border: 1px solid ${props => props.theme.colors.grey[7]};
   padding: 17px 20px;
   height: 168px;

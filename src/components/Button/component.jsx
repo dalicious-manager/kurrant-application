@@ -28,20 +28,26 @@ const Component = ({
   disabled = false,
   icon = 'nomal',
   text = 'BottomButtonSB',
-  onPressEvent = () => { console.log('버튼을 누르셨습니다.') }
+  style = '',
+  onPressEvent = () => {
+    console.log('버튼을 누르셨습니다.');
+  },
 }) => {
-  
   const renderIcon = () => {
-    switch(icon) {
+    switch (icon) {
       case 'plus':
-        return <PlusIcon/>;
+        return <PlusIcon />;
       case 'nomal':
         return null;
     }
-  }
+  };
   return (
-    <Wrap size={size}>
-      <Wrapper size={size} type={type} disabled={disabled} onPress={onPressEvent}>
+    <Wrap size={size} style={style}>
+      <Wrapper
+        size={size}
+        type={type}
+        disabled={disabled}
+        onPress={onPressEvent}>
         <LabelWrap>
           {icon && <IconWrap>{renderIcon(icon)}</IconWrap>}
           <Label type={type} disabled={disabled} text={text}>
@@ -50,40 +56,38 @@ const Component = ({
         </LabelWrap>
       </Wrapper>
     </Wrap>
-  )
+  );
 };
 
 export default Component;
 
 const Wrap = styled.View`
-  align-items:center;
-
+  align-items: center;
 `;
 
 const Wrapper = styled.Pressable`
-  ${({ size }) => getButtonSizeStyles(size)};
-  ${({ type }) => getButtonColor(type)};
-  ${({ type, disabled }) => disabled && getDisabledColor(type)};
-  border-radius: ${({type}) => type === 'login' ? '0px' : '100px'};
-  align-items:center;
-  flex-direction:row;
-  justify-content:center;
-
+  ${({size}) => getButtonSizeStyles(size)};
+  ${({type}) => getButtonColor(type)};
+  ${({type, disabled}) => disabled && getDisabledColor(type)};
+  border-radius: ${({type}) => (type === 'login' ? '0px' : '100px')};
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
 `;
 
 const IconWrap = styled.View`
-padding-right:8px;
+  padding-right: 8px;
 `;
 
 export const LabelWrap = styled.View`
-  flex-direction:row;
-  justify-content:center;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
   width: 100%;
 `;
 
 export const Label = styled(Typography)`
-  ${({ disabled, type }) =>  getLabelColor(disabled,type)};
+  ${({disabled, type}) => getLabelColor(disabled, type)};
 `;
 
 //<IconWrap>{renderIcon(icon)}</IconWrap>

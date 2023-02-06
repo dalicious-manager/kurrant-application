@@ -2,7 +2,7 @@ import faIR from 'date-fns/esm/locale/fa-IR/index.js';
 import {useAtom} from 'jotai';
 import React, {useRef, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 
 import Button from '../../../../components/Button';
@@ -43,8 +43,8 @@ const Screen = () => {
   });
 
   const onSignInPressed = data => {
-    console.log(data.review);
     console.log('input registered');
+    console.log(data.review);
   };
 
   return (
@@ -105,39 +105,6 @@ const Screen = () => {
             <ReviewWrap>
               <Title3>리뷰를 작성해주세요</Title3>
 
-              {/* <ReviewInput
-              multiline
-              numberOfLines={20}
-              maxLength={70}
-              placeholder="최소 10자 이상 입력해주세요"></ReviewInput> */}
-
-              {/* <RefTextInput
-                name="review"
-                label="리뷰를 작성해주세요"
-                ref={reviewRef}
-                // returnKeyType='next'
-                autoCapitalize="none"
-                onSubmitEditing={() => {
-                  console.log('refTextInput');
-                }}
-                placeholder="최소 10자 이상 입력해주세요"
-                rules={{
-                  // required: '필수 입력 항목 입니다.',
-                  minLength: {
-                    value: 10,
-                    message: '8글자 이상 입력',
-                  },
-                  maxLength: {
-                    value: 31,
-                    message: '32글자 이하 입력',
-                  },
-                  pattern: {
-                    value:
-                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,32}$/,
-                    message: '비밀번호 형식에 맞지 않습니다.',
-                  },
-                }}
-              /> */}
               <ReviewInputYo />
 
               <ShowOnlyToOwnerWrap>
@@ -161,17 +128,13 @@ const Screen = () => {
               서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
               제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
             </Warnings>
-
-            {/* <Button /> */}
           </Container>
 
-          <Button
-            // label={buttonTitle2}
+          <ButtonFinal
             size="full"
             label="완료"
-            // type={buttonType2}
             text={'Button09SB'}
-            style={{position: 'fixed'}}
+            disabled={false}
             onPressEvent={form.handleSubmit(onSignInPressed)}
           />
         </FormProvider>
@@ -185,12 +148,13 @@ export default Screen;
 const Container2 = styled.View`
   padding: 0 24px;
   padding-top: 24px;
+  flex: 1;
   background-color: #ffffff;
 `;
 
 const Container = styled.ScrollView`
   width: 100%;
-  height: 90%;
+  /* height: 90%; */
   background-color: #ffffff;
 `;
 
@@ -297,24 +261,7 @@ const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
 `;
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  input: {
-    marginBottom: 24,
-  },
-
-  buttonContainer: {
-    width: '100%',
-    marginBottom: 24,
-  },
-  label: {
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#424242',
-  },
-});
+const ButtonFinal = styled(Button)`
+  position: relative;
+  bottom: 20px;
+`;

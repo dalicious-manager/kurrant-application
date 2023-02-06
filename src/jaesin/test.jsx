@@ -7,7 +7,8 @@ import Modal from '../components/Modal';
 import RateStars from '../components/RateStars';
 import RefTextInput from '../components/RefTextInput';
 import ReviewPopup from '../pages/Main/MyPage/Review/Popup';
-import InputYo from './Input';
+import InputYo from './InputYo';
+
 import ModalSample from './ModalSample';
 import ModalSample2 from './ModalSample2';
 import SseTestOnSpring from './SseSample';
@@ -44,8 +45,8 @@ const Pages = () => {
           setSseTestOpen(!sseTestOpen);
         }}
       />
-      {/* <FormProvider {...form}>
-        <RefTextInput
+      <FormProvider {...form}>
+        {/* <RefTextInput
           name="email"
           label="가입한 이메일 주소"
           ref={emailRef}
@@ -72,17 +73,17 @@ const Pages = () => {
               message: '비밀번호 형식에 맞지 않습니다.',
             },
           }}
-        />
+        /> */}
       </FormProvider>
-
+      {/* 
       <Button
         type="yellow"
         label="로그인"
         // disabled={!isValidation}
         // onPressEvent={handleSubmit(onSubmit)}
-      />
+      /> */}
 
-      <InputYo /> */}
+      <InputYo />
 
       <RateStars ratingInput={4} width="300px" margin="2px" />
       <RateStars ratingInput={0} width="300px" margin="2px" />
