@@ -69,7 +69,7 @@ const Screens = () => {
     // photos : photosArray | ([{id: number, uri: '이미지uri'}])
     // review : data.review | string
     // isExclusive : input.isExclusive |  boolean
-    console.log();
+    console.log(input);
 
     console.log('report succefully sent');
   };
@@ -142,7 +142,7 @@ const Screens = () => {
           label="신고하기"
           text={'Button09SB'}
           disabled={!clickAvaliable}
-          // onPressEvent={form.handleSubmit(onSignInPressed)}
+          onPressEvent={form.handleSubmit(onSignInPressed)}
         />
       </FormProvider>
     </Container2>
