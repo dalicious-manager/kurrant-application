@@ -1,9 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Pressable } from 'react-native';
+import { Alert, Pressable } from 'react-native';
 import styled from 'styled-components';
 
 import CartIcon from '../../assets/icons/BuyMeal/cart.svg';
+import useAuth from '../../biz/useAuth';
 import {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
 
 /**
@@ -16,9 +18,37 @@ import {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main'
 
 const Component = ({color , margin = [0,0]}) => {
   const navigation = useNavigation();
-
+  const {readableAtom:{userRole}}=useAuth()
+  const goCart=()=>{
+    if (userRole === "ROLE_GUEST") {
+      return  Alert.alert("로그인이 필요합니다", "해당 기능은 로그인 이후 사용할수 있습니다.",[
+        {
+          text:'취소',
+          onPress:() => {},
+          
+        },
+        {
+          text:'확인',
+          onPress:async() => {
+            await AsyncStorage.clear();
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: LoginPageName,
+                },
+              ],
+            })
+          },
+          style:'destructive'
+        }
+      ])
+    }
+    navigation.navigate(MealCartPageName)
+  }
+  
     return(
-        <Wrpaper margin={margin} onPress={()=>{navigation.navigate(MealCartPageName)}} activeOpacity={1}>
+        <Wrpaper margin={margin} onPress={goCart} activeOpacity={1}>
             <CartIcon color={color || '#343337'}/>
         </Wrpaper>
     )

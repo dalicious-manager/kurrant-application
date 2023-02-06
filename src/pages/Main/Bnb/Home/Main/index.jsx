@@ -45,6 +45,8 @@ import { PAGE_NAME as FAQListDetailPageName } from '../../../MyPage/FAQ';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from "react-native-fast-image";
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
+import useAuth from '../../../../../biz/useAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 
@@ -55,7 +57,7 @@ const Pages = () => {
     const [isVisible, setIsVisible] = useState(true);
     const weekly = useAtomValue(weekAtom);
     const {isUserInfo, userInfo , isUserInfoLoading,isUserSpotStatus} = useUserInfo();
-   
+    const { readableAtom:{userRole}}= useAuth()
     const {userGroupSpotCheck,isUserGroupSpotCheck,userSpotRegister,groupSpotDetail} = useGroupSpots();
     const {isOrderMeal,todayMeal,orderMeal,todayOrderMeal,isOrderMealLoading} = useOrderMeal();
     const { loadMeal} = useShoppingBasket();
@@ -106,16 +108,16 @@ const Pages = () => {
      
     useFocusEffect(
       useCallback(()=>{
+        
         try {
           
           async function loadUser(){
-            const userData = await userInfo();     
-            console.log(userData, "estset134")
+            const userData = await userInfo();   
             dailyFood(userData?.spotId,formattedWeekDate(new Date()));
           }    
           async function loadMeal(){
-            await orderMeal(formattedWeekDate(weekly[0][0]),formattedWeekDate(weekly[weekly?.length-1][weekly[0].length-1]))
-           
+            console.log(userRole,"userStatus")
+            if(!(userRole ==="ROLE_GUEST")) await orderMeal(formattedWeekDate(weekly[0][0]),formattedWeekDate(weekly[weekly?.length-1][weekly[0].length-1]))           
           };
           loadMeal();
           loadUser();
@@ -126,51 +128,58 @@ const Pages = () => {
       },[])
     )
   useEffect(() => {
-    const start = weekly.map((s) => {
-      const startData = formattedWeekDate(s[0]);
-      return (
-          startData
-      )
-    });
-
-    const end = weekly.map((e) => {
-        const endData =  formattedWeekDate(e.slice(-1)[0]);
-        return (
-            endData
-        )
-    });
+    const isTester = async()=>{
+      
+      if(!(userRole==="ROLE_GUEST")){
+        const start = weekly.map((s) => {
+          const startData = formattedWeekDate(s[0]);
+          return (
+              startData
+          )
+        });
     
-    const status = async () => {
-       const userStatus = await getStorage('spotStatus');
-       await todayOrderMeal(start[0],end[0])
-       const getUserStatus = Number(userStatus);
-       console.log(getUserStatus,'userStatus')
-      
-      if(getUserStatus === 1){
-        navigation.navigate(GroupSelectPageName)
-      }
-      if(getUserStatus === 2){
-        navigation.navigate(GroupCreateMainPageName)
+        const end = weekly.map((e) => {
+            const endData =  formattedWeekDate(e.slice(-1)[0]);
+            return (
+                endData
+            )
+        });
+        
+        const status = async () => {
+           const userStatus = await getStorage('spotStatus');
+           await todayOrderMeal(start[0],end[0])
+           const getUserStatus = Number(userStatus);
+           console.log(getUserStatus,'userStatus')
+          
+          if(getUserStatus === 1){
+            navigation.navigate(GroupSelectPageName)
+          }
+          if(getUserStatus === 2){
+            navigation.navigate(GroupCreateMainPageName)
+          }
+        }
+        try {
+          if (!userRole === "ROLE_GUEST") {
+            status();            
+            userGroupSpotCheck();
+            loadMeal();
+          }
+        } catch (error) {
+          if(error.toString().replace("Error:",'').trim() === '403'){
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: LoginPageName,
+                },
+              ],
+            })
+          }
+          
+        }
       }
     }
-    try {
-      status();
-      userGroupSpotCheck();
-      loadMeal();
-    } catch (error) {
-      if(error.toString().replace("Error:",'').trim() === '403'){
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: LoginPageName,
-            },
-          ],
-        })
-      }
-      
-    }
-
+    isTester();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -229,6 +238,30 @@ const Pages = () => {
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
   const PressSpotButton = () => {
+    if (userRole === "ROLE_GUEST") {
+      return  Alert.alert("로그인이 필요합니다", "해당 기능은 로그인 이후 사용할수 있습니다.",[
+        {
+          text:'취소',
+          onPress:() => {},
+          
+        },
+        {
+          text:'확인',
+          onPress:async() => {
+            await AsyncStorage.clear();
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: LoginPageName,
+                },
+              ],
+            })
+          },
+          style:'destructive'
+        }
+      ])
+    }
     setModalVisible(true);
   }
 
@@ -242,7 +275,7 @@ const Pages = () => {
     }
   }
 
-if(isOrderMealLoading){
+if(isOrderMealLoading || isUserInfoLoading){
   return <SkeletonUI/>
 }
 

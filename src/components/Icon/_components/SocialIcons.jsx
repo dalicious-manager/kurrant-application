@@ -20,7 +20,6 @@ import IconWrapper from '../component';
 const Component = ({size = 16, color, social='GENERAL'}) => {
 
   const SocialIcon = (socialName)=>{
-    console.log(socialName)
     switch (socialName) {
       case 'GENERAL':
         return <GeneralIcon  

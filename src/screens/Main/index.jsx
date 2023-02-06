@@ -28,6 +28,9 @@ import LoginMainModal, {
 import SignUp, {
   PAGE_NAME as SignUpPageName,
 } from '~pages/Main/Login/SignUp';
+import AppleSignup, {
+  PAGE_NAME as AppleSignupPageName,
+} from '~pages/Main/Login/AppleSignup';
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
 } from '~pages/Main/Login/SignUp/SignUpComplate';
@@ -189,6 +192,22 @@ const Screen = () => {
         <MainRoot.Screen
           name={SignUpPageName}
           component={SignUp}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '회원가입',
+            headerTitleAlign: 'center',
+            headerTitleStyle:{
+              fontFamily:'Pretendard-SemiBold',
+              fontSize:14,
+              lineHeight:22
+            },
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={AppleSignupPageName}
+          component={AppleSignup}
           options={{
             headerShown: true,
             headerShadowVisible: false,

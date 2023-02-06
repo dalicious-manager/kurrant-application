@@ -26,6 +26,7 @@ import { PAGE_NAME as  NotificationSettingPageName} from './pages/NotificationSe
 import { PAGE_NAME as  PasswordSettingPageName} from './pages/PasswordSetting';
 import {SCREEN_NAME as PaymentsManageScreenName} from '../../../../screens/Main/PaymentsManage';
 import { PAGE_NAME as  PhoneNumberSettingPageName} from './pages/PhoneNumberSetting';
+import { PAGE_NAME as  NameSettingPageName} from '../../Login/AppleSignup';
 
 import { isUserInfoAtom } from '../../../../biz/useUserInfo/store';
 import BottomModal from '../../../../components/BottomModal';
@@ -131,6 +132,7 @@ const Pages = ({route}) => {
     useCallback(()=>{
       applicationList()
       getData();
+      console.log(isUserInfo)
     },[])
   )
   useEffect(()=>{
@@ -181,7 +183,6 @@ const Pages = ({route}) => {
             <SNSBox>
             {
               isConnected.map((v)=>{
-                console.log(v);
                 return (
                   <SNSPiece key={v.social} onPress={()=>!v.isConnect ? connectSNS(v.social) : disconnectSNS(v.social)}>                
                     <SocialConnectIcons social={v.social} isConnect={v.isConnect ? true : false}/>
@@ -201,6 +202,7 @@ const Pages = ({route}) => {
             </SNSBox>
           </SNSContainer>
           <Line />
+         {isUserInfo.name ==="이름없음" &&  <ListBox title={"이름 설정"}  description={isUserInfo.name ==="이름없음" &&  '설정하기'}  routeName={NameSettingPageName}/>}
           <ListBox title={isUserInfo?.phone ? '휴대폰번호 변경':'휴대폰번호 설정'}  description={!isUserInfo?.phone && '설정하기'}  routeName={PhoneNumberSettingPageName}/>
           <ListBox 
           title={!myInfoPerson.hasGeneralProvider ? '이메일/비밀번호 설정' : '비밀번호 변경'}  

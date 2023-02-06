@@ -32,6 +32,7 @@ const buildQuery = queryObj => {
 
 async function json(url, method, options = {}) {
   const storage = await getStorage('token');
+
   let token = JSON.parse(storage);
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {

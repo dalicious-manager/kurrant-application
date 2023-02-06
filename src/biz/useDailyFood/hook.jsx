@@ -3,6 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import { Alert } from 'react-native';
 import { PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
+import useAuth from '../useAuth';
+import { userRoleAtom } from '../useAuth/store';
 import * as Fetch from './Fetch';
 import { isDailyFoodAtom, isDailyFoodLoadingAtom, isDinnerFoodAtom, isDinnerFoodLoadingAtom, isLunchFoodAtom, isLunchFoodLoadingAtom, isMorningFoodAtom, isMorningFoodLoadingAtom } from './store';
 
@@ -13,6 +15,7 @@ const useFoodDaily = () => {
     const [isLunchFood,setLunch] = useAtom(isLunchFoodAtom);
     const [isDinnerFood,setDinner] = useAtom(isDinnerFoodAtom);
     const [isDailyFoodLoading,setDailyFoodLoading] = useAtom(isDailyFoodLoadingAtom);
+    const {readableAtom:{userRole}} = useAuth()
     const navigation = useNavigation();
     // const [isMorningFoodLoading,setMorningFoodLoading] = useAtom(isMorningFoodLoadingAtom);
     // const [isLunchFoodLoading,setLunchFoodLoading] = useAtom(isLunchFoodLoadingAtom);
@@ -24,7 +27,8 @@ const useFoodDaily = () => {
         try {
             setDailyFoodLoading(true)
             console.log(new Date().getSeconds(),"시작");
-            const res = await Fetch.DailyFood(spotId,seletedDate);
+            console.log(userRole,"test");
+            const res = await Fetch.DailyFood(spotId,seletedDate,userRole);
             
             if(res.data === null){
                

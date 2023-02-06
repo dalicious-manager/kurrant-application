@@ -65,6 +65,17 @@ export async function login(body, option) {
   });
   return fetchRes;
 }
+export async function guestLogin() {
+  const fetchRes = await fetchJson(`/auth/lookingAround`, 'GET',);
+  return fetchRes;
+}
+export async function nameSetting(body, option) {
+  const fetchRes = await fetchJson(`/users/me/setting/name`, 'POST', {
+    ...option,
+    body: JSON.stringify(body)
+  });
+  return fetchRes;
+}
 
 export async function snsLogin(body, type, option) {
   const fetchRes = await fetchJson(`/auth/login/${type}`, 'POST', {

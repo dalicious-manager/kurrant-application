@@ -1,7 +1,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useRef, useEffect, useLayoutEffect} from "react";
-import { View , StatusBar, Dimensions,Text} from "react-native";
+import { View , StatusBar, Dimensions,Text, Alert} from "react-native";
 import styled from "styled-components";
 import analytics from '@react-native-firebase/analytics';
 import LinearGradient from "react-native-linear-gradient";
@@ -25,6 +25,8 @@ import Typography from "../../../../../components/Typography";
 import withCommas from "../../../../../utils/withCommas";
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import Skeleton from '../Skeleton';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useAuth from "../../../../../biz/useAuth";
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -38,6 +40,7 @@ const Pages = ({route}) => {
     const [count, setCount] = useState(1);
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,isFoodDetailLoading,foodDetail} = useFoodDetail();
+    const {readableAtom:{userRole}}=useAuth()
     const {addMeal,loadMeal,isLoadMeal} = useShoppingBasket();
 
     const headerTitle = isFoodDetail?.name;
@@ -85,6 +88,30 @@ const Pages = ({route}) => {
     },[headerTitle,navigation, scroll]);
 
     const addCartPress = async () =>{
+        if (userRole === "ROLE_GUEST") {
+            return  Alert.alert("로그인이 필요합니다", "해당 기능은 로그인 이후 사용할수 있습니다.",[
+              {
+                text:'취소',
+                onPress:() => {},
+                
+              },
+              {
+                text:'확인',
+                onPress:async() => {
+                  await AsyncStorage.clear();
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
+                  })
+                },
+                style:'destructive'
+              }
+            ])
+          }
         const duplication = isLoadMeal?.map((v)=>v.cartDailyFoodDtoList.map(el => el.cartDailyFoods.some(c => c.dailyFoodId === dailyFoodId))).flat()
         
         if(duplication?.includes(true)){
