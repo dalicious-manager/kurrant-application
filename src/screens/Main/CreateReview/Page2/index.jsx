@@ -1,6 +1,6 @@
 import faIR from 'date-fns/esm/locale/fa-IR/index.js';
 import {useAtom} from 'jotai';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
@@ -17,34 +17,52 @@ import {starRatingAtom} from './store';
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 
 const Screen = () => {
-  const reviewRef = useRef(null);
-
   const [photosArray, setPhotosArray] = useState([]);
   const [starRating, setStarRating] = useAtom(starRatingAtom);
-  const [checked, setChecked] = useState(false);
 
   const [input, setInput] = useState({
-    rating: 0,
-    photos: [],
     review: '',
     isExclusive: false,
   });
 
-  const handlePhotoRemove = photoId => {
-    const thisPhotoArray = [...photosArray];
-
-    const returnArray = thisPhotoArray.filter(value => value.id !== photoId);
-
-    setPhotosArray(returnArray);
-  };
+  const [clickAvaliable, setClickAvaliable] = useState(false);
 
   const form = useForm({
     mode: 'all',
   });
+  useEffect(() => {
+    setInput({...input, review: form.watch('review')});
+  }, [form.watch('review')]);
+
+  const handlePhotoRemove = photoId => {
+    const thisPhotoArray = [...photosArray];
+    const returnArray = thisPhotoArray.filter(value => value.id !== photoId);
+    setPhotosArray(returnArray);
+  };
+
+  useEffect(() => {
+    setClickAvaliable(false);
+    if (input.review?.length >= 10) {
+      return;
+    }
+
+    setClickAvaliable(true);
+  }, [input]);
 
   const onSignInPressed = data => {
+    // 서버에 보내는 데이터 구조
+    // rating : starRating | number
+    // photos : photosArray | ([{id: number, uri: '이미지uri'}])
+    // review : data.review | string
+    // isExclusive : input.isExclusive |  boolean
+    console.log({
+      rating: starRating,
+      photos: photosArray,
+      review: data.review,
+      isExclusive: input.isExclusive,
+    });
+
     console.log('input registered');
-    console.log(data.review);
   };
 
   return (
@@ -80,6 +98,7 @@ const Screen = () => {
                   <UploadPhoto
                     width="80px"
                     height="80px"
+                    input={input}
                     photosArray={photosArray}
                     setPhotosArray={setPhotosArray}
                   />
@@ -109,9 +128,11 @@ const Screen = () => {
 
               <ShowOnlyToOwnerWrap>
                 <CheckBox
-                  checked={checked}
+                  checked={input.isExclusive}
                   onPress={() => {
-                    setChecked(!checked);
+                    // setChecked(!checked);
+
+                    setInput({...input, isExclusive: !input.isExclusive});
                   }}>
                   <CheckIcon
                     style={{width: 15, height: 10}}
@@ -134,7 +155,7 @@ const Screen = () => {
             size="full"
             label="완료"
             text={'Button09SB'}
-            disabled={false}
+            disabled={clickAvaliable}
             onPressEvent={form.handleSubmit(onSignInPressed)}
           />
         </FormProvider>
@@ -224,16 +245,7 @@ const Title3 = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-bottom: 12px;
 `;
-// const ReviewInputYo = styled.TextInput`
-//   border: 1px solid ${props => props.theme.colors.grey[7]};
-//   padding: 17px 20px;
-//   height: 168px;
-//   justify-content: flex-start;
-//   align-items: flex-start;
-//   text-align: justify;
 
-//   margin-bottom: 19px;
-// `;
 const ShowOnlyToOwnerWrap = styled.View`
   flex-direction: row;
   align-items: center;

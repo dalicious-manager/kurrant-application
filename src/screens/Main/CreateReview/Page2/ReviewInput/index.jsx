@@ -9,6 +9,13 @@ const ReviewInput = () => {
     formState: {errors},
   } = useFormContext();
 
+  const textInputProps = {
+    // placeholder,
+    autoComplete: 'off',
+    editable: true,
+    autoCapitalize: 'none',
+  };
+
   return (
     <>
       <Controller
@@ -21,6 +28,7 @@ const ReviewInput = () => {
         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
           <ViewWrap>
             <InputYo
+              {...textInputProps}
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
