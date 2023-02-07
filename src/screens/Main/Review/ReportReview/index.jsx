@@ -15,10 +15,10 @@ const Screens = () => {
   const form = useForm({
     mode: 'all',
     // values,
-    resetOptions: {
-      keepDirtyValues: true, // user-interacted input will be retained
-      keepErrors: true, // input errors will be retained with value update
-    },
+    // resetOptions: {
+    //   keepDirtyValues: true, // user-interacted input will be retained
+    //   keepErrors: true, // input errors will be retained with value update
+    // },
   });
 
   //   const [input, setInput] = useState({

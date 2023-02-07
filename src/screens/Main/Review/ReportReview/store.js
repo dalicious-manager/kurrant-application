@@ -6,5 +6,5 @@ export const reportReviewInputAtom = atomWithReset({
   check4: false,
   check5: false,
   check6: false,
-  detail: '123',
+  detail: '',
 });
