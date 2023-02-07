@@ -18,7 +18,7 @@ const Pages = () => {
   const {reviewWaitList, getReviewWait} = useReviewWait();
   // getReviewWait();
 
-  console.log(reviewWaitList);
+  // console.log(reviewWaitList);
 
   // let sum;
 

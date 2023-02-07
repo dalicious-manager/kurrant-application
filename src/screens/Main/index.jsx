@@ -1565,7 +1565,34 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon />,
+            headerLeft: () => (
+              <CloseIcon
+                alertCallback={() => {
+                  Alert.alert(
+                    '작성 종료',
+                    '작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?',
+                    [
+                      {
+                        text: '아니요',
+                        onPress: () => {
+                          return;
+                        },
+                        style: 'cancel',
+                      },
+                      {
+                        text: '작성종료',
+                        onPress: () => {
+                          navigation.navigate(ReviewScreenName);
+                          return;
+                        },
+
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            ),
           }}
         />
       </MainRoot.Group>

@@ -12,11 +12,31 @@ import CloseIcon from '../../assets/icons/Group/close.svg';
  * @param {number[]} margin index 0 : margin-left, index 1 : margin-right
  * @returns
  */
-const Component = ({margin = [0, 0]}) => {
+const Component = ({
+  margin = [0, 0],
+  goBackTo,
+  alertCallback = () => {
+    console.log('욤뇸욤');
+  },
+}) => {
   const navigation = useNavigation();
   const theme = useTheme();
 
   const handleBackPress = () => {
+    //
+
+    // console.log(alertCallback);
+    if (alertCallback) {
+      alertCallback();
+      return;
+    }
+
+    if (goBackTo) {
+      console.log(goBackTo);
+      navigation.navigate(goBackTo);
+      return;
+    }
+
     if (navigation.canGoBack()) {
       navigation.goBack();
     } else {
