@@ -3,6 +3,8 @@ import {useEffect, useMemo, useState} from 'react';
 import {Text, View} from 'react-native';
 import {getStorage, setStorage} from '../utils/asyncStorage';
 
+import {getCheck} from './RestApiTest';
+
 const SseTestOnSpring = () => {
   const [eventSource, setEventSource] = useState('');
 
@@ -18,6 +20,7 @@ const SseTestOnSpring = () => {
 
     let eventSourceYo = new RNEventSource(
       'http://13.125.224.194:8882/v1/notification/subscribe',
+      // 'http://13.125.224.194:8882/v1/users/me/orders?startDate=2023-02-06&endDate=2023-02-10',
       {
         headers: {
           Authorization: `Bearer ${yo?.accessToken}`,
@@ -29,21 +32,15 @@ const SseTestOnSpring = () => {
     setEventSource(eventSourceYo);
   };
 
+  getCheck('2023-02-06', '2023-02-10');
+
   useEffect(() => {
     setSse();
   }, []);
-
-  // useEffect(() => {
-  //   console.log(eventSource);
-  // }, [eventSource]);
-
-  // console.log(eventSource);
-
   useEffect(() => {
     return () => {
-      // console.log(eventSource);
       console.log(`server closed connection`);
-      eventSource.close();
+      if (eventSource) eventSource.close();
     };
   }, []);
 
@@ -58,7 +55,7 @@ const SseTestOnSpring = () => {
   console.log('들어옴');
   eventSource.addEventListener('message', e => {
     // console.log(JSON.parse(e.data));
-    console.log('addEventLister' + e.data);
+    console.log('addEventLister ' + e.data);
   });
   eventSource.onopen = event => {
     console.log(event);

@@ -9,6 +9,8 @@ const TextAreaInput = () => {
     formState: {errors},
   } = useFormContext();
 
+  const [input, setInput] = useAtom(reportReviewInputAtom);
+
   const textInputProps = {
     // placeholder,
     autoComplete: 'off',

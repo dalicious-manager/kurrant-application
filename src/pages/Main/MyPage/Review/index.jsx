@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, Text, View} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../components/Typography';
@@ -10,10 +10,31 @@ import NoOrder from '../NoOrder';
 
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import Popup from './Popup';
+import useReviewWait from '../../../../biz/useReviewWait';
 
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
+  const {reviewWaitList, getReviewWait} = useReviewWait();
+  // getReviewWait();
+
+  console.log(reviewWaitList);
+
+  // let sum;
+
+  // if (reviewWaitList) {
+  //   if (!reviewWaitList.orderFood) return;
+  //   reviewWaitList.orderFood.forEach(value => {
+  //     value.orderItemDtoList.forEach(value2 => {
+  //       sum = sum + value2.count;
+  //     });
+  //   });
+  // }
+
+  // useEffect(() => {
+  //   console.log(sum);
+  // }, [sum]);
+
   const ReviewWaitList = [
     {
       id: 1,

@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {Alert} from 'react-native';
+import {Alert, PermissionsAndroid} from 'react-native';
 
 const Component = ({photosArray, setPhotosArray}) => {
   const widthNum = 80;
@@ -13,8 +13,18 @@ const Component = ({photosArray, setPhotosArray}) => {
   const marginNum = 16;
   const marginUnit = 'px';
 
-  const ShowPicker = () => {
+  const ShowPicker = async () => {
     //launchImageLibrary : 사용자 앨범 접근
+    // const grantedStorage = await PermissionsAndroid.request(
+    //   PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAM_STORAGE,
+    //   {
+    //     title: 'App Camera Permission',
+    //     message: 'App needs access to your camera',
+    //     buttonNeutral: 'Ask Me Later',
+    //     buttonNegative: 'Cancel',
+    //     buttonPositive: 'Ok',
+    //   },
+    // );
 
     if (photosArray.length >= 5) {
       Alert.alert('사진 업로드는 5장까지만 가능합니다');
@@ -25,10 +35,33 @@ const Component = ({photosArray, setPhotosArray}) => {
       const formdata = new FormData();
       formdata.append('file', res.assets[0].uri);
 
-      setPhotosArray([
-        ...photosArray,
-        {id: Date.now(), uri: res.assets[0].uri},
-      ]);
+      const fileSize = res.assets[0].fileSize;
+      if (fileSize > 5000 * 1000) {
+        Alert.alert('용량초과', '사진은 5MB이하 크리고 업로드해주세요', [
+          {
+            text: '취소',
+            onPress: () => {
+              console.log('취소');
+              return;
+            },
+            style: 'cancel',
+          },
+          {
+            text: '삭제',
+            onPress: () => {
+              return;
+            },
+
+            style: 'destructive',
+          },
+        ]);
+      } else {
+        setPhotosArray([
+          ...photosArray,
+          {id: Date.now(), uri: res.assets[0].uri},
+        ]);
+      }
+
       // setPhotosArray([...photosArray, res.assets[0].uri]);
     });
   };

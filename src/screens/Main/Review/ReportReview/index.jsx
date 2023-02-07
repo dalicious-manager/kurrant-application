@@ -1,3 +1,4 @@
+import {useAtom} from 'jotai';
 import React, {useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Text, View} from 'react-native';
@@ -5,26 +6,32 @@ import styled from 'styled-components';
 import Button from '../../../../components/Button';
 import CheckAndText from '../../../../components/CheckAndText';
 import Typography from '../../../../components/Typography';
+import {reportReviewInputAtom} from './store';
 import TextAreaInput from './TextAreaInput';
 
 export const PAGE_NAME = 'P_MAIN__REPORT_REVIEW';
 
-export const pathfind = 'sfdkl';
-
 const Screens = () => {
   const form = useForm({
     mode: 'all',
+    // values,
+    resetOptions: {
+      keepDirtyValues: true, // user-interacted input will be retained
+      keepErrors: true, // input errors will be retained with value update
+    },
   });
 
-  const [input, setInput] = useState({
-    check1: false,
-    check2: false,
-    check3: false,
-    check4: false,
-    check5: false,
-    check6: false,
-    detail: '',
-  });
+  //   const [input, setInput] = useState({
+  //     check1: false,
+  //     check2: false,
+  //     check3: false,
+  //     check4: false,
+  //     check5: false,
+  //     check6: false,
+  //     detail: '',
+  //   });
+
+  const [input, setInput] = useAtom(reportReviewInputAtom);
 
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
@@ -40,7 +47,6 @@ const Screens = () => {
       input.check6;
 
     console.log(input);
-    console.log(result);
 
     if (!result) {
       return;
@@ -50,13 +56,6 @@ const Screens = () => {
       return;
     }
     setClickAvaliable(prevVal => true);
-
-    // if (result || input.detail?.length <= 200) return;
-    // console.log(input);
-  }, [input]);
-
-  useEffect(() => {
-    console.log(input);
   }, [input]);
 
   useEffect(() => {
@@ -64,11 +63,6 @@ const Screens = () => {
   }, [form.watch('report_detail')]);
 
   const onSignInPressed = data => {
-    // 서버에 보내는 데이터 구조
-    // rating : starRating | number
-    // photos : photosArray | ([{id: number, uri: '이미지uri'}])
-    // review : data.review | string
-    // isExclusive : input.isExclusive |  boolean
     console.log(input);
 
     console.log('report succefully sent');
@@ -133,7 +127,7 @@ const Screens = () => {
           {input.check6 && (
             <ReportDetailView>
               <TextAreaInput />
-              <TextLength>{input.detail?.length}/200</TextLength>
+              <TextLength>{input.detail?.length || 0}/200</TextLength>
             </ReportDetailView>
           )}
         </Container>
