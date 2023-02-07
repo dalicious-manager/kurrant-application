@@ -7,6 +7,8 @@ import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.s
 import StarRating from '../../../../../components/StarRating/StarRating';
 
 import AdminReview from './AdminReview';
+import {useNavigation} from '@react-navigation/native';
+import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
 const Component = ({
   makersName,
@@ -17,6 +19,7 @@ const Component = ({
   reviewText,
   adminReview,
 }) => {
+  const navigation = useNavigation();
   return (
     <Container>
       <TopWrap>
@@ -31,7 +34,10 @@ const Component = ({
         </TitleWrap>
 
         <EditWrap>
-          <Pressable>
+          <Pressable
+            onPress={() => {
+              navigation.navigate(EditReviewPage2ScreenName);
+            }}>
             <EditText>수정</EditText>
           </Pressable>
           <Pressable>

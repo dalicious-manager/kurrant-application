@@ -13,12 +13,20 @@ import Typography from '../../../../../components/Typography';
 import UploadPhoto from '../../../../../components/UploadPhoto';
 import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
+import {useRoute} from '@react-navigation/native';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
+export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
+
+export const pathfind = 'oyo';
 
 const Screen = () => {
   const [photosArray, setPhotosArray] = useState([]);
   const [starRating, setStarRating] = useAtom(starRatingAtom);
+
+  const route = useRoute();
+
+  console.log(route.name);
 
   const [input, setInput] = useState({
     review: '',
@@ -122,7 +130,11 @@ const Screen = () => {
             </UploadPhotosWrap>
 
             <ReviewWrap>
-              <Title3>리뷰를 작성해주세요</Title3>
+              <Title3>
+                리뷰를{' '}
+                {route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2' ? '수정' : '작성'}
+                해주세요
+              </Title3>
 
               <ReviewInput />
 

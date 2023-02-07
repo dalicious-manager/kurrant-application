@@ -39,20 +39,11 @@ const Component = ({photosArray, setPhotosArray}) => {
       if (fileSize > 5000 * 1000) {
         Alert.alert('용량초과', '사진은 5MB이하 크리고 업로드해주세요', [
           {
-            text: '취소',
+            text: '확인',
             onPress: () => {
-              console.log('취소');
               return;
             },
             style: 'cancel',
-          },
-          {
-            text: '삭제',
-            onPress: () => {
-              return;
-            },
-
-            style: 'destructive',
           },
         ]);
       } else {

@@ -225,6 +225,7 @@ import CreateReviewPage1, {
 } from './Review/CreateReview/Page1';
 import CreateReviewPage2, {
   SCREEN_NAME as CreateReviewPage2ScreenName,
+  SCREEN_NAME2 as EditReviewPage2ScreenName,
 } from './Review/CreateReview/Page2';
 
 import NoticeDetail, {
@@ -1533,7 +1534,7 @@ const Screen = () => {
         />
       </MainRoot.Group>
 
-      {/* 리뷰작성 */}
+      {/* 리뷰작성 및 수정 */}
 
       <MainRoot.Group>
         <MainRoot.Screen
@@ -1558,6 +1559,50 @@ const Screen = () => {
           options={{
             headerShown: true,
             title: '리뷰 작성',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <CloseIcon
+                alertCallback={() => {
+                  Alert.alert(
+                    '작성 종료',
+                    '작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?',
+                    [
+                      {
+                        text: '아니요',
+                        onPress: () => {
+                          return;
+                        },
+                        style: 'cancel',
+                      },
+                      {
+                        text: '작성종료',
+                        onPress: () => {
+                          navigation.navigate(ReviewScreenName);
+                          return;
+                        },
+
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            ),
+          }}
+        />
+
+        <MainRoot.Screen
+          name={EditReviewPage2ScreenName}
+          component={CreateReviewPage2}
+          options={{
+            headerShown: true,
+            title: '리뷰 수정',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
