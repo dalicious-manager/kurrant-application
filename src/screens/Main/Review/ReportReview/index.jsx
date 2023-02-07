@@ -21,16 +21,6 @@ const Screens = () => {
     // },
   });
 
-  //   const [input, setInput] = useState({
-  //     check1: false,
-  //     check2: false,
-  //     check3: false,
-  //     check4: false,
-  //     check5: false,
-  //     check6: false,
-  //     detail: '',
-  //   });
-
   const [input, setInput] = useAtom(reportReviewInputAtom);
 
   const [clickAvaliable, setClickAvaliable] = useState(false);
@@ -45,8 +35,6 @@ const Screens = () => {
       input.check4 ||
       input.check5 ||
       input.check6;
-
-    console.log(input);
 
     if (!result) {
       return;

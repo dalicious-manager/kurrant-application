@@ -18,8 +18,6 @@ import {useRoute} from '@react-navigation/native';
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
 
-export const pathfind = 'oyo';
-
 const Screen = () => {
   const [photosArray, setPhotosArray] = useState([]);
   const [starRating, setStarRating] = useAtom(starRatingAtom);
@@ -58,6 +56,9 @@ const Screen = () => {
   }, [input]);
 
   const onSignInPressed = data => {
+    // 여기에서 작성이냐, 수정이냐 나눠야 된다
+    // 라우터 이름으로 판단하면 된다  console.log(route.name);
+
     // 서버에 보내는 데이터 구조
     // rating : starRating | number
     // photos : photosArray | ([{id: number, uri: '이미지uri'}])
