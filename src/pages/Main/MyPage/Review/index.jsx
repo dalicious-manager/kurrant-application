@@ -20,24 +20,15 @@ const Pages = () => {
 
   const [ReviewWaitList, setReviewWaitList] = useState(undefined);
 
-  // const [dataRefetch, setDataRefetch] = useState(false);
   useEffect(() => {
-    console.log('데이터 들어옴');
-
     getReviewWait();
-
-    // setDataRefetch(!dataRefetch);
   }, []);
 
   useEffect(() => {
     if (!!ReviewWaitListYo) {
-      console.log('hiohihii');
       setReviewWaitList(ReviewWaitListYo);
     }
   }, [ReviewWaitListYo]);
-
-  console.log(ReviewWaitList);
-  // console.log(!!ReviewWaitList);
 
   // let sum;
 
