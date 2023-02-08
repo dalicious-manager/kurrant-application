@@ -8,6 +8,7 @@ import useOrderMeal from "../../../../../biz/useOrderMeal";
 import LabelButton from "../../../../../components/ButtonMeal";
 import Calendar from "../../../../../components/Calendar";
 import Typography from "../../../../../components/Typography";
+import Toast from "../../../../../components/Toast";
 import { formattedMonthDay, formattedWeekDate } from "../../../../../utils/dateFormatter";
 import { CalendarWrap, MakersName, MealName } from "../../BuyMeal/Main";
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -23,17 +24,18 @@ const Pages = ({route}) => {
   const navigation = useNavigation();
   const meal = true;
   const [touchDate,setTouchDate] = useState(data);
-  const {isOrderMeal} = useOrderMeal();
-
+  const [show,setShow] = useState(false);
+  const {isOrderMeal, refundItem,orderMeal} = useOrderMeal();
   const date = formattedWeekDate(new Date());
   const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter((m) => m.serviceDate === touchDate);
+  const toast = Toast();
 
   const pressDay = (day) => {
     setTouchDate(day??data);
   }
 
-  const cancelMealPress = () =>{
+  const cancelMealPress = (id) =>{
     Alert.alert(
       "메뉴 취소",
       "메뉴를 취소하시겠어요?",
@@ -45,7 +47,21 @@ const Pages = ({route}) => {
         },
         {
           text:'메뉴 취소',
-          onPress:() => {},
+          onPress: async() => {
+            try {
+              await refundItem({
+                id:id
+              })
+              setShow(true);
+              toast.toastEvent();
+              setTimeout(()=>{
+                setShow(false)
+              },2000)
+              
+            } catch (err) {
+              console.log(err)
+            }
+          },
           style:'destructive'
         }
       ]
@@ -82,49 +98,59 @@ const Pages = ({route}) => {
         <MealWrap>
         {touchDate ? 
         (<>
-          {selectDate.map((s,index) => 
-            <View key={index} >
+          {selectDate.map((s,index) => {
+            return (
+              <View key={index} >
                 <DiningTimeWrap >
                   <DiningTime>{formattedMonthDay(s.serviceDate)} {s.diningType}</DiningTime>
                 </DiningTimeWrap>
-              {s.orderItemDtoList?.map((sm,idx) => 
+              {s.orderItemDtoList?.map((sm,idx) => {
+                return (
+                  <MealContentWrap key={idx}>
+                    <FastImage source={{uri:`${sm.image}`,priority:FastImage.priority.high}}
+                      style={{
+                          width:107,
+                          height:107,
+                          borderRadius:7
+                      }}
+                      />
+                    <Content onPress={()=>navigation.navigate(MealDetailPageName,{dailyFoodId:sm.dailyFoodId})}>
+                      <MakersName>[{sm.makers}]</MakersName>
+                      <MealName>{sm.name}</MealName>
+                      <DeliveryAddress>{sm.groupName}・{sm.spotName}</DeliveryAddress>
+                      <CountText>{sm.count}개</CountText>
+                      {sm.orderStatus === 7 && <CancelText>취소완료</CancelText>}
+                    </Content>
+                    <CancleBtnWrap status={sm.orderStatus}>
+                      <LabelButton label={"취소"} onPressEvent={()=>cancelMealPress(sm.id)} disabled={(sm.orderStatus === 7) && true}/>
+                    </CancleBtnWrap>
+                  {sm.orderStatus !== 7 && <MealChangeWrap>
+                      <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
+                    </MealChangeWrap>}
+                </MealContentWrap>
+                )
+              }
               
-                <MealContentWrap key={idx}>
-                  <FastImage source={{uri:`${sm.image}`,priority:FastImage.priority.high}}
-                    style={{
-                        width:107,
-                        height:107,
-                        borderRadius:7
-                    }}
-                    />
-                  <Content onPress={()=>navigation.navigate(MealDetailPageName,{dailyFoodId:sm.dailyFoodId})}>
-                    <MakersName>[{sm.makers}]</MakersName>
-                    <MealName>{sm.name}</MealName>
-                    <DeliveryAddress>{sm.groupName}・{sm.spotName}</DeliveryAddress>
-                    <CountText>{sm.count}개</CountText>
-                  </Content>
-                  <CancleBtnWrap >
-                    <LabelButton label={"취소"} onPressEvent={cancelMealPress}/>
-                  </CancleBtnWrap>
-                  <MealChangeWrap>
-                    <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
-                  </MealChangeWrap>
-              </MealContentWrap>
+                
               
               )}
           </View>
+            )
+          }
+            
         )}
         </>) : 
         (
           <>
-          {todayMeal && todayMeal.map((m,i) => 
-            <View key={i} >
+          {todayMeal && todayMeal.map((m,i) => {
+            return (
+              <View key={i}>
                 <DiningTimeWrap >
                   <DiningTime>{formattedMonthDay(m.serviceDate)} {m.diningType}・오늘</DiningTime>
                 </DiningTimeWrap>
-              {m.orderItemDtoList?.map((el,idx) => 
-              
-                <MealContentWrap key={idx}>
+              {m.orderItemDtoList?.map((el,idx) => {
+                return (
+                  <MealContentWrap key={idx}>
                   <FastImage source={{uri:`${el.image}`,priority:FastImage.priority.high}}
                     style={{
                         width:107,
@@ -137,18 +163,26 @@ const Pages = ({route}) => {
                     <MealName>{el.name}</MealName>
                     <DeliveryAddress>{el.groupName}・{el.spotName}</DeliveryAddress>
                     <CountText>{el.count}개</CountText>
+                    {el.orderStatus === 7 && <CancelText>취소완료</CancelText>}
                   </Content>
-                  <CancleBtnWrap>
-                    <LabelButton label={"취소"} onPressEvent={cancelMealPress}/>
+                  <CancleBtnWrap status={el.orderStatus}>
+                    <LabelButton label={"취소"} onPressEvent={()=>cancelMealPress(el.id)} disabled={el.orderStatus === 7}/>
                   </CancleBtnWrap>
-                  <MealChangeWrap>
+                  {el.orderStatus !== 7 && <MealChangeWrap>
                     <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
-                  </MealChangeWrap>
-              </MealContentWrap>
+                  </MealChangeWrap>}
+                </MealContentWrap>
+                )
+              }
+              
+                
               
               )}
               
           </View>
+            )
+          }
+            
           )}
           </>
         )}
@@ -160,6 +194,7 @@ const Pages = ({route}) => {
             <PlusIcon/>
         </PlusButton>
       </ButtonWrap>
+      {show && <toast.ToastWrap message={"메뉴가 취소됐어요"} icon={'checked'}/>}
     </SafeView>
   )
 }
@@ -187,7 +222,7 @@ flex-direction:row;
 border-bottom-color:${props => props.theme.colors.grey[8]};
 border-bottom-width:1px;
 padding:24px 0px;
-min-height:131px;
+min-height:163px;
 `;
 const DiningTimeWrap = styled.View`
 padding-top:22px;
@@ -210,7 +245,7 @@ bottom:24px;
 `;
 
 const CancleBtnWrap = styled(MealChangeWrap)`
-right:83px;
+right: ${({status}) => status === 7 ? '0px' : '83px'};
 `;
 
 const ButtonWrap = styled.View`
@@ -251,4 +286,8 @@ color:${props => props.theme.colors.grey[5]};
 
 const DeliveryAddress = styled(Typography).attrs({text:'Button10R'})`
 color:${({theme}) => theme.colors.grey[5]};
+`;
+
+const CancelText = styled(Typography).attrs({test:'Body06R'})`
+color:${({theme}) => theme.colors.red[500]};
 `;

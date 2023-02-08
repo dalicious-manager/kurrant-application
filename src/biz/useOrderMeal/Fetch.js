@@ -11,7 +11,7 @@ export async function refundItem(body, option) {
     const req = {
         id: body.id
     }
-    const fetchRes = await fetchJson(`/users/me/orders/${body.orderId}/dailyFoods/refund`, 'POST', {
+    const fetchRes = await fetchJson(`/users/me/orders/dailyFoods/refund`, 'POST', {
         ...option,
         body: JSON.stringify(req)
     });

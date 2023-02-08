@@ -222,12 +222,13 @@ const Pages = ({route}) => {
                         <React.Fragment key={idx}>
                             {(selected === el.spotId) && el.cartDailyFoodDtoList.map((m,i) => {
                                 const arr = m.cartDailyFoods.filter(v => v.status !== 2);
-                                const borderLast = arr[arr.length - 1];
+                               // const borderLast = arr[arr.length - 1];
+                                
                                 return (
                                     <OrderWrap key={i}>
                                         
                                         {arr.map((meal,index) => {
-                                           console.log()
+                                           
                                            const price = meal.price * meal.count;
                                            const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
                                            const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
@@ -260,7 +261,7 @@ const Pages = ({route}) => {
                                                    </CountWrap>
                                                    
                                                </ContentsWrap>
-                                               {(borderLast !== meal) && <Border/>}
+                                               <Border/>
                                                </React.Fragment>
                                            )
                                        })}
