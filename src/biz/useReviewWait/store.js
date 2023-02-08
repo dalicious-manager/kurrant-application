@@ -1,3 +1,3 @@
 import {atomWithReset} from 'jotai/utils';
 
-export const reviewWaitListAtom = atomWithReset([]);
+export const reviewWaitListAtom = atomWithReset(undefined);

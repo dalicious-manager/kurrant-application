@@ -15,10 +15,29 @@ import useReviewWait from '../../../../biz/useReviewWait';
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
-  const {reviewWaitList, getReviewWait} = useReviewWait();
-  // getReviewWait();
+  const {ReviewWaitListSupply: ReviewWaitListYo, getReviewWait} =
+    useReviewWait();
 
-  // console.log(reviewWaitList);
+  const [ReviewWaitList, setReviewWaitList] = useState(undefined);
+
+  // const [dataRefetch, setDataRefetch] = useState(false);
+  useEffect(() => {
+    console.log('데이터 들어옴');
+
+    getReviewWait();
+
+    // setDataRefetch(!dataRefetch);
+  }, []);
+
+  useEffect(() => {
+    if (!!ReviewWaitListYo) {
+      console.log('hiohihii');
+      setReviewWaitList(ReviewWaitListYo);
+    }
+  }, [ReviewWaitListYo]);
+
+  console.log(ReviewWaitList);
+  // console.log(!!ReviewWaitList);
 
   // let sum;
 
@@ -35,74 +54,74 @@ const Pages = () => {
   //   console.log(sum);
   // }, [sum]);
 
-  const ReviewWaitList = [
-    {
-      id: 1,
-      orderDate: new Date(Date.now()),
-      orderItemDtoList: [
-        {
-          restaurentName: '세상의 모든 아침',
-          menuName: '맛없는 버섯 그라탕',
-          diningType: '아침',
-          option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
-          imageUrl:
-            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-        },
-        {
-          restaurentName: '세상의 모든 점심',
-          menuName: '맛있는 버섯 그라탕',
-          diningType: '점심',
-          option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
-          imageUrl:
-            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-        },
-      ],
-    },
-    {
-      id: 2,
-      orderDate: new Date(2023, 0, 14),
-      orderItemDtoList: [
-        {
-          restaurentName: '오메 인자오셨소!',
-          menuName: '두부',
-          diningType: '아침',
-          option: '만두 두부무침',
-          imageUrl:
-            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-        },
-        {
-          restaurentName: '여자만 장어타운',
-          menuName: '장어구이',
-          diningType: '점심',
-          option: '1옵션 장어 소스 꼬치 소스꼬치1',
-          imageUrl:
-            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-        },
-      ],
-    },
-    {
-      id: 3,
-      orderDate: new Date(2023, 0, 18),
-      orderItemDtoList: [
-        {
-          restaurentName: '오메 인자오셨소!',
-          menuName: '두부',
-          diningType: '아침',
-          option: '만두 두부무침',
-          imageUrl:
-            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-        },
-        {
-          restaurentName: '여자만 장어타운',
-          menuName: '장어구이',
-          diningType: '점심',
-          option: '1옵션 장어 소스 꼬치 소스꼬치1',
-          imageUrl:
-            'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-        },
-      ],
-    },
-  ];
+  // const ReviewWaitList = [
+  //   {
+  //     id: 1,
+  //     orderDate: new Date(Date.now()),
+  //     orderItemDtoList: [
+  //       {
+  //         restaurentName: '세상의 모든 아침',
+  //         menuName: '맛없는 버섯 그라탕',
+  //         diningType: '아침',
+  //         option: '2옵션 꼬치 소스 꼬치 소스꼬치2',
+  //         imageUrl:
+  //           'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+  //       },
+  //       {
+  //         restaurentName: '세상의 모든 점심',
+  //         menuName: '맛있는 버섯 그라탕',
+  //         diningType: '점심',
+  //         option: '1옵션 꼬치 소스 꼬치 소스꼬치1',
+  //         imageUrl:
+  //           'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     orderDate: new Date(2023, 0, 14),
+  //     orderItemDtoList: [
+  //       {
+  //         restaurentName: '오메 인자오셨소!',
+  //         menuName: '두부',
+  //         diningType: '아침',
+  //         option: '만두 두부무침',
+  //         imageUrl:
+  //           'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+  //       },
+  //       {
+  //         restaurentName: '여자만 장어타운',
+  //         menuName: '장어구이',
+  //         diningType: '점심',
+  //         option: '1옵션 장어 소스 꼬치 소스꼬치1',
+  //         imageUrl:
+  //           'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     orderDate: new Date(2023, 0, 18),
+  //     orderItemDtoList: [
+  //       {
+  //         restaurentName: '오메 인자오셨소!',
+  //         menuName: '두부',
+  //         diningType: '아침',
+  //         option: '만두 두부무침',
+  //         imageUrl:
+  //           'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+  //       },
+  //       {
+  //         restaurentName: '여자만 장어타운',
+  //         menuName: '장어구이',
+  //         diningType: '점심',
+  //         option: '1옵션 장어 소스 꼬치 소스꼬치1',
+  //         imageUrl:
+  //           'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+  //       },
+  //     ],
+  //   },
+  // ];
 
   const [popupShow, setPopupShow] = useState(false);
 
@@ -112,7 +131,7 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
         {/* 회색박스 포토후기, 텍스트후기  */}
-        {!!ReviewWaitList.length && (
+        {!!ReviewWaitList && (
           <PlaneGreyBox>
             <SmallWrap>
               <PlaneRowView>
@@ -148,33 +167,35 @@ const Pages = () => {
 
         {popupShow && <Popup setPopupShow={setPopupShow} />}
 
-        {!!ReviewWaitList.length ? (
-          <FlatList
-            data={ReviewWaitList}
-            scrollEnabled={true}
-            renderItem={({item}) => {
-              return (
-                <View>
-                  {item.orderItemDtoList.map((value2, index2) => {
-                    return (
-                      <Card
-                        key={index2}
-                        orderDate={item.orderDate}
-                        menuName={value2.menuName}
-                        option={value2.option}
-                        imageUrl={value2.imageUrl}
-                        diningType={value2.diningType}
-                        restaurentName={value2.restaurentName}
-                      />
-                    );
-                  })}
-                </View>
-              );
-            }}
-          />
+        {!!ReviewWaitList ? (
+          <View>
+            <FlatList
+              data={ReviewWaitList.orderFood}
+              scrollEnabled={true}
+              renderItem={({item}) => {
+                return (
+                  <View>
+                    {item.orderItemDtoList.map((value2, index2) => {
+                      return (
+                        <Card
+                          key={index2}
+                          orderDate={item.orderDate}
+                          menuName={value2.menuName}
+                          option={value2.option}
+                          imageUrl={value2.imageUrl}
+                          diningType={value2.diningType}
+                          restaurentName={value2.restaurentName}
+                        />
+                      );
+                    })}
+                  </View>
+                );
+              }}
+            />
+          </View>
         ) : (
           <NoOrder
-            isArrayEmpty={!ReviewWaitList.length}
+            isArrayEmpty={!ReviewWaitList}
             message={`주문 후 리뷰를 작성해 보세요.`}
           />
         )}

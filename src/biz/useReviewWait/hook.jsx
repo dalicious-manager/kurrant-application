@@ -5,7 +5,7 @@ import * as Fetch from './Fetch';
 import {reviewWaitListAtom} from './store';
 
 const useReviewWait = () => {
-  const [reviewWaitList, setReviewWaitList] = useAtom(reviewWaitListAtom);
+  const [ReviewWaitListSupply, setReviewWaitList] = useAtom(reviewWaitListAtom);
 
   const getReviewWait = async () => {
     try {
@@ -16,11 +16,11 @@ const useReviewWait = () => {
     }
   };
 
-  useEffect(() => {
-    getReviewWait();
-  }, []);
+  // useEffect(() => {
+  //   getReviewWait();
+  // }, []);
 
-  return {getReviewWait, reviewWaitList};
+  return {getReviewWait, ReviewWaitListSupply};
 };
 
 export default useReviewWait;
