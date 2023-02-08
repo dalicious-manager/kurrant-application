@@ -99,7 +99,7 @@ export default Pages;
 
 const SubtractView = styled.View`
     margin-bottom: 15px;
-`
+`;
 const SubtractWrapper = styled.View`
     margin: 24px;
     margin-bottom: 0px;
@@ -114,14 +114,14 @@ const TitleTextBox = styled.View`
     padding-bottom:40px;
     border-bottom-width: 1px;
     border-bottom-color: ${({theme})=>theme.colors.grey[8]};
-`
+`;
 const Title = styled(Typography)`
     text-align: center;
-`
+`;
 const SubTextBox = styled.View`
     margin: 24px;
     margin-bottom: 16px;
-`
+`;
 const SubTitle = styled(Typography).attrs({text:'Title04SB'})`
     margin-top: 24px;
     margin-left: 24px;
@@ -129,9 +129,8 @@ const SubTitle = styled(Typography).attrs({text:'Title04SB'})`
 `;
 const MembershipDateBox = styled.View`
     padding:37px;
-    /* background-color: ${({theme})=>theme.colors.grey[8]}; */
     margin-bottom: 24px;    
-`
+`;
 const Line = styled.View`
   width: 100%;
   height: 6px;
@@ -139,16 +138,16 @@ const Line = styled.View`
 `;
 const NoticeBox =styled.View`
     margin: 24px;
-`
+`;
 const NotiBox = styled.View`
     padding: 8px 16px;
     flex-direction: row;
     justify-content: space-between;
-`
+`;
 const NotiContainer = styled.View`
     padding: 8px;
     background-color: ${({theme})=>theme.colors.grey[8]};
-`
+`;
 const NoticeTitle = styled(Typography)`
     margin-bottom: 5px;
 `;
@@ -163,4 +162,4 @@ const ButtonBox = styled.View`
     margin-left: 6px;
     margin-right: 5px;
 
-`
+`;

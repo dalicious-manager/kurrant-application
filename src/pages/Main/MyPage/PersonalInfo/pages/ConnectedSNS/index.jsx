@@ -1,3 +1,4 @@
+import fi from "date-fns/esm/locale/fi/index.js";
 import { useAtom } from "jotai";
 import React, { useCallback } from "react";
 import { ActivityIndicator, Alert } from "react-native";
@@ -47,11 +48,23 @@ const Pages = ()=>{
     return(
         <Wrapper paddingTop={24}>
             {isConnected.map((v)=>{
+                const emailText = ()=>{
+                    if(v.email){
+                        const email= v.email.split("@")[1];
+                        if(email.includes(".appleid.com")){
+                            return "가려진 이메일 입니다";
+                        }else{
+                            return v.email;
+                        }
+                    }else{
+                        return "연결된 계정이 없어요";
+                    }
+                }
                 return (
                   <SNSPiece key={v.social} onPress={()=>!v.isConnect ? connectSNS(v.social) : disconnectSNS(v.social)}>  
                     <SNSIdBox>
                         <SocialConnectIcons social={v.social} isConnect={v.isConnect ? true : false}/>
-                        <SNSConnectText text={'Body06R'} textColor={v.email ? themeApp.colors.grey[3]:themeApp.colors.grey[7]}>{v.email ? v.email : "연결된 계정이 없어요"}</SNSConnectText>
+                        <SNSConnectText text={'Body06R'} textColor={v.email ? themeApp.colors.grey[3]:themeApp.colors.grey[7]}>{emailText()}</SNSConnectText>
                     </SNSIdBox>
                     <SNSConnectText 
                       text='Button10R' 
