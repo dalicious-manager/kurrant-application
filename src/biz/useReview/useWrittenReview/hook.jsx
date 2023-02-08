@@ -10,10 +10,9 @@ const useWrittenReview = () => {
   const getWrittenReview = async () => {
     try {
       const res = await Fetch.writtenReviewMockData();
-      // console.log(res);
+
       setWrittenReviewList(res);
     } catch (err) {
-      // console.log('에러떳음');
       console.log(err);
     }
   };

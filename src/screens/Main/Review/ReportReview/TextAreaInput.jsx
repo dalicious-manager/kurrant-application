@@ -22,7 +22,6 @@ const TextAreaInput = () => {
         control={control}
         name="report_detail"
         rules={{
-          //   minLength: {value: 10, message: '최소 10자 이상 입력해주세요'},
           maxLength: {value: 200, message: '최대 200자까지 입력해주세요'},
         }}
         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (

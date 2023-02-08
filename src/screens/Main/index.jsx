@@ -1476,12 +1476,6 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
-
-            // headerLeft: () => {
-            //   <Pressable onPress={()=>navigation.navigate(SCREEN_NAME)}>
-            //     <CloseIcon />
-            // </Pressable>
-            // },
           }}
         />
         <MainRoot.Screen

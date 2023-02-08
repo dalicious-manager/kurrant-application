@@ -1,6 +1,4 @@
 export const calculateTotalWrittenReviewList = list => {
-  console.log(list.writtenReviewList);
-
   let sum = 0;
 
   list.writtenReviewList.forEach(value => {
@@ -9,5 +7,4 @@ export const calculateTotalWrittenReviewList = list => {
     }
   });
   return sum;
-  // return list.writtenReviewList.length;
 };

@@ -25,12 +25,9 @@ const Screen = () => {
 
   useEffect(() => {
     if (route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2') {
-      console.log('Yo  S_MAIN__EDIT_REVIEW_PAGE_2');
-
       // 리뷰 수정 페이지로 들어오면
       // 1. 서버에서 데이터를 받아온다
       // 2. 데이터들을 업ㅔㅣ트시킨다
-
       // 1. setStarRating
       // 2. 포토 받기
       // 3. input.review
