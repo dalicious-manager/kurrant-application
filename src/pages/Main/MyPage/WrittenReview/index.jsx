@@ -27,7 +27,7 @@ const Pages = () => {
       setTotalWrittenReviewList(
         calculateTotalWrittenReviewList(WrittenReviewListSupply),
       );
-
+      // calculateTotalWrittenReviewList(WrittenReviewListSupply),
       setReviewList(WrittenReviewListSupply);
     }
   }, [WrittenReviewListSupply]);

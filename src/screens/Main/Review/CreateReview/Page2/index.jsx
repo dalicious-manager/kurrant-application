@@ -61,7 +61,7 @@ const Screen = () => {
 
   useEffect(() => {
     setClickAvaliable(false);
-    if (input.review?.length >= 10) {
+    if (input.review?.length >= 10 && input.review?.length <= 500) {
       return;
     }
 

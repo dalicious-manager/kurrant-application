@@ -23,6 +23,7 @@ const ReviewInput = () => {
         name="review"
         rules={{
           minLength: {value: 10, message: '최소 10자 이상 입력해주세요'},
+          maxLength: {value: 500, message: '최대 500자 까지 입력해주세요'},
         }}
         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
           <ViewWrap>
