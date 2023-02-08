@@ -6,12 +6,13 @@ import Typography from "../Typography";
 
 const Component = ({
     label,
+    disabled = false,
     onPressEvent = () => {console.log('dddd')}
-
 }) => {
+    console.log(disabled,'000')
     return (
-        <Wrap onPress={onPressEvent}>
-            <Label>{label}</Label>
+        <Wrap onPress={onPressEvent} disabled={disabled}>
+            <Label disabled={disabled}>{label}</Label>
         </Wrap>
     )
 
@@ -32,6 +33,6 @@ const Wrap = styled.Pressable`
 `;
 
 const Label = styled(Typography).attrs({text:'Button10SB'})`
-    color:${props => props.theme.colors.grey[3]};
+    color:${({theme,disabled}) => disabled  ? theme.colors.grey[6] : theme.colors.grey[3]};
     line-height: 19px;
 `;
