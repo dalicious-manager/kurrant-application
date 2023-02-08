@@ -1,5 +1,4 @@
 import {useAtom} from 'jotai';
-import React, {useEffect} from 'react';
 
 import * as Fetch from './Fetch';
 import {reviewWaitListAtom} from './store';

@@ -10,9 +10,9 @@ import NoOrder from '../NoOrder';
 
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import Popup from './Popup';
-import useReviewWait from '../../../../biz/useReviewWait';
-import {calculateTotalReviewWaitList} from '../../../../biz/useReviewWait/calculation';
-import {totalReviewWaitList} from '../../../../biz/useReviewWait/store';
+import useReviewWait from '../../../../biz/useReview/useReviewWait';
+import {calculateTotalReviewWaitList} from '../../../../biz/useReview/useReviewWait/calculation';
+import {totalReviewWaitList} from '../../../../biz/useReview/useReviewWait/store';
 import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';

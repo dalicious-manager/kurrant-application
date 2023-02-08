@@ -19,7 +19,6 @@ const Pages = ({setPopupShow}) => {
 
       <ClosePopup
         onPress={() => {
-          console.log('hi');
           setPopupShow(false);
         }}>
         <XVector />

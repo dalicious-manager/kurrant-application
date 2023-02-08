@@ -9,5 +9,3 @@ export const calculateTotalReviewWaitList = ReviewWaitList => {
   console.log(sum);
   return sum;
 };
-
-// export const calculateTotalWrittenReviewList = WrittenReviewList

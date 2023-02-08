@@ -3,7 +3,8 @@ import {useAtom} from 'jotai';
 import React, {useLayoutEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';
 import useMypageReview from '../../../biz/useMypageReview/hook';
-import {totalReviewWaitList} from '../../../biz/useReviewWait/store';
+import {totalReviewWaitList} from '../../../biz/useReview/useReviewWait/store';
+import {totalWrittenReview} from '../../../biz/useReview/useWrittenReview/store';
 
 export const SCREEN_NAME = 'S_MAIN__REVIEW';
 import Review, {
@@ -18,6 +19,9 @@ const Tab = createMaterialTopTabNavigator();
 const Screen = () => {
   const theme = useTheme();
   const [total, iAmNotUsingThis] = useAtom(totalReviewWaitList);
+
+  const [totalWritten, AmNotUsingTHis] = useAtom(totalWrittenReview);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -46,7 +50,7 @@ const Screen = () => {
         name={WrittenReviewPageName}
         component={WrittenReview}
         options={{
-          tabBarLabel: '작성한 리뷰(1)',
+          tabBarLabel: `작성한 리뷰(${totalWritten})`,
           tabBarLabelStyle: {
             fontSize: 15,
             lineHeight: 21,
