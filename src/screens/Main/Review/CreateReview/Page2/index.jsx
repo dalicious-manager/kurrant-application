@@ -1,9 +1,8 @@
-import faIR from 'date-fns/esm/locale/fa-IR/index.js';
 import {useAtom} from 'jotai';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import styled, {useTheme} from 'styled-components';
+
+import styled from 'styled-components';
 
 import Button from '../../../../../components/Button';
 import {CheckIcon, XCircleIcon} from '../../../../../components/Icon';
@@ -24,7 +23,20 @@ const Screen = () => {
 
   const route = useRoute();
 
-  console.log(route.name);
+  useEffect(() => {
+    if (route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2') {
+      console.log('Yo  S_MAIN__EDIT_REVIEW_PAGE_2');
+
+      // 리뷰 수정 페이지로 들어오면
+      // 1. 서버에서 데이터를 받아온다
+      // 2. 데이터들을 업ㅔㅣ트시킨다
+
+      // 1. setStarRating
+      // 2. 포토 받기
+      // 3. input.review
+      // 4. input.isExclusive
+    }
+  }, []);
 
   const [input, setInput] = useState({
     review: '',
@@ -36,6 +48,7 @@ const Screen = () => {
   const form = useForm({
     mode: 'all',
   });
+
   useEffect(() => {
     setInput({...input, review: form.watch('review')});
   }, [form.watch('review')]);

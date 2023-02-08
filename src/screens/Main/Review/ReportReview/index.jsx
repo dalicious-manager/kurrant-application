@@ -12,21 +12,12 @@ import TextAreaInput from './TextAreaInput';
 export const PAGE_NAME = 'P_MAIN__REPORT_REVIEW';
 
 const Screens = () => {
-  const form = useForm({
-    mode: 'all',
-    // values,
-    // resetOptions: {
-    //   keepDirtyValues: true, // user-interacted input will be retained
-    //   keepErrors: true, // input errors will be retained with value update
-    // },
-  });
-
   const [input, setInput] = useAtom(reportReviewInputAtom);
 
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
   useEffect(() => {
-    setClickAvaliable(prevVal => false);
+    setClickAvaliable(false);
 
     const result =
       input.check1 ||
@@ -43,8 +34,22 @@ const Screens = () => {
     if (input.check6 && input.detail?.length > 200) {
       return;
     }
-    setClickAvaliable(prevVal => true);
+    setClickAvaliable(true);
   }, [input]);
+
+  const form = useForm({
+    mode: 'all',
+
+    defaultValues: {
+      report_detail: input.detail,
+    },
+
+    // values,
+    // resetOptions: {
+    //   keepDirtyValues: true, // user-interacted input will be retained
+    //   keepErrors: true, // input errors will be retained with value update
+    // },
+  });
 
   useEffect(() => {
     setInput({...input, detail: form.watch('report_detail')});
