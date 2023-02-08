@@ -11,6 +11,9 @@ import NoOrder from '../NoOrder';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import Popup from './Popup';
 import useReviewWait from '../../../../biz/useReviewWait';
+import {calculateTotalReviewWaitList} from '../../../../biz/useReviewWait/calculation';
+import {totalReviewWaitList} from '../../../../biz/useReviewWait/store';
+import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
@@ -19,6 +22,7 @@ const Pages = () => {
     useReviewWait();
 
   const [ReviewWaitList, setReviewWaitList] = useState(undefined);
+  const [, setTotalReviewWaitList] = useAtom(totalReviewWaitList);
 
   useEffect(() => {
     getReviewWait();
@@ -26,6 +30,7 @@ const Pages = () => {
 
   useEffect(() => {
     if (!!ReviewWaitListYo) {
+      setTotalReviewWaitList(calculateTotalReviewWaitList(ReviewWaitListYo));
       setReviewWaitList(ReviewWaitListYo);
     }
   }, [ReviewWaitListYo]);

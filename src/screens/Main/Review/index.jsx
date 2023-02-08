@@ -1,7 +1,9 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {useAtom} from 'jotai';
 import React, {useLayoutEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';
 import useMypageReview from '../../../biz/useMypageReview/hook';
+import {totalReviewWaitList} from '../../../biz/useReviewWait/store';
 
 export const SCREEN_NAME = 'S_MAIN__REVIEW';
 import Review, {
@@ -15,7 +17,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const Screen = () => {
   const theme = useTheme();
-
+  const [total, iAmNotUsingThis] = useAtom(totalReviewWaitList);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -31,7 +33,8 @@ const Screen = () => {
         name={ReviewPageName}
         component={Review}
         options={{
-          tabBarLabel: `리뷰 작성(7)`,
+          tabBarLabel: `리뷰 작성(${total})`,
+          // tabBarLabel: `리뷰 작성(7)`,
           tabBarLabelStyle: {
             fontSize: 15,
             lineHeight: 21,
