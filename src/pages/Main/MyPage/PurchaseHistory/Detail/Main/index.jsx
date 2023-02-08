@@ -217,7 +217,7 @@ const Pages = ({route}) => {
 
 export default Pages;
 
-const SafeView = styled.SafeAreaView`
+const SafeView = styled.View`
   flex: 1;
 `
 

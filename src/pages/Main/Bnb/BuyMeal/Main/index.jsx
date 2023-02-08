@@ -1,7 +1,7 @@
 import {Slider} from '@miblanchard/react-native-slider';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, Dimensions, StyleSheet, ActivityIndicator, Alert} from "react-native";
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components';
@@ -112,11 +112,16 @@ const Pages = ({route}) => {
         
     }
     
-
+    // useFocusEffect(
+    //     useCallback(()=>{
+    //         loadMeal();
+    //     },[])
+    // )
         useEffect(()=>{
             async function loadDailyFood(){
                 try {
                     const data = await dailyFood(spotId,date);  
+                    
                     if(data[0]){
                         diningRef.current.setPage(Number(data[0])-1)
                         setSliderValue(Number(data[0])-1);
@@ -136,7 +141,8 @@ const Pages = ({route}) => {
                   }
             }
             // if(isDiningTypes.length ===0) loadDailyFood();
-            console.log(generateOrderCode(1,42),"test432")
+            
+            // console.log(generateOrderCode(1,42),"test432")
             loadDailyFood();
         },[date])
         useEffect(()=>{

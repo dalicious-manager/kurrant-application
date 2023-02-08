@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import React, {useRef, useState,useEffect, forwardRef} from "react";
 import {useForm} from 'react-hook-form';
 import { View, Alert,Text, Platform,KeyboardAvoidingView,NativeModules,TouchableWithoutFeedback} from "react-native";
@@ -23,7 +23,7 @@ import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import useUserMe from "../../../../../biz/useUserMe";
 import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
-import { SCREEN_NAME as HomePageName } from "../../../../../screens/Main/Bnb";
+import { PurchaseDetailPageName } from "../../../../../pages/Main/MyPage/PurchaseHistory/Detail";
 import { PAGE_NAME as DefaultPaymentManagePageName } from "../DefaultPaymentManage";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
@@ -42,7 +42,7 @@ const Pages = ({route}) => {
     const [statusBarHeight, setStatusBarHeight] = useState(0);
     const [point,setPoint] = useState(0);
     const [pointShow,setPointShow] = useState(false)
-    const {isLoadMeal,orderMeal} = useShoppingBasket();
+    const {isLoadMeal,orderMeal,loadMeal,setQuantity} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
     const {readableAtom:{selectDefaultCard}}= useUserMe();
     const inputRef = useRef(null);
@@ -176,8 +176,15 @@ const Pages = ({route}) => {
         }
         
         try {
-            await orderMeal(spotId,data);
-            navigation.navigate(HomePageName)
+            const res = await orderMeal(spotId,data);
+            console.log(res);
+            loadMeal();
+            // setLoadMeal([])           
+            const resetAction = StackActions.popToTop();
+            navigation.dispatch(resetAction); 
+            navigation.navigate(PurchaseDetailPageName,{
+                id:res.data
+            })
         }catch (err){
             console.log(err)
         }

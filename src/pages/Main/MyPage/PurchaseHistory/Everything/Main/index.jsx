@@ -216,7 +216,7 @@ const NothingContainer  = styled.View`
   align-items: center;
   justify-content: center;
 `
-const Container = styled(SafeAreaView)`
+const Container = styled.View`
   flex: 1;
 `;
 const ScrollViewBox = styled(ScrollView)`

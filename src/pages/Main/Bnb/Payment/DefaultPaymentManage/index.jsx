@@ -57,7 +57,48 @@ const Pages = ()=>{
     )
     return(
         <Wrapper paddingTop={24} >
-            <TossPayment
+              <InfoBox>
+                <InfoText text={'CaptionR'} textColor={themeApp.colors.grey[4]}>결제 금액 발생시 선택하신 결제 수단으로 결제가 이루어집니다.{'\n'}결제수단 삭제는 <InfoTextEffect text={'CaptionR'} textColor={themeApp.colors.grey[4]}>마이페이지&gt;결제수단 관리</InfoTextEffect>에서 가능합니다.</InfoText>
+            </InfoBox>
+            <CardRegisteredBox>
+                <RegisteredTitleBox >
+                    <Typography text='Title04SB' textColor={themeApp.colors.grey[2]}><Typography text='Title04SB' textColor={themeApp.colors.blue[500]}>결제카드</Typography>를 선택해 주세요</Typography>
+                    <RegisterCardButton onPress={onSelectEvent}>
+                        <Typography text="Button10SB" textColor={themeApp.colors.grey[3]}>
+                            신규 카드 등록
+                        </Typography>
+                    </RegisterCardButton>
+                </RegisteredTitleBox>
+                {cardList?.length > 0 ?  <CardListView>
+                {cardList.map((v)=>{
+                    return (
+                        <RegiteredView key={v.id} onPress={()=>setNowCard([v])}>
+                            <RegisteredBox cardName={`${v.cardCompany}카드`}  cardNumber={v.cardNumber} isMembership={false} isDefault={v.defaultType === 1 || v.defaultType===3} isSelected={v.id === selectNowCard[0]?.id}/>
+                        </RegiteredView>
+                    )
+                })}
+                
+                </CardListView>:<NonCard>
+                        <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>아직 등록된 결제 수단이 없어요</Typography>
+                    </NonCard>
+                    }
+            </CardRegisteredBox>
+            
+            <ButtonBox>
+                <FormWrap>
+                    <Form form={agreeCheck}>
+                        <Check name="agreeCheck" value={true}>
+                            <Label text='Body06R'>기본 결제수단으로 사용</Label>
+                        </Check>
+                    </Form>
+                </FormWrap>
+                <Button
+                    label='선택 완료' 
+                    onPressEvent={onSelectComplateEvent}
+                />
+            </ButtonBox>
+            <BottomSheet modalVisible={modalVisible} setModalVisible={setModalVisible} title="결제수단 추가" data={data} setValue={onSelectEvent} height={200}/>
+            {/* <TossPayment
                 clientKey={"test_ck_mnRQoOaPz8LZJXYn1aNVy47BMw6v"}
                 payment={{ orderId: 'KR' + Date.now().toString(),
                 amount: 100,
@@ -73,7 +114,7 @@ const Pages = ()=>{
                         navigation.goBack();
                     }
                 }}
-            />
+            /> */}
         </Wrapper>
     )
 }
