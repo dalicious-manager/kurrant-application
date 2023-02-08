@@ -106,12 +106,14 @@ const Component = ({
         <ReviewText>{reviewText}</ReviewText>
       </ReviewWrap>
       <CommentWrap>
-        <AdminReview
-          pngLink={adminReview.pngLink}
-          adminName={adminReview.adminName}
-          writtenDate={adminReview.writtenDate}
-          message={adminReview.message}
-        />
+        {adminReview && (
+          <AdminReview
+            pngLink={adminReview.pngLink}
+            adminName={adminReview.adminName}
+            writtenDate={adminReview.writtenDate}
+            message={adminReview.message}
+          />
+        )}
       </CommentWrap>
     </Container>
   );

@@ -41,6 +41,17 @@ export async function writtenReviewMockData() {
             '다음에는 더 맛있는 메뉴를준비해보겠습니다. 이용해주셔서 다시한번 감사드리고 새해에는 더더더더더복 많이 받으세요 사랑합니다.',
         },
       },
+      {
+        id: 3,
+        // writtenDate: new Date(Date.now()),
+        writtenDate: '2021. 10. 1',
+        makersName: '국밥',
+        menuName: '랄랄라 국밥 방어회',
+        option: '소오스~ 소스',
+        rating: 3.5,
+        reviewText: '랄랄라~~랄랄라~~랄랄라~~랄랄라~~ ',
+        adminReview: undefined,
+      },
     ],
   };
 }
