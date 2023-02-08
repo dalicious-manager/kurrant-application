@@ -40,14 +40,9 @@ const Screens = () => {
   const form = useForm({
     mode: 'all',
 
-    defaultValues: {
-      report_detail: input.detail,
-    },
-
-    // values,
-    // resetOptions: {
-    //   keepDirtyValues: true, // user-interacted input will be retained
-    //   keepErrors: true, // input errors will be retained with value update
+    // 혹시 전에 썼던 값을 유지 시키고 싶으면 여기 주석 풀면 됨
+    // defaultValues: {
+    //   report_detail: input.detail,
     // },
   });
 

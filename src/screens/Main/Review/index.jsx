@@ -34,7 +34,6 @@ const Screen = () => {
         component={Review}
         options={{
           tabBarLabel: `리뷰 작성(${total})`,
-          // tabBarLabel: `리뷰 작성(7)`,
           tabBarLabelStyle: {
             fontSize: 15,
             lineHeight: 21,

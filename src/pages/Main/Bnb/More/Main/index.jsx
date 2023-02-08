@@ -162,8 +162,14 @@ const Pages = () => {
               }
               routeName={ReviewScreenName}
             />
-            <ListBox title="조재신 업무파악용" routeName={testPageName} />
-            <ListBox title="리뷰 신고" routeName={ReportReviewPageName} />
+            <ListBox
+              title="조재신 업무파악용(테스트)"
+              routeName={testPageName}
+            />
+            <ListBox
+              title="리뷰 신고(테스트)"
+              routeName={ReportReviewPageName}
+            />
             <ListBox
               title="커런트 멤버십"
               routeName={MembershipIntroPageName}
