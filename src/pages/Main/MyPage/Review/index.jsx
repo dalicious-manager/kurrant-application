@@ -80,8 +80,9 @@ const Pages = () => {
         {popupShow && <Popup setPopupShow={setPopupShow} />}
 
         {!!ReviewWaitList ? (
-          <View>
+          <FlatListWrap>
             <FlatList
+              contentContainerStyle={{paddingBottom: 90}}
               data={ReviewWaitList.orderFood}
               scrollEnabled={true}
               renderItem={({item}) => {
@@ -104,7 +105,7 @@ const Pages = () => {
                 );
               }}
             />
-          </View>
+          </FlatListWrap>
         ) : (
           <NoOrder
             isArrayEmpty={!ReviewWaitList}
@@ -135,6 +136,8 @@ const PlaneGreyBox = styled.View`
   /* align-items: center; */
   justify-content: center;
 `;
+
+const FlatListWrap = styled.View``;
 
 const SmallWrap = styled.View`
   display: flex;
