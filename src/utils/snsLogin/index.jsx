@@ -102,8 +102,11 @@ export default () => {
         if(Platform.OS === "android"){
           const test = await appleAuthAndroid.signIn();
           // Clipboard.setString(test.id_token);
-          const appleCredential = firebase.auth.AppleAuthProvider.credential(test.id_token, test.nonce);
-          const userCredential = await firebase.auth().signInWithCredential(appleCredential);
+          console.log(test)
+          const {email} = jwtDecode(test.id_token);
+          if(!email) throw new Error("이메일을 가져올수 없습니다.\n핸드폰을 재부팅 하시고 이후 문제가 해결되지않는다면 고객센터로 문의 주세요")
+          // const appleCredential = firebase.auth.AppleAuthProvider.credential(test.id_token, test.nonce);
+          // const userCredential = await firebase.auth().signInWithCredential(appleCredential);
           await snsAppleLogin({
             ...test,
             autoLogin:true,
@@ -125,14 +128,14 @@ export default () => {
               requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
             });
 
-            
+            console.log(appleAuthRequestResponse)
             // // Ensure Apple returned a user identityToken
             if (!appleAuthRequestResponse.identityToken) {
               throw new Error('Apple Sign-In failed - no identify token returned');
             }
             const {email} = jwtDecode(appleAuthRequestResponse.identityToken);
-            if(!email) throw new Error("이메일이 존재하지 않습니다.")
-
+            if(!email) throw new Error("이메일을 가져올수 없습니다.\n핸드폰을 재부팅 하시고 이후 문제가 해결되지않는다면 고객센터로 문의 주세요")
+            
             const appleCredential = firebase.auth.AppleAuthProvider.credential(appleAuthRequestResponse.identityToken, appleAuthRequestResponse.nonce);
             const userCredential = await firebase.auth().signInWithCredential(appleCredential);
             const appleData = appleAuthRequestResponse;
@@ -192,7 +195,7 @@ export default () => {
           }
           } catch (error) {
             console.log("err",error.toString());
-            Alert.alert("로그인 에러","이메일을 가져올수 없습니다.\n핸드폰을 재부팅 하시고 이후 문제가 해결되지않는다면 고객센터로 문의 주세요");
+            Alert.alert("로그인 에러",error.toString());
           }
         // const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
         // // Sign the user in with the credential

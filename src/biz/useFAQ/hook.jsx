@@ -13,7 +13,6 @@ const useFAQ = () => {
         try {
             setGetFAQLoading(true)
             const res = await Fetch.getFAQ();
-            console.log(res.data)
             const FAQList = res.data?.filter(
                 (arr, index, callback) => index === callback.findIndex(t => t.titleNo === arr.titleNo)
               );

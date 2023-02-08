@@ -50,7 +50,6 @@ export async function checkedAuth(body, option) {
 }
 
 export async function changePassword(body, type, option) {
-  console.log(type, body)
   const fetchRes = await fetchJson(`/auth/inquiry/password/${type}`, 'POST', {
     ...option,
     body: JSON.stringify(body),
@@ -93,8 +92,6 @@ export async function snsAppleLogin(body, type, option) {
 }
 
 export async function logout(body, option) {
-  console.log("로그아웃")
-  console.log(body);
   const fetchRes = await fetchJson(`/auth/logout`, 'POST', {
     ...option,
     body: JSON.stringify(body)

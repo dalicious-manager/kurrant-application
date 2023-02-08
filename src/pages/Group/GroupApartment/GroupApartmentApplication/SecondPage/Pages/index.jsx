@@ -23,7 +23,6 @@ const Pages = () =>{
         const zibunAddress = data.jibunAddress;
         const autoZibunAddress = data.autoJibunAddress;
         const roadAddress = data.query;
-        console.log(data,'zibun')
         if (data.addressType === 'R') {
           if (data.bname !== '') {
             extraAddress += data.bname;

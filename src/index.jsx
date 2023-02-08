@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {StatusBar, LogBox, Text,TextInput} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
@@ -17,6 +17,7 @@ TextInput.defaultProps.allowFontScaling=false;
 const App = () => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
+  
   useEffect(()=>{
     
     SplashScreen.hide();

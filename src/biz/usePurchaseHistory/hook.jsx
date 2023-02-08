@@ -81,6 +81,7 @@ const usePurchaseHistory = () => {
         getPurchaseHistory,
         getPurchaseHistoryMeal,
         getPurchaseDetail,
+        setMealPurchase,
         readAbleAtom:{
             isAllPurchaseLoading,
             isMarketPurchaseLoading,

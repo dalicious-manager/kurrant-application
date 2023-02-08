@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
-import { Dimensions, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 // import DatePicker from 'react-native-modern-datepicker';
 import styled, { css, useTheme } from "styled-components/native";
 import Typography from "../../../../../../components/Typography";
@@ -14,7 +14,6 @@ import Skeleton from "../../Skeleton";
 import {formattedWeekDate} from '../../../../../../utils/dateFormatter'
 import { CalendarIcon } from "../../../../../../components/Icon";
 import DatePicker from "@react-native-community/datetimepicker";
-
 export const PAGE_NAME = 'P_MAIN__CATOR__HISTORY';
 
 const Pages = () => {
@@ -68,7 +67,7 @@ const confirmPress = (setModal) =>{
                   <Pressable onPress={()=>{setModal(false)}}>
                       <Cancel>취소</Cancel>
                   </Pressable>
-                  <Pressable onPress={confirm}>
+                  <Pressable onPress={()=>confirm(setModal)}>
                       <Confirm>완료</Confirm>
                   </Pressable>
               </IosButton>}
@@ -239,7 +238,7 @@ const DateSelectButton = styled.Pressable`
   padding-left: 12px;
 `
 const DateSelectedText = styled(Typography)`
-  margin-right: 22px;
+  margin-right: 15px;
 `
 const SubmitButton = styled.Pressable`
   border-radius: 100px;
@@ -248,3 +247,19 @@ const SubmitButton = styled.Pressable`
   align-items: center;
   border: 1px solid ${({theme})=> theme.colors.grey[7]};  
 `
+export const IosButton = styled.Pressable`
+  width:100%;
+  flex-direction:row;
+  justify-content:space-between;
+  padding:8px 20px;
+  background-color:#F5F5F5;
+  z-index:999;
+`;
+
+export const Cancel = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.grey[4]};
+`;
+
+export const Confirm = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.blue[500]};
+`;

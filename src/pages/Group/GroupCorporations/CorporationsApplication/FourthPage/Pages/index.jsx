@@ -72,8 +72,6 @@ const Pages = () => {
         
     }
 
-    console.log(isTotalSpot,'total')
-
     const onPressButton = (idx) =>{
       if(touch?.includes(idx)){
           return setTouch(touch?.filter((v)=> v !== idx))

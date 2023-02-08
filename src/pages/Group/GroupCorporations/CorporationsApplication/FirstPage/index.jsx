@@ -31,7 +31,6 @@ const Pages = () => {
     const [modalVisible,setModalVisible] = useState(false)
     const [isApplicant,setApplicant] = useAtom(isCorporationApplicant);
     
-    console.log(isApplicant)
     const information = useForm(); // 체크박스
     const form = useForm({
         mode:'all'

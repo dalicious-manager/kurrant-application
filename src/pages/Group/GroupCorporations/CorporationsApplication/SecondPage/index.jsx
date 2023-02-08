@@ -265,12 +265,12 @@ margin-top:40px;
 `;
 
 export const IosButton = styled.Pressable`
-width:100%;
-flex-direction:row;
-justify-content:space-between;
-padding:8px 20px;
-background-color:#F5F5F5;
-z-index:999;
+  width:100%;
+  flex-direction:row;
+  justify-content:space-between;
+  padding:8px 20px;
+  background-color:#F5F5F5;
+  z-index:999;
 `;
 
 export const Cancel = styled(Typography).attrs({text:'Body05R'})`

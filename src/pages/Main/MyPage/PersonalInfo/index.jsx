@@ -132,7 +132,6 @@ const Pages = ({route}) => {
     useCallback(()=>{
       applicationList()
       getData();
-      console.log(isUserInfo)
     },[])
   )
   useEffect(()=>{

@@ -53,7 +53,6 @@ const BottomSheet = props => {
   });
   const pressOutUp = e => {
     const { pageY } = e.nativeEvent;
-    console.log('test : ' + pageY);
     if (pageY > y + 30) {
       if (up < 500) {
         closeModal();
@@ -70,7 +69,6 @@ const BottomSheet = props => {
   };
   const pressInUp = e => {
     const { pageY } = e.nativeEvent;
-    console.log('test2 : ' + pageY);
     setY(pageY);
   };
   const upSheet = Animated.timing(upY, {

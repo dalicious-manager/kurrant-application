@@ -49,7 +49,7 @@ const Pages= ()=>{
                     <SubscriptionBox key={index}>
                         <TextBox>
                             <Label size="labelM" type={membership.membershipSubscriptionType === "월간구독" ? "blue": "green"} label={membership.membershipSubscriptionType}/>
-                            <Typography text={'Body05SB'} textColor={themeApp.colors.grey[2]}>{withCommas(membership.price)} 원</Typography>
+                            <Typography text={'Body05SB'} textColor={themeApp.colors.grey[2]}>{withCommas(membership.discountedPrice)} 원</Typography>
                         </TextBox>
                         <TextBox>
                             <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>기간</Typography>

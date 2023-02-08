@@ -70,7 +70,6 @@ const Component = props => {
     
   // }, [up, upY]);
   const closeModal = () => {
-    console.log("test")
     if(Platform.OS === 'android' ){
       setModalVisible(false);
     }else{

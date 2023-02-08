@@ -39,7 +39,6 @@ const useAuth = () => {
         type,
         option
       );
-     console.log(res);
 
       return res;
     } catch (err) {
@@ -64,7 +63,6 @@ const useAuth = () => {
     }
   };
   const requestPhoneAuth = async (body,type,option = {}) => {
-    console.log(body);
     try {
       setPhoneAuthLoading(true);
       const res = await Fetch.requestPhoneAuth(
@@ -114,7 +112,6 @@ const useAuth = () => {
     }
   };
   const checkedAuth = async (body,option = {}) => {
-    console.log(body);
     try {
       setCheckedAuthLoading(true);
       const res = await Fetch.checkedAuth(
@@ -132,7 +129,6 @@ const useAuth = () => {
     }
   };
   const changePassword = async (body,type,option = {}) => {
-    console.log(body);
     try {
       setChangePasswordLoading(true);
       const res = await Fetch.changePassword(
@@ -156,7 +152,6 @@ const useAuth = () => {
       if(isGuest){
         const res = await Fetch.guestLogin();
         const {roles} = jwtDecode(res.data.accessToken)
-        console.log(roles)
         setUserRole(roles[0])
         await setStorage('token',JSON.stringify(res.data));        
         await setStorage('isLogin',"false");
@@ -174,12 +169,10 @@ const useAuth = () => {
         },
         option
       );
-      setUserRole("")
+      setUserRole("NOMAL")
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       await setStorage('spotStatus',res.data.spotStatus.toString());
-      
-      console.log("여기까지 온다고?")
       return res;
     } catch (err) {
       throw err
@@ -200,11 +193,10 @@ const useAuth = () => {
         type,
         option
       );
-      console.log(res);
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       await setStorage('spotStatus',res.data.spotStatus.toString());
-      setUserRole("")
+      setUserRole("NOMAL")
       return res;
     } catch (err) {
       throw err
@@ -222,11 +214,10 @@ const useAuth = () => {
         type,
         option
       );
-      console.log(res);
       await setStorage('token',JSON.stringify(res.data));
       await setStorage('isLogin',body.autoLogin.toString());
       await setStorage('spotStatus',res.data.spotStatus.toString());
-      setUserRole("")
+      setUserRole("NOMAL")
       return res;
     } catch (err) {
       throw err

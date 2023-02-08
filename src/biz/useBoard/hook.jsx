@@ -18,7 +18,6 @@ const useBoard = () => {
             if(type===0) setGetNoticeLoading(true)
             if(type===1) setGetSpotNoticeLoading(true)
             const res = await Fetch.getNotice(type);
-            console.log(res.data)
             if(type===0) setNotice(res.data);
             if(type===1) setSpotNotice(res.data);
             
@@ -34,7 +33,6 @@ const useBoard = () => {
         try {
             setGetAlarmLoading(true)
             const res = await Fetch.getAlarm();
-            console.log(res.data)
             setAlarm(res.data);
             
         } catch (err) {
@@ -47,7 +45,6 @@ const useBoard = () => {
         try {
             setDeleteAlarmLoading(true)
             const res = await Fetch.deleteAlarm();
-            console.log(res.data)
             setAlarm([]);
             
         } catch (err) {

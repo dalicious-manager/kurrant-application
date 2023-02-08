@@ -29,7 +29,6 @@ const Component = ({
     const lastDiscount = secondDiscount - periodDiscountedPrice
     const discount = membershipDiscountedRate + makersDiscountedRate + periodDiscountedRate;
     const {isUserInfo} = useUserInfo(); 
-    console.log(isUserInfo)
     const getData = async () => {
         await foodDetailDiscount(id);
     };

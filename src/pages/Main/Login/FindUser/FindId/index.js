@@ -65,7 +65,6 @@ const Pages = () => {
         })
     }
     const callPhoneAuth = async (again) => {
-        console.log("핸드폰 인증요청", phoneNumber);
         if (phoneNumber && !errors.phone) {
             try {
                 await auth.requestPhoneAuth({ to: phoneNumber }, 2);
@@ -88,7 +87,6 @@ const Pages = () => {
             navigation.navigate(FindIdComplatePageName, {
                 phone: phoneNumber
             })
-            console.log(data);
         } catch (err) {
             Alert.alert(
                 "인증번호 오류",

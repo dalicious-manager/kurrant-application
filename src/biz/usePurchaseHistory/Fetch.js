@@ -13,41 +13,69 @@ export async function getPurchaseHistory(data, option) {
   return {
     data: [
       {
-        "id": 57,
-        "code": "S2023013100548136",
-        "orderDate": "2023-01-31",
+        "id": 34,
+        "orderType": 1,
+        "code": "S2023020700632509",
+        "orderDate": "2023-02-07",
         "orderItems": [
           {
-            "id": 69,
+            "id": 45,
             "makersName": "마라하오",
             "name": "마라샹궈",
             "image": "https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/%EB%A7%88%EB%9D%BC%EC%83%B9%EA%B6%88.png",
-            "serviceDate": "2023-02-01",
+            "serviceDate": "2023-02-08",
             "diningType": 2,
             "count": 1,
             "price": 18000.00,
             "orderStatus": 5
           },
           {
-            "id": 70,
+            "id": 46,
             "makersName": "라무진",
-            "name": "마늘밥",
-            "image": "https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/%EB%A7%88%EB%8A%98%EB%B0%A5.jpg",
-            "serviceDate": "2023-02-01",
+            "name": "오뎅탕",
+            "image": "https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/%EC%98%A4%EB%8E%85%ED%83%95.jpg",
+            "serviceDate": "2023-02-10",
             "diningType": 2,
             "count": 1,
-            "price": 4000.00,
+            "price": 16000.00,
             "orderStatus": 5
-          },
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "orderType": 1,
+        "code": "S2023020600638635",
+        "orderDate": "2023-02-06",
+        "orderItems": [
           {
-            "id": 71,
-            "makersName": "마라하오",
-            "name": "마라탕",
-            "image": "https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/%EB%A7%88%EB%9D%BC%ED%83%95.jpg",
-            "serviceDate": "2023-02-03",
+            "id": 15,
+            "makersName": "민디씨샌드위치",
+            "name": "BLT샌드위치",
+            "image": "https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/BLT%EC%83%8C%EB%93%9C%EC%9C%84%EC%B9%98.jpg",
+            "serviceDate": "2023-02-07",
+            "diningType": 2,
+            "count": 1,
+            "price": 5400.00,
+            "orderStatus": 5
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "orderType": 1,
+        "code": "S2023020300633099",
+        "orderDate": "2023-02-03",
+        "orderItems": [
+          {
+            "id": 6,
+            "makersName": "민디씨샌드위치",
+            "name": "BLT샌드위치",
+            "image": "https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/BLT%EC%83%8C%EB%93%9C%EC%9C%84%EC%B9%98.jpg",
+            "serviceDate": "2023-02-09",
             "diningType": 2,
             "count": 2,
-            "price": 21600.00,
+            "price": 10800.00,
             "orderStatus": 5
           }
         ]

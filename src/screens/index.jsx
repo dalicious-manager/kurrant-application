@@ -1,9 +1,9 @@
 import messaging from '@react-native-firebase/messaging';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAtom } from 'jotai';
-import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { Platform, StatusBar, StyleSheet } from 'react-native';
 import {Alert} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
@@ -15,9 +15,16 @@ import Main from './Main';
 const Root = createNativeStackNavigator();
 
 const Screen = () => {
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBarStyle("dark-content");
+      Platform.OS === 'android' && StatusBar.setBackgroundColor('transparent');
+      Platform.OS === 'android' && StatusBar.setTranslucent(true);
+    }, []),
+  );
   
   return (
-    <SafeAreaProvider>      
+    <SafeAreaProvider >      
         <Root.Navigator>
           <Root.Group screenOptions={{ headerShown: false }}>
             <Root.Screen name="ROOT" component={Main} style={styles.rootView} />

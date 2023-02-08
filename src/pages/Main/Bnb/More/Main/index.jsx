@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, { useEffect, useState } from "react";
-import { Alert, Pressable, ScrollView } from "react-native";
+import { Alert, Pressable, ScrollView, StatusBar } from "react-native";
 import styled, { useTheme } from 'styled-components/native';
 
 import ArrowRightIcon from "~assets/icons/Arrow/arrowRight.svg";
@@ -41,7 +41,7 @@ export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 const Pages = () => {
   const themeApp = useTheme();
   const navigation = useNavigation();
-  const { userMe, readableAtom:{myInfo,isMyInfoLoading}} = useUserMe();
+  const { userMe,userMePersonal, readableAtom:{myInfo,isMyInfoLoading}} = useUserMe();
   const {readableAtom:{userRole}} = useAuth()
   const [versionChecked ,setVersionChecked] = useState(false);
   const currentVersion =VersionCheck.getCurrentVersion();
@@ -52,9 +52,11 @@ const Pages = () => {
       else setVersionChecked(false);
     }); 
     await userMe();
+    userMePersonal();
   }
   useFocusEffect(
     useCallback(()=>{
+      console.log(myInfo);
       if (userRole==="ROLE_GUEST") {
         Alert.alert("로그인이 필요합니다", "해당 기능은 로그인 이후 사용할수 있습니다.",[
           {
@@ -83,7 +85,8 @@ const Pages = () => {
     },[])
   )
   useEffect(()=>{
-  if (userRole !== "ROLE_GUEST") {
+    console.log(userRole,"test")
+  if (userRole !== "ROLE_GUEST") {    
     getData();
   }
     
@@ -184,6 +187,7 @@ const GourmetTestButton = styled.Pressable`
 `
 const Container = styled.SafeAreaView`
   flex: 1;
+  padding-top:${Math.round(StatusBar.currentHeight)}px ;
 `
 const LoginBox = styled.Pressable`
   flex-direction: row;

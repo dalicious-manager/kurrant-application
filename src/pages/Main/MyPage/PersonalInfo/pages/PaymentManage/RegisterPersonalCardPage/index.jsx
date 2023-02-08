@@ -77,7 +77,6 @@ const Pages = ({route})=>{
                               required: '필수 입력 항목 입니다.',
                               validate: {
                                 isValid: (value) => {
-                                  console.log(cardValidator.number(value.replace(/\W/gi, '')))
                                   return (
                                     isValidCardNumber(value.replace(/\W/gi, '')) ||
                                     '유효한 카드번호를 입력해주세요'

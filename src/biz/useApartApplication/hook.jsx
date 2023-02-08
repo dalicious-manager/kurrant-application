@@ -76,7 +76,6 @@ const useApartApplication = () => {
             const res = await Fetch.ApartmentRegisterSpot(id,{
                 ...body
             })
-            console.log(res.data)
             return res
         } catch(err){
             console.log(err)
@@ -88,7 +87,6 @@ const useApartApplication = () => {
             const res = await Fetch.ApartmentModifyHo(id,{
                 ...body
             })
-            console.log(res.data)
             return res;
         }catch(err){
             console.log(err)

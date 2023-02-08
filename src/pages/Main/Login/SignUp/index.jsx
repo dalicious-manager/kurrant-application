@@ -63,8 +63,7 @@ const Pages = () => {
   // (progress === 3 && (password && passwordChecked) && (password === passwordChecked) && phoneNumber && !errors.phone);
 
   
-  const callMailAuth = async()=>{
-    console.log("메일 인증요청");    
+  const callMailAuth = async()=>{   
     try {
       await auth.requestEmailAuth({ receivers: [email] }, 1);
       if(progress < 2) setProgress(progressed => progressed+1);
@@ -84,7 +83,6 @@ const Pages = () => {
     }
   }
   const callPhoneAuth = async()=>{
-    console.log("핸드폰 인증요청");    
     if(phoneNumber && !errors.phone ) {
       try {
         await auth.requestPhoneAuth({to:phoneNumber}, 1);

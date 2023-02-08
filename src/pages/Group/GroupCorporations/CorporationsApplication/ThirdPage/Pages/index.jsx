@@ -43,7 +43,6 @@ const Pages = ({route}) => {
     const [isLunch,setLunch] = useAtom(isCorpMealLunchInfoAtom);
     const [isDinner,setDinner] = useAtom(isCorpMealDinnerInfoAtom);
     const [touch,setTouch] = useState([]); // 요일 선택
-    console.log(selected,name)
     const form = useForm({
         mode:'all'
       });

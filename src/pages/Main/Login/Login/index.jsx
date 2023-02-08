@@ -162,7 +162,6 @@ const Pages = ({route}) => {
         }}>
           <Pressable onPress={async()=>{
             const res = await login("",true)
-            console.log(res.data,"로그인 성공");
             navigation.reset({
               index: 0,
               routes: [

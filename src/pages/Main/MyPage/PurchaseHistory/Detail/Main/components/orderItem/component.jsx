@@ -27,6 +27,18 @@ const Component = ({
     orderStatus,
   } = orderItem;
   const navigation = useNavigation();
+  const statusColor = ()=>{
+    switch (orderStatus) {
+      case 7:
+        return themeApp.colors.red[500]
+      case 11:
+        return themeApp.colors.red[500]
+      case 12:
+        return themeApp.colors.red[500]                
+      default:
+        return themeApp.colors.grey[2];
+    }
+  }
     return (
         <OrderItemContainer >
          <DateOrderItemContentBox>
@@ -45,7 +57,7 @@ const Component = ({
                 <ServiceDateBox>
                   <ServiceDate text="SmallLabel" textColor={themeApp.colors.grey[4]}>식사일 : {formattedDateAndDay(serviceDate)} {formattedDateType(diningType)}</ServiceDate>
                   {orderStatus === 5  && <TextButton label="주문취소" type="blue" size="label13R" />}
-                  {orderStatus === 10 && <TextButton label="수령확인" type="blue" size="label13R" />}
+                  {orderStatus === 9 && <TextButton label="수령확인" type="blue" size="label13R" />}
                 </ServiceDateBox>
                 <Body06R19 textColor={themeApp.colors.grey[2]}>[{makers}] {foodName}</Body06R19>
                 <PriceBox>
@@ -53,7 +65,7 @@ const Component = ({
                   <Typography  text="Body06SB" textColor={themeApp.colors.grey[2]}>{withCommas(price)}원</Typography>
                 </PriceBox>
                 <FoodStatusBox>
-                  <Typography  text="Body06SB" textColor={themeApp.colors.grey[2]}>{formattedMealFoodStatus(orderStatus)}</Typography>
+                  <Typography  text="Body06SB" textColor={statusColor}>{formattedMealFoodStatus(orderStatus)}</Typography>
                 </FoodStatusBox>
               </TextBox>              
             </DateOrderItemContent>

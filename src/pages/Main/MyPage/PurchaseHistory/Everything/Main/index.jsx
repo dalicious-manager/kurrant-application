@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
-import { Dimensions, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 // import DatePicker from 'react-native-modern-datepicker';
 import styled, { css, useTheme } from "styled-components/native";
 import Typography from "../../../../../../components/Typography";
@@ -26,8 +26,6 @@ const Pages = () => {
   const [showDateModal, setShowDateModal] = useState(false);
   const [endDate, setEndDate] = useState(endDate || new Date());
   const [showDateModal2, setShowDateModal2] = useState(false);
-  
-
 const onChangeDate = (event,date,setModal,setSelected) => {
     if (Platform.OS === 'android') {
       setModal(false);
@@ -68,7 +66,7 @@ const confirmPress = (setModal) =>{
                   <Pressable onPress={()=>{setModal(false)}}>
                       <Cancel>취소</Cancel>
                   </Pressable>
-                  <Pressable onPress={confirm}>
+                  <Pressable onPress={()=>confirm(setModal)}>
                       <Confirm>완료</Confirm>
                   </Pressable>
               </IosButton>}
@@ -95,7 +93,7 @@ const confirmPress = (setModal) =>{
     if(selectDate[0].id !== 3){
       purchaseHistory();
     }else{
-      setAllPurchase({});
+      setAllPurchase([]);
     }
   },[searchDate])
   return (
@@ -135,6 +133,7 @@ const confirmPress = (setModal) =>{
         {isAllPurchaseLoading ? <Skeleton />:
         <Wrapper>
         {allPurchase ? <ScrollViewBox>{allPurchase?.map((v,i)=>{
+          console.log(v)
           return <DateOrderItemContainer key={`${v.orderDate}${i}`} itemIndex={i} purchase={v} date={v.orderDate} />
         }) }</ScrollViewBox>:
             <NothingContainer>
@@ -237,7 +236,7 @@ const DateSelectButton = styled.Pressable`
   padding-left: 12px;
 `
 const DateSelectedText = styled(Typography)`
-  margin-right: 22px;
+  margin-right: 15px;
 `
 const SubmitButton = styled.Pressable`
   border-radius: 100px;
@@ -246,3 +245,19 @@ const SubmitButton = styled.Pressable`
   align-items: center;
   border: 1px solid ${({theme})=> theme.colors.grey[7]};  
 `
+export const IosButton = styled.Pressable`
+  width:100%;
+  flex-direction:row;
+  justify-content:space-between;
+  padding:8px 20px;
+  background-color:#F5F5F5;
+  z-index:999;
+`;
+
+export const Cancel = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.grey[4]};
+`;
+
+export const Confirm = styled(Typography).attrs({text:'Body05R'})`
+color:${({theme}) => theme.colors.blue[500]};
+`;

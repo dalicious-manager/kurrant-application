@@ -27,7 +27,6 @@ const Pages = ({route}) => {
     }
   },[ToastMessage, isPassword,setPassword])
   if(isLoginLoading){
-    console.log("로그인 테스트",isLoginLoading);
     return <ActivityIndicator size="large" />
   }
   return (

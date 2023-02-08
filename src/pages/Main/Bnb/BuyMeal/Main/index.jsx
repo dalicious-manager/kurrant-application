@@ -18,22 +18,24 @@ import Label from '../../../../../components/Label';
 import MembershipBar from '../../../../../components/MembershipBar';
 import Typography from '../../../../../components/Typography';
 import { formattedWeekDate } from '../../../../../utils/dateFormatter';
-import withCommas from '../../../../../utils/withCommas';
+import withCommas, { generateOrderCode } from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import TossPayment from 'react-native-toss-payments';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
-const Pages = () => {
+const Pages = ({route}) => {
+    const params = route.params;
     const isFocused = useIsFocused();
     const navigation = useNavigation();
     const diningRef = useRef();
- 
+    
     const [modalVisible,setModalVisible] = useState(false);
     const [modalVisible2,setModalVisible2] = useState(false);
     const [modalVisible3,setModalVisible3] = useState(false);
@@ -48,7 +50,7 @@ const Pages = () => {
     
     const DININGTYPE = ['아침','점심','저녁'];
     const daily = true;
-    const date = formattedWeekDate(new Date()); // 오늘
+    const [date,setDate] = useState(params?.refundDate ? params?.refundDate: formattedWeekDate(new Date())); // 오늘
     // const todayMeal = mealInfo?.filter((m) => m.date === date);
     // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
     const spotId = userRole === "ROLE_GUEST" ? 1: userInfo.spotId; 
@@ -78,7 +80,8 @@ const Pages = () => {
     const dayPress = async (selectedDate) =>{
         
         try {
-            dailyFood(spotId,selectedDate);
+            setDate(selectedDate)
+            // dailyFood(spotId,selectedDate);
         }catch(err){
             console.log(err)
             throw err
@@ -132,9 +135,10 @@ const Pages = () => {
                     
                   }
             }
-            if(isDiningTypes.length ===0) loadDailyFood();
-            
-        },[])
+            // if(isDiningTypes.length ===0) loadDailyFood();
+            console.log(generateOrderCode(1,42),"test432")
+            loadDailyFood();
+        },[date])
         useEffect(()=>{
             
             updateMeal(req);  
@@ -303,6 +307,7 @@ const Pages = () => {
     
     return (
         <SafeView>
+            
                 {isDailyFoodLoading && <LoadingPage ><ActivityIndicator size={'large'}/></LoadingPage>}
                 {userInfo?.isMembership && <MembershipBar/>}
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -390,6 +395,7 @@ const Pages = () => {
                     navigation.navigate(MealCartPageName)
                     }}/>
             </ButtonWrap>
+            
         </SafeView>
         
     )

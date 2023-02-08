@@ -45,7 +45,6 @@ const Pages = ({route}) => {
 
     const headerTitle = isFoodDetail?.name;
     const dailyFoodId = route.params.dailyFoodId;
-    console.log(dailyFoodId,'2323')
     const closeModal = () => {
         setModalVisible(false)
     }
@@ -54,19 +53,16 @@ const Pages = ({route}) => {
     useEffect(()=>{
         async function loadFoodDetail(){
             const foodData = await foodDetail(dailyFoodId);
-            console.log(foodData);
             await loadMeal();
             const data = await analytics().logSelectContent({
                 content_type: foodData.makersName,
                 item_id: foodData.name,
               })
-              console.log(data);
             const data2 = await analytics().logEvent('food_detail', {
                 id: dailyFoodId,
                 name :foodData.name,
                 makers:foodData.makersName
               })
-              console.log(data2);
             
         }
         loadFoodDetail();

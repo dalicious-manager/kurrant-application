@@ -10,6 +10,7 @@ import { CommentsIcon, DeliveryFreeIcon, DiscountIcon, PointIcon } from "../../.
 import Typography from "../../../components/Typography";
 import Wrapper from "../../../components/Wrapper";
 import { formattedSameDate } from "../../../utils/dateFormatter";
+import withCommas from "../../../utils/withCommas";
 import SubtractBox from "../MembershipJoin/SubtractBox";
 import { PAGE_NAME as MembershipTerminateComplatePageName} from "./MembershipTerminateComplate";
 
@@ -65,14 +66,16 @@ const Pages =()=>{
                  남았어요.</Title>
             </SubTextBox>
             <MembershipDateBox>
+                <NotiContainer>
                 <NotiBox>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[2]} >멤버십 종료 예정일</Typography>
                 <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}> {membershipInfo?.nextPayDate}</Typography>
                 </NotiBox>
                 <NotiBox>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[2]} >예상 환불 금액</Typography>
-                <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}> {membershipInfo?.membershipRefundablePrice || 0} 원</Typography>
+                <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}> {withCommas(membershipInfo?.refundablePrice) || 0} 원</Typography>
                 </NotiBox>
+                </NotiContainer>
             </MembershipDateBox>
             <Line/>
             <NoticeBox>
@@ -125,10 +128,9 @@ const SubTitle = styled(Typography).attrs({text:'Title04SB'})`
     color:${({theme})=> theme.colors.grey[2]};
 `;
 const MembershipDateBox = styled.View`
-    padding:8px;
-    background-color: ${({theme})=>theme.colors.grey[8]};
-    margin-bottom: 24px;
-    align-self: center;
+    padding:37px;
+    /* background-color: ${({theme})=>theme.colors.grey[8]}; */
+    margin-bottom: 24px;    
 `
 const Line = styled.View`
   width: 100%;
@@ -142,6 +144,10 @@ const NotiBox = styled.View`
     padding: 8px 16px;
     flex-direction: row;
     justify-content: space-between;
+`
+const NotiContainer = styled.View`
+    padding: 8px;
+    background-color: ${({theme})=>theme.colors.grey[8]};
 `
 const NoticeTitle = styled(Typography)`
     margin-bottom: 5px;

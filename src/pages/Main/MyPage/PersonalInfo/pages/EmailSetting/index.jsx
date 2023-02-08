@@ -83,7 +83,6 @@ const Pages = ()=>{
                 password : data.password,
                 passwordCheck:data.passwordChecked,
             }
-            console.log(datas);
             const result = await settingEmail(datas);
             navigation.goBack();
         }catch(err){

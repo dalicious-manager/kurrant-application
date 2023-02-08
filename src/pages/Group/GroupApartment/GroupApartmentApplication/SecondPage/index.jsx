@@ -30,7 +30,6 @@ const Pages = () => {
     const [isApartAddress,setApartAddress] = useAtom(isApartSendAddressAtom);
     const isApartFullAddress = useAtomValue(isApartFullAddressAtom); // TextInput value
     const isSendAddress = useAtomValue(isApartSendAddressInfoAtom); // body에 담을 주소2
-    console.log(isSendAddress,'dkdkdk')
     const form = useForm({
         mode:'all'
       });
@@ -42,8 +41,7 @@ const Pages = () => {
     const apartFamilyCountChk = watch('familyCount');
     const apartDongCountChk = watch('dongCount');
     const apartStartDateChk = watch('startDate');
-    console.log(apartNameChk,apartAddressChk,apartFamilyCountChk,apartDongCountChk,
-        apartStartDateChk)
+  
     const isValidation = 
     (apartNameChk && !errors.apartName) &&
     (apartAddressChk&&  !errors.address) &&

@@ -82,7 +82,6 @@ const Pages = ({route}) => {
                     </TitleWrap>
                 </ContentsWrap>
                     {spots.map((s,idx) => {
-                        console.log(s.address,'어드레스')
                         return (
                             <React.Fragment key={idx}>
                                 <Border/>

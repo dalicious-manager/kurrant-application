@@ -57,7 +57,6 @@ const BottomSheetSpot = props => {
     onStartShouldSetPanResponder: () => true,
     onMoveShouldSetPanResponder: () => false,
     onPanResponderRelease: (event, gestureState) => {
-      console.log(gestureState)
         if(gestureState.dy > 0 && gestureState.vy > 1.5) {
             closeModal();
         }
@@ -75,19 +74,15 @@ const BottomSheetSpot = props => {
   const pressOutUp = e => {
     e.stopPropagation();
     const { pageY } = e.nativeEvent;
-    console.log('test : ' + pageY);
     if (pageY > y + 50) {
-      console.log("testtest1")
       if (snap === 0) {
         closeModal();
       } else {        
-        console.log("testtest2")
         if(contentScroll && scrollStart == 0 && scrollEnd && 0){
           handleSnapPress(0);
         }
       }
     } else if (pageY < y - 50) {
-      console.log("testtest3",snap, contentScroll)
       handleSnapPress(1);
     } else {      
       if(contentScroll && scrollStart == 0 && scrollEnd && 0){
@@ -98,7 +93,6 @@ const BottomSheetSpot = props => {
   const pressInUp = e => {
     e.stopPropagation();
     const { pageY } = e.nativeEvent;
-    console.log('test2 : ' + pageY);
     setY(pageY);
   };
  
@@ -156,7 +150,6 @@ const BottomSheetSpot = props => {
                 }
               }}
               onScrollEndDrag={(e)=>{
-                console.log(e.nativeEvent.contentOffset.y,"test1234");
                 setContentScroll(e.nativeEvent.contentOffset.y === 0);
                 setScrollEnd(e.nativeEvent.contentOffset.y);
                 if(e.nativeEvent.contentOffset.y === 0 ){

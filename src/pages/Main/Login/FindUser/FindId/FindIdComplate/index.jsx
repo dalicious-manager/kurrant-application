@@ -27,11 +27,9 @@ const Pages = ({route}) => {
     const {findEmail}=useAuth();
     const getUserId = async()=>{
         const userEmail = await findEmail({phone:phone});
-        console.log(userEmail);
         setUserId(userEmail.data);
     }
     useEffect(()=>{
-        console.log(userId);
         if(userId.email === ''){
             getUserId();
         }

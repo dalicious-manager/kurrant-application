@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect } from "react";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styled, { useTheme } from "styled-components/native";
 import usePurchaseHistory from "../../../../../../biz/usePurchaseHistory";
 import Typography from "../../../../../../components/Typography";
@@ -22,10 +22,11 @@ const Pages = ({route}) => {
         purchaseId:id
       }
       const data = await getPurchaseDetail(req);
-      console.log(data);
     }
     getData();
+    console.log(purchaseDetail)
   },[])
+  
   return (
     <SafeView>
       <ScrollView>
@@ -114,14 +115,15 @@ const Pages = ({route}) => {
               <Typography text="Title03SB" textColor={themeApp.colors.grey[2]}>{withCommas(purchaseDetail?.totalPrice)} 원</Typography>
             </TotalPriceBox>
           </PaymentsBox>
-          {/* <LineBar />
+          {purchaseDetail?.refundDto && <LineBar />}
+          {purchaseDetail?.refundDto && 
           <PaymentsBox>
             <PaymentsTitle>
               <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}>최종 환불금액</Typography>
             </PaymentsTitle>
             <PaymentsList>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>최종 환불금액</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>10,000 원</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>추가 결제금</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>{withCommas(purchaseDetail?.refundDto?.refundPayPrice)} 원</Typography>
             </PaymentsList>
             <SaleContainer>
               <DateBarBox>
@@ -129,14 +131,18 @@ const Pages = ({route}) => {
               </DateBarBox>
               <SaleBox>
                 <SaleItem>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>취소상품 주문금액</Typography>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>10,000원</Typography>
-                </SaleItem>                
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>상품 금액</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.refundDto?.refundItemPrice)} 원</Typography>
+                </SaleItem>           
+                <SaleItem>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>회사 지원금</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.refundDto?.refundSupportPrice)} 원</Typography>
+                </SaleItem>                 
               </SaleBox>
             </SaleContainer>
             <PaymentsList>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>환불금액 차감내역</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>10,000 원</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>배송비</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>{withCommas(purchaseDetail?.refundDto?.refundDeliveryFee)} 원</Typography>
             </PaymentsList>            
             <SaleContainer>
               <DateBarBox>
@@ -144,31 +150,59 @@ const Pages = ({route}) => {
               </DateBarBox>
               <SaleBox>
                 <SaleItem>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>멤버십 할인금액</Typography>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>0 원</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>배송비</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.refundDto?.refundSupportPrice)} 원</Typography>
                 </SaleItem>
-                <SaleCenterItem>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>판매자 할인 금액</Typography>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>10,000 원</Typography>
-                </SaleCenterItem>
                 <SaleItem>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>기간 할인 금액</Typography>
-                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>10,000 원</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>배송비 지원금</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.refundDto?.refundSupportPrice)} 원</Typography>
                 </SaleItem>
               </SaleBox>
             </SaleContainer>
             <PaymentsList>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>환불 포인트</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>10,000 P</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>환불 차감</Typography>
+              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>{withCommas(purchaseDetail?.refundDto?.refundDeduction)} P</Typography>
             </PaymentsList>
-            <PaymentsList>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>신용카드 환불</Typography>
-              <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>19,000원</Typography>
-            </PaymentsList>           
-          </PaymentsBox>*/}
+            <SaleContainer>
+              <DateBarBox>
+                <DateBar />
+              </DateBarBox>
+              <SaleBox>
+                <SaleItem>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>취소/반품 비용 차감</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.refundDto?.refundDeduction)} 원</Typography>
+                </SaleItem>
+              </SaleBox>
+            </SaleContainer>
+            <TotalPriceBox>
+              <Typography text="Title03SB" textColor={themeApp.colors.grey[4]}>총 환불 금액</Typography>
+              <Typography text="Title03SB" textColor={themeApp.colors.grey[2]}>{withCommas(purchaseDetail?.refundDto?.refundTotalPrice)} 원</Typography>
+            </TotalPriceBox>
+            <SaleContainer>
+              <DateBarBox>
+                <DateBar />
+              </DateBarBox>
+              <SaleBox>
+                <SaleItem>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>카드 환불</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.refundDto?.refundCardPrice)} 원</Typography>
+                </SaleItem>
+                <SaleItem>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>환불 포인트</Typography>
+                  <Typography text="CaptionR" textColor={themeApp.colors.grey[5]}>{withCommas(purchaseDetail?.refundDto?.refundTotalPoint)} 원</Typography>
+                </SaleItem>
+              </SaleBox>
+            </SaleContainer>
+           
+          </PaymentsBox>}
           <PaymentsMethodBox>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>결제수단</Typography>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{`${purchaseDetail?.cardCompany}카드(${purchaseDetail?.cardNumber})`}</Typography>
+              <ReceiptBox>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.cardCompany}카드</Typography>
+              {purchaseDetail?.receiptUrl ? <ReceiptTouch onPress={()=>Linking.openURL(purchaseDetail?.receiptUrl)}>
+                  <ReceiptText text="CaptionR" textColor={themeApp.colors.grey[5]}>(영수증)</ReceiptText>
+                </ReceiptTouch> : <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>({purchaseDetail?.cardNumber})</Typography>}
+              </ReceiptBox>
           </PaymentsMethodBox>
           <CancelBox>
             <CancelButton>
@@ -290,4 +324,20 @@ const SaleCenterItem = styled.View`
   align-items: center;
   justify-content: space-between;
   padding: 4px 0px;
+`
+const ReceiptText = styled(Typography)`
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration-line: underline;
+`
+const ReceiptTouch = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`
+const ReceiptBox = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 `

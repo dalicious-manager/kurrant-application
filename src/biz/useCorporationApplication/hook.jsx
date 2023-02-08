@@ -51,7 +51,6 @@ const useCorporationApplication = () => {
             },
                 id
             )
-            console.log(res)
             return res
         } catch(err) {
             throw err

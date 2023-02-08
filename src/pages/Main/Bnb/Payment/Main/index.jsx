@@ -83,7 +83,6 @@ const Pages = ({route}) => {
     const keyboardStatus = useKeyboardEvent();
     
     const handleEventPayments = ()=>{
-        console.log(agreeCheck.watch(agreeCheck).agreeCheck);
         if(agreeCheck.watch(agreeCheck).agreeCheck){
             if(selectDefaultCard.length === 0){
                 PressButton();
@@ -125,7 +124,6 @@ const Pages = ({route}) => {
 
     const onBlurPress = (e)=> {
         e.preventDefault();
-        console.log(inputRef.current.value,'111')
       };
 
     const registerCard = () =>{

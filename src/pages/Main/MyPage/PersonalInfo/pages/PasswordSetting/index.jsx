@@ -91,7 +91,6 @@ const Pages = ()=>{
         }) : null
         return async() => {
             const get = await getStorage('isChange')
-            console.log('컴포넌트가 화면에서 사라짐',get);
           };
     }, []);
     useEffect(()=>{

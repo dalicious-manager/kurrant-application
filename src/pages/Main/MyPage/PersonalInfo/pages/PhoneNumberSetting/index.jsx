@@ -57,7 +57,6 @@ const Pages = ()=>{
 
  
     const callPhoneAuth = async()=>{
-        console.log("핸드폰 인증요청");    
         if(phoneNumber && !errors.phone ) {
           try {
             await auth.requestPhoneAuth({to:phoneNumber}, 4);
@@ -84,12 +83,9 @@ const Pages = ()=>{
    
     const onSubmit = async(data) => {
         try {
-            console.log(data);
             const result = await settingPhoneNumber(data);
-            console.log(result);
 
             await setStorage('isChange','휴대폰 번호가 변경됐어요');
-            console.log("isChange");
             navigation.goBack(null);
         }catch(err){
             console.log(err)

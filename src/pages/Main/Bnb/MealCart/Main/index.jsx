@@ -194,7 +194,6 @@ const Pages = () => {
     const totalCount = arr?.map(p => p.count).reduce((acc,cur) => {
         return acc + cur
     },0);
-    console.log(totalCount,'455')
     // (할인전)총 금액
     const totalMealPrice = arr?.map(p => p.count * p.price).reduce((acc,cur) => {
         return acc + cur

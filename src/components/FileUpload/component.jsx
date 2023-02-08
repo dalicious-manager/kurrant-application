@@ -15,7 +15,6 @@ const Component = () => {
         presentationStyle: 'fullScreen',
         allowMultiSelection: true,
       });
-      console.log(response);
       setFileResponse(response);
     } catch (err) {
       console.log(err);

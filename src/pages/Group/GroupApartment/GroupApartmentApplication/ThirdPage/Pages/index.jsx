@@ -27,7 +27,6 @@ const Pages = () => {
     const [show, setShow] = useState(false);
     const [infoShow,setInfoShow] = useState(false);
     const [text, setText] = useAtom(apartDeliveryAtom);
-    console.log(text,'ddd')
     const [touch,setTouch] = useAtom(apartApplicationWeek);
 
     const form = useForm({

@@ -26,8 +26,6 @@ const useFoodDaily = () => {
         
         try {
             setDailyFoodLoading(true)
-            console.log(new Date().getSeconds(),"시작");
-            console.log(userRole,"test");
             const res = await Fetch.DailyFood(spotId,seletedDate,userRole);
             
             if(res.data === null){
@@ -59,7 +57,6 @@ const useFoodDaily = () => {
                 })
               }
         } finally {
-          console.log(new Date().getSeconds(),"끝");
             setDailyFoodLoading(false)
         }
     }

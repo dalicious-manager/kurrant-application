@@ -11,7 +11,6 @@ import { PAGE_NAME as LoginPage } from "../../EmailLogin";
 export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP_COMPLATE';
 
 const Pages = ({route}) => {
-    console.log(route)
     const {useName}=route.params;
     const themeApp = useTheme();
     const navigation = useNavigation();

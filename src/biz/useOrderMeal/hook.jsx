@@ -20,7 +20,6 @@ const useOrderMeal = () => {
             setOrderMeal(res.data);
             
         } catch(err){
-            console.log(err.toString().replace("Error:",''),"123456")
             if(err.toString().replace("Error:",'').trim() === '403'){
                 AsyncStorage.clear();
                 navigation.reset({
@@ -49,21 +48,20 @@ const useOrderMeal = () => {
         );
           
       } catch(err){
-          console.log(err.toString().replace("Error:",''),"123456")
-          if(err.toString().replace("Error:",'').trim() === '403'){
-              AsyncStorage.clear();
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: LoginPageName,
-                    params:{
-                      token:"end"
-                    }
-                  },
-                ],
-              })
-            }
+        if(err.toString().replace("Error:",'').trim() === '403'){
+            AsyncStorage.clear();
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: LoginPageName,
+                  params:{
+                    token:"end"
+                  }
+                },
+              ],
+            })
+          }
       }
   };
 
@@ -78,7 +76,6 @@ const useOrderMeal = () => {
             setTodayMeal(todayMeal)
 
         } catch(err){
-            console.log(err.toString().replace("Error:",''),"123456")
             if(err.toString().replace("Error:",'').trim() === '403'){
                 AsyncStorage.clear();
                 navigation.reset({

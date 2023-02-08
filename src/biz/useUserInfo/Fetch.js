@@ -10,7 +10,6 @@ export async function userInfomation() {
 
   const fetchRes = await fetchJson(`/users/me/userInfo`, 'GET');
 
-  console.log(fetchRes)
   return fetchRes
   if (userRole === "ROLE_GUEST") {
     await mSleep(100);

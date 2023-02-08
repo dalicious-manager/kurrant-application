@@ -39,13 +39,11 @@ const Pages = () => {
     const inputStyle = {
         marginBottom:16,
         }
-    console.log(isApplicant)
     const chkBox = information.watch(information).information
     const nameChk = watch('name');
     const phoneChk = watch('phone');
     const emailChk = watch('email');
     const {name,phone,email} = userInfo;
-    console.log(phoneChk,'dkdkdkdkdk')
     const isValidation = 
         (nameChk || nameChk !== '' ) && (emailChk || emailChk !== '') && 
         (phone === null ? (phoneChk !== '' && phoneChk !== undefined && phoneChk !== null) : (phoneChk !== '') )

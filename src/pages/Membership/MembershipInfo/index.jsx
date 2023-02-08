@@ -40,11 +40,11 @@ const Pages= ()=>{
               <TextCenterField text={'LargeTitle'} textColor={themeApp.colors.neutral[0]}>{isUserInfo.name}님은{'\n'}멤버십 이용중</TextCenterField>
               <MembershipLabelBox>
                 <LabelBox>
-                  <Label type={membershipInfo?.membershipSubscriptionType === "연간구독" ?"green" : "blue"} label={membershipInfo?.membershipSubscriptionType || "월간구독"}/>
+                  <Label type={membershipInfo?.membershipSubscriptionType === "YEAR" ?"green" : "blue"} label={membershipInfo?.membershipSubscriptionType==="YEAR" ?  "연간구독" : "월간구독"}/>
                 </LabelBox>
-                {membershipInfo?.membershipSubscriptionType && <LabelBox>
-                  <Label type={membershipInfo?.membershipSubscriptionType === "연간" ?"blue" : "green"} label={membershipInfo?.membershipSubscriptionType}/>
-                </LabelBox>}
+                {/* {membershipInfo?.membershipSubscriptionType && <LabelBox>
+                  <Label type={"purple"} label={"5000번째 커런트 파운더스"}/>
+                </LabelBox>} */}
               </MembershipLabelBox>
               <NoticeBox>
                 <TextCenterField text={'Body05SB'} textColor={themeApp.colors.neutral[0]}>

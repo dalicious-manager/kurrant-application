@@ -51,7 +51,6 @@ const Pages = () => {
     const form = useForm({
         mode:'all'
       });
-    console.log(address)
     const garbagePress = () => {
         setModalVisible(true)
     }
@@ -103,7 +102,6 @@ const Pages = () => {
 
         }
     
-        console.log(data)
         try{
             await corpApplication(data);
             removeStorage()

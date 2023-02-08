@@ -42,7 +42,6 @@ const Pages= ()=>{
         const {data} = await membershipProduct.getMembershipProduct();
         setMembershipData(data.reverse());
     },[membershipProduct])
-    console.log(signUpCheck.watch());
 
     const  handleSubmit = async(period) => {
         

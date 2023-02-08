@@ -9,6 +9,7 @@ import {
     isAlarmLookUpLoadingAtom,
     isMyInfoAtom , 
     isMyInfoLoadingAtom ,
+    isMyInfoPersonAtom,
     isMyInfoPersonalLoadingAtom,
     isSNSConnectAtom,
     isSNSConnectLoadingAtom,
@@ -30,7 +31,7 @@ import {
 const useUserMe = () => {
 
     const [myInfo,setMyInfo] = useAtom(isMyInfoAtom);
-    const [myInfoPerson,setMyInfoPerson] = useAtom(isMyInfoAtom);
+    const [myInfoPerson,setMyInfoPerson] = useAtom(isMyInfoPersonAtom);
     const [isConnected , setConnected] = useAtom(isSNSConnectAtom);
     const [isMyInfoLoading,setMyInfoLoading] = useAtom(isMyInfoLoadingAtom);
     const [isMyInfoPersonalLoading,setMyInfoPersonalLoading] = useAtom(isMyInfoPersonalLoadingAtom);

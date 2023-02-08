@@ -5,7 +5,7 @@ import FastImage from 'react-native-fast-image'
 import ButtonMeal from "~components/ButtonMeal";
 import Typography from "~components/Typography";
 import ArrowRight from "~assets/icons/Group/checkArrow.svg";
-import { Dimensions } from "react-native";
+import { Alert, Dimensions } from "react-native";
 import { css, useTheme } from "styled-components/native";
 import { formattedDateAndDay, formattedDateType, formattedDateWeekBtn } from "../../../../../../../../utils/dateFormatter";
 import withCommas from "../../../../../../../../utils/withCommas";
@@ -14,21 +14,51 @@ import TextButton from "../../../../../../../../components/TextButton";
 import { useNavigation } from "@react-navigation/native";
 import { PurchaseDetailPageName } from "../../../../Detail";
 import useOrderMeal from "../../../../../../../../biz/useOrderMeal";
+import usePurchaseHistory from "../../../../../../../../biz/usePurchaseHistory";
+import { PAGE_NAME as BuyMealPageName } from "../../../../../../Bnb/BuyMeal/Main";
 const {width} =Dimensions.get('screen');
 const Component = ({
-  purchase,
+  purchaseId,
   date,
   itemIndex
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
-  const {refundItem} = useOrderMeal()
+  const {refundItem} = useOrderMeal();
+  const {setMealPurchase,readAbleAtom:{mealPurchase}}= usePurchaseHistory();
+  const purchase = mealPurchase.filter(v => v.id === purchaseId)[0];
   const cancleItem = async(id)=>{
     const req = {
       orderId:purchase.id,
       id:id
     }
-    await refundItem(req)
+    await refundItem(req);
+    const refund = mealPurchase.map((o)=> {
+      return {...o,orderItems:[...o.orderItems.map(v=>{
+      if(v.id === id){
+        return { ...v , orderStatus:7}
+      }else{
+        return v
+      }
+    })]}})
+    setMealPurchase(refund)
+  }
+  const changeItem = async(id)=>{
+    const req = {
+      orderId:purchase.id,
+      id:id
+    }
+    await refundItem(req);
+    const refund = mealPurchase.map((o)=> {
+      return {...o,orderItems:[...o.orderItems.map(v=>{
+      if(v.id === id){
+        return { ...v , orderStatus:7}
+      }else{
+        return v
+      }
+    })]}})
+    setMealPurchase(refund);
+    navigation.navigate(BuyMealPageName)
   }
     return (
         <DateOrderItemListContainer isFirst={itemIndex === 0}>
@@ -84,8 +114,42 @@ const Component = ({
                         </PriceBox>
                       </TextBox>
                       {order.orderStatus === 5 && <ButtonContainer>
-                        <ButtonMeal label={"취소"} onPressEvent={()=>cancleItem(order.id)}/>
-                        <ButtonMeal label={"메뉴변경"}/>                      
+                        <ButtonMeal label={"취소"} 
+                        onPressEvent={()=>
+                        Alert.alert(
+                            "메뉴 취소",
+                            "메뉴를 취소하시겠어요?",
+                            [
+                              {
+                                text:'아니요',
+                                onPress:() => {},
+                                
+                              },
+                              {
+                                text:'메뉴 취소',
+                                onPress:() => cancleItem(order.id),
+                                style:'destructive'
+                              }
+                            ]
+                          )}/>             
+                        <ButtonMeal label={"메뉴변경"} 
+                        onPressEvent={()=> 
+                          Alert.alert(
+                            "메뉴 변경",
+                            "현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?",
+                            [
+                              {
+                                text:'아니요',
+                                onPress:() => {},
+                                
+                              },
+                              {
+                                text:'메뉴 취소',
+                                onPress:() => changeItem(order.id),
+                                style:'destructive'
+                              }
+                            ]
+                          )}/>                      
                       </ButtonContainer>}
                       {order.orderStatus === 9 && <ButtonContainer>
                         <ButtonMeal label={"수령확인"}/>                 

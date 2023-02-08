@@ -4,7 +4,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useAtom, useAtomValue } from 'jotai';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {useForm} from 'react-hook-form';
-import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable, Alert} from 'react-native';
+import { SafeAreaView, Text, View ,ScrollView,Dimensions,Image,Platform,StyleSheet, Pressable, Alert, StatusBar} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
@@ -119,7 +119,6 @@ const Pages = () => {
             dailyFood(userData?.spotId,formattedWeekDate(new Date()));
           }    
           async function loadMeal(){
-            console.log(userRole,"userStatus")
             if(!(userRole ==="ROLE_GUEST")) await orderMeal(formattedWeekDate(weekly[0][0]),formattedWeekDate(weekly[weekly?.length-1][weekly[0].length-1]))           
           };
           loadMeal();
@@ -151,9 +150,7 @@ const Pages = () => {
         const status = async () => {
            const userStatus = await getStorage('spotStatus');
            await todayOrderMeal(start[0],end[0])
-           const getUserStatus = Number(userStatus);
-           console.log(getUserStatus,'userStatus')
-          
+           const getUserStatus = Number(userStatus);          
           if(getUserStatus === 1){
             navigation.navigate(GroupSelectPageName)
           }
@@ -206,7 +203,6 @@ const Pages = () => {
         Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
       });
       
-      console.log("메세지 테스트")
       return unsubscribe;
     }, [navigation]);
 
@@ -286,7 +282,9 @@ if(isOrderMealLoading || isUserInfoLoading){
 
 
   return (
-    <SafeView>
+    <SafeView style={{
+      paddingTop: Math.round(StatusBar.currentHeight)
+    }}>
 
       <View>
         <BarWrap>
