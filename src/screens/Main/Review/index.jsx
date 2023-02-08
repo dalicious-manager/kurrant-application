@@ -37,7 +37,7 @@ const Screen = () => {
         name={ReviewPageName}
         component={Review}
         options={{
-          tabBarLabel: `리뷰 작성(${total})`,
+          tabBarLabel: `리뷰 작성(${total > 10 ? `9+` : total})`,
           tabBarLabelStyle: {
             fontSize: 15,
             lineHeight: 21,
@@ -50,7 +50,9 @@ const Screen = () => {
         name={WrittenReviewPageName}
         component={WrittenReview}
         options={{
-          tabBarLabel: `작성한 리뷰(${totalWritten})`,
+          tabBarLabel: `작성한 리뷰(${
+            totalWritten > 10 ? `9+` : totalWritten
+          })`,
           tabBarLabelStyle: {
             fontSize: 15,
             lineHeight: 21,
