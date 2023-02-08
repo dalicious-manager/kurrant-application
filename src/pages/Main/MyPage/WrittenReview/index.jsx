@@ -21,8 +21,6 @@ const Pages = () => {
   useEffect(() => {
     getWrittenReview();
   }, []);
-  // console.log('여기여기');
-  // console.log(WrittenReviewListSupply);
 
   useEffect(() => {
     if (!!WrittenReviewListSupply) {

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
@@ -16,6 +16,8 @@ const Screens = () => {
   const navigation = useNavigation();
 
   const [starRating, setStarRating] = useAtom(starRatingAtom);
+  const [disable, setDisable] = useState(false);
+
   return (
     <Container>
       <Wrap>
@@ -31,11 +33,14 @@ const Screens = () => {
           ratingInput={0}
           width={'200px'}
           margin={'2px'}
+          disableButton={disable}
           callback={async rating => {
             setStarRating(rating);
-
+            setDisable(true);
             await mSleep(300);
+
             navigation.navigate(CreateReviewPage2ScreenName);
+            setDisable(false);
           }}
         />
       </Wrap>

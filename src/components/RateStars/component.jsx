@@ -5,7 +5,7 @@ import {splitNumberAndUnit} from '../../utils/splitNumberAndUnit';
 
 const Component = ({
   ratingInput = 0,
-
+  disableButton,
   width = '80px',
   margin = '1px',
   callback,
@@ -34,6 +34,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(1);
               callback && callback(1);
@@ -48,6 +49,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(2);
 
@@ -63,6 +65,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(3);
 
@@ -78,6 +81,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(4);
 
@@ -93,6 +97,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(5);
 
@@ -111,6 +116,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(1);
 
@@ -126,6 +132,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(2);
 
@@ -141,6 +148,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(3);
 
@@ -156,6 +164,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(4);
 
@@ -171,6 +180,7 @@ const Component = ({
             height={widthAndHeight}
             margin={marginNum}
             unitMargin={unitMargin}
+            disabled={disableButton}
             onPress={() => {
               setRating(5);
 
