@@ -1,4 +1,5 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+
 import {useAtom} from 'jotai';
 import React, {useLayoutEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';

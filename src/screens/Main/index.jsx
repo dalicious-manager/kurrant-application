@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {Alert, View} from 'react-native';
@@ -256,6 +256,7 @@ const Screen = () => {
   const [isLoginLoading] = useAtom(isLoginLoadingAtom);
   const {allDeleteMeal, setLoadMeal} = useShoppingBasket();
   const navigation = useNavigation();
+  const route = useRoute();
   return (
     <MainRoot.Navigator>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
@@ -1564,8 +1565,8 @@ const Screen = () => {
               <CloseIcon
                 alertCallback={() => {
                   Alert.alert(
-                    '작성 종료',
-                    '작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?',
+                    `작성 종료`,
+                    `작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?`,
                     [
                       {
                         text: '아니요',
@@ -1575,7 +1576,7 @@ const Screen = () => {
                         style: 'cancel',
                       },
                       {
-                        text: '작성종료',
+                        text: `작성종료`,
                         onPress: () => {
                           navigation.navigate(ReviewScreenName);
                           return;
@@ -1608,8 +1609,8 @@ const Screen = () => {
               <CloseIcon
                 alertCallback={() => {
                   Alert.alert(
-                    '작성 종료',
-                    '작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?',
+                    '수정 종료',
+                    '수정중인 내용이 삭제됩니다 \n  수정작성을 종료하시겠어요?',
                     [
                       {
                         text: '아니요',
@@ -1619,7 +1620,7 @@ const Screen = () => {
                         style: 'cancel',
                       },
                       {
-                        text: '작성종료',
+                        text: '수정종료',
                         onPress: () => {
                           navigation.navigate(ReviewScreenName);
                           return;
