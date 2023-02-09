@@ -122,7 +122,7 @@ const Screen = () => {
                     setPhotosArray={setPhotosArray}
                   />
                   {!!photosArray.length &&
-                    photosArray.reverse().map((value, index) => {
+                    photosArray.map((value, index) => {
                       return (
                         <PhotoImageWrap key={value.id}>
                           <DeleteButton

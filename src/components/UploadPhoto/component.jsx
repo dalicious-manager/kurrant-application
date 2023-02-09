@@ -32,6 +32,10 @@ const Component = ({photosArray, setPhotosArray}) => {
     }
 
     launchImageLibrary({}, res => {
+      if (!res.assets[0]) {
+        console.log('사실상 존재하지 않는 이미지파일입니다 ');
+        return;
+      }
       const formdata = new FormData();
       formdata.append('file', res.assets[0].uri);
 
@@ -47,13 +51,10 @@ const Component = ({photosArray, setPhotosArray}) => {
           },
         ]);
       } else {
-        setPhotosArray([
-          ...photosArray,
-          {id: Date.now(), uri: res.assets[0].uri},
-        ]);
+        setPhotosArray(
+          [...photosArray, {id: Date.now(), uri: res.assets[0].uri}].reverse(),
+        );
       }
-
-      // setPhotosArray([...photosArray, res.assets[0].uri]);
     });
   };
 
