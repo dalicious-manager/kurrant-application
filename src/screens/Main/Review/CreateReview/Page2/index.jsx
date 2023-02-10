@@ -192,6 +192,7 @@ export default Screen;
 const Container2 = styled.View`
   padding: 0 24px;
   padding-top: 24px;
+
   flex: 1;
   background-color: #ffffff;
 `;
@@ -294,6 +295,7 @@ const Title4 = styled(Typography).attrs({text: 'Body06R'})`
 `;
 const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
+  margin-bottom: 32px;
 `;
 
 const ButtonFinal = styled(Button)`
