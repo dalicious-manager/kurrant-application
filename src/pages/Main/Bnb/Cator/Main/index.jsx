@@ -43,7 +43,7 @@ const Pages = () => {
             <LargeTitle>케이터링 신청하기</LargeTitle>
             <TypoBody05R>아래의 링크를 누르면 </TypoBody05R>
             <TypoBody05R>
-              케이터링 안내 및 신청 페이지로 이동합니다{' '}
+              케이터링 안내 및 신청 페이지로 이동합니다.{' '}
             </TypoBody05R>
             <BlueWrap onPress={() => handlePress()}>
               <LinkBody05R>https://kurrant.co/catering-home-view</LinkBody05R>
