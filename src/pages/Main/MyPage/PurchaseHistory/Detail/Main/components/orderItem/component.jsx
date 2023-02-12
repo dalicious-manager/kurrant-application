@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { Dimensions } from "react-native";
+import { Alert, Dimensions } from "react-native";
 import { css, useTheme } from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import FastImage from 'react-native-fast-image'
@@ -12,7 +12,8 @@ import { formattedMealFoodStatus } from "../../../../../../../../utils/statusFor
 
 const {width} =Dimensions.get('screen');
 const Component = ({
-  orderItem
+  orderItem,
+  onCancle=()=>{}
 }) => {
   const themeApp = useTheme();
   const {
@@ -24,7 +25,7 @@ const Component = ({
     count,
     id,
     price,
-    orderStatus,
+    orderStatus,    
   } = orderItem;
   const navigation = useNavigation();
   const statusColor = ()=>{
@@ -56,7 +57,24 @@ const Component = ({
               <TextBox>
                 <ServiceDateBox>
                   <ServiceDate text="SmallLabel" textColor={themeApp.colors.grey[4]}>식사일 : {formattedDateAndDay(serviceDate)} {formattedDateType(diningType)}</ServiceDate>
-                  {orderStatus === 5  && <TextButton label="주문취소" type="blue" size="label13R" />}
+                  {orderStatus === 5  && <TextButton label="주문취소" type="blue" size="label13R" 
+                  onPressEvent={()=>{
+                     Alert.alert(
+                      "메뉴 취소",
+                      "메뉴를 취소하시겠어요?",
+                      [
+                        {
+                          text:'아니요',
+                          onPress:() => {},
+                          
+                        },
+                        {
+                          text:'메뉴 취소',
+                          onPress:() => onCancle(id),
+                          style:'destructive'
+                        }
+                      ]
+                    )}}/>}
                   {orderStatus === 9 && <TextButton label="수령확인" type="blue" size="label13R" />}
                 </ServiceDateBox>
                 <Body06R19 textColor={themeApp.colors.grey[2]}>[{makers}] {foodName}</Body06R19>

@@ -19,14 +19,15 @@ import { v4 as uuid } from 'uuid'
 
 import { PAGE_NAME as AppleLoginPageName } from '../../pages/Main/Login/AppleSignup';
 import jwtDecode from 'jwt-decode';
+import Config from 'react-native-config';
 
 const nonce = uuid();
 
 
 const naverData = ()=>{
     const data = {
-        consumerKey : 'P2W9Zz6uKFyGPmuUfChT',
-        consumerSecret : 'ac256jv8OZ',
+        consumerKey : Config.NAVER_COSTOMER_KEY,
+        consumerSecret : Config.NAVER_SECRET_KEY,
         appName :'kurrant',
     }
     if(Platform.OS  === 'ios'){
@@ -41,7 +42,7 @@ export default () => {
     const {snsLogin,snsAppleLogin} =useAuth();
     const navigation = useNavigation();
     const naverLogin = async () => {
-        console.log('로그인')
+        // console.log('로그인')
         const {successResponse} = await NaverLogin.login(naverData());
         if(successResponse){
             // console.log(successResponse)
@@ -74,8 +75,8 @@ export default () => {
           
           const {accessToken} =await GoogleSignin.getTokens();
           const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-          console.log(scopes);
-          console.log(accessToken);
+          // console.log(scopes);
+          // console.log(accessToken);
           // Clipboard.setString(accessToken)
           // Sign-in the user with the credential
           await auth().signInWithCredential(googleCredential);
@@ -102,7 +103,7 @@ export default () => {
         if(Platform.OS === "android"){
           const test = await appleAuthAndroid.signIn();
           // Clipboard.setString(test.id_token);
-          console.log(test)
+          // console.log(test)
           const {email} = jwtDecode(test.id_token);
           if(!email) throw new Error("이메일을 가져올수 없습니다.\n핸드폰을 재부팅 하시고 이후 문제가 해결되지않는다면 고객센터로 문의 주세요")
           // const appleCredential = firebase.auth.AppleAuthProvider.credential(test.id_token, test.nonce);
@@ -128,7 +129,7 @@ export default () => {
               requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
             });
 
-            console.log(appleAuthRequestResponse)
+            // console.log(appleAuthRequestResponse)
             // // Ensure Apple returned a user identityToken
             if (!appleAuthRequestResponse.identityToken) {
               throw new Error('Apple Sign-In failed - no identify token returned');
@@ -140,12 +141,12 @@ export default () => {
             const userCredential = await firebase.auth().signInWithCredential(appleCredential);
             const appleData = appleAuthRequestResponse;
             
-            console.log(userCredential);
+            // console.log(userCredential);
             await snsAppleLogin({
                 ...appleData,
                 autoLogin:true,
             },'APPLE');
-            console.log(userCredential.additionalUserInfo.isNewUser);
+            // console.log(userCredential.additionalUserInfo.isNewUser);
             if(!userCredential.additionalUserInfo.isNewUser){
               navigation.reset({
                 index: 0,
@@ -194,7 +195,7 @@ export default () => {
             }
           }
           } catch (error) {
-            console.log("err",error.toString());
+            // console.log("err",error.toString());
             Alert.alert("로그인 에러",error.toString());
           }
         // const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
@@ -205,7 +206,7 @@ export default () => {
       const kakaoLogin = async () => {
         const token = await login();
         // Clipboard.setString(token.accessToken);
-        console.log(token.accessToken)
+        // console.log(token.accessToken)
         await snsLogin({
             snsAccessToken:token.accessToken,
             autoLogin:true,
@@ -225,7 +226,7 @@ export default () => {
             ['public_profile', 'email'],
             nonce
           );
-          console.log(result);
+          // console.log(result);
       
           if (Platform.OS === 'ios') {
             const result = await AuthenticationToken.getAuthenticationTokenIOS();

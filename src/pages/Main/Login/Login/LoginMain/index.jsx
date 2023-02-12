@@ -36,15 +36,9 @@ const Pages = () => {
       </FormProvider> */}
       <View style={styles.SNSContainer}>
         <balloon.BalloonWrap /> 
-        <ButtonSns type_sns="kakao" onPressEvent={kakaoLogin} />
-        <ButtonSns type_sns="naver" onPressEvent={naverLogin} />
         <View style={styles.buttonContainer}>
-          <View style={{...styles.buttonBox, marginRight:3.5}}>
-            <ButtonSns type_sns="email" onPressEvent={handleEmailPress} />
-          </View>
-          <View style={{...styles.buttonBox, marginLeft:3.5}}>
-            <ButtonSns type_sns="login" onPressEvent={handleLoginPress} />
-          </View>
+          <ButtonSns type_sns="login" onPressEvent={handleLoginPress} />
+          <ButtonSns type_sns="email" onPressEvent={handleEmailPress} />
         </View>
       </View>
       
@@ -61,12 +55,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   SNSContainer: {
-    paddingLeft:48,
-    paddingRight:48,
+    paddingLeft:20,
+    paddingRight:20,
     justifyContent: 'space-between',
   },
   buttonContainer: {
-    flexDirection:'row',
     justifyContent: 'center',
   },
   buttonBox: {

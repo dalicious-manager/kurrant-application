@@ -71,10 +71,10 @@ const Pages = () => {
 
     const VISITED_NOW_DATE = Math.floor(new Date().getDate())
     const nextWeek = weekly[1].map(el => formattedWeekDate(el))
-    const mealCheck = isOrderMeal.map(el => {
+    const mealCheck = isOrderMeal?.map(el => {
       return el.serviceDate
     });
-    const intersection = nextWeek.filter(x => mealCheck.includes(x));
+    const intersection = nextWeek.filter(x => mealCheck?.includes(x));
     
     useEffect(()=>{
       const handleShowModal = async () => {
@@ -118,11 +118,12 @@ const Pages = () => {
             const userData = await userInfo();     
             dailyFood(userData?.spotId,formattedWeekDate(new Date()));
           }    
-          async function loadMeal(){
+          async function loadOrderMeal(){
             if(!(userRole ==="ROLE_GUEST")) await orderMeal(formattedWeekDate(weekly[0][0]),formattedWeekDate(weekly[weekly?.length-1][weekly[0].length-1]))           
           };
-          loadMeal();
+          loadOrderMeal();
           loadUser();
+          
           
         }catch (e){
           console.log(e.toString());
@@ -159,7 +160,7 @@ const Pages = () => {
           }
         }
         try {
-          if (!userRole === "ROLE_GUEST") {
+          if (!(userRole === "ROLE_GUEST")) {
             status();            
             userGroupSpotCheck();
             loadMeal();

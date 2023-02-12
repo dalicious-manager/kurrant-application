@@ -185,14 +185,14 @@ const Pages = ({route}) => {
                 return (
                   <SNSPiece key={v.social} onPress={()=>!v.isConnect ? connectSNS(v.social) : disconnectSNS(v.social)}>                
                     <SocialConnectIcons social={v.social} isConnect={v.isConnect ? true : false}/>
-                    <SNSConnectText 
+                    {/* <SNSConnectText 
                       text='SmallLabel' 
                       textColor={v.isConnect 
                       ? themeApp.colors.grey[3]
                       : themeApp.colors.grey[5]}
                     >
                       {v.isConnect ? '연결완료': '연결하기'}
-                    </SNSConnectText>
+                    </SNSConnectText> */}
                   </SNSPiece>
                 )
               })

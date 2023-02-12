@@ -32,7 +32,7 @@ const useFoodDaily = () => {
                
                 throw new Error('없음');
             }
-            console.log(res.data.diningTypes)
+            // console.log(res.data.diningTypes)
             setDiningTypes(res.data.diningTypes);
             setMorning(res.data.dailyFoodDtos.filter(x => x.diningType === 1));
             setLunch(res.data.dailyFoodDtos.filter(x =>  x.diningType === 2));

@@ -17,7 +17,7 @@ import Check from "../../../../../components/Check";
 import Form from "../../../../../components/Form";
 import Typography from "../../../../../components/Typography";
 import { formattedDate, formattedMonthDay } from "../../../../../utils/dateFormatter";
-import withCommas from "../../../../../utils/withCommas";
+import withCommas, { generateOrderCode } from "../../../../../utils/withCommas";
 import { ButtonWrap, ContentWrap,DiningName, MealImage, MealName, PaymentText, PaymentView,PointBoldText,PointInput,PointInputWrap,PointText, PointUnitText, PointWrap, PressableView, Price, QuestionIcon, SalePrice, SalePriceWrap, TotalPrice, TotalPriceTitle, XIcon } from "../../MealCart/Main";
 import useKeyboardEvent from "../../../../../hook/useKeyboardEvent";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
@@ -25,6 +25,7 @@ import useUserMe from "../../../../../biz/useUserMe";
 import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
 import { PurchaseDetailPageName } from "../../../../../pages/Main/MyPage/PurchaseHistory/Detail";
 import { PAGE_NAME as DefaultPaymentManagePageName } from "../DefaultPaymentManage";
+import { PAGE_NAME as MealPaymentPageName } from "../MealPayment";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -60,6 +61,7 @@ const Pages = ({route}) => {
         name,
         spotName,
         clientType,
+        arr  : mealArr,
         usedSupportPrice
         } = route.params
     const PressButton = () => {
@@ -84,11 +86,12 @@ const Pages = ({route}) => {
     
     const handleEventPayments = ()=>{
         if(agreeCheck.watch(agreeCheck).agreeCheck){
-            if(selectDefaultCard.length === 0){
-                PressButton();
-            }else{
-                orderPress(selected)
-            }
+            // if(selectDefaultCard.length === 0){
+            //     PressButton();
+            // }else{
+                
+            // }
+            orderPress(selected)
           
         }else{
             Alert.alert(
@@ -112,6 +115,7 @@ const Pages = ({route}) => {
 
         
     useEffect(()=>{
+        console.log(mealArr);
         Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
             setStatusBarHeight(statusBarFrameData.height)
         }) : null
@@ -166,7 +170,7 @@ const Pages = ({route}) => {
     const orderPress = async (spotId) => {
         const data = {
             'spotId':spotId,
-            "cardId": selectDefaultCard[0]?.id,
+            // "cardId": selectDefaultCard[0]?.id,
             'cartDailyFoodDtoList':lastArr,
             'totalPrice':totalPrice,
             'supportPrice':usedSupportPrice,
@@ -176,14 +180,23 @@ const Pages = ({route}) => {
         }
         
         try {
-            const res = await orderMeal(spotId,data);
-            console.log(res);
+            // const res = await orderMeal(spotId,data);
+            // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
+            const firstName = lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "";
+            const orderName = totalCount > 1 ? `${firstName} 외 ${totalCount}건` : firstName;
+            // console.log(isUserInfo?.userId)
             loadMeal();
+            
             // setLoadMeal([])           
-            const resetAction = StackActions.popToTop();
-            navigation.dispatch(resetAction); 
-            navigation.navigate(PurchaseDetailPageName,{
-                id:res.data
+            // const resetAction = StackActions.popToTop();
+            // navigation.dispatch(resetAction); 
+            navigation.navigate(MealPaymentPageName,{
+                amount: totalPrice,
+                orderName:orderName,
+                orderId : generateOrderCode(1,isUserInfo?.userId,spotId),
+                email:isUserInfo?.email,
+                name:isUserInfo?.name,
+                orderItems:JSON.stringify(data)
             })
         }catch (err){
             console.log(err)
@@ -376,7 +389,7 @@ const Pages = ({route}) => {
                                     navigation.navigate(DefaultPaymentManagePageName)
                                 }
                             >
-                                <CardText>결제 카드 등록</CardText>              
+                                <CardText>결제 수단 선택</CardText>              
                                 <ArrowRight />
                             </Card>
                         }

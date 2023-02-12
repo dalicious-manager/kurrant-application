@@ -246,8 +246,8 @@ android {
             resValue "string", "CodePushDeploymentKey", '"aKh-tMAQ8Xx6eIFD9-QPoA3l0cE-qgTOWwR_D"'
             resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
             signingConfig signingConfigs.release
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            // minifyEnabled enableProguardInReleaseBuilds
+            // proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
         releaseStaging {
             initWith release

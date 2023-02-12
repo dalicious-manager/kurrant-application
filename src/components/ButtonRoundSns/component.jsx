@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import { AppleSnsIcon, FacebookSnsIcon,GoogleSnsIcon} from '../Icon';
+import { AppleSnsIcon, FacebookSnsIcon,GoogleSnsIcon,NaverSnsIcon,KakaoSnsIcon} from '../Icon';
 import { getSnsButtonColor, getSnsButtonBorder } from './style';
 
 /**
@@ -21,6 +21,10 @@ const Component = ({ type_sns = 'email', size, onPressEvent = () => { console.lo
         return <GoogleSnsIcon/>;
       case 'facebook':
         return <FacebookSnsIcon/>;
+      case 'kakao':
+        return <KakaoSnsIcon />;
+      case 'naver':
+        return <NaverSnsIcon/>;
     }
   };
 

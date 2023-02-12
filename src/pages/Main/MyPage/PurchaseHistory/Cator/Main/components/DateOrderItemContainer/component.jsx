@@ -5,41 +5,84 @@ import FastImage from 'react-native-fast-image'
 import ButtonMeal from "~components/ButtonMeal";
 import Typography from "~components/Typography";
 import ArrowRight from "~assets/icons/Group/checkArrow.svg";
-import { Dimensions } from "react-native";
+import ArrowDown from "~assets/icons/Group/arrowDown.svg";
+import { Alert, Dimensions, Pressable, View } from "react-native";
 import { css, useTheme } from "styled-components/native";
 import { formattedDateAndDay, formattedDateType, formattedDateWeekBtn } from "../../../../../../../../utils/dateFormatter";
 import withCommas from "../../../../../../../../utils/withCommas";
 import { formattedMealFoodStatus } from "../../../../../../../../utils/statusFormatter";
-import { useNavigation } from "@react-navigation/native";
 import TextButton from "../../../../../../../../components/TextButton";
-
+import { useNavigation } from "@react-navigation/native";
 import { PurchaseDetailPageName } from "../../../../Detail";
-
+import useOrderMeal from "../../../../../../../../biz/useOrderMeal";
+import usePurchaseHistory from "../../../../../../../../biz/usePurchaseHistory";
+import { PAGE_NAME as BuyMealPageName } from "../../../../../../Bnb/BuyMeal/Main";
 const {width} =Dimensions.get('screen');
 const Component = ({
-  purchase,
+  purchaseId,
   date,
-  index,
   itemIndex
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+  const {refundItem} = useOrderMeal();
+  const [open, setOpen] = useState(false)
+  const {setMealPurchase,readAbleAtom:{mealPurchase}}= usePurchaseHistory();
+  const purchase = mealPurchase.filter(v => v.id === purchaseId)[0];
+  const cancleItem = async(id)=>{
+    const req = {
+      orderId:purchase.id,
+      id:id
+    }
+    await refundItem(req);
+    const refund = mealPurchase.map((o)=> {
+      return {...o,orderItems:[...o.orderItems.map(v=>{
+      if(v.id === id){
+        return { ...v , orderStatus:7}
+      }else{
+        return v
+      }
+    })]}})
+    setMealPurchase(refund)
+  }
+  const changeItem = async(id)=>{
+    const req = {
+      orderId:purchase.id,
+      id:id
+    }
+    await refundItem(req);
+    const refund = mealPurchase.map((o)=> {
+      return {...o,orderItems:[...o.orderItems.map(v=>{
+      if(v.id === id){
+        return { ...v , orderStatus:7}
+      }else{
+        return v
+      }
+    })]}})
+    setMealPurchase(refund);
+    navigation.navigate(BuyMealPageName)
+  }
     return (
-        <DateOrderItemListContainer isFirst={index ===0 && itemIndex === 0}>
+        <DateOrderItemListContainer isFirst={itemIndex === 0}>
         <DateDetailBox>
           <Typography text={"CaptionR"} textColor={themeApp.colors.grey[4]}>{date} 결제</Typography>
-          <DetailWrap>
-              <TextButton size='label13R' label='주문상세' type='blue' 
-              onPressEvent={()=>{navigation.navigate(PurchaseDetailPageName,{code:purchase.code,date:date})}}/>
-              <ArrowRightIcon/>
-          </DetailWrap>
+          <DateDetailEndView>
+            {open && <DetailWrap>
+                <TextButton size='label13R' label='주문상세' type='blue' onPressEvent={()=>{navigation.navigate(PurchaseDetailPageName,{id:purchase.id})}}/>
+                {/* <ArrowRightIcon/> */}
+            </DetailWrap>} 
+            <OpenItems onPress={()=>setOpen(!open)}>
+              {open ? <ArrowUpIcon/> : <ArrowDownIcon/>}
+            </OpenItems>
+          </DateDetailEndView>
         </DateDetailBox>
-        <DateOrderItemListBox>
+        
+        {open && <DateOrderItemListBox>
           <DateBar />
           <DateOrderItemList>
-            {purchase.orderItem.map((order,i)=>{
+            {purchase?.orderItems.map((order,i)=>{
               const statusColor = ()=>{
-                switch (order.foodStatus) {
+                switch (order.orderStatus) {
                   case 7:
                     return themeApp.colors.red[500]
                   case 11:
@@ -54,7 +97,7 @@ const Component = ({
                 <DateOrderItemBox key={order.id} isFirst={i ===0}>
                   <StatusBox>
                     <StatusText>
-                      <Typography text="Title04SB" textColor={statusColor()}>{formattedMealFoodStatus(order.foodStatus)}</Typography>
+                      <Typography text="Title04SB" textColor={statusColor()}>{formattedMealFoodStatus(order.orderStatus)}</Typography>
                     </StatusText>
                     {order?.cancelDate && <Typography text="Samlllabel" textColor={themeApp.colors.grey[5]}>{formattedDateWeekBtn(order?.cancelDate)} 취소</Typography>}
                   </StatusBox>
@@ -63,7 +106,7 @@ const Component = ({
                       <FastImage
                         style={{ width: '100%', height: '100%', borderRadius:7 }}
                         source={{
-                            uri: order.Image,
+                            uri: order.image,
                             priority: FastImage.priority.high,
                         }}
                         resizeMode={FastImage.resizeMode.cover}
@@ -78,19 +121,56 @@ const Component = ({
                           <Typography  text="Body06SB" textColor={themeApp.colors.grey[2]}>{withCommas(order.price)}원</Typography>
                         </PriceBox>
                       </TextBox>
-                      {order.foodStatus === 5 && <ButtonContainer>
-                        <ButtonMeal label={"취소"}/>
-                        <ButtonMeal label={"메뉴변경"}/>                      
+                      {order.orderStatus === 5 && <ButtonContainer>
+                        <ButtonMeal label={"취소"} 
+                        onPressEvent={()=>
+                        Alert.alert(
+                            "메뉴 취소",
+                            "메뉴를 취소하시겠어요?",
+                            [
+                              {
+                                text:'아니요',
+                                onPress:() => {},
+                                
+                              },
+                              {
+                                text:'메뉴 취소',
+                                onPress:() => cancleItem(order.id),
+                                style:'destructive'
+                              }
+                            ]
+                          )}/>             
+                        <ButtonMeal label={"메뉴변경"} 
+                        onPressEvent={()=> 
+                          Alert.alert(
+                            "메뉴 변경",
+                            "현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?",
+                            [
+                              {
+                                text:'아니요',
+                                onPress:() => {},
+                                
+                              },
+                              {
+                                text:'메뉴 취소',
+                                onPress:() => changeItem(order.id),
+                                style:'destructive'
+                              }
+                            ]
+                          )}/>                      
+                      </ButtonContainer>}
+                      {order.orderStatus === 9 && <ButtonContainer>
+                        <ButtonMeal label={"수령확인"}/>                 
                       </ButtonContainer>}
                     </DateOrderItemContent>
-                        
+                
                   </DateOrderItemContentBox>
                 </DateOrderItemBox>           
               )
             })}
                
           </DateOrderItemList>
-        </DateOrderItemListBox>
+        </DateOrderItemListBox>}
       </DateOrderItemListContainer>
     )
 }
@@ -174,17 +254,35 @@ const StatusText = styled.View`
   margin-right: 5px;
 `
 
-
 const DateDetailBox = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  border-bottom-width: 1px;
+  border-bottom-color: ${({theme})=>theme.colors.grey[8]};
+  padding-bottom: 8px;
+`
+const DateDetailEndView= styled.View`
+  flex-direction: row;
+  align-items: center;
 
 `
 const DetailWrap = styled.Pressable`
 flex-direction:row;
 align-items:center;
+margin-right: 9px;
 `;
-
+const OpenItems = styled.Pressable`
+  padding: 5px;
+`
 const ArrowRightIcon = styled(ArrowRight)`
 margin-left:4px;
+`;
+
+const ArrowUpIcon = styled(ArrowDown)`
+  margin-left:4px;
+  transform : rotateX(180deg);
+`;  
+
+const ArrowDownIcon = styled(ArrowDown)`
+  margin-left:4px;
 `;

@@ -2,6 +2,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect } from "react";
 import { Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styled, { useTheme } from "styled-components/native";
+import useOrderMeal from "../../../../../../biz/useOrderMeal";
 import usePurchaseHistory from "../../../../../../biz/usePurchaseHistory";
 import Typography from "../../../../../../components/Typography";
 import Wrapper from "../../../../../../components/Wrapper";
@@ -15,7 +16,37 @@ const Pages = ({route}) => {
   const {id} = route.params;
   const navigation = useNavigation();
   const themeApp = useTheme();
-  const {getPurchaseDetail,readAbleAtom:{purchaseDetail}} = usePurchaseHistory();
+  const {getPurchaseDetail,setPurchaseDetail,readAbleAtom:{purchaseDetail}} = usePurchaseHistory();
+  const {refundItem} = useOrderMeal();
+  const cancleItem = async(foodId)=>{
+    const req = {
+      orderId:id,
+      id:foodId
+    }
+    await refundItem(req);
+    const refund = {...purchaseDetail,orderItems:[...purchaseDetail.orderItems.map(v=>{
+      if(v.id === foodId){
+        return { ...v , orderStatus:7}
+      }else{
+        return v
+      }
+    })]}
+    
+    
+    // purchaseDetail.map((o)=> {
+    //   return {...o,orderItems:[...o.orderItems.map(v=>{
+    //   if(v.id === id){
+    //     return { ...v , orderStatus:7}
+    //   }else{
+    //     return v
+    //   }
+    // })]}})
+    setPurchaseDetail(refund)
+    const reqs = {
+      purchaseId:id
+    }
+    await getPurchaseDetail(reqs);
+  }
   useEffect(()=>{
     const getData = async()=>{
       const req = {
@@ -24,7 +55,7 @@ const Pages = ({route}) => {
       const data = await getPurchaseDetail(req);
     }
     getData();
-    console.log(purchaseDetail)
+    console.log(purchaseDetail,"test1234")
   },[])
   
   return (
@@ -63,7 +94,7 @@ const Pages = ({route}) => {
             </OrderTitleBox>
             {purchaseDetail?.orderItems?.map((v)=>{
               console.log(v);
-              return <OrderItem key={v.id} orderItem={v}/>
+              return <OrderItem key={v.id} orderItem={v} onCancle={cancleItem} />
             })}
             
           </OrderItemBox>
