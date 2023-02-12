@@ -17,16 +17,13 @@ import { getSnsButtonColor, getSnsButtonBorder } from './style';
 const Component = ({ type_sns = 'email', onPressEvent = () => { console.log('sns 버튼을 누르셨습니다.') } }) => {
   const snsButtonLabel = {
     kakao: '카카오톡으로 로그인',
-    email: '이메일로 가입',
+    email: '회원가입',
     login: '로그인',
     naver: '네이버로 로그인',
   };
 
   const renderButton = () => {
     switch (type_sns) {
-      case 'kakao':
-        
-        return <KakaoTalk />;
       case 'naver':
         
         return <NaverLogo />;

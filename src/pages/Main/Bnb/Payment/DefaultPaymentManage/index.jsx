@@ -13,7 +13,6 @@ import Check from '~components/Check';
 import Form from '~components/Form';
 import { useForm } from 'react-hook-form';
 import { Dimensions, ScrollView } from 'react-native';
-import TossPayment from 'react-native-toss-payments';
 
 export const PAGE_NAME = "P__DEFAULT__PAYMENT_MANAGE";
 const windowHeight = Dimensions.get('window').height;
@@ -98,23 +97,7 @@ const Pages = ()=>{
                 />
             </ButtonBox>
             <BottomSheet modalVisible={modalVisible} setModalVisible={setModalVisible} title="결제수단 추가" data={data} setValue={onSelectEvent} height={200}/>
-            {/* <TossPayment
-                clientKey={"test_ck_mnRQoOaPz8LZJXYn1aNVy47BMw6v"}
-                payment={{ orderId: 'KR' + Date.now().toString(),
-                amount: 100,
-                customerName: '홍길동',
-                customerEmail: 'honggildong@gmail.com',
-                orderName: 'Apple Macbook Pro`16 M1 Ultra 32GB 1TB',
-                successUrl: 'http://15.165.39.55/admin/success.php',
-                failUrl: 'http://15.165.39.55:8882/fail',}}
-                onApproveError={(v) => {console.log("에러",v)}}
-                onApproveFailed={() => {console.log("teset")}}
-                onApproveSucceed={(v) => {
-                    if(v.status === "DONE"){
-                        navigation.goBack();
-                    }
-                }}
-            /> */}
+      
         </Wrapper>
     )
 }

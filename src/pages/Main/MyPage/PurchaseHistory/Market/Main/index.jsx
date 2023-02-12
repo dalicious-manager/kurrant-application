@@ -85,19 +85,19 @@ const confirmPress = (setModal) =>{
     const body = {
       startDate:startDate, endDate:endDate
     }
-    await getPurchaseHistory(body);     
+    // await getPurchaseHistory(body);     
   }
-  useEffect(()=>{
-    const purchaseHistory =async()=>{
-      await getPurchaseHistory();     
-    } 
-    const selectDate = searchDate.filter((v)=> v.isActive === true);
-    if(selectDate[0].id !== 3){
-      purchaseHistory();
-    }else{
-      setMarketPurchase([]);
-    }
-  },[searchDate])
+  // useEffect(()=>{
+  //   const purchaseHistory =async()=>{
+  //     await getPurchaseHistory();     
+  //   } 
+  //   const selectDate = searchDate.filter((v)=> v.isActive === true);
+  //   if(selectDate[0].id !== 3){
+  //     purchaseHistory();
+  //   }else{
+  //     setMarketPurchase([]);
+  //   }
+  // },[searchDate])
   return (
     
     <Container>

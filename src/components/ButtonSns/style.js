@@ -12,11 +12,11 @@ const snsButtonColor = {
     background-color: ${({ theme }) => theme.colors.etc.naver}; 
   `,
   email: css`
-    background-color: ${({ theme }) => '#F5F5F5'}; 
+    background-color: ${({ theme }) => '#ffffff'}; 
   `,
   login: css`
-  background-color: ${({ theme }) => '#F5F5F5'}; 
-`,
+    background-color: ${({ theme }) => theme.colors.yellow[500]}; 
+  `,
   apple: css`
     background-color: ${({ theme }) => theme.colors.neutral[0]}; 
   `,
@@ -34,10 +34,9 @@ const snsButtonBorder = {
     border: 1px solid ${({ theme }) => theme.colors.etc.naver}; 
     `,
   email: css`
-    border: 1px solid ${({ theme }) => '#F5F5F5'}; 
+    border: 1px solid ${({ theme }) => '#BDBAC1'}; 
     `,
   login: css`
-    border: 1px solid ${({ theme }) => '#F5F5F5'}; 
     `,
   apple: css`
     border: 1px solid ${({ theme }) => theme.colors.neutral[900]}; 

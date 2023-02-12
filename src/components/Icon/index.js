@@ -7,6 +7,8 @@ export { default as EyeInvisibleIcon } from './_components/EyeInvisibleIcon';
 export { default as KaKaoIcon } from './_components/KaKaoIcon';
 export { default as AppleSnsIcon } from './_components/AppleSnsIcon';
 export { default as FacebookSnsIcon } from './_components/FacebookSnsIcon';
+export { default as KakaoSnsIcon } from './_components/KakaoSnsIcon';
+export { default as NaverSnsIcon } from './_components/NaverSnsIcon';
 export { default as GoogleSnsIcon } from './_components/GoogleSnsIcon';
 export { default as NaverIcon } from './_components/NaverIcon';
 export { default as Octicons } from './_components/Octicons';

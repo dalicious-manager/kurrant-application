@@ -5,7 +5,8 @@ import FastImage from 'react-native-fast-image'
 import ButtonMeal from "~components/ButtonMeal";
 import Typography from "~components/Typography";
 import ArrowRight from "~assets/icons/Group/checkArrow.svg";
-import { Alert, Dimensions } from "react-native";
+import ArrowDown from "~assets/icons/Group/arrowDown.svg";
+import { Alert, Dimensions, Pressable, View } from "react-native";
 import { css, useTheme } from "styled-components/native";
 import { formattedDateAndDay, formattedDateType, formattedDateWeekBtn } from "../../../../../../../../utils/dateFormatter";
 import withCommas from "../../../../../../../../utils/withCommas";
@@ -25,6 +26,7 @@ const Component = ({
   const themeApp = useTheme();
   const navigation = useNavigation();
   const {refundItem} = useOrderMeal();
+  const [open, setOpen] = useState(false)
   const {setMealPurchase,readAbleAtom:{mealPurchase}}= usePurchaseHistory();
   const purchase = mealPurchase.filter(v => v.id === purchaseId)[0];
   const cancleItem = async(id)=>{
@@ -64,12 +66,18 @@ const Component = ({
         <DateOrderItemListContainer isFirst={itemIndex === 0}>
         <DateDetailBox>
           <Typography text={"CaptionR"} textColor={themeApp.colors.grey[4]}>{date} 결제</Typography>
-          <DetailWrap>
-              <TextButton size='label13R' label='주문상세' type='blue' onPressEvent={()=>{navigation.navigate(PurchaseDetailPageName,{id:purchase.id})}}/>
-              <ArrowRightIcon/>
-          </DetailWrap>
+          <DateDetailEndView>
+            {open && <DetailWrap>
+                <TextButton size='label13R' label='주문상세' type='blue' onPressEvent={()=>{navigation.navigate(PurchaseDetailPageName,{id:purchase.id})}}/>
+                {/* <ArrowRightIcon/> */}
+            </DetailWrap>} 
+            <OpenItems onPress={()=>setOpen(!open)}>
+              {open ? <ArrowUpIcon/> : <ArrowDownIcon/>}
+            </OpenItems>
+          </DateDetailEndView>
         </DateDetailBox>
-        <DateOrderItemListBox>
+        
+        {open && <DateOrderItemListBox>
           <DateBar />
           <DateOrderItemList>
             {purchase?.orderItems.map((order,i)=>{
@@ -162,7 +170,7 @@ const Component = ({
             })}
                
           </DateOrderItemList>
-        </DateOrderItemListBox>
+        </DateOrderItemListBox>}
       </DateOrderItemListContainer>
     )
 }
@@ -249,13 +257,32 @@ const StatusText = styled.View`
 const DateDetailBox = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  border-bottom-width: 1px;
+  border-bottom-color: ${({theme})=>theme.colors.grey[8]};
+  padding-bottom: 8px;
+`
+const DateDetailEndView= styled.View`
+  flex-direction: row;
+  align-items: center;
 
 `
 const DetailWrap = styled.Pressable`
 flex-direction:row;
 align-items:center;
+margin-right: 9px;
 `;
-
+const OpenItems = styled.Pressable`
+  padding: 5px;
+`
 const ArrowRightIcon = styled(ArrowRight)`
 margin-left:4px;
+`;
+
+const ArrowUpIcon = styled(ArrowDown)`
+  margin-left:4px;
+  transform : rotateX(180deg);
+`;  
+
+const ArrowDownIcon = styled(ArrowDown)`
+  margin-left:4px;
 `;

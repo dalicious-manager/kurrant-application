@@ -5,22 +5,17 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, BackHandler, Dimensions,Platform,Pressable,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
-import { Settings ,LoginButton,AccessToken} from 'react-native-fbsdk-next';
+import { Settings} from 'react-native-fbsdk-next';
 
-import {LogoImage , LogoBackground, LogoImage2} from '../../../../assets';
+import {LogoBackground} from '../../../../assets';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
-import Image from '../../../../components/Image';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
 import { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { SCREEN_NAME } from '../../../../screens/Main/Bnb';
 import { getStorage } from '../../../../utils/asyncStorage';
 import snsLogin from '../../../../utils/snsLogin';
-import {
-  PAGE_NAME as MembershipJoinPageName,
-} from '../../../Membership/MembershipIntro';
-import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
 import LoginMain from './LoginMain';
 
 import 'react-native-get-random-values';
@@ -28,6 +23,7 @@ import { v4 as uuid } from 'uuid'
 
 import LogoImageSvg from '../../../../assets/icons/Logo.svg'
 import useAuth from '../../../../biz/useAuth';
+import Config from 'react-native-config';
 
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
@@ -44,12 +40,12 @@ const Pages = ({route}) => {
   const navigation = useNavigation();
   const toast = Toast();
   const [isLoginLoading, setLoginLoading] = useState();
-  const {googleLogin,appleLogin, facebookLogin} = snsLogin();
+  const {googleLogin,appleLogin, facebookLogin,kakaoLogin,naverLogin} = snsLogin();
   const {login} = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes:['https://www.googleapis.com/auth/user.phonenumbers.read'],
-      webClientId: '872782655273-mhb2jokicsaqb99astkb4hlqr4dndf7o.apps.googleusercontent.com', 
+      webClientId: Config.GOOGLE_WEB_CLIENT_ID, 
     });
   }
   const appleSignConfiguration = ()=>{
@@ -63,7 +59,7 @@ const Pages = ({route}) => {
     });
   }
   const facebookConfiguration = ()=>{
-    Settings.setAppID('978024843173047');
+    Settings.setAppID(Config.FACEBOOK_APP_ID);
     Settings.initializeSDK();
     
   }
@@ -135,20 +131,12 @@ const Pages = ({route}) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
   
-  if(isLoginLoading){
-    return<ActivityIndicator size="large" />
-  }
+  // if(isLoginLoading){
+  //   return<ActivityIndicator size="large" />
+  // }
   return (
     <WrapperBox>
-      <BackgroundContainer>
-        <ImageGradient
-          colors={['rgba(255,255,255,0)','rgba(255,255,255,0)','white']}
-          start={{ x: 0, y: -0.5 }}
-          end={{ x: 0, y: 0.65 }}
-        />
-        <BackgroundImageBox source={LogoBackground} resizeMode="cover"/>
-      </BackgroundContainer>
-      <LoginBox>
+        <LoginContainer>
         <LogoBox>
           {/* <Image imagePath={LogoImage} scale={1.0}/> */}
           
@@ -156,11 +144,23 @@ const Pages = ({route}) => {
           <LogoImageSvg/>
           
         </LogoBox>
+        <BackgroundImageBox source={LogoBackground} resizeMode="cover"/>
         <LoginMain />
-        <TouchableOpacity onPress={()=>{
-          // navigation.navigate(MembershipJoinPageName)
-        }}>
-          <Pressable onPress={async()=>{
+        
+        <EtcSNSContainer>
+
+         <HorizonLine text={`그외 SNS로 로그인`}/>
+         
+          {/* <Text style={{flex:1 ,textAlign:'center'}} >───── 그외 SNS로 로그인 ─────</Text> */}
+          <EtcSNSBox >
+            <ButtonRoundSns type_sns='kakao' size={32} onPressEvent={kakaoLogin}/>
+            <ButtonRoundSns type_sns='naver' size={32} onPressEvent={naverLogin}/>
+            <ButtonRoundSns type_sns='google' size={32} onPressEvent={googleLogin}/>
+            <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>
+            <ButtonRoundSns type_sns='facebook' size={32} onPressEvent={facebookLogin}/>
+          </EtcSNSBox>
+        </EtcSNSContainer>
+        <Pressable onPress={async()=>{
             const res = await login("",true)
             navigation.reset({
               index: 0,
@@ -171,21 +171,9 @@ const Pages = ({route}) => {
               ],
             })
           }}>
-          <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
+          {/* <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping> */}
           </Pressable>
-        </TouchableOpacity>
-        <EtcSNSContainer>
-
-         <HorizonLine text={`그외 SNS로 로그인`}/>
-         
-          {/* <Text style={{flex:1 ,textAlign:'center'}} >───── 그외 SNS로 로그인 ─────</Text> */}
-          <EtcSNSBox >
-            <ButtonRoundSns type_sns='facebook' size={32} onPressEvent={facebookLogin}/>
-            <ButtonRoundSns type_sns='google' size={32} onPressEvent={googleLogin}/>
-            <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>
-          </EtcSNSBox>
-        </EtcSNSContainer>
-      </LoginBox>
+          </LoginContainer>
       <toast.ToastWrap message={"뒤로버튼 한번 더 누르시면 종료됩니다."} />
     </WrapperBox>
   );
@@ -194,29 +182,24 @@ const Pages = ({route}) => {
 const WrapperBox = styled(Wrapper)`
   flex:1;
   background-color: '#fff';
+  
 `
-const BackgroundContainer = styled.View`
-  position: relative;
-  height: ${screenHeight/2}px;
-`
-const LoginBox = styled.View`
-  position:absolute;
-  width:100%;
-  top:${screenHeight/2-(317/2)}px;
-  align-items: center;
-  justify-content: flex-start;
-`
+
 
 const BackgroundImageBox = styled.Image` 
-    position: absolute;
-    top: 0;
-    left: 0;
-    width:100%;
-    z-index: -1;
+  width: 220px;
+  height: 220px;
+  margin-bottom: 57px;
 `;
-
+const LoginContainer = styled.View`
+  flex:1;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 59px;
+  padding-top: 141px;
+`
 const LogoBox = styled.View`
-  margin-bottom: 40px;
+  margin-bottom: 15px;
 `;
 const WindowShopping = styled.Text`
 /* 로그인 하지 않고 둘러보기 */
@@ -227,25 +210,16 @@ const WindowShopping = styled.Text`
   /* identical to box height, or 140% */
   text-align: right;
   text-decoration-line: underline;
-  margin-top: 40px;
   /* grey 5 */
   color: #BDBAC1;
+  margin-top: 24px;
+`
 
-`
-const ImageGradient = styled(LinearGradient)`
-  position:absolute;
-  top:0;
-  left:0; 
-  width:100%;
-  z-index: 0;
-  height: 500px;
-`
 const EtcSNSContainer = styled.View`
-  margin: 65px 48px 0px 48px;
-  flex:1;
+  margin: 0px 24px 0px 24px;
+  padding-top: 40px;
 `
 const EtcSNSBox = styled.View`
-  flex:1;
   justify-content: center;
   flex-direction: row;
 `

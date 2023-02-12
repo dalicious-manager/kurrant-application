@@ -81,17 +81,50 @@ const confirmPress = (setModal) =>{
   }
   const onPressCondition = async()=>{
     const body = {
-      startDate:startDate, endDate:endDate
+      startDate:formattedWeekDate(startDate), 
+      endDate:formattedWeekDate(endDate),
+      orderType:1
     }
     await getPurchaseHistory(body);     
   }
   useEffect(()=>{
-    const purchaseHistory =async()=>{
-      await getPurchaseHistory();     
+    const purchaseHistory =async(date)=>{
+      if(date.startDate){
+        console.log(date,"dddsss");
+        await getPurchaseHistory(date);     
+      }
     } 
     const selectDate = searchDate.filter((v)=> v.isActive === true);
+    console.log(selectDate[0])
+    const dateArray = ()=>{
+      var now = new Date();
+      if(selectDate[0].id === 0){
+        const starts = new Date(now.setDate(now.getDate() - 7));
+        const ends = new Date();;
+        return [starts,ends];
+      }
+
+      if(selectDate[0].id === 1){
+        const starts = new Date(now.setMonth(now.getMonth() - 1));
+        const ends = new Date();;
+        return [starts,ends];
+      }
+      if(selectDate[0].id === 2){
+        const starts = new Date(now.setMonth(now.getMonth() - 3));
+        const ends = new Date();;
+        return [starts,ends];
+      }
+      
+    }
     if(selectDate[0].id !== 3){
-      purchaseHistory();
+      const [start , end] = dateArray();
+      console.log(start , end,"test1231241");
+      const req = {
+        startDate :formattedWeekDate(start),
+        endDate:formattedWeekDate(end),
+        orderType:0
+      }
+      purchaseHistory(req);
     }else{
       setAllPurchase([]);
     }
@@ -133,8 +166,7 @@ const confirmPress = (setModal) =>{
         {isAllPurchaseLoading ? <Skeleton />:
         <Wrapper>
         {allPurchase ? <ScrollViewBox>{allPurchase?.map((v,i)=>{
-          console.log(v)
-          return <DateOrderItemContainer key={`${v.orderDate}${i}`} itemIndex={i} purchase={v} date={v.orderDate} />
+          return <DateOrderItemContainer key={`${v.orderDate}${i}`} itemIndex={i} purchaseId={v.id} date={v.orderDate} />
         }) }</ScrollViewBox>:
             <NothingContainer>
               <Typography text={"Body05R"} textColor={themeApp.colors.grey[5]}>주문 내역이 없어요</Typography>

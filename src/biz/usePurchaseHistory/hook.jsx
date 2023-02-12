@@ -25,7 +25,6 @@ const usePurchaseHistory = () => {
     const getPurchaseHistory = async (body,option = {}) => {
         try {
           setAllPurchaseLoading(true);
-          setAllPurchase([]);
           const res = await Fetch.getPurchaseHistory(     
             {
               ...body
@@ -44,7 +43,6 @@ const usePurchaseHistory = () => {
       const getPurchaseHistoryMeal = async (body,option = {}) => {
         try {
           setMealPurchaseLoading(true);
-          setMealPurchase([]);
           const res = await Fetch.getPurchaseHistoryMeal(     
             {
               ...body
@@ -82,6 +80,8 @@ const usePurchaseHistory = () => {
         getPurchaseHistoryMeal,
         getPurchaseDetail,
         setMealPurchase,
+        setAllPurchase,
+        setPurchaseDetail,
         readAbleAtom:{
             isAllPurchaseLoading,
             isMarketPurchaseLoading,

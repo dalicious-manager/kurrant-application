@@ -6,8 +6,8 @@ export const setStorage = async (key, value, callback = () => console.log('저�
 }
 
 
-export const getStorage = async (key, callback = () => console.log('가져오기')) => {
+export const getStorage = async (key, callback = () => { }) => {
     const result = await AsyncStorage.getItem(key, callback);
-    console.log(result)
+    // console.log(result)
     return result
 }

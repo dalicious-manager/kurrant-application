@@ -102,7 +102,7 @@ const useShoppingBasket = () => {
             const res = await Fetch.updateMealCart({
                 ...body
             });
-            console.log(res.message ,body.updateCartList.map((v)=>v.count))
+            // console.log(res.message ,body.updateCartList.map((v)=>v.count))
             return res;
 
         }catch(err){

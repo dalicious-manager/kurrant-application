@@ -17,7 +17,7 @@ export default function withCommas(price) {
 }
 
 
-export function generateOrderCode(orderType, userId) {
+export function generateOrderCode(orderType, userId, spotId) {
   const codeType = () => {
     switch (orderType) {
       case DAILYFOOD: return "S"
@@ -29,23 +29,42 @@ export function generateOrderCode(orderType, userId) {
   let code = codeType();
   const now = formattedDate(new Date(), '')
   code += now.toString().replace("-", "");
-  code += idToFourString(userId);
+  code += idToFiveString(userId);
+  code += spotToFiverString(spotId);
   code += create4DigitKey();
   return code;
 }
 
-const idToFourString = (id) => {
+const idToFiveString = (id) => {
   const strId = id.toString();
-  if (id > 10000) {
-    return strId.substring(0, 4);
-  } else if (id > 1000) {
+  if (id > 100000) {
+    return strId.substring(0, 5);
+  } else if (id > 10000) {
     return strId;
-  } else if (id > 100) {
+  } else if (id > 1000) {
     return "0" + strId;
-  } else if (id > 10) {
+  } else if (id > 100) {
     return "00" + strId;
-  } else {
+  } else if (id > 10) {
     return "000" + strId;
+  } else {
+    return "0000" + strId;
+  }
+}
+const spotToFiverString = (id) => {
+  const strId = id.toString();
+  if (id > 100000) {
+    return strId.substring(0, 5);
+  } else if (id > 10000) {
+    return strId;
+  } else if (id > 1000) {
+    return "0" + strId;
+  } else if (id > 100) {
+    return "00" + strId;
+  } else if (id > 10) {
+    return "000" + strId;
+  } else {
+    return "0000" + strId;
   }
 }
 

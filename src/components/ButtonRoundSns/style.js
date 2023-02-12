@@ -28,18 +28,18 @@ export const getSnsButtonBorder = type => {
 
 const snsButtonBorder = {
   kakao: css`
-    border: 1px solid ${({ theme }) => theme.colors.etc.kakao}; 
+    
     `,
   naver: css`
-    border: 1px solid ${({ theme }) => theme.colors.etc.naver}; 
+    
     `,
   email: css`
-    border: 1px solid ${({ theme }) => '#F5F5F5'}; 
+    border: 1px solid ${({ theme }) => '#BDBAC1'}; 
     `,
   login: css`
-    border: 1px solid ${({ theme }) => '#F5F5F5'}; 
+    border: 1px solid ${({ theme }) => '#FDC800'}; 
     `,
   apple: css`
-    border: 1px solid ${({ theme }) => theme.colors.neutral[900]}; 
+    
   `,
 };
