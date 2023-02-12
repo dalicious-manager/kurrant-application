@@ -48,7 +48,7 @@ const Pages = ({route}) => {
     const closeModal = () => {
         setModalVisible(false)
     }
-    
+    console.log(dailyFoodId,'id')
     // foodId 넘겨줘야함 
     useEffect(()=>{
         async function loadFoodDetail(){

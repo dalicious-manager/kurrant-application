@@ -99,6 +99,7 @@ const useOrderMeal = () => {
         orderMeal,
         todayOrderMeal,
         refundItem,
+        setOrderMeal,
         isOrderMeal,
         todayMeal,
         isOrderMealLoading

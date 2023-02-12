@@ -146,7 +146,7 @@ const Pages = ({route}) => {
             loadDailyFood();
         },[date])
         useEffect(()=>{
-            
+            loadMeal()
             updateMeal(req);  
         },[isFocused])
     const addCartPress = async (id,day,type,m) =>{

@@ -4,7 +4,8 @@ import {
   Text,
   Animated,
   Pressable,
-  Dimensions
+  Dimensions,
+  View
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -29,20 +30,20 @@ const Component = ({
   onPressEvent,
   increasePress,
   decreasePress,
-  onPressEvent2 = () => console.log('장바구니 버튼')
+  onPressEvent2 = () => console.log('장바구니 버튼'),
+  capacity
 }) => {
-
+  console.log(capacity,'수량')
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const [fadeIn, setFadeIn] = useState(false);
   const [rotate, setRotate] = useState('0deg');
 
   const PRICE = price * count
-  //const result = PRICE.toLocaleString('ko-KR')
 
   const handlePress = () => {
     Animated.timing(fadeAnim, {
-      toValue: fadeIn ? 0 : 60,
+      toValue: fadeIn ? 0 : 72,
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -70,7 +71,9 @@ const Component = ({
         <BtnContainer >
           <PressView>
             <Pressable onPress={handlePress}>
-              <Trapezoid />
+              <TrapezoidIcon
+              capacity={capacity} count={count}
+              />
               <Animated.View
                 style={{
                   transform: [{rotate: rotate}],
@@ -83,24 +86,28 @@ const Component = ({
             </Pressable>
           </PressView>
 
-          <InnerContainer>
+          <InnerContainer capacity={capacity} count={count}>
             <Animated.View style={{height: fadeAnim}}>
-              <AnimationView>
+              <AnimationView capacity={capacity} count={count}>
                 <Inner>
                     <PriceText>{withCommas(PRICE)}원</PriceText>
-                  <Count
-                  detail
-                  count={count}
-                  increasePress={increasePress}
-                  decreasePress={decreasePress}
-                  onPressEvent={onPressEvent}
-                  />
+                    <CountView >
+                      <Count
+                      detail
+                      count={count}
+                      increasePress={increasePress}
+                      decreasePress={decreasePress}
+                      onPressEvent={onPressEvent}
+                      capacity={capacity}
+                      />
+                      <CapacityText capacity={capacity} count={count}>재고수량 : {capacity}</CapacityText>
+                    </CountView>
                 </Inner>
               </AnimationView>
             </Animated.View>
-            <PressButton onPress={onPressEvent2}>
-              <ButtonText>
-                {fadeIn ? '장바구니에 담기' : `${count}개 담기`}
+            <PressButton onPress={onPressEvent2} capacity={capacity} count={count} disabled={capacity < count}>
+              <ButtonText capacity={capacity} count={count}>
+                {(capacity < count) ? '재고가 부족해요' : fadeIn ? '장바구니 담기' : `${count}개 담기`}
               </ButtonText>
             </PressButton>
           </InnerContainer>
@@ -127,7 +134,7 @@ const PressView = styled.View`
 `;
 
 const PressButton = styled.Pressable`
-background-color:${props => props.theme.colors.yellow[500]};
+background-color:${({theme,capacity,count}) => count > capacity ? theme.colors.grey[7] : theme.colors.yellow[500]};
 width:100%;
 height:56px;
 border-radius:29px;
@@ -135,37 +142,28 @@ padding:16px;
 `;
 
 const AnimationView = styled.View`
-background-color:${props => props.theme.colors.yellow[500]};
+background-color:${({theme,capacity,count}) => count > capacity ? theme.colors.grey[7] : theme.colors.yellow[500]};
 height:70px;
 border-radius:29px;
-padding:4px;
+padding:2px;
 box-sizing:border-box;
 `;
 
 const InnerContainer = styled.View`
-background-color:${props => props.theme.colors.yellow[500]};
+background-color:${({theme,capacity,count}) => count > capacity ? theme.colors.grey[7] : theme.colors.yellow[500]};
 border-radius:29px;
 overflow:hidden;
 `;
 
-const InnerView = styled.View`
-flex-direction:row;
-align-items:center;
-justify-content:space-around;
-width:98px;
-height:38px;
-border:1px solid ${props => props.theme.colors.grey[6]};
-border-radius:7px;
-`;
 
 const Inner = styled.View`
 background-color:${props => props.theme.colors.grey[0]};
-height:56px;
+height:70px;
 border-top-left-radius:27px;
 border-top-right-radius:27px;
 justify-content:space-between;
 flex-direction:row;
-padding:0px 18px;
+padding:8px 18px 4px 18px;
 align-items:center;
 
 `;
@@ -175,7 +173,18 @@ color:${props => props.theme.colors.grey[2]};
 `;
 
 const ButtonText = styled(Typography).attrs({text:'BottomButtonSB'})`
-color:${props => props.theme.colors.grey[2]};
+color:${({theme,capacity,count}) => count > capacity ? theme.colors.grey[0] : theme.colors.grey[2]};
 text-align:center;
 `;
 
+const CapacityText = styled(Typography).attrs({text:'CaptionR'})`
+color:${({theme,capacity,count}) => count > capacity ? theme.colors.red[500] : theme.colors.grey[2]};
+`;
+
+const CountView = styled.View`
+align-items:flex-end;
+`;
+
+const TrapezoidIcon = styled(Trapezoid)`
+color:${({theme,capacity,count}) => count > capacity ? theme.colors.grey[7] : theme.colors.yellow[500]};
+`;

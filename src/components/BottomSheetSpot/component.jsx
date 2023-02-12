@@ -162,6 +162,7 @@ const BottomSheetSpot = props => {
                
               }}
               renderItem={({ item }) => (
+                
                 <>
                  <ItemContainer>
                   <GroupName>{item.clientName}</GroupName>

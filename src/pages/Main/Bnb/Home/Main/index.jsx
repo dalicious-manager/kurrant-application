@@ -75,7 +75,7 @@ const Pages = () => {
       return el.serviceDate
     });
     const intersection = nextWeek.filter(x => mealCheck.includes(x));
-    
+   
     useEffect(()=>{
       const handleShowModal = async () => {
         const VISITED_BEFORE_DATE = await getStorage('balloonTime');
@@ -149,6 +149,7 @@ const Pages = () => {
         
         const status = async () => {
            const userStatus = await getStorage('spotStatus');
+           
            await todayOrderMeal(start[0],end[0])
            const getUserStatus = Number(userStatus);          
           if(getUserStatus === 1){
@@ -159,7 +160,8 @@ const Pages = () => {
           }
         }
         try {
-          if (!userRole === "ROLE_GUEST") {
+          if (!(userRole === "ROLE_GUEST")) {
+            
             status();            
             userGroupSpotCheck();
             loadMeal();
