@@ -150,6 +150,7 @@ const Pages = () => {
         
         const status = async () => {
            const userStatus = await getStorage('spotStatus');
+           
            await todayOrderMeal(start[0],end[0])
            const getUserStatus = Number(userStatus);          
           if(getUserStatus === 1){

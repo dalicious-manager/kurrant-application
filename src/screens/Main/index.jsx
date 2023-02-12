@@ -1017,7 +1017,7 @@ const Screen = () => {
                 lineHeight:22
               },
               
-              headerLeft: () => <BackButton />,
+              headerLeft: () => <BackButton margin={[10,0]}/>,
             }}
           />
           <MainRoot.Screen

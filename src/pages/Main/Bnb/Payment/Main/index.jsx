@@ -226,7 +226,7 @@ const Pages = ({route}) => {
             </BorderWrap>
             <BorderWrap>
                 <Container>
-                    <MealInfo onPress={() => setShow(!show)}>
+                    <MealInfo onPress={() => setShow(!show)} >
                         <Title>주문 상품 정보</Title>
                         {show ?  <ArrowUpIcon/> : <ArrowDownIcon/> }
                        
@@ -235,13 +235,14 @@ const Pages = ({route}) => {
                 </Container>
                 {show && <ProductInfo>
                 {isLoadMeal?.map((el,idx) => {
+                    const arrs = el.cartDailyFoodDtoList[el.cartDailyFoodDtoList.length - 1]
+                    const lastArr = arrs.cartDailyFoods[arrs.cartDailyFoods.length -1]
                     
                     return (
                         <React.Fragment key={idx}>
                             {(selected === el.spotId) && el.cartDailyFoodDtoList.map((m,i) => {
                                 const arr = m.cartDailyFoods.filter(v => v.status !== 2);
-                               // const borderLast = arr[arr.length - 1];
-                                
+                               
                                 return (
                                     <OrderWrap key={i}>
                                         
@@ -279,7 +280,7 @@ const Pages = ({route}) => {
                                                    </CountWrap>
                                                    
                                                </ContentsWrap>
-                                               <Border/>
+                                               {(lastArr !== meal) && <Border/>}
                                                </React.Fragment>
                                            )
                                        })}
@@ -455,6 +456,7 @@ margin:0px 24px;
 
 const FormWrap = styled.View`
 margin: 24px;
+padding-bottom:48px;
 `;
 
 const DeliveryTextWrap = styled.View`
@@ -517,8 +519,7 @@ align-items:center;
 `;
 
 const ProductInfo = styled.View`
-margin-top:16px;
-
+margin-top:34px;
 `;
 
 const ArrowRight = styled(ArrowRightIcon)`

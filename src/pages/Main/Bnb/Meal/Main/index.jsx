@@ -25,7 +25,7 @@ const Pages = ({route}) => {
   const meal = true;
   const [touchDate,setTouchDate] = useState(data);
   const [show,setShow] = useState(false);
-  const {isOrderMeal, refundItem,orderMeal} = useOrderMeal();
+  const {isOrderMeal, refundItem, setOrderMeal} = useOrderMeal();
   const date = formattedWeekDate(new Date());
   const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter((m) => m.serviceDate === touchDate);
@@ -36,6 +36,14 @@ const Pages = ({route}) => {
   }
 
   const cancelMealPress = (id) =>{
+    const list = isOrderMeal.map(el => {
+      return {...el,orderItemDtoList:[...el.orderItemDtoList.filter(v => v.id !== id)]}
+    })
+
+    const listArr = list.filter(el => {
+      return el.orderItemDtoList.length !== 0
+    })
+    
     Alert.alert(
       "메뉴 취소",
       "메뉴를 취소하시겠어요?",
@@ -52,6 +60,7 @@ const Pages = ({route}) => {
               await refundItem({
                 id:id
               })
+              setOrderMeal(listArr)
               setShow(true);
               toast.toastEvent();
               setTimeout(()=>{
@@ -68,7 +77,16 @@ const Pages = ({route}) => {
     )
   };
 
-  const changeMealPress = () =>{
+  const changeMealPress = (id) =>{
+    
+    const list = isOrderMeal.map(el => {
+      return {...el,orderItemDtoList:[...el.orderItemDtoList.filter(v => v.id !== id)]}
+    })
+
+    const listArr = list.filter(el => {
+      return el.orderItemDtoList.length !== 0
+    })
+
     Alert.alert(
       "메뉴 변경",
       "현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?",
@@ -80,7 +98,17 @@ const Pages = ({route}) => {
         },
         {
           text:'메뉴 취소',
-          onPress:() => {},
+          onPress: async () => {
+            try {
+              await refundItem({
+                id:id
+              })
+              setOrderMeal(listArr)
+              navigation.navigate(BuyMealPageName)
+            } catch (err) {
+              console.log(err)
+            }
+          },
           style:'destructive'
         }
       ]
@@ -125,7 +153,7 @@ const Pages = ({route}) => {
                       <LabelButton label={"취소"} onPressEvent={()=>cancelMealPress(sm.id)} disabled={(sm.orderStatus === 7) && true}/>
                     </CancleBtnWrap>
                   {sm.orderStatus !== 7 && <MealChangeWrap>
-                      <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
+                      <LabelButton label={"메뉴변경"} onPressEvent={()=>changeMealPress(sm.id)}/>
                     </MealChangeWrap>}
                 </MealContentWrap>
                 )
@@ -169,7 +197,7 @@ const Pages = ({route}) => {
                     <LabelButton label={"취소"} onPressEvent={()=>cancelMealPress(el.id)} disabled={el.orderStatus === 7}/>
                   </CancleBtnWrap>
                   {el.orderStatus !== 7 && <MealChangeWrap>
-                    <LabelButton label={"메뉴변경"} onPressEvent={changeMealPress}/>
+                    <LabelButton label={"메뉴변경"} onPressEvent={()=>changeMealPress(el.id)}/>
                   </MealChangeWrap>}
                 </MealContentWrap>
                 )

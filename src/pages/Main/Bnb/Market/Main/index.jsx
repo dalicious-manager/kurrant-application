@@ -19,7 +19,7 @@ const Pages = () => {
           />
 
           <MetadataWrap>
-            <LargeTitle>마켓은 서비스 준비중이에요</LargeTitle>
+            <LargeTitle>마켓은 서비스 준비중이에요.</LargeTitle>
             <TypoBody05R>
               빠른 시일 내에 이용할 수 있도록 노력할게요.{' '}
             </TypoBody05R>
