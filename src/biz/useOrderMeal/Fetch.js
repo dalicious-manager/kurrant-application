@@ -20,3 +20,14 @@ export async function refundItem(body, option) {
     return fetchRes;
 
 }
+
+export async function refundAll(body, option) {
+    const fetchRes = await fetchJson(`/users/me/orders/refund`, 'POST', {
+        ...option,
+        body: JSON.stringify(body)
+    });
+
+
+    return fetchRes;
+
+}

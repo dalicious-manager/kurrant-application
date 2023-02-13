@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect } from "react";
-import { Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styled, { useTheme } from "styled-components/native";
 import useOrderMeal from "../../../../../../biz/useOrderMeal";
 import usePurchaseHistory from "../../../../../../biz/usePurchaseHistory";
@@ -16,9 +16,9 @@ const Pages = ({route}) => {
   const {id} = route.params;
   const navigation = useNavigation();
   const themeApp = useTheme();
-  const {getPurchaseDetail,setPurchaseDetail,readAbleAtom:{purchaseDetail}} = usePurchaseHistory();
-  const {refundItem} = useOrderMeal();
-  const cancleItem = async(foodId)=>{
+  const {getPurchaseDetail,setPurchaseDetail,readAbleAtom:{purchaseDetail,isPurchaseDetailLoading}} = usePurchaseHistory();
+  const {refundItem,refundAll} = useOrderMeal();
+  const cancelItem = async(foodId)=>{
     const req = {
       orderId:id,
       id:foodId
@@ -31,7 +31,15 @@ const Pages = ({route}) => {
         return v
       }
     })]}
-    
+  }
+  const cancelAll = async()=>{
+    const req = {
+      id:id,
+    }
+    await refundAll(req);
+    const refund = {...purchaseDetail,orderItems:[...purchaseDetail.orderItems.map(v=>{
+      return { ...v , orderStatus:7}
+    })]}
     
     // purchaseDetail.map((o)=> {
     //   return {...o,orderItems:[...o.orderItems.map(v=>{
@@ -45,19 +53,32 @@ const Pages = ({route}) => {
     const reqs = {
       purchaseId:id
     }
-    await getPurchaseDetail(reqs);
+    getPurchaseDetail(reqs);
   }
+  const possibleOrder = purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7)?.length > 0 
+  ? (purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7))?.length > 0 
+  ? "(취소된주문:"+purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7)?.length
+  :""
+  :"";
+  purchaseDetail?.orderItems?.map((v)=>console.log(v));
   useEffect(()=>{
     const getData = async()=>{
       const req = {
         purchaseId:id
       }
-      const data = await getPurchaseDetail(req);
+      await getPurchaseDetail(req);
     }
     getData();
-    console.log(purchaseDetail,"test1234")
   },[])
-  
+  if(isPurchaseDetailLoading){
+    return (
+      <SafeView>
+        <Wrapper>
+          <ActivityIndicator size={"large"}/>
+        </Wrapper>
+      </SafeView>
+    )
+  }
   return (
     <SafeView>
       <ScrollView>
@@ -91,10 +112,31 @@ const Pages = ({route}) => {
           <OrderItemBox>
             <OrderTitleBox>
               <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}>주문한 제품</Typography>
+              <CancelButton onPress={()=>{
+                Alert.alert(
+                  "주문 취소",
+                  `${purchaseDetail?.orderItems?.length}개의 주문 중 ${purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 5)?.length || 0}개를 취소 하시겠어요?\n${possibleOrder}`,
+                  [
+                    {
+                      text:'아니요',
+                      onPress:() => {},
+                      
+                    },
+                    {
+                      text:'메뉴 취소',
+                      onPress: async() => {
+                        cancelAll()
+                      },
+                      style:'destructive'
+                    }
+                  ]
+                )
+              }}>
+                <Typography text="Button10SB" textColor={themeApp.colors.grey[3]}>주문전체취소</Typography>
+              </CancelButton>
             </OrderTitleBox>
             {purchaseDetail?.orderItems?.map((v)=>{
-              console.log(v);
-              return <OrderItem key={v.id} orderItem={v} onCancle={cancleItem} />
+              return <OrderItem key={v.id} orderItem={v} oncancel={cancelItem} />
             })}
             
           </OrderItemBox>
@@ -236,10 +278,8 @@ const Pages = ({route}) => {
               </ReceiptBox>
           </PaymentsMethodBox>
           <CancelBox>
-            <CancelButton>
-              <Typography text="Body05SB" textColor={themeApp.colors.grey[3]}>전체 주문 취소</Typography>
-            </CancelButton>
-          </CancelBox> 
+
+          </CancelBox>
         </Wrapper>
       </ScrollView>
     </SafeView>
@@ -275,9 +315,13 @@ const PurchaseInfoList = styled.View`
 const OrderItemBox =styled.View`
   border-bottom-width: 6px;
   border-bottom-color: ${({theme})=> theme.colors.grey[8]};
+  padding-bottom: 10px;
 `
 const OrderTitleBox = styled.View`
   padding: 17px 24px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `
 
 const PaymentsBox = styled.View`
@@ -320,10 +364,10 @@ const CancelBox = styled.View`
 `
 const CancelButton = styled.Pressable`
   border: 1px solid ${({theme})=> theme.colors.grey[7]};
-  border-radius: 7px;
+  border-radius: 50px;
   justify-content: center;
   align-items: center;
-  padding: 16px;
+  padding: 6.5px 16px;
 `
 const SaleContainer  =styled.View`
   flex-direction: row;

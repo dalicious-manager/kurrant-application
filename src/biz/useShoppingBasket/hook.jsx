@@ -60,11 +60,10 @@ const useShoppingBasket = () => {
             setAddMeal(true)
             const res = await Fetch.addMealCart([
                 ...body
-        ]);
-        console.log(res,'2323')
-        setQuantity(res.data)
-        loadMeal();
-        return res
+            ]);
+            setQuantity(res.data.cartCount)
+            loadMeal();
+            return res.data
 
         }catch(err){
             throw err

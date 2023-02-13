@@ -22,6 +22,7 @@ import withCommas from '../../utils/withCommas';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
 import { useNavigation } from '@react-navigation/native';
+import useUserInfo from '../../biz/useUserInfo';
 
 const BottomSheet = props => {
   const { modalVisible, setModalVisible ,title={}, description='', data={} = ()=>{}, height=500 ,btn='버튼이름',toast,setShow} = props;
@@ -38,6 +39,7 @@ const BottomSheet = props => {
 
   const navigation = useNavigation();
   const { addMeal,setSoldOutMeal,loadMeal } = useShoppingBasket();
+  const {isUserInfo}= useUserInfo()
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const upY = useRef(new Animated.Value(0)).current;
@@ -134,7 +136,8 @@ const BottomSheet = props => {
     const meal = data.filter(el => el.count !== 0).map(v => {
       return {
         dailyFoodId:v.id,
-        count:v.count
+        count:v.count,
+        spotId:isUserInfo?.spotId
       }
     });
   

@@ -1,6 +1,6 @@
 
-import { useNavigation } from "@react-navigation/native";
-import React, { useState, useRef, useEffect, useLayoutEffect} from "react";
+import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
+import React, { useState, useRef, useEffect, useLayoutEffect, useCallback} from "react";
 import { View , StatusBar, Dimensions,Text, Alert} from "react-native";
 import styled from "styled-components";
 import analytics from '@react-native-firebase/analytics';
@@ -27,6 +27,7 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import Skeleton from '../Skeleton';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useAuth from "../../../../../biz/useAuth";
+import useUserInfo from "../../../../../biz/useUserInfo";
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -41,14 +42,26 @@ const Pages = ({route}) => {
     const [scroll,setScroll] = useState(0);
     const {isFoodDetail,isFoodDetailLoading,foodDetail} = useFoodDetail();
     const {readableAtom:{userRole}}=useAuth()
-    const {addMeal,loadMeal,isLoadMeal} = useShoppingBasket();
-
+    const {addMeal,loadMeal,updateMeal,isLoadMeal} = useShoppingBasket();
+    const {isUserInfo}= useUserInfo()
     const headerTitle = isFoodDetail?.name;
     const dailyFoodId = route.params.dailyFoodId;
+    const isFocused = useIsFocused();
     const closeModal = () => {
         setModalVisible(false)
     }
-    console.log(dailyFoodId,'id')
+    const quantityArr = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods.map(c => {
+        return {
+            dailyFoodId:c.dailyFoodId,
+            count:c.count,
+            cartItemId:c.id
+        }
+    })))
+    const cartCount = isLoadMeal?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods.map(c => { if(c.dailyFoodId === dailyFoodId  ) return c.count }))).flat();    
+    const quantity = quantityArr.reduce((acc, val) => [ ...acc, ...val ], []);
+    const modifyQty = quantity.reduce((acc,cur) => [...acc, ... cur], []);
+    const req = {"updateCartList":modifyQty}
+    // console.log(dailyFoodId,'id')
     // foodId 넘겨줘야함 
     useEffect(()=>{
         async function loadFoodDetail(){
@@ -68,7 +81,9 @@ const Pages = ({route}) => {
         loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
-    
+    useEffect(()=>{
+        updateMeal(req);  
+    },[isFocused])
     useLayoutEffect(()=>{
         navigation.setOptions({   
             headerTransparent: true,
@@ -124,10 +139,12 @@ const Pages = ({route}) => {
     const addToCart = async () =>{
         
             try {
-                await addMeal([{
+                const data = await addMeal([{
                      "dailyFoodId":dailyFoodId,
                      "count":count,
+                     "spotId":isUserInfo?.spotId
                  }]);
+                 console.log(data);
                  balloonEvent();
                 // await loadMeal();
                  } catch(err){
@@ -305,18 +322,21 @@ const Pages = ({route}) => {
                         onPressEvent2={()=>{addCartPress()}}
                         onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
                         count={count} 
+                        cartCount={cartCount[0][0]}
                         capacity={isFoodDetail?.capacity}
                         increasePress={increasePress}
                         decreasePress={decreasePress}
                     />
                 </ButtonWrap>}
                 <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'96px', right:'14px'}}/>
-                <BottomModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
-                                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
-                                    description={'그래도 추가하시겠어요?'} 
-                                    buttonTitle1={'아니요'} buttonType1='grey7' 
-                                    buttonTitle2={'추가'} buttonType2='yellow' 
-                                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart()}/>
+                <BottomModal 
+                    modalVisible={modalVisible} setModalVisible={setModalVisible} 
+                    title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`} 
+                    description={'그래도 추가하시겠어요?'} 
+                    buttonTitle1={'아니요'} buttonType1='grey7' 
+                    buttonTitle2={'추가'} buttonType2='yellow' 
+                    onPressEvent1={closeModal} onPressEvent2={()=>addToCart()}
+                />
          </Wrap>
                
         </>

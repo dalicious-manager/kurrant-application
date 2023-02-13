@@ -34,6 +34,7 @@ async function json(url, method, options = {}) {
   const storage = await getStorage('token');
 
   let token = JSON.parse(storage);
+  console.log(token, "tests");
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
       throw new Error('body is empty');
@@ -85,9 +86,9 @@ async function json(url, method, options = {}) {
     headers.Authorization = 'Bearer ' + options.accessToken;
   }
 
-  // console.log('fetching to:', reqUrl);
-  // console.log('fetching method:', method);
-  // console.log('fetching option:', options.body);
+  console.log('fetching to:', reqUrl);
+  console.log('fetching method:', method);
+  console.log('fetching option:', options.body);
   // console.log('fetching token:', headers.Authorization);
   // throw new Error('rul : ' + reqUrl);
   let startTs = Date.now();

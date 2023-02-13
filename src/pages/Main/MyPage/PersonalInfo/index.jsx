@@ -56,7 +56,7 @@ const Pages = ({route}) => {
   const [message , setMessage] = useState("계정이 연결됐어요");
   const {snsConnectID,snsDisconnectID} = snsConnected();
   const {toastEvent,ToastWrap} = Toast();
-  const {logout} = useAuth();
+  const {logout,terminateUser} = useAuth();
   const getDataStorage =useCallback(async()=>{
     const data = await getStorage('isChange');
     
@@ -93,6 +93,39 @@ const Pages = ({route}) => {
     }
     
   }
+  const terminate = async()=>{
+    Alert.alert(
+      "회원 탈퇴",
+      "커런트앱의 회원을 탈퇴 하시겠어요?",
+      [{
+        text:"취소",
+      },
+        {
+          text:"탈퇴",
+          onPress:async()=>{
+          try{
+            await terminateUser();
+            await AsyncStorage.clear().then(()=>{                
+              navigation.reset({
+                index: 0,
+                routes: [
+                    {
+                        name: LoginPageName,
+                    },                    
+                ],
+            })
+            });
+          } catch (error) {
+            console.log(error.toString());            
+          }
+          }
+        }
+      ],{
+        cancelable: true,
+      }
+    )
+    
+  }
   const disconnectSNS = async(social)=>{
     Alert.alert(
       "계정 연결 해지",
@@ -115,8 +148,6 @@ const Pages = ({route}) => {
             } catch (error) {
               setModalVisible(true);
             }
-            
-            
           }
         }
       ],{
@@ -250,7 +281,7 @@ const Pages = ({route}) => {
             }}/>
           </TextButtonBox>
           <TextButtonBox>
-            <TextButton label="탈퇴하기" type='grey4' size='label13R'/>
+            <TextButton label="탈퇴하기" type='grey4' size='label13R' onPressEvent={terminate}/>
           </TextButtonBox>
         </ScrollView>
         <ToastWrap icon='checked' message={message}/>

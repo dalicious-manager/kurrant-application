@@ -1,5 +1,6 @@
 import { Linking, Platform } from 'react-native';
 import WebView from 'react-native-webview'
+import { getStorage } from '../../../../../../utils/asyncStorage';
 import {
     ANDROID_APPSCHEME,
     ANDROID_MARKET_PREFIX,
@@ -145,9 +146,10 @@ export function isAppUrl(scheme) {
     );
 }
 
-export function isBlank(url, mainDocumentUrl, orderItems, setUrls) {
+export function isBlank(url, mainDocumentUrl, orderItems, setUrls, token) {
+
     if (url.includes("15.165.39.55/admin")) {
-        const reqUrl = url + `&orderItems=${JSON.stringify(
+        const reqUrl = url + `&token=${token}&orderItems=${JSON.stringify(
             orderItems
         )}`
         setUrls({ uri: reqUrl })

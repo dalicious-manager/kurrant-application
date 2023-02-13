@@ -27,6 +27,7 @@ const screenWidth = Dimensions.get('window').width;
 const Component = ({
   price,
   count,
+  cartCount,
   onPressEvent,
   increasePress,
   decreasePress,
@@ -72,7 +73,7 @@ const Component = ({
           <PressView>
             <Pressable onPress={handlePress}>
               <TrapezoidIcon
-              capacity={capacity} count={count}
+              capacity={capacity-cartCount} count={count}
               />
               <Animated.View
                 style={{
@@ -86,9 +87,9 @@ const Component = ({
             </Pressable>
           </PressView>
 
-          <InnerContainer capacity={capacity} count={count}>
+          <InnerContainer capacity={capacity-cartCount} count={count}>
             <Animated.View style={{height: fadeAnim}}>
-              <AnimationView capacity={capacity} count={count}>
+              <AnimationView capacity={capacity-cartCount} count={count}>
                 <Inner>
                     <PriceText>{withCommas(PRICE)}원</PriceText>
                     <CountView >
@@ -98,16 +99,16 @@ const Component = ({
                       increasePress={increasePress}
                       decreasePress={decreasePress}
                       onPressEvent={onPressEvent}
-                      capacity={capacity}
+                      capacity={capacity-cartCount}
                       />
-                      <CapacityText capacity={capacity} count={count}>재고수량 : {capacity}</CapacityText>
+                      <CapacityText capacity={capacity-cartCount} count={count}>재고수량 : {capacity-cartCount}</CapacityText>
                     </CountView>
                 </Inner>
               </AnimationView>
             </Animated.View>
-            <PressButton onPress={onPressEvent2} capacity={capacity} count={count} disabled={capacity < count}>
-              <ButtonText capacity={capacity} count={count}>
-                {(capacity < count) ? '재고가 부족해요' : fadeIn ? '장바구니 담기' : `${count}개 담기`}
+            <PressButton onPress={onPressEvent2} capacity={capacity-cartCount} count={count} disabled={capacity < count+cartCount}>
+              <ButtonText capacity={capacity-cartCount} count={count}>
+                {(capacity < count+cartCount) ? '재고가 부족해요' : fadeIn ? '장바구니 담기' : `${count}개 담기`}
               </ButtonText>
             </PressButton>
           </InnerContainer>
@@ -134,7 +135,7 @@ const PressView = styled.View`
 `;
 
 const PressButton = styled.Pressable`
-background-color:${({theme,capacity,count}) => count > capacity ? theme.colors.grey[7] : theme.colors.yellow[500]};
+background-color:${({theme,capacity,count}) => (count > capacity) ? theme.colors.grey[7] : theme.colors.yellow[500]};
 width:100%;
 height:56px;
 border-radius:29px;
@@ -142,7 +143,7 @@ padding:16px;
 `;
 
 const AnimationView = styled.View`
-background-color:${({theme,capacity,count}) => count > capacity ? theme.colors.grey[7] : theme.colors.yellow[500]};
+background-color:${({theme,capacity,count}) => (count > capacity) ? theme.colors.grey[7] : theme.colors.yellow[500]};
 height:70px;
 border-radius:29px;
 padding:2px;
@@ -150,7 +151,7 @@ box-sizing:border-box;
 `;
 
 const InnerContainer = styled.View`
-background-color:${({theme,capacity,count}) => count > capacity ? theme.colors.grey[7] : theme.colors.yellow[500]};
+background-color:${({theme,capacity,count}) => (count > capacity) ? theme.colors.grey[7] : theme.colors.yellow[500]};
 border-radius:29px;
 overflow:hidden;
 `;

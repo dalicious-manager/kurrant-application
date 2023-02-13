@@ -16,6 +16,10 @@ import {
 import { setStorage } from '../../utils/asyncStorage';
 import { isUserSpotStatusAtom } from '../useUserInfo/store';
 import jwtDecode from 'jwt-decode';
+import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { PAGE_NAME as LoginPageName } from '../../pages/Main/Login/Login';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -29,7 +33,7 @@ const useAuth = () => {
   const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
   const [userRole, setUserRole] = useAtom(userRoleAtom);
-
+  const navigation = useNavigation();
   const requestEmailAuth = async (body,type,option = {}) => {
     try {
       setEmailAuthLoading(true);
@@ -151,6 +155,7 @@ const useAuth = () => {
       setLoginLoading(true);
       if(isGuest){
         const res = await Fetch.guestLogin();
+       
         const {roles} = jwtDecode(res.data.accessToken)
         setUserRole(roles[0])
         await setStorage('token',JSON.stringify(res.data));        
@@ -169,10 +174,53 @@ const useAuth = () => {
         },
         option
       );
-      setUserRole("NOMAL")
-      await setStorage('token',JSON.stringify(res.data));
-      await setStorage('isLogin',body.autoLogin.toString());
-      await setStorage('spotStatus',res.data.spotStatus.toString());
+      if(res?.data?.isActive){
+        await setStorage('token',JSON.stringify(res.data));
+        await setStorage('isLogin',body.autoLogin.toString());
+        await setStorage('spotStatus',res.data.spotStatus.toString());
+        setUserRole("NOMAL")
+      }else{
+        await setStorage('token',JSON.stringify(res.data));
+        await setStorage('isLogin',body.autoLogin.toString());
+        await setStorage('spotStatus',res.data.spotStatus.toString());
+        setUserRole("NOMAL")
+       Alert.alert(
+        "탈퇴한 계정 입니다.",
+        "탈퇴한 계정입니다 계정을 복구 하시겠습니까?",
+        [
+          {
+            text:"취소",
+            onPress:async()=>{
+              await AsyncStorage.clear();
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: LoginPageName  ,
+                  },
+                ],
+              })
+            }
+          },
+          {
+            text:"계정복구",
+            onPress:async()=>{
+              try{
+                const cancel = await cancelTerminateUser();
+                await setStorage('token',JSON.stringify(res.data));
+                await setStorage('isLogin',body.autoLogin.toString());
+                await setStorage('spotStatus',res.data.spotStatus.toString());
+                setUserRole("NOMAL")
+              }catch(e){
+                console.log(e.toString());
+              }
+             
+            }
+          }
+          
+        ]
+       )
+      }
       return res;
     } catch (err) {
       throw err
@@ -193,10 +241,53 @@ const useAuth = () => {
         type,
         option
       );
-      await setStorage('token',JSON.stringify(res.data));
-      await setStorage('isLogin',body.autoLogin.toString());
-      await setStorage('spotStatus',res.data.spotStatus.toString());
-      setUserRole("NOMAL")
+      if(res?.data?.isActive){
+        await setStorage('token',JSON.stringify(res.data));
+        await setStorage('isLogin',body.autoLogin.toString());
+        await setStorage('spotStatus',res.data.spotStatus.toString());
+        setUserRole("NOMAL")
+      }else{
+        await setStorage('token',JSON.stringify(res.data));
+        await setStorage('isLogin',body.autoLogin.toString());
+        await setStorage('spotStatus',res.data.spotStatus.toString());
+        setUserRole("NOMAL")
+       Alert.alert(
+        "탈퇴한 계정 입니다.",
+        "탈퇴한 계정입니다 계정을 복구 하시겠습니까?",
+        [
+          {
+            text:"취소",
+            onPress:async()=>{
+              await AsyncStorage.clear();
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: LoginPageName  ,
+                  },
+                ],
+              })
+            }
+          },
+          {
+            text:"계정복구",
+            onPress:async()=>{
+              try{
+                const cancel = await cancelTerminateUser();
+                await setStorage('token',JSON.stringify(res.data));
+                await setStorage('isLogin',body.autoLogin.toString());
+                await setStorage('spotStatus',res.data.spotStatus.toString());
+                setUserRole("NOMAL")
+              }catch(e){
+                console.log(e.toString());
+              }
+             
+            }
+          }
+          
+        ]
+       )
+      }
       return res;
     } catch (err) {
       throw err
@@ -242,6 +333,18 @@ const useAuth = () => {
     )
     return res
   }
+  const terminateUser = async(body,option={})=>{
+    const res = await Fetch.terminateUser(
+    option
+    )
+    return res
+  }
+  const cancelTerminateUser = async(body,option={})=>{
+    const res = await Fetch.cancelTerminateUser(
+      option
+    )
+    return res
+  }
   return {
     requestEmailAuth,
     confirmEmailAuth,
@@ -251,9 +354,11 @@ const useAuth = () => {
     checkedAuth,
     findEmail,
     changePassword,
+    cancelTerminateUser,
     login,
     snsLogin,
     snsAppleLogin,
+    terminateUser,
     logout,
     readableAtom: {
       isPhoneAuthLoading,

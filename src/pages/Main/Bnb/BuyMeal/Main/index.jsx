@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, Dimensions, StyleSheet, ActivityIndicator, Alert} from "react-native";
 import PagerView from 'react-native-pager-view';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import FastImage from "react-native-fast-image";
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -204,6 +204,7 @@ const Pages = ({route}) => {
             await addMeal([{
                 "dailyFoodId":id,
                 "count":1,
+                "spotId":userInfo.spotId
             }]);             
             setShow(true)
             balloonEvent();
@@ -244,7 +245,9 @@ const Pages = ({route}) => {
             }
         }
         
-        return (<View>
+        return (
+            <ScrollView showsVerticalScrollIndicator={false}>
+        <View>
             
             {(diningFood.length === 0 && spotId !== null) && <NoServieceView>
                 <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
@@ -306,7 +309,9 @@ const Pages = ({route}) => {
                 buttonTitle1={'아니요'} buttonType1='grey7' 
                 buttonTitle2={'추가'} buttonType2='yellow' 
                 onPressEvent1={closeModal} onPressEvent2={()=>addToCart(selectFood.id)}/>
-        </View>)
+        </View>
+        </ScrollView>
+        )
                         
 
     }
@@ -316,13 +321,15 @@ const Pages = ({route}) => {
             
                 {isDailyFoodLoading && <LoadingPage ><ActivityIndicator size={'large'}/></LoadingPage>}
                 {userInfo?.isMembership && <MembershipBar/>}
-                <ScrollView showsVerticalScrollIndicator={false}>
+                
                 <CalendarWrap>
                     <Calendar BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={dayPress} daily={daily} margin={'0px 28px'} />
                 </CalendarWrap>
                 
                 <PagerViewWrap>
+                
                     <ProgressWrap>
+                    
                         <ProgressInner>
                              <Slider
                                 value={sliderValue}
@@ -357,20 +364,24 @@ const Pages = ({route}) => {
                             
                             
                         </ProgressInner>
+                        
                     </ProgressWrap>
-
-            
+                    
+                    
                     <Pager ref={diningRef} 
                         initialPage={isMorningFood.length !== 0 ? 0 : isLunchFood.length !== 0 ? 1 : isDinnerFood.length !== 0 ? 2 : 1} 
                         onPageSelected={(e) => {onPageScroll(e)}} 
                      >
+                       
                         {BuyMeal(isMorningFood)}
                         {BuyMeal(isLunchFood)}
                         {BuyMeal(isDinnerFood)}
                     </Pager> 
+                   
                 </PagerViewWrap>
                 
-            </ScrollView>
+                
+            
             {show && <BalloonWrap message={'장바구니에 담았어요'}  horizontal={'right'} size={'B'} location={{top:'8px', right:'14px'}}/>}
             <ButtonWrap membership={userInfo?.isMembership}>
                 <Button label={'장바구니 보기'} type={'yellow'} onPressEvent={()=>{
@@ -426,6 +437,7 @@ export default Pages;
 
 const SafeView = styled.View` 
     background-color:${props => props.theme.colors.grey[0]};
+    flex: 1;
 `;
 
 export const CalendarWrap = styled.View`
@@ -444,10 +456,10 @@ const LoadingPage = styled.View`
     z-index: 1;
     width: ${screenWidth}px;
     height: ${screenHeight}px;
-;
-`
+
+`;
 const PagerViewWrap = styled.View`
-height:${screenHeight}px;
+     height: ${screenHeight}px;
 `;
 
 const ProgressWrap = styled.View`
@@ -467,7 +479,7 @@ width:93px;
 `;
 
 const Pager = styled(PagerView)`
-flex:1;
+height: ${screenHeight-320}px;
 `;
 
 const Contents = styled.Pressable`

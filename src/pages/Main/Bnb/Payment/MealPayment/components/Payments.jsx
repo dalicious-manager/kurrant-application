@@ -1,7 +1,9 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { WebView ,Linking } from 'react-native-webview';
+import useUserInfo from '../../../../../../biz/useUserInfo';
+import { getStorage } from '../../../../../../utils/asyncStorage';
 
 import { isAppUrl, isBlank, openPGApp } from './lib';
 
@@ -14,7 +16,7 @@ const Payment = ({
   detectIsLoading,
   orderItems,
 }) => {
- 
+  const [token ,setToken] = useState();
   const webviewRef = useRef();
   const WEBVIEW_SOURCE_HTML = `
       <html>
@@ -36,7 +38,13 @@ const Payment = ({
   const [urls ,setUrls] = useState({
     html: WEBVIEW_SOURCE_HTML,
   });
-
+  useEffect(()=>{
+    const getToken =async()=>{
+      const token = await getStorage("token");
+      setToken(JSON.parse(token).accessToken);
+    }
+    getToken();
+  },[])
   return (
     <SafeAreaView
       style={{
@@ -70,7 +78,7 @@ const Payment = ({
         sharedCookiesEnabled={true}
         onShouldStartLoadWithRequest={(request) => {
           const { url, mainDocumentURL } = request;
-          if (isBlank(url, mainDocumentURL,orderItems,setUrls)) {
+          if (isBlank(url, mainDocumentURL,orderItems,setUrls,token)) {
             detectIsLoading(true);
             return true;
           }

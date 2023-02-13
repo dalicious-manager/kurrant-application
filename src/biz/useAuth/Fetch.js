@@ -75,6 +75,18 @@ export async function nameSetting(body, option) {
   });
   return fetchRes;
 }
+export async function terminateUser(option) {
+  const fetchRes = await fetchJson(`/users/me/withdrawal`, 'GET', {
+    ...option,
+  });
+  return fetchRes;
+}
+export async function cancelTerminateUser(option) {
+  const fetchRes = await fetchJson(`/users/me/withdrawal/cancel`, 'GET', {
+    ...option,
+  });
+  return fetchRes;
+}
 
 export async function snsLogin(body, type, option) {
   const fetchRes = await fetchJson(`/auth/login/${type}`, 'POST', {

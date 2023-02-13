@@ -30,17 +30,14 @@ export function generateOrderCode(orderType, userId, spotId) {
   const now = formattedDate(new Date(), '')
   code += now.toString().replace("-", "");
   code += idToFiveString(userId);
-  code += spotToFiverString(spotId);
   code += create4DigitKey();
   return code;
 }
 
 const idToFiveString = (id) => {
   const strId = id.toString();
-  if (id > 100000) {
-    return strId.substring(0, 5);
-  } else if (id > 10000) {
-    return strId;
+  if (id > 10000) {
+    return strId.substring(0, 4);
   } else if (id > 1000) {
     return "0" + strId;
   } else if (id > 100) {
@@ -53,10 +50,8 @@ const idToFiveString = (id) => {
 }
 const spotToFiverString = (id) => {
   const strId = id.toString();
-  if (id > 100000) {
-    return strId.substring(0, 5);
-  } else if (id > 10000) {
-    return strId;
+  if (id > 10000) {
+    return strId.substring(0, 4);
   } else if (id > 1000) {
     return "0" + strId;
   } else if (id > 100) {

@@ -29,7 +29,7 @@ const Component = ({
   const [open, setOpen] = useState(false)
   const {setAllPurchase,readAbleAtom:{allPurchase}}= usePurchaseHistory();
   const purchase = allPurchase.filter(v => v.id === purchaseId)[0];
-  const cancleItem = async(id)=>{
+  const cancelItem = async(id)=>{
     const req = {
       orderId:purchase.id,
       id:id
@@ -135,7 +135,7 @@ const Component = ({
                               },
                               {
                                 text:'메뉴 취소',
-                                onPress:() => cancleItem(order.id),
+                                onPress:() => cancelItem(order.id),
                                 style:'destructive'
                               }
                             ]

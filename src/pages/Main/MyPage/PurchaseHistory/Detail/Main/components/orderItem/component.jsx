@@ -13,7 +13,7 @@ import { formattedMealFoodStatus } from "../../../../../../../../utils/statusFor
 const {width} =Dimensions.get('screen');
 const Component = ({
   orderItem,
-  onCancle=()=>{}
+  oncancel=()=>{}
 }) => {
   const themeApp = useTheme();
   const {
@@ -70,7 +70,7 @@ const Component = ({
                         },
                         {
                           text:'메뉴 취소',
-                          onPress:() => onCancle(id),
+                          onPress:() => oncancel(id),
                           style:'destructive'
                         }
                       ]
@@ -94,7 +94,8 @@ const Component = ({
 
 export default Component;
 const OrderItemContainer = styled.View`  
-  padding-bottom: 24px;
+  padding-top: 14px;
+  padding-bottom: 10px;
 `;
 const DateOrderItemContentBox = styled.View`
   padding-top: 6px;
