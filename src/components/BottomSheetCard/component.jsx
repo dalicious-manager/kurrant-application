@@ -17,7 +17,7 @@ import Typography from '../Typography';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 
-const BottomSheetSpot = props => {
+const BottomSheetCard = props => {
   const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected,onPressEvent=()=>{},userSpotId,booleanValue,onPressEvent2=()=>{}} = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
@@ -25,11 +25,12 @@ const BottomSheetSpot = props => {
   const navigation = useNavigation();
 
   const onSelect = useCallback(
-    (id) => {
+    (id,text) => {
       //멀티 셀렉터시 이용
       // const newSelected = new Map(selected);
       // newSelected.set(id, !selected.get(id));
       setSelected(id);
+      onPressEvent(text,id)
       setModalVisible(false)
     },
     [setModalVisible, setSelected],
@@ -82,7 +83,7 @@ const BottomSheetSpot = props => {
           handleSnapPress(0);
         }
       }
-    } else if (pageY < y - 50) {
+    } else if (pageY < y - 30) {
       handleSnapPress(1);
     } else {      
       if(contentScroll && scrollStart == 0 ){
@@ -109,7 +110,10 @@ const BottomSheetSpot = props => {
     });
   };
   return (
+    <>
+    {modalVisible && <OverlayBack/>}
     <Modal visible={modalVisible} animationType={'slide'} transparent>
+      
       <Overlay
          onPressIn={pressInUp}
          onPressOut={pressOutUp}
@@ -162,36 +166,18 @@ const BottomSheetSpot = props => {
               }}
               renderItem={({ item }) => (
                 
-                <>
-                 <ItemContainer>
-                  <GroupName>{item.clientName}</GroupName>
-                  <Border/>
-                 </ItemContainer>
-                 
-                {item.spots.map((el,idx) => (
-                  <ContentItemContainer 
-                    onPressIn={pressInUp}
-                    onPressOut={pressOutUp}
-                    onPress={()=>{           
-                      onSelect(el.spotId);
-                      onPressEvent(el.spotId)
-                    }} 
-                    key={el.spotId}>
-                    {(el.spotId === userSpotId) ?
-                  <ContentItemBox>
-                    <ContentItemText>{el.spotName}</ContentItemText>
-                    <CheckedIcon />
-                  </ContentItemBox>:
-                  <ContentItemText>
-                    {el.spotName}
-                  </ContentItemText>}
-                  </ContentItemContainer>
-                  ))}
-                  
-                  
-                </>
-              )}
-               keyExtractor={item => item.clientId.toString()}
+                <ContentItemContainer
+                onPressIn={pressInUp}
+                onPressOut={pressOutUp}
+                 onPress={()=>onSelect(item.id, item.text)}>
+                {selected === item.id ?<ContentItemBox><ContentItemText>
+                  {item.text}
+                </ContentItemText><CheckedIcon /></ContentItemBox>:<ContentItemText>
+                  {item.text}
+                </ContentItemText>}
+              </ContentItemContainer>
+            )}
+            keyExtractor={item => item.id.toString()}
             />
             <ManagePressView></ManagePressView>
           </BottomSheet>
@@ -202,6 +188,7 @@ const BottomSheetSpot = props => {
                 </ManagePressView>} 
       </Overlay>
     </Modal>
+    </>
   );
 };
 
@@ -209,6 +196,16 @@ const Overlay =styled.Pressable`
   position: relative;
   flex: 1;
   justify-content: flex-end;
+  /* background-color: rgba(0, 0, 0, 0.7); */
+`;
+const OverlayBack =styled.View`
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: ${screenWidth}px;
+  height: ${screenHeight}px;
+  flex: 1;
   background-color: rgba(0, 0, 0, 0.7);
 `;
 
@@ -289,4 +286,4 @@ const ManagePressView = styled.Pressable`
 `;
 
 
-export default BottomSheetSpot;
+export default BottomSheetCard;

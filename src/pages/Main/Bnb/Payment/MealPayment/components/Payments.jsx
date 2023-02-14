@@ -65,14 +65,7 @@ const Payment = ({
               window.ReactNativeWebView.postMessage(JSON.stringify(err));  
             })
           }
-        `}
-        onLoadEnd={()=>{
-          if(orderItems){
-            webviewRef.current.postMessage(JSON.stringify(
-              orderItems
-            ));
-          }
-        }}       
+        `}     
         onMessage={onWebViewMessageReceived}
         originWhitelist={['*']}
         sharedCookiesEnabled={true}

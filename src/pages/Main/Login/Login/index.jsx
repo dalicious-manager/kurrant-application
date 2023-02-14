@@ -24,6 +24,7 @@ import { v4 as uuid } from 'uuid'
 import LogoImageSvg from '../../../../assets/icons/Logo.svg'
 import useAuth from '../../../../biz/useAuth';
 import Config from 'react-native-config';
+import useUserMe from '../../../../biz/useUserMe';
 
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
@@ -41,6 +42,7 @@ const Pages = ({route}) => {
   const toast = Toast();
   const [isLoginLoading, setLoginLoading] = useState();
   const {googleLogin,appleLogin, facebookLogin,kakaoLogin,naverLogin} = snsLogin();
+  const {setSelectDefaultCard,readableAtom:{selectDefaultCard}}= useUserMe();
   const {login} = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
@@ -106,8 +108,13 @@ const Pages = ({route}) => {
   useEffect(()=>{
     const isAutoLogin = async()=>{
       const isLogin = await getStorage('isLogin');
+      const userCard = await getStorage('selectCard');
+      
       if(isLogin !== 'false'){                
         const token = await getStorage('token');
+        if(userCard){ 
+          setSelectDefaultCard(userCard);
+        }
         setLoginLoading(false);
         if(token){
           const getToken = JSON.parse(token);

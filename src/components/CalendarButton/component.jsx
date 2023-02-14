@@ -65,7 +65,7 @@ const Component = ({
                 checked={chk}
                 chk={chk}
                 >
-                    <WeekText checked={chk} idx={idx}>{week}</WeekText>
+                    <WeekText text={chk===idx ? "Button10SB":"Button10R" } checked={chk} idx={idx}>{week}</WeekText>
                 </Btn>
                 )}
           
@@ -91,6 +91,6 @@ background-color:${({checked,idx,chk}) => checked === idx ? props => props.theme
 ${({idx})=> idx === 0 ? 'margin-left:28px' : idx === 3 && 'margin-right:28px'}
 `;
 
-const WeekText = styled(Typography).attrs({text:'Button10SB'})`
+const WeekText = styled(Typography)`
 color:${({checked,idx,chk}) => checked === idx  ? props => props.theme.colors.grey[2] : props => props.theme.colors.grey[5]};
 `;

@@ -99,6 +99,7 @@ const Pages= ()=>{
                 <Description>
                     지금 신청하면 다양한 혜택을 누릴 수 있어요!
                 </Description>
+                <TopLine />
                 <SubTitle>
                     멤버십 혜택
                 </SubTitle>
@@ -186,6 +187,12 @@ const Line = styled.View`
   background-color: ${({theme}) => theme.colors.grey[8]};
   margin: 8px 0 24px;
 `;
+const TopLine = styled.View`
+  width: 100%;
+  height: 1px;
+  background-color: ${({theme}) => theme.colors.grey[8]};
+`;
+
 const CheckWrap = styled.View`
     margin-top: 24px;
     padding-left: 24px;
@@ -196,7 +203,7 @@ const Label = styled(Typography).attrs({ text:'Body06R' })`
   color: ${({ theme }) => theme.colors.grey[4]};
 `;
 const TitleLabel = styled(Typography).attrs({ text:'Body05SB' })`
-  color: ${({ theme }) => theme.colors.grey[4]};
+  color: ${({ theme }) => theme.colors.grey[2]};
 `;
 const EffectLabel = styled(Typography).attrs({text:'Body06SB'})`
     text-decoration-line: underline;
@@ -212,12 +219,12 @@ const Title = styled(Typography).attrs({text:'Title02SB'})`
 
 
 const SubTitle = styled(Typography).attrs({text:'Title02SB'})`
-    margin-top: 40px;
+    margin-top: 24px;
     color:${({theme})=> theme.colors.grey[2]};
 `;
 
 const Description = styled(Typography).attrs({text:'Body06R'})`
-    margin-bottom: 5px;
+    margin-bottom: 24px;
     color:${({theme})=> theme.colors.grey[4]};
 `;
 const SubtractWrapper = styled.View`

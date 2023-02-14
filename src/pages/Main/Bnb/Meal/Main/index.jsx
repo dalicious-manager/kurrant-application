@@ -120,7 +120,7 @@ const Pages = ({route}) => {
     <SafeView>
       <ScrollView>
         <CalendarView>
-          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={pressDay}  meal={meal} margin={'0px 28px'}/>
+          <Calendar  BooleanValue type={'grey2'} color={'white'} size={'Body05R'} onPressEvent2={pressDay} selectDate={touchDate} meal={meal} margin={'0px 28px'}/>
         </CalendarView>
         
         <MealWrap>
@@ -149,9 +149,9 @@ const Pages = ({route}) => {
                       <CountText>{sm.count}개</CountText>
                       {sm.orderStatus === 7 && <CancelText>취소완료</CancelText>}
                     </Content>
-                    <cancelBtnWrap status={sm.orderStatus}>
+                    <CancelBtnWrap status={sm.orderStatus}>
                       <LabelButton label={"취소"} onPressEvent={()=>cancelMealPress(sm.id)} disabled={(sm.orderStatus === 7) && true}/>
-                    </cancelBtnWrap>
+                    </CancelBtnWrap>
                   {sm.orderStatus !== 7 && <MealChangeWrap>
                       <LabelButton label={"메뉴변경"} onPressEvent={()=>changeMealPress(sm.id)}/>
                     </MealChangeWrap>}
@@ -193,9 +193,9 @@ const Pages = ({route}) => {
                     <CountText>{el.count}개</CountText>
                     {el.orderStatus === 7 && <CancelText>취소완료</CancelText>}
                   </Content>
-                  <cancelBtnWrap status={el.orderStatus}>
+                  <CancelBtnWrap status={el.orderStatus}>
                     <LabelButton label={"취소"} onPressEvent={()=>cancelMealPress(el.id)} disabled={el.orderStatus === 7}/>
-                  </cancelBtnWrap>
+                  </CancelBtnWrap>
                   {el.orderStatus !== 7 && <MealChangeWrap>
                     <LabelButton label={"메뉴변경"} onPressEvent={()=>changeMealPress(el.id)}/>
                   </MealChangeWrap>}
@@ -272,7 +272,7 @@ right:0;
 bottom:24px;
 `;
 
-const cancelBtnWrap = styled(MealChangeWrap)`
+const CancelBtnWrap = styled(MealChangeWrap)`
 right: ${({status}) => status === 7 ? '0px' : '83px'};
 `;
 

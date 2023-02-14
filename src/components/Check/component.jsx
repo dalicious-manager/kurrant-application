@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import styled, { css } from 'styled-components/native';
 
-import Checkicon from '../../assets/icons/smallCheck.svg';
+import Checkicon from '../../assets/icons/check.svg';
 import Typography from '../Typography';
 
 

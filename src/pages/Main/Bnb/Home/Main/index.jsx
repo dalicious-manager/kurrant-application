@@ -292,7 +292,7 @@ if(isOrderMealLoading || isUserInfoLoading){
         <BarWrap>
           <SpotName>
             <Pressable onPress={PressSpotButton} >
-              <SpotNameText>{userGroupName === null ? '스팟을 선택해 주세요' : userGroupName + "\u00a0" + userSpot}</SpotNameText>
+              <SpotNameText>{userGroupName === null ? '스팟을 선택해 주세요' : userGroupName?.length+userSpot?.length+1 > 11 ? userGroupName + "\n" + userSpot : userGroupName + "\u00a0" + userSpot}</SpotNameText>
             </Pressable>
           <ArrowIcon/>
           </SpotName>
@@ -319,7 +319,7 @@ if(isOrderMealLoading || isUserInfoLoading){
               <React.Fragment key={`${m.id} ${idx}`}>
                 {m.orderItemDtoList.map((meal) => {
                   return (
-                    <MealInfoWrap key={meal.id}>
+                    <MealInfoWrap key={meal.id} onPress={()=>navigation.navigate(MealMainPageName)}>
                     <MealInfo >
                         <FastImage source={{uri:`${meal.image}`,priority:FastImage.priority.high}}
                         style={{
@@ -537,7 +537,7 @@ align-items:center;
 margin:0px 24px;
 `;
 
-const MealInfoWrap = styled.View`
+const MealInfoWrap = styled.Pressable`
 ${Display};
 height:64px;
 border-radius:14px;

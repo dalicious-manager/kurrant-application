@@ -4,7 +4,8 @@ import {BackHandler, NativeModules, Platform} from 'react-native'
 import { useTheme } from 'styled-components';
 import styled from 'styled-components/native';
 
-import { MaterialIcons } from '../Icon';
+
+import { ArrowLeftBoxIcon, MaterialIcons } from '../Icon';
 
 /**
  *
@@ -30,13 +31,7 @@ const Component = ({ mode = 'page', color, margin = [0, 0],onPressEvent =()=>{}}
 
   const renderContents = {
     page: (
-      <React.Fragment>
-        <MaterialIcons
-          name="arrow-back-ios"
-          size={24}
-          color={color || theme.colors.neutral[900]}
-        />
-      </React.Fragment>
+        <ArrowLeftBoxIcon />
     ),
     modal: (
       <MaterialIcons

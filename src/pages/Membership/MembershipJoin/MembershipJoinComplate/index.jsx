@@ -1,6 +1,6 @@
 import {StackActions, useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
 
 import Button from '~components/Button';
@@ -13,8 +13,10 @@ import {PAGE_NAME as MainPageName} from '../../../Main/Bnb/Home';
 import {SCREEN_NAME as BnbScreenName} from '../../../../screens/Main/Bnb';
 import {MembershipJoinComplateImage} from '~assets';
 import useUserInfo from '../../../../biz/useUserInfo';
+import FastImage from 'react-native-fast-image';
+import { Dimensions } from 'react-native';
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_COMPLATE';
-
+const screenHeight = Dimensions.get("screen").height
 const Pages = () => {
   const themeApp = useTheme();
   const {userInfo, isUserInfo} = useUserInfo();
@@ -27,7 +29,11 @@ const Pages = () => {
   }, []);
   return (
     <Conotainer>
-      <Image imagePath={MembershipJoinComplateImage} scale={0.5} />
+      <FastImage
+        style={{ height:screenHeight/100*26, paddingRight:100, paddingLeft:100 }}
+        source={MembershipJoinComplateImage}
+        resizeMode={FastImage.resizeMode.cover}
+      />
       <Title textColor={themeApp.colors.grey[2]}>
         {isUserInfo?.name}님, 축하드려요!
       </Title>
@@ -83,3 +89,8 @@ const ButtonContainer = styled.View`
   padding-left: 24px;
   padding-right: 24px;
 `;
+const ImageBox = styled.View`
+  padding-left: 100px;
+  padding-right: 100px;
+  background-color: red;
+`

@@ -15,6 +15,7 @@ export { default as Octicons } from './_components/Octicons';
 export { default as MaterialIcons } from './_components/MaterialIcons';
 export { default as DeliveryFreeIcon } from './_components/DeliveryFreeIcon';
 export { default as ArrowRightBoxIcon } from './_components/ArrowRightBoxIcon';
+export { default as ArrowLeftBoxIcon } from './_components/ArrowLeftBoxIcon';
 export { default as PointIcon } from './_components/PointIcon';
 export { default as PointBadge } from './_components/PointBoxIcon';
 export { default as MembershipBadge } from './_components/MembershipBadge';
@@ -27,3 +28,6 @@ export { default as SocialConnectIcons } from './_components/SocialConnectIcons'
 export { default as DeleteIcon } from './_components/DeleteIcon';
 export { default as CalendarIcon } from './_components/CalendarIcon';
 export { default as NotificationIcon } from './_components/NotificationIcon';
+export { default as NomalCardIcon } from './_components/NomalCardIcon';
+export { default as KakaoPayIcon } from './_components/KakaoPayIcon';
+export { default as NaverPayIcon } from './_components/NaverPayIcon';

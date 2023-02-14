@@ -1,8 +1,8 @@
-import { StackActions, useNavigation } from "@react-navigation/native";
-import React, {useRef, useState,useEffect, forwardRef} from "react";
+import { StackActions, useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, {useRef, useState,useEffect, forwardRef, useCallback} from "react";
 import {useForm} from 'react-hook-form';
 import { View, Alert,Text, Platform,KeyboardAvoidingView,NativeModules,TouchableWithoutFeedback} from "react-native";
-import styled from "styled-components";
+import styled from "styled-components/native";
 
 import FastImage from "react-native-fast-image";
 import ArrowUpIcon from '../../../../../assets/icons/Payment/arrow.svg';
@@ -26,11 +26,17 @@ import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/R
 import { PurchaseDetailPageName } from "../../../../../pages/Main/MyPage/PurchaseHistory/Detail";
 import { PAGE_NAME as DefaultPaymentManagePageName } from "../DefaultPaymentManage";
 import { PAGE_NAME as MealPaymentPageName } from "../MealPayment";
+import { cardListData, formattedCardCode } from "../../../../../utils/statusFormatter";
+import BottomSheet from "../../../../../components/BottomSheet";
+import { getStorage, setStorage } from "../../../../../utils/asyncStorage";
+import BottomSheetSpot from "../../../../../components/BottomSheetSpot";
+import BottomSheetCard from "../../../../../components/BottomSheetCard";
+import PaymentsList from "./components/PaymentsList";
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
 const Pages = ({route}) => {
-  
+    
     const [test,setTest] = useState();
     const { StatusBarManager } = NativeModules;
     const navigation = useNavigation();
@@ -40,12 +46,16 @@ const Pages = ({route}) => {
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ modalVisible2, setModalVisible2 ] = useState(false);
     const [ modalVisible3, setModalVisible3 ] = useState(false);
+    const [ modalVisible4, setModalVisible4 ] = useState(false);
     const [statusBarHeight, setStatusBarHeight] = useState(0);
+    const [payments, setPayments] = useState("NOMAL");
     const [point,setPoint] = useState(0);
+    
     const [pointShow,setPointShow] = useState(false)
     const {isLoadMeal,orderMeal,loadMeal,setQuantity} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
-    const {readableAtom:{selectDefaultCard}}= useUserMe();
+    const {setSelectDefaultCard,readableAtom:{selectDefaultCard}}= useUserMe();
+    const [card,setCard] = useState(Number(selectDefaultCard));
     const inputRef = useRef(null);
     const {totalCount,
         totalMealPrice,
@@ -67,7 +77,11 @@ const Pages = ({route}) => {
     const PressButton = () => {
         setModalVisible(true);
     }
-
+    const selectCard = async(text,id)=>{
+        await setStorage('selectCard',id.toString())
+        console.log(text,id)
+        setSelectDefaultCard(id.toString());
+    }
     const pointButton = () => {
         setModalVisible2(true);
     }
@@ -85,25 +99,7 @@ const Pages = ({route}) => {
     const keyboardStatus = useKeyboardEvent();
     
     const handleEventPayments = ()=>{
-        if(agreeCheck.watch(agreeCheck).agreeCheck){
-            // if(selectDefaultCard.length === 0){
-            //     PressButton();
-            // }else{
-                
-            // }
-            orderPress(selected)
-          
-        }else{
-            Alert.alert(
-                '동의가 필요합니다',
-                '결제 진행 필수사항에 동의해주세요',
-                [
-                    {
-                        text:'확인'
-                    }
-                ]
-            )
-        }        
+        orderPress(selected)
       }
 
     
@@ -115,12 +111,25 @@ const Pages = ({route}) => {
 
         
     useEffect(()=>{
-        console.log(mealArr);
         Platform.OS === 'ios' ? StatusBarManager.getHeight((statusBarFrameData) => {
             setStatusBarHeight(statusBarFrameData.height)
         }) : null
     }, []);
-
+    useFocusEffect(
+        useCallback(()=>{
+            const getCard = async()=>{
+                const nowCard = await getStorage('selectCard');                
+                const easyPay = await getStorage('easyPay');   
+                if(easyPay){
+                    setPayments(easyPay);             
+                }
+                if(nowCard){
+                    setCard(Number(nowCard));
+                }
+            }
+            getCard();
+        },[])
+    )
     const confirmPress = () =>{
         
         setPointShow(false);
@@ -196,7 +205,10 @@ const Pages = ({route}) => {
                 orderId : generateOrderCode(1,isUserInfo?.userId,spotId),
                 email:isUserInfo?.email,
                 name:isUserInfo?.name,
-                orderItems:JSON.stringify(data)
+                orderItems:JSON.stringify(data),
+                easyPay:payments,
+                flowMode:'DIRECT',
+                cardCompany:card
             })
         }catch (err){
             console.log(err)
@@ -362,49 +374,60 @@ const Pages = ({route}) => {
                 <BorderWrap>
                     <Container>
                         <Title>결제 수단</Title>
-                        <DeliveryTitle>카드 결제시 등록한 카드로 결제가 진행됩니다.</DeliveryTitle>
-                        {selectDefaultCard[0]?.id  ? 
-                            selectDefaultCard.map((card)=>{
-                            return (
-                                <Card 
-                                key={card.id}
-                                onPress={() =>
-                                    navigation.navigate(DefaultPaymentManagePageName)
-                                  }
-                                  >
-                                {/* <CardText>결제 카드 등록</CardText> */}
-                                <CardText>{card.cardCompany}카드({card.cardNumber?.toString().slice(-4)})</CardText>
-                                {/* <PayInfoWrap>
-                                    <PayInfo>
-                                    <PayError />
-                                    <PayText>결제불가</PayText>
-                                    </PayInfo>
-                                    <ArrowRight />
-                                </PayInfoWrap> */}
+                        <DeliveryTitle>선택한 결제 수단으로 결제가 진행됩니다.</DeliveryTitle>
+                        <AgreeTextBox>
+                            <PaymentsList 
+                                onSelectPress={setPayments}
+                                select={payments}
+                                name={"NOMAL"}
+                            />
+                            <PaymentsList 
+                                onSelectPress={setPayments}
+                                select={payments}
+                                name={"KAKAOPAY"}
+                            />
+                            <PaymentsList 
+                                onSelectPress={setPayments}
+                                select={payments}
+                                name={"NAVERPAY"}
+                            />
+                        </AgreeTextBox>
+                        {payments ==="NOMAL" && <View>
+                        {card  ? 
+                            <Card 
+                            key={card}
+                            onPress={() =>
+                                // navigation.navigate(DefaultPaymentManagePageName)
+                                setModalVisible4(!modalVisible4)
+                              }
+                              >
+                            {/* <CardText>결제 카드 등록</CardText> */}
+                            <CardText>{formattedCardCode(card)}</CardText>
+                            {/* <PayInfoWrap>
+                                <PayInfo>
+                                <PayError />
+                                <PayText>결제불가</PayText>
+                                </PayInfo>
                                 <ArrowRight />
-                                </Card>
-                            )
-                            }) : 
+                            </PayInfoWrap> */}
+                            <ArrowRight />
+                            </Card> : 
                             <Card
                                 onPress={() =>
-                                    navigation.navigate(DefaultPaymentManagePageName)
+                                    // navigation.navigate(DefaultPaymentManagePageName)
+                                    setModalVisible4(!modalVisible4)
                                 }
                             >
                                 <CardText>결제 수단 선택</CardText>              
                                 <ArrowRight />
                             </Card>
                         }
+                        </View>}
                     
                     </Container>
-                    
+                    <Label>위 주문 내용을 확인 하였으며, 회원 본인은 개인정보 이용 및 제공 및 결제에 동의합니다.</Label>
                 </BorderWrap>
-                <FormWrap>
-                    <Form form={agreeCheck}>
-                        <Check name="agreeCheck" >
-                            <Label>구매 조건 확인 및 결제 진행 필수 동의</Label>
-                        </Check>
-                    </Form>
-                </FormWrap>
+                
                 </ViewScroll>
                 <KeyContainer
                     keyboardVerticalOffset={Platform.OS === "ios" && statusBarHeight+44}
@@ -424,6 +447,11 @@ const Pages = ({route}) => {
                 <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                 <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow' onPressEvent1={registerCard}/>
                 <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
+                {/* <BottomSheet title='일반 카드 선택' modalVisible={modalVisible4} setModalVisible={setModalVisible4} setSelected={setCard} selected={card} data={cardListData} setValue={selectCard}/> */}
+                <BottomSheetCard modalVisible={modalVisible4} setModalVisible={setModalVisible4} 
+                    title='일반 카드 선택' data={cardListData} selected={card} setSelected={setCard} 
+                    onPressEvent={selectCard}
+                />
         </SafeArea>
     )
 }
@@ -443,6 +471,8 @@ flex:1;
 `;
 const Label = styled(Typography).attrs({ text:'Body06R' })`
   color: ${({ theme }) => theme.colors.grey[4]};
+  padding:24px;
+  padding-bottom: 48px;
 `;
 const BorderWrap = styled.View`
 border-bottom-color: ${props => props.theme.colors.grey[8]};
@@ -457,6 +487,13 @@ margin:0px 24px;
 const FormWrap = styled.View`
 margin: 24px;
 padding-bottom:48px;
+`;
+
+const AgreeTextBox = styled.View`
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 24px;
+    padding-bottom: 10px;
 `;
 
 const DeliveryTextWrap = styled.View`

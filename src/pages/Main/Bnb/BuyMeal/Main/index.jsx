@@ -35,7 +35,9 @@ const Pages = ({route}) => {
     const isFocused = useIsFocused();
     const navigation = useNavigation();
     const diningRef = useRef();
-    
+    const MorningRef = useRef();
+    const LunchRef = useRef();
+    const DinnerRef = useRef();
     const [modalVisible,setModalVisible] = useState(false);
     const [modalVisible2,setModalVisible2] = useState(false);
     const [modalVisible3,setModalVisible3] = useState(false);
@@ -75,6 +77,10 @@ const Pages = ({route}) => {
         }else{
             setSliderValue(position);
         }
+        MorningRef?.current?.scrollTo({x: 0, y: 0, animated: false })
+        LunchRef?.current?.scrollTo({x: 0, y: 0, animated: false })
+        DinnerRef?.current?.scrollTo({x: 0, y: 0, animated: false })
+        
     }
     
     const dayPress = async (selectedDate) =>{
@@ -229,6 +235,7 @@ const Pages = ({route}) => {
             if(type === isDinnerFood){
                 return setModalVisible3
             }
+          
         }
         const modal = (type)=>{
             if(type === isMorningFood){
@@ -244,10 +251,25 @@ const Pages = ({route}) => {
                 return modalVisible3
             }
         }
+        const refType = (type)=>{
+            if(type === isMorningFood){
+                return MorningRef
+            }            
+            if(type === isLunchFood){
+                return LunchRef
+            }
+            if(type === isDinnerFood){
+                return DinnerRef
+            }
+        }
         
         return (
-            <ScrollView showsVerticalScrollIndicator={false}>
-        <View>
+            <ScrollView 
+                ref={refType(diningFood)}
+                showsVerticalScrollIndicator={false}                
+                scrollEnabled={!(diningFood.length === 0 && spotId !== null) || !spotId === null}
+            >
+        <View style={{height:screenHeight}}>
             
             {(diningFood.length === 0 && spotId !== null) && <NoServieceView>
                 <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
@@ -441,7 +463,6 @@ const SafeView = styled.View`
 `;
 
 export const CalendarWrap = styled.View`
-
     height:120px;
     border-bottom-color: ${props => props.theme.colors.grey[8]};
     border-bottom-width: 1px;

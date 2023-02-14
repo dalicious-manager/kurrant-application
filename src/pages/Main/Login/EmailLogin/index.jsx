@@ -34,7 +34,7 @@ const Pages = ({route}) => {
       <FormProvider {...form}>
         <Login userId={params?.userId && params.userId}/>
       </FormProvider>
-      <ToastMessage.ToastWrap message='비밀번호가 변경됐어요' icon='checked'/>
+      {isPassword && <ToastMessage.ToastWrap message='비밀번호가 변경됐어요' icon='checked'/>}
     </WrapperBox>
   );
 };

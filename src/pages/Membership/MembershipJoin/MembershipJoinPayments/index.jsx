@@ -64,6 +64,7 @@ const Pages = ({route}) => {
 
   const handleEventPayments = async () => {
     console.log(agreeCheck.watch(agreeCheck).agreeCheck);
+    // navigation.navigate(MembershipJoinComplatePageName);
     console.log(selectMembershipCard);
     if (agreeCheck.watch(agreeCheck).agreeCheck) {
       if(!cardList.find((card)=> card.defaultType ===2 ||card.defaultType ===3)){
@@ -123,7 +124,6 @@ const Pages = ({route}) => {
         <ImageWrap>
           <Image imagePath={MembershipIconImage} width={45} height={45} />
         </ImageWrap>
-
         <InnerTextView>
           <MembershipText textColor={themeApp.colors.grey[2]}>
             커런트 연간 멤버십 정기결제
@@ -136,7 +136,7 @@ const Pages = ({route}) => {
               {withCommas(membershipTypeData?.totalPrice)}
             </PriceText>
           </PriceSaleBox>
-          <PriceTextMid textColor={themeApp.colors.grey[4]}>
+          <PriceTextMid textColor={themeApp.colors.grey[5]}>
             {withCommas(membershipTypeData?.defaultPrice)}
           </PriceTextMid>
         </InnerTextView>

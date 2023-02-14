@@ -37,7 +37,7 @@ const Component = ({
     onPressEvent,
     onPressEvent2,
     onPressEvent3,
-    daily,
+    selectDate,
     meal,
     margin='0px',
     
@@ -45,11 +45,11 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
     const pager = useRef();
-    const today = new Date();
+    const today =new Date();
     const weekly = useAtomValue(weekAtom);
     const {isOrderMeal,orderMeal} = useOrderMeal();
 
-    const [currentPress,setCurrentPress] = useState(null);
+    const [currentPress,setCurrentPress] = useState(selectDate);
     const [chk,setChk] = useState(0);
     
 
@@ -76,14 +76,13 @@ const Component = ({
      margins={margin}
      >
     {weekly.map((week,i) => {
-      
         return (
             <View key={i} >
                 <Wrap>
                     {week.map((day,idx) => {
                       
                         const txt = format(day,'EEE',{locale:ko});
-                        const now = (day.toDateString() === today.toDateString());
+                        const now = (formattedDate(day) === formattedDate(today));
                         const pressDay = (formattedDate(day));
                         const propsDay = (formattedWeekDate(day));
                         
@@ -91,7 +90,6 @@ const Component = ({
                         const order = isOrderMeal?.filter(x => x.serviceDate === propsDay)
                         const set = new Set(order?.map((x) => x.diningType));
                         const orderCount = [...set].length;
-                        
                         
                         const events =()=>{
                           selectedPress(day); onPressEvent2(propsDay)
@@ -153,7 +151,7 @@ border-radius:50px;
 margin-top:3px;
 align-items:center;
 justify-content:center;
-background-color:${({currentPress, day ,pressDay}) => (currentPress === day) ? '#E4E3E7' : 'white'};
+background-color:${({currentPress, day ,pressDay}) => (formattedDate(currentPress) === formattedDate(day)) ? '#E4E3E7' : 'white'};
  ${({ type, now }) => now && getCircleColor(type)};
 `;
 
