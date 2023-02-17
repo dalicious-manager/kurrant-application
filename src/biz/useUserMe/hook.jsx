@@ -57,11 +57,12 @@ const useUserMe = () => {
         try {
             setMyInfoLoading(true)
             const res = await Fetch.userMe();
+            console.log(res.data,"123123123");
             setMyInfo(res.data)
            
         } catch (err) {
-            console.log(err.toString().replace("Error:",''),"123456")
-            if(err.toString().replace("Error:",'').trim() === '403'){
+            console.log(err.toString().replace("Error:",'').replace("error:",''),"123456")
+            if(err.toString().replace("Error:",'').trim().replace("error:",'') === '403'){
                 AsyncStorage.clear();
                 navigation.reset({
                   index: 0,

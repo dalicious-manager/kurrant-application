@@ -40,7 +40,6 @@ const Pages = ({route}) => {
     const [test,setTest] = useState();
     const { StatusBarManager } = NativeModules;
     const navigation = useNavigation();
-    const agreeCheck = useForm();
     const pointRef = useRef();
     const [show,setShow] = useState(false);
     const [ modalVisible, setModalVisible ] = useState(false);
@@ -52,7 +51,7 @@ const Pages = ({route}) => {
     const [point,setPoint] = useState(0);
     
     const [pointShow,setPointShow] = useState(false)
-    const {isLoadMeal,orderMeal,loadMeal,setQuantity} = useShoppingBasket();
+    const {isLoadMeal,loadMeal} = useShoppingBasket();
     const {isUserInfo} = useUserInfo();
     const {setSelectDefaultCard,readableAtom:{selectDefaultCard}}= useUserMe();
     const [card,setCard] = useState(Number(selectDefaultCard));
@@ -68,22 +67,14 @@ const Pages = ({route}) => {
         discountPrice,
         totalPrice,
         selected,
-        name,
         spotName,
         clientType,
-        arr  : mealArr,
         usedSupportPrice
         } = route.params
-    const PressButton = () => {
-        setModalVisible(true);
-    }
     const selectCard = async(text,id)=>{
         await setStorage('selectCard',id.toString())
         console.log(text,id)
         setSelectDefaultCard(id.toString());
-    }
-    const pointButton = () => {
-        setModalVisible2(true);
     }
 
     const fundButton = () => {
@@ -105,9 +96,6 @@ const Pages = ({route}) => {
     
     
 
-    const clearInput = () => {
-        inputRef.current.setNativeProps({ text: ''  }); 
-    }
 
         
     useEffect(()=>{
@@ -121,7 +109,7 @@ const Pages = ({route}) => {
                 const nowCard = await getStorage('selectCard');                
                 const easyPay = await getStorage('easyPay');   
                 if(easyPay){
-                    setPayments(easyPay);             
+                    setPayments(easyPay);
                 }
                 if(nowCard){
                     setCard(Number(nowCard));
@@ -130,10 +118,6 @@ const Pages = ({route}) => {
             getCard();
         },[])
     )
-    const confirmPress = () =>{
-        
-        setPointShow(false);
-    }
 
     const onBlurPress = (e)=> {
         e.preventDefault();
@@ -262,7 +246,6 @@ const Pages = ({route}) => {
                                            
                                            const price = meal.price * meal.count;
                                            const mealDiscountPrice = meal.membershipDiscountPrice + meal.makersDiscountPrice + meal.periodDiscountPrice;
-                                           const mealDiscountRate = meal.membershipDiscountRate + meal.makersDiscountRate + meal.periodDiscountRate;
                                            return (
                                                <React.Fragment key={index}>
                                                    <ContentHeader>
@@ -392,6 +375,7 @@ const Pages = ({route}) => {
                                 name={"NAVERPAY"}
                             />
                         </AgreeTextBox>
+                        <CardSelectContainer>
                         {payments ==="NOMAL" && <View>
                         {card  ? 
                             <Card 
@@ -423,7 +407,7 @@ const Pages = ({route}) => {
                             </Card>
                         }
                         </View>}
-                    
+                    </CardSelectContainer>
                     </Container>
                     <Label>위 주문 내용을 확인 하였으며, 회원 본인은 개인정보 이용 및 제공 및 결제에 동의합니다.</Label>
                 </BorderWrap>
@@ -442,13 +426,13 @@ const Pages = ({route}) => {
                 </KeyContainer>
                 {/* ;handleEventPayments() */}
                 {!keyboardStatus.isKeyboardActivate && <ButtonWrap>
-                    <Button label={`총 ${totalCount}개 결제하기`} onPressEvent={()=>{handleEventPayments()}}/>
+                    <Button label={`총 ${totalCount}개 결제하기`} disabled={!((payments !== "NOMAL") || card)} onPressEvent={()=>{handleEventPayments()}}/>
                 </ButtonWrap>}
                 <BottomModal modalVisible={modalVisible3} setModalVisible={setModalVisible3} title={'지원금이란?'} description={'고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                 <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow' onPressEvent1={registerCard}/>
                 <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                 {/* <BottomSheet title='일반 카드 선택' modalVisible={modalVisible4} setModalVisible={setModalVisible4} setSelected={setCard} selected={card} data={cardListData} setValue={selectCard}/> */}
-                <BottomSheetCard modalVisible={modalVisible4} setModalVisible={setModalVisible4} 
+                <BottomSheetCard modalVisible={modalVisible4} se00tModalVisible={setModalVisible4} 
                     title='일반 카드 선택' data={cardListData} selected={card} setSelected={setCard} 
                     onPressEvent={selectCard}
                 />
@@ -484,10 +468,6 @@ const Container = styled.View`
 margin:0px 24px;
 `;
 
-const FormWrap = styled.View`
-margin: 24px;
-padding-bottom:48px;
-`;
 
 const AgreeTextBox = styled.View`
     flex-direction: row;
@@ -564,45 +544,15 @@ color:${props => props.theme.colors.grey[4]};
 margin-left:8px;
 `;
 
-const PayInfoWrap = styled.View`
-flex-direction:row;
-align-items:center;
-text-align:center;
-`;
 
-const NoPayInfoWrap = styled.View`
-flex-direction:row;
-align-items:center;
-text-align:center;
-justify-content:space-between;
-width:100%;
-`;
 
-const PayInfo = styled.View`
-flex-direction:row;
-align-items:center;
-height:56px;
-`;
 
-const PayText = styled(Typography).attrs({text:'Body06R'})`
-color:${props => props.theme.colors.red[500]};
-margin-left:4px;
-`;
 
 const MealNameView = styled.View`
 width:80%;
 `;
 
-const UserPointView = styled.View`
-flex-direction:row;
-justify-content:flex-end;
-margin:0px 24px;
-`;
 
-const UserPointText = styled(Typography).attrs({text:'SmallLabel'})`
-color:${({theme}) => theme.colors.grey[4]};
-margin-bottom:24px;
-`;
 
 const Bar = styled.View`
 background-color:${({theme}) => theme.colors.grey[7]};
@@ -637,10 +587,9 @@ const KeyContainer = styled.KeyboardAvoidingView`
   /* flex: 1; */
   position: relative;
 `
-
-const InnerView = styled.View`
-flex-direction:row;
-`;
+const CardSelectContainer = styled.View`
+    height: 82px;
+`
 
 const KeyboardInner = styled.View`
 width:100%;

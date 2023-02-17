@@ -146,11 +146,11 @@ export function formattedSameDate(startData, endDate) {
 
 export function formattedDateType(data) {
   switch (data) {
-    case 0:
-      return '아침';
     case 1:
-      return '점심';
+      return '아침';
     case 2:
+      return '점심';
+    case 3:
       return '저녁';
     default:
       break;

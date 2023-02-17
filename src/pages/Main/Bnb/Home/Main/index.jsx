@@ -40,7 +40,7 @@ import Toast from '../../../../../components/Toast';
 import {PAGE_NAME as ApartRegisterSpotPageName } from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import useUserMe from '../../../../../biz/useUserMe';
-import { Members } from '../../../../../assets';
+import { FoundersMembers, Members } from '../../../../../assets';
 import { PAGE_NAME as FAQListDetailPageName } from '../../../MyPage/FAQ';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from "react-native-fast-image";
@@ -49,7 +49,8 @@ import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
-
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 const Pages = () => {
   
     const navigation = useNavigation();
@@ -92,6 +93,7 @@ const Pages = () => {
        
         };
         handleShowModal();
+        
       },[])
 
       const closeBalloon = async () => {
@@ -275,7 +277,7 @@ const Pages = () => {
       console.log(err)
     }
   }
-
+  console.log(isUserInfo);
 if(isOrderMealLoading || isUserInfoLoading){
   return <SkeletonUI/>
 }
@@ -387,16 +389,6 @@ if(isOrderMealLoading || isUserInfoLoading){
             </MealCalendarTitle>
             <Calendar onPressEvent={()=>navigation.navigate(MealMainPageName)} />
           </MealCalendar>
-          {!(isUserInfo?.isMembership) &&<Image source={Members} scale={1.0} resizeMode={'stretch'}  style={{
-            width:327,
-            height:64,
-            alignSelf:'center'
-          }}/>}
-          {/* {!isUserInfo?.isMembership && <MenbershipBanner onPress={()=>navigation.navigate(MembershipIntro)}>
-            <MembershipImage source={require('../../../../../assets/images/membership.png')} resizeMode='stretch'/>
-            <MembershipText>멤버십 가입하고 <PointText>20%할인</PointText> 받기</MembershipText>
-          </MenbershipBanner>} */}
-          
           {/* <CatorWrap>
             <Cator>
               <CatorIcon/>
@@ -417,19 +409,28 @@ if(isOrderMealLoading || isUserInfoLoading){
               <CountText>건</CountText>
             </CountWrap>
           </MembershipWrap>} */}
-          {isUserInfo?.isMembership && <MembershipWrap>
+          {isUserInfo?.isMembership ? <MembershipWrap>
             <Membership>
               <MembershipIcon/>
               <TitleText>멤버십</TitleText>
             </Membership>
             <View>
-              <MembershipUsing>{isUserInfo?.membershipUsingPeriod}개월째 이용중</MembershipUsing>
-              <MembersWrap>
+              <MembershipUsing>{isUserInfo?.membershipUsingPeriod}일째 이용중</MembershipUsing>
+              { isUserInfo?.foundersNumber < 5000 && <MembersWrap>
                 <MembersIcon/>
-                <MembersText>n번째 커런트파운더스</MembersText>
-              </MembersWrap>
+                <MembersText>{isUserInfo?.foundersNumber}번째 커런트파운더스</MembersText>
+              </MembersWrap>}
             </View>
-          </MembershipWrap>}
+          </MembershipWrap> : isUserInfo?.leftFoundersNumber > 0 
+          ? 
+          <MenbershipBanner onPress={()=>navigation.navigate(MembershipIntro)} >
+            <MembershipImages source={FoundersMembers} resizeMode={'cover'}  />
+          </MenbershipBanner>
+          :
+          <MenbershipBanner onPress={()=>navigation.navigate(MembershipIntro)}>
+            <MembershipImage source={require('../../../../../assets/images/membership.png')} resizeMode='stretch'/>
+            <MembershipText>멤버십 가입하고 <PointText>20%할인</PointText> 받기</MembershipText>
+          </MenbershipBanner>}
           {/* <MarketWrap>
             <Market>
               <MarketIcon/>
@@ -625,6 +626,8 @@ flex-direction:row;
 const MenbershipBanner = styled.Pressable`
 width:100%;
 height:64px;
+margin-left: 24px;
+margin-right: 24px;
 margin-bottom:16px;
 /* justify-content:center;
 align-items:center; */
@@ -635,6 +638,12 @@ width:100%;
 height:64px;
 border-radius:14px;
 position:relative;
+
+`;
+const MembershipImages = styled.Image`
+width:100%;
+height:64px;
+border-radius:14px;
 
 `;
 

@@ -46,7 +46,7 @@ const Pages = () => {
             removeStorage()
             navigation.navigate(GroupCompletePageName,{name:'apartment'})
         }catch(err){
-            alert(err)
+            alert(err.toString().replace('error: ',''),)
         }
         
     }

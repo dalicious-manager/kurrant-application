@@ -34,14 +34,14 @@ const Component = ({
   onPressEvent2 = () => console.log('장바구니 버튼'),
   capacity
 }) => {
-  console.log(capacity,'수량')
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const [fadeIn, setFadeIn] = useState(false);
   const [rotate, setRotate] = useState('0deg');
 
   const PRICE = price * count
-
+  console.log(cartCount,
+    capacity)
   const handlePress = () => {
     Animated.timing(fadeAnim, {
       toValue: fadeIn ? 0 : 72,
@@ -66,14 +66,13 @@ const Component = ({
     );
   }, [rotateAnim]);
 
-
   return (
       <Container>
         <BtnContainer >
           <PressView>
             <Pressable onPress={handlePress}>
               <TrapezoidIcon
-              capacity={capacity-cartCount} count={count}
+              capacity={Number(capacity)-Number(cartCount|| 0)} count={Number(count)}
               />
               <Animated.View
                 style={{
@@ -87,28 +86,28 @@ const Component = ({
             </Pressable>
           </PressView>
 
-          <InnerContainer capacity={capacity-cartCount} count={count}>
+          <InnerContainer capacity={Number(capacity)-Number(cartCount|| 0)} count={Number(count)}>
             <Animated.View style={{height: fadeAnim}}>
-              <AnimationView capacity={capacity-cartCount} count={count}>
+              <AnimationView capacity={Number(capacity)-Number(cartCount|| 0)} count={Number(count)}>
                 <Inner>
                     <PriceText>{withCommas(PRICE)}원</PriceText>
                     <CountView >
                       <Count
                       detail
-                      count={count}
+                      count={Number(count)}
                       increasePress={increasePress}
                       decreasePress={decreasePress}
                       onPressEvent={onPressEvent}
-                      capacity={capacity-cartCount}
+                      capacity={Number(capacity)-Number(cartCount|| 0)}
                       />
-                      <CapacityText capacity={capacity-cartCount} count={count}>재고수량 : {capacity-cartCount}</CapacityText>
+                      <CapacityText capacity={Number(capacity)-Number(cartCount)} count={Number(count)}>재고수량 : {Number(capacity)-Number(cartCount|| 0)}</CapacityText>
                     </CountView>
                 </Inner>
               </AnimationView>
             </Animated.View>
-            <PressButton onPress={onPressEvent2} capacity={capacity-cartCount} count={count} disabled={capacity < count+cartCount}>
-              <ButtonText capacity={capacity-cartCount} count={count}>
-                {(capacity < count+cartCount) ? '재고가 부족해요' : fadeIn ? '장바구니 담기' : `${count}개 담기`}
+            <PressButton onPress={onPressEvent2} capacity={Number(capacity)-Number(cartCount|| 0)} count={Number(count)} disabled={(Number(capacity) < Number(count)+Number(cartCount|| 0))}>
+              <ButtonText capacity={Number(capacity)-Number(cartCount|| 0)} count={Number(count)}>
+                {(Number(capacity) < Number(count)+Number(cartCount|| 0)) ? '재고가 부족해요' : fadeIn ? '장바구니 담기' : `${Number(count)}개 담기`}
               </ButtonText>
             </PressButton>
           </InnerContainer>

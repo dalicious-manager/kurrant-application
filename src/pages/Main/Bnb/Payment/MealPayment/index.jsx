@@ -9,6 +9,7 @@ import BackButton from '../../../../../components/BackButton';
 import Config from 'react-native-config';
 import PaymentContainer from './components/PaymentContainer';
 import {PurchaseDetailPageName} from '../../../MyPage/PurchaseHistory/Detail'
+import Clipboard from '@react-native-clipboard/clipboard';
 export const PAGE_NAME = "P__PAYMENT__MEAL_PAYMENT";
 
 const Pages = ({route})=>{
@@ -24,8 +25,8 @@ const Pages = ({route})=>{
                 easyPay:params.easyPay,
                 flowMode:params.flowMode,        
                 orderName: params.orderName,
-                successUrl: `http://15.165.39.55/admin/success.php`,
-                failUrl: 'http://15.165.39.55:8882/fail',
+                successUrl: `http://3.35.197.186/admin/success.php`,
+                failUrl: 'http://3.35.197.186:8882/fail',
             }
         }else{
             return {
@@ -36,8 +37,8 @@ const Pages = ({route})=>{
                 flowMode:params.flowMode,      
                 cardCompany:params.cardCompany,
                 orderName: params.orderName,
-                successUrl: `http://15.165.39.55/admin/success.php`,
-                failUrl: 'http://15.165.39.55:8882/fail',
+                successUrl: `http://3.35.197.186/admin/success.php`,
+                failUrl: 'http://3.35.197.186:8882/fail',
             }
         }
     }
@@ -50,6 +51,9 @@ const Pages = ({route})=>{
                 onApproveError={(v) => {console.log("에러",v)}}
                 onApproveFailed={() => {console.log("teset")}}
                 onApproveSucceed={(v) => {
+                    // console.log(v)
+                    // Clipboard.setString(v.paymentKey);
+                    // navigation.goBack();
                     if(v){
                         const resetAction = StackActions.popToTop();
                         navigation.dispatch(resetAction); 

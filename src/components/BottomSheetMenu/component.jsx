@@ -23,7 +23,8 @@ import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
 import { useNavigation } from '@react-navigation/native';
 import useUserInfo from '../../biz/useUserInfo';
-
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 const BottomSheet = props => {
   const { modalVisible, setModalVisible ,title={}, description='', data={} = ()=>{}, height=500 ,btn='버튼이름',toast,setShow} = props;
   //멀티 셀렉터시 이용
@@ -163,7 +164,7 @@ const BottomSheet = props => {
   }
 
   return (
-    <Modal visible={modalVisible} animationType={'slide'} transparent>
+    <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay>
         <TouchableWithoutFeedback onPress={closeModal}>
           <Background />
@@ -241,10 +242,20 @@ const BottomSheet = props => {
   );
 };
 
-const Overlay =styled.View`
+const Overlay =styled.Pressable`
   position: relative;
   flex: 1;
   justify-content: flex-end;
+  background-color: rgba(0, 0, 0, 0.7);
+`;
+const OverlayBack =styled.View`
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: ${screenWidth}px;
+  height: ${screenHeight}px;
+  flex: 1;
   background-color: rgba(0, 0, 0, 0.7);
 `;
 

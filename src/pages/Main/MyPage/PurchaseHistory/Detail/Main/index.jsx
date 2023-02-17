@@ -20,7 +20,6 @@ const Pages = ({route}) => {
   const {refundItem,refundAll} = useOrderMeal();
   const cancelItem = async(foodId)=>{
     const req = {
-      orderId:id,
       id:foodId
     }
     await refundItem(req);
@@ -31,6 +30,7 @@ const Pages = ({route}) => {
         return v
       }
     })]}
+    setPurchaseDetail(refund)
   }
   const cancelAll = async()=>{
     const req = {
@@ -55,11 +55,13 @@ const Pages = ({route}) => {
     }
     getPurchaseDetail(reqs);
   }
-  const possibleOrder = purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7)?.length > 0 
-  ? (purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7))?.length > 0 
-  ? "(취소된주문:"+purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7)?.length
-  :""
-  :"";
+  const possibleOrder = (purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7)?.length > 0 
+  ? (purchaseDetail?.orderItems?.filter((v)=>v.isBeforeLastOrderTime === false))?.length > 0 
+  ? "(취소된 주문:"+purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7)?.length+" / 마감된 주문:"+(purchaseDetail?.orderItems?.filter((v)=>v.isBeforeLastOrderTime === true))?.length+" 제외)"
+  :"(취소된 주문:"+purchaseDetail?.orderItems?.filter((v)=>v.orderStatus === 7)?.length+" 제외)"
+  :(purchaseDetail?.orderItems?.filter((v)=>v.isBeforeLastOrderTime === false))?.length > 0 
+  ?"(마감된 주문:"+(purchaseDetail?.orderItems?.filter((v)=>v.isBeforeLastOrderTime === true))?.length+" 제외)"
+  :"");
   purchaseDetail?.orderItems?.map((v)=>console.log(v));
   useEffect(()=>{
     const getData = async()=>{
@@ -136,7 +138,7 @@ const Pages = ({route}) => {
               </CancelButton>
             </OrderTitleBox>
             {purchaseDetail?.orderItems?.map((v)=>{
-              return <OrderItem key={v.id} orderItem={v} oncancel={cancelItem} />
+              return <OrderItem key={v.id} orderItem={v} onCancel={cancelItem} />
             })}
             
           </OrderItemBox>
@@ -271,7 +273,7 @@ const Pages = ({route}) => {
           <PaymentsMethodBox>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>결제수단</Typography>
               <ReceiptBox>
-              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.cardCompany}카드</Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>{purchaseDetail?.paymentCompany}</Typography>
               {purchaseDetail?.receiptUrl ? <ReceiptTouch onPress={()=>Linking.openURL(purchaseDetail?.receiptUrl)}>
                   <ReceiptText text="CaptionR" textColor={themeApp.colors.grey[5]}>(영수증)</ReceiptText>
                 </ReceiptTouch> : <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>({purchaseDetail?.cardNumber})</Typography>}

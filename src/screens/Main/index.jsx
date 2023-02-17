@@ -203,7 +203,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -219,7 +219,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -235,7 +235,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -251,7 +251,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -267,7 +267,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -283,7 +283,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -299,7 +299,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -315,7 +315,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
          
@@ -332,7 +332,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
       </MainRoot.Group>
@@ -357,7 +357,7 @@ const Screen = () => {
             fontSize:14,
             lineHeight:22,
           },
-          headerLeft: () => <BackButton />,
+          headerLeft: () => <BackButton margin={[10,0]}/>,
         }}
         />
        
@@ -375,7 +375,7 @@ const Screen = () => {
             fontSize:14,
             lineHeight:22,
           },
-          headerLeft: () => <BackButton />,
+          headerLeft: () => <BackButton margin={[10,0]}/>,
         }}
         />
        
@@ -394,7 +394,7 @@ const Screen = () => {
             fontSize:14,
             lineHeight:22,
           },
-          headerLeft: () => <BackButton />,
+          headerLeft: () => <BackButton margin={[10,0]}/>,
         }}
         />
         <MainRoot.Screen
@@ -428,7 +428,7 @@ const Screen = () => {
               lineHeight:22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,}}
+            headerLeft: () => <BackButton margin={[10,0]}/>,}}
         />
         <MainRoot.Screen
           name={NoticeDetailPageName}
@@ -443,7 +443,7 @@ const Screen = () => {
               lineHeight:22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,}}
+            headerLeft: () => <BackButton margin={[10,0]}/>,}}
         />
       </MainRoot.Group>
       {/* 알림센터 */}
@@ -530,7 +530,7 @@ const Screen = () => {
               lineHeight:22
             },
             headerShadowVisible: false,
-            // headerLeft: () => <BackButton />,
+            // headerLeft: () => <BackButton margin={[10,0]}/>,
             // headerRight: () => <ShoppingCart/>
           }}
         />
@@ -549,7 +549,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
       </MainRoot.Group>
@@ -636,7 +636,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -648,10 +648,10 @@ const Screen = () => {
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
-              fontSize:17,
+              fontSize:14,
               lineHeight:21
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -663,10 +663,10 @@ const Screen = () => {
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
-              fontSize:17,
+              fontSize:14,
               lineHeight:21
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -678,10 +678,10 @@ const Screen = () => {
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
-              fontSize:17,
+              fontSize:14,
               lineHeight:21
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         
@@ -694,10 +694,10 @@ const Screen = () => {
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
-              fontSize:17,
+              fontSize:14,
               lineHeight:21
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -709,10 +709,10 @@ const Screen = () => {
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
-              fontSize:17,
+              fontSize:14,
               lineHeight:21
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -724,10 +724,10 @@ const Screen = () => {
             headerTitleAlign: 'center',
             headerTitleStyle:{
               fontFamily:'Pretendard-SemiBold',
-              fontSize:17,
+              fontSize:14,
               lineHeight:21
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -742,7 +742,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -757,7 +757,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -772,7 +772,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -787,7 +787,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -802,7 +802,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -817,7 +817,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         
@@ -833,7 +833,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
       </MainRoot.Group>
@@ -852,7 +852,7 @@ const Screen = () => {
             //   fontSize:14,
             //   lineHeight:22
             // },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -867,7 +867,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -882,7 +882,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -897,7 +897,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -912,7 +912,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -927,7 +927,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -942,7 +942,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -957,7 +957,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
         <MainRoot.Screen
@@ -972,7 +972,7 @@ const Screen = () => {
               fontSize:14,
               lineHeight:22
             },
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10,0]}/>,
           }}
         />
       </MainRoot.Group>
@@ -1034,7 +1034,7 @@ const Screen = () => {
                 lineHeight:22
               },
               
-              // headerLeft: () => <BackButton />,
+              // headerLeft: () => <BackButton margin={[10,0]}/>,
             }}
           />
           <MainRoot.Screen
@@ -1051,7 +1051,7 @@ const Screen = () => {
                 lineHeight:22
               },
               
-              headerLeft: () => <BackButton />,
+              headerLeft: () => <BackButton margin={[10,0]}/>,
             }}
           />
            <MainRoot.Screen
@@ -1068,7 +1068,7 @@ const Screen = () => {
                 lineHeight:22
               },
               
-              headerLeft: () => <BackButton />,
+              headerLeft: () => <BackButton margin={[10,0]}/>,
             }}
           />
           <MainRoot.Screen
@@ -1085,7 +1085,7 @@ const Screen = () => {
                 lineHeight:22
               },
               
-              headerLeft: () => <BackButton />,
+              headerLeft: () => <BackButton margin={[10,0]}/>,
             }}
           />
           <MainRoot.Screen
@@ -1119,7 +1119,7 @@ const Screen = () => {
                 lineHeight:22
               },
               
-              headerLeft: () => <BackButton />,
+              headerLeft: () => <BackButton margin={[10,0]}/>,
             }}
           />
           

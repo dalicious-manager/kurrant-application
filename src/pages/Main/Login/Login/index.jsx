@@ -163,8 +163,8 @@ const Pages = ({route}) => {
             <ButtonRoundSns type_sns='kakao' size={32} onPressEvent={kakaoLogin}/>
             <ButtonRoundSns type_sns='naver' size={32} onPressEvent={naverLogin}/>
             <ButtonRoundSns type_sns='google' size={32} onPressEvent={googleLogin}/>
-            <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>
             <ButtonRoundSns type_sns='facebook' size={32} onPressEvent={facebookLogin}/>
+            <ButtonRoundSns type_sns='apple' size={32} onPressEvent={appleLogin}/>
           </EtcSNSBox>
         </EtcSNSContainer>
         <Pressable onPress={async()=>{
@@ -178,7 +178,7 @@ const Pages = ({route}) => {
               ],
             })
           }}>
-          {/* <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping> */}
+          <WindowShopping>로그인 하지 않고 둘러보기</WindowShopping>
           </Pressable>
           </LoginContainer>
       <toast.ToastWrap message={"뒤로버튼 한번 더 누르시면 종료됩니다."} />
@@ -194,16 +194,16 @@ const WrapperBox = styled(Wrapper)`
 
 
 const BackgroundImageBox = styled.Image` 
-  width: 220px;
-  height: 220px;
-  margin-bottom: 57px;
+  margin-left: 78.5px;
+  margin-right: 78.5px;
+  margin-bottom: 11%;
 `;
 const LoginContainer = styled.View`
   flex:1;
   justify-content: center;
   align-items: center;
   padding-bottom: 59px;
-  padding-top: 141px;
+  padding-top: 20%;
 `
 const LogoBox = styled.View`
   margin-bottom: 15px;

@@ -86,9 +86,9 @@ const Pages = () => {
   )
   useEffect(()=>{
     console.log(userRole,"test")
-  if (userRole !== "ROLE_GUEST") {    
-    getData();
-  }
+    if (userRole !== "ROLE_GUEST") {    
+      getData();
+    }
     
   },[])
   if(isMyInfoLoading && !myInfo){
@@ -131,7 +131,7 @@ const Pages = () => {
               <ArrowRightLogin height={16} width={8}/>
             </LoginBox>}
         
-            <MembershipBox isMembership={isUserInfo?.isMembership} membershipPeriod={myInfo?.membershipPeriod}/>
+            <MembershipBox isMembership={isUserInfo?.isMembership} membershipPeriod={isUserInfo?.membershipUsingPeriod}/>
           {/* 포인트 활성시
             <PointBox point={41030}/> 
           */}

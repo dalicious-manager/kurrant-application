@@ -145,9 +145,7 @@ const Pages = () => {
                 }
             })]}
         })
-
         setLoadMeal(substracQty);
-     
     }
 
     // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인

@@ -42,9 +42,9 @@ const Pages= ()=>{
                 <LabelBox>
                   <Label type={membershipInfo?.membershipSubscriptionType === "YEAR" ?"green" : "blue"} label={membershipInfo?.membershipSubscriptionType==="YEAR" ?  "연간구독" : "월간구독"}/>
                 </LabelBox>
-                {/* {membershipInfo?.membershipSubscriptionType && <LabelBox>
-                  <Label type={"purple"} label={"5000번째 커런트 파운더스"}/>
-                </LabelBox>} */}
+                {isUserInfo?.foundersNumber <= 5000 && <LabelBox>
+                  <Label type={"purple"} label={`${isUserInfo?.foundersNumber}번째 커런트 파운더스`}/>
+                </LabelBox>}
               </MembershipLabelBox>
               <NoticeBox>
                 <TextCenterField text={'Body05SB'} textColor={themeApp.colors.neutral[0]}>

@@ -56,7 +56,7 @@ const Component = ({userId}) => {
       console.log(err)
       Alert.alert(
         "로그인 실패",
-        err.toString(),
+        err.toString().replace('error: ',''),
           [
               {
                   text: "확인",

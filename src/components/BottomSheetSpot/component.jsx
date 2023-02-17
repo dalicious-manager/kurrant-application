@@ -109,7 +109,7 @@ const BottomSheetSpot = props => {
     });
   };
   return (
-    <Modal visible={modalVisible} animationType={'slide'} transparent>
+    <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay
          onPressIn={pressInUp}
          onPressOut={pressOutUp}

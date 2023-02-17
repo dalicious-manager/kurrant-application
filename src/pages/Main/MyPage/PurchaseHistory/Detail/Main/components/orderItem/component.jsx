@@ -13,7 +13,7 @@ import { formattedMealFoodStatus } from "../../../../../../../../utils/statusFor
 const {width} =Dimensions.get('screen');
 const Component = ({
   orderItem,
-  oncancel=()=>{}
+  onCancel=()=>{}
 }) => {
   const themeApp = useTheme();
   const {
@@ -70,7 +70,7 @@ const Component = ({
                         },
                         {
                           text:'메뉴 취소',
-                          onPress:() => oncancel(id),
+                          onPress:() => onCancel(id),
                           style:'destructive'
                         }
                       ]

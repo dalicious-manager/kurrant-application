@@ -38,7 +38,7 @@ const Pages = () => {
             source={{uri:'https://asset.kurrant.co/img/common/corporation.png',
             priority:FastImage.priority.high}}
             style={{
-                    maxWidth: width,
+                    width: width,
                     height:height,
                 }}
             />

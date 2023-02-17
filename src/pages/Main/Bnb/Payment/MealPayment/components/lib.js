@@ -148,7 +148,7 @@ export function isAppUrl(scheme) {
 
 export function isBlank(url, mainDocumentUrl, orderItems, setUrls, token) {
 
-    if (url.includes("15.165.39.55/admin")) {
+    if (url.includes("3.35.197.186/admin")) {
         const reqUrl = url + `&token=${token}&orderItems=${JSON.stringify(
             orderItems
         )}`

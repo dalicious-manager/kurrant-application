@@ -70,7 +70,7 @@ const Pages = () => {
     }catch(err){
       Alert.alert(
         "메일 인증 요청 실패",
-        err.toString(),
+        err.toString().replace('error: ',''),
           [
               {
                   text: "확인",
@@ -91,7 +91,7 @@ const Pages = () => {
       }catch(err){
         Alert.alert(
           "핸드폰 인증 요청 실패",
-          err.toString(),
+          err.toString().replace('error: ',''),
             [
                 {
                     text: "확인",
@@ -395,7 +395,7 @@ const Pages = () => {
                           } catch (err) {
                             Alert.alert(
                               "인증확인 실패",
-                              err.toString(),
+                              err.toString().replace('error: ',''),
                                 [
                                     {
                                         text: "확인",
@@ -433,7 +433,7 @@ const Pages = () => {
                     } catch (err) {
                       Alert.alert(
                         "인증확인 실패",
-                        err.toString(),
+                        err.toString().replace('error: ',''),
                           [
                               {
                                   text: "확인",

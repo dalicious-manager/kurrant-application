@@ -148,8 +148,9 @@ const Pages = ({route}) => {
                  balloonEvent();
                 // await loadMeal();
                  } catch(err){
+                    alert(err.toString().replace("error:","").trim())
                      console.log(err)
-                     throw err
+                    //  throw err
                  }
                closeModal();  
     }
@@ -174,7 +175,7 @@ const Pages = ({route}) => {
         setFocus(false);
       };
 
-    const changeText = number => {
+    const changeText = (number,id) => {
         setCount(number);
       };
 
@@ -322,7 +323,7 @@ const Pages = ({route}) => {
                         onPressEvent2={()=>{addCartPress()}}
                         onPressEvent={() => {bodyRef.current.focus(); focusPress()}} 
                         count={count} 
-                        cartCount={cartCount[0][0]}
+                        cartCount={cartCount[0] &&  cartCount[0][0] ?(cartCount[0][0] || 0) : 0}
                         capacity={isFoodDetail?.capacity}
                         increasePress={increasePress}
                         decreasePress={decreasePress}

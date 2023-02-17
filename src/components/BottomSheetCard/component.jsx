@@ -110,9 +110,7 @@ const BottomSheetCard = props => {
     });
   };
   return (
-    <>
-    {modalVisible && <OverlayBack/>}
-    <Modal visible={modalVisible} animationType={'slide'} transparent>
+    <Modal visible={modalVisible} animationType={'fade'} transparent>
       
       <Overlay
          onPressIn={pressInUp}
@@ -188,7 +186,6 @@ const BottomSheetCard = props => {
                 </ManagePressView>} 
       </Overlay>
     </Modal>
-    </>
   );
 };
 
@@ -196,41 +193,12 @@ const Overlay =styled.Pressable`
   position: relative;
   flex: 1;
   justify-content: flex-end;
-  /* background-color: rgba(0, 0, 0, 0.7); */
-`;
-const OverlayBack =styled.View`
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: ${screenWidth}px;
-  height: ${screenHeight}px;
-  flex: 1;
   background-color: rgba(0, 0, 0, 0.7);
 `;
 
+
 const Background = styled.View`
   flex: 1;
-`;
-
-const AnimatedView = styled(Animated.View)`
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  padding-top: 20px;
-`;
-
-const DragButton = styled.TouchableOpacity`
-  flex: 1;
-`;
-
-const DragButtonView = styled.View`
-  background-color: white;
-  width: 40px;
-  height: 5px;
-  border-radius: 10px;
 `;
 
 const BottomSheetTitleView = styled.View`
@@ -253,12 +221,6 @@ const ContentItemContainer = styled.Pressable`
   padding-left: 40px;
 `
 
-const ItemContainer = styled.View`
-  width: ${Dimensions.get('screen').width}px;
-  height: 60px;
-  padding: 19px 24px;
-`
-
 const ContentItemBox = styled.View`
   flex-direction: row;
   justify-content: space-between;
@@ -267,16 +229,6 @@ const ContentItemBox = styled.View`
 
 const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``
 
-const GroupName = styled(Typography).attrs({text: 'Body06R'})`
-color:${({theme}) => theme.colors.grey[4]};
-`;
-
-const Border = styled.View`
-width:100%;
-height:1px;
-margin-top:12px;
-background-color:${({theme}) => theme.colors.grey[8]};
-`;
 
 const ManagePressView = styled.Pressable`
   width: ${Dimensions.get('screen').width}px;

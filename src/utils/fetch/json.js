@@ -10,9 +10,9 @@ import { getStorage, setStorage } from '../asyncStorage';
 const RESPONSE_SLEEP = 300;
 
 const apiHostUrl =
-  process.env.NODE_ENV === 'prod'
-    ? Config.API_HOST_URL + '/' + Config.API_VERSION
-    : Config.API_DEVELOP_URL + '/' + Config.API_VERSION;
+  process.env.NODE_ENV === 'dev'
+    ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 const buildQuery = queryObj => {
   let ret;

@@ -85,7 +85,7 @@ const Screen = () => {
           ),
         }}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name={CatorMainPageName}
         component={CatorMainPage}
         options={{
@@ -119,7 +119,7 @@ const Screen = () => {
             </TabBarIconWrap>
           ),
         }}
-      />
+      /> */}
       <BottomTab.Screen
         name={MoreMainPageName}
         component={MoreMainPage}
