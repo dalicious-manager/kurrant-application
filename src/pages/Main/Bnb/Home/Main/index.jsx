@@ -220,7 +220,6 @@ const Pages = () => {
       if(res.data === null){
         navigation.navigate(ApartRegisterSpotPageName,{id:id})
       }else{
-        
         await userInfo();
         setShow(true);
         toast.toastEvent();
@@ -320,6 +319,7 @@ if(isOrderMealLoading || isUserInfoLoading){
             return (
               <React.Fragment key={`${m.id} ${idx}`}>
                 {m.orderItemDtoList.map((meal) => {
+                  console.log(meal,"131241221")
                   return (
                     <MealInfoWrap key={meal.id} onPress={()=>navigation.navigate(MealMainPageName)}>
                     <MealInfo >
@@ -333,7 +333,7 @@ if(isOrderMealLoading || isUserInfoLoading){
                         />
                         <MealText>
                           <View>
-                            <DiningType>{m.diningType}</DiningType>
+                            <DiningType>{`오늘 ${m.diningType}`}</DiningType>
                             <View>
                               <MealTxt>{meal.name}</MealTxt>
                             </View>

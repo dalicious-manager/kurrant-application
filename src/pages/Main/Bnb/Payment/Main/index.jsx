@@ -432,7 +432,7 @@ const Pages = ({route}) => {
                 <BottomModal  modalVisible={modalVisible} setModalVisible={setModalVisible} title='결제수단 등록이 필요해요' description='최초 1회 등록으로 편리하게 결제할 수 있어요' buttonTitle1='결제 카드 등록하기' buttonType1='yellow' onPressEvent1={registerCard}/>
                 <BottomModal modalVisible={modalVisible2} setModalVisible={setModalVisible2} title={'포인트란?'} description={'고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'} buttonTitle1={'확인했어요'} buttonType1={'grey7'} onPressEvent1={closeModal}/>
                 {/* <BottomSheet title='일반 카드 선택' modalVisible={modalVisible4} setModalVisible={setModalVisible4} setSelected={setCard} selected={card} data={cardListData} setValue={selectCard}/> */}
-                <BottomSheetCard modalVisible={modalVisible4} se00tModalVisible={setModalVisible4} 
+                <BottomSheetCard modalVisible={modalVisible4} setModalVisible={setModalVisible4} 
                     title='일반 카드 선택' data={cardListData} selected={card} setSelected={setCard} 
                     onPressEvent={selectCard}
                 />
