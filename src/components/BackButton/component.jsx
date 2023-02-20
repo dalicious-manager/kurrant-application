@@ -1,11 +1,10 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {BackHandler, NativeModules, Platform} from 'react-native'
-import { useTheme } from 'styled-components';
+import {BackHandler, NativeModules, Platform} from 'react-native';
+import {useTheme} from 'styled-components';
 import styled from 'styled-components/native';
 
-
-import { ArrowLeftBoxIcon, MaterialIcons } from '../Icon';
+import {ArrowLeftBoxIcon, MaterialIcons} from '../Icon';
 
 /**
  *
@@ -15,24 +14,27 @@ import { ArrowLeftBoxIcon, MaterialIcons } from '../Icon';
  * @param {number[]} margin index 0 : margin-left, index 1 : margin-right
  * @returns
  */
-const Component = ({ mode = 'page', color, margin = [0, 0],onPressEvent =()=>{}}) => {
+const Component = ({
+  mode = 'page',
+  color,
+  margin = [0, 0],
+  onPressEvent = () => {},
+}) => {
   const navigation = useNavigation();
   const theme = useTheme();
 
   const handleBackPress = () => {
-    if(navigation.canGoBack()){      
+    if (navigation.canGoBack()) {
       navigation.goBack();
-    }else{
+    } else {
       if (Platform.OS === 'android') {
         BackHandler.exitApp();
-      } 
+      }
     }
   };
 
   const renderContents = {
-    page: (
-        <ArrowLeftBoxIcon />
-    ),
+    page: <ArrowLeftBoxIcon />,
     modal: (
       <MaterialIcons
         name="close"
@@ -43,15 +45,20 @@ const Component = ({ mode = 'page', color, margin = [0, 0],onPressEvent =()=>{}}
   };
 
   return (
-    <Wrpaper margin={margin} onPress={()=>{onPressEvent();handleBackPress();}}>
+    <Wrpaper
+      margin={margin}
+      onPress={() => {
+        onPressEvent();
+        handleBackPress();
+      }}>
       {renderContents[mode]}
     </Wrpaper>
   );
 };
 
 const Wrpaper = styled.TouchableOpacity`
-  margin-left: ${({ margin }) => margin[0]}px;
-  margin-right: ${({ margin }) => margin[1]}px;
+  margin-left: ${({margin}) => margin[0]}px;
+  margin-right: ${({margin}) => margin[1]}px;
 `;
 
 export default Component;
