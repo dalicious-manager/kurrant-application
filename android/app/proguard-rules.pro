@@ -12,5 +12,7 @@
        public protected *;
 }
 
+-keep class com.facebook.hermes.unicode.** { *; }
+
 -keep class com.kakao.sdk.**.model.* { <fields>; }
 -keep class * extends com.google.gson.TypeAdapter
