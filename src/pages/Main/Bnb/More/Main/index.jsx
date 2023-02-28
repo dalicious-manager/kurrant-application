@@ -98,7 +98,9 @@ const Pages = () => {
   useEffect(() => {
     console.log(userRole, 'test');
     if (userRole !== 'ROLE_GUEST') {
-      applicationList();
+      if (applicationList) {
+        applicationList();
+      }
       getData();
     }
   }, []);
