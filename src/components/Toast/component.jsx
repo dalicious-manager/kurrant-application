@@ -1,5 +1,5 @@
-import React, { useCallback, useRef } from 'react';
-import { Animated , Platform} from 'react-native';
+import React, {useCallback, useRef} from 'react';
+import {Animated, Platform} from 'react-native';
 import styled from 'styled-components/native';
 
 import CheckIcon from '../../assets/icons/Toast/CheckIcon.svg';
@@ -14,19 +14,19 @@ import Typography from '../Typography';
 // <Button title='wip' onPress={toastEvent} /> <- 사용하교 싶은 버튼에 적용하기
 
 /**
- * 
- * @param {object} props 
- * @param {string} props.ToastWrap 
- * @param {string} props.ToastWrap.message 
+ *
+ * @param {object} props
+ * @param {string} props.ToastWrap
+ * @param {string} props.ToastWrap.message
  * @param {boolean} props.ToastWrap.isBottom
- * @param {nomal | checked | error} props.ToastWrap.icon 
- * @param {function} props.toastEvent onPress 
- * @returns 
+ * @param {nomal | checked | error} props.ToastWrap.icon
+ * @param {function} props.toastEvent onPress
+ * @returns
  */
 
 const Component = () => {
   const fadeToast = useRef(new Animated.Value(0)).current;
- 
+
   const toastEvent = useCallback(() => {
     Animated.sequence([
       Animated.timing(fadeToast, {
@@ -44,32 +44,37 @@ const Component = () => {
         duration: 550,
         useNativeDriver: true,
       }),
-    ]
-    ).start()
+    ]).start();
   }, [fadeToast]);
 
   const ToastWrap = useCallback(
-    ({ message="test" ,icon = 'nomal',isBottom=false}) => {
+    ({message = 'test', icon = 'nomal', isBottom = false}) => {
       const renderIcon = () => {
-        switch(icon) {
+        switch (icon) {
           case 'checked':
-            return <CheckIcon/>;
+            return <CheckIcon />;
           case 'error':
-            return <ErrorIcon/>;
+            return <ErrorIcon />;
           case 'nomal':
             return null;
         }
-      }
-      return <Wrapper style={{ opacity: fadeToast }}  isBottom={isBottom} Platform={Platform.OS}>
-        <Container icon={icon}>
-          <IconWrap icon={icon}>{renderIcon(icon)}</IconWrap>
-          <ToastMessage>{message.trim()}</ToastMessage>
-        </Container>
-      </Wrapper>
-  }, [fadeToast])
+      };
+      return (
+        <Wrapper
+          style={{opacity: fadeToast}}
+          isBottom={isBottom}
+          Platform={Platform.OS}>
+          <Container icon={icon}>
+            <IconWrap icon={icon}>{renderIcon(icon)}</IconWrap>
+            <ToastMessage>{message.trim()}</ToastMessage>
+          </Container>
+        </Wrapper>
+      );
+    },
+    [fadeToast],
+  );
 
-
-  return { toastEvent, ToastWrap };
+  return {toastEvent, ToastWrap};
 };
 
 export default Component;
@@ -77,26 +82,28 @@ export default Component;
 const Wrapper = styled(Animated.View)`
   position: absolute;
   align-items: center;
-  ${({isBottom,Platform})=> isBottom ? 'bottom:35px;': Platform === 'ios' ? 'top:40px':'top: 8px'}
+  ${({isBottom, Platform}) =>
+    isBottom ? 'bottom:35px;' : Platform === 'ios' ? 'top:40px' : 'top: 30px'}
   /* width: 100%; */
   align-self:center;
   border-radius: 100px;
 `;
 const Container = styled.View`
-  flex:1;
+  flex: 1;
   flex-direction: row;
   align-items: center;
-  padding: ${({icon})=> icon === 'nomal' ? '9px 20px' : '13px 16px 12px 17px'};
+  padding: ${({icon}) =>
+    icon === 'nomal' ? '9px 20px' : '13px 16px 12px 17px'};
   justify-content: center;
-  border-radius: ${({icon})=> icon === 'nomal' ? '14px' : '100px'};
-  background-color: ${({theme})=> theme.colors.grey[1]}; 
+  border-radius: ${({icon}) => (icon === 'nomal' ? '14px' : '100px')};
+  background-color: ${({theme}) => theme.colors.grey[1]};
   max-width: 339px;
-`
-const ToastMessage = styled(Typography).attrs({ text: 'Body05R'})`  
-  overflow: hidden;  
-  color: ${({ theme }) => theme.colors.neutral[0]};
+`;
+const ToastMessage = styled(Typography).attrs({text: 'Body05R'})`
+  overflow: hidden;
+  color: ${({theme}) => theme.colors.neutral[0]};
 `;
 
 const IconWrap = styled.View`
-  padding-right:${({icon})=> icon === 'nomal' ? '0px' : '13px'}
+  padding-right: ${({icon}) => (icon === 'nomal' ? '0px' : '13px')};
 `;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import Wrapper from '~components/Wrapper';
 import {StackActions, useNavigation} from '@react-navigation/native';
@@ -37,7 +37,11 @@ const Pages = ({route}) => {
       };
     }
   };
-
+  console.log(
+    Config.NODE_ENV === 'prod'
+      ? Config.TOSS_PAYMENT_CLIENT_KEY
+      : Config.TOSS_PAYMENT_CLIENT_TEST_KEY,
+  );
   return (
     <Wrapper paddingTop={24}>
       <PaymentContainer

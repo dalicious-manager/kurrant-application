@@ -78,6 +78,7 @@ import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import BottomSheetCard from '../../../../../components/BottomSheetCard';
 import PaymentsList from './components/PaymentsList';
+import useOrderMeal from '../../../../../biz/useOrderMeal';
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -97,6 +98,7 @@ const Pages = ({route}) => {
 
   const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
+  const {order} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
   const {
     setSelectDefaultCard,
@@ -235,21 +237,36 @@ const Pages = ({route}) => {
         totalCount > 1 ? `${firstName} 외 ${totalCount}건` : firstName;
       // console.log(isUserInfo?.userId)
       loadMeal();
-
-      // setLoadMeal([])
-      // const resetAction = StackActions.popToTop();
-      // navigation.dispatch(resetAction);
-      navigation.navigate(MealPaymentPageName, {
-        amount: totalPrice,
-        orderName: orderName,
-        orderId: generateOrderCode(1, isUserInfo?.userId, spotId),
-        email: isUserInfo?.email,
-        name: isUserInfo?.name,
-        orderItems: JSON.stringify(data),
-        easyPay: payments,
-        flowMode: 'DIRECT',
-        cardCompany: card,
-      });
+      if (totalPrice > 0) {
+        // setLoadMeal([])
+        // const resetAction = StackActions.popToTop();
+        // navigation.dispatch(resetAction);
+        return navigation.navigate(MealPaymentPageName, {
+          amount: totalPrice,
+          orderName: orderName,
+          orderId: generateOrderCode(1, isUserInfo?.userId, spotId),
+          email: isUserInfo?.email,
+          name: isUserInfo?.name,
+          orderItems: JSON.stringify(data),
+          easyPay: payments,
+          flowMode: 'DIRECT',
+          cardCompany: card,
+        });
+      } else {
+        const result = await order({
+          amount: totalPrice,
+          orderId: generateOrderCode(1, isUserInfo?.userId, spotId),
+          orderItems: data,
+        });
+        console.log(result);
+        if (result?.data) {
+          const resetAction = StackActions.popToTop();
+          navigation.dispatch(resetAction);
+          navigation.navigate(PurchaseDetailPageName, {
+            id: result?.data,
+          });
+        }
+      }
     } catch (err) {
       console.log(err);
     }

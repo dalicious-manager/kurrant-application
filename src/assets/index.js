@@ -9,6 +9,7 @@ export const LogoImage = require('../assets/images/logo.png');
 export const LogoBackground = require('../assets/images/loginBackground.png');
 export const SignUpComplate = require('../assets/images/signupcomplate.png');
 export const MembershipImage = require('../assets/images/kurrant-membership.png');
+export const FoundersMembershipImage = require('../assets/images/founders-membership.png');
 export const MembershipIconImage = require('../assets/images/membership-icon.png');
 export const MembershipJoinComplateImage = require('../assets/images/membership-join-complate.png');
 export const MembershipJoin = require('../assets/images/membership-join.png');
@@ -31,6 +32,3 @@ export const FoundersMembers = require('../assets/images/point.png');
 export const FoundersNewMembers = require('../assets/images/newMembers.png');
 export const Members = require('../assets/images/members.png');
 export const NewMembers = require('../assets/images/newMembers.png');
-
-
-
