@@ -166,7 +166,6 @@ const Pages = ({route}) => {
   const groupId = isUserInfo.groupId;
   useFocusEffect(
     useCallback(() => {
-      applicationList();
       getData();
     }, []),
   );
