@@ -33,7 +33,7 @@ import {useCallback} from 'react';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
-import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
+import useGroupSpots from '../../../../../biz/useGroupSpots';
 
 import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';

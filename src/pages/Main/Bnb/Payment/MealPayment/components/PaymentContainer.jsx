@@ -1,7 +1,5 @@
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import Payment from './Payments';
-
-
 
 const PaymentContainer = ({
   clientKey,
@@ -13,10 +11,8 @@ const PaymentContainer = ({
   onApproveSucceed,
 }) => {
   const onWebViewMessageReceived = useCallback(
-    async (e) => {
-      const tossPaymentMessageFromWeb = JSON.parse(
-        e.nativeEvent.data
-      ) ;
+    async e => {
+      const tossPaymentMessageFromWeb = JSON.parse(e.nativeEvent.data);
       // console.log(tossPaymentMessageFromWeb)
       // 웹뷰로 부터 성공 및 실패 둘중 아무것도 받지못했을떄.
       if (!tossPaymentMessageFromWeb.type) {
@@ -29,21 +25,21 @@ const PaymentContainer = ({
         onApproveFailed(tossPaymentMessageFromWeb.data);
         return;
       }
-     
+
       // 결제 승인되었을경우
       onApproveSucceed(tossPaymentMessageFromWeb.data);
     },
-    [onApproveSucceed, onApproveError, onApproveFailed]
+    [onApproveSucceed, onApproveError, onApproveFailed],
   );
 
   const detectIsLoading = useCallback(
-    (isLoading) => {
+    isLoading => {
       if (!onLoading) {
         return;
       }
       onLoading(isLoading);
     },
-    [onLoading]
+    [onLoading],
   );
 
   return (

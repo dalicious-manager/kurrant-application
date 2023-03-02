@@ -20,7 +20,10 @@ const Pages = ({route}) => {
         easyPay: params.easyPay,
         flowMode: params.flowMode,
         orderName: params.orderName,
-        successUrl: `http://3.35.197.186/admin/success.php`,
+        successUrl:
+          Config.NODE_ENV === 'dev'
+            ? `http://3.35.197.186/admin/success.php`
+            : 'http://3.35.197.186/admin/success2.php',
         failUrl: 'http://3.35.197.186:8882/fail',
       };
     } else {
@@ -32,7 +35,10 @@ const Pages = ({route}) => {
         flowMode: params.flowMode,
         cardCompany: params.cardCompany,
         orderName: params.orderName,
-        successUrl: `http://3.35.197.186/admin/success.php`,
+        successUrl:
+          Config.NODE_ENV === 'dev'
+            ? `http://3.35.197.186/admin/success.php`
+            : 'http://3.35.197.186/admin/success2.php',
         failUrl: 'http://3.35.197.186:8882/fail',
       };
     }

@@ -354,7 +354,7 @@ const Pages = ({route}) => {
               m.membershipDiscountPrice +
               m.makersDiscountPrice +
               m.periodDiscountPrice;
-
+            console.log(m.image, 'image');
             return (
               <Contents
                 key={m.id}
