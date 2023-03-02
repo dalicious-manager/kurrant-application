@@ -63,7 +63,6 @@ const Pages = () => {
           <MainTitle>오픈 스팟 찾기</MainTitle>
           <SubTitleWrap>
             <SubTitle>내 주변에 오픈 스팟 검색</SubTitle>
-            <ArrowRight />
           </SubTitleWrap>
           <ImageWrap>
             {/* <AlreadyApartIcon/> */}
