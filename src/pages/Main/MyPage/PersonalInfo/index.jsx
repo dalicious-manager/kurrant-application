@@ -285,7 +285,7 @@ const Pages = ({route}) => {
           />
           <ListBox title="결제수단 관리" routeName={PaymentsManageScreenName} />
           <ListBox
-            title="그룹/스팟 관리"
+            title="스팟 관리"
             onPressEvent={() => {
               navigation.navigate(GroupManagePageName, {
                 id: spotId,

@@ -76,8 +76,8 @@ const Pages = ({route}) => {
 
   const withdrawPress = () => {
     Alert.alert(
-      '그룹 탈퇴',
-      '이 그룹의 모든 스팟에서 로그아웃됩니다.\n 정말 탈퇴하시겠어요?',
+      '스팟 탈퇴',
+      '이 스팟의 모든 상세스팟에서 로그아웃됩니다.\n 정말 탈퇴하시겠어요?',
 
       [
         {
@@ -85,7 +85,7 @@ const Pages = ({route}) => {
           onPress: () => {},
         },
         {
-          text: '그룹 탈퇴',
+          text: '스팟 탈퇴',
           onPress: async () => {
             try {
               const res = await userWithdrawGroup({
@@ -186,7 +186,7 @@ const Pages = ({route}) => {
         </TextView>
         {supportPrice?.[0] !== null && (
           <TextView>
-            <Title>회사 지원금</Title>
+            <Title>식사 지원금</Title>
             {isDetailSpot?.mealTypeInfoList?.map((el, idx) => {
               const diningType =
                 el.diningType === 1
@@ -203,13 +203,13 @@ const Pages = ({route}) => {
           </TextView>
         )}
         <TextView>
-          <Title>그룹명</Title>
+          <Title>스팟명</Title>
           <ContentText>{isDetailSpot?.clientName}</ContentText>
           <Withdraw>
             <TextButton
               size="label13R"
               type="grey5"
-              label="그룹 탈퇴"
+              label="스팟 탈퇴"
               onPressEvent={() => {
                 withdrawPress();
               }}
@@ -218,7 +218,7 @@ const Pages = ({route}) => {
         </TextView>
       </ContentView>
       <AddSpotWrap onPress={() => navigation.navigate(CreateGroupPageName)}>
-        <AddSpotText>다른 그룹 신청/추가</AddSpotText>
+        <AddSpotText>다른 스팟 신청/추가</AddSpotText>
       </AddSpotWrap>
       <BottomSheetSpot
         modalVisible={modalVisible}

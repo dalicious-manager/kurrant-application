@@ -401,7 +401,7 @@ const Pages = ({route}) => {
           {clientType[0]?.clientStatus === 1 && (
             <PaymentView>
               <PressableView onPress={fundButton}>
-                <PaymentText>회사 지원금 사용 금액</PaymentText>
+                <PaymentText>식사 지원금 사용 금액</PaymentText>
                 <QuestionIcon />
               </PressableView>
               <PaymentText>

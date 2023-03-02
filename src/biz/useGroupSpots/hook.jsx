@@ -8,13 +8,13 @@ import {
 } from './store';
 
 const useGroupSpots = () => {
-  const [isApplicationList, setApplicationList] = useAtom(applicationListAtom); // 아파트 + 기업
+  const [isApplicationList, setApplicationList] = useAtom(applicationListAtom); // 아파트 + 프라이빗 스팟
   const [isUserGroupSpotCheck, setUserGroupSpotCheck] = useAtom(
     userGroupSpotListAtom,
   ); // 유저가 속한 그룹 스팟 조회
   const [isDetailSpot, setDetailSpot] = useAtom(groupSpotDetailAtom); // 그룹별 스팟 상세 조회
 
-  // 그룹/스팟 신청 목록 조회 (아파트 + 기업)
+  // 그룹/스팟 신청 목록 조회 (아파트 + 프라이빗 스팟)
   const applicationList = async () => {
     try {
       const res = await Fetch.applicationList();

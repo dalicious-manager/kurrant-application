@@ -1351,7 +1351,7 @@ const Screen = () => {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: '우리 아파트 검색',
+            title: '오픈 스팟 칮기',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
@@ -1363,7 +1363,7 @@ const Screen = () => {
           }}
         />
       </MainRoot.Group>
-      {/* 기업 스팟 신청 */}
+      {/* 프라이빗 스팟 스팟 신청 */}
       <MainRoot.Group>
         <MainRoot.Screen
           name={GroupCreateCorporationsPageName}
@@ -1608,7 +1608,7 @@ const Screen = () => {
           options={{
             headerShown: false,
             headerShadowVisible: false,
-            title: '내그룹',
+            title: '내스팟',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
@@ -1625,7 +1625,7 @@ const Screen = () => {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: '그룹/스팟 관리',
+            title: '스팟 관리',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',

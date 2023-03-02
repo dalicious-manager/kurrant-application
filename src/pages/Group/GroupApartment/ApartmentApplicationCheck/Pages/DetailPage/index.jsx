@@ -54,7 +54,7 @@ const Pages = ({route}) => {
             <Heading>기본 정보</Heading>
           </HeadingWrap>
           <TitleWrap>
-            <Title>아파트명</Title>
+            <Title>오픈 스팟명</Title>
             <TitleContent>{info?.apartmentName}</TitleContent>
           </TitleWrap>
           <TitleWrap>
@@ -68,7 +68,7 @@ const Pages = ({route}) => {
             <TitleContent>{info?.familyCount}개</TitleContent>
           </TitleWrap>
           <TitleWrap>
-            <Title>아파트 단지내 동 개수</Title>
+            <Title>단지내 동 개수</Title>
             <TitleContent>{info?.dongCount}개</TitleContent>
           </TitleWrap>
           <TitleWrap>

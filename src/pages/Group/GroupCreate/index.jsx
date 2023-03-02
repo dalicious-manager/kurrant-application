@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {View, Text, SafeAreaView, Image} from 'react-native';
 import styled from 'styled-components';
+import {useTheme} from 'styled-components/native';
 
 import {
   AlreadyApartment,
@@ -21,6 +22,7 @@ import {PAGE_NAME as GroupCreateCorporationsPageName} from '../GroupCorporations
 export const PAGE_NAME = 'P__GROUP__CREATE';
 const Pages = () => {
   const navigation = useNavigation();
+  const themeApp = useTheme();
   return (
     <Wrapper>
       {/* <CloseWrap>
@@ -33,9 +35,11 @@ const Pages = () => {
           }}>
           <MainTitle>프라이빗 스팟</MainTitle>
           <SubTitleWrap>
-            <SubTitle>신규 스팟 개설 신청 </SubTitle>
-            <ArrowRight />
+            <SubTitle>지정한 인원만 사용할 수{'\n'}있는 스팟 신청 </SubTitle>
           </SubTitleWrap>
+          <Typography text="SmallLabel" textColor={themeApp.colors.grey[5]}>
+            (관리 페이지, 식사 지원금 시스템 제공)
+          </Typography>
           <ImageWrap>
             <CorporationIcon />
           </ImageWrap>
@@ -46,8 +50,7 @@ const Pages = () => {
           }}>
           <MainTitle>오픈 스팟</MainTitle>
           <SubTitleWrap>
-            <SubTitle>신규 스팟 개설 신청 </SubTitle>
-            <ArrowRight />
+            <SubTitle>가입과 탈퇴가 자유로운{'\n'}배송 스팟 신청</SubTitle>
           </SubTitleWrap>
           <ImageWrap>
             <ApartmentIcon />
@@ -59,7 +62,7 @@ const Pages = () => {
           }}>
           <MainTitle>오픈 스팟 찾기</MainTitle>
           <SubTitleWrap>
-            <SubTitle>우리 아파트 검색</SubTitle>
+            <SubTitle>내 주변에 오픈 스팟 검색</SubTitle>
             <ArrowRight />
           </SubTitleWrap>
           <ImageWrap>
