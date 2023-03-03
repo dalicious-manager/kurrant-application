@@ -10,7 +10,7 @@ import {getStorage, setStorage} from '../asyncStorage';
 const RESPONSE_SLEEP = 300;
 
 const apiHostUrl =
-  process.env.NODE_ENV === 'dev'
+  Config.NODE_ENV === 'dev'
     ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
@@ -32,7 +32,7 @@ const buildQuery = queryObj => {
 
 async function json(url, method, options = {}) {
   const storage = await getStorage('token');
-
+  console.log(Config.NODE_ENV, '입니다');
   let token = JSON.parse(storage);
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
