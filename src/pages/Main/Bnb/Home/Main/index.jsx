@@ -56,6 +56,7 @@ import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipInt
 import useUserMe from '../../../../../biz/useUserMe';
 import {FoundersMembers, Members} from '../../../../../assets';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
+import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -237,6 +238,7 @@ const Pages = () => {
       const res = await userSpotRegister({
         id: id,
       });
+      console.log(res.data, 'testst');
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
@@ -287,7 +289,11 @@ const Pages = () => {
         ],
       );
     }
-    setModalVisible(true);
+    if (userGroupName) {
+      setModalVisible(true);
+    } else {
+      navigation.navigate(CreateGroupPageName);
+    }
   };
 
   const groupManagePress = async () => {
@@ -301,7 +307,6 @@ const Pages = () => {
       console.log(err);
     }
   };
-  console.log(isUserInfo);
   if (isOrderMealLoading || isUserInfoLoading) {
     return <SkeletonUI />;
   }
@@ -355,7 +360,6 @@ const Pages = () => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
                   {m.orderItemDtoList.map(meal => {
-                    console.log(meal, '131241221');
                     return (
                       <MealInfoWrap
                         key={meal.id}

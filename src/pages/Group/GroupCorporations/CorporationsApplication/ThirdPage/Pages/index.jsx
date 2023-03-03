@@ -23,6 +23,7 @@ import {
   isCorpMealMorningInfoAtom,
 } from '../../../../../../biz/useCorporationApplication/store';
 import BottomSheet from '../../../../../../components/BottomSheet/component';
+import BottomSheetPrice from '../../../../../../components/BottomSheetPrice';
 import Button from '../../../../../../components/Button';
 import WeekButton from '../../../../../../components/ButtonWeek';
 import CloseButton from '../../../../../../components/CloseButton';
@@ -213,7 +214,7 @@ const Pages = ({route}) => {
   const supportPriceValue = text => {
     setValue('supportPrice', text);
   };
-
+  console.log(selected);
   useEffect(() => {
     const getData = async () => {
       const data1 = await getStorage('corpPage3-1');
@@ -393,7 +394,7 @@ const Pages = ({route}) => {
           />
         </ButtonWrap>
       )}
-      <BottomSheet
+      <BottomSheetPrice
         title="식단 가격 범위"
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}

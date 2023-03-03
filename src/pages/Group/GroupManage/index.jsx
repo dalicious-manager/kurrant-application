@@ -58,7 +58,6 @@ const Pages = () => {
       console.log(err);
     }
   };
-
   return (
     <SafeView>
       <Wrap>

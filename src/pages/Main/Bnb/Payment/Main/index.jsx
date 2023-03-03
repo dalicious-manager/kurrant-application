@@ -75,7 +75,6 @@ import {
 } from '../../../../../utils/statusFormatter';
 import BottomSheet from '../../../../../components/BottomSheet';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
-import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import BottomSheetCard from '../../../../../components/BottomSheetCard';
 import PaymentsList from './components/PaymentsList';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
@@ -258,7 +257,6 @@ const Pages = ({route}) => {
           orderId: generateOrderCode(1, isUserInfo?.userId, spotId),
           orderItems: data,
         });
-        console.log(result);
         if (result?.data) {
           const resetAction = StackActions.popToTop();
           navigation.dispatch(resetAction);

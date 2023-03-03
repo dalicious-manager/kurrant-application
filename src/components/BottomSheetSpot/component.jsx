@@ -167,25 +167,27 @@ const BottomSheetSpot = props => {
                   <Border />
                 </ItemContainer>
 
-                {item.spots.map((el, idx) => (
-                  <ContentItemContainer
-                    onPressIn={pressInUp}
-                    onPressOut={pressOutUp}
-                    onPress={() => {
-                      onSelect(el.spotId);
-                      onPressEvent(el.spotId);
-                    }}
-                    key={el.spotId}>
-                    {el.spotId === userSpotId ? (
-                      <ContentItemBox>
+                {item.spots.map((el, idx) => {
+                  return (
+                    <ContentItemContainer
+                      onPressIn={pressInUp}
+                      onPressOut={pressOutUp}
+                      onPress={() => {
+                        onSelect(el.spotId);
+                        onPressEvent(el.spotId);
+                      }}
+                      key={el.spotId}>
+                      {el.spotId === userSpotId ? (
+                        <ContentItemBox>
+                          <ContentItemText>{el.spotName}</ContentItemText>
+                          <CheckedIcon />
+                        </ContentItemBox>
+                      ) : (
                         <ContentItemText>{el.spotName}</ContentItemText>
-                        <CheckedIcon />
-                      </ContentItemBox>
-                    ) : (
-                      <ContentItemText>{el.spotName}</ContentItemText>
-                    )}
-                  </ContentItemContainer>
-                ))}
+                      )}
+                    </ContentItemContainer>
+                  );
+                })}
               </>
             )}
             keyExtractor={item => item.clientId.toString()}

@@ -52,7 +52,7 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['35%', '90%'], []);
+  const snapPoints = useMemo(() => ['50%', '90%'], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
@@ -172,11 +172,19 @@ const BottomSheetSpot = props => {
                 }}>
                 {selected === item.id ? (
                   <ContentItemBox>
-                    <ContentItemText>{item.text}</ContentItemText>
-                    <CheckedIcon />
+                    <ContentItemTitle>{item.title}</ContentItemTitle>
+                    <ContentTail>
+                      <ContentItemText>{item.text}</ContentItemText>
+                      <CheckedIcon />
+                    </ContentTail>
                   </ContentItemBox>
                 ) : (
-                  <ContentItemText>{item.text}</ContentItemText>
+                  <ContentItemBox>
+                    <ContentItemTitle>{item.title}</ContentItemTitle>
+                    <ContentTail>
+                      <ContentItemText>{item.text}</ContentItemText>
+                    </ContentTail>
+                  </ContentItemBox>
                 )}
               </ContentItemContainer>
             )}
@@ -261,7 +269,13 @@ const ContentItemBox = styled.View`
   align-items: center;
 `;
 
+const ContentTail = styled.View`
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+`;
 const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
+const ContentItemTitle = styled(Typography).attrs({text: 'Body05SB'})``;
 
 const GroupName = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[4]};

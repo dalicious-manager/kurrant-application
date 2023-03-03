@@ -32,6 +32,7 @@ import {isUserInfoAtom} from '../../../../biz/useUserInfo/store';
 import BottomModal from '../../../../components/BottomModal';
 import {setStorage} from '../../../../utils/asyncStorage';
 import {PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/DetailPage';
+import {PAGE_NAME as CreateGroupPageName} from '../../../Group/GroupCreate';
 
 import {PAGE_NAME as LoginPageName} from '../../../Main/Login/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -286,10 +287,14 @@ const Pages = ({route}) => {
           <ListBox
             title="스팟 관리"
             onPressEvent={() => {
-              navigation.navigate(GroupManagePageName, {
-                id: spotId,
-                clientId: groupId,
-              });
+              if (spotId) {
+                navigation.navigate(GroupManagePageName, {
+                  id: spotId,
+                  clientId: groupId,
+                });
+              } else {
+                navigation.navigate(CreateGroupPageName);
+              }
             }}
           />
 

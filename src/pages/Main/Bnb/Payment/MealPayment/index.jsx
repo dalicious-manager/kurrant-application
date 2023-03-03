@@ -61,6 +61,7 @@ const Pages = ({route}) => {
           console.log('에러', v);
         }}
         onApproveFailed={() => {
+          x;
           console.log('teset');
         }}
         onApproveSucceed={v => {

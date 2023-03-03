@@ -50,6 +50,7 @@ const useGroupSpots = () => {
 
   const groupSpotDetail = async id => {
     try {
+      setDetailSpot();
       const res = await Fetch.GroupDetail(id);
 
       setDetailSpot(res.data);

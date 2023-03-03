@@ -1,12 +1,12 @@
 /* eslint-disable no-unreachable */
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {Alert} from 'react-native';
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
 
-import { getStorage, setStorage } from '../asyncStorage';
+import {getStorage, setStorage} from '../asyncStorage';
 const RESPONSE_SLEEP = 300;
 
 const apiHostUrl =
@@ -34,7 +34,6 @@ async function json(url, method, options = {}) {
   const storage = await getStorage('token');
 
   let token = JSON.parse(storage);
-  console.log(token, "tests");
   if (method === 'POST' || method === 'PATCH') {
     if (options.body === undefined) {
       throw new Error('body is empty');
@@ -44,14 +43,14 @@ async function json(url, method, options = {}) {
   // console.log(token?.expiresIn, new Date().getTime(), token?.expiresIn < new Date().getTime())
   if (token?.expiresIn < new Date().getTime()) {
     const bodyData = {
-      "accessToken": token.accessToken,
-      "refreshToken": token.refreshToken
-    }
-    const reissue = await fetch(apiHostUrl + "/auth/reissue", {
-      headers: { 'content-type': 'application/json', },
-      method: "POST",
+      accessToken: token.accessToken,
+      refreshToken: token.refreshToken,
+    };
+    const reissue = await fetch(apiHostUrl + '/auth/reissue', {
+      headers: {'content-type': 'application/json'},
+      method: 'POST',
       body: JSON.stringify(bodyData),
-    })
+    });
     // console.log(reissue);
     const result = await reissue.json();
 
@@ -60,16 +59,15 @@ async function json(url, method, options = {}) {
       throw new Error(result.statusCode.toString());
     } else {
       const resultData = {
-        "accessToken": result.data.accessToken,
-        "expiresIn": result.data.accessTokenExpiredIn,
-        "refreshToken": result.data.refreshToken,
-        "spotStatus": token.spotStatus
-      }
+        accessToken: result.data.accessToken,
+        expiresIn: result.data.accessTokenExpiredIn,
+        refreshToken: result.data.refreshToken,
+        spotStatus: token.spotStatus,
+      };
       await setStorage('token', JSON.stringify(resultData));
       await setStorage('spotStatus', token.spotStatus.toString());
       token = resultData;
     }
-
   }
   let reqUrl = apiHostUrl + url;
 
@@ -79,7 +77,7 @@ async function json(url, method, options = {}) {
   }
   let headers = {
     'content-type': 'application/json',
-    'Authorization': `Bearer ${token?.accessToken}`
+    Authorization: `Bearer ${token?.accessToken}`,
   };
 
   if (options.accessToken !== undefined) {
@@ -102,7 +100,7 @@ async function json(url, method, options = {}) {
 
   if (ret.error) {
     const errors = new Error(ret.message);
-    errors.name = "error";
+    errors.name = 'error';
     throw errors;
   }
 
@@ -114,7 +112,6 @@ async function json(url, method, options = {}) {
   }
 
   return ret;
-
 }
 
 export default json;

@@ -155,7 +155,7 @@ const Pages = ({route}) => {
           <Title>배송지</Title>
           <ContentText>{isDetailSpot?.address}</ContentText>
         </TextView>
-        {isDetailSpot.ho !== null && (
+        {isDetailSpot?.ho !== null && (
           <TextView>
             <Title>세부 주소</Title>
             <HoView

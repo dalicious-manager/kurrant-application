@@ -20,7 +20,7 @@ import Image from '../../../../components/Image';
 import withCommas from '../../../../utils/withCommas';
 import {PAGE_NAME as MembershipJoinComplatePageName} from '../MembershipJoinComplate';
 import {PAGE_NAME as MemebershipPaymentManagePageName} from '../MemebershipPaymentManage';
-
+import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_PAYMENTS';
 const Pages = ({route}) => {
   const {period, membershipData} = route.params;
@@ -36,8 +36,11 @@ const Pages = ({route}) => {
   const rotateAnim = useRef(new Animated.Value(1)).current;
   const themeApp = useTheme();
   const {getMembershipType, membershipJoin} = useMembership();
-  const {getCardList,readableAtom:{cardList,selectMembershipCard}}= useUserMe();
-  
+  const {
+    getCardList,
+    readableAtom: {cardList, selectMembershipCard},
+  } = useUserMe();
+
   const getMembershipInfo = async () => {
     const membership = period === 'month' ? 1 : 2;
     const {data} = await getMembershipType(membership);
@@ -67,9 +70,11 @@ const Pages = ({route}) => {
     // navigation.navigate(MembershipJoinComplatePageName);
     console.log(selectMembershipCard);
     if (agreeCheck.watch(agreeCheck).agreeCheck) {
-      if(!cardList.find((card)=> card.defaultType ===2 ||card.defaultType ===3)){
+      if (
+        !cardList.find(card => card.defaultType === 2 || card.defaultType === 3)
+      ) {
         setModalVisible(true);
-        return
+        return;
       }
       const req = {
         paymentType: 1,
@@ -79,7 +84,7 @@ const Pages = ({route}) => {
           membershipTypeData?.yearDescriptionDiscountPrice,
         periodDiscountPrice: membershipTypeData?.periodDiscountPrice,
         totalPrice: membershipTypeData.totalPrice,
-        cardId:selectMembershipCard[0]?.id || -1
+        cardId: selectMembershipCard[0]?.id || -1,
       };
       console.log(req);
       const result = await membershipJoin(req);
@@ -94,10 +99,10 @@ const Pages = ({route}) => {
     }
   };
   useEffect(() => {
-    const getData = async()=>{
-        await getMembershipInfo();
-        await getCardList();
-    }
+    const getData = async () => {
+      await getMembershipInfo();
+      await getCardList();
+    };
     getData();
   }, []);
   const ProductInfoBlock = () => {
@@ -253,17 +258,19 @@ const Pages = ({route}) => {
               <DeliveryTitle>
                 카드 결제시 등록한 카드로 결제가 진행됩니다.
               </DeliveryTitle>
-              {selectMembershipCard[0]?.id  ? 
-                selectMembershipCard.map((card)=>{
+              {selectMembershipCard[0]?.id ? (
+                selectMembershipCard.map(card => {
                   return (
-                    <Card 
-                      key={card.id} 
+                    <Card
+                      key={card.id}
                       onPress={() =>
                         navigation.navigate(MemebershipPaymentManagePageName)
-                      }
-                    >
+                      }>
                       {/* <CardText>결제 카드 등록</CardText> */}
-                      <CardText>{card.cardCompany}카드({card.cardNumber?.toString().slice(-4)})</CardText>
+                      <CardText>
+                        {card.cardCompany}카드(
+                        {card.cardNumber?.toString().slice(-4)})
+                      </CardText>
                       {/* <PayInfoWrap>
                         <PayInfo>
                           <PayError />
@@ -273,16 +280,17 @@ const Pages = ({route}) => {
                       </PayInfoWrap> */}
                       <ArrowRight />
                     </Card>
-                  )
-                }) : 
-                <Card onPress={() =>
-                  navigation.navigate(MemebershipPaymentManagePageName)
-                }>
-                  <CardText>결제 카드 등록</CardText>              
+                  );
+                })
+              ) : (
+                <Card
+                  onPress={() =>
+                    navigation.navigate(MemebershipPaymentManagePageName)
+                  }>
+                  <CardText>결제 카드 등록</CardText>
                   <ArrowRight />
                 </Card>
-              }
-              
+              )}
             </CardContainer>
           </BorderWrap>
           <FormWrap>
@@ -301,6 +309,10 @@ const Pages = ({route}) => {
         description="최초 1회 등록으로 편리하게 결제할 수 있어요"
         buttonTitle1="결제 카드 등록하기"
         buttonType1="yellow"
+        onPressEvent1={() => {
+          navigation.navigate(RegisterCardScreenName, {defaultType: 1});
+          setModalVisible(false);
+        }}
       />
       <ButtonContainer>
         <Button

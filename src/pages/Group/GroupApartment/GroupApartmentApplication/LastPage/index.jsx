@@ -55,7 +55,6 @@ const Pages = () => {
       memo: memo,
     };
 
-    console.log(data);
     try {
       await apartApplication(data);
       removeStorage();
