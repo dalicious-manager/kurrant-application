@@ -38,6 +38,7 @@ const BottomSheetCard = props => {
 
   const onSelect = useCallback(
     (id, text) => {
+      console.log(id);
       //멀티 셀렉터시 이용
       // const newSelected = new Map(selected);
       // newSelected.set(id, !selected.get(id));

@@ -716,7 +716,7 @@ const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
 `;
 const ButtonWrap = styled.View`
   position: absolute;
-  bottom: ${({membership}) => (membership ? '70px' : '35px')};
+  bottom: 35px;
   margin: 0px 48px;
 `;
 

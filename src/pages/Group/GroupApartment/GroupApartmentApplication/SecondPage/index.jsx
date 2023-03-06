@@ -83,6 +83,10 @@ const Pages = () => {
   const inputStyle = {
     marginBottom: 16,
   };
+  const inputDongStyle = {
+    display: 'none',
+    marginBottom: 16,
+  };
   //console.log(isApartAddress)
   const saveAtom = async () => {
     await setStorage(
@@ -202,13 +206,14 @@ const Pages = () => {
               }}
             />
 
-            {/* <RefTextInput
+            <RefTextInput
               label="동 개수"
               name="dongCount"
               placeholder="동 개수"
               keyboardType="numeric"
+              defaultValue={100}
               caption="동 개수를 입력해주세요.(예.101동 - 105동이면 5개)"
-              style={inputStyle}
+              style={inputDongStyle}
               suffix={{
                 isNeedDelete: true,
               }}
@@ -218,7 +223,7 @@ const Pages = () => {
                   message: '숫자만 입력해 주세요.',
                 },
               }}
-            /> */}
+            />
 
             <View>
               <RefTextInput

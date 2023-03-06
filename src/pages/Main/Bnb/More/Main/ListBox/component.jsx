@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useCallback} from 'react';
+import {Linking, Pressable} from 'react-native';
 
 import styled, {useTheme} from 'styled-components/native';
 
@@ -14,7 +15,14 @@ import Typography from '../../../../../../components/Typography';
  * @param {boolean} props.isArrow
  * @returns
  */
-
+const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
+// 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
+const GOOGLE_PLAY_STORE_WEB_LINK =
+  'https://play.google.com/store/apps/details?id=com.dalicious.kurrant';
+// 애플 앱 스토어 링크
+const APPLE_APP_STORE_LINK = 'itms-apps://itunes.apple.com/us/app/id1663407738';
+// 애플 앱 스토어가 설치되어 있지 않을 때 웹 링크
+const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 const Component = ({
   title = '',
   isVersion,
@@ -28,15 +36,34 @@ const Component = ({
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+  const onPress = useCallback(() => {
+    if (Platform.OS === 'android') {
+      handlePress(GOOGLE_PLAY_STORE_LINK, GOOGLE_PLAY_STORE_WEB_LINK);
+    } else {
+      handlePress(APPLE_APP_STORE_LINK, APPLE_APP_STORE_WEB_LINK);
+    }
+  }, []);
+  const handlePress = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
 
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
   return (
     <TitleContainer
       onPress={() =>
-        routeName && params
+        routeName &&
+        (params
           ? navigation.navigate(routeName, {
               ...params,
             })
-          : navigation.navigate(routeName)
+          : navigation.navigate(routeName))
       }>
       <TitleBox>
         <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>
@@ -53,11 +80,18 @@ const Component = ({
           {description && <Description>{description}</Description>}
           {effect && effect}
         </TailTextBox>
-        {isVersion && latestVersion && (
-          <Description textColor={themeApp.colors.grey[4]}>
-            최신버전
-          </Description>
-        )}
+        {isVersion &&
+          (latestVersion ? (
+            <Description textColor={themeApp.colors.grey[4]}>
+              최신버전
+            </Description>
+          ) : (
+            <Pressable onPress={onPress}>
+              <Description textColor={themeApp.colors.grey[4]}>
+                업데이트
+              </Description>
+            </Pressable>
+          ))}
         {isArrow && <ArrowIcon />}
       </TailBox>
     </TitleContainer>

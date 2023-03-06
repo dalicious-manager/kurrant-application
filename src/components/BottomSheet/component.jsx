@@ -42,7 +42,7 @@ const BottomSheetSpot = props => {
       //멀티 셀렉터시 이용
       // const newSelected = new Map(selected);
       // newSelected.set(id, !selected.get(id));
-      setSelected(id);
+      if (setSelected) setSelected(id);
       if (setValue) setValue(text);
       setModalVisible(false);
     },
