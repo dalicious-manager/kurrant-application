@@ -610,8 +610,11 @@ const Wrap = styled.View`
 `;
 const BarWrap = styled.View`
   ${BarDisplay};
+  display: flex;
   margin: 10px 0px;
   padding: 0px 24px;
+
+  align-items: center;
 `;
 
 const SpotName = styled.View`
@@ -873,7 +876,7 @@ const MembersText = styled(Typography).attrs({text: 'SmallLabel'})`
 const BellIconPress = styled.Pressable`
   width: 40px;
   height: 40px;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   margin-right: 4px;
 `;
@@ -881,6 +884,6 @@ const BellIconPress = styled.Pressable`
 const CsIconPress = styled.Pressable`
   width: 40px;
   height: 40px;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 `;
