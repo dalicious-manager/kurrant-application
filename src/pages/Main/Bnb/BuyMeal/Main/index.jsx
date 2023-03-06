@@ -15,7 +15,7 @@ import {
   Alert,
 } from 'react-native';
 import PagerView from 'react-native-pager-view';
-import styled from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 import FastImage from 'react-native-fast-image';
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -330,7 +330,7 @@ const Pages = ({route}) => {
         scrollEnabled={
           !(diningFood.length === 0 && spotId !== null) || !spotId === null
         }>
-        <View style={{height: screenHeight}}>
+        <FoodContainer isFood={diningFood.length === 0 && spotId !== null}>
           {diningFood.length === 0 && spotId !== null && (
             <NoServieceView>
               <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
@@ -446,7 +446,7 @@ const Pages = ({route}) => {
             onPressEvent1={closeModal}
             onPressEvent2={() => addToCart(selectFood.id)}
           />
-        </View>
+        </FoodContainer>
       </ScrollView>
     );
   };
@@ -596,6 +596,14 @@ const styles = StyleSheet.create({
 
 export default Pages;
 
+const FoodContainer = styled.View`
+  ${({isFood}) => {
+    if (isFood)
+      return css`
+        height: ${screenHeight}px;
+      `;
+  }}
+`;
 const SafeView = styled.View`
   background-color: ${props => props.theme.colors.grey[0]};
   flex: 1;
