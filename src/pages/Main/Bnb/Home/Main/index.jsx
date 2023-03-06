@@ -331,18 +331,18 @@ const Pages = () => {
             <ArrowIcon />
           </SpotName>
           <Icons>
-            <Pressable
+            <BellIconPress
               onPress={() => {
                 navigation.navigate(NotificationCenterName);
               }}>
               <BellIcon />
-            </Pressable>
-            <Pressable
+            </BellIconPress>
+            <CsIconPress
               onPress={() => {
                 navigation.navigate(FAQListDetailPageName);
               }}>
               <CsIcon />
-            </Pressable>
+            </CsIconPress>
           </Icons>
         </BarWrap>
       </View>
@@ -620,7 +620,7 @@ const SpotName = styled.View`
 
 const Icons = styled.View`
   ${BarDisplay};
-  width: 68px;
+  //width: 68px;
 `;
 
 const MainWrap = styled.View`
@@ -868,4 +868,19 @@ const MembersWrap = styled.View`
 const MembersText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme}) => theme.colors.purple[500]};
   margin-left: 2px;
+`;
+
+const BellIconPress = styled.Pressable`
+  width: 40px;
+  height: 40;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 4px;
+`;
+
+const CsIconPress = styled.Pressable`
+  width: 40px;
+  height: 40px;
+  justify-content: flex-start;
+  align-items: center;
 `;

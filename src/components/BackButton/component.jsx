@@ -57,6 +57,10 @@ const Component = ({
 };
 
 const Wrpaper = styled.TouchableOpacity`
+  flex-direction: row;
+  width: 30px;
+  height: 30px;
+  justify-content: flex-start;
   margin-left: ${({margin}) => margin[0]}px;
   margin-right: ${({margin}) => margin[1]}px;
 `;

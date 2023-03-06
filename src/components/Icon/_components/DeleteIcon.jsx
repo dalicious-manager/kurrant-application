@@ -11,7 +11,7 @@ import IconWrapper from '../component';
 const Component = ({name, size = 16, color}) => {
   return (
     <IconWrapper>
-       <TrashIcon name={name} size={size} color={color} />
+      <TrashIcon name={name} size={size} color={color} />
     </IconWrapper>
   );
 };
