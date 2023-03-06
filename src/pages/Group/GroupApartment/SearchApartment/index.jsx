@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Keyboard, Pressable} from 'react-native';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 import Search from '../../../../assets/icons/Group/search.svg';
 import SearchArrow from '../../../../assets/icons/Group/searchArrow.svg';
@@ -61,31 +61,32 @@ const Pages = () => {
               onChange={e => handleChange(e)}
             />
           </Container>
-
-          {searchTerm !== '' &&
-            filtered.map(el => {
-              return (
-                <ResultView key={el.id}>
-                  <Pressable
-                    onPress={() => {
-                      setTouch(el.id);
-                      navigation.navigate(AddpartmentPageName, {data: el});
-                    }}>
-                    {el.name.includes(searchTerm) ? (
-                      <ApartName>
-                        {el.name.split(searchTerm)[0]}
-                        <SearchText>{searchTerm}</SearchText>
-                        {el.name.split(searchTerm)[1]}
-                      </ApartName>
-                    ) : (
-                      <ApartName>{el.name}</ApartName>
-                    )}
-                    <ApartAddress>{el.address}</ApartAddress>
-                  </Pressable>
-                  <SearchArrow />
-                </ResultView>
-              );
-            })}
+          <ResultScrollView>
+            {searchTerm !== '' &&
+              filtered.map(el => {
+                return (
+                  <ResultView key={el.id}>
+                    <Pressable
+                      onPress={() => {
+                        setTouch(el.id);
+                        navigation.navigate(AddpartmentPageName, {data: el});
+                      }}>
+                      {el.name.includes(searchTerm) ? (
+                        <ApartName>
+                          {el.name.split(searchTerm)[0]}
+                          <SearchText>{searchTerm}</SearchText>
+                          {el.name.split(searchTerm)[1]}
+                        </ApartName>
+                      ) : (
+                        <ApartName>{el.name}</ApartName>
+                      )}
+                      <ApartAddress>{el.address}</ApartAddress>
+                    </Pressable>
+                    <SearchArrow />
+                  </ResultView>
+                );
+              })}
+          </ResultScrollView>
         </KeyDismiss>
       </FormProvider>
     </Wrap>
@@ -120,6 +121,7 @@ const ResultView = styled.View`
   align-items: center;
   margin-bottom: 8px;
 `;
+const ResultScrollView = styled.ScrollView``;
 
 const ApartName = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[2]};

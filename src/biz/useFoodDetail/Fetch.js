@@ -30,9 +30,9 @@ export async function FoodDetail(foodId, userRole) {
       error: null,
     };
   }
-  //   const fetchRes = await fetchJson(`/dailyfoods/${foodId}`, 'GET');
+  const fetchRes = await fetchJson(`/dailyfoods/${foodId}`, 'GET');
 
-  //   return fetchRes;
+  return fetchRes;
 }
 
 export async function FoodDetailDiscount(foodId) {
