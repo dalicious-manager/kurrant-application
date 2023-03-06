@@ -25,7 +25,7 @@ const useFoodDetail = () => {
       setFoodDetailLoading(true);
       console.log(userRole);
       const res = await Fetch.FoodDetail(foodId, userRole);
-
+      console.log(res, '12312937');
       setFoodDetail(res.data);
       return res.data;
     } catch (err) {

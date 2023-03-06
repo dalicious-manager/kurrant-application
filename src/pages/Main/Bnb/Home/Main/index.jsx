@@ -528,8 +528,12 @@ const Pages = () => {
       <ButtonWrap>
         <Button
           onPress={() => {
-            navigation.navigate(BuyMealPageName);
-            closeBalloon();
+            if (userSpotId) {
+              navigation.navigate(BuyMealPageName);
+              closeBalloon();
+            } else {
+              Alert.alert('식사구매', '스팟선택 후 식사를 구매해주세요');
+            }
           }}>
           <PlusIcon />
           <ButtonText>식사 구매하기</ButtonText>
