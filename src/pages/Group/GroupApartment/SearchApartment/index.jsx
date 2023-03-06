@@ -34,7 +34,7 @@ const Pages = () => {
     setSearchTerm(e.nativeEvent.text);
   };
 
-  const filtered = isApartSearch.filter(itemList => {
+  const filtered = isApartSearch?.filter(itemList => {
     return itemList.name.includes(searchTerm);
   });
 
@@ -63,7 +63,7 @@ const Pages = () => {
           </Container>
 
           {searchTerm !== '' &&
-            filtered.map(el => {
+            filtered?.map(el => {
               return (
                 <ResultView key={el.id}>
                   <Pressable
