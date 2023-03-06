@@ -32,7 +32,7 @@ const SseTestOnSpring = () => {
     setEventSource(eventSourceYo);
   };
 
-  getCheck('2023-02-06', '2023-02-10');
+  // getCheck('2023-02-06', '2023-02-10');
 
   useEffect(() => {
     setSse();
