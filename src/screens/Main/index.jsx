@@ -569,7 +569,7 @@ const Screen = () => {
             headerRight: () => (
               <>
                 <DeleteTxt
-                  style={{marginRight: 20}}
+                  style={{marginRight: 4}}
                   onPress={() => {
                     Alert.alert('알림 삭제', '모든 알림을 삭제하시겠어요?', [
                       {
@@ -1695,7 +1695,11 @@ const Screen = () => {
 
 export default Screen;
 
-const DeleteTxt = styled(Typography).attrs({text: 'Button09R'})`
-  color: ${({theme}) => theme.colors.grey[2]};
+const DeleteTxt = styled.Pressable`
   margin-right: 10px;
+  flex-direction: row;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
 `;
