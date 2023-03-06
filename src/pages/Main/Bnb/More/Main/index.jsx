@@ -55,6 +55,7 @@ const Pages = () => {
   const {isUserInfo} = useUserInfo();
   const getData = async () => {
     VersionCheck.getLatestVersion().then(latestVersion => {
+      console.log(latestVersion, currentVersion);
       if (currentVersion === latestVersion) setVersionChecked(true);
       else setVersionChecked(false);
     });

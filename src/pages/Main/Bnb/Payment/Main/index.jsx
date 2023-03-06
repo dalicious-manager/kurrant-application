@@ -493,7 +493,7 @@ const Pages = ({route}) => {
             <DeliveryTitle>
               선택한 결제 수단으로 결제가 진행됩니다.
             </DeliveryTitle>
-            <AgreeTextBox>
+            {/* <AgreeTextBox>
               <PaymentsList
                 onSelectPress={setPayments}
                 select={payments}
@@ -509,7 +509,7 @@ const Pages = ({route}) => {
                 select={payments}
                 name={'NAVERPAY'}
               />
-            </AgreeTextBox>
+            </AgreeTextBox> */}
             <CardSelectContainer>
               {payments === 'NOMAL' && (
                 <View>
@@ -569,7 +569,7 @@ const Pages = ({route}) => {
         <ButtonWrap>
           <Button
             label={`총 ${totalCount}개 결제하기`}
-            disabled={!(payments !== 'NOMAL' || card)}
+            disabled={!(payments !== 'NOMAL' || card || totalPrice <= 0)}
             onPressEvent={() => {
               handleEventPayments();
             }}
