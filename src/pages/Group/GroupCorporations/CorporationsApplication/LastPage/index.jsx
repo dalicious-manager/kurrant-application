@@ -198,7 +198,7 @@ const Pages = () => {
       )}
       <BottomSheet
         title="쓰레기 수거 서비스(선택)"
-        description={`50인 미만 : 300원/1인 ${'\n'}50인 이상 : 15,000원/일`}
+        description={`50인 미만 : 15,000원/일 ${'\n'}50인 이상 : 500원/1인`}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         setSelected={setSelected}
