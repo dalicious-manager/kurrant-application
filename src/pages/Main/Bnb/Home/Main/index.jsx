@@ -872,7 +872,7 @@ const MembersText = styled(Typography).attrs({text: 'SmallLabel'})`
 
 const BellIconPress = styled.Pressable`
   width: 40px;
-  height: 40;
+  height: 40px;
   justify-content: flex-start;
   align-items: center;
   margin-right: 4px;
