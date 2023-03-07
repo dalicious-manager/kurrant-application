@@ -58,6 +58,12 @@ const Pages = ({route}) => {
   const {
     readableAtom: {userRole},
   } = useAuth();
+
+  useEffect(() => {
+    console.log(`식사 구매하기`);
+    console.log(params.date);
+  }, [params]);
+
   const {
     isDiningTypes,
     isMorningFood,
@@ -177,6 +183,7 @@ const Pages = ({route}) => {
     async function loadDailyFood() {
       try {
         const data = await dailyFood(spotId, date);
+        console.log('음식 불러오기' + data);
 
         if (data[0]) {
           diningRef.current.setPage(Number(data[0]) - 1);
@@ -466,6 +473,7 @@ const Pages = ({route}) => {
           type={'grey2'}
           color={'white'}
           size={'Body05R'}
+          selectDate={params.date && params.date}
           onPressEvent2={dayPress}
           daily={daily}
           margin={'0px 28px'}
