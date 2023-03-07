@@ -1696,10 +1696,11 @@ const Screen = () => {
 export default Screen;
 
 const DeleteTxt = styled.Pressable`
-  margin-right: 10px;
+  margin-right: -6px;
   flex-direction: row;
   width: 40px;
   height: 40px;
   justify-content: center;
   align-items: center;
+  /* background-color: gold; */
 `;

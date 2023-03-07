@@ -115,7 +115,11 @@ const Component = ({
                             })
                           : onPressEvent2 && events();
                       }}>
-                      <Day lastDay={lastDay} color={color} size={size}>
+                      <Day
+                        lastDay={lastDay}
+                        color={color}
+                        size={size}
+                        holiday={idx}>
                         {txt}
                       </Day>
                       <TodayCircle
@@ -124,6 +128,7 @@ const Component = ({
                         currentPress={currentPress}
                         day={day}>
                         <Day
+                          holiday={idx}
                           color={color}
                           lastDay={lastDay}
                           now={now}
@@ -198,8 +203,12 @@ const Dot = styled.View`
 `;
 
 const Day = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({lastDay, theme}) =>
-    lastDay ? theme.colors.grey[5] : theme.colors.grey[2]};
+  color: ${({lastDay, theme, holiday}) =>
+    lastDay
+      ? theme.colors.grey[5]
+      : holiday === 6 || holiday === 5
+      ? theme.colors.grey[5]
+      : theme.colors.grey[2]};
   ${({color, now}) => now && getTodayColor(color)};
   ${({size}) => getFontStyle(size)};
 `;
