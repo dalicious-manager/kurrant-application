@@ -318,16 +318,15 @@ const Pages = () => {
       }}>
       <View>
         <BarWrap>
-          <SpotName>
-            <Pressable onPress={PressSpotButton}>
-              <SpotNameText>
-                {userGroupName === null
-                  ? '스팟을 선택해 주세요'
-                  : userGroupName?.length + userSpot?.length + 1 > 11
-                  ? userGroupName + '\n' + userSpot
-                  : userGroupName + '\u00a0' + userSpot}
-              </SpotNameText>
-            </Pressable>
+          <SpotName onPress={PressSpotButton}>
+            <SpotNameText>
+              {userGroupName === null
+                ? '스팟을 선택해 주세요'
+                : userGroupName?.length + userSpot?.length + 1 > 11
+                ? userGroupName + '\n' + userSpot
+                : userGroupName + '\u00a0' + userSpot}
+            </SpotNameText>
+
             <ArrowIcon />
           </SpotName>
           <Icons>
@@ -617,13 +616,15 @@ const BarWrap = styled.View`
   align-items: center;
 `;
 
-const SpotName = styled.View`
+const SpotName = styled.Pressable`
   ${Display};
 `;
 
 const Icons = styled.View`
   ${BarDisplay};
   //width: 68px;
+
+  margin-right: -6px;
 `;
 
 const MainWrap = styled.View`
