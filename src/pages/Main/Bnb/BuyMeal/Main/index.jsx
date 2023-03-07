@@ -458,7 +458,6 @@ const Pages = ({route}) => {
           <ActivityIndicator size={'large'} />
         </LoadingPage>
       )}
-      {userInfo?.isMembership && <MembershipBar />}
 
       <CalendarWrap>
         <Calendar
@@ -603,6 +602,7 @@ const FoodContainer = styled.View`
         height: ${screenHeight}px;
       `;
   }}
+  padding-bottom:24px;
 `;
 const SafeView = styled.View`
   background-color: ${props => props.theme.colors.grey[0]};
