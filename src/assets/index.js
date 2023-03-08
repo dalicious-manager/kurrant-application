@@ -32,3 +32,4 @@ export const FoundersMembers = require('../assets/images/point.png');
 export const FoundersNewMembers = require('../assets/images/newMembers.png');
 export const Members = require('../assets/images/members.png');
 export const NewMembers = require('../assets/images/newMembers.png');
+export const AIbackground = require('../assets/images/background.png');
