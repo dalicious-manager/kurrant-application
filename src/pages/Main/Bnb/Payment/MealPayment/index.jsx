@@ -5,6 +5,7 @@ import {StackActions, useNavigation} from '@react-navigation/native';
 import Config from 'react-native-config';
 import PaymentContainer from './components/PaymentContainer';
 import {PurchaseDetailPageName} from '../../../MyPage/PurchaseHistory/Detail';
+import {Alert} from 'react-native';
 export const PAGE_NAME = 'P__PAYMENT__MEAL_PAYMENT';
 
 const Pages = ({route}) => {
@@ -23,7 +24,7 @@ const Pages = ({route}) => {
         successUrl:
           Config.NODE_ENV === 'dev'
             ? `http://3.35.197.186/admin/success.php`
-            : 'http://3.35.197.186/admin/success2.php',
+            : 'https://admin.dalicious.co/success',
         failUrl: 'http://3.35.197.186:8882/fail',
       };
     } else {
@@ -38,16 +39,11 @@ const Pages = ({route}) => {
         successUrl:
           Config.NODE_ENV === 'dev'
             ? `http://3.35.197.186/admin/success.php`
-            : 'http://3.35.197.186/admin/success2.php',
+            : 'https://admin.dalicious.co/success',
         failUrl: 'http://3.35.197.186:8882/fail',
       };
     }
   };
-  console.log(
-    Config.NODE_ENV === 'prod'
-      ? Config.TOSS_PAYMENT_CLIENT_KEY
-      : Config.TOSS_PAYMENT_CLIENT_TEST_KEY,
-  );
   return (
     <Wrapper paddingTop={24}>
       <PaymentContainer
@@ -61,18 +57,18 @@ const Pages = ({route}) => {
           console.log('에러', v);
         }}
         onApproveFailed={() => {
-          x;
-          console.log('teset');
+          Alert.alert('결재 실패', '결재를 실패하셨습니다.');
+          navigation.goBack();
         }}
         onApproveSucceed={v => {
-          // console.log(v)
+          console.log(v.data, 'testsetst');
           // Clipboard.setString(v.paymentKey);
           // navigation.goBack();
-          if (v) {
+          if (v.data) {
             const resetAction = StackActions.popToTop();
             navigation.dispatch(resetAction);
             navigation.navigate(PurchaseDetailPageName, {
-              id: v,
+              id: v.data,
             });
           }
         }}

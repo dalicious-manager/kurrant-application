@@ -45,6 +45,9 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
     if ([url.scheme isEqualToString:@"kurrant-naver"]) {
       return [[NaverThirdPartyLoginConnection getSharedInstance] application:application openURL:url options:options];
     }
+    if ([url.scheme isEqualToString:@"kurrant"]) {
+       return [RCTLinkingManager application:application openURL:url options:options];
+    }
     // kakao
     if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
         return [RNKakaoLogins handleOpenUrl: url];

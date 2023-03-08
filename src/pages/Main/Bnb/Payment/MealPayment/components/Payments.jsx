@@ -1,13 +1,10 @@
-
-import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView } from 'react-native';
-import { WebView ,Linking } from 'react-native-webview';
+import React, {useEffect, useRef, useState} from 'react';
+import {SafeAreaView} from 'react-native';
+import {WebView, Linking} from 'react-native-webview';
 import useUserInfo from '../../../../../../biz/useUserInfo';
-import { getStorage } from '../../../../../../utils/asyncStorage';
+import {getStorage} from '../../../../../../utils/asyncStorage';
 
-import { isAppUrl, isBlank, openPGApp } from './lib';
-
-
+import {isAppUrl, isBlank, openPGApp} from './lib';
 
 const Payment = ({
   clientKey,
@@ -16,7 +13,7 @@ const Payment = ({
   detectIsLoading,
   orderItems,
 }) => {
-  const [token ,setToken] = useState();
+  const [token, setToken] = useState();
   const webviewRef = useRef();
   const WEBVIEW_SOURCE_HTML = `
       <html>
@@ -35,22 +32,21 @@ const Payment = ({
         </body>
       </html>
       `;
-  const [urls ,setUrls] = useState({
+  const [urls, setUrls] = useState({
     html: WEBVIEW_SOURCE_HTML,
   });
-  useEffect(()=>{
-    const getToken =async()=>{
-      const token = await getStorage("token");
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await getStorage('token');
       setToken(JSON.parse(token).accessToken);
-    }
+    };
     getToken();
-  },[])
+  }, []);
   return (
     <SafeAreaView
       style={{
         flex: 1,
-      }}
-    >
+      }}>
       <WebView
         ref={webviewRef}
         style={{
@@ -60,18 +56,19 @@ const Payment = ({
         injectedJavaScript={`
           if(${orderItems.length > 0}){
             tossPayments.requestPayment('카드',${JSON.stringify(
-              payment
+              payment,
             )}).catch(err => {              
               window.ReactNativeWebView.postMessage(JSON.stringify(err));  
             })
           }
-        `}     
+        `}
         onMessage={onWebViewMessageReceived}
         originWhitelist={['*']}
         sharedCookiesEnabled={true}
-        onShouldStartLoadWithRequest={(request) => {
-          const { url, mainDocumentURL } = request;
-          if (isBlank(url, mainDocumentURL,orderItems,setUrls,token)) {
+        code
+        onShouldStartLoadWithRequest={request => {
+          const {url, mainDocumentURL} = request;
+          if (isBlank(url, mainDocumentURL, orderItems, setUrls, token)) {
             detectIsLoading(true);
             return true;
           }
