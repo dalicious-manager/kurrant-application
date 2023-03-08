@@ -34,7 +34,9 @@ const Pages = ({route}) => {
   const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
-
+  const pressDay = day => {
+    setTouchDate(day ?? data);
+  };
   const cancelMealPress = id => {
     const list = isOrderMeal.map(el => {
       return {
@@ -345,11 +347,9 @@ const CancelBtnWrap = styled(MealChangeWrap)`
   right: ${({status}) => (status === 7 ? '0px' : '83px')};
 `;
 
-
 const ButtonWrap = styled.View`
   margin: 0px 20px 0px 0px;
 `;
-
 
 const PlusButton = styled.Pressable`
   width: 56px;
@@ -363,7 +363,7 @@ const PlusButton = styled.Pressable`
 const ButtonBox = styled.Pressable`
   position: absolute;
   bottom: 26px;
-  right: 20px;
+  right: 0px;
   left: 20px;
 `;
 const PlusIcon = styled(Plus)`
@@ -411,5 +411,4 @@ const NoMealButtonWrap = styled.View`
 const ButtonText = styled(Typography).attrs({text: 'BottomButtonSB'})`
   color: ${props => props.theme.colors.grey[1]};
   margin-left: 8px;
-
 `;

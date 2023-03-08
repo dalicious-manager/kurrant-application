@@ -573,7 +573,6 @@ const Pages = ({route}) => {
           </ProgressWrap>
         )}
 
-
         <Pager
           ref={diningRef}
           initialPage={
@@ -695,7 +694,6 @@ const PagerViewWrap = styled.View`
 
 const ProgressWrap = styled.View`
   flex-direction: row;
-  //justify-content: center;
   padding: 12px 0px;
   margin-left: 24px;
 `;
@@ -722,7 +720,6 @@ const Contents = styled.Pressable`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   border-bottom-width: 1px;
   align-items: center;
-  /* background-color: gold; */
   min-height: 160px;
 `;
 
@@ -744,12 +741,7 @@ const ContentsText = styled.View`
   width: 60%;
 `;
 
-const MealImageWrap = styled.View`
-  /* position: absolute;
-  bottom: 8px;
-  right: 8px; */
-  //ai 있을떈 위에 스타일
-`;
+const MealImageWrap = styled.View``;
 
 const CartIconWrap = styled.Pressable`
   width: 40px;
@@ -779,15 +771,6 @@ const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
 `;
 const ButtonWrap = styled.View`
   position: absolute;
-  /* ${({membership}) => {
-    if (membership)
-      return css`
-        bottom: 35px;
-      `;
-    return css`
-      bottom: 35px;
-    `;
-  }} */
   bottom: 35px;
   margin: 0px 48px;
 `;
@@ -817,7 +800,6 @@ const MealDsc = styled(Typography).attrs({text: 'MealDes'})`
   color: ${({theme, soldOut}) =>
     soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
   margin-top: 6px;
-  //padding-right: 17px;
 `;
 
 const ProgressText = styled(Typography).attrs({text: 'Title04SB'})`
