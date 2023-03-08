@@ -354,7 +354,6 @@ const Pages = ({route}) => {
               m.membershipDiscountPrice +
               m.makersDiscountPrice +
               m.periodDiscountPrice;
-            console.log(m.image, 'image');
             return (
               <Contents
                 key={m.id}
@@ -472,7 +471,7 @@ const Pages = ({route}) => {
         />
       </CalendarWrap>
 
-      <PagerViewWrap>
+      <PagerViewWrap isMembership={userInfo?.isMembership}>
         <ProgressWrap>
           <ProgressInner>
             <Slider
@@ -600,7 +599,7 @@ const FoodContainer = styled.View`
   ${({isFood}) => {
     if (isFood)
       return css`
-        height: ${screenHeight}px;
+        height: ${screenHeight - 32}px;
       `;
   }}
 `;
@@ -626,7 +625,17 @@ const LoadingPage = styled.View`
   height: ${screenHeight}px;
 `;
 const PagerViewWrap = styled.View`
-  height: ${screenHeight}px;
+  ${({isMembership}) => {
+    if (isMembership) {
+      return css`
+        height: ${screenHeight - 100}px;
+      `;
+    }
+    return css`
+      height: ${screenHeight}px;
+    `;
+  }}
+  background-color: red;
 `;
 
 const ProgressWrap = styled.View`
@@ -716,7 +725,16 @@ const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
 `;
 const ButtonWrap = styled.View`
   position: absolute;
-  bottom: 35px;
+  ${({membership}) => {
+    if (membership)
+      return css`
+        bottom: 0px;
+      `;
+    return css`
+      bottom: 35px;
+    `;
+  }}
+
   margin: 0px 48px;
 `;
 
