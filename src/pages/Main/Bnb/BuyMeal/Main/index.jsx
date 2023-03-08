@@ -545,9 +545,11 @@ const Pages = ({route}) => {
             </Progress>
           </ProgressInner>
         </ProgressWrap>
-        {/* <View>
-          <Modal />
-        </View> */}
+        {!userInfo?.isMembership && (
+          <View>
+            <Modal />
+          </View>
+        )}
         <Pager
           ref={diningRef}
           initialPage={

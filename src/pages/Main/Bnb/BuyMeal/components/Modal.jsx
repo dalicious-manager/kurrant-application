@@ -1,43 +1,69 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Pressable} from 'react-native';
 import styled from 'styled-components';
 import AIicon from '../../../../../assets/icons/BuyMeal/modalAI.svg';
 import XIcon from '../../../../../assets/icons/BuyMeal/modalX.svg';
 import CloseIcon from '../../../../../assets/icons/BuyMeal/close.svg';
 import Typography from '../../../../../components/Typography';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {formattedDate} from '../../../../../utils/dateFormatter';
 
 const Modal = () => {
+  const [hideModal, setHideModal] = useState(true);
+  const today = new Date();
+
+  const oneMonthLater = new Date(today.setMonth(today.getMonth() + 1));
+
+  const hidePress = async () => {
+    await setStorage('today', formattedDate(today));
+    setHideModal(false);
+  };
+
+  useEffect(() => {
+    const day = async () => {
+      const aa = await getStorage('today');
+      console.log(aa, '99');
+    };
+    day();
+  }, []);
   return (
-    <Wrapper>
-      <Wrap>
-        <CloseButtonWrap>
-          <CloseButton>
-            <XIcon />
-          </CloseButton>
-        </CloseButtonWrap>
-        <TitleWrap>
-          <AIIcon />
-          <Title>AI 메뉴 추천 받기</Title>
-        </TitleWrap>
-        <ContentsWrap>
-          <ContentsText>
-            멤버십 가입하고 AI에게 메뉴 추천을 받아보세요!
-          </ContentsText>
-          <ContentsText>
-            구매이력이 쌓이면 더 정확한 추천을 받을 수 있어요
-          </ContentsText>
-          <MembershipButton>
-            <ButtonText>멤버십 가입하기</ButtonText>
-          </MembershipButton>
-        </ContentsWrap>
-      </Wrap>
-      <HideButtonWrap>
-        <HideButton>
-          <HideButtonText>한달간 보지 않기</HideButtonText>
-          <CloseIcon />
-        </HideButton>
-      </HideButtonWrap>
-    </Wrapper>
+    <>
+      {hideModal && (
+        <Wrapper>
+          <Wrap>
+            <CloseButtonWrap>
+              <CloseButton>
+                <XIcon />
+              </CloseButton>
+            </CloseButtonWrap>
+            <TitleWrap>
+              <AIIcon />
+              <Title>AI 메뉴 추천 받기</Title>
+            </TitleWrap>
+            <ContentsWrap>
+              <ContentsText>
+                멤버십 가입하고 AI에게 메뉴 추천을 받아보세요!
+              </ContentsText>
+              <ContentsText>
+                구매이력이 쌓이면 더 정확한 추천을 받을 수 있어요
+              </ContentsText>
+              <MembershipButton>
+                <ButtonText>멤버십 가입하기</ButtonText>
+              </MembershipButton>
+            </ContentsWrap>
+          </Wrap>
+          <HideButtonWrap
+            onPress={() => {
+              hidePress();
+            }}>
+            <HideButton>
+              <HideButtonText>한달간 보지 않기</HideButtonText>
+              <CloseIcon />
+            </HideButton>
+          </HideButtonWrap>
+        </Wrapper>
+      )}
+    </>
   );
 };
 
