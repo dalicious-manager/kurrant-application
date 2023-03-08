@@ -238,6 +238,7 @@ const Pages = ({route}) => {
       const orderName =
         totalCount > 1 ? `${firstName} 외 ${totalCount}건` : firstName;
       // console.log(isUserInfo?.userId)
+      const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
       loadMeal();
       if (totalPrice > 0) {
         // setLoadMeal([])
@@ -246,7 +247,7 @@ const Pages = ({route}) => {
         return navigation.navigate(MealPaymentPageName, {
           amount: totalPrice,
           orderName: orderName,
-          orderId: generateOrderCode(1, isUserInfo?.userId, spotId),
+          orderId: orderId,
           email: isUserInfo?.email,
           name: isUserInfo?.name,
           orderItems: JSON.stringify(data),
@@ -257,7 +258,7 @@ const Pages = ({route}) => {
       } else {
         const result = await order({
           amount: totalPrice,
-          orderId: generateOrderCode(1, isUserInfo?.userId, spotId),
+          orderId: orderId,
           orderItems: data,
         });
         if (result?.data) {
