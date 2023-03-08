@@ -42,6 +42,7 @@ import AIicon from '../../../../../assets/icons/BuyMeal/ai.svg';
 // import TossPayment from 'react-native-toss-payments';
 import {AIbackground} from '../../../../../assets';
 import MealImage from '../components/MealImage';
+import Modal from '../components/Modal';
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
@@ -522,6 +523,7 @@ const Pages = ({route}) => {
               thumbStyle={styles.thumbStyle}
               containerStyle={{height: 12}}
             />
+
             <Progress>
               {DININGTYPE.map((btn, i) => {
                 const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
@@ -543,7 +545,9 @@ const Pages = ({route}) => {
             </Progress>
           </ProgressInner>
         </ProgressWrap>
-
+        {/* <View>
+          <Modal />
+        </View> */}
         <Pager
           ref={diningRef}
           initialPage={
@@ -751,8 +755,8 @@ const PriceWrap = styled.View`
 
 const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
   position: absolute;
-  right: ${({rank}) => (rank === 1 ? '24px' : '15px')};
-  top: 55%;
+  right: ${({rank}) => (rank === 1 ? '17px' : '15px')};
+  top: ${({rank}) => (rank === 1 ? '60%' : '55%')};
   color: ${props => props.theme.colors.grey[4]};
   z-index: 1000;
 `;
@@ -796,7 +800,7 @@ const MealDsc = styled(Typography).attrs({text: 'MealDes'})`
   color: ${({theme, soldOut}) =>
     soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
   margin-top: 6px;
-  padding-right: 17px;
+  //padding-right: 17px;
 `;
 
 const ProgressText = styled(Typography).attrs({text: 'Title04SB'})`

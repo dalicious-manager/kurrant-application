@@ -206,10 +206,10 @@ const Pages = ({route}) => {
           <KeyDismiss onPress={() => Keyboard.dismiss()}>
             <Container>
               <RefTextInput
-                label="서비스 이용 예상 세대수"
+                label="서비스 이용 예상 인원수"
                 name="svcDongCount"
                 keyboardType="numeric"
-                placeholder="서비스 이용 예상 세대수"
+                placeholder="서비스 이용 예상 인원수"
                 style={inputStyle}
                 defaultValue={
                   diningType === 1

@@ -190,9 +190,9 @@ const Pages = () => {
             </View>
 
             <RefTextInput
-              label="단지 총 세대수"
+              label="예상인원 수"
               name="familyCount"
-              placeholder="단지 총 세대수"
+              placeholder="예상인원 수"
               keyboardType="numeric"
               style={inputStyle}
               suffix={{

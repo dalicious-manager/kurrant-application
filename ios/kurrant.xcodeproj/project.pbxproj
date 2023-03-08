@@ -773,6 +773,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P98WMV6993;
 				ENABLE_BITCODE = NO;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = kurrant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "커런트";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
@@ -805,6 +806,7 @@
 				CODE_SIGN_ENTITLEMENTS = kurrant/kurrantRelease.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P98WMV6993;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = kurrant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "커런트";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
@@ -1043,6 +1045,7 @@
 				CODE_SIGN_ENTITLEMENTS = kurrant/kurrantRelease.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P98WMV6993;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = kurrant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "커런트";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
