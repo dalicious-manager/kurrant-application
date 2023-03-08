@@ -63,6 +63,7 @@ const Pages = () => {
             delete getDataPage3.deliveryTime2;
           }
           setMorning(getDataPage);
+          console.log(getDataPage, '922777');
           setLunch(getDataPage2);
           setDinner(getDataPage3);
         }

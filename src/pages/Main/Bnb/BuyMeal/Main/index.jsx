@@ -13,6 +13,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  Image,
+  Text,
+  ImageBackground,
 } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import styled, {css} from 'styled-components/native';
@@ -35,8 +38,10 @@ import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AIicon from '../../../../../assets/icons/BuyMeal/ai.svg';
 // import TossPayment from 'react-native-toss-payments';
-
+import {AIbackground} from '../../../../../assets';
+import MealImage from '../components/MealImage';
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
@@ -58,6 +63,11 @@ const Pages = ({route}) => {
   const {
     readableAtom: {userRole},
   } = useAuth();
+
+  useEffect(() => {
+    console.log(`식사 구매하기`);
+  }, [params]);
+
   const {
     isDiningTypes,
     isMorningFood,
@@ -177,6 +187,7 @@ const Pages = ({route}) => {
     async function loadDailyFood() {
       try {
         const data = await dailyFood(spotId, date);
+        console.log('음식 불러오기' + data);
 
         if (data[0]) {
           diningRef.current.setPage(Number(data[0]) - 1);
@@ -340,7 +351,7 @@ const Pages = ({route}) => {
             <NoSpotView>
               <NoServiceText>메뉴는 스팟 선택 또는 </NoServiceText>
               <NoServiceText>
-                스팟 개설 신청 승인후 확인할 수 있어요{' '}
+                스팟 개설 신청 승인후 확인할 수 있어요
               </NoServiceText>
             </NoSpotView>
           )}
@@ -354,6 +365,7 @@ const Pages = ({route}) => {
               m.membershipDiscountPrice +
               m.makersDiscountPrice +
               m.periodDiscountPrice;
+
             return (
               <Contents
                 key={m.id}
@@ -364,7 +376,7 @@ const Pages = ({route}) => {
                   e.stopPropagation();
                 }}>
                 <ContentsText>
-                  <MakersName soldOut={m.status}>[{m.makersName}]</MakersName>
+                  <MakersName soldOut={m.status}>{m.makersName}</MakersName>
                   <MealName
                     soldOut={m.status}
                     numberOfLines={1}
@@ -398,18 +410,33 @@ const Pages = ({route}) => {
                     </LabelWrap>
                   )}
                 </ContentsText>
-
-                <MealImageWrap>
+                <MealImage
+                  status={m.status}
+                  image={m.image}
+                  onPressEvent={() => {
+                    addCartPress(m.id, m.serviceDate, m.diningType, m);
+                  }}
+                  isAddMeal={isAddMeal}
+                  rank={m.rank}
+                />
+                {/* <ImageBackground
+                  source={AIbackground}
+                  resizeMode="cover"
+                  style={{width: 130, height: 146}}>
+                  <AIrecommend>
+                    <AIicon />
+                    <AItext>AI추천</AItext>
+                  </AIrecommend> */}
+                {/* <MealImageWrap>
                   {(m.status === 0 || m.status === 2) && <BlurView />}
-
                   <FastImage
                     source={{
                       uri: `${m.image}`,
                       priority: FastImage.priority.high,
                     }}
                     style={{
-                      width: 107,
-                      height: 107,
+                      width: 114,
+                      height: 114,
                       borderRadius: 7,
                     }}
                   />
@@ -423,12 +450,18 @@ const Pages = ({route}) => {
                       <CartIcon />
                     </CartIconWrap>
                   )}
-                </MealImageWrap>
+                </MealImageWrap> */}
+                {/* </ImageBackground> */}
+
                 {m.status === 0 && (
-                  <SoldOut soldOut={m.status}>품절됐어요</SoldOut>
+                  <SoldOut soldOut={m.status} rank={m.rank}>
+                    품절됐어요
+                  </SoldOut>
                 )}
                 {m.status === 2 && (
-                  <SoldOut soldOut={m.status}>마감됐어요</SoldOut>
+                  <SoldOut soldOut={m.status} rank={m.rank}>
+                    마감됐어요
+                  </SoldOut>
                 )}
               </Contents>
             );
@@ -457,7 +490,6 @@ const Pages = ({route}) => {
           <ActivityIndicator size={'large'} />
         </LoadingPage>
       )}
-      {userInfo?.isMembership && <MembershipBar />}
 
       <CalendarWrap>
         <Calendar
@@ -465,6 +497,7 @@ const Pages = ({route}) => {
           type={'grey2'}
           color={'white'}
           size={'Body05R'}
+          selectDate={params?.date && params?.date}
           onPressEvent2={dayPress}
           daily={daily}
           margin={'0px 28px'}
@@ -586,8 +619,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   thumbStyle: {
-    width: 20,
-    height: 2,
+    width: 28,
+    height: 1,
     borderRadius: 10,
     backgroundColor: '#343337',
   },
@@ -602,6 +635,7 @@ const FoodContainer = styled.View`
         height: ${screenHeight - 32}px;
       `;
   }}
+  padding-bottom:24px;
 `;
 const SafeView = styled.View`
   background-color: ${props => props.theme.colors.grey[0]};
@@ -640,8 +674,9 @@ const PagerViewWrap = styled.View`
 
 const ProgressWrap = styled.View`
   flex-direction: row;
-  justify-content: center;
-  padding-top: 12px;
+  //justify-content: center;
+  padding: 12px 0px;
+  margin-left: 24px;
 `;
 
 const ProgressInner = styled.View`
@@ -651,7 +686,7 @@ const ProgressInner = styled.View`
 const Progress = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  width: 93px;
+  width: 120px;
 `;
 
 const Pager = styled(PagerView)`
@@ -659,19 +694,21 @@ const Pager = styled(PagerView)`
 `;
 
 const Contents = styled.Pressable`
-  padding: ${({spicy}) => (spicy ? '24px 0px 12px 0px' : '24px 0px 28px 0px')};
+  padding: ${({spicy}) => (spicy ? '18px 0px 28px 0px' : '18px 0px 28px 0px')};
   margin: 0px 28px;
   flex-direction: row;
   justify-content: space-between;
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   border-bottom-width: 1px;
   align-items: center;
+  /* background-color: gold; */
+  min-height: 160px;
 `;
 
 const BlurView = styled.View`
   position: absolute;
-  width: 107px;
-  height: 107px;
+  width: 114px;
+  height: 114px;
   border-radius: 7px;
   left: 0px;
   background-color: #ffffffcc;
@@ -687,14 +724,10 @@ const ContentsText = styled.View`
 `;
 
 const MealImageWrap = styled.View`
-  //height:107px;
-  position: relative;
-`;
-
-const MealImage = styled.Image`
-  width: 107px;
-  height: 107px;
-  border-radius: 7px;
+  /* position: absolute;
+  bottom: 8px;
+  right: 8px; */
+  //ai 있을떈 위에 스타일
 `;
 
 const CartIconWrap = styled.Pressable`
@@ -718,8 +751,8 @@ const PriceWrap = styled.View`
 
 const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
   position: absolute;
-  top: 60%;
-  right: 15px;
+  right: ${({rank}) => (rank === 1 ? '24px' : '15px')};
+  top: 55%;
   color: ${props => props.theme.colors.grey[4]};
   z-index: 1000;
 `;
@@ -744,9 +777,9 @@ const ReviewWrap = styled.View`
   text-align: center;
 `;
 
-export const MakersName = styled(Typography).attrs({text: 'Body05R'})`
+export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
+    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
 `;
 
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
@@ -754,19 +787,21 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
     soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
-const Price = styled(MakersName)`
+const Price = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme, soldOut}) =>
     soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
-const MealDsc = styled(Typography).attrs({text: 'CaptionR'})`
+const MealDsc = styled(Typography).attrs({text: 'MealDes'})`
   color: ${({theme, soldOut}) =>
     soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
+  margin-top: 6px;
+  padding-right: 17px;
 `;
 
-const ProgressText = styled(Typography).attrs({text: 'CaptionSB'})`
+const ProgressText = styled(Typography).attrs({text: 'Title04SB'})`
   color: ${({theme, type, index}) =>
-    type ? theme.colors.grey[2] : theme.colors.grey[5]};
+    type ? theme.colors.grey[2] : theme.colors.grey[7]};
 `;
 
 const PercentText = styled(Typography).attrs({text: 'Body05R'})`
@@ -811,3 +846,14 @@ const NoSpotView = styled(NoServieceView)`
 `;
 
 const DiningPress = styled.Pressable``;
+
+const AItext = styled(Typography).attrs({text: 'CaptionSB'})`
+  color: ${({theme}) => theme.colors.purple[500]};
+  margin-left: 3px;
+`;
+
+const AIrecommend = styled.View`
+  flex-direction: row;
+  margin-left: 7px;
+  margin-top: 2px;
+`;
