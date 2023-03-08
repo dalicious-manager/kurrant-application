@@ -45,13 +45,22 @@ const Pages = () => {
     const addressData = await getStorage('page2-1');
     const get = JSON.parse(addressData);
     const arr = [];
-    arr.push(mealInfo);
 
+    if (isMorning) {
+      arr.push(isMorning);
+    }
+    if (isLunch) {
+      arr.push(isLunch);
+    }
+    if (isDinner) {
+      arr.push(isDinner);
+    }
     const data = {
       user: user,
       address: Object.keys(address).length === 0 ? get : address,
       apartmentInfo: apartmentInfo,
-      mealDetails: Array.isArray(mealInfo) ? mealInfo : arr,
+      //mealDetails: Array.isArray(mealInfo) ? mealInfo : arr,
+      mealDetails: arr,
       memo: memo,
     };
 

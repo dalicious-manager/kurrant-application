@@ -1,4 +1,4 @@
-import { css } from 'styled-components/native';
+import {css} from 'styled-components/native';
 
 export const weightStyles = {
   B: css`
@@ -12,7 +12,7 @@ export const weightStyles = {
   `,
   N: css`
     font-weight: 600;
-  `
+  `,
 };
 
 export const optionStyles = {
@@ -80,12 +80,12 @@ export const textStyles = {
     font-size: 22px;
     line-height: 30px;
     font-family: 'Pretendard-Regular';
-`,
+  `,
   Title02SB: css`
     font-size: 22px;
     line-height: 30px;
     font-family: 'Pretendard-SemiBold';
-`,
+  `,
   Title03R: css`
     font-size: 20px;
     line-height: 28px;
@@ -130,13 +130,13 @@ export const textStyles = {
     font-size: 13px;
     line-height: 19px;
     font-family: 'Pretendard-Regular';
-    letter-spacing:-0.2px;
-    `,
+    letter-spacing: -0.2px;
+  `,
   CaptionSB: css`
     font-size: 13px;
     line-height: 19px;
     font-family: 'Pretendard-SemiBold';
-    letter-spacing:-0.2px;
+    letter-spacing: -0.2px;
   `,
   BottomButtonR: css`
     font-size: 17px;
@@ -177,7 +177,7 @@ export const textStyles = {
     font-size: 12px;
     line-height: 14px;
     font-family: 'Pretendard-Regular';
-    letter-spacing:-0.5px;
+    letter-spacing: -0.5px;
   `,
   InputText: css`
     font-size: 20px;
@@ -190,20 +190,23 @@ export const textStyles = {
     font-family: 'Pretendard-Regular';
   `,
   Badge: css`
-  font-size: 12px;
-  line-height: 14.4px;
-  font-family: 'Pretendard-SemiBold';
-`,
+    font-size: 12px;
+    line-height: 14.4px;
+    font-family: 'Pretendard-SemiBold';
+  `,
   Description: css`
-  font-size: 14px;
-  line-height: 22px;
-  font-family: 'Pretendard-Regular';
+    font-size: 14px;
+    line-height: 22px;
+    font-family: 'Pretendard-Regular';
   `,
   MealCount: css`
-  font-size: 14px;
-  line-height: 20px;
-  font-family: 'Pretendard-Regular';
+    font-size: 14px;
+    line-height: 20px;
+    font-family: 'Pretendard-Regular';
   `,
-
-
+  MealDes: css`
+    font-size: 14px;
+    line-height: 19px;
+    font-family: 'Pretendard-Regular';
+  `,
 };

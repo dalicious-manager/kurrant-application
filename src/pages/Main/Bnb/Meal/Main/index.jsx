@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+
+import React, {useEffect, useState} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
 import styled from 'styled-components';
 
@@ -15,6 +16,7 @@ import {
 } from '../../../../../utils/dateFormatter';
 import {CalendarWrap, MakersName, MealName} from '../../BuyMeal/Main';
 import NoMealButton from '~components/Button';
+
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import FastImage from 'react-native-fast-image';
@@ -32,10 +34,6 @@ const Pages = ({route}) => {
   const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
-
-  const pressDay = day => {
-    setTouchDate(day ?? data);
-  };
 
   const cancelMealPress = id => {
     const list = isOrderMeal.map(el => {
@@ -293,6 +291,7 @@ const Pages = ({route}) => {
           </ButtonBox>
         </ButtonWrap>
       )}
+
       {show && (
         <toast.ToastWrap message={'메뉴가 취소됐어요'} icon={'checked'} />
       )}
@@ -346,7 +345,11 @@ const CancelBtnWrap = styled(MealChangeWrap)`
   right: ${({status}) => (status === 7 ? '0px' : '83px')};
 `;
 
-const ButtonWrap = styled.View``;
+
+const ButtonWrap = styled.View`
+  margin: 0px 20px 0px 0px;
+`;
+
 
 const PlusButton = styled.Pressable`
   width: 56px;
@@ -378,6 +381,7 @@ const Button = styled.Pressable`
   justify-content: center;
   align-items: center;
 `;
+
 const CountText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[5]};
 `;
@@ -407,4 +411,5 @@ const NoMealButtonWrap = styled.View`
 const ButtonText = styled(Typography).attrs({text: 'BottomButtonSB'})`
   color: ${props => props.theme.colors.grey[1]};
   margin-left: 8px;
+
 `;

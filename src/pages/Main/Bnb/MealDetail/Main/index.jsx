@@ -123,17 +123,22 @@ const Pages = ({route}) => {
       headerTitle: `${scroll > 60 ? `${headerTitle}` : ''}`,
       headerLeft: () =>
         scroll > 60 ? (
-          <TouchableOpacity
+          <Pressable
             onPress={() => navigation.goBack()}
-            style={{marginLeft: 2}}>
+            style={{marginLeft: 2, width: 30, height: 30}}>
             <BackArrow color={'#343337'} />
-          </TouchableOpacity>
+          </Pressable>
         ) : (
-          <TouchableOpacity
+          <Pressable
             onPress={() => navigation.goBack()}
-            style={{marginLeft: 2}}>
+            style={{
+              marginLeft: 2,
+
+              width: 30,
+              height: 30,
+            }}>
             <BackArrow color={'#fff'} />
-          </TouchableOpacity>
+          </Pressable>
         ),
       headerRight: () =>
         scroll > 60 ? (
@@ -307,7 +312,7 @@ const Pages = ({route}) => {
                 </Line>
                 <MealDsc>{isFoodDetail?.description}</MealDsc>
 
-                {isFoodDetail?.spicy !== 'NULL' && (
+                {isFoodDetail?.spicy !== null && (
                   <Label label={`${isFoodDetail?.spicy}`} />
                 )}
                 <PriceTitleWrap>

@@ -56,12 +56,14 @@
 				<string>fb978024843173047</string>
 			</array>
 		</dict>
+
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>kurrant</string>
 			</array>
 		</dict>
+
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>

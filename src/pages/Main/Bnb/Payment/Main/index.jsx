@@ -120,6 +120,9 @@ const Pages = ({route}) => {
     spotName,
     clientType,
     usedSupportPrice,
+    medtronicTotalPrice,
+    medtronicPrice,
+    medtronicSupportArr,
   } = route.params;
   const selectCard = async (text, id) => {
     await setStorage('selectCard', id.toString());
@@ -404,12 +407,13 @@ const Pages = ({route}) => {
                 <QuestionIcon />
               </PressableView>
               <PaymentText>
-                {' '}
-                {supportPrice === 0
+                {medtronicSupportArr.includes(62471004)
+                  ? `-${withCommas(medtronicPrice)}`
+                  : supportPrice === 0
                   ? 0
                   : discountPrice < supportPrice
                   ? `-${withCommas(discountPrice)}`
-                  : `-${withCommas(supportPrice)}`}{' '}
+                  : `-${withCommas(supportPrice)}`}
                 원
               </PaymentText>
             </PaymentView>
@@ -449,7 +453,7 @@ const Pages = ({route}) => {
                 <DiscountText>
                   {periodDiscountPrice === 0
                     ? 0
-                    : withCommas(periodDiscountPrice)}
+                    : withCommas(periodDiscountPrice)}{' '}
                   원
                 </DiscountText>
               </DiscountTextView>
@@ -485,7 +489,12 @@ const Pages = ({route}) => {
                       </UserPointView> */}
           <PaymentView>
             <TotalPriceTitle>총 결제금액</TotalPriceTitle>
-            <TotalPrice>{withCommas(totalPrice)} 원</TotalPrice>
+            <TotalPrice>
+              {medtronicSupportArr.includes(62471004)
+                ? withCommas(medtronicTotalPrice)
+                : withCommas(totalPrice)}
+              원
+            </TotalPrice>
           </PaymentView>
         </BorderWrap>
         <BorderWrap>

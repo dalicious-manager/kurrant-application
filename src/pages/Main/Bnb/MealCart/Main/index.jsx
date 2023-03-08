@@ -53,6 +53,7 @@ import BottomSheet from '../../../../../components/BottomSheet';
 import BottomMenu from '../../../../../components/BottomSheetMenu';
 import Toast from '../../../../../components/Toast';
 import useUserMe from '../../../../../biz/useUserMe';
+import {surpportPrice} from '../../../../Group/GroupCorporations/CorporationsApplication/ThirdPage/Pages/function';
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
@@ -309,17 +310,31 @@ const Pages = () => {
       return acc + cur;
     }, 0);
 
-  // 지원금 계산
+  // 할인가 계산
   const discountPrice = arr
     ?.map(p => p.discountedPrice * p.count)
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
-
+  console.log(discountPrice, '할인금액');
   // 사용한 식사 지원금
   const usedSupportPrice =
     discountPrice < supportPrice ? discountPrice : supportPrice;
 
+  // 메드트로닉 지원금 유
+  const medtronicSupportPrice = lastArr?.map(el => el.supportPrice);
+  const set = new Set(medtronicSupportPrice);
+  const medtronicSupportArr = [...set];
+  console.log(medtronicSupportArr, '989');
+  // 메드트로닉 식사가격
+  const medtronicPrice =
+    medtronicSupportArr.includes(62471004) && Math.round(discountPrice / 2);
+  console.log(
+    medtronicPrice,
+    supportPrice,
+    Math.round(discountPrice / 2),
+    '메드트로닉 식사가격',
+  );
   // 총 할인금액
   const totalDiscountPrice =
     membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
@@ -328,6 +343,17 @@ const Pages = () => {
   const totalPrice =
     totalMealPrice - usedSupportPrice - totalDiscountPrice + deliveryFee;
 
+  // 메드트로닉 총 결제금액
+  const medtronicTotalPrice =
+    totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
+  console.log(
+    totalMealPrice,
+    medtronicPrice,
+    totalDiscountPrice,
+    deliveryFee,
+    'total : ',
+    medtronicTotalPrice,
+  );
   // 품절
   const soldout = arr.filter(el => el.status === 0);
 
@@ -739,8 +765,9 @@ const Pages = () => {
                     <QuestionIcon />
                   </PressableView>
                   <PaymentText>
-                    {' '}
-                    {supportPrice === 0
+                    {medtronicSupportArr.includes(62471004)
+                      ? `-${withCommas(medtronicPrice)}`
+                      : supportPrice === 0
                       ? 0
                       : discountPrice < supportPrice
                       ? `-${withCommas(discountPrice)}`
@@ -752,7 +779,6 @@ const Pages = () => {
               <PaymentView>
                 <PaymentText>총 할인금액</PaymentText>
                 <PaymentText>
-                  {' '}
                   {totalDiscountPrice === 0
                     ? 0
                     : `-${withCommas(totalDiscountPrice)}`}{' '}
@@ -767,7 +793,12 @@ const Pages = () => {
               </PaymentView>
               <PaymentView>
                 <TotalPriceTitle>총 결제금액</TotalPriceTitle>
-                <TotalPrice>{withCommas(totalPrice)} 원</TotalPrice>
+                <TotalPrice>
+                  {medtronicSupportArr.includes(62471004)
+                    ? withCommas(medtronicTotalPrice)
+                    : withCommas(totalPrice)}
+                  원
+                </TotalPrice>
               </PaymentView>
               <Border />
               {/* <UserPointView>
@@ -832,6 +863,9 @@ const Pages = () => {
                   clientType,
                   arr,
                   usedSupportPrice,
+                  medtronicSupportArr,
+                  medtronicTotalPrice,
+                  medtronicPrice,
                 });
             }}
           />
