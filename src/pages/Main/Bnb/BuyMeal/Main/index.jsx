@@ -58,9 +58,11 @@ const Pages = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
+  const [startScroll, setStartScroll] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
   const [selectFood, setSelectFood] = useState();
   const [show, setShow] = useState(false);
+  const [scrollDir, setScrollDir] = useState(true);
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -144,6 +146,7 @@ const Pages = ({route}) => {
     MorningRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     LunchRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     DinnerRef?.current?.scrollTo({x: 0, y: 0, animated: false});
+    setScrollDir(true);
   };
 
   const dayPress = async selectedDate => {
@@ -212,6 +215,7 @@ const Pages = ({route}) => {
     // console.log(generateOrderCode(1,42),"test432")
     loadDailyFood();
   }, [date]);
+
   useEffect(() => {
     loadMeal();
     updateMeal(req);
@@ -334,10 +338,31 @@ const Pages = ({route}) => {
         return DinnerRef;
       }
     };
+    const threshold = 0;
+    let lastScrollY = window.pageYOffset;
+    let ticking = false;
 
+    const onScrollStart = e => {
+      const {
+        contentOffset: {x, y},
+      } = e.nativeEvent;
+      setStartScroll(y);
+    };
+    const onScrollEnd = e => {
+      const {
+        contentOffset: {x, y},
+      } = e.nativeEvent;
+      if (y < 20) {
+        setScrollDir(true);
+      } else {
+        setScrollDir(startScroll > y ? true : false);
+      }
+    };
     return (
       <ScrollView
         ref={refType(diningFood)}
+        onScrollBeginDrag={onScrollStart}
+        onScrollEndDrag={onScrollEnd}
         showsVerticalScrollIndicator={false}
         scrollEnabled={
           !(diningFood.length === 0 && spotId !== null) || !spotId === null
@@ -492,62 +517,63 @@ const Pages = ({route}) => {
         </LoadingPage>
       )}
 
-      <CalendarWrap>
-        <Calendar
-          BooleanValue
-          type={'grey2'}
-          color={'white'}
-          size={'Body05R'}
-          selectDate={params?.date && params?.date}
-          onPressEvent2={dayPress}
-          daily={daily}
-          margin={'0px 28px'}
-        />
-      </CalendarWrap>
+      {scrollDir && (
+        <CalendarWrap>
+          <Calendar
+            BooleanValue
+            type={'grey2'}
+            color={'white'}
+            size={'Body05R'}
+            onPressEvent2={dayPress}
+            daily={daily}
+            margin={'0px 28px'}
+          />
+        </CalendarWrap>
+      )}
 
       <PagerViewWrap isMembership={userInfo?.isMembership}>
-        <ProgressWrap>
-          <ProgressInner>
-            <Slider
-              value={sliderValue}
-              onValueChange={e => setSliderValue(...e)}
-              minimumValue={0}
-              maximumValue={2}
-              maximumTrackTintColor="#fff"
-              minimumTrackTintColor="#fff"
-              onSlidingComplete={e => {
-                diningRef.current.setPage(...e);
-              }}
-              step={1}
-              trackStyle={styles.trackStyle}
-              thumbStyle={styles.thumbStyle}
-              containerStyle={{height: 12}}
-            />
+        {scrollDir && (
+          <ProgressWrap>
+            <ProgressInner>
+              <Slider
+                value={sliderValue}
+                onValueChange={e => setSliderValue(...e)}
+                minimumValue={0}
+                maximumValue={2}
+                maximumTrackTintColor="#fff"
+                minimumTrackTintColor="#fff"
+                onSlidingComplete={e => {
+                  diningRef.current.setPage(...e);
+                }}
+                step={1}
+                trackStyle={styles.trackStyle}
+                thumbStyle={styles.thumbStyle}
+                containerStyle={{height: 12}}
+              />
+              <Progress>
+                {DININGTYPE.map((btn, i) => {
+                  const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
+                  const typeBoolean = isDiningTypes.includes(type);
+                  return (
+                    <DiningPress
+                      key={i}
+                      disabled={!typeBoolean && true}
+                      onPress={() => {
+                        diningRef.current.setPage(i);
+                        setSliderValue(i);
+                      }}>
+                      <ProgressText type={typeBoolean} index={i}>
+                        {btn}
+                      </ProgressText>
+                    </DiningPress>
+                  );
+                })}
+              </Progress>
+            </ProgressInner>
+          </ProgressWrap>
+        )}
 
-            <Progress>
-              {DININGTYPE.map((btn, i) => {
-                const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
-                const typeBoolean = isDiningTypes.includes(type);
-                return (
-                  <DiningPress
-                    key={i}
-                    disabled={!typeBoolean && true}
-                    onPress={() => {
-                      diningRef.current.setPage(i);
-                      setSliderValue(i);
-                    }}>
-                    <ProgressText type={typeBoolean} index={i}>
-                      {btn}
-                    </ProgressText>
-                  </DiningPress>
-                );
-              })}
-            </Progress>
-          </ProgressInner>
-        </ProgressWrap>
-        {/* <View>
-          <Modal />
-        </View> */}
+
         <Pager
           ref={diningRef}
           initialPage={
@@ -636,7 +662,7 @@ const FoodContainer = styled.View`
   ${({isFood}) => {
     if (isFood)
       return css`
-        height: ${screenHeight - 32}px;
+        height: ${screenHeight}px;
       `;
   }}
   padding-bottom:24px;
@@ -663,16 +689,8 @@ const LoadingPage = styled.View`
   height: ${screenHeight}px;
 `;
 const PagerViewWrap = styled.View`
-  ${({isMembership}) => {
-    if (isMembership) {
-      return css`
-        height: ${screenHeight - 100}px;
-      `;
-    }
-    return css`
-      height: ${screenHeight}px;
-    `;
-  }}
+  flex: 1;
+  padding-bottom: 120px;
 `;
 
 const ProgressWrap = styled.View`
@@ -693,7 +711,7 @@ const Progress = styled.View`
 `;
 
 const Pager = styled(PagerView)`
-  height: ${screenHeight - 320}px;
+  flex: 1;
 `;
 
 const Contents = styled.Pressable`
@@ -764,7 +782,7 @@ const ButtonWrap = styled.View`
   /* ${({membership}) => {
     if (membership)
       return css`
-        bottom: 0px;
+        bottom: 35px;
       `;
     return css`
       bottom: 35px;
