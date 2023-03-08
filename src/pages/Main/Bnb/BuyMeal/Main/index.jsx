@@ -576,7 +576,7 @@ const Pages = ({route}) => {
           location={{top: '8px', right: '14px'}}
         />
       )}
-      <ButtonWrap membership={userInfo?.isMembership}>
+      <ButtonWrap>
         <Button
           label={'장바구니 보기'}
           type={'yellow'}
@@ -673,7 +673,6 @@ const PagerViewWrap = styled.View`
       height: ${screenHeight}px;
     `;
   }}
-  background-color: red;
 `;
 
 const ProgressWrap = styled.View`
@@ -762,7 +761,7 @@ const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
 `;
 const ButtonWrap = styled.View`
   position: absolute;
-  ${({membership}) => {
+  /* ${({membership}) => {
     if (membership)
       return css`
         bottom: 0px;
@@ -770,8 +769,8 @@ const ButtonWrap = styled.View`
     return css`
       bottom: 35px;
     `;
-  }}
-
+  }} */
+  bottom: 35px;
   margin: 0px 48px;
 `;
 
