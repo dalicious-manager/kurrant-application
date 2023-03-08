@@ -117,8 +117,8 @@ const Pages = ({route}) => {
                 <TitleContent>{m.serviceDays}</TitleContent>
               </TitleWrap>
               <TitleWrap>
-                <Title>서비스 이용 예상 세대수</Title>
-                <TitleContent>{m.expectedUserCount}세대</TitleContent>
+                <Title>서비스 예상 인원수</Title>
+                <TitleContent>{m.expectedUserCount}명</TitleContent>
               </TitleWrap>
             </ContentsWrap>
           </React.Fragment>

@@ -143,6 +143,7 @@ const Pages = () => {
     navigation.setOptions({
       headerLeft: () => (
         <BackButton
+          margin={[10, 0]}
           onPressEvent={async () => {
             const data = await getStorage('page1');
             const get = JSON.parse(data);

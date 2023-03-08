@@ -282,10 +282,10 @@ const Pages = ({route}) => {
                 showSoftInputOnFocus={false}
               />
               <RefTextInput
-                label="서비스 이용 예상 인원수"
+                label="예상 인원수"
                 name="svcCount"
                 keyboardType="numeric"
-                placeholder="서비스 이용 예상 인원수"
+                placeholder="예상 인원수"
                 style={inputStyle}
                 rules={{
                   //   required: '필수 입력 항목 입니다.',
