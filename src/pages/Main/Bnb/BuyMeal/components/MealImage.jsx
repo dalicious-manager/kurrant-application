@@ -12,7 +12,7 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
         <ImageBackground
           source={AIbackground}
           resizeMode="cover"
-          style={{width: 130, height: 146}}>
+          style={{width: 130, height: 146, marginRight: -8}}>
           <AIrecommend>
             <AIicon />
             <AItext>AI추천</AItext>
