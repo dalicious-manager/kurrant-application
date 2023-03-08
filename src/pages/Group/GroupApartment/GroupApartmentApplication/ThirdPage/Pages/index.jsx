@@ -54,7 +54,7 @@ const Pages = ({route}) => {
   const [isMorning, setMorning] = useAtom(isApartMealMorningInfoAtom);
   const [isLunch, setLunch] = useAtom(isApartMealLunchInfoAtom);
   const [isDinner, setDinner] = useAtom(isApartMealDinnerInfoAtom);
-
+  console.log(isMorning, '모닝');
   const form = useForm({
     mode: 'all',
   });
@@ -85,6 +85,7 @@ const Pages = ({route}) => {
       await setStorage(
         'page3-1',
         JSON.stringify({
+          diningType: 1,
           expectedUserCount: Number(svcDongCountChk),
           serviceDays: touch,
           deliveryTime: deliveryTimeChk.substr(3),
@@ -95,6 +96,7 @@ const Pages = ({route}) => {
       await setStorage(
         'page3-2',
         JSON.stringify({
+          diningType: 2,
           expectedUserCount: Number(svcDongCountChk),
           serviceDays: touch,
           deliveryTime: deliveryTimeChk.substr(3),
@@ -105,6 +107,7 @@ const Pages = ({route}) => {
       await setStorage(
         'page3-3',
         JSON.stringify({
+          diningType: 3,
           expectedUserCount: Number(svcDongCountChk),
           serviceDays: touch,
           deliveryTime: deliveryTimeChk.substr(3),
