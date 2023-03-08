@@ -66,7 +66,6 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     console.log(`식사 구매하기`);
-    console.log(params.date);
   }, [params]);
 
   const {
@@ -88,7 +87,7 @@ const Pages = ({route}) => {
   } = useShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
   const userInfo = useAtomValue(isUserInfoAtom);
-  console.log(isMorningFood, '999');
+
   const DININGTYPE = ['아침', '점심', '저녁'];
   const daily = true;
   const [date, setDate] = useState(
@@ -358,7 +357,6 @@ const Pages = ({route}) => {
           )}
 
           {diningFood.map(m => {
-            console.log(m, '007777');
             const totalRate =
               m.membershipDiscountRate +
               m.makersDiscountRate +
@@ -367,7 +365,7 @@ const Pages = ({route}) => {
               m.membershipDiscountPrice +
               m.makersDiscountPrice +
               m.periodDiscountPrice;
-            console.log(m.image, 'image');
+            // console.log(m.image, 'image');
             return (
               <Contents
                 key={m.id}
@@ -499,7 +497,7 @@ const Pages = ({route}) => {
           type={'grey2'}
           color={'white'}
           size={'Body05R'}
-          selectDate={params.date && params.date}
+          selectDate={params?.date && params?.date}
           onPressEvent2={dayPress}
           daily={daily}
           margin={'0px 28px'}

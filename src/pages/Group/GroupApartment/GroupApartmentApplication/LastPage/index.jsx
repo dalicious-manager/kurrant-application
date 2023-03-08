@@ -41,7 +41,6 @@ const Pages = () => {
   const mealInfo = useAtomValue(isApartMealInfoAtom);
   const memo = useAtomValue(apartMemoAtom);
 
-  console.log(isMorning, isLunch, isDinner, '999');
   const applicationPress = async () => {
     const addressData = await getStorage('page2-1');
     const get = JSON.parse(addressData);
