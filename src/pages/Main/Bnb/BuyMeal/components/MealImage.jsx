@@ -15,7 +15,7 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
           style={{width: 130, height: 146, marginRight: -8}}>
           <AIrecommend>
             <AIicon />
-            <AItext>AI추천</AItext>
+            <AItext>오늘의 픽</AItext>
           </AIrecommend>
           <MealImageWrap>
             {(status === 0 || status === 2) && <BlurView />}

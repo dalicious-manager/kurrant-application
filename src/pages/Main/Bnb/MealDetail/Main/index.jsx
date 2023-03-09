@@ -46,6 +46,7 @@ import useAuth from '../../../../../biz/useAuth';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useAtomValue} from 'jotai';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -66,6 +67,7 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const isFocused = useIsFocused();
+  console.log(isUserInfo, '디테일페이지');
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -125,7 +127,11 @@ const Pages = ({route}) => {
         scroll > 60 ? (
           <Pressable
             onPress={() => navigation.goBack()}
-            style={{marginLeft: 2, width: 30, height: 30}}>
+            style={{
+              marginLeft: 2,
+              width: 30,
+              height: 30,
+            }}>
             <BackArrow color={'#343337'} />
           </Pressable>
         ) : (
@@ -384,25 +390,43 @@ const Pages = ({route}) => {
                 </InfoTextView>
               </InfoWrap>
 
-              <InfoWrap>
-                <InfoTitleView>
-                  <InfoTitle>배송 정보</InfoTitle>
-                </InfoTitleView>
-                <InfoTextView>
-                  <InfoTextWrap>
-                    <Info>단체 배송</Info>
-                    <InfoText>15,000(50개 마다 부과)</InfoText>
-                  </InfoTextWrap>
-                  <InfoTextWrap>
-                    <Info>개별 배송</Info>
-                    <InfoText>2,200원(5개 마다 부과)</InfoText>
-                  </InfoTextWrap>
-                  <InfoTextWrap>
-                    <Info>멤버십 회원</Info>
-                    <InfoText>무료 배송</InfoText>
-                  </InfoTextWrap>
-                </InfoTextView>
-              </InfoWrap>
+              {isUserInfo?.spotType === 2 ? (
+                <InfoWrap>
+                  <InfoTitleView>
+                    <InfoTitle>배송 정보</InfoTitle>
+                  </InfoTitleView>
+                  <InfoTextView>
+                    <InfoTextWrap>
+                      <Info>단체 배송</Info>
+                      <InfoText>25,000(50개 마다 부과)</InfoText>
+                    </InfoTextWrap>
+                    <InfoTextWrap>
+                      <Info>개별 배송</Info>
+                      <InfoText>3,500원</InfoText>
+                    </InfoTextWrap>
+                    <InfoTextWrap>
+                      <Info>멤버십 회원</Info>
+                      <InfoText>무료 배송</InfoText>
+                    </InfoTextWrap>
+                  </InfoTextView>
+                </InfoWrap>
+              ) : (
+                <InfoWrap>
+                  <InfoTitleView>
+                    <InfoTitle>배송 정보</InfoTitle>
+                  </InfoTitleView>
+                  <InfoTextView>
+                    <InfoTextWrap>
+                      <Info>개별 배송</Info>
+                      <InfoText>3,500원</InfoText>
+                    </InfoTextWrap>
+                    <InfoTextWrap>
+                      <Info>멤버십 회원</Info>
+                      <InfoText>무료 배송</InfoText>
+                    </InfoTextWrap>
+                  </InfoTextView>
+                </InfoWrap>
+              )}
             </Content>
 
             {/* 리뷰자리 */}
