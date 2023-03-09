@@ -64,6 +64,7 @@ const Pages = ({route}) => {
   const [selectFood, setSelectFood] = useState();
   const [show, setShow] = useState(false);
   const [scrollDir, setScrollDir] = useState(true);
+  const [hideModal, setHideModal] = useState(true);
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -370,12 +371,12 @@ const Pages = ({route}) => {
         }>
         <FoodContainer isFood={diningFood.length === 0 && spotId !== null}>
           {diningFood.length === 0 && spotId !== null && (
-            <NoServieceView>
+            <NoServieceView status={hideModal}>
               <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
             </NoServieceView>
           )}
           {spotId === null && (
-            <NoSpotView>
+            <NoSpotView status={hideModal}>
               <NoServiceText>메뉴는 스팟 선택 또는 </NoServiceText>
               <NoServiceText>
                 스팟 개설 신청 승인후 확인할 수 있어요
@@ -542,7 +543,7 @@ const Pages = ({route}) => {
         </ProgressWrap>
         {!userInfo?.isMembership && (
           <View>
-            <Modal />
+            <Modal hideModal={hideModal} setHideModal={setHideModal} />
           </View>
         )}
 
@@ -829,14 +830,14 @@ const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`
 
 const NoServieceView = styled.View`
   position: absolute;
-  top: 30%;
-  left: 30%;
+  top: ${({status}) => (status ? '10%' : '30%')};
+  left: 29%;
 `;
 
 const NoSpotView = styled(NoServieceView)`
   justify-content: center;
   align-items: center;
-  left: 20%;
+  left: 18%;
 `;
 
 const DiningPress = styled.Pressable``;

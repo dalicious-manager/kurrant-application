@@ -11,10 +11,10 @@ import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipInt
 import {useNavigation} from '@react-navigation/native';
 import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import {useAtomValue} from 'jotai';
-const Modal = () => {
+const Modal = ({hideModal, setHideModal}) => {
   const navigation = useNavigation();
   const isUserInfo = useAtomValue(isUserInfoAtom);
-  const [hideModal, setHideModal] = useState(true);
+  // const [hideModal, setHideModal] = useState(true);
 
   const today = new Date();
   const now = new Date();
