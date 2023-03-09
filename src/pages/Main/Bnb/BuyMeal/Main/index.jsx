@@ -116,6 +116,7 @@ const Pages = ({route}) => {
     params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
   ); // 오늘
 
+  // 일일 식사지원금
   const {supportPrices, getSupportPrices} = useSupportPrices();
   const [supportPrice, setSupportPrice] = useState(0);
   useEffect(() => {
@@ -600,10 +601,7 @@ const Pages = ({route}) => {
 
           <MiniWrap>
             <Typography2>일일 식사지원금</Typography2>
-            <QuestionPressable
-              onPress={() => {
-                console.log('버튼 잘 눌림');
-              }}>
+            <QuestionPressable onPress={() => {}}>
               <QuestionCircleMonoIcon />
             </QuestionPressable>
             <Typography3> {supportPrice}원</Typography3>
