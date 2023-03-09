@@ -44,6 +44,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {AIbackground} from '../../../../../assets';
 import MealImage from '../components/MealImage';
 import Modal from '../components/Modal';
+
+import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
+
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
@@ -539,6 +542,17 @@ const Pages = ({route}) => {
               })}
             </Progress>
           </ProgressInner>
+
+          <MiniWrap>
+            <Typography2>일일 식사지원금</Typography2>
+            <QuestionPressable
+              onPress={() => {
+                console.log('버튼 잘 눌림');
+              }}>
+              <QuestionCircleMonoIcon />
+            </QuestionPressable>
+            <Typography3> 10,000원</Typography3>
+          </MiniWrap>
         </ProgressWrap>
         {!userInfo?.isMembership && (
           <View>
@@ -678,13 +692,54 @@ const PagerViewWrap = styled.View`
 `;
 
 const ProgressWrap = styled.View`
-  flex-direction: row;
+  /* flex-direction: row;
   padding: 12px 0px;
-  margin-left: 24px;
+  margin-left: 24px; */
+
+  flex-direction: row;
+  align-items: center;
+  padding: 0px 24px;
+  justify-content: space-between;
+  height: 56px;
+  position: relative;
+
+  justify-content: space-between;
 `;
 
 const ProgressInner = styled.View`
   justify-content: center;
+
+  position: relative;
+  top: -6.5px;
+`;
+
+const MiniWrap = styled.View`
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  width: 181px;
+  height: 32px;
+
+  border: 0.5px solid ${({theme}) => theme.colors.grey[7]};
+  border-radius: 7px;
+`;
+
+const QuestionPressable = styled.Pressable`
+  margin-right: 3px;
+`;
+
+const Typography2 = styled(Typography).attrs({text: 'SmallLabel'})`
+  margin-right: 4px;
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const Typography3 = styled(Typography).attrs({text: 'Body05SB'})`
+  margin-right: 4px;
+  color: ${({theme}) => theme.colors.grey[2]};
+
+  font-weight: 600;
 `;
 
 const Progress = styled.View`
