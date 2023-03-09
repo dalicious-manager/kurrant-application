@@ -46,6 +46,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import {AIbackground} from '../../../../../assets';
 import MealImage from '../components/MealImage';
 import Modal from '../components/Modal';
+
+import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
+import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
+import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
+
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
@@ -106,10 +111,37 @@ const Pages = ({route}) => {
     setScrollDir(prev => !prev);
   };
   const DININGTYPE = ['아침', '점심', '저녁'];
-  const daily = true;
+
   const [date, setDate] = useState(
     params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
   ); // 오늘
+
+  const {supportPrices, getSupportPrices} = useSupportPrices();
+  const [supportPrice, setSupportPrice] = useState(0);
+  useEffect(() => {
+    getSupportPrices(spotId, date);
+  }, [spotId, date]);
+
+  useEffect(() => {
+    let price = null;
+
+    switch (sliderValue) {
+      case 0:
+        price = supportPrices['morningSupportPrice'];
+        break;
+      case 1:
+        price = supportPrices['lunchSupportPrice'];
+        break;
+      case 2:
+        price = supportPrices['dinnerSupportPrice'];
+        break;
+    }
+
+    setSupportPrice(price);
+  }, [sliderValue, supportPrices]);
+
+  const daily = true;
+
   // const todayMeal = mealInfo?.filter((m) => m.date === date);
   // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
   const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo.spotId;
@@ -210,7 +242,6 @@ const Pages = ({route}) => {
     async function loadDailyFood() {
       try {
         const data = await dailyFood(spotId, date);
-        console.log('음식 불러오기' + data);
 
         if (data[0]) {
           diningRef.current.setPage(Number(data[0]) - 1);
@@ -549,6 +580,7 @@ const Pages = ({route}) => {
               {DININGTYPE.map((btn, i) => {
                 const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
                 const typeBoolean = isDiningTypes.includes(type);
+
                 return (
                   <DiningPress
                     key={i}
@@ -565,6 +597,17 @@ const Pages = ({route}) => {
               })}
             </Progress>
           </ProgressInner>
+
+          <MiniWrap>
+            <Typography2>일일 식사지원금</Typography2>
+            <QuestionPressable
+              onPress={() => {
+                console.log('버튼 잘 눌림');
+              }}>
+              <QuestionCircleMonoIcon />
+            </QuestionPressable>
+            <Typography3> {supportPrice}원</Typography3>
+          </MiniWrap>
         </ProgressWrap>
         {!userInfo?.isMembership && (
           <View>
@@ -706,13 +749,54 @@ const PagerViewWrap = styled.View`
 `;
 
 const ProgressWrap = styled.View`
-  flex-direction: row;
+  /* flex-direction: row;
   padding: 12px 0px;
-  margin-left: 24px;
+  margin-left: 24px; */
+
+  flex-direction: row;
+  align-items: center;
+  padding: 0px 24px;
+  justify-content: space-between;
+  height: 56px;
+  position: relative;
+
+  justify-content: space-between;
 `;
 
 const ProgressInner = styled.View`
   justify-content: center;
+
+  position: relative;
+  top: -6.5px;
+`;
+
+const MiniWrap = styled.View`
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  width: 181px;
+  height: 32px;
+
+  border: 0.5px solid ${({theme}) => theme.colors.grey[7]};
+  border-radius: 7px;
+`;
+
+const QuestionPressable = styled.Pressable`
+  margin-right: 3px;
+`;
+
+const Typography2 = styled(Typography).attrs({text: 'SmallLabel'})`
+  margin-right: 4px;
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const Typography3 = styled(Typography).attrs({text: 'Body05SB'})`
+  margin-right: 4px;
+  color: ${({theme}) => theme.colors.grey[2]};
+
+  font-weight: 600;
 `;
 
 const Progress = styled.View`
