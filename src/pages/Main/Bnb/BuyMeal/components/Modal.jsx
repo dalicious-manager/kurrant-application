@@ -7,22 +7,38 @@ import CloseIcon from '../../../../../assets/icons/BuyMeal/close.svg';
 import Typography from '../../../../../components/Typography';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedDate} from '../../../../../utils/dateFormatter';
-
+import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
+import {useNavigation} from '@react-navigation/native';
+import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
+import {useAtomValue} from 'jotai';
 const Modal = () => {
+  const navigation = useNavigation();
+  const isUserInfo = useAtomValue(isUserInfoAtom);
   const [hideModal, setHideModal] = useState(true);
-  const today = new Date();
 
-  const oneMonthLater = new Date(today.setMonth(today.getMonth() + 1));
+  const today = new Date();
+  const now = new Date();
+  const oneMonthLater = new Date(now.setMonth(now.getMonth() + 1));
 
   const hidePress = async () => {
     await setStorage('today', formattedDate(today));
     setHideModal(false);
   };
 
+  const closePress = () => {
+    setHideModal(false);
+  };
+
   useEffect(() => {
     const day = async () => {
-      const aa = await getStorage('today');
-      console.log(aa, '99');
+      const getDate = await getStorage('today');
+
+      const popup = getDate === formattedDate(oneMonthLater);
+      if (getDate === null || popup) {
+        setHideModal(true);
+      } else {
+        setHideModal(false);
+      }
     };
     day();
   }, []);
@@ -32,7 +48,10 @@ const Modal = () => {
         <Wrapper>
           <Wrap>
             <CloseButtonWrap>
-              <CloseButton>
+              <CloseButton
+                onPress={() => {
+                  closePress();
+                }}>
                 <XIcon />
               </CloseButton>
             </CloseButtonWrap>
@@ -47,7 +66,12 @@ const Modal = () => {
               <ContentsText>
                 구매이력이 쌓이면 더 정확한 추천을 받을 수 있어요
               </ContentsText>
-              <MembershipButton>
+              <MembershipButton
+                onPress={() => {
+                  navigation.navigate(MembershipIntro, {
+                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                  });
+                }}>
                 <ButtonText>멤버십 가입하기</ButtonText>
               </MembershipButton>
             </ContentsWrap>
