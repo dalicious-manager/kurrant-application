@@ -1,6 +1,6 @@
 {
   "name": "kurrant",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

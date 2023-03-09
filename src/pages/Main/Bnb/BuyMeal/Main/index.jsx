@@ -532,7 +532,6 @@ const Pages = ({route}) => {
       )}
 
       <PagerViewWrap isMembership={userInfo?.isMembership}>
-
         <ProgressWrap>
           <ProgressInner>
             <Slider

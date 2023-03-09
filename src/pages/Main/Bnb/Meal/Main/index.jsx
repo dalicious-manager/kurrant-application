@@ -14,6 +14,7 @@ import {
   formattedMonthDay,
   formattedWeekDate,
 } from '../../../../../utils/dateFormatter';
+
 import {CalendarWrap, MakersName, MealName} from '../../BuyMeal/Main';
 import NoMealButton from '~components/Button';
 
@@ -264,35 +265,27 @@ const Pages = ({route}) => {
       {todayMeal?.length === 0 && selectDate?.length === 0 && (
         <NoMealWrap>
           <NoMealText>주문한 메뉴가 없어요</NoMealText>
+          <NoMealButtonWrap>
+            <NoMealButton
+              size={'button38'}
+              label={'식사 구매하기'}
+              type={'white'}
+              text={'Button09SB'}
+              onPressEvent={() => {
+                navigation.navigate(BuyMealPageName);
+              }}
+            />
+          </NoMealButtonWrap>
         </NoMealWrap>
       )}
-      {todayMeal?.length !== 0 && selectDate?.length !== 0 ? (
-        <ButtonWrap>
-          <PlusButton
-            onPress={() => {
-              navigation.navigate(BuyMealPageName);
-            }}>
-            <PlusIcon />
-          </PlusButton>
-        </ButtonWrap>
-      ) : (
-        <ButtonWrap>
-          <ButtonBox>
-            <Button
-              onPress={() => {
-                if (userSpotId) {
-                  navigation.navigate(BuyMealPageName);
-                  closeBalloon();
-                } else {
-                  Alert.alert('식사구매', '스팟선택 후 식사를 구매해주세요');
-                }
-              }}>
-              <PlusLongIcon />
-              <ButtonText>식사 구매하기</ButtonText>
-            </Button>
-          </ButtonBox>
-        </ButtonWrap>
-      )}
+      <ButtonWrap>
+        <PlusButton
+          onPress={() => {
+            navigation.navigate(BuyMealPageName);
+          }}>
+          <PlusIcon />
+        </PlusButton>
+      </ButtonWrap>
 
       {show && (
         <toast.ToastWrap message={'메뉴가 취소됐어요'} icon={'checked'} />
@@ -405,7 +398,7 @@ const CancelText = styled(Typography).attrs({test: 'Body06R'})`
 `;
 
 const NoMealButtonWrap = styled.View`
-  padding: 0px 120px;
+  padding: 10px 120px;
 `;
 
 const ButtonText = styled(Typography).attrs({text: 'BottomButtonSB'})`

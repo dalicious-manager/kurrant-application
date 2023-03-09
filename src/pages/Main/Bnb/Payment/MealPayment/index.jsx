@@ -19,6 +19,7 @@ const Pages = ({route}) => {
         customerName: params.name,
         customerEmail: params.email,
         easyPay: params.easyPay,
+        appScheme: 'kurrant://',
         flowMode: params.flowMode,
         orderName: params.orderName,
         successUrl:
@@ -35,6 +36,7 @@ const Pages = ({route}) => {
         customerEmail: params.email,
         flowMode: params.flowMode,
         cardCompany: params.cardCompany,
+        appScheme: 'kurrant://',
         orderName: params.orderName,
         successUrl:
           Config.NODE_ENV === 'dev'
@@ -61,7 +63,6 @@ const Pages = ({route}) => {
           navigation.goBack();
         }}
         onApproveSucceed={v => {
-          console.log(v.data, 'testsetst');
           // Clipboard.setString(v.paymentKey);
           // navigation.goBack();
           if (v.data) {
