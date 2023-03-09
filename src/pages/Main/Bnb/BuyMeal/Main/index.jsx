@@ -46,6 +46,8 @@ import MealImage from '../components/MealImage';
 import Modal from '../components/Modal';
 
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
+import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
+import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -96,6 +98,35 @@ const Pages = ({route}) => {
   const userInfo = useAtomValue(isUserInfoAtom);
 
   const DININGTYPE = ['아침', '점심', '저녁'];
+
+  // const [supportPrice, setSupportPrice] = useAtom(supportPriceAtom);
+
+  const {supportPrices, getSupportPrices} = useSupportPrices();
+  const [supportPrice, setSupportPrice] = useState(0);
+  useEffect(() => {
+    getSupportPrices(spotId, date);
+  }, [spotId, date]);
+
+  useEffect(() => {
+    let price = null;
+    console.log('여기여기2');
+    console.log(supportPrices);
+
+    switch (sliderValue) {
+      case 0:
+        price = supportPrices['morningSupportPrice'];
+        break;
+      case 1:
+        price = supportPrices['lunchSupportPrice'];
+        break;
+      case 2:
+        price = supportPrices['dinnerSupportPrice'];
+        break;
+    }
+
+    setSupportPrice(price);
+  }, [sliderValue, supportPrices]);
+
   const daily = true;
   const [date, setDate] = useState(
     params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
@@ -526,6 +557,7 @@ const Pages = ({route}) => {
               {DININGTYPE.map((btn, i) => {
                 const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
                 const typeBoolean = isDiningTypes.includes(type);
+
                 return (
                   <DiningPress
                     key={i}
@@ -551,7 +583,7 @@ const Pages = ({route}) => {
               }}>
               <QuestionCircleMonoIcon />
             </QuestionPressable>
-            <Typography3> 10,000원</Typography3>
+            <Typography3> {supportPrice}원</Typography3>
           </MiniWrap>
         </ProgressWrap>
         {!userInfo?.isMembership && (
