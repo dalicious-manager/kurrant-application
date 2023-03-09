@@ -40,6 +40,7 @@ import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AIicon from '../../../../../assets/icons/BuyMeal/ai.svg';
 // import TossPayment from 'react-native-toss-payments';
+import LinearGradient from 'react-native-linear-gradient';
 import {AIbackground} from '../../../../../assets';
 import MealImage from '../components/MealImage';
 import Modal from '../components/Modal';
@@ -445,39 +446,6 @@ const Pages = ({route}) => {
                   isAddMeal={isAddMeal}
                   rank={m.rank}
                 />
-                {/* <ImageBackground
-                  source={AIbackground}
-                  resizeMode="cover"
-                  style={{width: 130, height: 146}}>
-                  <AIrecommend>
-                    <AIicon />
-                    <AItext>AI추천</AItext>
-                  </AIrecommend> */}
-                {/* <MealImageWrap>
-                  {(m.status === 0 || m.status === 2) && <BlurView />}
-                  <FastImage
-                    source={{
-                      uri: `${m.image}`,
-                      priority: FastImage.priority.high,
-                    }}
-                    style={{
-                      width: 114,
-                      height: 114,
-                      borderRadius: 7,
-                    }}
-                  />
-
-                  {m.status === 1 && (
-                    <CartIconWrap
-                      disabled={isAddMeal}
-                      onPress={() => {
-                        addCartPress(m.id, m.serviceDate, m.diningType, m);
-                      }}>
-                      <CartIcon />
-                    </CartIconWrap>
-                  )}
-                </MealImageWrap> */}
-                {/* </ImageBackground> */}
 
                 {m.status === 0 && (
                   <SoldOut soldOut={m.status} rank={m.rank}>
@@ -504,6 +472,7 @@ const Pages = ({route}) => {
             onPressEvent1={closeModal}
             onPressEvent2={() => addToCart(selectFood.id)}
           />
+          <View style={{height: 120}}></View>
         </FoodContainer>
       </ScrollView>
     );
@@ -605,7 +574,18 @@ const Pages = ({route}) => {
           location={{top: '8px', right: '14px'}}
         />
       )}
-      <ButtonWrap>
+      <ButtonWrap
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 1)',
+          'rgba(255, 255, 255, 1)',
+          'rgba(255, 255, 255, 1)',
+        ]}
+        useAngle={true}
+        angle={180}>
         <Button
           label={'장바구니 보기'}
           type={'yellow'}
@@ -693,7 +673,8 @@ const LoadingPage = styled.View`
 `;
 const PagerViewWrap = styled.View`
   flex: 1;
-  padding-bottom: 120px;
+  //padding-bottom: 120px;
+  /* background-color: red; */
 `;
 
 const ProgressWrap = styled.View`
@@ -773,10 +754,16 @@ const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
   color: ${props => props.theme.colors.grey[4]};
   z-index: 1000;
 `;
-const ButtonWrap = styled.View`
+const ButtonWrap = styled(LinearGradient)`
   position: absolute;
-  bottom: 35px;
-  margin: 0px 48px;
+  bottom: 0;
+  padding: 0px 48px;
+
+  width: 100%;
+  height: 100px;
+  border-radius: 50px;
+  //background-color: white;
+  justify-content: flex-start;
 `;
 
 const ReviewWrap = styled.View`
