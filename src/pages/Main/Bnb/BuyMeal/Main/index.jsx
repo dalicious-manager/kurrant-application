@@ -58,9 +58,11 @@ const Pages = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
+  const [startScroll, setStartScroll] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
   const [selectFood, setSelectFood] = useState();
   const [show, setShow] = useState(false);
+  const [scrollDir, setScrollDir] = useState(true);
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -144,6 +146,7 @@ const Pages = ({route}) => {
     MorningRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     LunchRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     DinnerRef?.current?.scrollTo({x: 0, y: 0, animated: false});
+    setScrollDir(true);
   };
 
   const dayPress = async selectedDate => {
@@ -212,6 +215,7 @@ const Pages = ({route}) => {
     // console.log(generateOrderCode(1,42),"test432")
     loadDailyFood();
   }, [date]);
+
   useEffect(() => {
     loadMeal();
     updateMeal(req);
@@ -334,10 +338,31 @@ const Pages = ({route}) => {
         return DinnerRef;
       }
     };
+    const threshold = 0;
+    let lastScrollY = window.pageYOffset;
+    let ticking = false;
 
+    const onScrollStart = e => {
+      const {
+        contentOffset: {x, y},
+      } = e.nativeEvent;
+      setStartScroll(y);
+    };
+    const onScrollEnd = e => {
+      const {
+        contentOffset: {x, y},
+      } = e.nativeEvent;
+      if (y < 20) {
+        setScrollDir(true);
+      } else {
+        setScrollDir(startScroll > y ? true : false);
+      }
+    };
     return (
       <ScrollView
         ref={refType(diningFood)}
+        onScrollBeginDrag={onScrollStart}
+        onScrollEndDrag={onScrollEnd}
         showsVerticalScrollIndicator={false}
         scrollEnabled={
           !(diningFood.length === 0 && spotId !== null) || !spotId === null
@@ -492,20 +517,22 @@ const Pages = ({route}) => {
         </LoadingPage>
       )}
 
-      <CalendarWrap>
-        <Calendar
-          BooleanValue
-          type={'grey2'}
-          color={'white'}
-          size={'Body05R'}
-          selectDate={params?.date && params?.date}
-          onPressEvent2={dayPress}
-          daily={daily}
-          margin={'0px 28px'}
-        />
-      </CalendarWrap>
+      {scrollDir && (
+        <CalendarWrap>
+          <Calendar
+            BooleanValue
+            type={'grey2'}
+            color={'white'}
+            size={'Body05R'}
+            onPressEvent2={dayPress}
+            daily={daily}
+            margin={'0px 28px'}
+          />
+        </CalendarWrap>
+      )}
 
       <PagerViewWrap isMembership={userInfo?.isMembership}>
+
         <ProgressWrap>
           <ProgressInner>
             <Slider
@@ -550,6 +577,7 @@ const Pages = ({route}) => {
             <Modal />
           </View>
         )}
+
         <Pager
           ref={diningRef}
           initialPage={
@@ -638,7 +666,7 @@ const FoodContainer = styled.View`
   ${({isFood}) => {
     if (isFood)
       return css`
-        height: ${screenHeight - 32}px;
+        height: ${screenHeight}px;
       `;
   }}
   padding-bottom:24px;
@@ -665,21 +693,12 @@ const LoadingPage = styled.View`
   height: ${screenHeight}px;
 `;
 const PagerViewWrap = styled.View`
-  ${({isMembership}) => {
-    if (isMembership) {
-      return css`
-        height: ${screenHeight - 100}px;
-      `;
-    }
-    return css`
-      height: ${screenHeight}px;
-    `;
-  }}
+  flex: 1;
+  padding-bottom: 120px;
 `;
 
 const ProgressWrap = styled.View`
   flex-direction: row;
-  //justify-content: center;
   padding: 12px 0px;
   margin-left: 24px;
 `;
@@ -695,7 +714,7 @@ const Progress = styled.View`
 `;
 
 const Pager = styled(PagerView)`
-  height: ${screenHeight - 320}px;
+  flex: 1;
 `;
 
 const Contents = styled.Pressable`
@@ -706,7 +725,6 @@ const Contents = styled.Pressable`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   border-bottom-width: 1px;
   align-items: center;
-  /* background-color: gold; */
   min-height: 160px;
 `;
 
@@ -728,12 +746,7 @@ const ContentsText = styled.View`
   width: 60%;
 `;
 
-const MealImageWrap = styled.View`
-  /* position: absolute;
-  bottom: 8px;
-  right: 8px; */
-  //ai 있을떈 위에 스타일
-`;
+const MealImageWrap = styled.View``;
 
 const CartIconWrap = styled.Pressable`
   width: 40px;
@@ -763,15 +776,6 @@ const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
 `;
 const ButtonWrap = styled.View`
   position: absolute;
-  /* ${({membership}) => {
-    if (membership)
-      return css`
-        bottom: 0px;
-      `;
-    return css`
-      bottom: 35px;
-    `;
-  }} */
   bottom: 35px;
   margin: 0px 48px;
 `;
@@ -801,7 +805,6 @@ const MealDsc = styled(Typography).attrs({text: 'MealDes'})`
   color: ${({theme, soldOut}) =>
     soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
   margin-top: 6px;
-  //padding-right: 17px;
 `;
 
 const ProgressText = styled(Typography).attrs({text: 'Title04SB'})`

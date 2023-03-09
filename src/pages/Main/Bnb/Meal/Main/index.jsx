@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+
 import React, {useEffect, useState} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
 import styled from 'styled-components';
@@ -14,6 +15,8 @@ import {
   formattedWeekDate,
 } from '../../../../../utils/dateFormatter';
 import {CalendarWrap, MakersName, MealName} from '../../BuyMeal/Main';
+import NoMealButton from '~components/Button';
+
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import FastImage from 'react-native-fast-image';
@@ -31,16 +34,9 @@ const Pages = ({route}) => {
   const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
-
-  useEffect(() => {
-    console.log('식사일정 data 여기');
-    console.log(data);
-  }, [data]);
-
   const pressDay = day => {
     setTouchDate(day ?? data);
   };
-
   const cancelMealPress = id => {
     const list = isOrderMeal.map(el => {
       return {
@@ -270,14 +266,34 @@ const Pages = ({route}) => {
           <NoMealText>주문한 메뉴가 없어요</NoMealText>
         </NoMealWrap>
       )}
-      <ButtonWrap>
-        <PlusButton
-          onPress={() => {
-            navigation.navigate(BuyMealPageName, {date: touchDate});
-          }}>
-          <PlusIcon />
-        </PlusButton>
-      </ButtonWrap>
+      {todayMeal?.length !== 0 && selectDate?.length !== 0 ? (
+        <ButtonWrap>
+          <PlusButton
+            onPress={() => {
+              navigation.navigate(BuyMealPageName);
+            }}>
+            <PlusIcon />
+          </PlusButton>
+        </ButtonWrap>
+      ) : (
+        <ButtonWrap>
+          <ButtonBox>
+            <Button
+              onPress={() => {
+                if (userSpotId) {
+                  navigation.navigate(BuyMealPageName);
+                  closeBalloon();
+                } else {
+                  Alert.alert('식사구매', '스팟선택 후 식사를 구매해주세요');
+                }
+              }}>
+              <PlusLongIcon />
+              <ButtonText>식사 구매하기</ButtonText>
+            </Button>
+          </ButtonBox>
+        </ButtonWrap>
+      )}
+
       {show && (
         <toast.ToastWrap message={'메뉴가 취소됐어요'} icon={'checked'} />
       )}
@@ -344,10 +360,26 @@ const PlusButton = styled.Pressable`
   bottom: 26px;
   right: 0;
 `;
+const ButtonBox = styled.Pressable`
+  position: absolute;
+  bottom: 26px;
+  right: 0px;
+  left: 20px;
+`;
 const PlusIcon = styled(Plus)`
   position: absolute;
   bottom: 20px;
   left: 18px;
+`;
+const PlusLongIcon = styled(Plus)``;
+const Button = styled.Pressable`
+  background-color: ${({theme}) => theme.colors.yellow[500]};
+  border-radius: 100px;
+  width: 100%;
+  padding: 16px 0px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CountText = styled(Typography).attrs({text: 'CaptionR'})`
@@ -370,4 +402,13 @@ const DeliveryAddress = styled(Typography).attrs({text: 'Button10R'})`
 
 const CancelText = styled(Typography).attrs({test: 'Body06R'})`
   color: ${({theme}) => theme.colors.red[500]};
+`;
+
+const NoMealButtonWrap = styled.View`
+  padding: 0px 120px;
+`;
+
+const ButtonText = styled(Typography).attrs({text: 'BottomButtonSB'})`
+  color: ${props => props.theme.colors.grey[1]};
+  margin-left: 8px;
 `;
