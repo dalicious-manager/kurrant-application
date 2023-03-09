@@ -99,7 +99,9 @@ const Pages = ({route}) => {
 
   const DININGTYPE = ['아침', '점심', '저녁'];
 
-  // const [supportPrice, setSupportPrice] = useAtom(supportPriceAtom);
+  const [date, setDate] = useState(
+    params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
+  ); // 오늘
 
   const {supportPrices, getSupportPrices} = useSupportPrices();
   const [supportPrice, setSupportPrice] = useState(0);
@@ -109,8 +111,6 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     let price = null;
-    console.log('여기여기2');
-    console.log(supportPrices);
 
     switch (sliderValue) {
       case 0:
@@ -128,9 +128,7 @@ const Pages = ({route}) => {
   }, [sliderValue, supportPrices]);
 
   const daily = true;
-  const [date, setDate] = useState(
-    params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
-  ); // 오늘
+
   // const todayMeal = mealInfo?.filter((m) => m.date === date);
   // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
   const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo.spotId;
@@ -226,7 +224,6 @@ const Pages = ({route}) => {
     async function loadDailyFood() {
       try {
         const data = await dailyFood(spotId, date);
-        console.log('음식 불러오기' + data);
 
         if (data[0]) {
           diningRef.current.setPage(Number(data[0]) - 1);
