@@ -15,7 +15,7 @@ import {
   formattedWeekDate,
 } from '../../../../../utils/dateFormatter';
 
-import {CalendarWrap, MakersName, MealName} from '../../BuyMeal/Main';
+import {MakersName, MealName} from '../../BuyMeal/Main';
 import NoMealButton from '~components/Button';
 
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -119,7 +119,7 @@ const Pages = ({route}) => {
   return (
     <SafeView>
       <ScrollView>
-        <CalendarView>
+        <CalendarWrap>
           <Calendar
             BooleanValue
             type={'grey2'}
@@ -130,7 +130,7 @@ const Pages = ({route}) => {
             meal={meal}
             margin={'0px 28px'}
           />
-        </CalendarView>
+        </CalendarWrap>
 
         <MealWrap>
           {touchDate ? (
@@ -301,7 +301,12 @@ const SafeView = styled.SafeAreaView`
   flex: 1;
 `;
 
-const CalendarView = styled(CalendarWrap)``;
+const CalendarWrap = styled.View`
+  height: 120px;
+  border-bottom-color: ${props => props.theme.colors.grey[8]};
+  border-bottom-width: 1px;
+  width: 100%;
+`;
 
 const MealWrap = styled.View`
   margin: 0px 24px 24px 24px;

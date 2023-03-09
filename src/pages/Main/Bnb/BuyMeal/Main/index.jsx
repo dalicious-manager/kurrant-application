@@ -96,10 +96,10 @@ const Pages = ({route}) => {
   const {balloonEvent, BalloonWrap} = Balloon();
 
   const userInfo = useAtomValue(isUserInfoAtom);
-  const fadeAnim = useRef(new Animated.Value(48)).current;
+  const fadeAnim = useRef(new Animated.Value(32)).current;
   const handlePress = anim => {
     Animated.timing(fadeAnim, {
-      toValue: !anim ? 0 : 48,
+      toValue: !anim ? 0 : 32,
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -683,8 +683,8 @@ const SafeView = styled.View`
   flex: 1;
 `;
 
-export const CalendarWrap = styled.View`
-  height: 72px;
+const CalendarWrap = styled.View`
+  height: 85px;
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   border-bottom-width: 1px;
   width: 100%;
