@@ -532,45 +532,50 @@ const Pages = ({route}) => {
       )}
 
       <PagerViewWrap isMembership={userInfo?.isMembership}>
-        {scrollDir && (
-          <ProgressWrap>
-            <ProgressInner>
-              <Slider
-                value={sliderValue}
-                onValueChange={e => setSliderValue(...e)}
-                minimumValue={0}
-                maximumValue={2}
-                maximumTrackTintColor="#fff"
-                minimumTrackTintColor="#fff"
-                onSlidingComplete={e => {
-                  diningRef.current.setPage(...e);
-                }}
-                step={1}
-                trackStyle={styles.trackStyle}
-                thumbStyle={styles.thumbStyle}
-                containerStyle={{height: 12}}
-              />
-              <Progress>
-                {DININGTYPE.map((btn, i) => {
-                  const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
-                  const typeBoolean = isDiningTypes.includes(type);
-                  return (
-                    <DiningPress
-                      key={i}
-                      disabled={!typeBoolean && true}
-                      onPress={() => {
-                        diningRef.current.setPage(i);
-                        setSliderValue(i);
-                      }}>
-                      <ProgressText type={typeBoolean} index={i}>
-                        {btn}
-                      </ProgressText>
-                    </DiningPress>
-                  );
-                })}
-              </Progress>
-            </ProgressInner>
-          </ProgressWrap>
+
+        <ProgressWrap>
+          <ProgressInner>
+            <Slider
+              value={sliderValue}
+              onValueChange={e => setSliderValue(...e)}
+              minimumValue={0}
+              maximumValue={2}
+              maximumTrackTintColor="#fff"
+              minimumTrackTintColor="#fff"
+              onSlidingComplete={e => {
+                diningRef.current.setPage(...e);
+              }}
+              step={1}
+              trackStyle={styles.trackStyle}
+              thumbStyle={styles.thumbStyle}
+              containerStyle={{height: 12}}
+            />
+
+            <Progress>
+              {DININGTYPE.map((btn, i) => {
+                const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
+                const typeBoolean = isDiningTypes.includes(type);
+                return (
+                  <DiningPress
+                    key={i}
+                    disabled={!typeBoolean && true}
+                    onPress={() => {
+                      diningRef.current.setPage(i);
+                      setSliderValue(i);
+                    }}>
+                    <ProgressText type={typeBoolean} index={i}>
+                      {btn}
+                    </ProgressText>
+                  </DiningPress>
+                );
+              })}
+            </Progress>
+          </ProgressInner>
+        </ProgressWrap>
+        {!userInfo?.isMembership && (
+          <View>
+            <Modal />
+          </View>
         )}
 
         <Pager
