@@ -19,6 +19,7 @@ import Typography from '../Typography';
  * @param {string} props.ToastWrap
  * @param {string} props.ToastWrap.message
  * @param {boolean} props.ToastWrap.isBottom
+ * @param {boolean} props.ToastWrap.isHeader
  * @param {nomal | checked | error} props.ToastWrap.icon
  * @param {function} props.toastEvent onPress
  * @returns
@@ -48,7 +49,7 @@ const Component = () => {
   }, [fadeToast]);
 
   const ToastWrap = useCallback(
-    ({message = 'test', icon = 'nomal', isBottom = false}) => {
+    ({message = 'test', icon = 'nomal', isBottom = false, isHeader = true}) => {
       const renderIcon = () => {
         switch (icon) {
           case 'checked':
@@ -63,6 +64,7 @@ const Component = () => {
         <Wrapper
           style={{opacity: fadeToast}}
           isBottom={isBottom}
+          isHeader={isHeader}
           Platform={Platform.OS}>
           <Container icon={icon}>
             <IconWrap icon={icon}>{renderIcon(icon)}</IconWrap>
@@ -82,8 +84,16 @@ export default Component;
 const Wrapper = styled(Animated.View)`
   position: absolute;
   align-items: center;
-  ${({isBottom, Platform}) =>
-    isBottom ? 'bottom:35px;' : Platform === 'ios' ? 'top:40px' : 'top: 30px'}
+  ${({isBottom, Platform, isHeader}) =>
+    isBottom
+      ? 'bottom:35px;'
+      : Platform === 'ios'
+      ? isHeader
+        ? 'top:40px'
+        : 'top:105px'
+      : isHeader
+      ? 'top: 30px'
+      : 'top: 95px'}
   /* width: 100%; */
   align-self:center;
   border-radius: 100px;

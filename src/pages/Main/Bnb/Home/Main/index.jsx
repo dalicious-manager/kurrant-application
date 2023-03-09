@@ -555,7 +555,11 @@ const Pages = () => {
         booleanValue
       />
       {show && (
-        <toast.ToastWrap message={'스팟이 설정됐어요'} icon={'checked'} />
+        <toast.ToastWrap
+          message={'스팟이 설정됐어요'}
+          icon={'checked'}
+          isHeader={false}
+        />
       )}
     </SafeView>
   );

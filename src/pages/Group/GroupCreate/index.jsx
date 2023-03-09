@@ -29,46 +29,57 @@ const Pages = () => {
                 <CloseIcon/>
             </CloseWrap> */}
       <Wrap>
-        <BoxWrap
-          onPress={() => {
-            navigation.navigate(GroupCreateCorporationsPageName);
-          }}>
-          <MainTitle>프라이빗 스팟</MainTitle>
-          <SubTitleWrap>
-            <SubTitle>지정한 인원만 사용할 수{'\n'}있는 스팟 신청 </SubTitle>
-          </SubTitleWrap>
-          <Typography text="SmallLabel" textColor={themeApp.colors.grey[5]}>
-            (관리 페이지, 식사 지원금 시스템 제공)
-          </Typography>
-          <ImageWrap>
-            <CorporationIcon />
-          </ImageWrap>
-        </BoxWrap>
-        <BoxWrap
-          onPress={() => {
-            navigation.navigate(GroupCreateApartmentPageName);
-          }}>
-          <MainTitle>오픈 스팟</MainTitle>
-          <SubTitleWrap>
-            <SubTitle>가입과 탈퇴가 자유로운{'\n'}배송 스팟 신청</SubTitle>
-          </SubTitleWrap>
-          <ImageWrap>
-            <ApartmentIcon />
-          </ImageWrap>
-        </BoxWrap>
-        <BoxWrap
+        <SearchBoxWrap
           onPress={() => {
             navigation.navigate(ApartmentSearchPageName);
           }}>
-          <MainTitle>오픈 스팟 찾기</MainTitle>
-          <SubTitleWrap>
-            <SubTitle>내 주변에 오픈 스팟 검색</SubTitle>
-          </SubTitleWrap>
+          <SearchTextBox>
+            <Typography text="Body06R" textColor={themeApp.colors.grey[2]}>
+              스팟 검색
+            </Typography>
+            <CenterText>
+              <Typography text="LargeTitle" textColor={themeApp.colors.grey[2]}>
+                내 주변에 배송{'\n'}
+                받을 수 있는 스팟 검색
+              </Typography>
+            </CenterText>
+            <Typography text="Body06SB" textColor={themeApp.colors.grey[2]}>
+              #아파트 #학원 #공유오피스
+            </Typography>
+          </SearchTextBox>
           <ImageWrap>
-            {/* <AlreadyApartIcon/> */}
-            <Image source={AlreadyApartment} style={{width: 124, height: 86}} />
+            <ApartmentIcon />
           </ImageWrap>
-        </BoxWrap>
+        </SearchBoxWrap>
+        <ApplyText>
+          <Typography text={'Title04SB'} textColor={themeApp.colors.grey[2]}>
+            신규 신청
+          </Typography>
+        </ApplyText>
+        <ApplyContainer>
+          <BoxWrap
+            onPress={() => {
+              navigation.navigate(GroupCreateApartmentPageName);
+            }}>
+            <MainTitle>오픈 스팟</MainTitle>
+            <SubTitleWrap>
+              <SubTitle>가입, 탈퇴가 자유로운{'\n'}배송 스팟 신청</SubTitle>
+            </SubTitleWrap>
+          </BoxWrap>
+          <View style={{width: 11}}></View>
+          <BoxWrap
+            onPress={() => {
+              navigation.navigate(GroupCreateCorporationsPageName);
+            }}>
+            <MainTitle>프라이빗 스팟</MainTitle>
+            <SubTitleWrap>
+              <SubTitle>지정한 인원만{'\n'}사용 가능한 스팟 신청</SubTitle>
+            </SubTitleWrap>
+            <Typography text="SmallLabel" textColor={themeApp.colors.grey[5]}>
+              (관리 페이지, 식사 지원금{'\n'}시스템 제공)
+            </Typography>
+          </BoxWrap>
+        </ApplyContainer>
       </Wrap>
       <NextView
         onPress={() => {
@@ -85,27 +96,42 @@ export default Pages;
 const Wrapper = styled.SafeAreaView`
   //margin:56px 24px 50px 24px;
   margin: 24px;
+  margin-top: 12px;
   flex: 1;
 `;
 const BoxWrap = styled.Pressable`
   background-color: ${({theme}) => theme.colors.grey[0]};
   border-radius: 14px;
-  padding: 24px 0px 20px 24px;
-  margin-bottom: 16px;
-  min-height: 186px;
+  padding: 20px;
+  flex: 1;
+  min-height: 158px;
+`;
+const SearchBoxWrap = styled.Pressable`
+  background-color: ${({theme}) => theme.colors.grey[0]};
+  border-radius: 14px;
+  padding: 20px;
+  flex: 1;
 `;
 
+const CenterText = styled.View`
+  padding-top: 6px;
+  padding-bottom: 6px;
+`;
 const SubTitleWrap = styled.View`
   flex-direction: row;
   align-items: center;
 `;
+const SearchTextBox = styled.View`
+  flex: 1;
+  padding-left: 4px;
+`;
 
-const MainTitle = styled(Typography).attrs({text: 'Title02SB'})`
+const MainTitle = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
   margin-bottom: 6px;
 `;
 
-const SubTitle = styled(Typography).attrs({text: 'Button09R'})`
+const SubTitle = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[4]};
   margin-right: 8px;
 `;
@@ -117,10 +143,12 @@ const Img = styled(Image)`
 
 const ImageWrap = styled.View`
   flex-direction: row;
+  width: 100%;
+  padding-right: 2px;
+  padding-bottom: 16px;
+  flex: 1;
   justify-content: flex-end;
-  position: absolute;
-  top: 72px;
-  right: 0px;
+  align-items: flex-end;
 `;
 
 const NextText = styled(Typography).attrs({text: 'BottomButtonR'})`
@@ -128,17 +156,28 @@ const NextText = styled(Typography).attrs({text: 'BottomButtonR'})`
 `;
 
 const NextView = styled.Pressable`
-  position: absolute;
-  bottom: 20px;
   width: 100%;
+  padding-top: 56px;
+  margin-bottom: 27px;
   justify-content: center;
   flex-direction: row;
 `;
 
+const ApplyContainer = styled.View`
+  flex-direction: row;
+  margin-bottom: 9px;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const ApplyText = styled.View`
+  margin-bottom: 12px;
+  margin-top: 24px;
+`;
 const CloseWrap = styled.View`
   margin-bottom: 24px;
 `;
 
 const Wrap = styled.View`
-  margin-top: 56px;
+  flex: 1;
 `;

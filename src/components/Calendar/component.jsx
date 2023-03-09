@@ -42,12 +42,14 @@ const Component = ({
   onPressEvent,
   onPressEvent2,
   onPressEvent3,
+  onPageScroll2,
   selectDate,
   meal,
+  pagerRef,
   margin = '0px',
 }) => {
   const navigation = useNavigation();
-  const pager = useRef();
+  const pager = pagerRef ? pagerRef : useRef();
   const today = new Date();
   const weekly = useAtomValue(weekAtom);
   const {isOrderMeal, orderMeal} = useOrderMeal();
@@ -73,6 +75,7 @@ const Component = ({
         initialPage={0}
         pageMargin={22}
         onPageScroll={e => {
+          if (onPageScroll2) onPageScroll2(e);
           onPageScroll(e);
         }}
         margins={margin}>

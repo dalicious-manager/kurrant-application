@@ -1143,7 +1143,7 @@ const Screen = () => {
             headerStyle: {
               backgroundColor: '#F5F5F5',
             },
-            headerShown: false,
+            headerShown: true,
             headerShadowVisible: false,
             title: '',
             headerTitleAlign: 'center',
