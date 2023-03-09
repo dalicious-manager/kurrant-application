@@ -388,12 +388,16 @@ const Pages = ({route}) => {
         }>
         <FoodContainer isFood={diningFood.length === 0 && spotId !== null}>
           {diningFood.length === 0 && spotId !== null && (
-            <NoServieceView status={hideModal}>
+            <NoServieceView
+              status={hideModal}
+              isMembership={userInfo?.isMembership}>
               <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
             </NoServieceView>
           )}
           {spotId === null && (
-            <NoSpotView status={hideModal}>
+            <NoSpotView
+              status={hideModal}
+              isMembership={userInfo?.isMembership}>
               <NoServiceText>메뉴는 스팟 선택 또는 </NoServiceText>
               <NoServiceText>
                 스팟 개설 신청 승인후 확인할 수 있어요
@@ -402,6 +406,7 @@ const Pages = ({route}) => {
           )}
 
           {diningFood.map(m => {
+            // console.log(m, '3353');
             const totalRate =
               m.membershipDiscountRate +
               m.makersDiscountRate +
@@ -851,7 +856,7 @@ const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`
 
 const NoServieceView = styled.View`
   position: absolute;
-  top: ${({status}) => (status ? '10%' : '30%')};
+  top: ${({status, isMembership}) => (status && !isMembership ? '10%' : '30%')};
   left: 29%;
 `;
 
