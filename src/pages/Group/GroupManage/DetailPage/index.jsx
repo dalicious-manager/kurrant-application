@@ -217,9 +217,7 @@ const Pages = ({route}) => {
           </Withdraw>
         </TextView>
       </ContentView>
-      <AddSpotWrap onPress={() => navigation.navigate(CreateGroupPageName)}>
-        <AddSpotText>다른 스팟 신청/추가</AddSpotText>
-      </AddSpotWrap>
+
       <BottomSheetSpot
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -232,21 +230,26 @@ const Pages = ({route}) => {
         }}
       />
       <toast.ToastWrap message={'스팟이 설정됐어요'} icon={'checked'} />
-      <ButtonBox>
-        <Button
-          label="확인"
-          onPressEvent={() => {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: SCREEN_NAME,
-                },
-              ],
-            });
-          }}
-        />
-      </ButtonBox>
+      <BottomContainer>
+        <ButtonBox>
+          <Button
+            label="확인"
+            onPressEvent={() => {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              });
+            }}
+          />
+        </ButtonBox>
+        <AddSpotWrap onPress={() => navigation.navigate(CreateGroupPageName)}>
+          <AddSpotText>다른 스팟 신청/추가</AddSpotText>
+        </AddSpotWrap>
+      </BottomContainer>
     </Wrap>
     // </SafeView>
   );
@@ -289,8 +292,7 @@ const TextView = styled.View`
 `;
 
 const AddSpotWrap = styled.Pressable`
-  position: absolute;
-  bottom: 56px;
+  margin-top: 24px;
 `;
 
 const Withdraw = styled.View`
@@ -298,15 +300,18 @@ const Withdraw = styled.View`
   bottom: 0;
   right: 0;
 `;
-const ButtonBox = styled.View`
-  margin-top: 50px;
-`;
+const ButtonBox = styled.View``;
 const SpotSelect = styled(Typography).attrs({text: 'Title04SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
   margin-bottom: 24px;
   margin-top: 40px;
 `;
-
+const BottomContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 56px;
+`;
 const SpotName = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme}) => theme.colors.grey[0]};
 `;

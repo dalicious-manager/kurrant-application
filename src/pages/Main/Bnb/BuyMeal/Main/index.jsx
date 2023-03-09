@@ -13,6 +13,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  Animated,
   Image,
   Text,
   ImageBackground,
@@ -27,6 +28,7 @@ import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/Balloon';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
+import CalendarButton from '../../../../../components/CalendarButton';
 import Calendar from '../../../../../components/Calendar';
 import Label from '../../../../../components/Label';
 import MembershipBar from '../../../../../components/MembershipBar';
@@ -56,6 +58,7 @@ const Pages = ({route}) => {
   const MorningRef = useRef();
   const LunchRef = useRef();
   const DinnerRef = useRef();
+  const pager = useRef();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
@@ -90,8 +93,17 @@ const Pages = ({route}) => {
     setQuantity,
   } = useShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-  const userInfo = useAtomValue(isUserInfoAtom);
 
+  const userInfo = useAtomValue(isUserInfoAtom);
+  const fadeAnim = useRef(new Animated.Value(48)).current;
+  const handlePress = anim => {
+    Animated.timing(fadeAnim, {
+      toValue: !anim ? 0 : 48,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+    setScrollDir(prev => !prev);
+  };
   const DININGTYPE = ['아침', '점심', '저녁'];
   const daily = true;
   const [date, setDate] = useState(
@@ -101,7 +113,11 @@ const Pages = ({route}) => {
   // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
   const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo.spotId;
   // const spotId = 1;
-
+  const [chk, setChk] = useState(0);
+  const onPageScroll2 = e => {
+    const {position} = e.nativeEvent;
+    setChk(position);
+  };
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
 
@@ -148,6 +164,7 @@ const Pages = ({route}) => {
     LunchRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     DinnerRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     setScrollDir(true);
+    handlePress(true);
   };
 
   const dayPress = async selectedDate => {
@@ -354,9 +371,9 @@ const Pages = ({route}) => {
         contentOffset: {x, y},
       } = e.nativeEvent;
       if (y < 20) {
-        setScrollDir(true);
+        handlePress(true);
       } else {
-        setScrollDir(startScroll > y ? true : false);
+        handlePress(startScroll > y ? true : false);
       }
     };
     return (
@@ -485,20 +502,23 @@ const Pages = ({route}) => {
           <ActivityIndicator size={'large'} />
         </LoadingPage>
       )}
-
-      {scrollDir && (
-        <CalendarWrap>
-          <Calendar
-            BooleanValue
-            type={'grey2'}
-            color={'white'}
-            size={'Body05R'}
-            onPressEvent2={dayPress}
-            daily={daily}
-            margin={'0px 28px'}
-          />
-        </CalendarWrap>
-      )}
+      <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
+        <CalendarButton pager={pager} daily chk={chk} />
+      </Animated.View>
+      <CalendarWrap>
+        <Calendar
+          BooleanValue={false}
+          type={'grey2'}
+          color={'white'}
+          size={'Body05R'}
+          onPressEvent2={dayPress}
+          daily={daily}
+          margin={'0px 28px'}
+          scrollDir
+          pagerRef={pager}
+          onPageScroll2={onPageScroll2}
+        />
+      </CalendarWrap>
 
       <PagerViewWrap isMembership={userInfo?.isMembership}>
         <ProgressWrap>
@@ -576,9 +596,11 @@ const Pages = ({route}) => {
       )}
       <ButtonWrap
         colors={[
-          'rgba(255, 255, 255, 0)',
-          'rgba(255, 255, 255, 0.3)',
-
+          'rgba(255, 255, 255, 0.0)',
+          'rgba(255, 255, 255, 0.0)',
+          'rgba(255, 255, 255, 0.0)',
+          'rgba(255, 255, 255, 0.5)',
+          'rgba(255, 255, 255, 0.7)',
           'rgba(255, 255, 255, 0.9)',
           'rgba(255, 255, 255, 1)',
           'rgba(255, 255, 255, 1)',
@@ -656,7 +678,7 @@ const SafeView = styled.View`
 `;
 
 export const CalendarWrap = styled.View`
-  height: 120px;
+  height: 72px;
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   border-bottom-width: 1px;
   width: 100%;
@@ -758,10 +780,9 @@ const ButtonWrap = styled(LinearGradient)`
   position: absolute;
   bottom: 0;
   padding: 0px 48px;
-
+  padding-top: 20px;
   width: 100%;
   height: 100px;
-  border-radius: 50px;
   //background-color: white;
   justify-content: flex-start;
 `;
