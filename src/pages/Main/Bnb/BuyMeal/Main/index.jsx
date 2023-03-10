@@ -67,12 +67,14 @@ const Pages = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
+  const [modalVisible4, setModalVisible4] = useState(false);
   const [startScroll, setStartScroll] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
   const [selectFood, setSelectFood] = useState();
   const [show, setShow] = useState(false);
   const [scrollDir, setScrollDir] = useState(true);
   const [hideModal, setHideModal] = useState(true);
+
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -627,14 +629,24 @@ const Pages = ({route}) => {
 
           {showSupportPrice && (
             <MiniWrap>
-              {!whenSupportPriceKor && (
+              {/* {!whenSupportPriceKor && (
                 <Typography2>일일 식사지원금</Typography2>
               )}
               {!whenSupportPriceKor && (
-                <QuestionPressable onPress={() => {}}>
+                <QuestionPressable
+                  onPress={() => {
+                    setModalVisible4(true);
+                  }}>
                   <QuestionCircleMonoIcon />
                 </QuestionPressable>
-              )}
+              )} */}
+              <Typography2>일일 식사지원금</Typography2>
+              <QuestionPressable
+                onPress={() => {
+                  setModalVisible4(true);
+                }}>
+                <QuestionCircleMonoIcon />
+              </QuestionPressable>
 
               {whenSupportPriceKor ? (
                 <Typography4>{supportPrice}</Typography4>
@@ -727,6 +739,19 @@ const Pages = ({route}) => {
           }}
         />
       </ButtonWrap>
+      <BottomModal
+        modalVisible={modalVisible4}
+        setModalVisible={setModalVisible4}
+        title={'포인트란?'}
+        description={
+          '고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불포인트입니다. \n 결재시 사용가능한 최대 금액으로 자동 적용됩니다.'
+        }
+        buttonTitle1={'확인했어요'}
+        buttonType1="grey7"
+        onPressEvent1={() => {
+          setModalVisible4(false);
+        }}
+      />
     </SafeView>
   );
 };
@@ -821,7 +846,7 @@ const MiniWrap = styled.View`
 `;
 
 const QuestionPressable = styled.Pressable`
-  margin-right: 3px;
+  margin-right: 5px;
 `;
 
 const Typography2 = styled(Typography).attrs({text: 'SmallLabel'})`

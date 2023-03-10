@@ -10,8 +10,6 @@ const useSupportPrices = () => {
     try {
       const res = await Fetch.GetSupportPrice(spotId, selectedDate);
 
-      console.log(res);
-
       setSupportPrices(res.data.supportPrice);
     } catch (err) {
       console.log(err);
