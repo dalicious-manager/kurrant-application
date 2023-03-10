@@ -616,7 +616,7 @@ const Pages = ({route}) => {
         setModalVisible={setModalVisible3}
         title={'지원금이란?'}
         description={
-          '고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
+          '고객님의 스팟에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
         }
         buttonTitle1={'확인했어요'}
         buttonType1={'grey7'}
@@ -636,7 +636,7 @@ const Pages = ({route}) => {
         setModalVisible={setModalVisible2}
         title={'포인트란?'}
         description={
-          '고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
+          '고객님의 스팟에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
         }
         buttonTitle1={'확인했어요'}
         buttonType1={'grey7'}

@@ -178,7 +178,7 @@ const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
 `;
 const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
   margin-bottom: 22px;
-  max-width: 279px;
+  max-width: 300px;
   text-align: center;
   color: ${props => props.theme.colors.grey[3]};
 `;
