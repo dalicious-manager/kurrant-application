@@ -328,8 +328,9 @@ const Pages = () => {
 
   // 메드트로닉 식사가격
   const medtronicPrice =
-    medtronicSupportArr.includes(62471004) && Math.round(discountPrice / 2);
-
+    medtronicSupportArr.includes(62471004) &&
+    Math.round(discountPrice / 20) * 10;
+  console.log(medtronicPrice, discountPrice, '00');
   // 총 할인금액
   const totalDiscountPrice =
     membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
