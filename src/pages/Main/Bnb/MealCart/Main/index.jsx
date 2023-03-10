@@ -316,25 +316,21 @@ const Pages = () => {
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
-  console.log(discountPrice, '할인금액');
+
   // 사용한 식사 지원금
   const usedSupportPrice =
     discountPrice < supportPrice ? discountPrice : supportPrice;
 
-  // 메드트로닉 지원금 유
+  // 메드트로닉 지원금 유무
   const medtronicSupportPrice = lastArr?.map(el => el.supportPrice);
   const set = new Set(medtronicSupportPrice);
   const medtronicSupportArr = [...set];
-  console.log(medtronicSupportArr, '989');
+
   // 메드트로닉 식사가격
   const medtronicPrice =
-    medtronicSupportArr.includes(62471004) && Math.round(discountPrice / 2);
-  console.log(
-    medtronicPrice,
-    supportPrice,
-    Math.round(discountPrice / 2),
-    '메드트로닉 식사가격',
-  );
+    medtronicSupportArr.includes(62471004) &&
+    Math.round(discountPrice / 20) * 10;
+  console.log(medtronicPrice, discountPrice, '00');
   // 총 할인금액
   const totalDiscountPrice =
     membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
@@ -348,7 +344,7 @@ const Pages = () => {
     totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
   console.log(
     totalMealPrice,
-    medtronicPrice,
+    usedSupportPrice,
     totalDiscountPrice,
     deliveryFee,
     'total : ',
