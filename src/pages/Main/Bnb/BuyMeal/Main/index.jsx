@@ -119,9 +119,22 @@ const Pages = ({route}) => {
   // 일일 식사지원금
   const {supportPrices, getSupportPrices} = useSupportPrices();
   const [supportPrice, setSupportPrice] = useState(0);
+  const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
   useEffect(() => {
+    console.log('spotId ' + spotId);
+
     getSupportPrices(spotId, date);
   }, [spotId, date]);
+
+  useEffect(() => {
+    console.log(typeof supportPrice);
+
+    if (!parseInt(supportPrice)) {
+      setWhenSupportPriceKor(true);
+    } else {
+      setWhenSupportPriceKor(false);
+    }
+  }, [supportPrice]);
 
   useEffect(() => {
     let price = null;
@@ -600,11 +613,18 @@ const Pages = ({route}) => {
           </ProgressInner>
 
           <MiniWrap>
-            <Typography2>일일 식사지원금</Typography2>
-            <QuestionPressable onPress={() => {}}>
-              <QuestionCircleMonoIcon />
-            </QuestionPressable>
-            <Typography3> {supportPrice}원</Typography3>
+            {!whenSupportPriceKor && <Typography2>일일 식사지원금</Typography2>}
+            {!whenSupportPriceKor && (
+              <QuestionPressable onPress={() => {}}>
+                <QuestionCircleMonoIcon />
+              </QuestionPressable>
+            )}
+
+            {whenSupportPriceKor ? (
+              <Typography4>{supportPrice}</Typography4>
+            ) : (
+              <Typography3> {supportPrice}원</Typography3>
+            )}
           </MiniWrap>
         </ProgressWrap>
         {!userInfo?.isMembership && (
@@ -794,6 +814,12 @@ const Typography3 = styled(Typography).attrs({text: 'Body05SB'})`
   margin-right: 4px;
   color: ${({theme}) => theme.colors.grey[2]};
 
+  font-weight: 600;
+`;
+const Typography4 = styled(Typography).attrs({text: 'Body05SB'})`
+  margin-right: 4px;
+  color: ${({theme}) => theme.colors.grey[2]};
+  font-size: 14px;
   font-weight: 600;
 `;
 
