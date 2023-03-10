@@ -426,11 +426,11 @@ const Pages = ({route}) => {
               <PaymentText>
                 {medtronicSupportArr.includes(62471004)
                   ? `-${withCommas(medtronicPrice)}`
-                  : supportPrice === 0
+                  : usedSupportPrice === 0
                   ? 0
-                  : discountPrice < supportPrice
+                  : discountPrice < usedSupportPrice
                   ? `-${withCommas(discountPrice)}`
-                  : `-${withCommas(supportPrice)}`}
+                  : `-${withCommas(usedSupportPrice)}`}
                 원
               </PaymentText>
             </PaymentView>

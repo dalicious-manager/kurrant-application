@@ -53,7 +53,6 @@ const Component = ({
   const today = new Date();
   const weekly = useAtomValue(weekAtom);
   const {isOrderMeal, orderMeal} = useOrderMeal();
-
   const [currentPress, setCurrentPress] = useState(selectDate);
   const [chk, setChk] = useState(0);
 
@@ -65,7 +64,9 @@ const Component = ({
     const {position} = e.nativeEvent;
     setChk(position);
   };
-
+  useEffect(() => {
+    setCurrentPress(selectDate);
+  }, [currentPress, selectDate]);
   return (
     <React.Fragment>
       {BooleanValue ? <Button pager={pager} daily chk={chk} /> : <></>}
@@ -105,7 +106,7 @@ const Component = ({
                     <DaysWrap
                       key={day}
                       idx={idx}
-                      disabled={lastDay && true}
+                      disabled={(lastDay && true) || idx === 5 || idx === 6}
                       onPress={() => {
                         onPressEvent
                           ? navigation.reset({

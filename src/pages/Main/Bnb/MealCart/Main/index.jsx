@@ -296,13 +296,6 @@ const Pages = () => {
       return acc + cur;
     }, 0);
 
-  // 식사 지원금
-  const supportPrice = lastArr
-    ?.map(el => el.supportPrice)
-    .reduce((acc, cur) => {
-      return acc + cur;
-    }, 0);
-
   // 배송비
   const deliveryFee = lastArr
     ?.map(el => el.deliveryFee)
@@ -316,35 +309,109 @@ const Pages = () => {
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
+  console.log(discountPrice, '할인금액');
 
-  // 사용한 식사 지원금
-  const usedSupportPrice =
-    discountPrice < supportPrice ? discountPrice : supportPrice;
-
-  // 메드트로닉 지원금 유무
+  // 메드트로닉 지원금 유
   const medtronicSupportPrice = lastArr?.map(el => el.supportPrice);
   const set = new Set(medtronicSupportPrice);
   const medtronicSupportArr = [...set];
-
+  console.log(medtronicSupportArr, '989');
   // 메드트로닉 식사가격
   const medtronicPrice =
     medtronicSupportArr.includes(62471004) &&
     Math.round(discountPrice / 20) * 10;
-  console.log(medtronicPrice, discountPrice, '00');
+
   // 총 할인금액
   const totalDiscountPrice =
     membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
+  const totals = lastArr?.map(v => {
+    const totalDateMealPrice = v.cartDailyFoods
+      ?.map(p => p.count * p.price)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+    const membershipDateDiscountPrice = v.cartDailyFoods
+      ?.map(p => p.membershipDiscountPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
 
+    // 판매자 할인 금액
+    const makersDateDiscountPrice = v.cartDailyFoods
+      ?.map(p => p.makersDiscountPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+
+    // 기간 할인 금액
+    const periodDateDiscountPrice = v.cartDailyFoods
+      ?.map(p => p.periodDiscountPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+    const dailyDiscountPrice =
+      membershipDateDiscountPrice +
+      makersDateDiscountPrice +
+      periodDateDiscountPrice;
+    const totalDatePrice =
+      totalDateMealPrice - dailyDiscountPrice - v.supportPrice + v.deliveryFee;
+    return totalDatePrice > 0 ? totalDatePrice : 0;
+  });
+  const useDateSupportPrice = lastArr?.map(v => {
+    const totalDateMealPrice = v.cartDailyFoods
+      ?.map(p => p.count * p.price)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+    const membershipDateDiscountPrice = v.cartDailyFoods
+      ?.map(p => p.membershipDiscountPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+
+    // 판매자 할인 금액
+    const makersDateDiscountPrice = v.cartDailyFoods
+      ?.map(p => p.makersDiscountPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+
+    // 기간 할인 금액
+    const periodDateDiscountPrice = v.cartDailyFoods
+      ?.map(p => p.periodDiscountPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+    const dailyDiscountPrice =
+      membershipDateDiscountPrice +
+      makersDateDiscountPrice +
+      periodDateDiscountPrice;
+    const totalDatePrice =
+      totalDateMealPrice - dailyDiscountPrice - v.supportPrice + v.deliveryFee;
+    return totalDatePrice > 0
+      ? v.supportPrice
+      : v.supportPrice + totalDatePrice;
+  });
+  console.log(useDateSupportPrice, 'testets');
+  const totalPrice = totals?.reduce((acc, cur) => {
+    return acc + cur;
+  }, 0);
+  // 사용한 식사 지원금
+  //  const usedSupportPrice =
+  //  discountPrice < supportPrice ? discountPrice : supportPrice;
+  const usedSupportPrice = useDateSupportPrice?.reduce((acc, cur) => {
+    return acc + cur;
+  }, 0);
   // 총 결제금액
-  const totalPrice =
-    totalMealPrice - usedSupportPrice - totalDiscountPrice + deliveryFee;
+  // const totalPrice =
+  //   totalMealPrice - usedSupportPrice - totalDiscountPrice + deliveryFee;
 
   // 메드트로닉 총 결제금액
   const medtronicTotalPrice =
     totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
   console.log(
     totalMealPrice,
-    usedSupportPrice,
+    medtronicPrice,
     totalDiscountPrice,
     deliveryFee,
     'total : ',
@@ -763,11 +830,11 @@ const Pages = () => {
                   <PaymentText>
                     {medtronicSupportArr.includes(62471004)
                       ? `-${withCommas(medtronicPrice)}`
-                      : supportPrice === 0
+                      : usedSupportPrice === 0
                       ? 0
-                      : discountPrice < supportPrice
+                      : discountPrice < usedSupportPrice
                       ? `-${withCommas(discountPrice)}`
-                      : `-${withCommas(supportPrice)}`}{' '}
+                      : `-${withCommas(usedSupportPrice)}`}{' '}
                     원
                   </PaymentText>
                 </PaymentView>
@@ -849,7 +916,6 @@ const Pages = () => {
                   makersDiscountPrice,
                   periodDiscountPrice,
                   totalDiscountPrice,
-                  supportPrice,
                   totalPrice,
                   deliveryFee,
                   selected,
