@@ -111,7 +111,6 @@ const Pages = ({route}) => {
     membershipDiscountPrice,
     makersDiscountPrice,
     periodDiscountPrice,
-    supportPrice,
     deliveryFee,
     totalDiscountPrice,
     discountPrice,
@@ -129,7 +128,7 @@ const Pages = ({route}) => {
     console.log(text, id);
     setSelectDefaultCard(id.toString());
   };
-  console.log(totalPrice, medtronicPrice, '090999');
+
   const fundButton = () => {
     setModalVisible3(true);
   };
@@ -221,16 +220,12 @@ const Pages = ({route}) => {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
       cartDailyFoodDtoList: lastArr,
-      totalPrice: medtronicSupportArr.includes(62471004)
-        ? medtronicTotalPrice
-        : totalPrice,
-      supportPrice: medtronicSupportArr.includes(62471004)
-        ? medtronicPrice
-        : usedSupportPrice,
+      totalPrice: totalPrice,
+      supportPrice: usedSupportPrice,
       deliveryFee: deliveryFee,
       userPoint: isUserInfo.point,
     };
-    console.log(data, 'data');
+
     try {
       // const res = await orderMeal(spotId,data);
       // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
@@ -259,25 +254,12 @@ const Pages = ({route}) => {
           flowMode: 'DIRECT',
           cardCompany: card,
         });
-      } else if (medtronicSupportArr.includes(62471004)) {
-        return navigation.navigate(MealPaymentPageName, {
-          amount: medtronicTotalPrice,
-          orderName: orderName,
-          orderId: orderId,
-          email: isUserInfo?.email,
-          name: isUserInfo?.name,
-          orderItems: JSON.stringify(data),
-          easyPay: payments,
-          flowMode: 'DIRECT',
-          cardCompany: card,
-        });
       } else {
         const result = await order({
           amount: totalPrice,
           orderId: orderId,
           orderItems: data,
         });
-
         if (result?.data) {
           const resetAction = StackActions.popToTop();
           navigation.dispatch(resetAction);
@@ -426,11 +408,11 @@ const Pages = ({route}) => {
               <PaymentText>
                 {medtronicSupportArr.includes(62471004)
                   ? `-${withCommas(medtronicPrice)}`
-                  : supportPrice === 0
+                  : usedSupportPrice === 0
                   ? 0
-                  : discountPrice < supportPrice
+                  : discountPrice < usedSupportPrice
                   ? `-${withCommas(discountPrice)}`
-                  : `-${withCommas(supportPrice)}`}
+                  : `-${withCommas(usedSupportPrice)}`}
                 원
               </PaymentText>
             </PaymentView>
@@ -596,15 +578,7 @@ const Pages = ({route}) => {
         <ButtonWrap>
           <Button
             label={`총 ${totalCount}개 결제하기`}
-            disabled={
-              !(
-                payments !== 'NOMAL' ||
-                card ||
-                (medtronicSupportArr.includes(62471004)
-                  ? medtronicTotalPrice <= 0
-                  : totalPrice <= 0)
-              )
-            }
+            disabled={!(payments !== 'NOMAL' || card || totalPrice <= 0)}
             onPressEvent={() => {
               handleEventPayments();
             }}
