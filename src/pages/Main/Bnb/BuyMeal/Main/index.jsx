@@ -118,23 +118,11 @@ const Pages = ({route}) => {
 
   // 일일 식사지원금
   const {supportPrices, getSupportPrices} = useSupportPrices();
-  const [supportPrice, setSupportPrice] = useState(0);
+  const [supportPrice, setSupportPrice] = useState(null);
   const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
   useEffect(() => {
-    console.log('spotId ' + spotId);
-
     getSupportPrices(spotId, date);
   }, [spotId, date]);
-
-  useEffect(() => {
-    console.log(typeof supportPrice);
-
-    if (!parseInt(supportPrice)) {
-      setWhenSupportPriceKor(true);
-    } else {
-      setWhenSupportPriceKor(false);
-    }
-  }, [supportPrice]);
 
   useEffect(() => {
     let price = null;
@@ -153,6 +141,31 @@ const Pages = ({route}) => {
 
     setSupportPrice(price);
   }, [sliderValue, supportPrices]);
+
+  const [showSupportPrice, setShowSupportPrice] = useState(false);
+
+  useEffect(() => {
+    if (!!parseInt(supportPrice)) {
+      // 숫자이면
+
+      if (parseInt(supportPrice) > 0) {
+        setShowSupportPrice(true);
+        setWhenSupportPriceKor(false);
+      } else {
+        setShowSupportPrice(false);
+      }
+    } else {
+      // 널 이냐 한국어이냐
+      if (typeof supportPrice === 'string') {
+        // 한국어 일때
+        setWhenSupportPriceKor(true);
+        setShowSupportPrice(true);
+      } else {
+        // null일떄
+        setShowSupportPrice(false);
+      }
+    }
+  }, [supportPrice]);
 
   const daily = true;
 
@@ -612,20 +625,24 @@ const Pages = ({route}) => {
             </Progress>
           </ProgressInner>
 
-          <MiniWrap>
-            {!whenSupportPriceKor && <Typography2>일일 식사지원금</Typography2>}
-            {!whenSupportPriceKor && (
-              <QuestionPressable onPress={() => {}}>
-                <QuestionCircleMonoIcon />
-              </QuestionPressable>
-            )}
+          {showSupportPrice && (
+            <MiniWrap>
+              {!whenSupportPriceKor && (
+                <Typography2>일일 식사지원금</Typography2>
+              )}
+              {!whenSupportPriceKor && (
+                <QuestionPressable onPress={() => {}}>
+                  <QuestionCircleMonoIcon />
+                </QuestionPressable>
+              )}
 
-            {whenSupportPriceKor ? (
-              <Typography4>{supportPrice}</Typography4>
-            ) : (
-              <Typography3> {supportPrice}원</Typography3>
-            )}
-          </MiniWrap>
+              {whenSupportPriceKor ? (
+                <Typography4>{supportPrice}</Typography4>
+              ) : (
+                <Typography3> {supportPrice}원</Typography3>
+              )}
+            </MiniWrap>
+          )}
         </ProgressWrap>
         {!userInfo?.isMembership && (
           <View>
@@ -794,7 +811,9 @@ const MiniWrap = styled.View`
   align-items: center;
   justify-content: center;
   margin-left: 6px;
-  width: 181px;
+  padding-left: 16px;
+  padding-right: 16px;
+
   height: 32px;
 
   border: 0.5px solid ${({theme}) => theme.colors.grey[7]};
