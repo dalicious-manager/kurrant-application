@@ -4,8 +4,10 @@ import {
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import {useAtomValue} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 import React, {useRef, useState, useEffect, useCallback} from 'react';
+import Animateds, {useEvent, useHandler} from 'react-native-reanimated';
+
 import {
   ScrollView,
   View,
@@ -50,11 +52,13 @@ import Modal from '../components/Modal';
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
 import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
 import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
+import {weekAtom} from '../../../../../biz/useBanner/store';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
+const AnimatedPagerView = Animateds.createAnimatedComponent(PagerView);
 const Pages = ({route}) => {
   const params = route.params;
   const isFocused = useIsFocused();
@@ -67,14 +71,13 @@ const Pages = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
-  const [modalVisible4, setModalVisible4] = useState(false);
   const [startScroll, setStartScroll] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
+  const [nowPage, setNowPage] = useState(1);
   const [selectFood, setSelectFood] = useState();
   const [show, setShow] = useState(false);
   const [scrollDir, setScrollDir] = useState(true);
   const [hideModal, setHideModal] = useState(true);
-
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -117,11 +120,11 @@ const Pages = ({route}) => {
   const [date, setDate] = useState(
     params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
   ); // 오늘
-
+  const [weekly] = useAtom(weekAtom);
   // 일일 식사지원금
   const {supportPrices, getSupportPrices} = useSupportPrices();
-  const [supportPrice, setSupportPrice] = useState(null);
-  const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
+  const [supportPrice, setSupportPrice] = useState(0);
+
   useEffect(() => {
     getSupportPrices(spotId, date);
   }, [spotId, date]);
@@ -144,31 +147,6 @@ const Pages = ({route}) => {
     setSupportPrice(price);
   }, [sliderValue, supportPrices]);
 
-  const [showSupportPrice, setShowSupportPrice] = useState(false);
-
-  useEffect(() => {
-    if (!!parseInt(supportPrice)) {
-      // 숫자이면
-
-      if (parseInt(supportPrice) > 0) {
-        setShowSupportPrice(true);
-        setWhenSupportPriceKor(false);
-      } else {
-        setShowSupportPrice(false);
-      }
-    } else {
-      // 널 이냐 한국어이냐
-      if (typeof supportPrice === 'string') {
-        // 한국어 일때
-        setWhenSupportPriceKor(true);
-        setShowSupportPrice(true);
-      } else {
-        // null일떄
-        setShowSupportPrice(false);
-      }
-    }
-  }, [supportPrice]);
-
   const daily = true;
 
   // const todayMeal = mealInfo?.filter((m) => m.date === date);
@@ -176,13 +154,65 @@ const Pages = ({route}) => {
   const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo.spotId;
   // const spotId = 1;
   const [chk, setChk] = useState(0);
+
   const onPageScroll2 = e => {
     const {position} = e.nativeEvent;
     setChk(position);
   };
+  const onPageScroll3 = e => {
+    const {position, offset} = e.nativeEvent;
+
+    if (offset === 0) {
+      if (nowPage === position) {
+        console.log(nowPage, position);
+        if (position === 2) {
+          setDate(
+            formattedWeekDate(
+              new Date(date).setDate(new Date(date).getDate() + 1),
+            ),
+          );
+          const dateIndex = weekly.map(v => {
+            return v.map(s => {
+              return formattedWeekDate(s);
+            });
+          });
+          const index = dateIndex.findIndex((v, i) => {
+            return v.includes(
+              formattedWeekDate(
+                new Date(date).setDate(new Date(date).getDate() + 1),
+              ),
+            );
+          });
+          setChk(index);
+          pager.current.setPage(index);
+        }
+        if (position === 0) {
+          setDate(
+            formattedWeekDate(
+              new Date(date).setDate(new Date(date).getDate() - 1),
+            ),
+          );
+          const dateIndex = weekly.map(v => {
+            return v.map(s => {
+              return formattedWeekDate(s);
+            });
+          });
+          const index = dateIndex.findIndex((v, i) => {
+            return v.includes(
+              formattedWeekDate(
+                new Date(date).setDate(new Date(date).getDate() - 1),
+              ),
+            );
+          });
+          setChk(index);
+          pager.current.setPage(index);
+        }
+      }
+      setNowPage(position);
+    }
+  };
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
-
     if (
       isDiningTypes[0] &&
       ((isMorningFood.length === 0 && position === 0) ||
@@ -214,7 +244,49 @@ const Pages = ({route}) => {
           ? 0
           : 2;
       if (page !== position) {
-        diningRef.current.setPage(page);
+        if (position === 2) {
+          setDate(
+            formattedWeekDate(
+              new Date(date).setDate(new Date(date).getDate() + 1),
+            ),
+          );
+          const dateIndex = weekly.map(v => {
+            return v.map(s => {
+              return formattedWeekDate(s);
+            });
+          });
+          const index = dateIndex.findIndex((v, i) => {
+            return v.includes(
+              formattedWeekDate(
+                new Date(date).setDate(new Date(date).getDate() + 1),
+              ),
+            );
+          });
+          setChk(index);
+          pager.current.setPage(index);
+        }
+        if (position === 0) {
+          setDate(
+            formattedWeekDate(
+              new Date(date).setDate(new Date(date).getDate() - 1),
+            ),
+          );
+          const dateIndex = weekly.map(v => {
+            return v.map(s => {
+              return formattedWeekDate(s);
+            });
+          });
+          const index = dateIndex.findIndex((v, i) => {
+            return v.includes(
+              formattedWeekDate(
+                new Date(date).setDate(new Date(date).getDate() - 1),
+              ),
+            );
+          });
+          setChk(index);
+          pager.current.setPage(index);
+        }
+        // diningRef.current.setPage(page);
         setSliderValue(page);
       } else {
         setSliderValue(page);
@@ -579,6 +651,7 @@ const Pages = ({route}) => {
           size={'Body05R'}
           onPressEvent2={dayPress}
           daily={daily}
+          selectDate={date}
           margin={'0px 28px'}
           scrollDir
           pagerRef={pager}
@@ -627,34 +700,13 @@ const Pages = ({route}) => {
             </Progress>
           </ProgressInner>
 
-          {showSupportPrice && (
-            <MiniWrap>
-              {/* {!whenSupportPriceKor && (
-                <Typography2>일일 식사지원금</Typography2>
-              )}
-              {!whenSupportPriceKor && (
-                <QuestionPressable
-                  onPress={() => {
-                    setModalVisible4(true);
-                  }}>
-                  <QuestionCircleMonoIcon />
-                </QuestionPressable>
-              )} */}
-              <Typography2>일일 식사지원금</Typography2>
-              <QuestionPressable
-                onPress={() => {
-                  setModalVisible4(true);
-                }}>
-                <QuestionCircleMonoIcon />
-              </QuestionPressable>
-
-              {whenSupportPriceKor ? (
-                <Typography4>{supportPrice}</Typography4>
-              ) : (
-                <Typography3> {supportPrice}원</Typography3>
-              )}
-            </MiniWrap>
-          )}
+          <MiniWrap>
+            <Typography2>일일 식사지원금</Typography2>
+            <QuestionPressable onPress={() => {}}>
+              <QuestionCircleMonoIcon />
+            </QuestionPressable>
+            <Typography3> {supportPrice}원</Typography3>
+          </MiniWrap>
         </ProgressWrap>
         {!userInfo?.isMembership && (
           <View>
@@ -664,6 +716,7 @@ const Pages = ({route}) => {
 
         <Pager
           ref={diningRef}
+          overdrag={true}
           initialPage={
             isMorningFood.length !== 0
               ? 0
@@ -673,6 +726,7 @@ const Pages = ({route}) => {
               ? 2
               : 1
           }
+          onPageScroll={onPageScroll3}
           onPageSelected={e => {
             onPageScroll(e);
           }}>
@@ -739,19 +793,6 @@ const Pages = ({route}) => {
           }}
         />
       </ButtonWrap>
-      <BottomModal
-        modalVisible={modalVisible4}
-        setModalVisible={setModalVisible4}
-        title={'포인트란?'}
-        description={
-          '고객님의 회사에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불포인트입니다. \n 결재시 사용가능한 최대 금액으로 자동 적용됩니다.'
-        }
-        buttonTitle1={'확인했어요'}
-        buttonType1="grey7"
-        onPressEvent1={() => {
-          setModalVisible4(false);
-        }}
-      />
     </SafeView>
   );
 };
@@ -836,9 +877,7 @@ const MiniWrap = styled.View`
   align-items: center;
   justify-content: center;
   margin-left: 6px;
-  padding-left: 16px;
-  padding-right: 16px;
-
+  width: 181px;
   height: 32px;
 
   border: 0.5px solid ${({theme}) => theme.colors.grey[7]};
@@ -846,7 +885,7 @@ const MiniWrap = styled.View`
 `;
 
 const QuestionPressable = styled.Pressable`
-  margin-right: 5px;
+  margin-right: 3px;
 `;
 
 const Typography2 = styled(Typography).attrs({text: 'SmallLabel'})`
@@ -860,12 +899,6 @@ const Typography3 = styled(Typography).attrs({text: 'Body05SB'})`
 
   font-weight: 600;
 `;
-const Typography4 = styled(Typography).attrs({text: 'Body05SB'})`
-  margin-right: 4px;
-  color: ${({theme}) => theme.colors.grey[2]};
-  font-size: 14px;
-  font-weight: 600;
-`;
 
 const Progress = styled.View`
   flex-direction: row;
@@ -873,7 +906,7 @@ const Progress = styled.View`
   width: 120px;
 `;
 
-const Pager = styled(PagerView)`
+const Pager = styled(AnimatedPagerView)`
   flex: 1;
 `;
 
