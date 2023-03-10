@@ -71,6 +71,7 @@ const Pages = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
+  const [modalVisible4, setModalVisible4] = useState(false);
   const [startScroll, setStartScroll] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
   const [nowPage, setNowPage] = useState(1);
@@ -124,6 +125,7 @@ const Pages = ({route}) => {
   // 일일 식사지원금
   const {supportPrices, getSupportPrices} = useSupportPrices();
   const [supportPrice, setSupportPrice] = useState(0);
+  const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
 
   useEffect(() => {
     getSupportPrices(spotId, date);
@@ -146,6 +148,30 @@ const Pages = ({route}) => {
 
     setSupportPrice(price);
   }, [sliderValue, supportPrices]);
+  const [showSupportPrice, setShowSupportPrice] = useState(false);
+
+  useEffect(() => {
+    if (!!parseInt(supportPrice)) {
+      // 숫자이면
+
+      if (parseInt(supportPrice) > 0) {
+        setShowSupportPrice(true);
+        setWhenSupportPriceKor(false);
+      } else {
+        setShowSupportPrice(false);
+      }
+    } else {
+      // 널 이냐 한국어이냐
+      if (typeof supportPrice === 'string') {
+        // 한국어 일때
+        setWhenSupportPriceKor(true);
+        setShowSupportPrice(true);
+      } else {
+        // null일떄
+        setShowSupportPrice(false);
+      }
+    }
+  }, [supportPrice]);
 
   const daily = true;
 
@@ -700,13 +726,34 @@ const Pages = ({route}) => {
             </Progress>
           </ProgressInner>
 
-          <MiniWrap>
-            <Typography2>일일 식사지원금</Typography2>
-            <QuestionPressable onPress={() => {}}>
-              <QuestionCircleMonoIcon />
-            </QuestionPressable>
-            <Typography3> {supportPrice}원</Typography3>
-          </MiniWrap>
+          {showSupportPrice && (
+            <MiniWrap
+              onPress={() => {
+                setModalVisible4(true);
+              }}>
+              {/* {!whenSupportPriceKor && (
+                <Typography2>일일 식사지원금</Typography2>
+              )}
+              {!whenSupportPriceKor && (
+                <QuestionPressable
+                  onPress={() => {
+                    setModalVisible4(true);
+                  }}>
+                  <QuestionCircleMonoIcon />
+                </QuestionPressable>
+              )} */}
+              <Typography2>일일 식사지원금</Typography2>
+              <QuestionPressable>
+                <QuestionCircleMonoIcon />
+              </QuestionPressable>
+
+              {whenSupportPriceKor ? (
+                <Typography4>{supportPrice}</Typography4>
+              ) : (
+                <Typography3> {supportPrice}원</Typography3>
+              )}
+            </MiniWrap>
+          )}
         </ProgressWrap>
         {!userInfo?.isMembership && (
           <View>
@@ -793,6 +840,19 @@ const Pages = ({route}) => {
           }}
         />
       </ButtonWrap>
+      <BottomModal
+        modalVisible={modalVisible4}
+        setModalVisible={setModalVisible4}
+        title={'지원금이란?'}
+        description={
+          '고객님의 스팟에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
+        }
+        buttonTitle1={'확인했어요'}
+        buttonType1="grey7"
+        onPressEvent1={() => {
+          setModalVisible4(false);
+        }}
+      />
     </SafeView>
   );
 };
@@ -871,7 +931,7 @@ const ProgressInner = styled.View`
   top: -6.5px;
 `;
 
-const MiniWrap = styled.View`
+const MiniWrap = styled.Pressable`
   display: flex;
   flex-flow: row;
   align-items: center;
@@ -1038,7 +1098,12 @@ const ReviewCount = styled(Typography).attrs({text: 'SmallLabel'})`
 const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme}) => theme.colors.grey[5]};
 `;
-
+const Typography4 = styled(Typography).attrs({text: 'Body05SB'})`
+  margin-right: 4px;
+  color: ${({theme}) => theme.colors.grey[2]};
+  font-size: 14px;
+  font-weight: 600;
+`;
 const NoServieceView = styled.View`
   position: absolute;
   top: ${({status, isMembership}) => (status && !isMembership ? '10%' : '30%')};
