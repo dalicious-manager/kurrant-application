@@ -38,7 +38,10 @@ const Pages = ({route}) => {
   const pressDay = day => {
     setTouchDate(day ?? data);
   };
+
+  // console.log(isOrderMeal, '밀정보');
   const cancelMealPress = id => {
+    console.log(id, '밀 취소');
     const list = isOrderMeal.map(el => {
       return {
         ...el,
