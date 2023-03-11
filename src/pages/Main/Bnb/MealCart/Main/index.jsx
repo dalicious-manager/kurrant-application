@@ -309,13 +309,12 @@ const Pages = () => {
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
-  console.log(discountPrice, '할인금액');
 
   // 메드트로닉 지원금 유
   const medtronicSupportPrice = lastArr?.map(el => el.supportPrice);
   const set = new Set(medtronicSupportPrice);
   const medtronicSupportArr = [...set];
-  console.log(medtronicSupportArr, '989');
+
   // 메드트로닉 식사가격
   const medtronicPrice =
     medtronicSupportArr.includes(62471004) &&
@@ -392,7 +391,7 @@ const Pages = () => {
       ? v.supportPrice
       : v.supportPrice + totalDatePrice;
   });
-  console.log(useDateSupportPrice, 'testets');
+
   const totalPrice = totals?.reduce((acc, cur) => {
     return acc + cur;
   }, 0);
@@ -409,14 +408,7 @@ const Pages = () => {
   // 메드트로닉 총 결제금액
   const medtronicTotalPrice =
     totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
-  console.log(
-    totalMealPrice,
-    medtronicPrice,
-    totalDiscountPrice,
-    deliveryFee,
-    'total : ',
-    medtronicTotalPrice,
-  );
+
   // 품절
   const soldout = arr.filter(el => el.status === 0);
 
