@@ -80,13 +80,13 @@ const Pages = () => {
             </Typography>
           </BoxWrap>
         </ApplyContainer>
+        <NextView
+          onPress={() => {
+            navigation.navigate(SCREEN_NAME);
+          }}>
+          <NextText>다음에 하기</NextText>
+        </NextView>
       </Wrap>
-      <NextView
-        onPress={() => {
-          navigation.navigate(SCREEN_NAME);
-        }}>
-        <NextText>다음에 하기</NextText>
-      </NextView>
     </Wrapper>
   );
 };
@@ -110,7 +110,7 @@ const SearchBoxWrap = styled.Pressable`
   background-color: ${({theme}) => theme.colors.grey[0]};
   border-radius: 14px;
   padding: 20px;
-  flex: 1;
+  min-height: 350px;
 `;
 
 const CenterText = styled.View`
@@ -157,7 +157,7 @@ const NextText = styled(Typography).attrs({text: 'BottomButtonR'})`
 
 const NextView = styled.Pressable`
   width: 100%;
-  padding-top: 56px;
+  margin-top: 56px;
   margin-bottom: 27px;
   justify-content: center;
   flex-direction: row;
@@ -178,6 +178,6 @@ const CloseWrap = styled.View`
   margin-bottom: 24px;
 `;
 
-const Wrap = styled.View`
+const Wrap = styled.ScrollView`
   flex: 1;
 `;
