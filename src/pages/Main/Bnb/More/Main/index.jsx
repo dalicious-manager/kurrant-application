@@ -99,12 +99,11 @@ const Pages = () => {
     }, []),
   );
   useEffect(() => {
-    console.log(userRole, 'test');
     if (userRole !== 'ROLE_GUEST') {
       if (applicationList) {
         applicationList();
       }
-      getData();
+      // getData();
     }
   }, []);
   if (isMyInfoLoading && !myInfo) {
