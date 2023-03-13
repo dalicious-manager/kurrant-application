@@ -25,14 +25,16 @@ import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
-  const data = route?.params?.data === undefined ? '' : route.params.data;
+  const date = formattedWeekDate(new Date());
+  const data = route?.params?.data === undefined ? date : route.params.data;
   const navigation = useNavigation();
   const meal = true;
+  console.log(data);
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
   const {isOrderMeal, refundItem, setOrderMeal} = useOrderMeal();
-  const date = formattedWeekDate(new Date());
-  const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
+
+  // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
   const pressDay = day => {
@@ -200,8 +202,8 @@ const Pages = ({route}) => {
             </>
           ) : (
             <>
-              {todayMeal &&
-                todayMeal.map((m, i) => {
+              {selectDate &&
+                selectDate.map((m, i) => {
                   return (
                     <View key={i}>
                       <DiningTimeWrap>
@@ -265,7 +267,7 @@ const Pages = ({route}) => {
           )}
         </MealWrap>
       </ScrollView>
-      {todayMeal?.length === 0 && selectDate?.length === 0 && (
+      {selectDate?.length === 0 && (
         <NoMealWrap>
           <NoMealText>주문한 메뉴가 없어요</NoMealText>
           <NoMealButtonWrap>

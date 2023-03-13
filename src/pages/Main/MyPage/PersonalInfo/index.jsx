@@ -100,7 +100,7 @@ const Pages = ({route}) => {
   const terminate = async () => {
     Alert.alert(
       '회원 탈퇴',
-      '커런트앱의 회원을 탈퇴 하시겠어요?',
+      '커런트앱의 회원을 탈퇴를 요청 하시겠어요?\n회원 탈퇴는 7일간 진행되며 \n7일 후엔 완전히 삭제 됩니다.',
       [
         {
           text: '취소',
@@ -338,14 +338,14 @@ const Pages = ({route}) => {
               }}
             />
           </TextButtonBox>
-          <TextButtonBox>
+          <TextButtonBoxTerminate>
             <TextButton
               label="탈퇴하기"
               type="grey4"
               size="label13R"
               onPressEvent={terminate}
             />
-          </TextButtonBox>
+          </TextButtonBoxTerminate>
         </ScrollView>
         <ToastWrap icon="checked" message={message} />
         <BottomModal
@@ -447,6 +447,10 @@ const ArrowSNSRight = styled(ArrowRightIcon)`
 
 const TextButtonBox = styled.View`
   margin-top: 24px;
+  margin-left: 24px;
+`;
+const TextButtonBoxTerminate = styled.View`
+  margin-top: 40px;
   margin-left: 24px;
 `;
 
