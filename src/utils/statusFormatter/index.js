@@ -89,15 +89,15 @@ export function formattedCardCode(data) {
   }
 }
 export const cardListData = [
-  { id: 51, text: "삼성카드" },
-  { id: 33, text: "우리카드" },
-  { id: 41, text: "신한카드" },
-  { id: 61, text: "현대카드" },
-  { id: 11, text: "KB국민카드" },
-  { id: 71, text: "롯데카드" },
-  { id: 91, text: "NH농협카드" },
-  { id: 31, text: "비씨카드" },
-  { id: 21, text: "하나카드" },
-  { id: 36, text: "씨티카드" },
-  { id: 15, text: "카카오뱅크카드" },
-]
+  {id: 51, text: '삼성카드'},
+  // {id: 33, text: '우리카드'},
+  {id: 41, text: '신한카드'},
+  {id: 61, text: '현대카드'},
+  {id: 11, text: 'KB국민카드 (현재 심사 중으로 이용할 수 없어요)'},
+  {id: 71, text: '롯데카드'},
+  {id: 91, text: 'NH농협카드'},
+  {id: 31, text: '비씨카드'},
+  {id: 21, text: '하나카드'},
+  // {id: 36, text: '씨티카드'},
+  // {id: 15, text: '카카오뱅크카드'},
+];
