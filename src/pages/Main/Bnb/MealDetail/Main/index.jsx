@@ -128,9 +128,10 @@ const Pages = ({route}) => {
           <Pressable
             onPress={() => navigation.goBack()}
             style={{
-              marginLeft: 2,
+              marginLeft: 3,
               width: 30,
               height: 30,
+              justifyContent: 'center',
             }}>
             <BackArrow color={'#343337'} />
           </Pressable>
@@ -138,10 +139,10 @@ const Pages = ({route}) => {
           <Pressable
             onPress={() => navigation.goBack()}
             style={{
-              marginLeft: 2,
-
+              marginLeft: 3,
               width: 30,
               height: 30,
+              justifyContent: 'center',
             }}>
             <BackArrow color={'#fff'} />
           </Pressable>
@@ -390,7 +391,7 @@ const Pages = ({route}) => {
                 </InfoTextView>
               </InfoWrap>
 
-              {isUserInfo?.spotType === 2 ? (
+              {isUserInfo?.spotType === 0 ? (
                 <InfoWrap>
                   <InfoTitleView>
                     <InfoTitle>배송 정보</InfoTitle>

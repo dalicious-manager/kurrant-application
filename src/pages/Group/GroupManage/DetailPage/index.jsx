@@ -168,7 +168,7 @@ const Pages = ({route}) => {
           </TextView>
         )}
         <TextView>
-          <Title>주문 마감 / 배송 시간</Title>
+          <Title>멤버십 할인 마감 / 주문 마감 / 배송 시간</Title>
           {isDetailSpot?.mealTypeInfoList?.map((el, idx) => {
             const diningType =
               el.diningType === 1
@@ -178,8 +178,8 @@ const Pages = ({route}) => {
                 : '저녁';
             return (
               <ContentText key={idx}>
-                {diningType} 식사(전일{el.lastOrderTime} / 당일{el.deliveryTime}
-                )
+                {diningType} 식사 {'\n'}({el.membershipBenefitTime} /{' '}
+                {el.lastOrderTime} / 당일{el.deliveryTime})
               </ContentText>
             );
           })}

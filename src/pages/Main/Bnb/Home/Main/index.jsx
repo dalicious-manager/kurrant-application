@@ -97,7 +97,7 @@ const Pages = () => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const toast = Toast();
-  // console.log(isUserInfo, 'l');
+
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
   const mealCheck = isOrderMeal?.map(el => {
@@ -541,7 +541,7 @@ const Pages = () => {
       <BottomSheetSpot
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        title="스팟 선택"
+        title="상세스팟 선택"
         data={isUserGroupSpotCheck}
         selected={selected}
         setSelected={setSelected}

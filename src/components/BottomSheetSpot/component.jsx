@@ -286,8 +286,8 @@ const Border = styled.View`
 
 const ManagePressView = styled.Pressable`
   width: ${Dimensions.get('screen').width}px;
-  height: 60px;
-  padding: 19px 24px;
+  height: 100px;
+  padding: 19px 24px 55px 24px;
   background-color: white;
 `;
 

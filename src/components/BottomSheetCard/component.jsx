@@ -164,16 +164,21 @@ const BottomSheetCard = props => {
             }}
             renderItem={({item}) => (
               <ContentItemContainer
+                disabled={item.id === 11}
                 onPressIn={pressInUp}
                 onPressOut={pressOutUp}
                 onPress={() => onSelect(item.id, item.text)}>
                 {selected === item.id ? (
                   <ContentItemBox>
-                    <ContentItemText>{item.text}</ContentItemText>
+                    <ContentItemText status={item.id}>
+                      {item.text}
+                    </ContentItemText>
                     <CheckedIcon />
                   </ContentItemBox>
                 ) : (
-                  <ContentItemText>{item.text}</ContentItemText>
+                  <ContentItemText status={item.id}>
+                    {item.text}
+                  </ContentItemText>
                 )}
               </ContentItemContainer>
             )}
@@ -232,7 +237,9 @@ const ContentItemBox = styled.View`
   align-items: center;
 `;
 
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${({theme, status}) => status === 11 && theme.colors.grey[5]};
+`;
 
 const ManagePressView = styled.Pressable`
   width: ${Dimensions.get('screen').width}px;
