@@ -375,7 +375,7 @@ const Pages = ({route}) => {
           setSliderValue(Number(data[0]) - 1);
         }
       } catch (error) {
-        if (error.toString().replace('Error:', '').trim() === '403') {
+        if (error.toString().replace('Error.:', '').trim() === '403') {
           navigation.reset({
             index: 0,
             routes: [
