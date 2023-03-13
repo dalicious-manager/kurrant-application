@@ -11,7 +11,9 @@ import SplashScreen from 'react-native-splash-screen';
 import {PAGE_NAME as BuyMealPageName} from '~pages/Main/Bnb/BuyMeal/Main';
 
 import {pageNameAtom} from '../atoms/store';
+
 import Main from './Main';
+
 const Root = createNativeStackNavigator();
 
 const Screen = () => {
