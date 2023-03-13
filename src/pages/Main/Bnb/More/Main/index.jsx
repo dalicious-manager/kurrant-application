@@ -64,6 +64,9 @@ const Pages = () => {
   };
   useFocusEffect(
     useCallback(() => {
+      if (userRole !== 'ROLE_GUEST') {
+        getData();
+      }
       if (userRole === 'ROLE_GUEST') {
         Alert.alert(
           '로그인이 필요합니다',

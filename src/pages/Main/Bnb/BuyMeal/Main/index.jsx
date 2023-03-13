@@ -661,11 +661,6 @@ const Pages = ({route}) => {
 
   return (
     <SafeView>
-      {isDailyFoodLoading && (
-        <LoadingPage>
-          <ActivityIndicator size={'large'} />
-        </LoadingPage>
-      )}
       <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
         <CalendarButton pager={pager} daily chk={chk} />
       </Animated.View>
@@ -760,27 +755,32 @@ const Pages = ({route}) => {
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
           </View>
         )}
-
-        <Pager
-          ref={diningRef}
-          overdrag={true}
-          initialPage={
-            isMorningFood.length !== 0
-              ? 0
-              : isLunchFood.length !== 0
-              ? 1
-              : isDinnerFood.length !== 0
-              ? 2
-              : 1
-          }
-          onPageScroll={onPageScroll3}
-          onPageSelected={e => {
-            onPageScroll(e);
-          }}>
-          {BuyMeal(isMorningFood)}
-          {BuyMeal(isLunchFood)}
-          {BuyMeal(isDinnerFood)}
-        </Pager>
+        {isDailyFoodLoading ? (
+          <LoadingPage>
+            <ActivityIndicator size={'large'} />
+          </LoadingPage>
+        ) : (
+          <Pager
+            ref={diningRef}
+            overdrag={true}
+            initialPage={
+              isMorningFood.length !== 0
+                ? 0
+                : isLunchFood.length !== 0
+                ? 1
+                : isDinnerFood.length !== 0
+                ? 2
+                : 1
+            }
+            onPageScroll={onPageScroll3}
+            onPageSelected={e => {
+              onPageScroll(e);
+            }}>
+            {BuyMeal(isMorningFood)}
+            {BuyMeal(isLunchFood)}
+            {BuyMeal(isDinnerFood)}
+          </Pager>
+        )}
       </PagerViewWrap>
 
       {show && (
@@ -894,14 +894,14 @@ const CalendarWrap = styled.View`
   width: 100%;
 `;
 const LoadingPage = styled.View`
-  position: absolute;
   background-color: white;
   opacity: 0.5;
   justify-content: center;
   align-items: center;
   z-index: 1;
-  width: ${screenWidth}px;
-  height: ${screenHeight}px;
+  width: 100%;
+  flex: 1;
+  padding-bottom: 150px;
 `;
 const PagerViewWrap = styled.View`
   flex: 1;
