@@ -229,7 +229,7 @@ const Pages = ({route}) => {
 
     if (offset === 0) {
       if (nowPage === position) {
-        console.log(nowPage, position);
+        //console.log(nowPage, position);
         if (position === 2) {
           setDate(
             formattedWeekDate(
@@ -512,7 +512,7 @@ const Pages = ({route}) => {
         setShow(false);
       }, 3000);
     } catch (err) {
-      console.log(err, '8');
+      console.log(err);
     }
     closeModal();
   };
@@ -603,11 +603,14 @@ const Pages = ({route}) => {
           )}
 
           {diningFood.map(m => {
-            // console.log(m, '3353');
-            const totalRate =
-              m.membershipDiscountRate +
-              m.makersDiscountRate +
-              m.periodDiscountRate;
+            const realToTalDiscountRate =
+              100 -
+              (100 - m.membershipDiscountRate) *
+                0.01 *
+                ((100 - m.makersDiscountRate) * 0.01) *
+                ((100 - m.periodDiscountRate) * 0.01) *
+                100;
+
             const totalDiscount =
               m.membershipDiscountPrice +
               m.makersDiscountPrice +
@@ -637,13 +640,15 @@ const Pages = ({route}) => {
                     {m.description}
                   </MealDsc>
                   <PriceWrap>
-                    {totalRate !== 0 && (
-                      <PercentText soldOut={m.status}>{totalRate}%</PercentText>
+                    {realToTalDiscountRate !== 0 && (
+                      <PercentText soldOut={m.status}>
+                        {Math.round(realToTalDiscountRate * 100) / 100}%
+                      </PercentText>
                     )}
                     <Price soldOut={m.status}>
                       {withCommas(m.price - totalDiscount)}원
                     </Price>
-                    {totalRate !== 0 && (
+                    {realToTalDiscountRate !== 0 && (
                       <OriginPrice>{withCommas(m.price)}원</OriginPrice>
                     )}
                   </PriceWrap>
