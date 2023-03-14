@@ -58,7 +58,8 @@ const Pages = ({route}) => {
   const [focus, setFocus] = useState(false);
   const [count, setCount] = useState(1);
   const [scroll, setScroll] = useState(0);
-  const {isFoodDetail, isFoodDetailLoading, foodDetail} = useFoodDetail();
+  const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
+  const {isFoodDetail, isFoodDetailLoading, foodDetail} = useFoodDetail(); // 상세정보
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -67,7 +68,7 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const isFocused = useIsFocused();
-  console.log(isUserInfo, '디테일페이지');
+  console.log(isfoodDetailDiscount, isFoodDetail, '--');
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -219,7 +220,7 @@ const Pages = ({route}) => {
           spotId: isUserInfo?.spotId,
         },
       ]);
-      console.log(data);
+      //console.log(data);
       balloonEvent();
       // await loadMeal();
     } catch (err) {
@@ -253,16 +254,26 @@ const Pages = ({route}) => {
     setCount(number);
   };
 
-  const totalDiscountRate =
-    isFoodDetail?.membershipDiscountedRate +
-    isFoodDetail?.makersDiscountedRate +
-    isFoodDetail?.periodDiscountedRate;
+  const realToTalDiscountRate =
+    100 -
+    (100 - isFoodDetail.membershipDiscountedRate) *
+      0.01 *
+      ((100 - isFoodDetail.makersDiscountedRate) * 0.01) *
+      ((100 - isFoodDetail.periodDiscountedRate) * 0.01) *
+      100;
+  // console.log(Math.round(realToTalDiscountRate * 100) / 100, 'rate');
 
   const discountPrice =
     isFoodDetail?.membershipDiscountedPrice +
     isFoodDetail?.makersDiscountedPrice +
     isFoodDetail?.periodDiscountedPrice;
 
+  useEffect(() => {
+    async function detail() {
+      await foodDetailDiscount(dailyFoodId);
+    }
+    detail();
+  }, []);
   if (isFoodDetailLoading) {
     return <Skeleton />;
   }
@@ -342,27 +353,29 @@ const Pages = ({route}) => {
                         isFoodDetail?.periodDiscountedPrice
                       }
                       periodDiscountedRate={isFoodDetail?.periodDiscountedRate}
-                      totalDiscountRate={totalDiscountRate}
+                      totalDiscountRate={realToTalDiscountRate}
                       discountPrice={discountPrice}
                     />
                   </ModalWrap>
                 </PriceTitleWrap>
                 <PriceWrap>
-                  {totalDiscountRate !== 0 && (
-                    <Percent>{totalDiscountRate}%</Percent>
+                  {realToTalDiscountRate !== 0 && (
+                    <Percent>
+                      {Math.round(realToTalDiscountRate * 100) / 100}%
+                    </Percent>
                   )}
-                  {totalDiscountRate !== 0 && (
+                  {realToTalDiscountRate !== 0 && (
                     <SalePrice>
                       {withCommas(isFoodDetail?.price - discountPrice)}원
                     </SalePrice>
                   )}
 
-                  {totalDiscountRate === 0 && (
+                  {realToTalDiscountRate === 0 && (
                     <NoSalePrice>
                       {withCommas(isFoodDetail?.price)}원
                     </NoSalePrice>
                   )}
-                  {totalDiscountRate !== 0 && (
+                  {realToTalDiscountRate !== 0 && (
                     <Price>{withCommas(isFoodDetail?.price)}원</Price>
                   )}
                 </PriceWrap>
@@ -375,10 +388,20 @@ const Pages = ({route}) => {
                 </InfoTitleView>
                 <InfoTextView>
                   <InfoTextWrap>
-                    <Info>멤버십 할인</Info>
-                    <InfoText>
-                      {isFoodDetail?.membershipDiscountedRate}%
-                    </InfoText>
+                    {isFoodDetail?.membershipDiscountedRate !== 0 ? (
+                      <Info>멤버십 할인</Info>
+                    ) : (
+                      <Info>멤버십 가입시 할인</Info>
+                    )}
+                    {isFoodDetail?.membershipDiscountedRate !== 0 ? (
+                      <InfoText>
+                        {isFoodDetail?.membershipDiscountedRate}%
+                      </InfoText>
+                    ) : (
+                      <InfoText>
+                        {isfoodDetailDiscount?.membershipDiscountRate}%
+                      </InfoText>
+                    )}
                   </InfoTextWrap>
                   <InfoTextWrap>
                     <Info>판매자 할인</Info>
@@ -648,7 +671,7 @@ const InfoTitle = styled(Typography).attrs({text: 'CaptionR'})`
 const Info = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-bottom: 4px;
-  width: 30%;
+  width: 50%;
 `;
 
 const MessageView = styled.View`
