@@ -11,6 +11,7 @@ import Screen from './screens';
 import Theme from './theme';
 import Config from 'react-native-config';
 import styled from 'styled-components/native';
+import {SseProvider} from './utils/seeContextApi/sseContext';
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -37,28 +38,31 @@ const App = () => {
   return (
     <ThemeProvider theme={Theme}>
       <SafeAreaProvider>
-        <StatusBar />
-        {Config.NODE_ENV === 'dev' && <IsDevelop>개발서버 입니다.</IsDevelop>}
-        <NavigationContainer
-          ref={navigationRef}
-          onReady={() => {
-            routeNameRef.current = navigationRef.current.getCurrentRoute().name;
-          }}
-          onStateChange={async () => {
-            const previousRouteName = routeNameRef.current;
-            const currentRouteName =
-              navigationRef.current.getCurrentRoute().name;
+        <SseProvider>
+          <StatusBar />
+          {Config.NODE_ENV === 'dev' && <IsDevelop>개발서버 입니다.</IsDevelop>}
+          <NavigationContainer
+            ref={navigationRef}
+            onReady={() => {
+              routeNameRef.current =
+                navigationRef.current.getCurrentRoute().name;
+            }}
+            onStateChange={async () => {
+              const previousRouteName = routeNameRef.current;
+              const currentRouteName =
+                navigationRef.current.getCurrentRoute().name;
 
-            if (previousRouteName !== currentRouteName) {
-              await analytics().logScreenView({
-                screen_name: currentRouteName,
-                screen_class: currentRouteName,
-              });
-            }
-            routeNameRef.current = currentRouteName;
-          }}>
-          <Screen />
-        </NavigationContainer>
+              if (previousRouteName !== currentRouteName) {
+                await analytics().logScreenView({
+                  screen_name: currentRouteName,
+                  screen_class: currentRouteName,
+                });
+              }
+              routeNameRef.current = currentRouteName;
+            }}>
+            <Screen />
+          </NavigationContainer>
+        </SseProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   );
