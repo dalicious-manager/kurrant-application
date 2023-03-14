@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import styled from 'styled-components';
 
 import useApartApplication from '../../../biz/useApartApplication/hook';
@@ -62,12 +62,14 @@ const Pages = () => {
     <SafeView>
       <Wrap>
         <MyGroup>내 스팟</MyGroup>
-        <GroupNameView>
-          {isUserGroupSpotCheck.length !== 0 &&
-            isUserGroupSpotCheck.map((el, idx) => (
-              <GroupName key={el.clientId}>{el.clientName}</GroupName>
-            ))}
-        </GroupNameView>
+        <ScrollView>
+          <GroupNameView>
+            {isUserGroupSpotCheck.length !== 0 &&
+              isUserGroupSpotCheck.map((el, idx) => (
+                <GroupName key={el.clientId}>{el.clientName}</GroupName>
+              ))}
+          </GroupNameView>
+        </ScrollView>
       </Wrap>
       <ButtonWrap>
         <Button label="스팟 선택" onPressEvent={modalOpen} />
