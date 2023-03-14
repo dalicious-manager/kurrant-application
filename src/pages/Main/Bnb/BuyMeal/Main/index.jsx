@@ -353,6 +353,7 @@ const Pages = ({route}) => {
         }
         // diningRef.current.setPage(page);
         setSliderValue(page);
+        setNowPage(page);
       } else {
         setSliderValue(page);
       }
