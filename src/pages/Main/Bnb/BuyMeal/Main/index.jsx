@@ -1,9 +1,5 @@
 import {Slider} from '@miblanchard/react-native-slider';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useRef, useState, useEffect, useCallback} from 'react';
 import Animateds, {useEvent, useHandler} from 'react-native-reanimated';
@@ -13,17 +9,13 @@ import {
   View,
   Dimensions,
   StyleSheet,
+  Platform,
   ActivityIndicator,
   Alert,
   Animated,
-  Image,
-  Text,
-  ImageBackground,
 } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import styled, {css} from 'styled-components/native';
-import FastImage from 'react-native-fast-image';
-import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
@@ -33,25 +25,21 @@ import Button from '../../../../../components/Button';
 import CalendarButton from '../../../../../components/CalendarButton';
 import Calendar from '../../../../../components/Calendar';
 import Label from '../../../../../components/Label';
-import MembershipBar from '../../../../../components/MembershipBar';
 import Typography from '../../../../../components/Typography';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
-import withCommas, {generateOrderCode} from '../../../../../utils/withCommas';
+import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AIicon from '../../../../../assets/icons/BuyMeal/ai.svg';
 // import TossPayment from 'react-native-toss-payments';
 import LinearGradient from 'react-native-linear-gradient';
-import {AIbackground} from '../../../../../assets';
 import MealImage from '../components/MealImage';
 import Modal from '../components/Modal';
 
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
 import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
-import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
@@ -59,6 +47,7 @@ export const PAGE_NAME = 'BUY_MEAL_PAGE';
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 const AnimatedPagerView = Animateds.createAnimatedComponent(PagerView);
+
 const Pages = ({route}) => {
   const params = route.params;
   const isFocused = useIsFocused();
@@ -184,6 +173,56 @@ const Pages = ({route}) => {
   const onPageScroll2 = e => {
     const {position} = e.nativeEvent;
     setChk(position);
+  };
+  const onPageScrollAndroid = e => {
+    const {position, offset} = e.nativeEvent;
+    if (offset !== 0) {
+      if (position === 2) {
+        setDate(
+          formattedWeekDate(
+            new Date(date).setDate(new Date(date).getDate() + 1),
+          ),
+        );
+        const dateIndex = weekly.map(v => {
+          return v.map(s => {
+            return formattedWeekDate(s);
+          });
+        });
+        const index = dateIndex.findIndex((v, i) => {
+          return v.includes(
+            formattedWeekDate(
+              new Date(date).setDate(new Date(date).getDate() + 1),
+            ),
+          );
+        });
+        setChk(index);
+        pager.current.setPage(index);
+      }
+      if (position === -1) {
+        setDate(
+          formattedWeekDate(
+            new Date(date).setDate(new Date(date).getDate() - 1),
+          ),
+        );
+        const dateIndex = weekly.map(v => {
+          return v.map(s => {
+            return formattedWeekDate(s);
+          });
+        });
+        const index = dateIndex.findIndex((v, i) => {
+          return v.includes(
+            formattedWeekDate(
+              new Date(date).setDate(new Date(date).getDate() - 1),
+            ),
+          );
+        });
+        setChk(index);
+        pager.current.setPage(index);
+      }
+
+      console.log(position);
+      setNowPage(position);
+    }
   };
   const onPageScroll3 = e => {
     const {position, offset} = e.nativeEvent;
@@ -726,17 +765,6 @@ const Pages = ({route}) => {
               onPress={() => {
                 setModalVisible4(true);
               }}>
-              {/* {!whenSupportPriceKor && (
-                <Typography2>일일 식사지원금</Typography2>
-              )}
-              {!whenSupportPriceKor && (
-                <QuestionPressable
-                  onPress={() => {
-                    setModalVisible4(true);
-                  }}>
-                  <QuestionCircleMonoIcon />
-                </QuestionPressable>
-              )} */}
               <Typography2>일일 식사지원금</Typography2>
               <QuestionPressable>
                 <QuestionCircleMonoIcon />
@@ -763,16 +791,10 @@ const Pages = ({route}) => {
           <Pager
             ref={diningRef}
             overdrag={true}
-            initialPage={
-              isMorningFood.length !== 0
-                ? 0
-                : isLunchFood.length !== 0
-                ? 1
-                : isDinnerFood.length !== 0
-                ? 2
-                : 1
+            initialPage={nowPage}
+            onPageScroll={
+              Platform.OS === 'android' ? onPageScroll3 : onPageScrollAndroid
             }
-            onPageScroll={onPageScroll3}
             onPageSelected={e => {
               onPageScroll(e);
             }}>
