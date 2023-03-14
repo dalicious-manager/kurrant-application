@@ -32,6 +32,15 @@ const Component = ({photosArray, setPhotosArray}) => {
     }
 
     launchImageLibrary({}, res => {
+      if (!res) {
+        return;
+      }
+
+      if (res.didCancel) {
+        console.log('사진 업로드를 취소하셨습니다');
+        return;
+      }
+
       if (!res.assets[0]) {
         console.log('사실상 존재하지 않는 이미지파일입니다 ');
         return;

@@ -262,13 +262,20 @@ import Credit, {
 } from '../../pages/Main/MyPage/Credit';
 import CloseButton from '../../components/CloseButton';
 
+// 리뷰 및 재신 개인
+import CreateReviewPage1, {
+  SCREEN_NAME as CreateReviewPage1ScreenName,
+} from './Review/CreateReview/Page1';
+import CreateReviewPage2, {
+  SCREEN_NAME as CreateReviewPage2ScreenName,
+  SCREEN_NAME2 as EditReviewPage2ScreenName,
+} from './Review/CreateReview/Page2';
 
 import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
 import test, {PAGE_NAME as testPageName} from '../../jaesin/test';
 import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
 } from './Review/ReportReview';
-
 
 const MainRoot = createNativeStackNavigator();
 
@@ -1707,6 +1714,155 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 리뷰작성 및 수정 */}
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={CreateReviewPage1ScreenName}
+          component={CreateReviewPage1}
+          options={{
+            headerShown: true,
+            title: '리뷰 작성',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon />,
+          }}
+        />
+        <MainRoot.Screen
+          name={CreateReviewPage2ScreenName}
+          component={CreateReviewPage2}
+          options={{
+            headerShown: true,
+            title: '리뷰 작성',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <CloseIcon
+                alertCallback={() => {
+                  Alert.alert(
+                    `작성 종료`,
+                    `작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?`,
+                    [
+                      {
+                        text: '아니요',
+                        onPress: () => {
+                          return;
+                        },
+                        style: 'cancel',
+                      },
+                      {
+                        text: `작성종료`,
+                        onPress: () => {
+                          navigation.navigate(ReviewScreenName);
+                          return;
+                        },
+
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            ),
+          }}
+        />
+
+        <MainRoot.Screen
+          name={EditReviewPage2ScreenName}
+          component={CreateReviewPage2}
+          options={{
+            headerShown: true,
+            title: '리뷰 수정',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <CloseIcon
+                alertCallback={() => {
+                  Alert.alert(
+                    '수정 종료',
+                    '수정중인 내용이 삭제됩니다 \n  수정작성을 종료하시겠어요?',
+                    [
+                      {
+                        text: '아니요',
+                        onPress: () => {
+                          return;
+                        },
+                        style: 'cancel',
+                      },
+                      {
+                        text: '수정종료',
+                        onPress: () => {
+                          navigation.navigate(ReviewScreenName);
+                          return;
+                        },
+
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            ),
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 조재신 업무 파악용(맘대로 지워도 됩니다) */}
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={testPageName}
+          component={test}
+          options={{
+            headerShown: true,
+            title: '조재신 엄무파학용',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 리뷰 신고  */}
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={ReportReviewPageName}
+          component={ReportReview}
+          options={{
+            headerShown: true,
+            title: '신고하기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon />,
           }}
         />
       </MainRoot.Group>

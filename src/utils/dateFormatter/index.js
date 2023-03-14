@@ -162,6 +162,59 @@ export function formattedDateType(data) {
       break;
   }
 }
+
+// '기준일로부터 몇일 전인가?'
+export const timePassIndicator = (criterionDate, compareDate) => {
+  const subtraction = criterionDate.getTime() - compareDate.getTime();
+
+  // if (subtraction < 1000 * 60) {
+  //   // return `${Math.floor(subtraction / 1000)}초전`;
+  //   return `몇 초전`;
+  // } else if (subtraction >= 1000 * 60 && subtraction < 1000 * 60 * 60) {
+  //   return `${Math.floor(subtraction / (1000 * 60))}분전`;
+  // } else if (
+  //   subtraction >= 1000 * 60 * 60 &&
+  //   subtraction < 1000 * 60 * 60 * 24
+  // ) {
+  //   return `${Math.floor(subtraction / (1000 * 60 * 60))}시간전`;
+  // } else
+
+  // if (subtraction >= 1000 * 60 * 60 && subtraction < 1000 * 60 * 60 * 24) {
+  if (subtraction <= 1000 * 60 * 60 * 24) {
+    return '오늘';
+  } else if (
+    subtraction >= 1000 * 60 * 60 * 24 &&
+    subtraction < 1000 * 60 * 60 * 24 * 2
+  ) {
+    return '어제';
+  } else if (
+    subtraction >= 1000 * 60 * 60 * 24 * 2 &&
+    subtraction < 1000 * 60 * 60 * 24 * 3
+  ) {
+    return '그저께';
+  } else {
+    return `${Math.floor(subtraction / (1000 * 60 * 60 * 24))}일전`;
+  }
+};
+
+// '기준일로부터 몇일 남았는가'
+export const timeLeftIndicator = (criterionDayLength, compareDate) => {
+  const subtraction =
+    compareDate.getTime() + criterionDayLength * 1000 * 60 * 60 * 24;
+
+  const deadlineDate = new Date(subtraction);
+
+  const leftDate = deadlineDate.getTime() - new Date(Date.now()).getTime();
+
+  if (leftDate < 0) {
+    return '리뷰 가능한 기한이 지났습니다';
+  } else if (leftDate <= 1000 * 60 * 60 * 24) {
+    return '기한 D-Day';
+  } else {
+    return `기한 D-${Math.floor(leftDate / (1000 * 60 * 60 * 24))}`;
+  }
+};
+
 // export function daysLeft(endDate) {
 //   const dayNow = new Date();
 

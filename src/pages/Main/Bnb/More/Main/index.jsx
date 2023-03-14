@@ -36,6 +36,11 @@ import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
 
 import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
+
+import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
+import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
+
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
 const Pages = () => {
@@ -206,7 +211,28 @@ const Pages = () => {
             {/* <ListBox title='장바구니(마켓)' /> */}
             {/* <ListBox title='찜목록' /> */}
             <ListBox title="구매 내역" routeName={PurchaseHistoryName} />
-            {/* <ListBox title='리뷰 관리' description={`모두 작성시 최대 `} effect={<Typography test={'CaptionR'} textColor={themeApp.colors.blue[500]}>500P</Typography>} /> */}
+
+            <ListBox
+              title="리뷰 관리"
+              description={`모두 작성시 최대 `}
+              effect={
+                <Typography
+                  test={'CaptionR'}
+                  textColor={themeApp.colors.blue[500]}>
+                  500P
+                </Typography>
+              }
+              routeName={ReviewScreenName}
+            />
+            <ListBox
+              title="조재신 업무파악용(테스트)"
+              routeName={testPageName}
+            />
+            <ListBox
+              title="리뷰 신고(테스트)"
+              routeName={ReportReviewPageName}
+            />
+
             <ListBox
               title="커런트 멤버십"
               routeName={
