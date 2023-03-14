@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {Alert, View} from 'react-native';
@@ -261,11 +261,14 @@ import Credit, {
   PAGE_NAME as CreditPageName,
 } from '../../pages/Main/MyPage/Credit';
 import CloseButton from '../../components/CloseButton';
-// Pages > Exchange
-// Pages > IndexCard
-// Pages > Information
-// Pages > Investment
-// Pages > Statement
+
+
+import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+import test, {PAGE_NAME as testPageName} from '../../jaesin/test';
+import ReportReview, {
+  PAGE_NAME as ReportReviewPageName,
+} from './Review/ReportReview';
+
 
 const MainRoot = createNativeStackNavigator();
 
@@ -273,6 +276,7 @@ const Screen = () => {
   const [isLoginLoading] = useAtom(isLoginLoadingAtom);
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
+  const route = useRoute();
   return (
     <MainRoot.Navigator>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
@@ -756,6 +760,23 @@ const Screen = () => {
             headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
+        <MainRoot.Screen
+          name={ReviewScreenName}
+          component={Review}
+          options={{
+            headerShown: true,
+            title: '리뷰 관리',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+
         <MainRoot.Screen
           name={TermPageName}
           component={Term}

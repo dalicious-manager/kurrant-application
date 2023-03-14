@@ -32,3 +32,6 @@ export {default as NomalCardIcon} from './_components/NomalCardIcon';
 export {default as KakaoPayIcon} from './_components/KakaoPayIcon';
 export {default as NaverPayIcon} from './_components/NaverPayIcon';
 export {default as ThumbsUpWithThreeStarsIcon} from './_components/ThumbsUpWithThreeStarsIcon';
+
+export {default as CheckIcon} from './_components/CheckIcon';
+export {default as XCircleIcon} from './_components/XCircle';

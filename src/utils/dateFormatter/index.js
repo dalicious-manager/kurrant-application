@@ -36,7 +36,9 @@ export function formattedMealTime(data) {
   const hour = leftPad(dateTime.getHours());
   const minute = leftPad(dateTime.getMinutes());
 
-  return `${hour < 12 ? '오전' : '오후'} ${hour > 12 ? hour - 12 : hour}:${minute}`;
+  return `${hour < 12 ? '오전' : '오후'} ${
+    hour > 12 ? hour - 12 : hour
+  }:${minute}`;
   // return `${hour}:${minute}`;
 }
 
@@ -45,7 +47,7 @@ export function formattedDate(data, delimiter = '.') {
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
-  if (delimiter === "년월일") {
+  if (delimiter === '년월일') {
     return `${year}년 ${month}월 ${day}일`;
   }
   if (delimiter === '/') {
@@ -53,7 +55,6 @@ export function formattedDate(data, delimiter = '.') {
   }
   return [year, month, day].join(delimiter);
 }
-
 
 export function formattedDateAndTime(data, delimiter = '.') {
   const dateTime = transDateType(data);
@@ -94,25 +95,25 @@ export function formattedDateBtn(data) {
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
-  return month + '월' + day + '일'
+  return month + '월' + day + '일';
 }
 
 // 취소 날짜
-export function formattedDateWeekBtn(data, delimiter = ".") {
+export function formattedDateWeekBtn(data, delimiter = '.') {
   const dateTime = transDateType(data);
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
   const week = ['일', '월', '화', '수', '목', '금', '토'];
   const dayOfWeek = week[dateTime.getDay()];
-  return `${[month, day].join(delimiter)}(${dayOfWeek})`
+  return `${[month, day].join(delimiter)}(${dayOfWeek})`;
 }
 export function formattedWeekDate(data, delimiter = '-') {
   const dateTime = transDateType(data);
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
-  return `${[year, month, day].join(delimiter)}`
+  return `${[year, month, day].join(delimiter)}`;
 }
 
 export function formattedMonthDay(data) {
@@ -131,17 +132,22 @@ export function formattedApplicationDate(data) {
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
-  return `${[year, month, day]}`.replace(/[^0-9 ^\-]/g, "");
+  return `${[year, month, day]}`.replace(/[^0-9 ^\-]/g, '');
 }
 export function formattedSameDate(startData, endDate) {
-  const dateTime1 = transDateType(startData.replace("년", "-").replace("월", "-").replace("일", "").replace(/\s/gi, ""));
+  const dateTime1 = transDateType(
+    startData
+      .replace('년', '-')
+      .replace('월', '-')
+      .replace('일', '')
+      .replace(/\s/gi, ''),
+  );
   const dateTime2 = transDateType(endDate);
 
   const diffMSec = dateTime1.getTime() - dateTime2.getTime();
   const diffHour = diffMSec / (60 * 60 * 1000 * 24);
-  console.log(Math.round(diffHour))
-  return Math.round(diffHour)
-
+  console.log(Math.round(diffHour));
+  return Math.round(diffHour);
 }
 
 export function formattedDateType(data) {
