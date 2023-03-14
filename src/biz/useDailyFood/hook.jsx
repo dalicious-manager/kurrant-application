@@ -39,6 +39,7 @@ const useFoodDaily = () => {
   const dailyFood = async (spotId, seletedDate) => {
     try {
       setDailyFoodLoading(true);
+
       const res = await Fetch.DailyFood(spotId, seletedDate, userRole);
 
       if (res.data === null) {
