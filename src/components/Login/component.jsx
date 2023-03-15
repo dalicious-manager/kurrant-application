@@ -118,6 +118,7 @@ const Component = ({userId}) => {
                 // buttonText:'인증요청',
                 // timer:900,
               }}
+              padding="4px 0px"
               placeholder="가입한 이메일 주소"
               rules={{
                 required: '필수 입력 항목 입니다.',
@@ -140,6 +141,7 @@ const Component = ({userId}) => {
                 required: '필수 입력 항목 입니다.',
               }}
               style={styles.input}
+              padding="4px 0px"
             />
             <CheckView>
               <Check name={'autoLogin'} type="login">
@@ -208,7 +210,8 @@ const LableContainer = styled.View`
 const ButtonContainer = styled.View`
   position: absolute;
   bottom: 22px;
-  margin-bottom: 24px;
+  /* margin-bottom: 24px; */
+  margin-bottom: 35px;
 `;
 const Label = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[2]};
