@@ -110,12 +110,12 @@ import PaymentsManage, {
 import PurchaseHistory, {
   SCREEN_NAME as PurchaseHistoryScreenName,
 } from './PurchaseHistory';
-import useShoppingBasket from '../../biz/useShoppingBasket/hook';
+
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
 import ShoppingCart from '../../components/BasketButton';
 import CloseIcon from '../../components/CloseButton';
-import Typography from '../../components/Typography';
+
 import GroupCreateApartmnet, {
   PAGE_NAME as GroupCreateApartmentPageName,
 } from '../../pages/Group/GroupApartment';

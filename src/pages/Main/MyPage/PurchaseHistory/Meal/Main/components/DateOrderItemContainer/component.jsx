@@ -33,6 +33,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
   } = usePurchaseHistory();
   const purchase = mealPurchase.filter(v => v.id === purchaseId)[0];
   const cancelItem = async id => {
+
     try {
       const req = {
         orderId: purchase.id,

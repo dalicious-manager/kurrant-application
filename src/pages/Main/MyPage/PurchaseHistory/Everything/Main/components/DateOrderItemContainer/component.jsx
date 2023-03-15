@@ -9,6 +9,7 @@ import ArrowDown from '~assets/icons/Group/arrowDown.svg';
 import {Alert, Dimensions, Pressable, View} from 'react-native';
 import {css, useTheme} from 'styled-components/native';
 import {
+  formattedDate,
   formattedDateAndDay,
   formattedDateType,
   formattedDateWeekBtn,
@@ -80,10 +81,13 @@ const Component = ({purchaseId, date, itemIndex}) => {
         };
       });
       setMealPurchase(refund);
-      navigation.navigate(BuyMealPageName);
+      navigation.navigate(BuyMealPageName, {
+        date: serviceDate ? serviceDate : formattedDate(new Date()),
+      });
     } catch (error) {
       alert(error.toString().replace('error:', ''));
     }
+
   };
   return (
     <DateOrderItemListContainer isFirst={itemIndex === 0}>
@@ -214,7 +218,9 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   },
                                   {
                                     text: '메뉴 취소',
-                                    onPress: () => changeItem(order.id),
+
+                                    onPress: () =>
+                                      changeItem(order.id, order.serviceDate),
                                     style: 'destructive',
                                   },
                                 ],

@@ -84,6 +84,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
     } catch (error) {
       alert(error.toString().replace('error:', ''));
     }
+
   };
   return (
     <DateOrderItemListContainer isFirst={itemIndex === 0}>
@@ -112,7 +113,6 @@ const Component = ({purchaseId, date, itemIndex}) => {
           </OpenItems>
         </DateDetailEndView>
       </DateDetailBox>
-
       {open && (
         <DateOrderItemListBox>
           <DateBar />
