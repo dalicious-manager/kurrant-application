@@ -1,27 +1,34 @@
 import RNEventSource from 'react-native-event-source';
-import {useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {Text, View} from 'react-native';
 import {getStorage, setStorage} from '../../asyncStorage';
 import {getCheck} from '../restApis/getRestApis';
+import Config from 'react-native-config';
+
+const apiHostUrl =
+  Config.NODE_ENV === 'dev'
+    ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 const useSse = () => {
   const [eventSource, setEventSource] = useState('');
 
   const [eventSourceMsg, setEventSourceMsg] = useState({});
 
-  const setSse = async () => {
+  const setSse = useCallback(async () => {
     const token = await getStorage('token');
 
     let yo;
     if (token) {
       yo = JSON.parse(token);
+      console.log(token);
     }
 
     // console.log(yo?.accessToken);
 
     let eventSourceYo = new RNEventSource(
-      'http://13.125.224.194:8882/v1/notification/subscribe',
-      // 'http://13.125.224.194:8882/v1/users/me/orders?startDate=2023-02-06&endDate=2023-02-10',
+      `${apiHostUrl}/notification/subscribe`,
+
       {
         headers: {
           Authorization: `Bearer ${yo?.accessToken}`,
@@ -31,11 +38,11 @@ const useSse = () => {
     );
 
     setEventSource(eventSourceYo);
-  };
+  }, [setEventSource]);
 
   useEffect(() => {
     setSse();
-    getCheck('2023-02-06', '2023-02-10');
+    // getCheck('2023-02-06', '2023-02-10');
   }, []);
   useEffect(() => {
     return () => {
@@ -48,7 +55,7 @@ const useSse = () => {
     return {evetnSourceMsg: undefined};
   }
 
-  console.log('들어옴');
+  console.log('sse 열림 잘 들어옴');
   eventSource.addEventListener('message', e => {
     // console.log(JSON.parse(e.data));
 

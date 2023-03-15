@@ -62,11 +62,19 @@ import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSseContext} from '../../../../../utils/seeContextApi/sseContext';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 const Pages = () => {
+  const sseContext = useSseContext();
+
+  // useEffect(() => {
+  //   console.log('sseContext 홈에서 확인하기 ');
+  //   console.log(sseContext);
+  // }, [sseContext]);
+
   const navigation = useNavigation();
 
   const [isVisible, setIsVisible] = useState(true);
