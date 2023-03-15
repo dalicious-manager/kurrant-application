@@ -27,7 +27,7 @@ const Component = ({point, isMembership, membershipPeriod = 0}) => {
   const {isUserInfo} = useUserInfo();
   return (
     <>
-      {isMembership ? (
+      {!isMembership ? (
         <MembershipJoinPage
           onPress={() =>
             navigation.navigate(MembershipIntroPageName, {
