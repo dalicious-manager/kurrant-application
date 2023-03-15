@@ -278,7 +278,9 @@ const Pages = ({route}) => {
               type={'white'}
               text={'Button09SB'}
               onPressEvent={() => {
-                navigation.navigate(BuyMealPageName);
+                navigation.navigate(BuyMealPageName, {
+                  date: touchDate ? touchDate : formattedDate(new Date()),
+                });
               }}
             />
           </NoMealButtonWrap>
