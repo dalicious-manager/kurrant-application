@@ -97,7 +97,10 @@ const Pages = () => {
       } catch (err) {
         Alert.alert(
           '핸드폰 인증 요청 실패',
-          err.toString().replace('error: ', ''),
+          err
+            .toString()
+            .replace('error: ', '')
+            .replace('존재하는 유저입니다.', '사용중인 번호에요.'),
           [
             {
               text: '확인',
@@ -175,6 +178,7 @@ const Pages = () => {
                           message: '이메일 형식에 맞지 않습니다.',
                         },
                       }}
+                      padding=" 4px 0px"
                       style={inputStyle}
                     />
                   )}
@@ -221,16 +225,16 @@ const Pages = () => {
                           required: '필수 입력 항목 입니다.',
                           minLength: {
                             value: 8,
-                            message: '8글자 이상 입력',
+                            message: '8글자 이상 입력해주세요',
                           },
                           maxLength: {
                             value: 31,
-                            message: '32글자 이하 입력',
+                            message: '32글자 이하로 입력해주세요',
                           },
                           pattern: {
                             value:
                               /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,32}$/,
-                            message: '비밀번호 형식에 맞지 않습니다.',
+                            message: '영문자, 숫자, 특수문자로 입력해주세요.',
                           },
                         }}
                         style={inputStyle}
@@ -297,7 +301,7 @@ const Pages = () => {
                     password &&
                     passwordChecked &&
                     password === passwordChecked && (
-                      <View>
+                      <PhoneView>
                         <RefTextInput
                           name="phone"
                           label="휴대폰 번호"
@@ -353,7 +357,7 @@ const Pages = () => {
                             style={inputStyle}
                           />
                         )}
-                      </View>
+                      </PhoneView>
                     )}
                   {progress === 5 && (
                     <RefTextInput
@@ -396,7 +400,10 @@ const Pages = () => {
                           } catch (err) {
                             Alert.alert(
                               '인증확인 실패',
-                              err.toString().replace('error: ', ''),
+                              err
+                                .toString()
+                                .replace('error: ', '')
+                                .replace('않습니다.', '않아요.'),
                               [
                                 {
                                   text: '확인',
@@ -493,4 +500,8 @@ const ButtonContainer = styled.View`
   position: absolute;
   bottom: 22px;
   margin-bottom: 24px;
+`;
+
+const PhoneView = styled.View`
+  margin-bottom: 50px;
 `;
