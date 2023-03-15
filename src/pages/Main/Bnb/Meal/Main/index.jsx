@@ -83,7 +83,7 @@ const Pages = ({route}) => {
     ]);
   };
 
-  const changeMealPress = id => {
+  const changeMealPress = (id, serviceDate) => {
     const list = isOrderMeal.map(el => {
       return {
         ...el,
@@ -111,7 +111,10 @@ const Pages = ({route}) => {
                 id: id,
               });
               setOrderMeal(listArr);
-              navigation.navigate(BuyMealPageName);
+
+              navigation.navigate(BuyMealPageName, {
+                date: serviceDate ? serviceDate : formattedDate(new Date()),
+              });
             } catch (err) {
               console.log(err);
             }
@@ -190,7 +193,9 @@ const Pages = ({route}) => {
                             <MealChangeWrap>
                               <LabelButton
                                 label={'메뉴변경'}
-                                onPressEvent={() => changeMealPress(sm.id)}
+                                onPressEvent={() =>
+                                  changeMealPress(sm.id, s.serviceDate)
+                                }
                               />
                             </MealChangeWrap>
                           )}

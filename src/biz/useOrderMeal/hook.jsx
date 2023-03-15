@@ -86,6 +86,7 @@ const useOrderMeal = () => {
           ],
         });
       }
+      throw err;
     }
   };
   const refundAll = async (body, option = {}) => {
