@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
+import {useState} from 'react';
 import {Alert} from 'react-native';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
 import useAuth from '../useAuth';
@@ -25,6 +26,7 @@ const useFoodDaily = () => {
   const [isDailyFoodLoading, setDailyFoodLoading] = useAtom(
     isDailyFoodLoadingAtom,
   );
+  const [isFetchingDone, setIsFetchingDone] = useState(false);
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -37,6 +39,7 @@ const useFoodDaily = () => {
   const dailyFood = async (spotId, seletedDate) => {
     try {
       setDailyFoodLoading(true);
+
       const res = await Fetch.DailyFood(spotId, seletedDate, userRole);
 
       if (res.data === null) {
@@ -47,6 +50,7 @@ const useFoodDaily = () => {
       setMorning(res.data.dailyFoodDtos.filter(x => x.diningType === 1));
       setLunch(res.data.dailyFoodDtos.filter(x => x.diningType === 2));
       setDinner(res.data.dailyFoodDtos.filter(x => x.diningType === 3));
+      setIsFetchingDone(true);
       return res.data.diningTypes;
     } catch (err) {
       setMorning([]);
@@ -77,6 +81,7 @@ const useFoodDaily = () => {
     isLunchFood,
     isDinnerFood,
     isDailyFoodLoading,
+    isFetchingDone,
   };
 };
 
