@@ -34,7 +34,7 @@ const Component = ({point, isMembership, membershipPeriod = 0}) => {
               isFounders: isUserInfo?.leftFoundersNumber > 0,
             })
           }>
-          {isUserInfo?.leftFoundersNumber > 0 ? (
+          {!(isUserInfo?.leftFoundersNumber > 0) ? (
             <MembershipBox source={MembershipJoin} resizeMode={'stretch'}>
               <MembershipText
                 text={'Body05SB'}
