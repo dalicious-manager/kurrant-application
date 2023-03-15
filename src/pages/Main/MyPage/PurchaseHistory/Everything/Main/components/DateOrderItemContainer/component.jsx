@@ -87,7 +87,6 @@ const Component = ({purchaseId, date, itemIndex}) => {
     } catch (error) {
       alert(error.toString().replace('error:', ''));
     }
-
   };
   return (
     <DateOrderItemListContainer isFirst={itemIndex === 0}>
@@ -254,7 +253,8 @@ const DateOrderItemListContainer = styled.View`
           margin-top: 16px;
         `
       : css`
-          margin-top: 56px;
+          /* margin-top: 56px; */
+          margin-top: 20px;
         `}
   padding-left: 24px;
   padding-right: 24px;
@@ -276,12 +276,15 @@ const DateOrderItemList = styled.View`
   padding-left: 12px;
 `;
 const DateOrderItemBox = styled.View`
-  ${({isFirst}) =>
+  /* ${({isFirst}) =>
     !isFirst &&
     css`
-      padding-top: 16px;
-    `}
+      padding-top: 14px;
+    `} */
   width: 100%;
+
+  /* padding-top: 14px; */
+  margin-bottom: 14px;
 `;
 const DateOrderItemContentBox = styled.View`
   padding-top: 6px;
