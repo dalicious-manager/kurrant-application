@@ -21,10 +21,7 @@ const useSse = () => {
     let yo;
     if (token) {
       yo = JSON.parse(token);
-      console.log(token);
     }
-
-    // console.log(yo?.accessToken);
 
     let eventSourceYo = new RNEventSource(
       `${apiHostUrl}/notification/subscribe`,
@@ -34,11 +31,14 @@ const useSse = () => {
           Authorization: `Bearer ${yo?.accessToken}`,
         },
         withCredentials: true,
+        retry: 3000,
       },
     );
 
     setEventSource(eventSourceYo);
   }, [setEventSource]);
+
+  // 시작할때 한번만 만들기 (샘플코드에서 이렇게 하드라)
 
   useEffect(() => {
     setSse();
@@ -47,7 +47,10 @@ const useSse = () => {
   useEffect(() => {
     return () => {
       console.log(`server closed connection`);
-      if (eventSource) eventSource.close();
+      if (eventSource) {
+        eventSource.removeAllListeners();
+        eventSource.close();
+      }
     };
   }, []);
 

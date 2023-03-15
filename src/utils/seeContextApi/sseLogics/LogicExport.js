@@ -7,3 +7,5 @@ export const applyDebouncing = (millisecond, callback) => {
     }, millisecond);
   });
 };
+
+export const applyThrottle = () => {};

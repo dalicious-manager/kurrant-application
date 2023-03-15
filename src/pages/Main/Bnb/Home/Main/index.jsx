@@ -70,10 +70,10 @@ const screenWidth = Dimensions.get('screen').width;
 const Pages = () => {
   const sseContext = useSseContext();
 
-  // useEffect(() => {
-  //   console.log('sseContext 홈에서 확인하기 ');
-  //   console.log(sseContext);
-  // }, [sseContext]);
+  useEffect(() => {
+    console.log('sseContext 홈에서 확인하기 ');
+    console.log(sseContext);
+  }, [sseContext]);
 
   const navigation = useNavigation();
 
