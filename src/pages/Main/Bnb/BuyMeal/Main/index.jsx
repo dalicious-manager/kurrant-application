@@ -244,8 +244,11 @@ const Pages = ({route}) => {
         pager.current.setPage(index);
       }
 
-      console.log(position);
-      setNowPage(position);
+      if (position === -1) {
+        setNowPage(0);
+      } else {
+        setNowPage(position);
+      }
     }
   };
   const onPageScroll3 = e => {
@@ -380,9 +383,14 @@ const Pages = ({route}) => {
         setNowPage(page);
       } else {
         setSliderValue(page);
+        setNowPage(page);
       }
     } else {
-      setSliderValue(position);
+      if (position === -1) {
+        setSliderValue(0);
+      } else {
+        setSliderValue(position);
+      }
     }
     MorningRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     LunchRef?.current?.scrollTo({x: 0, y: 0, animated: false});
