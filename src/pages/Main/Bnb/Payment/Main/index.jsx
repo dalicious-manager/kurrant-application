@@ -228,7 +228,7 @@ const Pages = ({route}) => {
         ? medtronicPrice
         : usedSupportPrice,
       deliveryFee: deliveryFee,
-      userPoint: isUserInfo.point,
+      userPoint: point,
     };
     console.log(data, 'data');
     try {

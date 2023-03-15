@@ -16,6 +16,7 @@ import styled from 'styled-components/native';
 
 import {weekAtom} from '../../biz/useBanner/store';
 import useFoodDaily from '../../biz/useDailyFood/hook';
+import {calculateSelectDatePosition} from '../../biz/useDailyFood/logic';
 import useFoodDetail from '../../biz/useFoodDetail/hook';
 import useOrderMeal from '../../biz/useOrderMeal/hook';
 import {isUserMeAtom} from '../../biz/useUserInfo/store';
@@ -64,9 +65,28 @@ const Component = ({
     const {position} = e.nativeEvent;
     setChk(position);
   };
+
+  ///// 여기부터 재신 코드
+  const [isMount, setIsMount] = useState(false);
+
   useEffect(() => {
+    setIsMount(true);
+  }, []);
+
+  useEffect(() => {
+    // '첫 렌더시 해당 날짜로 위치하게 하기'
+    if (selectDate && isMount) {
+      pager.current.setPage(calculateSelectDatePosition(selectDate, weekly));
+      setIsMount(false);
+    }
     setCurrentPress(selectDate);
-  }, [currentPress, selectDate]);
+  }, [selectDate, weekly, isMount, setIsMount]);
+
+  /////// 끝
+
+  // useEffect(() => {
+  //   setCurrentPress(selectDate);
+  // }, [currentPress, selectDate]);
   return (
     <React.Fragment>
       {BooleanValue ? <Button pager={pager} daily chk={chk} /> : <></>}
