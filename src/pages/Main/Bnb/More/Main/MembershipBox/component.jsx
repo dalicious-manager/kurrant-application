@@ -27,14 +27,14 @@ const Component = ({point, isMembership, membershipPeriod = 0}) => {
   const {isUserInfo} = useUserInfo();
   return (
     <>
-      {!isMembership ? (
+      {isMembership ? (
         <MembershipJoinPage
           onPress={() =>
             navigation.navigate(MembershipIntroPageName, {
               isFounders: isUserInfo?.leftFoundersNumber > 0,
             })
           }>
-          {!(isUserInfo?.leftFoundersNumber > 0) ? (
+          {isUserInfo?.leftFoundersNumber > 0 ? (
             <MembershipBox source={MembershipJoin} resizeMode={'stretch'}>
               <MembershipText
                 text={'Body05SB'}
