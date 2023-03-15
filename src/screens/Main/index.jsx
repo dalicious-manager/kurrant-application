@@ -1018,15 +1018,15 @@ const Screen = () => {
           component={MembershipIntro}
           options={{
             headerShown: true,
-            title: '',
+            title: '멤버십 가입',
             headerShadowVisible: false,
-            headerTransparent: true,
+            // headerTransparent: true,
             headerTitleAlign: 'center',
-            // headerTitleStyle:{
-            //   fontFamily:'Pretendard-SemiBold',
-            //   fontSize:14,
-            //   lineHeight:22
-            // },
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
             headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />

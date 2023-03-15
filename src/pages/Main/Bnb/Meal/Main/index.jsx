@@ -11,6 +11,7 @@ import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import Toast from '../../../../../components/Toast';
 import {
+  formattedDate,
   formattedMonthDay,
   formattedWeekDate,
 } from '../../../../../utils/dateFormatter';
@@ -82,7 +83,7 @@ const Pages = ({route}) => {
     ]);
   };
 
-  const changeMealPress = id => {
+  const changeMealPress = (id, serviceDate) => {
     const list = isOrderMeal.map(el => {
       return {
         ...el,
@@ -110,7 +111,10 @@ const Pages = ({route}) => {
                 id: id,
               });
               setOrderMeal(listArr);
-              navigation.navigate(BuyMealPageName);
+
+              navigation.navigate(BuyMealPageName, {
+                date: serviceDate ? serviceDate : formattedDate(new Date()),
+              });
             } catch (err) {
               console.log(err);
             }
@@ -189,7 +193,9 @@ const Pages = ({route}) => {
                             <MealChangeWrap>
                               <LabelButton
                                 label={'메뉴변경'}
-                                onPressEvent={() => changeMealPress(sm.id)}
+                                onPressEvent={() =>
+                                  changeMealPress(sm.id, s.serviceDate)
+                                }
                               />
                             </MealChangeWrap>
                           )}
@@ -277,7 +283,9 @@ const Pages = ({route}) => {
               type={'white'}
               text={'Button09SB'}
               onPressEvent={() => {
-                navigation.navigate(BuyMealPageName);
+                navigation.navigate(BuyMealPageName, {
+                  date: touchDate ? touchDate : formattedDate(new Date()),
+                });
               }}
             />
           </NoMealButtonWrap>
@@ -286,7 +294,9 @@ const Pages = ({route}) => {
       <ButtonWrap>
         <PlusButton
           onPress={() => {
-            navigation.navigate(BuyMealPageName);
+            navigation.navigate(BuyMealPageName, {
+              date: touchDate ? touchDate : formattedDate(new Date()),
+            });
           }}>
           <PlusIcon />
         </PlusButton>
