@@ -34,26 +34,30 @@ const Component = ({purchaseId, date, itemIndex}) => {
   } = usePurchaseHistory();
   const purchase = mealPurchase.filter(v => v.id === purchaseId)[0];
   const cancelItem = async id => {
-    const req = {
-      orderId: purchase.id,
-      id: id,
-    };
-    await refundItem(req);
-    const refund = mealPurchase.map(o => {
-      return {
-        ...o,
-        orderItems: [
-          ...o.orderItems.map(v => {
-            if (v.id === id) {
-              return {...v, orderStatus: 7};
-            } else {
-              return v;
-            }
-          }),
-        ],
+    try {
+      const req = {
+        orderId: purchase.id,
+        id: id,
       };
-    });
-    setMealPurchase(refund);
+      const refundResult = await refundItem(req);
+      const refund = mealPurchase.map(o => {
+        return {
+          ...o,
+          orderItems: [
+            ...o.orderItems.map(v => {
+              if (v.id === id) {
+                return {...v, orderStatus: 7};
+              } else {
+                return v;
+              }
+            }),
+          ],
+        };
+      });
+      setMealPurchase(refund);
+    } catch (error) {
+      alert(error.toString().replace('error:', ''));
+    }
   };
   const changeItem = async (id, serviceDate) => {
     const req = {
@@ -108,7 +112,6 @@ const Component = ({purchaseId, date, itemIndex}) => {
           </OpenItems>
         </DateDetailEndView>
       </DateDetailBox>
-
       {open && (
         <DateOrderItemListBox>
           <DateBar />

@@ -34,52 +34,60 @@ const Component = ({purchaseId, date, itemIndex}) => {
   } = usePurchaseHistory();
   const purchase = allPurchase.filter(v => v.id === purchaseId)[0];
   const cancelItem = async id => {
-    const req = {
-      orderId: purchase.id,
-      id: id,
-    };
-    await refundItem(req);
-    const refund = allPurchase.map(o => {
-      return {
-        ...o,
-        orderItems: [
-          ...o.orderItems.map(v => {
-            if (v.id === id) {
-              return {...v, orderStatus: 7};
-            } else {
-              return v;
-            }
-          }),
-        ],
+    try {
+      const req = {
+        orderId: purchase.id,
+        id: id,
       };
-    });
-    setAllPurchase(refund);
+      const refundResult = await refundItem(req);
+      const refund = mealPurchase.map(o => {
+        return {
+          ...o,
+          orderItems: [
+            ...o.orderItems.map(v => {
+              if (v.id === id) {
+                return {...v, orderStatus: 7};
+              } else {
+                return v;
+              }
+            }),
+          ],
+        };
+      });
+      setMealPurchase(refund);
+    } catch (error) {
+      alert(error.toString().replace('error:', ''));
+    }
   };
-  const changeItem = async (id, serviceDate) => {
-    const req = {
-      orderId: purchase.id,
-      id: id,
-    };
-    await refundItem(req);
-    const refund = allPurchase.map(o => {
-      return {
-        ...o,
-        orderItems: [
-          ...o.orderItems.map(v => {
-            if (v.id === id) {
-              return {...v, orderStatus: 7};
-            } else {
-              return v;
-            }
-          }),
-        ],
+  const changeItem = async id => {
+    try {
+      const req = {
+        orderId: purchase.id,
+        id: id,
       };
-    });
-    setAllPurchase(refund);
+      await refundItem(req);
+      const refund = mealPurchase.map(o => {
+        return {
+          ...o,
+          orderItems: [
+            ...o.orderItems.map(v => {
+              if (v.id === id) {
+                return {...v, orderStatus: 7};
+              } else {
+                return v;
+              }
+            }),
+          ],
+        };
+      });
+      setMealPurchase(refund);
+      navigation.navigate(BuyMealPageName, {
+        date: serviceDate ? serviceDate : formattedDate(new Date()),
+      });
+    } catch (error) {
+      alert(error.toString().replace('error:', ''));
+    }
 
-    navigation.navigate(BuyMealPageName, {
-      date: serviceDate ? serviceDate : formattedDate(new Date()),
-    });
   };
   return (
     <DateOrderItemListContainer isFirst={itemIndex === 0}>
@@ -210,6 +218,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   },
                                   {
                                     text: '메뉴 취소',
+
                                     onPress: () =>
                                       changeItem(order.id, order.serviceDate),
                                     style: 'destructive',
