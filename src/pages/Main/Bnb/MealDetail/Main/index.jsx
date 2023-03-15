@@ -68,7 +68,7 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const isFocused = useIsFocused();
-  console.log(isfoodDetailDiscount, isFoodDetail, '--');
+
   const closeModal = () => {
     setModalVisible(false);
   };

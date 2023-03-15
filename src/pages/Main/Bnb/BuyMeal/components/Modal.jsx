@@ -21,7 +21,7 @@ const Modal = ({hideModal, setHideModal}) => {
   const oneMonthLater = new Date(now.setMonth(now.getMonth() + 1));
 
   const hidePress = async () => {
-    await setStorage('today', formattedDate(today));
+    await setStorage('onMonthLater', formattedDate(oneMonthLater));
     setHideModal(false);
   };
 
@@ -31,10 +31,10 @@ const Modal = ({hideModal, setHideModal}) => {
 
   useEffect(() => {
     const day = async () => {
-      const getDate = await getStorage('today');
+      const getLaterDate = await getStorage('onMonthLater');
 
-      const popup = getDate === formattedDate(oneMonthLater);
-      if (getDate === null || popup) {
+      const popup = getLaterDate === formattedDate(today);
+      if (getLaterDate === null || popup) {
         setHideModal(true);
       } else {
         setHideModal(false);
