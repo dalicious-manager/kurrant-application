@@ -55,7 +55,9 @@ const Pages = () => {
         type: 'email',
         email: email,
       });
-    } catch (error) {}
+    } catch (error) {
+      alert(error.toString().replace('error:', ''));
+    }
   };
   const onSubmit2 = async data => {
     try {
@@ -63,7 +65,9 @@ const Pages = () => {
       navigation.navigate(ChagePasswordPageName, {
         type: 'phone',
       });
-    } catch (error) {}
+    } catch (error) {
+      alert(error.toString().replace('error:', ''));
+    }
   };
 
   return (
