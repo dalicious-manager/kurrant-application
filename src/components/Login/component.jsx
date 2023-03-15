@@ -137,11 +137,16 @@ const Component = ({userId}) => {
               isPassword={true}
               autoCapitalize="none"
               placeholder="비밀번호"
-              rules={{
-                required: '필수 입력 항목 입니다.',
-              }}
               style={styles.input}
               padding="4px 0px"
+              rules={{
+                required: '필수 입력 항목 입니다.',
+
+                minLength: {
+                  value: 8,
+                  message: '8글자 이상 입력해주세요.',
+                },
+              }}
             />
             <CheckView>
               <Check name={'autoLogin'} type="login">
