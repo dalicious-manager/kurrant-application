@@ -88,7 +88,6 @@ const Pages = () => {
                 );
               })}
           </ResultScrollView>
-
         </KeyDismiss>
       </FormProvider>
     </Wrap>

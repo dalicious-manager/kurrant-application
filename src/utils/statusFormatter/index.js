@@ -93,7 +93,7 @@ export const cardListData = [
   // {id: 33, text: '우리카드'},
   {id: 41, text: '신한카드'},
   {id: 61, text: '현대카드'},
-  {id: 11, text: 'KB국민카드 (현재 심사 중으로 이용할 수 없어요)'},
+  {id: 11, text: 'KB국민카드 (곧 사용 가능해요)'},
   {id: 71, text: '롯데카드'},
   {id: 91, text: 'NH농협카드'},
   {id: 31, text: '비씨카드'},

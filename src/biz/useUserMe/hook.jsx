@@ -277,6 +277,7 @@ const useUserMe = () => {
     try {
       setCardListLoading(true);
       const res = await Fetch.getCardList();
+      console.log(res, '카드');
       setCardList(res.data);
       setCardSimpleList(
         res.data.map((v, idx) => {
