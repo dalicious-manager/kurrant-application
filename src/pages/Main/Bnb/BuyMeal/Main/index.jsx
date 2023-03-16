@@ -72,10 +72,6 @@ const Pages = ({route}) => {
     readableAtom: {userRole},
   } = useAuth();
 
-  useEffect(() => {
-    console.log(`식사 구매하기`);
-  }, [params]);
-
   const {
     isDiningTypes,
     isMorningFood,
