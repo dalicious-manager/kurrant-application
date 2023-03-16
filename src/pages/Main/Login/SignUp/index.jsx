@@ -1,7 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, View, Alert} from 'react-native';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  View,
+  Alert,
+  Text,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
@@ -149,6 +156,7 @@ const Pages = () => {
             <KeyContainer
               keyboardVerticalOffset={
                 Platform.OS === 'ios' && statusBarHeight + 44
+                // Platform.OS === 'ios' && statusBarHeight + 60
               }
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
               <ProgressBar progress={progress} />
@@ -210,6 +218,7 @@ const Pages = () => {
                             '이메일로 발송된 6자리 인증번호를 입력해 주세요.',
                         },
                       }}
+                      padding="4px 0"
                       style={inputStyle}
                     />
                   )}
@@ -238,6 +247,7 @@ const Pages = () => {
                           },
                         }}
                         style={inputStyle}
+                        padding="4px 0"
                       />
                       <RefTextInput
                         name="passwordChecked"
@@ -265,6 +275,7 @@ const Pages = () => {
                           },
                         }}
                         style={inputStyle}
+                        padding="4px 0"
                       />
                       {progress === 3 && !(password === passwordChecked) && (
                         <View>
@@ -301,7 +312,7 @@ const Pages = () => {
                     password &&
                     passwordChecked &&
                     password === passwordChecked && (
-                      <PhoneView>
+                      <>
                         <RefTextInput
                           name="phone"
                           label="휴대폰 번호"
@@ -326,7 +337,9 @@ const Pages = () => {
                             },
                           }}
                           style={inputStyle}
+                          padding="4px 0"
                         />
+
                         {progress === 4 && isPhoneAuth && (
                           <RefTextInput
                             name="pauth"
@@ -355,9 +368,10 @@ const Pages = () => {
                               },
                             }}
                             style={inputStyle}
+                            padding="4px 0"
                           />
                         )}
-                      </PhoneView>
+                      </>
                     )}
                   {progress === 5 && (
                     <RefTextInput
@@ -378,9 +392,32 @@ const Pages = () => {
                         },
                       }}
                       style={inputStyle}
+                      padding="4px 0"
+                      caption={
+                        <>
+                          <Text>
+                            {` 이름은 배송, 비밀번호 찾기 등에 사용되므로 실명을 기입해주세요.`}
+                          </Text>
+                        </>
+                      }
                     />
                   )}
                 </ScrollView>
+
+                <TermsOfUseView
+                  isKeyboardActivate={keyboardStatus.isKeyboardActivate}>
+                  <TermsOfUseTypo>
+                    본인은{' '}
+                    <TermsOfUseUnderlinedTypo>
+                      달리셔스 이용약관,
+                    </TermsOfUseUnderlinedTypo>
+                    <TermsOfUseUnderlinedTypo>
+                      개인정보 수집 및 이용 내용
+                    </TermsOfUseUnderlinedTypo>
+                    을 확인 하였으며 동의합니다.
+                  </TermsOfUseTypo>
+                </TermsOfUseView>
+
                 {!keyboardStatus.isKeyboardActivate && (
                   <ButtonContainer>
                     <Button
@@ -421,6 +458,7 @@ const Pages = () => {
                   </ButtonContainer>
                 )}
               </Container>
+
               <KeyboardButton
                 isKeyboardActivate={keyboardStatus.isKeyboardActivate}
                 label={progress >= 5 ? '가입완료' : '다음'}
@@ -502,6 +540,26 @@ const ButtonContainer = styled.View`
   margin-bottom: 24px;
 `;
 
-const PhoneView = styled.View`
-  margin-bottom: 50px;
+const TermsOfUseView = styled.View`
+  width: 100%;
+  color: ${({theme}) => theme.colors.grey[4]};
+  ${({isKeyboardActivate}) => {
+    if (isKeyboardActivate) {
+      return `margin-bottom: 10px;`;
+    } else {
+      return `height: 150px;
+      margin-bottom: 20px;
+      `;
+    }
+  }}
+`;
+
+const TermsOfUseTypo = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+`;
+
+const TermsOfUseUnderlinedTypo = styled(Typography).attrs({text: 'CaptionR'})`
+  text-decoration: underline;
+  text-decoration-color: ${({theme}) => theme.colors.grey[5]};
+  color: ${({theme}) => theme.colors.grey[5]};
 `;
