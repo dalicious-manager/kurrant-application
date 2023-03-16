@@ -403,20 +403,21 @@ const Pages = () => {
                     />
                   )}
                 </ScrollView>
-
-                <TermsOfUseView
-                  isKeyboardActivate={keyboardStatus.isKeyboardActivate}>
-                  <TermsOfUseTypo>
-                    본인은{' '}
-                    <TermsOfUseUnderlinedTypo>
-                      달리셔스 이용약관,
-                    </TermsOfUseUnderlinedTypo>
-                    <TermsOfUseUnderlinedTypo>
-                      개인정보 수집 및 이용 내용
-                    </TermsOfUseUnderlinedTypo>
-                    을 확인 하였으며 동의합니다.
-                  </TermsOfUseTypo>
-                </TermsOfUseView>
+                {progress === 5 && (
+                  <TermsOfUseView
+                    isKeyboardActivate={keyboardStatus.isKeyboardActivate}>
+                    <TermsOfUseTypo>
+                      본인은{' '}
+                      <TermsOfUseUnderlinedTypo>
+                        달리셔스 이용약관,
+                      </TermsOfUseUnderlinedTypo>
+                      <TermsOfUseUnderlinedTypo>
+                        개인정보 수집 및 이용 내용
+                      </TermsOfUseUnderlinedTypo>
+                      을 확인 하였으며 동의합니다.
+                    </TermsOfUseTypo>
+                  </TermsOfUseView>
+                )}
 
                 {!keyboardStatus.isKeyboardActivate && (
                   <ButtonContainer>
