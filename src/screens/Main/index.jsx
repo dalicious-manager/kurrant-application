@@ -261,6 +261,8 @@ import Credit, {
   PAGE_NAME as CreditPageName,
 } from '../../pages/Main/MyPage/Credit';
 import CloseButton from '../../components/CloseButton';
+
+import test, {PAGE_NAME as testPageName} from '../../jaesin/test';
 // Pages > Exchange
 // Pages > IndexCard
 // Pages > Information
@@ -1713,6 +1715,23 @@ const Screen = () => {
           
           
           /> */}
+
+        <MainRoot.Screen
+          name={testPageName}
+          component={test}
+          options={{
+            headerShown: true,
+            title: '조재신 엄무파학용',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
       </MainRoot.Group>
     </MainRoot.Navigator>
   );

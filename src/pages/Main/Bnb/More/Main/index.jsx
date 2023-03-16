@@ -35,6 +35,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
 
+import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
+
 import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -226,6 +228,10 @@ const Pages = () => {
           </ListContainer>
           <ListContainer title="알림">
             <ListBox title="공지사항" routeName={NoticeScreenName} />
+            <ListBox
+              title="조재신 업무파악용(테스트)"
+              routeName={testPageName}
+            />
             <ListBox
               title="약관 및 개인 정보"
               routeName={TermOfServicePageName}

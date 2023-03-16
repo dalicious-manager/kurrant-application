@@ -14,11 +14,29 @@ const apiHostUrl =
 const useSse = () => {
   // const [eventSource, setEventSource] = useState('');
 
+  const [token, setToken] = useState(undefined);
+
+  const fetchToken = useCallback(async () => {
+    const tokenRaw = await getStorage('token');
+
+    const parsedToken = JSON.parse(tokenRaw);
+    return parsedToken;
+  }, []);
+
+  useEffect(() => {
+    const parsedToken = fetchToken();
+    console.log(parsedToken);
+    if (parsedToken) {
+      console.log('일단 토큰은 받아옴');
+      setToken(parsedToken);
+    }
+  }, []);
+
   const [eventSourceMsg, setEventSourceMsg] = useState({});
 
   const SseServiceKit = useMemo(() => {
-    return new SseService();
-  }, []);
+    return new SseService(apiHostUrl, token);
+  }, [token]);
 
   // 메세지 받아고기
   useEffect(() => {

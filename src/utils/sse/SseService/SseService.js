@@ -3,30 +3,18 @@ import Config from 'react-native-config';
 import RNEventSource from 'react-native-event-source';
 
 class SseService {
-  constructor() {}
+  token;
+  baseUrl;
 
-  baseUrl =
-    Config.NODE_ENV === 'dev'
-      ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
-      : Config.API_HOST_URL + '/' + Config.API_VERSION;
-
-  getToken = async () => {
-    const token = await getStorage('token');
-
-    let yo = undefined;
-    if (token) {
-      yo = JSON.parse(token);
-    }
-
-    return yo;
-  };
-
-  token = this.getToken();
+  constructor(baseUrl, token) {
+    this.baseUrl = baseUrl;
+    this.token = token;
+  }
 
   eventSource = new RNEventSource(
     `${this.baseUrl}/notification/subscribe`,
 
-    token && {
+    this.token && {
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
