@@ -23,6 +23,8 @@ import {formattedWeekDate} from '../../../../../../utils/dateFormatter';
 import {CalendarIcon} from '../../../../../../components/Icon';
 import DatePicker from '@react-native-community/datetimepicker';
 
+import ModalCalendar from './ModalCalendar';
+
 export const PAGE_NAME = 'P_MAIN__EVERYTHING__HISTORY';
 
 const Pages = () => {
@@ -254,7 +256,35 @@ const Pages = () => {
           </Wrapper>
         )}
       </Wrapper>
-      {showDateModal &&
+      <ModalCalendar
+        modalVisible={showDateModal}
+        setModalVisible={setShowDateModal}
+        calendarProps={{
+          selected: startDate,
+
+          onChange: onChangeDate,
+
+          confirm: confirmPress,
+
+          setModal: setShowDateModal,
+
+          setSelected: setStartDate,
+        }}></ModalCalendar>
+      <ModalCalendar
+        modalVisible={showDateModal2}
+        setModalVisible={setShowDateModal2}
+        calendarProps={{
+          selected: endDate,
+
+          onChange: onChangeDate,
+
+          confirm: confirmPress,
+
+          setModal: setShowDateModal2,
+
+          setSelected: setEndDate,
+        }}></ModalCalendar>
+      {/* {showDateModal &&
         ShowCalendar(
           startDate,
           onChangeDate,
@@ -269,7 +299,7 @@ const Pages = () => {
           confirmPress,
           setShowDateModal2,
           setEndDate,
-        )}
+        )} */}
     </Container>
   );
 };
