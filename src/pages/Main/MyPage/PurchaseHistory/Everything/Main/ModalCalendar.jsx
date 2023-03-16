@@ -126,9 +126,9 @@ const Background = styled.View`
 const AnimatedView = styled(Animated.View)`
   align-items: center;
   background-color: white;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  padding-top: 20px;
+  /* border-top-left-radius: 25px; */
+  /* border-top-right-radius: 25px; */
+  /* padding-top: 20px; */
   padding-bottom: 56px;
 `;
 export const IosButton = styled.Pressable`
