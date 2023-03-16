@@ -1,4 +1,4 @@
-import {fetchJson} from '../../../utils/fetch';
+import {fetchJson} from '../../../fetch';
 
 export const getCheck = async (startDate, endDate) => {
   // const fetchRes = await fetchJson(`/auth/certification/email?key=${auth}&type=${type}`, 'GET');

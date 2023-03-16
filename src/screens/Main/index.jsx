@@ -1689,6 +1689,31 @@ const Screen = () => {
           }}
         />
       </MainRoot.Group>
+
+      {/* Sse 테스트 */}
+
+      <MainRoot.Group>
+        {/* <MainRoot.Screen
+          
+          name={}
+          component={}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+          
+          
+          /> */}
+      </MainRoot.Group>
     </MainRoot.Navigator>
   );
 };
