@@ -1,8 +1,8 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import cardValidator from 'card-validator';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {ScrollView} from 'react-native';
+import {KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 
 import Button from '~components/Button';
@@ -69,121 +69,141 @@ const Pages = ({route}) => {
       };
     }, []),
   );
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
+
+  useEffect(() => {
+    Platform.OS === 'ios'
+      ? StatusBarManager.getHeight(statusBarFrameData => {
+          setStatusBarHeight(statusBarFrameData.height);
+        })
+      : null;
+  }, []);
+
   return (
-    <Wrapper paddingTop={24} paddingHorizontal={24}>
-      <FormProvider {...form}>
-        <ScrollView>
-          <CardRegisteredBox>
-            <RegisteredTitleBox>
-              <Typography text="Title03SB" textColor={themeApp.colors.grey[2]}>
-                카드 정보
-              </Typography>
-            </RegisteredTitleBox>
-            <RegiteredView>
-              <RefTextInput
-                label="카드번호"
-                name="cardNumber"
-                placeholder="0000 0000 0000 0000"
-                keyboardType="numeric"
-                // value={isApplicant.phone}
-                rules={{
-                  required: '필수 입력 항목 입니다.',
-                  validate: {
-                    isValid: value => {
-                      return (
-                        isValidCardNumber(value.replace(/\W/gi, '')) ||
-                        '유효한 카드번호를 입력해주세요'
-                      );
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
+      behavior={Platform.OS === 'ios' && 'padding'}>
+      <Wrapper paddingTop={24} paddingHorizontal={24}>
+        <FormProvider {...form}>
+          <ScrollView>
+            <CardRegisteredBox>
+              <RegisteredTitleBox>
+                <Typography
+                  text="Title03SB"
+                  textColor={themeApp.colors.grey[2]}>
+                  카드 정보
+                </Typography>
+              </RegisteredTitleBox>
+              <RegiteredView>
+                <RefTextInput
+                  label="카드번호"
+                  name="cardNumber"
+                  placeholder="0000 0000 0000 0000"
+                  keyboardType="numeric"
+                  // value={isApplicant.phone}
+                  rules={{
+                    required: '필수 입력 항목 입니다.',
+                    validate: {
+                      isValid: value => {
+                        return (
+                          isValidCardNumber(value.replace(/\W/gi, '')) ||
+                          '유효한 카드번호를 입력해주세요'
+                        );
+                      },
                     },
-                  },
-                }}
-              />
-            </RegiteredView>
-            <RegiteredView>
-              <RefTextInput
-                label="유효기간"
-                name="cardExpDate"
-                placeholder="MM/YY"
-                keyboardType="numeric"
-                // value={isApplicant.phone}
-                rules={{
-                  required: '필수 입력 항목 입니다.',
-                  validate: {
-                    isValid: value => {
-                      return (
-                        cardValidator.expirationDate(value).isValid ||
-                        '올바른 유효기간을 입력해주세요'
-                      );
+                  }}
+                />
+              </RegiteredView>
+              <RegiteredView>
+                <RefTextInput
+                  label="유효기간"
+                  name="cardExpDate"
+                  placeholder="MM/YY"
+                  keyboardType="numeric"
+                  // value={isApplicant.phone}
+                  rules={{
+                    required: '필수 입력 항목 입니다.',
+                    validate: {
+                      isValid: value => {
+                        return (
+                          cardValidator.expirationDate(value).isValid ||
+                          '올바른 유효기간을 입력해주세요'
+                        );
+                      },
                     },
-                  },
-                }}
-              />
-            </RegiteredView>
-            <RegiteredView>
-              <RefTextInput
-                label="CVC(보안코드)"
-                name="cardSecret"
-                placeholder="카드 뒷면 세자리"
-                keyboardType="numeric"
-                // value={isApplicant.phone}
-                rules={{
-                  required: '필수 입력 항목 입니다.',
-                  validate: {
-                    isValid: value => {
-                      return (
-                        cardValidator.cvv(value).isValid ||
-                        cardValidator.cvv(value, 4).isValid ||
-                        '올바른 보안코드를 입력해주세요'
-                      );
+                  }}
+                />
+              </RegiteredView>
+              <RegiteredView>
+                <RefTextInput
+                  label="CVC(보안코드)"
+                  name="cardSecret"
+                  placeholder="카드 뒷면 세자리"
+                  keyboardType="numeric"
+                  // value={isApplicant.phone}
+                  rules={{
+                    required: '필수 입력 항목 입니다.',
+                    validate: {
+                      isValid: value => {
+                        return (
+                          cardValidator.cvv(value).isValid ||
+                          cardValidator.cvv(value, 4).isValid ||
+                          '올바른 보안코드를 입력해주세요'
+                        );
+                      },
                     },
-                  },
-                }}
-              />
-            </RegiteredView>
-            <RegiteredView>
-              <RefTextInput
-                label="사업자등록번호"
-                name="cardCorpNumber"
-                placeholder="0000000000"
-                keyboardType="numeric"
-                // value={isApplicant.phone}
-                rules={{
-                  required: '필수 입력 항목 입니다.',
-                  validate: {
-                    isValid: value => {
-                      console.log(value);
-                      return (
-                        checkCorporateRegiNumber(value) ||
-                        '유효한 사업자등록번호를 입력해주세요'
-                      );
+                  }}
+                />
+              </RegiteredView>
+              <RegiteredView>
+                <RefTextInput
+                  label="사업자등록번호"
+                  name="cardCorpNumber"
+                  placeholder="0000000000"
+                  keyboardType="numeric"
+                  // value={isApplicant.phone}
+                  rules={{
+                    required: '필수 입력 항목 입니다.',
+                    validate: {
+                      isValid: value => {
+                        console.log(value);
+                        return (
+                          checkCorporateRegiNumber(value) ||
+                          '유효한 사업자등록번호를 입력해주세요'
+                        );
+                      },
                     },
-                  },
-                }}
-              />
-            </RegiteredView>
-            <RegiteredView>
-              <RefTextInput
-                label="비밀번호"
-                name="cardPass"
-                placeholder="앞에 두자리"
-                keyboardType="numeric"
-                isPassword={true}
-                rules={{
-                  required: '필수 입력 항목 입니다.',
-                  maxLength: {
-                    value: 2,
-                    message: '올바른 비밀번호를 입력해주세요',
-                  },
-                }}
-              />
-            </RegiteredView>
-          </CardRegisteredBox>
-        </ScrollView>
-        <ButtonBox>
-          <Button label="등록하기" onPressEvent={form.handleSubmit(onSubmit)} />
-        </ButtonBox>
-      </FormProvider>
-    </Wrapper>
+                  }}
+                />
+              </RegiteredView>
+              <RegiteredView>
+                <RefTextInput
+                  label="비밀번호"
+                  name="cardPass"
+                  placeholder="앞에 두자리"
+                  keyboardType="numeric"
+                  isPassword={true}
+                  rules={{
+                    required: '필수 입력 항목 입니다.',
+                    maxLength: {
+                      value: 2,
+                      message: '올바른 비밀번호를 입력해주세요',
+                    },
+                  }}
+                />
+              </RegiteredView>
+            </CardRegisteredBox>
+          </ScrollView>
+          <ButtonBox>
+            <Button
+              label="등록하기"
+              onPressEvent={form.handleSubmit(onSubmit)}
+            />
+          </ButtonBox>
+        </FormProvider>
+      </Wrapper>
+    </KeyboardAvoidingView>
   );
 };
 

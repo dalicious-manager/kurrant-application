@@ -1,8 +1,13 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import cardValidator from 'card-validator';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {KeyboardAvoidingView, ScrollView} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  NativeModules,
+} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 
 import Button from '~components/Button';
@@ -23,7 +28,10 @@ const Pages = ({route}) => {
     mode: 'all',
   });
   const keyboardEvent = useKeyboardEvent();
+
   const [modalVisible, setModalVisible] = useState(false);
+
+  const {StatusBarManager} = NativeModules;
   const {
     cardRegisted,
     readableAtom: {cardList},
@@ -65,11 +73,24 @@ const Pages = ({route}) => {
       };
     }, []),
   );
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
+
+  useEffect(() => {
+    Platform.OS === 'ios'
+      ? StatusBarManager.getHeight(statusBarFrameData => {
+          setStatusBarHeight(statusBarFrameData.height);
+        })
+      : null;
+  }, []);
+
   return (
-    <Wrapper paddingTop={24} paddingHorizontal={24}>
-      <FormProvider {...form}>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
+      behavior={Platform.OS === 'ios' && 'padding'}>
+      <Wrapper paddingTop={24} paddingHorizontal={24}>
         <ScrollView>
-          <KeyboardAvoidingView behavior="padding">
+          <FormProvider {...form}>
             <CardRegisteredBox>
               <RegisteredTitleBox>
                 <Typography
@@ -175,20 +196,27 @@ const Pages = ({route}) => {
                 />
               </RegiteredView>
             </CardRegisteredBox>
-          </KeyboardAvoidingView>
+          </FormProvider>
         </ScrollView>
 
-        <ButtonBox>
-          <Button label="등록하기" onPressEvent={form.handleSubmit(onSubmit)} />
+        <ButtonBox isKeyboard={keyboardEvent.isKeyboardActivate}>
+          {!keyboardEvent.isKeyboardActivate && (
+            <Button
+              label="등록하기"
+              onPressEvent={form.handleSubmit(onSubmit)}
+            />
+          )}
         </ButtonBox>
-      </FormProvider>
-    </Wrapper>
+      </Wrapper>
+    </KeyboardAvoidingView>
   );
 };
 
 export default Pages;
 
-const CardRegisteredBox = styled.View``;
+const CardRegisteredBox = styled.View`
+  flex: 1;
+`;
 const RegisteredTitleBox = styled.View`
   flex-direction: row;
   margin-bottom: 28px;
@@ -200,5 +228,9 @@ const RegiteredView = styled.View`
 const ButtonBox = styled.View`
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: ${({isKeyboard}) => (isKeyboard ? '100px' : '24px')};
+  background-color: ${({isKeyboard}) =>
+    isKeyboard ? 'rgba(0,0,0,1)' : 'white'};
+  padding-left: 24px;
+  padding-right: 24px;
 `;
