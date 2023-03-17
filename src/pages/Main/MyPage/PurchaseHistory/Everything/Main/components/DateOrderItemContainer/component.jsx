@@ -87,10 +87,9 @@ const Component = ({purchaseId, date, itemIndex}) => {
     } catch (error) {
       alert(error.toString().replace('error:', ''));
     }
-
   };
   return (
-    <DateOrderItemListContainer isFirst={itemIndex === 0}>
+    <DateOrderItemListContainer isFirst={itemIndex === 0} open={open}>
       <DateDetailBox>
         <Typography text={'CaptionR'} textColor={themeApp.colors.grey[4]}>
           {date} 결제
@@ -248,16 +247,29 @@ const Component = ({purchaseId, date, itemIndex}) => {
 
 export default Component;
 const DateOrderItemListContainer = styled.View`
-  ${({isFirst}) =>
-    isFirst
-      ? css`
-          margin-top: 16px;
-        `
-      : css`
-          margin-top: 56px;
-        `}
+  ${({isFirst}) => {
+    if (isFirst) {
+      return css`
+        margin-top: 16px;
+      `;
+    }
+  }}
+
+  ${({open}) => {
+    if (open) {
+      return css`
+        margin-bottom: 30px;
+      `;
+    } else {
+      return css`
+        margin-bottom: 20px;
+      `;
+    }
+  }}
+
   padding-left: 24px;
   padding-right: 24px;
+  /* border: 1px solid black; */
 `;
 
 const DateOrderItemListBox = styled.View`
@@ -276,12 +288,15 @@ const DateOrderItemList = styled.View`
   padding-left: 12px;
 `;
 const DateOrderItemBox = styled.View`
-  ${({isFirst}) =>
+  /* ${({isFirst}) =>
     !isFirst &&
     css`
-      padding-top: 16px;
-    `}
+      padding-top: 14px;
+    `} */
   width: 100%;
+  /* border: 1px solid black; */
+  padding-top: 14px;
+  /* margin-bottom: 14px; */
 `;
 const DateOrderItemContentBox = styled.View`
   padding-top: 6px;

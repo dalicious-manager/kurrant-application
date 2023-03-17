@@ -1,19 +1,32 @@
 /* eslint-disable react-native/no-inline-styles */
 import cardValidator from 'card-validator';
-import React, {useState, useEffect,forwardRef} from 'react';
+import React, {useState, useEffect, forwardRef} from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
 import {Image, TouchableOpacity} from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 
-import { VISA ,AMEX,DISCOVER,JCB,UNKOWN,MASTERCARD,UNION, MAESTRO, DINERS } from '../../assets';
+import {
+  VISA,
+  AMEX,
+  DISCOVER,
+  JCB,
+  UNKOWN,
+  MASTERCARD,
+  UNION,
+  MAESTRO,
+  DINERS,
+} from '../../assets';
 import EyeOff from '../../assets/icons/TextInput/eyeOff.svg';
 import EyeOn from '../../assets/icons/TextInput/eyeOn.svg';
-import { cardNumberFormatter, cardSerialNumberFormatter, expirationDateFormatter } from '../../utils/cardFormatter';
+import {
+  cardNumberFormatter,
+  cardSerialNumberFormatter,
+  expirationDateFormatter,
+} from '../../utils/cardFormatter';
 import {formattedTimer} from '../../utils/dateFormatter';
 import {AntDesignIcon} from '../Icon';
 import Typography from '../Typography';
-import { textStyles } from './styles';
-
+import {textStyles} from './styles';
 
 /**
  *
@@ -37,261 +50,307 @@ import { textStyles } from './styles';
  *
  * @returns
  */
-const Component = forwardRef(({
-  name,
-  placeholder = '',
-  isEditable = true,
-  isPassword = false,
-  rules={},
-  suffix = {
-    isNeedDelete: false,
-    timer: 0,
-    isAuth:false,
-    authText:'',
-    authPressEvent:()=>{console.log('인증 요청')},
-  },
-  padding='4px 8px',
-  setisFocused,
-  label = '',
-  caption ='',
-  errMsg = '',
-  defaultValue,
-  style,
-  ...rest
-},ref) => {
-  // Hook
-  const {control,watch,formState:{errors},resetField} = useFormContext();
-  const [timer, setTimer] = useState({
-    remainTime: suffix.timer || 0,
-    isRunning: false,
-  });
-  const data = watch(name);
-  const [isShowing , setShowing] = useState(false);
-  const [focus,setFocused] = useState(false)
-  const [values , setValues] = useState();
-  const themeApp = useTheme();
+const Component = forwardRef(
+  (
+    {
+      name,
+      placeholder = '',
+      isEditable = true,
+      isPassword = false,
+      rules = {},
+      suffix = {
+        isNeedDelete: false,
+        timer: 0,
+        isAuth: false,
+        authText: '',
+        authPressEvent: () => {
+          console.log('인증 요청');
+        },
+      },
+      padding = '4px 8px',
+      setisFocused,
+      label = '',
+      caption = '',
+      errMsg = '',
+      defaultValue,
+      style,
+      ...rest
+    },
+    ref,
+  ) => {
+    // Hook
+    const {
+      control,
+      watch,
+      formState: {errors},
+      resetField,
+    } = useFormContext();
+    const [timer, setTimer] = useState({
+      remainTime: suffix.timer || 0,
+      isRunning: false,
+    });
+    const data = watch(name);
+    const [isShowing, setShowing] = useState(false);
+    const [focus, setFocused] = useState(false);
+    const [values, setValues] = useState();
+    const themeApp = useTheme();
 
-  // Props
-  const containerProps = {
-    editable: isEditable,
-  };
+    // Props
+    const containerProps = {
+      editable: isEditable,
+    };
 
-  const textInputProps = {
-    placeholder,
-    autoComplete: 'off',
-    editable: isEditable,
-  };
+    const textInputProps = {
+      placeholder,
+      autoComplete: 'off',
+      editable: isEditable,
+    };
 
-  // Suffix Contents
-  let suffixContent = '';
-  let timerContent = '';
+    // Suffix Contents
+    let suffixContent = '';
+    let timerContent = '';
 
-  if (suffix.isNeedDelete && data && focus) {
-    suffixContent = <TouchableOpacity onPress={()=>{
-      resetField(name)
-      ref?.current?.focus();
-    }}><AntDesignIcon name="closecircle" /></TouchableOpacity>;
-  }
-
-  // Password Showing
-  if (isPassword && data) {
-    suffixContent = <TouchableOpacity onPress={()=>{
-      setShowing(!isShowing)
-    }}>{isShowing ? <EyeOn />:<EyeOff />}</TouchableOpacity>;
-  }
-
-  // Suffix - Timer
-  if (timer.remainTime > 0) {
-    timerContent = (
-      <Typography variant="h600" weight="R">
-        {formattedTimer(timer.remainTime)}
-      </Typography>
-    );
-  }
-  if (timer.remainTime > 0 && !timer.isRunning) {
-    setTimer(prev => ({...prev, isRunning: true}));
-  }
- 
-  useEffect(() => {
-    if (timer.isRunning) {
-      const timerId = setTimeout(() => {
-        setTimer(prev => ({...prev, remainTime: prev.remainTime - 1}));
-      }, 1000);
-
-      if (timer.remainTime < 0) {
-        setTimer(prev => ({...prev, isRunning: false}));
-      }
-
-      return () => {
-        clearTimeout(timerId);
-      };
+    if (suffix.isNeedDelete && data && focus) {
+      suffixContent = (
+        <TouchableOpacity
+          onPress={() => {
+            resetField(name);
+            ref?.current?.focus();
+          }}>
+          <AntDesignIcon name="closecircle" />
+        </TouchableOpacity>
+      );
     }
-  }, [timer]);
 
-  return (
-    <Controller
-      control={control}
-      name={name}
-      rules={rules}
-      defaultValue={defaultValue && defaultValue}
-      render={({field: {onChange,value}}) => {
-        const formatter = ()=>{
-          if(name.includes("cardNumber")) {
-            return cardSerialNumberFormatter(value)
-          }else if(name.includes("cardExpDate")){
-            return expirationDateFormatter(value)
-          }
-          else{
-            if(value){
-              return value
+    // Password Showing
+    if (isPassword && data) {
+      suffixContent = (
+        <TouchableOpacity
+          onPress={() => {
+            setShowing(!isShowing);
+          }}>
+          {isShowing ? <EyeOn /> : <EyeOff />}
+        </TouchableOpacity>
+      );
+    }
+
+    // Suffix - Timer
+    if (timer.remainTime > 0) {
+      timerContent = (
+        <Typography variant="h600" weight="R">
+          {formattedTimer(timer.remainTime)}
+        </Typography>
+      );
+    }
+    if (timer.remainTime > 0 && !timer.isRunning) {
+      setTimer(prev => ({...prev, isRunning: true}));
+    }
+
+    useEffect(() => {
+      if (timer.isRunning) {
+        const timerId = setTimeout(() => {
+          setTimer(prev => ({...prev, remainTime: prev.remainTime - 1}));
+        }, 1000);
+
+        if (timer.remainTime < 0) {
+          setTimer(prev => ({...prev, isRunning: false}));
+        }
+
+        return () => {
+          clearTimeout(timerId);
+        };
+      }
+    }, [timer]);
+
+    return (
+      <Controller
+        control={control}
+        name={name}
+        rules={rules}
+        defaultValue={defaultValue && defaultValue}
+        render={({field: {onChange, value}}) => {
+          const formatter = () => {
+            if (name.includes('cardNumber')) {
+              return cardSerialNumberFormatter(value);
+            } else if (name.includes('cardExpDate')) {
+              return expirationDateFormatter(value);
+            } else {
+              if (value) {
+                return value;
+              }
+              return '';
             }
-            return '';
-          }
-          
-        }
-        const cardTypeIcon = ()=>{
-          const {card} = cardValidator.number(value);
-          let source;
-          switch (card?.type) {
-            case 'visa':
-              source = VISA;
-              break;
-            case 'mastercard':
-              source = MASTERCARD;
-              break;
-            case 'discover':
-              source = DISCOVER;
-              break;
-            case 'american-express':
-              source = AMEX;
-              break;
-            case 'unionpay':
-              source = UNION;
-              break;
-            case 'maestro':
-              source = MAESTRO;
-              break;
-            case 'jcb':
-              source = JCB;
-              break;
-            case 'diners-club':
-              source = DINERS;
-              break;
-            default:
-              source = UNKOWN;
-              break;
-          }
-          if (!source) return null;
-          return <Image source={source} scale={1.0} resizeMode={'stretch'}  style={{
-            width:29,
-            height:18,
-            alignSelf:'center'
-          }}/>;
-        }
-        
-        return (
-          <Wrapper {...style}>
-            {/* Label */}
-            {label && (
-              <LabelContainer>
-                <Typography
-                  text="CaptionR"
-                  textColor={errors[name] ? themeApp.colors.red[500]: focus ? themeApp.colors.blue[500] : themeApp.colors.grey[2] }>
-                  {value ? label:name.includes("card") ? label : '  '}
-                </Typography>
-              </LabelContainer>
-            )}
-            {/* TextInput */}
-            <ControlContainer 
-              isEditable={isEditable}
-              isError={errors[name]}
-              {...containerProps}
-              focus={focus}
-            >
-              
-              {name.includes("cardNumber") && cardTypeIcon()}
-              <InputContainer>
-                <StyledTextInput
-                  paddings={padding}
-                  ref={ref && ref}
-                  {...textInputProps}
-                  name={name}
-                  onChangeText={onChange}
-                  onBlur={()=>{
-                    setFocused(false)
-                    if(setisFocused){
-                      setisFocused(false)
-                    }
-                  }}
-                  onFocus={()=>{
-                    setFocused(true);
-                    if(setisFocused){
-                      setisFocused(true)
-                    }
-                  }}
-                  text={'InputText'}
-                  suffix={!!suffixContent}
-                  timer={timer.remainTime > 0}
-                  value={formatter()}
-                  secureTextEntry={isPassword ? !isShowing :false}
-                  {...rest}
-                />
-              </InputContainer>
-              {/* Suffix */}
-              {isEditable && <><TimerContainer timer={timer.remainTime > 0} isAuth={suffix.isAuth}>
-                {timerContent}
-              </TimerContainer><SuffixContainer suffix={!!suffixContent} isAuth={suffix.isAuth}>
-                  {suffixContent}
-                </SuffixContainer></>}
-              {isEditable && suffix.isAuth && <AuthenticationButton onPress={()=>{
-                if(suffix.authText ==='재발송'){
-                  setTimer(prev => ({...prev, remainTime: 180}));
-                  resetField(name);
-                  return suffix.authPressEvent(true)
-                }                
-                suffix.authPressEvent(false)
-              }}>
-                    <Typography 
-                      text={'Button10SB'} 
-                      textColor={suffix.authText ==='재발송'
-                      ? themeApp.colors.grey[3] 
-                      : errors[name]
-                      ? themeApp.colors.grey[6] 
-                      : watch(name) 
-                      ? themeApp.colors.grey[3] 
-                      : themeApp.colors.grey[6]}
-                    >
+          };
+          const cardTypeIcon = () => {
+            const {card} = cardValidator.number(value);
+            let source;
+            switch (card?.type) {
+              case 'visa':
+                source = VISA;
+                break;
+              case 'mastercard':
+                source = MASTERCARD;
+                break;
+              case 'discover':
+                source = DISCOVER;
+                break;
+              case 'american-express':
+                source = AMEX;
+                break;
+              case 'unionpay':
+                source = UNION;
+                break;
+              case 'maestro':
+                source = MAESTRO;
+                break;
+              case 'jcb':
+                source = JCB;
+                break;
+              case 'diners-club':
+                source = DINERS;
+                break;
+              default:
+                source = UNKOWN;
+                break;
+            }
+            if (!source) return null;
+            return (
+              <Image
+                source={source}
+                scale={1.0}
+                resizeMode={'stretch'}
+                style={{
+                  width: 29,
+                  height: 18,
+                  alignSelf: 'center',
+                }}
+              />
+            );
+          };
+
+          return (
+            <Wrapper {...style}>
+              {/* Label */}
+              {label && (
+                <LabelContainer>
+                  <Typography
+                    text="CaptionR"
+                    textColor={
+                      errors[name]
+                        ? themeApp.colors.red[500]
+                        : focus
+                        ? themeApp.colors.blue[500]
+                        : themeApp.colors.grey[2]
+                    }>
+                    {value ? label : name.includes('card') ? label : '  '}
+                  </Typography>
+                </LabelContainer>
+              )}
+              {/* TextInput */}
+              <ControlContainer
+                isEditable={isEditable}
+                isError={errors[name]}
+                {...containerProps}
+                focus={focus}>
+                {name.includes('cardNumber') && cardTypeIcon()}
+                <InputContainer>
+                  <StyledTextInput
+                    paddings={padding}
+                    ref={ref && ref}
+                    {...textInputProps}
+                    name={name}
+                    onChangeText={onChange}
+                    onBlur={() => {
+                      setFocused(false);
+                      if (setisFocused) {
+                        setisFocused(false);
+                      }
+                    }}
+                    onFocus={() => {
+                      setFocused(true);
+                      if (setisFocused) {
+                        setisFocused(true);
+                      }
+                    }}
+                    text={'InputText'}
+                    suffix={!!suffixContent}
+                    timer={timer.remainTime > 0}
+                    value={formatter()}
+                    secureTextEntry={isPassword ? !isShowing : false}
+                    {...rest}
+                  />
+                </InputContainer>
+                {/* Suffix */}
+                {isEditable && (
+                  <>
+                    <TimerContainer
+                      timer={timer.remainTime > 0}
+                      isAuth={suffix.isAuth}>
+                      {timerContent}
+                    </TimerContainer>
+                    <SuffixContainer
+                      suffix={!!suffixContent}
+                      isAuth={suffix.isAuth}>
+                      {suffixContent}
+                    </SuffixContainer>
+                  </>
+                )}
+                {isEditable && suffix.isAuth && (
+                  <AuthenticationButton
+                    onPress={() => {
+                      if (suffix.authText === '재발송') {
+                        setTimer(prev => ({...prev, remainTime: 180}));
+                        resetField(name);
+                        return suffix.authPressEvent(true);
+                      }
+                      suffix.authPressEvent(false);
+                    }}>
+                    <Typography
+                      text={'Button10SB'}
+                      textColor={
+                        suffix.authText === '재발송'
+                          ? themeApp.colors.grey[3]
+                          : errors[name]
+                          ? themeApp.colors.grey[6]
+                          : watch(name)
+                          ? themeApp.colors.grey[3]
+                          : themeApp.colors.grey[6]
+                      }>
                       {suffix.authText}
                     </Typography>
-                  </AuthenticationButton>}
-            </ControlContainer>
-            {/* caption */}
-            {caption && (
+                  </AuthenticationButton>
+                )}
+              </ControlContainer>
+              {/* caption */}
+              {caption && (
                 <CaptionContainer>
                   <Typography
                     text="CaptionR"
-                    textColor={value ? themeApp.colors.grey[4] : themeApp.colors.grey[5]}>
-                      {caption}
+                    textColor={
+                      value ? themeApp.colors.grey[4] : themeApp.colors.grey[5]
+                    }>
+                    {caption}
                   </Typography>
                 </CaptionContainer>
               )}
-            {/* Error Message */}
-            {errors[name] && (
-              <LabelContainer>
-                <Typography
-                  variant="h500"
-                  weight="R"
-                  textColor={themeApp.colors.red[500]}>
-                  {errors[name].message}
-                </Typography>
-              </LabelContainer>
-            )}
-          </Wrapper>
-        );
-      }}
-    />
-  );
-});
+              {/* Error Message */}
+              {errors[name] && (
+                <LabelContainer>
+                  <Typography
+                    variant="h500"
+                    weight="R"
+                    textColor={themeApp.colors.red[500]}>
+                    {errors[name].message}
+                  </Typography>
+                </LabelContainer>
+              )}
+            </Wrapper>
+          );
+        }}
+      />
+    );
+  },
+);
 
 // Wrapper
 const Wrapper = styled.View`
@@ -319,15 +378,20 @@ const ControlContainer = styled.View`
   /* border-radius: 6px; */
 
   border: none;
-  ${({isEditable,theme,isError,focus})=> { 
-    if(isEditable){
+  ${({isEditable, theme, isError, focus}) => {
+    if (isEditable) {
       return css`
-      background-color: ${theme.colors.grey[0]};
-      border-bottom-color:${isError ? theme.colors.red[500]: focus ? theme.colors.blue[500]:theme.colors.grey[8]};
-      border-bottom-width:2px;`
-      }
+        background-color: ${theme.colors.grey[0]};
+        border-bottom-color: ${isError
+          ? theme.colors.red[500]
+          : focus
+          ? theme.colors.blue[500]
+          : theme.colors.grey[8]};
+        border-bottom-width: 2px;
+      `;
     }
-  }`;
+  }}
+`;
 
 const AuthenticationButton = styled.TouchableOpacity`
   min-width: 77px;
@@ -335,13 +399,12 @@ const AuthenticationButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   border-radius: 100px;
-  border: ${({theme})=> `1px solid ${theme.colors.grey[7]}`};
-  padding:7px 16px;
+  border: ${({theme}) => `1px solid ${theme.colors.grey[7]}`};
+  padding: 7px 16px;
   position: absolute;
   right: 0;
-  bottom:8px;
-  
-`
+  bottom: 8px;
+`;
 const InputContainer = styled.View`
   width: 100%;
   justify-content: center;
@@ -350,17 +413,16 @@ const InputContainer = styled.View`
 
 const StyledTextInput = styled.TextInput`
   width: 100%;
-  ${({text})=> text && textStyles[text]}  
-  ${({name})=> name.includes("cardNumber") ? 
-  css`
-    padding: 4px 8px;
-  `
-   : 
-   css`
-    padding: 4px 0px;
-    padding-right: 8px;
-   `
-   }
+  ${({text}) => text && textStyles[text]}
+  ${({name}) =>
+    name.includes('cardNumber')
+      ? css`
+          padding: 4px 8px;
+        `
+      : css`
+          padding: 4px 0px;
+          padding-right: 8px;
+        `}
   ${({suffix}) => {
     if (suffix) {
       return css`
@@ -378,14 +440,13 @@ const StyledTextInput = styled.TextInput`
   ${({editable}) => {
     if (!editable) {
       return css`
-        color:black;
-        padding-right:0px;
+        color: black;
+        padding-right: 0px;
       `;
     }
   }}
   padding:${({paddings}) => paddings && paddings};
 `;
-
 
 // Suffix
 const SuffixContainer = styled.View`
@@ -395,25 +456,25 @@ const SuffixContainer = styled.View`
   bottom: 8px;
   ${({isAuth}) => {
     if (isAuth) {
-      return css`     
+      return css`
         align-items: flex-end;
         justify-content: space-between;
         flex-direction: row;
       `;
-    }else{
+    } else {
       return css`
         align-items: center;
         justify-content: center;
-      `
+      `;
     }
   }}
-  ${({suffix,isAuth}) => {
+  ${({suffix, isAuth}) => {
     if (suffix) {
-      if(isAuth){
+      if (isAuth) {
         return css`
           width: 32%;
         `;
-      }else{
+      } else {
         return css`
           width: 10%;
         `;
@@ -428,30 +489,29 @@ const TimerContainer = styled.View`
   bottom: 8px;
   ${({isAuth}) => {
     if (isAuth) {
-      return css`        
+      return css`
         align-items: center;
         justify-content: space-between;
         flex-direction: row;
       `;
-    }else{
+    } else {
       return css`
         align-items: center;
         justify-content: center;
-      `
+      `;
     }
   }}
-  ${({timer,isAuth}) => {
+  ${({timer, isAuth}) => {
     if (timer) {
-      if(isAuth){
+      if (isAuth) {
         return css`
           width: 38%;
         `;
-      }else{
+      } else {
         return css`
           width: 15%;
         `;
       }
-      
     }
   }}
 `;

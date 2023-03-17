@@ -268,7 +268,7 @@ const Pages = () => {
                             <CaptionPoint>{'\u2022   '}</CaptionPoint>
                             <CaptionText>
                               {
-                                '비밀번호는 8~32자리의 영문자, 숫자, 특수문자를 조합하여 설정해주세요.'
+                                '비밀번호는 8~32자리의 영문자, 숫자, 특수문자($@!%*#?&)를 조합하여 설정해주세요.'
                               }
                             </CaptionText>
                           </CaptionBox>
