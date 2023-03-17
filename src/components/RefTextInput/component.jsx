@@ -88,6 +88,7 @@ const Component = forwardRef(
     const [timer, setTimer] = useState({
       remainTime: suffix.timer || 0,
       isRunning: false,
+      firstRunning: false,
     });
     const data = watch(name);
     const [isShowing, setShowing] = useState(false);
@@ -135,21 +136,18 @@ const Component = forwardRef(
     }
 
     // Suffix - Timer
-    if (timer.remainTime > 0) {
-      timerContent = (
-        <Typography variant="h600" weight="R">
-          {formattedTimer(timer.remainTime)}
-        </Typography>
-      );
-    } else {
-      timerContent = (
-        <Typography variant="h600" weight="R" textColor="red">
-          {formattedTimer(timer.remainTime)}
-        </Typography>
-      );
-    }
+
+    timerContent = (
+      <Typography
+        variant="h600"
+        weight="R"
+        textColor={timer.remainTime > 0 ? undefined : 'red'}>
+        {timer.isRunning ? formattedTimer(timer.remainTime) : '00:00'}
+      </Typography>
+    );
+
     if (timer.remainTime > 0 && !timer.isRunning) {
-      setTimer(prev => ({...prev, isRunning: true}));
+      setTimer(prev => ({...prev, isRunning: true, firstRunning: true}));
     }
 
     useEffect(() => {
@@ -234,6 +232,12 @@ const Component = forwardRef(
             );
           };
 
+          timer.remainTime > 0 && timer.isRunning;
+
+          const redTimerConditiion =
+            // suffix?.timer &&
+            (timer.remainTime <= 0 || !timer.isRunning) && timer.firstRunning;
+
           return (
             <Wrapper {...style}>
               {/* Label */}
@@ -289,11 +293,28 @@ const Component = forwardRef(
                 {/* Suffix */}
                 {isEditable && (
                   <>
-                    <TimerContainer
+                    {/* <TimerContainer
                       timer={timer.remainTime > 0}
                       isAuth={suffix.isAuth}>
                       {timerContent}
-                    </TimerContainer>
+                    </TimerContainer> */}
+
+                    {timer.remainTime > 0 && timer.isRunning && (
+                      <TimerContainer
+                        timer={timer.remainTime > 0}
+                        isAuth={suffix.isAuth}>
+                        {timerContent}
+                      </TimerContainer>
+                    )}
+
+                    {redTimerConditiion && (
+                      <TimerContainerWhenDone>
+                        <Typography variant="h600" weight="R" textColor="red">
+                          00:00
+                        </Typography>
+                      </TimerContainerWhenDone>
+                    )}
+
                     <SuffixContainer
                       suffix={!!suffixContent}
                       isAuth={suffix.isAuth}>
@@ -492,7 +513,8 @@ const TimerContainer = styled.View`
   position: absolute;
   width: 0;
   right: 0;
-  bottom: 8px;
+  /* bottom: 8px; */
+  bottom: 16px;
   ${({isAuth}) => {
     if (isAuth) {
       return css`
@@ -520,6 +542,18 @@ const TimerContainer = styled.View`
       }
     }
   }}
+`;
+
+const TimerContainerWhenDone = styled.View`
+  position: absolute;
+  width: 0;
+  right: 0;
+  bottom: 16px;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+
+  width: 38%;
 `;
 
 export default Component;
