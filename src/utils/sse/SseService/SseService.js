@@ -5,23 +5,23 @@ import RNEventSource from 'react-native-event-source';
 class SseService {
   token;
   baseUrl;
-
+  eventSource;
   constructor(baseUrl, token) {
     this.baseUrl = baseUrl;
     this.token = token;
-  }
 
-  eventSource = new RNEventSource(
-    `${this.baseUrl}/notification/subscribe`,
+    this.eventSource = new RNEventSource(
+      `${this.baseUrl}/notification/subscribe`,
 
-    this.token && {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
+      this.token && {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+        withCredentials: true,
+        retry: 3000,
       },
-      withCredentials: true,
-      retry: 3000,
-    },
-  );
+    );
+  }
 
   onMessage = callback => {
     this.eventSource.addEventListener('message', e => {

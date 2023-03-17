@@ -63,21 +63,27 @@ import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSseContext} from '../../../../../utils/sse/seeContextApi/sseContext';
+import useSse from '../../../../../utils/sse/seeContextApi/sseLogics/useSse';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 const Pages = () => {
-  const sseContext = useSseContext();
+  // const sseContext = useSseContext();
 
-  useEffect(() => {
-    console.log('sseContext 홈에서 확인하기 ');
-    console.log(sseContext);
-  }, [sseContext]);
+  // useEffect(() => {
+  //   console.log('sseContext 홈에서 확인하기 ');
+  //   console.log(sseContext);
+  // }, [sseContext]);
+
+  // const {eventSourceMsg} = useSse();
+
+  // useEffect(() => {
+  //   console.log(eventSourceMsg);
+  // }, [eventSourceMsg]);
 
   const navigation = useNavigation();
 
-  const [isVisible, setIsVisible] = useState(true);
   const weekly = useAtomValue(weekAtom);
   const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
     useUserInfo();
@@ -526,11 +532,12 @@ const Pages = () => {
         </Wrap>
       </ScrollViewWrap>
 
-      {isVisible && (
+      {/* {eventSourceMsg && (
         <BalloonWrap>
           <Balloon label="다음주 식사 구매하셨나요?" />
+          <Balloon label={eventSourceMsg.content} />
         </BalloonWrap>
-      )}
+      )} */}
 
       <ButtonWrap>
         <Button

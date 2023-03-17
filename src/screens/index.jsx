@@ -11,6 +11,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {PAGE_NAME as BuyMealPageName} from '~pages/Main/Bnb/BuyMeal/Main';
 
 import {pageNameAtom} from '../atoms/store';
+import useSse from '../utils/sse/seeContextApi/sseLogics/useSse';
 
 import Main from './Main';
 
@@ -24,6 +25,13 @@ const Screen = () => {
       Platform.OS === 'android' && StatusBar.setTranslucent(true);
     }, []),
   );
+
+  const {eventSourceMsg} = useSse();
+
+  useEffect(() => {
+    //
+    console.log(eventSourceMsg);
+  }, [eventSourceMsg]);
 
   return (
     <SafeAreaProvider>

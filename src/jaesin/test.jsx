@@ -30,11 +30,11 @@ const Pages = () => {
   //   formState: {errors, dirtyFields},
   // } = useFormContext();
 
-  const {eventSourceMsg} = useSse();
+  // const {eventSourceMsg} = useSse();
 
-  useEffect(() => {
-    console.log(eventSourceMsg);
-  }, [eventSourceMsg]);
+  // useEffect(() => {
+  //   console.log(eventSourceMsg);
+  // }, [eventSourceMsg]);
 
   return (
     <Container>
