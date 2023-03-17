@@ -284,22 +284,6 @@ const Pages = () => {
 
           setSelected: setEndDate,
         }}></ModalCalendar>
-      {/* {showDateModal &&
-        ShowCalendar(
-          startDate,
-          onChangeDate,
-          confirmPress,
-          setShowDateModal,
-          setStartDate,
-        )}
-      {showDateModal2 &&
-        ShowCalendar(
-          endDate,
-          onChangeDate,
-          confirmPress,
-          setShowDateModal2,
-          setEndDate,
-        )} */}
     </Container>
   );
 };
