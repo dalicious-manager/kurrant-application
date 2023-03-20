@@ -95,11 +95,17 @@ const Pages = ({route}) => {
                     <EmailText text={'Body05SB'}>{emailInfo.email}</EmailText>
                   </InfoBox>
                 ) : (
-                  <View>
+                  <SocialLoginView>
                     <SocialIcons social={emailInfo.provider} />
-                    <Text>{showSocialTitleIntoKr(emailInfo.provider)}</Text>
-                    <EmailText text={'Body05SB'}>{emailInfo.email}</EmailText>
-                  </View>
+                    <SmallView>
+                      <SocialText>
+                        {showSocialTitleIntoKr(emailInfo.provider)}
+                      </SocialText>
+                      <SocialEmailText text={'Body05SB'}>
+                        {emailInfo.email}
+                      </SocialEmailText>
+                    </SmallView>
+                  </SocialLoginView>
                 )}
 
                 <LoginButton onPress={onPressEvent}>
@@ -176,4 +182,21 @@ const DateBox = styled.View`
   left: 24px;
   width: 100%;
   margin-bottom: 48px;
+`;
+
+const SocialLoginView = styled.View`
+  flex: 1;
+
+  display: flex;
+  flex-direction: row;
+`;
+const SmallView = styled.View``;
+
+const SocialText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  padding-left: 11px;
+`;
+const SocialEmailText = styled(Typography).attrs({text: ' Body06R'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+  padding-left: 11px;
 `;
