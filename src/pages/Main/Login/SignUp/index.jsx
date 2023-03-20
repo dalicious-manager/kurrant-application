@@ -218,8 +218,8 @@ const Pages = () => {
                         isAuth: true,
                         authText: '재발송',
                         authPressEvent: callMailAuth,
-                        // timer: 180,
-                        timer: 4,
+                        timer: 180,
+                        // timer: 4,
                       }}
                       rules={{
                         required: '필수 입력 항목 입니다.',
