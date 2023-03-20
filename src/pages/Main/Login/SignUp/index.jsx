@@ -521,24 +521,6 @@ const Pages = () => {
 
 export default Pages;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  content: {
-    padding: 16,
-  },
-  textInput: {
-    height: 140,
-    borderWidth: 1,
-    borderColor: 'gray',
-    paddingHorizontal: 8,
-  },
-});
-
 const KeyDismiss = styled.Pressable`
   flex: 1;
 `;
