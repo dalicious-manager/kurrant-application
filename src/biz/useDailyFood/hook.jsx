@@ -16,6 +16,7 @@ import {
   isLunchFoodLoadingAtom,
   isMorningFoodAtom,
   isMorningFoodLoadingAtom,
+  isServiceDaysAtom,
 } from './store';
 
 const useFoodDaily = () => {
@@ -23,6 +24,7 @@ const useFoodDaily = () => {
   const [isMorningFood, setMorning] = useAtom(isMorningFoodAtom);
   const [isLunchFood, setLunch] = useAtom(isLunchFoodAtom);
   const [isDinnerFood, setDinner] = useAtom(isDinnerFoodAtom);
+  const [isServiceDays, setServiceDays] = useAtom(isServiceDaysAtom);
   const [isDailyFoodLoading, setDailyFoodLoading] = useAtom(
     isDailyFoodLoadingAtom,
   );
@@ -46,6 +48,7 @@ const useFoodDaily = () => {
         throw new Error('없음');
       }
       // console.log(res.data.diningTypes)
+      setServiceDays(res.data.serviceDays);
       setDiningTypes(res.data.diningTypes);
       setMorning(res.data.dailyFoodDtos.filter(x => x.diningType === 1));
       setLunch(res.data.dailyFoodDtos.filter(x => x.diningType === 2));
@@ -82,6 +85,7 @@ const useFoodDaily = () => {
     isDinnerFood,
     isDailyFoodLoading,
     isFetchingDone,
+    isServiceDays,
   };
 };
 
