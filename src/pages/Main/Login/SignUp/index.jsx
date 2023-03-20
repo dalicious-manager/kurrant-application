@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {
   Platform,
@@ -8,6 +8,9 @@ import {
   View,
   Alert,
   Text,
+  TextInput,
+  StyleSheet,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
@@ -148,6 +151,20 @@ const Pages = () => {
         })
       : null;
   }, []);
+
+  /// 테스트
+  // const [textInputValue, setTextInputValue] = useState('');
+
+  const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    if (keyboardStatus.isKeyboardActivate) {
+      console.log('키보드 됨');
+      scrollViewRef.current.scrollToEnd({animated: true});
+      // scrollViewRef.current.scrollTo({y: 1200, animated: true});
+    }
+  }, [keyboardStatus.isKeyboardActivate]);
+
   return (
     <Wrapper>
       <FormProvider {...form}>
@@ -156,13 +173,16 @@ const Pages = () => {
             <KeyContainer
               keyboardVerticalOffset={
                 Platform.OS === 'ios' && statusBarHeight + 44
-                // Platform.OS === 'ios' && statusBarHeight + 60
+                // Platform.OS === 'ios' && statusBarHeight + 200
               }
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
               <ProgressBar progress={progress} />
               <InfomationText>{Infomation()}</InfomationText>
               <Container>
-                <ScrollView keyboardShouldPersistTaps={'always'}>
+                <ScrollView
+                  ref={scrollViewRef}
+                  keyboardShouldPersistTaps={'always'}>
+                  {/* <ScrollView ref={scrollViewRef}> */}
                   {progress < 5 && (
                     <RefTextInput
                       name="email"
@@ -371,6 +391,9 @@ const Pages = () => {
                             padding="4px 0"
                           />
                         )}
+
+                        <EmptySpacesView />
+                        {/* <EmptySpacesView /> */}
                       </>
                     )}
                   {progress === 5 && (
@@ -502,6 +525,24 @@ const Pages = () => {
 
 export default Pages;
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  content: {
+    padding: 16,
+  },
+  textInput: {
+    height: 140,
+    borderWidth: 1,
+    borderColor: 'gray',
+    paddingHorizontal: 8,
+  },
+});
+
 const KeyDismiss = styled.Pressable`
   flex: 1;
 `;
@@ -563,4 +604,8 @@ const TermsOfUseUnderlinedTypo = styled(Typography).attrs({text: 'CaptionR'})`
   text-decoration: underline;
   text-decoration-color: ${({theme}) => theme.colors.grey[5]};
   color: ${({theme}) => theme.colors.grey[5]};
+`;
+
+const EmptySpacesView = styled.View`
+  height: 100px;
 `;
