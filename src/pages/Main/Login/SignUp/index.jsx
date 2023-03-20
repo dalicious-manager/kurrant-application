@@ -154,16 +154,11 @@ const Pages = () => {
       : null;
   }, []);
 
-  /// 테스트
-  // const [textInputValue, setTextInputValue] = useState('');
-
   const scrollViewRef = useRef(null);
 
   useEffect(() => {
     if (keyboardStatus.isKeyboardActivate) {
-      console.log('키보드 됨');
       scrollViewRef.current.scrollToEnd({animated: true});
-      // scrollViewRef.current.scrollTo({y: 1200, animated: true});
     }
   }, [keyboardStatus.isKeyboardActivate]);
 
@@ -175,7 +170,6 @@ const Pages = () => {
             <KeyContainer
               keyboardVerticalOffset={
                 Platform.OS === 'ios' && statusBarHeight + 44
-                // Platform.OS === 'ios' && statusBarHeight + 200
               }
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
               <ProgressBar progress={progress} />
@@ -226,7 +220,8 @@ const Pages = () => {
                         isAuth: true,
                         authText: '재발송',
                         authPressEvent: callMailAuth,
-                        timer: 180,
+                        // timer: 180,
+                        timer: 4,
                       }}
                       rules={{
                         required: '필수 입력 항목 입니다.',
@@ -257,7 +252,7 @@ const Pages = () => {
                           required: '필수 입력 항목 입니다.',
                           minLength: {
                             value: 8,
-                            message: '8글자 이상 입력해주세요',
+                            message: '8글자 이상 입력해주세요. ',
                           },
                           maxLength: {
                             value: 31,
@@ -285,7 +280,7 @@ const Pages = () => {
                             '비밀번호가 일치하지 않습니다.',
                           minLength: {
                             value: 8,
-                            message: '8글자 이상 입력',
+                            message: '8글자 이상 입력해주세요. ',
                           },
                           maxLength: {
                             value: 31,
