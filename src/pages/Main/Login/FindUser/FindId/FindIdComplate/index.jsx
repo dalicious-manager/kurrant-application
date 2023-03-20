@@ -38,6 +38,7 @@ const Pages = ({route}) => {
   }, []);
 
   useEffect(() => {
+    console.log('여기 맞ㄱ음');
     console.log(userId);
   }, [userId]);
 
@@ -66,7 +67,7 @@ const Pages = ({route}) => {
         입력하신 정보로{'\n'}찾은 계정 정보예요.
       </Title>
       <LoginContainer>
-        {userId.connectedSns.length < 1 &&
+        {userId.connectedSns.length > 0 &&
           userId.connectedSns.map((emailInfo, i) => {
             const onPressEvent = () => {
               if (emailInfo.provider === 'GENERAL') {
