@@ -18,6 +18,7 @@ const useOrderMeal = () => {
     try {
       const res = await Fetch.OrderMeal(startdate, enddate);
       setOrderMeal(res.data);
+      return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
@@ -125,6 +126,7 @@ const useOrderMeal = () => {
 
       const todayMeal = res.data?.filter(m => m.serviceDate === date);
       setTodayMeal(todayMeal);
+      return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();

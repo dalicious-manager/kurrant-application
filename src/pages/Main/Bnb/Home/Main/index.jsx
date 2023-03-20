@@ -1,46 +1,26 @@
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useAtom, useAtomValue} from 'jotai';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {
-  SafeAreaView,
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-  Image,
-  Platform,
-  StyleSheet,
-  Pressable,
-  Alert,
-  StatusBar,
-} from 'react-native';
+import {useAtomValue} from 'jotai';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View, StyleSheet, Alert, StatusBar} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
-import CatorIcon from '../../../../../assets/icons/Home/cator.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
-import MarketIcon from '../../../../../assets/icons/Home/market.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
-import {isOrderMealAtom} from '../../../../../biz/useOrderMeal/store';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import Balloon from '../../../../../components/BalloonHome';
-import BottomSheet from '../../../../../components/BottomSheet/component';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
-import {
-  formattedDate,
-  formattedWeekDate,
-} from '../../../../../utils/dateFormatter';
+import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
@@ -53,8 +33,7 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/De
 import Toast from '../../../../../components/Toast';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
-import useUserMe from '../../../../../biz/useUserMe';
-import {FoundersMembers, Members} from '../../../../../assets';
+import {FoundersMembers} from '../../../../../assets';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
@@ -64,8 +43,6 @@ import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 const Pages = () => {
   const navigation = useNavigation();
 
@@ -91,9 +68,7 @@ const Pages = () => {
   } = useOrderMeal();
   const {loadMeal} = useShoppingBasket();
   const {dailyFood} = useFoodDaily();
-  const mealInfo = useAtomValue(isOrderMealAtom);
   const [modalVisible, setModalVisible] = useState(false);
-  const [data, setData] = useState(null);
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const toast = Toast();
@@ -142,75 +117,88 @@ const Pages = () => {
 
   useFocusEffect(
     useCallback(() => {
-      try {
-        async function loadUser() {
+      async function loadUser() {
+        try {
           const userData = await userInfo();
-          dailyFood(userData?.spotId, formattedWeekDate(new Date()));
-        }
-        async function loadOrderMeal() {
-          if (!(userRole === 'ROLE_GUEST'))
-            await orderMeal(
-              formattedWeekDate(weekly[0][0]),
-              formattedWeekDate(
-                weekly[weekly?.length - 1][weekly[0].length - 1],
-              ),
+          if (userData?.email) {
+            const daily = await dailyFood(
+              userData?.spotId,
+              formattedWeekDate(new Date()),
             );
+            console.log(daily, '12313da');
+            if (daily) {
+              if (!(userRole === 'ROLE_GUEST'))
+                await orderMeal(
+                  formattedWeekDate(weekly[0][0]),
+                  formattedWeekDate(
+                    weekly[weekly?.length - 1][weekly[0].length - 1],
+                  ),
+                );
+            }
+          }
+          return true;
+        } catch (error) {
+          return false;
         }
-        loadOrderMeal();
-        loadUser();
+      }
+      const isTester = async () => {
+        if (!(userRole === 'ROLE_GUEST')) {
+          const start = weekly.map(s => {
+            const startData = formattedWeekDate(s[0]);
+            return startData;
+          });
+
+          const end = weekly.map(e => {
+            const endData = formattedWeekDate(e.slice(-1)[0]);
+            return endData;
+          });
+
+          const status = async () => {
+            const userStatus = await getStorage('token');
+            const result = await todayOrderMeal(start[0], end[0]);
+            const getUserStatus = Number(userStatus.spotStatus);
+            if (getUserStatus === 1) {
+              navigation.navigate(GroupSelectPageName);
+            }
+            if (getUserStatus === 2) {
+              navigation.navigate(GroupCreateMainPageName);
+            }
+            return result;
+          };
+          try {
+            if (!(userRole === 'ROLE_GUEST')) {
+              const user = loadUser();
+              if (user) {
+                const data = await status();
+                if (data.statusCode === 200) {
+                  const group = await userGroupSpotCheck();
+                  if (group.statusCode === 200) {
+                    await loadMeal();
+                  }
+                }
+              }
+            }
+          } catch (error) {
+            if (error.toString().replace('Error:', '').trim() === '403') {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: LoginPageName,
+                  },
+                ],
+              });
+            }
+          }
+        }
+      };
+      try {
+        isTester();
       } catch (e) {
-        console.log(e.toString());
+        alert(e.toString().replace('error:'));
       }
     }, []),
   );
-  useEffect(() => {
-    const isTester = async () => {
-      if (!(userRole === 'ROLE_GUEST')) {
-        const start = weekly.map(s => {
-          const startData = formattedWeekDate(s[0]);
-          return startData;
-        });
-
-        const end = weekly.map(e => {
-          const endData = formattedWeekDate(e.slice(-1)[0]);
-          return endData;
-        });
-
-        const status = async () => {
-          const userStatus = await getStorage('spotStatus');
-
-          await todayOrderMeal(start[0], end[0]);
-          const getUserStatus = Number(userStatus);
-          if (getUserStatus === 1) {
-            navigation.navigate(GroupSelectPageName);
-          }
-          if (getUserStatus === 2) {
-            navigation.navigate(GroupCreateMainPageName);
-          }
-        };
-        try {
-          if (!(userRole === 'ROLE_GUEST')) {
-            status();
-            userGroupSpotCheck();
-            loadMeal();
-          }
-        } catch (error) {
-          if (error.toString().replace('Error:', '').trim() === '403') {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: LoginPageName,
-                },
-              ],
-            });
-          }
-        }
-      }
-    };
-    isTester();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     // Check whether an initial notification is available
@@ -320,7 +308,7 @@ const Pages = () => {
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
             <SpotNameText>
-              {userGroupName === null
+              {!userGroupName
                 ? '스팟을 선택해 주세요'
                 : userGroupName?.length + userSpot?.length + 1 > 11
                 ? userGroupName + '\n' + userSpot

@@ -30,6 +30,7 @@ const useGroupSpots = () => {
       const res = await Fetch.GroupSpotCheck();
 
       setUserGroupSpotCheck(res.data);
+      return res;
     } catch (err) {
       console.log(err);
     }
