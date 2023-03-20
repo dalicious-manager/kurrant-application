@@ -67,6 +67,8 @@ const Component = forwardRef(
           console.log('인증 요청');
         },
       },
+
+      additionalCssOnTextInput = '',
       padding = '4px 8px',
       setisFocused,
       label = '',
@@ -265,6 +267,7 @@ const Component = forwardRef(
                 {name.includes('cardNumber') && cardTypeIcon()}
                 <InputContainer>
                   <StyledTextInput
+                    additionalCssOnTextInput={additionalCssOnTextInput}
                     paddings={padding}
                     ref={ref && ref}
                     {...textInputProps}
@@ -472,7 +475,13 @@ const StyledTextInput = styled.TextInput`
       `;
     }
   }}
+
+
   padding:${({paddings}) => paddings && paddings};
+
+  ${({additionalCssOnTextInput}) => {
+    return additionalCssOnTextInput;
+  }}
 `;
 
 // Suffix
