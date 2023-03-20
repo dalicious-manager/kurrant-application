@@ -74,6 +74,7 @@ const Pages = ({route}) => {
   } = useAuth();
 
   const {
+    isServiceDays,
     isDiningTypes,
     isMorningFood,
     isLunchFood,
@@ -92,7 +93,7 @@ const Pages = ({route}) => {
     setQuantity,
   } = useShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-
+  console.log(isServiceDays, '서비스일');
   const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
   const handlePress = anim => {
@@ -219,7 +220,7 @@ const Pages = ({route}) => {
       if (position === -1) {
         const prevDate = new Date(date).getDate();
         const todayDate = new Date().getDate();
-        console.log(todayDate, prevDate);
+        // console.log(todayDate, prevDate);
         if (todayDate < prevDate) {
           setDate(
             formattedWeekDate(
@@ -256,7 +257,7 @@ const Pages = ({route}) => {
 
     if (offset === 0) {
       if (nowPage === position) {
-        console.log(nowPage, position, 'tests');
+        // console.log(nowPage, position, 'tests');
         if (position === 2) {
           const currentDate = formattedWeekDate(new Date());
           const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
@@ -686,6 +687,7 @@ const Pages = ({route}) => {
               m.membershipDiscountPrice +
               m.makersDiscountPrice +
               m.periodDiscountPrice;
+
             return (
               <Contents
                 key={m.id}
@@ -797,6 +799,7 @@ const Pages = ({route}) => {
           scrollDir
           pagerRef={pager}
           onPageScroll2={onPageScroll2}
+          sliderValue={sliderValue}
         />
       </CalendarWrap>
 

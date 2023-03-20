@@ -48,6 +48,7 @@ const Component = ({
   meal,
   pagerRef,
   margin = '0px',
+  sliderValue,
 }) => {
   const navigation = useNavigation();
   const pager = pagerRef ? pagerRef : useRef();
@@ -60,7 +61,7 @@ const Component = ({
   const selectedPress = day => {
     setCurrentPress(day);
   };
-
+  console.log(sliderValue, '슬라이드');
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
     setChk(position);
