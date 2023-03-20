@@ -227,6 +227,7 @@ const Pages = ({route}) => {
 };
 const SafeView = styled.SafeAreaView`
   flex: 1;
+  background-color: white;
 `;
 const WrapperBox = styled(Wrapper)`
   flex: 1;
