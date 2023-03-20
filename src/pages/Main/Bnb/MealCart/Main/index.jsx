@@ -99,32 +99,38 @@ const Pages = () => {
 
   useFocusEffect(
     useCallback(() => {
-      getCardList();
-    }, []),
-  );
-  useEffect(() => {
-    updateMeal(req);
-  }, [isFocused]);
-  useEffect(() => {
-    async function loadCart() {
-      try {
-        const res = await loadMeal();
-      } catch (error) {
-        if (error.toString().replace('Error:', '').trim() === '403') {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: LoginPageName,
-              },
-            ],
-          });
+      async function loadCart() {
+        try {
+          const res = await loadMeal();
+          if (res) {
+          }
+        } catch (error) {
+          if (error.toString().replace('Error:', '').trim() === '403') {
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: LoginPageName,
+                },
+              ],
+            });
+          }
         }
       }
-    }
-
-    loadCart();
-  }, []);
+      const getData = async () => {
+        const card = await getCardList();
+        if (card.statusCode === 200) {
+          const update = await updateMeal(req);
+          if (update.statusCode === 200) {
+            await loadCart();
+          }
+        }
+      };
+      getData();
+    }, []),
+  );
+  useEffect(() => {}, [isFocused]);
+  useEffect(() => {}, []);
 
   const quantityArr = isLoadMeal?.map(el =>
     el.cartDailyFoodDtoList.map(v =>

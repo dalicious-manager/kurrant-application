@@ -1,42 +1,20 @@
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-} from 'react';
-import {
-  View,
-  StatusBar,
-  Dimensions,
-  Text,
-  Alert,
-  Pressable,
-} from 'react-native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useState, useRef, useEffect, useLayoutEffect} from 'react';
+import {View, StatusBar, Dimensions, Alert, Pressable} from 'react-native';
 import styled from 'styled-components';
 import analytics from '@react-native-firebase/analytics';
 import LinearGradient from 'react-native-linear-gradient';
-import InfoIcon from '../../../../../assets/icons/MealDetail/info.svg';
 import FastImage from 'react-native-fast-image';
-import StartIcon from '../../../../../assets/icons/star.svg';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import BackButton from '../../../../../components/BackButton';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/ButtonExtendable';
-import MoreButton from '../../../../../components/ButtonMore';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
-import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from '../../../../../components/Typography';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
@@ -45,8 +23,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useAtomValue} from 'jotai';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -100,7 +76,12 @@ const Pages = ({route}) => {
   useEffect(() => {
     async function loadFoodDetail() {
       const foodData = await foodDetail(dailyFoodId);
-      await loadMeal();
+      if (foodData) {
+        const meal = await loadMeal();
+        if (meal) {
+          await updateMeal(req);
+        }
+      }
       const data = await analytics().logSelectContent({
         content_type: foodData.makersName,
         item_id: foodData.name,
@@ -114,9 +95,6 @@ const Pages = ({route}) => {
     loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    updateMeal(req);
-  }, [isFocused]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTransparent: true,
