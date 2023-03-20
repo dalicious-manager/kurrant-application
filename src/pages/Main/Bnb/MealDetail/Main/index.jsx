@@ -301,6 +301,7 @@ const Pages = ({route}) => {
                     onPress={() => {
                       navigation.navigate(MealInformationPageName, {
                         data: isFoodDetail?.origins,
+                        data2: isFoodDetail?.allergies,
                       });
                     }}>
                     <InformationText>알레르기/원산지</InformationText>
