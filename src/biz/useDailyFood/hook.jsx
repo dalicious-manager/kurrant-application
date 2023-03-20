@@ -6,6 +6,7 @@ import {Alert} from 'react-native';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
 import useAuth from '../useAuth';
 import {userRoleAtom} from '../useAuth/store';
+import {supportPriceAtom} from '../useSupportPrice/store';
 import * as Fetch from './Fetch';
 import {
   isDailyFoodAtom,
@@ -26,6 +27,8 @@ const useFoodDaily = () => {
   const [isDailyFoodLoading, setDailyFoodLoading] = useAtom(
     isDailyFoodLoadingAtom,
   );
+  const [supportPrices, setSupportPrices] = useAtom(supportPriceAtom);
+
   const [isFetchingDone, setIsFetchingDone] = useState(false);
   const {
     readableAtom: {userRole},
@@ -50,6 +53,7 @@ const useFoodDaily = () => {
       setMorning(res.data.dailyFoodDtos.filter(x => x.diningType === 1));
       setLunch(res.data.dailyFoodDtos.filter(x => x.diningType === 2));
       setDinner(res.data.dailyFoodDtos.filter(x => x.diningType === 3));
+      setSupportPrices(res.data.supportPrice);
       setIsFetchingDone(true);
       return res.data.diningTypes;
     } catch (err) {

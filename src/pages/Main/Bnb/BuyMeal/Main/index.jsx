@@ -41,6 +41,7 @@ import Modal from '../components/Modal';
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
 import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
 import {weekAtom} from '../../../../../biz/useBanner/store';
+import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -136,13 +137,9 @@ const Pages = ({route}) => {
   }, []);
 
   // 일일 식사지원금
-  const {supportPrices, getSupportPrices} = useSupportPrices();
+  const [supportPrices] = useAtom(supportPriceAtom);
   const [supportPrice, setSupportPrice] = useState(0);
   const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
-
-  useEffect(() => {
-    getSupportPrices(spotId, date);
-  }, [spotId, date]);
 
   useEffect(() => {
     let price = null;
@@ -160,7 +157,7 @@ const Pages = ({route}) => {
     }
 
     setSupportPrice(price);
-  }, [sliderValue, supportPrices]);
+  }, [sliderValue]);
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
@@ -485,10 +482,12 @@ const Pages = ({route}) => {
     async function loadDailyFood() {
       try {
         const data = await dailyFood(spotId, date);
-
         if (data[0]) {
           diningRef.current.setPage(Number(data[0]) - 1);
           setSliderValue(Number(data[0]) - 1);
+        }
+        if (isFocused) {
+          await updateMeal(req);
         }
       } catch (error) {
         if (error.toString().replace('Error.:', '').trim() === '403') {
@@ -512,10 +511,6 @@ const Pages = ({route}) => {
     }
   }, [date, isMount]);
 
-  useEffect(() => {
-    loadMeal();
-    updateMeal(req);
-  }, [isFocused]);
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
     const duplication = isLoadMeal
@@ -695,7 +690,6 @@ const Pages = ({route}) => {
               m.membershipDiscountPrice +
               m.makersDiscountPrice +
               m.periodDiscountPrice;
-            console.log(m.status);
             return (
               <Contents
                 key={m.id}
