@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
+import {Text, View} from 'react-native';
 import styled from 'styled-components';
 import {useTheme} from 'styled-components/native';
 
@@ -26,15 +27,38 @@ const Pages = ({route}) => {
   const {findEmail} = useAuth();
   const getUserId = async () => {
     const userEmail = await findEmail({phone: phone});
-    console.log(userEmail.data);
 
     setUserId(userEmail.data);
   };
+
   useEffect(() => {
     if (userId.email === '') {
       getUserId();
     }
   }, []);
+
+  useEffect(() => {
+    console.log(userId);
+  }, [userId]);
+
+  const showSocialTitleIntoKr = socialName => {
+    switch (socialName) {
+      case 'GENERAL':
+        return <GeneralIcon size={size} color={color} />;
+      case 'KAKAO':
+        return '카카오';
+      case 'APPLE':
+        return '애플';
+      case 'FACEBOOK':
+        return '페이스북';
+      case 'GOOGLE':
+        return '구글';
+      case 'NAVER':
+        return '네이버';
+      default:
+        break;
+    }
+  };
 
   return (
     <Conotainer>
@@ -42,40 +66,49 @@ const Pages = ({route}) => {
         입력하신 정보로{'\n'}찾은 계정 정보예요.
       </Title>
       <LoginContainer>
-        {userId.connectedSns.map(icon => {
-          //   console.log(icon);
-          const onPressEvent = () => {
-            if (icon === 'GENERAL') {
-              navigation.reset({
-                index: 1,
-                routes: [
-                  {
-                    name: LoginPageName,
-                  },
-                  {
-                    name: EmailLoginPageName,
-                    params: {
-                      userId: userId.email,
+        {userId.connectedSns.length < 1 &&
+          userId.connectedSns.map((emailInfo, i) => {
+            const onPressEvent = () => {
+              if (emailInfo.provider === 'GENERAL') {
+                navigation.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: LoginPageName,
                     },
-                  },
-                ],
-              });
-            }
-          };
-          return (
-            <LoginBox key={icon}>
-              <InfoBox>
-                <SocialIcons social={icon} />
-                <EmailText text={'Body05SB'}>{userId.email}</EmailText>
-              </InfoBox>
-              <LoginButton onPress={onPressEvent}>
-                <LoginBoxText textColor={themeApp.colors.neutral[0]}>
-                  로그인
-                </LoginBoxText>
-              </LoginButton>
-            </LoginBox>
-          );
-        })}
+                    {
+                      name: EmailLoginPageName,
+                      params: {
+                        userId: emailInfo.email,
+                      },
+                    },
+                  ],
+                });
+              }
+            };
+            return (
+              <LoginBox key={i}>
+                {emailInfo.provider === 'GENERAL' ? (
+                  <InfoBox>
+                    <SocialIcons social={emailInfo.provider} />
+                    <EmailText text={'Body05SB'}>{emailInfo.email}</EmailText>
+                  </InfoBox>
+                ) : (
+                  <View>
+                    <SocialIcons social={emailInfo.provider} />
+                    <Text>{showSocialTitleIntoKr(emailInfo.provider)}</Text>
+                    <EmailText text={'Body05SB'}>{emailInfo.email}</EmailText>
+                  </View>
+                )}
+
+                <LoginButton onPress={onPressEvent}>
+                  <LoginBoxText textColor={themeApp.colors.neutral[0]}>
+                    로그인
+                  </LoginBoxText>
+                </LoginButton>
+              </LoginBox>
+            );
+          })}
       </LoginContainer>
       <DateBox>
         <CaptionText>
