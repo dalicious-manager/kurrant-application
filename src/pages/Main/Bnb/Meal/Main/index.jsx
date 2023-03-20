@@ -23,6 +23,8 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import FastImage from 'react-native-fast-image';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
+import useFoodDaily from '../../../../../biz/useDailyFood/hook';
+import useUserInfo from '../../../../../biz/useUserInfo';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
@@ -30,7 +32,9 @@ const Pages = ({route}) => {
   const data = route?.params?.data === undefined ? date : route.params.data;
   const navigation = useNavigation();
   const meal = true;
-  console.log(data);
+  // console.log(data);
+  const {dailyFood, isServiceDays} = useFoodDaily();
+  const {isUserInfo, userInfo} = useUserInfo();
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
   const {isOrderMeal, refundItem, setOrderMeal} = useOrderMeal();
@@ -44,7 +48,7 @@ const Pages = ({route}) => {
 
   // console.log(isOrderMeal, '밀정보');
   const cancelMealPress = id => {
-    console.log(id, '밀 취소');
+    // console.log(id, '밀 취소');
     const list = isOrderMeal.map(el => {
       return {
         ...el,
@@ -125,6 +129,17 @@ const Pages = ({route}) => {
     );
   };
 
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const userData = await userInfo();
+        await dailyFood(userData?.spotId, formattedWeekDate(new Date()));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    loadUser();
+  }, []);
   return (
     <SafeView>
       <ScrollView>
@@ -138,13 +153,14 @@ const Pages = ({route}) => {
             selectDate={touchDate}
             meal={meal}
             margin={'0px 28px'}
+            isServiceDays={isServiceDays}
           />
         </CalendarWrap>
 
         <MealWrap>
           {touchDate ? (
             <>
-              {selectDate.map((s, index) => {
+              {selectDate?.map((s, index) => {
                 return (
                   <View key={index}>
                     <DiningTimeWrap>
