@@ -12,17 +12,17 @@ import {PAGE_NAME as LoginPage} from '../../EmailLogin';
 export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP_COMPLATE';
 
 const Pages = ({route}) => {
-  //   const {useName} = route.params;
+  const {useName} = route.params;
   const themeApp = useTheme();
   const navigation = useNavigation();
   return (
     <Conotainer>
-      {/* <Image imagePath={SignUpComplate} scale={0.5} /> */}
-
       <CongratulationsClapIcon />
 
-      {/* <Title textColor={themeApp.colors.grey[2]}>{useName}님, 환영합니다!</Title> */}
-      <Title textColor={themeApp.colors.grey[2]}>허버허버님, 환영합니다!</Title>
+      <Title textColor={themeApp.colors.grey[2]}>
+        {useName}님, 환영합니다!
+      </Title>
+
       <CaptionText textColor={themeApp.colors.grey[4]}>
         커런트 가입을 축하드려요. {'\n'}이제 맛있는 식사를 주문해볼까요?
       </CaptionText>
@@ -34,13 +34,13 @@ const Pages = ({route}) => {
             navigation.popToTop();
             navigation.navigate(LoginPage);
             // navigation.reset({
-            //     index: 0,
-            //     routes: [
-            //       {
-            //         name: SCREEN_NAME,
-            //       },
-            //     ],
-            //   })
+            //   index: 0,
+            //   // routes: [
+            //   //   {
+            //   //     name: SCREEN_NAME,
+            //   //   },
+            //   // ],
+            // });
           }}
         />
       </ButtonContainer>

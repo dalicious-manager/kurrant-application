@@ -142,8 +142,6 @@ const Pages = () => {
 
   const inputStyle = {
     marginBottom: 16,
-    // paddingRight: 130,
-    // backgroundColor: 'blue',
   };
 
   useEffect(() => {
