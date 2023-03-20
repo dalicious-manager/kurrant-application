@@ -39,8 +39,8 @@ const Component = ({purchaseId, date, itemIndex}) => {
         orderId: purchase.id,
         id: id,
       };
-      const refundResult = await refundItem(req);
-      const refund = mealPurchase.map(o => {
+      await refundItem(req);
+      const refund = allPurchase.map(o => {
         return {
           ...o,
           orderItems: [
@@ -54,42 +54,39 @@ const Component = ({purchaseId, date, itemIndex}) => {
           ],
         };
       });
-      setMealPurchase(refund);
+      setAllPurchase(refund);
     } catch (error) {
       alert(error.toString().replace('error:', ''));
     }
   };
-  const changeItem = async id => {
-    try {
-      const req = {
-        orderId: purchase.id,
-        id: id,
+  const changeItem = async (id, serviceDate) => {
+    const req = {
+      orderId: purchase.id,
+      id: id,
+    };
+    await refundItem(req);
+    const refund = allPurchase.map(o => {
+      return {
+        ...o,
+        orderItems: [
+          ...o.orderItems.map(v => {
+            if (v.id === id) {
+              return {...v, orderStatus: 7};
+            } else {
+              return v;
+            }
+          }),
+        ],
       };
-      await refundItem(req);
-      const refund = mealPurchase.map(o => {
-        return {
-          ...o,
-          orderItems: [
-            ...o.orderItems.map(v => {
-              if (v.id === id) {
-                return {...v, orderStatus: 7};
-              } else {
-                return v;
-              }
-            }),
-          ],
-        };
-      });
-      setMealPurchase(refund);
-      navigation.navigate(BuyMealPageName, {
-        date: serviceDate ? serviceDate : formattedDate(new Date()),
-      });
-    } catch (error) {
-      alert(error.toString().replace('error:', ''));
-    }
+    });
+    setAllPurchase(refund);
+
+    navigation.navigate(BuyMealPageName, {
+      date: serviceDate ? serviceDate : formattedDate(new Date()),
+    });
   };
   return (
-    <DateOrderItemListContainer isFirst={itemIndex === 0} open={open}>
+    <DateOrderItemListContainer isFirst={itemIndex === 0}>
       <DateDetailBox>
         <Typography text={'CaptionR'} textColor={themeApp.colors.grey[4]}>
           {date} 결제
@@ -217,7 +214,6 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   },
                                   {
                                     text: '메뉴 취소',
-
                                     onPress: () =>
                                       changeItem(order.id, order.serviceDate),
                                     style: 'destructive',
@@ -247,29 +243,16 @@ const Component = ({purchaseId, date, itemIndex}) => {
 
 export default Component;
 const DateOrderItemListContainer = styled.View`
-  ${({isFirst}) => {
-    if (isFirst) {
-      return css`
-        margin-top: 16px;
-      `;
-    }
-  }}
-
-  ${({open}) => {
-    if (open) {
-      return css`
-        margin-bottom: 30px;
-      `;
-    } else {
-      return css`
-        margin-bottom: 20px;
-      `;
-    }
-  }}
-
+  ${({isFirst}) =>
+    isFirst
+      ? css`
+          margin-top: 16px;
+        `
+      : css`
+          margin-top: 56px;
+        `}
   padding-left: 24px;
   padding-right: 24px;
-  /* border: 1px solid black; */
 `;
 
 const DateOrderItemListBox = styled.View`
@@ -288,15 +271,12 @@ const DateOrderItemList = styled.View`
   padding-left: 12px;
 `;
 const DateOrderItemBox = styled.View`
-  /* ${({isFirst}) =>
+  ${({isFirst}) =>
     !isFirst &&
     css`
-      padding-top: 14px;
-    `} */
+      padding-top: 16px;
+    `}
   width: 100%;
-  /* border: 1px solid black; */
-  padding-top: 14px;
-  /* margin-bottom: 14px; */
 `;
 const DateOrderItemContentBox = styled.View`
   padding-top: 6px;
@@ -367,7 +347,7 @@ const ArrowRightIcon = styled(ArrowRight)`
 
 const ArrowUpIcon = styled(ArrowDown)`
   margin-left: 4px;
-  transform: rotateX(180deg);
+  transform: rotateX('180deg');
 `;
 
 const ArrowDownIcon = styled(ArrowDown)`

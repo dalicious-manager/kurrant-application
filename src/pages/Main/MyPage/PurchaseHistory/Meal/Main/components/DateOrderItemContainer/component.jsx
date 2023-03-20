@@ -347,7 +347,7 @@ const ArrowRightIcon = styled(ArrowRight)`
 
 const ArrowUpIcon = styled(ArrowDown)`
   margin-left: 4px;
-  transform: rotateX(180deg);
+  transform: rotateX('180deg');
 `;
 
 const ArrowDownIcon = styled(ArrowDown)`
