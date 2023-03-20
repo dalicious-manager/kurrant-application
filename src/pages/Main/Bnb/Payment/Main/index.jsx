@@ -100,10 +100,10 @@ const Pages = ({route}) => {
   const {order} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
   const {
-    setSelectDefaultCard,
+    getCardList,
     readableAtom: {selectDefaultCard},
   } = useUserMe();
-  const [card, setCard] = useState(Number(selectDefaultCard));
+  const [card, setCard] = useState(selectDefaultCard);
   const inputRef = useRef(null);
   const {
     totalCount,
@@ -125,11 +125,11 @@ const Pages = ({route}) => {
     medtronicSupportArr,
   } = route.params;
   const selectCard = async (text, id) => {
-    await setStorage('selectCard', id.toString());
+    // await setStorage('selectCard', id.toString());
     console.log(text, id);
-    setSelectDefaultCard(id.toString());
+    // setSelectDefaultCard(id.toString());
   };
-  console.log(totalPrice, medtronicPrice, '090999');
+  // console.log(totalPrice, medtronicPrice, '090999');
   const fundButton = () => {
     setModalVisible3(true);
   };
@@ -146,27 +146,40 @@ const Pages = ({route}) => {
   };
 
   useEffect(() => {
+    const getCard = async () => {
+      // const nowCard = await getStorage('selectCard');
+      // const easyPay = await getStorage('easyPay');
+      // if (easyPay) {
+      //   setPayments(easyPay);
+      // }
+      // if (nowCard) {
+      //   setCard(Number(nowCard));
+      // }
+      await getCardList();
+    };
+    getCard();
     Platform.OS === 'ios'
       ? StatusBarManager.getHeight(statusBarFrameData => {
           setStatusBarHeight(statusBarFrameData.height);
         })
       : null;
   }, []);
-  useFocusEffect(
-    useCallback(() => {
-      const getCard = async () => {
-        const nowCard = await getStorage('selectCard');
-        const easyPay = await getStorage('easyPay');
-        if (easyPay) {
-          setPayments(easyPay);
-        }
-        if (nowCard) {
-          setCard(Number(nowCard));
-        }
-      };
-      getCard();
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const getCard = async () => {
+  //       // const nowCard = await getStorage('selectCard');
+  //       // const easyPay = await getStorage('easyPay');
+  //       // if (easyPay) {
+  //       //   setPayments(easyPay);
+  //       // }
+  //       // if (nowCard) {
+  //       //   setCard(Number(nowCard));
+  //       // }
+  //       await getCardList();
+  //     };
+  //     getCard();
+  //   }, []),
+  // );
 
   const onBlurPress = e => {
     e.preventDefault();
@@ -230,7 +243,7 @@ const Pages = ({route}) => {
       deliveryFee: deliveryFee,
       userPoint: point,
     };
-    console.log(data, 'data');
+    // console.log(data, 'data');
     try {
       // const res = await orderMeal(spotId,data);
       // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
@@ -537,7 +550,7 @@ const Pages = ({route}) => {
                 name={'NAVERPAY'}
               />
             </AgreeTextBox> */}
-            <CardSelectContainer>
+            {/*<CardSelectContainer>
               {payments === 'NOMAL' && (
                 <View>
                   {card ? (
@@ -552,6 +565,52 @@ const Pages = ({route}) => {
                       ) : (
                         <CardText>{formattedCardCode(card)}</CardText>
                       )}
+                       <PayInfoWrap>
+                                <PayInfo>
+                                <PayError />
+                                <PayText>결제불가</PayText>
+                                </PayInfo>
+                                <ArrowRight />
+                            </PayInfoWrap> 
+                      <ArrowRight />
+                    </Card>
+                  ) : (
+                    <Card
+                      onPress={() =>
+                        // navigation.navigate(DefaultPaymentManagePageName)
+                        setModalVisible4(!modalVisible4)
+                      }>
+                      <CardText>결제 수단 선택</CardText>
+                      <ArrowRight />
+                    </Card>
+                  )}
+                </View>
+              )}
+            </CardSelectContainer>*/}
+            <CardSelectContainer>
+              {payments === 'NOMAL' && (
+                <View>
+                  {selectDefaultCard ? (
+                    <Card
+                      key={selectDefaultCard}
+                      onPress={() => {
+                        // console.log(selectDefaultCard);
+                        navigation.navigate(DefaultPaymentManagePageName);
+                        // setModalVisible4(!modalVisible4);
+                      }}>
+                      {!selectDefaultCard ? (
+                        <CardText>결제 카드 등록</CardText>
+                      ) : (
+                        <CardText>
+                          {selectDefaultCard[0].cardCompany +
+                            '(' +
+                            selectDefaultCard[0].cardNumber.substring(
+                              selectDefaultCard[0].cardNumber.length - 4,
+                              selectDefaultCard[0].cardNumber.length,
+                            ) +
+                            ')'}
+                        </CardText>
+                      )}
                       {/* <PayInfoWrap>
                                 <PayInfo>
                                 <PayError />
@@ -563,9 +622,9 @@ const Pages = ({route}) => {
                     </Card>
                   ) : (
                     <Card
-                      onPress={() =>
-                        // navigation.navigate(DefaultPaymentManagePageName)
-                        setModalVisible4(!modalVisible4)
+                      onPress={
+                        () => navigation.navigate(DefaultPaymentManagePageName)
+                        // setModalVisible4(!modalVisible4)
                       }>
                       <CardText>결제 수단 선택</CardText>
                       <ArrowRight />
@@ -646,7 +705,7 @@ const Pages = ({route}) => {
         onPressEvent1={closeModal}
       />
       {/* <BottomSheet title='일반 카드 선택' modalVisible={modalVisible4} setModalVisible={setModalVisible4} setSelected={setCard} selected={card} data={cardListData} setValue={selectCard}/> */}
-      <BottomSheetCard
+      {/* <BottomSheetCard
         modalVisible={modalVisible4}
         setModalVisible={setModalVisible4}
         title="일반 카드 선택"
@@ -654,7 +713,7 @@ const Pages = ({route}) => {
         selected={card}
         setSelected={setCard}
         onPressEvent={selectCard}
-      />
+      /> */}
     </SafeArea>
   );
 };

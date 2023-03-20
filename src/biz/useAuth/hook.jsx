@@ -183,7 +183,7 @@ const useAuth = () => {
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
-          '탈퇴한 계정입니다 계정을 복구 하시겠습니까?',
+          `탈퇴한 계정입니다 계정을 복구 하시겠습니까?\n탈퇴까지 남은 기간${res?.data?.leftWithdrawDays}일 남음`,
           [
             {
               text: '취소',
@@ -251,7 +251,7 @@ const useAuth = () => {
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
-          '탈퇴한 계정입니다 계정을 복구 하시겠습니까?',
+          `탈퇴한 계정입니다 계정을 복구 하시겠습니까?\n탈퇴까지 남은 기간${res?.data?.leftWithdrawDays}일 남음`,
           [
             {
               text: '취소',
@@ -316,7 +316,7 @@ const useAuth = () => {
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
-          '탈퇴한 계정입니다 계정을 복구 하시겠습니까?',
+          `탈퇴한 계정입니다 계정을 복구 하시겠습니까?\n탈퇴까지 남은 기간${res?.data?.leftWithdrawDays}일 남음`,
           [
             {
               text: '취소',
