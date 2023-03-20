@@ -72,11 +72,13 @@ const screenWidth = Dimensions.get('screen').width;
 const Pages = () => {
   const {eventSourceMsg, setEventSourceMsg} = useSse();
 
-  // useEffect(() => {
-  //   //
-  //   console.log('홈에서 나오는 메세지입니다');
-  //   console.log(eventSourceMsg.content);
-  // }, [eventSourceMsg]);
+  useEffect(() => {
+    //
+    console.log('홈에서 나오는 메세지입니다');
+    if (eventSourceMsg) {
+      console.log(eventSourceMsg.content);
+    }
+  }, [eventSourceMsg]);
 
   const navigation = useNavigation();
 
