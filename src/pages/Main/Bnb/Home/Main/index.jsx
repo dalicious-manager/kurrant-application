@@ -67,7 +67,7 @@ const Pages = () => {
     isOrderMealLoading,
   } = useOrderMeal();
   const {loadMeal} = useShoppingBasket();
-  const {dailyFood} = useFoodDaily();
+  const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
@@ -125,7 +125,7 @@ const Pages = () => {
               userData?.spotId,
               formattedWeekDate(new Date()),
             );
-            console.log(daily, '12313da');
+            // console.log(daily, '12313da');
             if (daily) {
               if (!(userRole === 'ROLE_GUEST'))
                 await orderMeal(
@@ -226,6 +226,7 @@ const Pages = () => {
       const res = await userSpotRegister({
         id: id,
       });
+
       console.log(res.data, 'testst');
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
@@ -249,6 +250,16 @@ const Pages = () => {
   // const date = formattedWeekDate(new Date());
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
+  useEffect(() => {
+    async function dailys() {
+      try {
+        await dailyFood(userSpotId, formattedWeekDate(new Date()));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    dailys();
+  }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
@@ -421,6 +432,7 @@ const Pages = () => {
                 <TitleText>식사일정</TitleText>
               </MealCalendarTitle>
               <Calendar
+                isServiceDays={isServiceDays}
                 onPressEvent={() => navigation.navigate(MealMainPageName)}
               />
             </MealCalendar>

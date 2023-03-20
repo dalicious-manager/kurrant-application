@@ -19,6 +19,7 @@ import useFoodDaily from '../../biz/useDailyFood/hook';
 import {calculateSelectDatePosition} from '../../biz/useDailyFood/logic';
 import useFoodDetail from '../../biz/useFoodDetail/hook';
 import useOrderMeal from '../../biz/useOrderMeal/hook';
+import useUserInfo from '../../biz/useUserInfo';
 import {isUserMeAtom} from '../../biz/useUserInfo/store';
 import {PAGE_NAME as MealMainPageName} from '../../pages/Main/Bnb/Meal/Main';
 import {formattedDate, formattedWeekDate} from '../../utils/dateFormatter';
@@ -49,6 +50,7 @@ const Component = ({
   pagerRef,
   margin = '0px',
   sliderValue,
+  isServiceDays,
 }) => {
   const navigation = useNavigation();
   const pager = pagerRef ? pagerRef : useRef();
@@ -58,10 +60,15 @@ const Component = ({
   const [currentPress, setCurrentPress] = useState(selectDate);
   const [chk, setChk] = useState(0);
 
+  const morningServiceDays = isServiceDays?.morningServiceDays;
+  const lunchServiceDays = isServiceDays?.lunchServiceDays;
+  const dinnerServiceDays = isServiceDays?.dinnerServiceDays;
+
   const selectedPress = day => {
     setCurrentPress(day);
   };
-  console.log(sliderValue, '슬라이드');
+  //console.log(sliderValue, '슬라이드');
+
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
     setChk(position);
@@ -85,9 +92,6 @@ const Component = ({
 
   /////// 끝
 
-  // useEffect(() => {
-  //   setCurrentPress(selectDate);
-  // }, [currentPress, selectDate]);
   return (
     <React.Fragment>
       {BooleanValue ? <Button pager={pager} daily chk={chk} /> : <></>}
@@ -107,10 +111,10 @@ const Component = ({
               <Wrap>
                 {week.map((day, idx) => {
                   const txt = format(day, 'EEE', {locale: ko});
+                  //ㄱconsole.log(txt, 'day');
                   const now = formattedDate(day) === formattedDate(today);
                   const pressDay = formattedDate(day);
                   const propsDay = formattedWeekDate(day);
-
                   const lastDay =
                     formattedDate(day, '/') < formattedDate(today, '/');
                   const order = isOrderMeal?.filter(
@@ -118,6 +122,17 @@ const Component = ({
                   );
                   const set = new Set(order?.map(x => x.diningType));
                   const orderCount = [...set].length;
+
+                  // 서비스일
+                  const morning =
+                    (sliderValue === 0 && morningServiceDays.includes(txt)) ||
+                    morningServiceDays?.includes(txt);
+                  const lunch =
+                    (sliderValue === 1 && lunchServiceDays.includes(txt)) ||
+                    lunchServiceDays?.includes(txt);
+                  const dinner =
+                    (sliderValue === 2 && dinnerServiceDays.includes(txt)) ||
+                    dinnerServiceDays?.includes(txt);
 
                   const events = () => {
                     selectedPress(day);
@@ -127,7 +142,12 @@ const Component = ({
                     <DaysWrap
                       key={day}
                       idx={idx}
-                      disabled={(lastDay && true) || idx === 5 || idx === 6}
+                      disabled={
+                        (lastDay && true) ||
+                        morning === false ||
+                        lunch === false ||
+                        dinner === false
+                      }
                       onPress={() => {
                         onPressEvent
                           ? navigation.reset({
@@ -144,7 +164,9 @@ const Component = ({
                         lastDay={lastDay}
                         color={color}
                         size={size}
-                        holiday={idx}>
+                        morning={morning}
+                        lunch={lunch}
+                        dinner={dinner}>
                         {txt}
                       </Day>
                       <TodayCircle
@@ -153,7 +175,9 @@ const Component = ({
                         currentPress={currentPress}
                         day={day}>
                         <Day
-                          holiday={idx}
+                          morning={morning}
+                          lunch={lunch}
+                          dinner={dinner}
                           color={color}
                           lastDay={lastDay}
                           now={now}
@@ -228,12 +252,12 @@ const Dot = styled.View`
 `;
 
 const Day = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({lastDay, theme, holiday}) =>
-    lastDay
+  color: ${({lastDay, theme, morning, lunch, dinner}) =>
+    morning || lunch || dinner
+      ? theme.colors.grey[2]
+      : lastDay
       ? theme.colors.grey[5]
-      : holiday === 6 || holiday === 5
-      ? theme.colors.grey[5]
-      : theme.colors.grey[2]};
+      : theme.colors.grey[5]};
   ${({color, now}) => now && getTodayColor(color)};
   ${({size}) => getFontStyle(size)};
 `;

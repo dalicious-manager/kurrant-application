@@ -93,7 +93,7 @@ const Pages = ({route}) => {
     setQuantity,
   } = useShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-  console.log(isServiceDays, '서비스일');
+
   const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
   const handlePress = anim => {
@@ -800,6 +800,7 @@ const Pages = ({route}) => {
           pagerRef={pager}
           onPageScroll2={onPageScroll2}
           sliderValue={sliderValue}
+          isServiceDays={isServiceDays}
         />
       </CalendarWrap>
 

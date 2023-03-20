@@ -6,11 +6,6 @@ import React, {useCallback, useEffect} from 'react';
 import {Platform, StatusBar, StyleSheet} from 'react-native';
 import {Alert} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import SplashScreen from 'react-native-splash-screen';
-
-import {PAGE_NAME as BuyMealPageName} from '~pages/Main/Bnb/BuyMeal/Main';
-
-import {pageNameAtom} from '../atoms/store';
 
 import Main from './Main';
 
