@@ -17,10 +17,13 @@ export const getCheck = async (startDate, endDate) => {
   // return fetchRes;
 };
 
-export const sendDone = async type => {
+export const sendDone = async (type, setEventSourceMsg) => {
   try {
     const sendYo = await fetchJson(`/notification/read?type=${type}`, 'PUT');
+
     console.log(sendYo);
+    console.log('클릭되었네요');
+    setEventSourceMsg(undefined);
   } catch (err) {
     console.log(err);
   }

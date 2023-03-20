@@ -5,6 +5,8 @@ import {getStorage, setStorage} from '../../../asyncStorage';
 import {getCheck} from '../restApis/getRestApis';
 import Config from 'react-native-config';
 import SseService from '../../SseService/SseService';
+import {eventSourceMsgAtom} from '../store';
+import {useAtom} from 'jotai';
 
 const apiHostUrl =
   Config.NODE_ENV === 'dev'
@@ -12,7 +14,7 @@ const apiHostUrl =
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 const useSse = () => {
-  const [eventSourceMsg, setEventSourceMsg] = useState({});
+  const [eventSourceMsg, setEventSourceMsg] = useAtom(eventSourceMsgAtom);
 
   const [myEventSource, setMyEventSource] = useState();
 
@@ -58,83 +60,46 @@ const useSse = () => {
       sseServiceInstance.onMessage(message => {
         // console.log('연결된듯');
         // console.log(message);
-        setEventSourceMsg(message);
+        if (typeof message === 'string') {
+          if (message.includes('EventStream')) {
+            console.log(1);
+            console.log('EventStream 연결 되었답니다');
+            // console.log(eventSourceMsg);
+          } else {
+            console.log(2);
+
+            // console.log(JSON.parse(message));
+
+            // setEventSourceMsg(message);
+            setEventSourceMsg(JSON.parse(message));
+          }
+        }
       });
     });
   }, [getSseServiceInstance, setEventSourceMsg]);
 
-  useEffect(() => {
-    console.log('잘 들어옴 이벤트 메세지');
-
-    console.log(eventSourceMsg);
-    // console.log(typeof eventSourceMsg);
-    if (typeof eventSourceMsg === 'string') {
-      console.log('일단 스트링이긴 함');
-
-      // console.log(JSON.parse(eventSourceMsg));
-
-      if (eventSourceMsg.includes('EventStream')) {
-        console.log(1);
-        // console.log(eventSourceMsg);
-      } else {
-        console.log(2);
-
-        console.log(JSON.parse(eventSourceMsg));
-
-        // if (JSON.parse(eventSourceMsg).content) {
-        //   setEventSourceMsg(JSON.parse(eventSourceMsg).content);
-        // } else {
-        //   setEventSourceMsg(undefined);
-        // }
-      }
-
-      // try {
-      //   console.log('에러안뜸');
-      //   const jsonObj = JSON.parse(eventSourceMsg);
-
-      //   console.log(jsonObj);
-      //   console.log('말풍선 대사 들어올랑가??' + jsonObj.content);
-      // } catch (e) {
-      //   console.log('에러뜸 메세지확인 ㄱ');
-      //   console.error('Error parsing JSON string: ' + e.message);
-      // }
-
-      // if (/{/.test(eventSourceMsg)) {
-      //   console.log('1');
-      //   console.log(JSON.parse(eventSourceMsg));
-      // } else {
-      //   console.log('2');
-      //   console.log(eventSourceMsg);
-      // }
-    }
-
-    // console.log(JSON.parse(`${eventSourceMsg}`));
-    // if (typeof eventSourceMsg === 'string') {
-    //   console.log(JSON.parse(eventSourceMsg));
-    // }
-
-    // console.log(eventSourceMsg.id);
-    // if (eventSourceMsg.id) {
-    //   console.log(eventSourceMsg.content);
-    // }
-  }, [eventSourceMsg]);
-
   // useEffect(() => {
-  //   // console.log()
-  //   // console.log('2 랄랄라~~');
-  //   // console.log('SseServiceKit 임' + SseServiceKit);
-  //   // console.log(SseServiceKit);
+  //   console.log('잘 들어옴 이벤트 메세지');
 
-  //   console.log(myEventSource);
-  //   console.log(typeof myEventSource);
-  //   console.log(myEventSource.onMessage);
+  //   console.log(eventSourceMsg);
+  //   // console.log(typeof eventSourceMsg);
+  //   if (typeof eventSourceMsg === 'string') {
+  //     console.log('일단 스트링이긴 함');
 
-  //   // myEventSource.onMessage(message => {
-  //   //   console.log(message);
-  //   // });
-  // }, [myEventSource]);
+  //     // console.log(JSON.parse(eventSourceMsg));
 
-  // 메세지 받아고기
+  //     if (eventSourceMsg.includes('EventStream')) {
+  //       console.log(1);
+  //       // console.log(eventSourceMsg);
+  //     } else {
+  //       console.log(2);
+
+  //       console.log(JSON.parse(eventSourceMsg));
+  //     }
+  //   }
+
+  //   // }
+  // }, [eventSourceMsg]);
 
   // 뭔가 에러터지면 끊기
 
@@ -224,7 +189,7 @@ const useSse = () => {
   //   eventSource.close();
   // };
 
-  return {eventSourceMsg};
+  return {eventSourceMsg, setEventSourceMsg};
 };
 
 export default useSse;

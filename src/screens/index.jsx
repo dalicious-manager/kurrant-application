@@ -26,13 +26,6 @@ const Screen = () => {
     }, []),
   );
 
-  const {eventSourceMsg} = useSse();
-
-  useEffect(() => {
-    //
-    console.log(eventSourceMsg);
-  }, [eventSourceMsg]);
-
   return (
     <SafeAreaProvider>
       <Root.Navigator>

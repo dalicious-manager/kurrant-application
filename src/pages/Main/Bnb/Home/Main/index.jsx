@@ -64,22 +64,18 @@ import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSseContext} from '../../../../../utils/sse/seeContextApi/sseContext';
 import useSse from '../../../../../utils/sse/seeContextApi/sseLogics/useSse';
+import {sendDone} from '../../../../../utils/sse/seeContextApi/restApis/getRestApis';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 const Pages = () => {
-  // const sseContext = useSseContext();
+  const {eventSourceMsg, setEventSourceMsg} = useSse();
 
   // useEffect(() => {
-  //   console.log('sseContext 홈에서 확인하기 ');
-  //   console.log(sseContext);
-  // }, [sseContext]);
-
-  // const {eventSourceMsg} = useSse();
-
-  // useEffect(() => {
-  //   console.log(eventSourceMsg);
+  //   //
+  //   console.log('홈에서 나오는 메세지입니다');
+  //   console.log(eventSourceMsg.content);
   // }, [eventSourceMsg]);
 
   const navigation = useNavigation();
@@ -124,20 +120,20 @@ const Pages = () => {
       const VISITED_BEFORE_DATE = await getStorage('balloonTime');
 
       if (intersection.length === 0) {
-        setIsVisible(true);
+        // setIsVisible(true);
       }
       if (
         intersection.length === 0 &&
         VISITED_BEFORE_DATE === VISITED_NOW_DATE
       ) {
-        setIsVisible(true);
+        // setIsVisible(true);
       }
       if (
         intersection.length === 0 &&
         VISITED_BEFORE_DATE !== null &&
         VISITED_BEFORE_DATE !== VISITED_NOW_DATE
       ) {
-        setIsVisible(false);
+        // setIsVisible(false);
       }
     };
     handleShowModal();
@@ -275,6 +271,11 @@ const Pages = () => {
   // const date = formattedWeekDate(new Date());
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
+
+  const confirmBalloonClicked = async () => {
+    await sendDone(5);
+  };
+
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
@@ -532,16 +533,19 @@ const Pages = () => {
         </Wrap>
       </ScrollViewWrap>
 
-      {/* {eventSourceMsg && (
-        <BalloonWrap>
-          <Balloon label="다음주 식사 구매하셨나요?" />
+      {eventSourceMsg.content && (
+        <BalloonPressable
+          onPress={() => {
+            confirmBalloonClicked();
+          }}>
           <Balloon label={eventSourceMsg.content} />
-        </BalloonWrap>
-      )} */}
+        </BalloonPressable>
+      )}
 
       <ButtonWrap>
         <Button
-          onPress={() => {
+          onPress={async () => {
+            await sendDone(5, setEventSourceMsg);
             if (userSpotId) {
               navigation.navigate(BuyMealPageName);
               closeBalloon();
@@ -872,7 +876,7 @@ const ButtonText = styled(Typography).attrs({text: 'BottomButtonSB'})`
   margin-left: 8px;
 `;
 
-const BalloonWrap = styled.View`
+const BalloonPressable = styled.Pressable`
   position: absolute;
   bottom: 80px;
   left: 28%;
