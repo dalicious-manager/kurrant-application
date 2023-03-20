@@ -64,13 +64,9 @@ const useSse = () => {
           if (message.includes('EventStream')) {
             console.log(1);
             console.log('EventStream 연결 되었답니다');
-            // console.log(eventSourceMsg);
           } else {
             console.log(2);
 
-            // console.log(JSON.parse(message));
-
-            // setEventSourceMsg(message);
             setEventSourceMsg(JSON.parse(message));
           }
         }
