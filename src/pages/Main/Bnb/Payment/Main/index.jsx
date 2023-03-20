@@ -543,12 +543,15 @@ const Pages = ({route}) => {
                   {card ? (
                     <Card
                       key={card}
-                      onPress={() =>
-                        // navigation.navigate(DefaultPaymentManagePageName)
-                        setModalVisible4(!modalVisible4)
-                      }>
-                      {/* <CardText>결제 카드 등록</CardText> */}
-                      <CardText>{formattedCardCode(card)}</CardText>
+                      onPress={() => {
+                        // navigation.navigate(DefaultPaymentManagePageName);
+                        setModalVisible4(!modalVisible4);
+                      }}>
+                      {!card ? (
+                        <CardText>결제 카드 등록</CardText>
+                      ) : (
+                        <CardText>{formattedCardCode(card)}</CardText>
+                      )}
                       {/* <PayInfoWrap>
                                 <PayInfo>
                                 <PayError />

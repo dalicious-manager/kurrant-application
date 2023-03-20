@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Pressable, Text, View} from 'react-native';
+import {Pressable, Text, View, Alert} from 'react-native';
 import styled from 'styled-components';
 
 import Apart from '../../../../../assets/icons/Group/apartImg.svg';
@@ -24,6 +24,12 @@ const Pages = ({route}) => {
       });
       navigation.navigate(MyGroupListPageName);
     } catch (err) {
+      Alert.alert('메세지', '등록 가능한 그룹의 개수를 초과했습니다.', [
+        {
+          text: '확인',
+          onPress: () => {},
+        },
+      ]);
       console.log(err);
     }
   };

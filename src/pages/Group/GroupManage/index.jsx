@@ -62,14 +62,14 @@ const Pages = () => {
     <SafeView>
       <Wrap>
         <MyGroup>내 스팟</MyGroup>
-        <ScrollView>
+        <Contents showsVerticalScrollIndicator={false}>
           <GroupNameView>
             {isUserGroupSpotCheck.length !== 0 &&
               isUserGroupSpotCheck.map((el, idx) => (
                 <GroupName key={el.clientId}>{el.clientName}</GroupName>
               ))}
           </GroupNameView>
-        </ScrollView>
+        </Contents>
       </Wrap>
       <ButtonWrap>
         <Button label="스팟 선택" onPressEvent={modalOpen} />
@@ -117,4 +117,8 @@ const GroupName = styled(Typography).attrs({text: 'LargeTitle'})`
 
 const GroupNameView = styled.View`
   align-items: center;
+`;
+
+const Contents = styled.ScrollView`
+  max-height: 550px;
 `;

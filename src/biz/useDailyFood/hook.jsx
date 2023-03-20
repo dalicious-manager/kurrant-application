@@ -6,6 +6,7 @@ import {Alert} from 'react-native';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
 import useAuth from '../useAuth';
 import {userRoleAtom} from '../useAuth/store';
+import {supportPriceAtom} from '../useSupportPrice/store';
 import * as Fetch from './Fetch';
 import {
   isDailyFoodAtom,
@@ -16,6 +17,7 @@ import {
   isLunchFoodLoadingAtom,
   isMorningFoodAtom,
   isMorningFoodLoadingAtom,
+  isServiceDaysAtom,
 } from './store';
 
 const useFoodDaily = () => {
@@ -23,9 +25,12 @@ const useFoodDaily = () => {
   const [isMorningFood, setMorning] = useAtom(isMorningFoodAtom);
   const [isLunchFood, setLunch] = useAtom(isLunchFoodAtom);
   const [isDinnerFood, setDinner] = useAtom(isDinnerFoodAtom);
+  const [isServiceDays, setServiceDays] = useAtom(isServiceDaysAtom);
   const [isDailyFoodLoading, setDailyFoodLoading] = useAtom(
     isDailyFoodLoadingAtom,
   );
+  const [supportPrices, setSupportPrices] = useAtom(supportPriceAtom);
+
   const [isFetchingDone, setIsFetchingDone] = useState(false);
   const {
     readableAtom: {userRole},
@@ -46,16 +51,19 @@ const useFoodDaily = () => {
         throw new Error('없음');
       }
       // console.log(res.data.diningTypes)
+      setServiceDays(res.data.serviceDays);
       setDiningTypes(res.data.diningTypes);
       setMorning(res.data.dailyFoodDtos.filter(x => x.diningType === 1));
       setLunch(res.data.dailyFoodDtos.filter(x => x.diningType === 2));
       setDinner(res.data.dailyFoodDtos.filter(x => x.diningType === 3));
+      setSupportPrices(res.data.supportPrice);
       setIsFetchingDone(true);
       return res.data.diningTypes;
     } catch (err) {
       setMorning([]);
       setLunch([]);
       setDinner([]);
+      setServiceDays([]);
       if (err.toString().replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
@@ -82,6 +90,7 @@ const useFoodDaily = () => {
     isDinnerFood,
     isDailyFoodLoading,
     isFetchingDone,
+    isServiceDays,
   };
 };
 

@@ -18,7 +18,7 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
             <AItext>오늘의 픽</AItext>
           </AIrecommend>
           <MealImageWrap>
-            {(status === 0 || status === 2) && <BlurView />}
+            {(status === 2 || status === 6) && <BlurView />}
             <FastImage
               source={{
                 uri: `${image}`,
@@ -44,7 +44,7 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
         </ImageBackground>
       ) : (
         <View>
-          {(status === 0 || status === 2) && <BlurView />}
+          {(status === 2 || status === 6) && <BlurView />}
           <FastImage
             source={{
               uri: `${image}`,
@@ -55,6 +55,7 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
               height: 114,
               borderRadius: 7,
             }}
+            r
           />
 
           {status === 1 && (

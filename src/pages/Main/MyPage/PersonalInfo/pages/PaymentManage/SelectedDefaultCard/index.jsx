@@ -111,18 +111,36 @@ const Pages = () => {
           </Typography>
         </RegisteredTitleBox>
         {/* <DefaultCardBox>
-                    <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>구매 대표카드</Typography>
-                    <SpotView onPress={onSelectOpenModal}>
-                        <SpotName>
-                        {cardList.map((card)=>{
-                            if(card.defaultType ===1 || card.defaultType ===3) return `${card.cardCompany}카드(${card.cardNumber?.toString().slice(-4)})`
-                        })?.join().replace(",","").toString().length > 1 ? cardList.map((card)=>{
-                            if(card.defaultType ===1 || card.defaultType ===3) return `${card.cardCompany}카드(${card.cardNumber?.toString().slice(-4)})`
-                        })?.join().replace(",","").toString() : "선택" }
-                        </SpotName>
-                        <Arrow/>
-                    </SpotView>
-                </DefaultCardBox> */}
+          <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
+            구매 대표카드
+          </Typography>
+          <SpotView onPress={onSelectOpenModal}>
+            <SpotName>
+              {cardList
+                .map(card => {
+                  if (card.defaultType === 1 || card.defaultType === 3)
+                    return `${card.cardCompany}카드(${card.cardNumber
+                      ?.toString()
+                      .slice(-4)})`;
+                })
+                ?.join()
+                .replace(',', '')
+                .toString().length > 1
+                ? cardList
+                    .map(card => {
+                      if (card.defaultType === 1 || card.defaultType === 3)
+                        return `${card.cardCompany}카드(${card.cardNumber
+                          ?.toString()
+                          .slice(-4)})`;
+                    })
+                    ?.join()
+                    .replace(',', '')
+                    .toString()
+                : '선택'}
+            </SpotName>
+            <Arrow />
+          </SpotView>
+        </DefaultCardBox> */}
         <DefaultCardBox>
           <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
             멤버십 대표카드

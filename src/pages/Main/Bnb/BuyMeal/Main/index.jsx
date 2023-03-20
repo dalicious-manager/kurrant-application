@@ -41,6 +41,7 @@ import Modal from '../components/Modal';
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
 import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
 import {weekAtom} from '../../../../../biz/useBanner/store';
+import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -72,11 +73,8 @@ const Pages = ({route}) => {
     readableAtom: {userRole},
   } = useAuth();
 
-  useEffect(() => {
-    console.log(`식사 구매하기`);
-  }, [params]);
-
   const {
+    isServiceDays,
     isDiningTypes,
     isMorningFood,
     isLunchFood,
@@ -136,13 +134,9 @@ const Pages = ({route}) => {
   }, []);
 
   // 일일 식사지원금
-  const {supportPrices, getSupportPrices} = useSupportPrices();
+  const [supportPrices] = useAtom(supportPriceAtom);
   const [supportPrice, setSupportPrice] = useState(0);
   const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
-
-  useEffect(() => {
-    getSupportPrices(spotId, date);
-  }, [spotId, date]);
 
   useEffect(() => {
     let price = null;
@@ -160,7 +154,7 @@ const Pages = ({route}) => {
     }
 
     setSupportPrice(price);
-  }, [sliderValue, supportPrices]);
+  }, [sliderValue]);
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
@@ -221,11 +215,13 @@ const Pages = ({route}) => {
         });
         setChk(index);
         pager.current.setPage(index);
+        return setNowPage(0);
       }
       if (position === -1) {
         const prevDate = new Date(date).getDate();
         const todayDate = new Date().getDate();
-        if (todayDate > prevDate) {
+        // console.log(todayDate, prevDate);
+        if (todayDate < prevDate) {
           setDate(
             formattedWeekDate(
               new Date(date).setDate(new Date(date).getDate() - 1),
@@ -245,6 +241,7 @@ const Pages = ({route}) => {
           });
           setChk(index);
           pager.current.setPage(index);
+          return setNowPage(2);
         }
 
         if (position === -1) {
@@ -260,7 +257,7 @@ const Pages = ({route}) => {
 
     if (offset === 0) {
       if (nowPage === position) {
-        //console.log(nowPage, position);
+        // console.log(nowPage, position, 'tests');
         if (position === 2) {
           const currentDate = formattedWeekDate(new Date());
           const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
@@ -296,6 +293,7 @@ const Pages = ({route}) => {
             });
             setChk(index);
             pager.current.setPage(index);
+            return setNowPage(0);
           }
         }
         if (position === 0) {
@@ -313,26 +311,32 @@ const Pages = ({route}) => {
             });
             return find !== -1;
           });
+
           if (week.includes(true)) {
-            setDate(
-              formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() - 1),
-              ),
-            );
-            const dateIndex = weekly.map(v => {
-              return v.map(s => {
-                return formattedWeekDate(s);
-              });
-            });
-            const index = dateIndex.findIndex((v, i) => {
-              return v.includes(
+            const prevDate = new Date(date).getDate();
+            const todayDate = new Date().getDate();
+            if (todayDate < prevDate) {
+              setDate(
                 formattedWeekDate(
                   new Date(date).setDate(new Date(date).getDate() - 1),
                 ),
               );
-            });
-            setChk(index);
-            pager.current.setPage(index);
+              const dateIndex = weekly.map(v => {
+                return v.map(s => {
+                  return formattedWeekDate(s);
+                });
+              });
+              const index = dateIndex.findIndex((v, i) => {
+                return v.includes(
+                  formattedWeekDate(
+                    new Date(date).setDate(new Date(date).getDate() - 1),
+                  ),
+                );
+              });
+              setChk(index);
+              pager.current.setPage(index);
+              return setNowPage(2);
+            }
           }
         }
       }
@@ -371,27 +375,35 @@ const Pages = ({route}) => {
           : isDiningTypes.includes(1)
           ? 0
           : 2;
-
       if (page !== position) {
         if (position === 2) {
-          const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
-          const todayDate = new Date(currentDate).setDate(
-            new Date(currentDate).getDate(),
+          setDate(
+            formattedWeekDate(
+              new Date(date).setDate(new Date(date).getDate() + 1),
+            ),
           );
-
-          const week = weekly.map(w => {
-            const find = w.findIndex(v => {
-              return (
-                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
-              );
+          const dateIndex = weekly.map(v => {
+            return v.map(s => {
+              return formattedWeekDate(s);
             });
-            return find !== -1;
           });
-          if (week.includes(true)) {
-            setDate(
+          const index = dateIndex.findIndex((v, i) => {
+            return v.includes(
               formattedWeekDate(
                 new Date(date).setDate(new Date(date).getDate() + 1),
+              ),
+            );
+          });
+          setChk(index);
+          pager.current.setPage(index);
+        }
+        if (position === 0) {
+          const prevDate = new Date(date).getDate();
+          const todayDate = new Date().getDate();
+          if (todayDate < prevDate) {
+            setDate(
+              formattedWeekDate(
+                new Date(date).setDate(new Date(date).getDate() - 1),
               ),
             );
             const dateIndex = weekly.map(v => {
@@ -402,7 +414,7 @@ const Pages = ({route}) => {
             const index = dateIndex.findIndex((v, i) => {
               return v.includes(
                 formattedWeekDate(
-                  new Date(date).setDate(new Date(date).getDate() + 1),
+                  new Date(date).setDate(new Date(date).getDate() - 1),
                 ),
               );
             });
@@ -410,59 +422,13 @@ const Pages = ({route}) => {
             pager.current.setPage(index);
           }
         }
-        if (position === 0) {
-          const currentDate = formattedWeekDate(new Date());
-          const prevDate = new Date(date).setDate(new Date(date).getDate() - 1);
-          const todayDate = new Date(currentDate).setDate(
-            new Date(currentDate).getDate(),
-          );
-
-          const week = weekly.map(w => {
-            const find = w.findIndex(v => {
-              return (
-                formattedWeekDate(v) === formattedWeekDate(new Date(prevDate))
-              );
-            });
-            return find !== -1;
-          });
-
-          if (week.includes(true)) {
-            if (todayDate <= prevDate) {
-              setDate(
-                formattedWeekDate(
-                  new Date(date).setDate(new Date(date).getDate() - 1),
-                ),
-              );
-              const dateIndex = weekly.map(v => {
-                return v.map(s => {
-                  return formattedWeekDate(s);
-                });
-              });
-              const index = dateIndex.findIndex((v, i) => {
-                return v.includes(
-                  formattedWeekDate(
-                    new Date(date).setDate(new Date(date).getDate() - 1),
-                  ),
-                );
-              });
-              setChk(index);
-              pager.current.setPage(index);
-            }
-          }
-        }
         diningRef.current.setPage(page);
         setSliderValue(page);
-        setNowPage(page);
       } else {
         setSliderValue(page);
-        setNowPage(page);
       }
     } else {
-      if (position === -1) {
-        setSliderValue(0);
-      } else {
-        setSliderValue(position);
-      }
+      setSliderValue(position);
     }
     MorningRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     LunchRef?.current?.scrollTo({x: 0, y: 0, animated: false});
@@ -513,10 +479,12 @@ const Pages = ({route}) => {
     async function loadDailyFood() {
       try {
         const data = await dailyFood(spotId, date);
-
         if (data[0]) {
           diningRef.current.setPage(Number(data[0]) - 1);
           setSliderValue(Number(data[0]) - 1);
+        }
+        if (isFocused) {
+          await updateMeal(req);
         }
       } catch (error) {
         if (error.toString().replace('Error.:', '').trim() === '403') {
@@ -540,10 +508,6 @@ const Pages = ({route}) => {
     }
   }, [date, isMount]);
 
-  useEffect(() => {
-    loadMeal();
-    updateMeal(req);
-  }, [isFocused]);
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
     const duplication = isLoadMeal
@@ -728,7 +692,12 @@ const Pages = ({route}) => {
               <Contents
                 key={m.id}
                 spicy={m.spicy}
-                disabled={m.status === 0 || m.status === 2 || isAddMeal}
+                disabled={
+                  m.status === 2 ||
+                  m.status === 6 ||
+                  isAddMeal ||
+                  m.status === 5
+                }
                 onPress={e => {
                   navigation.navigate(MealDetailPageName, {dailyFoodId: m.id});
                   e.stopPropagation();
@@ -762,7 +731,7 @@ const Pages = ({route}) => {
                   </PriceWrap>
                   {m.spicy !== null && (
                     <LabelWrap>
-                      {m.status === 0 ? (
+                      {m.status === 2 || m.status === 6 ? (
                         <Label label={`${m.spicy}`} type={'soldOut'} />
                       ) : (
                         <Label label={`${m.spicy}`} />
@@ -780,12 +749,12 @@ const Pages = ({route}) => {
                   rank={m.rank}
                 />
 
-                {m.status === 0 && (
+                {m.status === 2 && (
                   <SoldOut soldOut={m.status} rank={m.rank}>
                     품절됐어요
                   </SoldOut>
                 )}
-                {m.status === 2 && (
+                {m.status === 6 && (
                   <SoldOut soldOut={m.status} rank={m.rank}>
                     마감됐어요
                   </SoldOut>
@@ -830,68 +799,72 @@ const Pages = ({route}) => {
           scrollDir
           pagerRef={pager}
           onPageScroll2={onPageScroll2}
+          sliderValue={sliderValue}
+          isServiceDays={isServiceDays}
         />
       </CalendarWrap>
 
       <PagerViewWrap isMembership={userInfo?.isMembership}>
-        <ProgressWrap>
-          <ProgressInner>
-            <Slider
-              value={sliderValue}
-              onValueChange={e => setSliderValue(...e)}
-              minimumValue={0}
-              maximumValue={2}
-              maximumTrackTintColor="#fff"
-              minimumTrackTintColor="#fff"
-              onSlidingComplete={e => {
-                diningRef.current.setPage(...e);
-              }}
-              step={1}
-              trackStyle={styles.trackStyle}
-              thumbStyle={styles.thumbStyle}
-              containerStyle={{height: 12}}
-            />
+        {!isDailyFoodLoading && (
+          <ProgressWrap>
+            <ProgressInner>
+              <Slider
+                value={sliderValue}
+                onValueChange={e => setSliderValue(...e)}
+                minimumValue={0}
+                maximumValue={2}
+                maximumTrackTintColor="#fff"
+                minimumTrackTintColor="#fff"
+                onSlidingComplete={e => {
+                  diningRef.current.setPage(...e);
+                }}
+                step={1}
+                trackStyle={styles.trackStyle}
+                thumbStyle={styles.thumbStyle}
+                containerStyle={{height: 12}}
+              />
 
-            <Progress>
-              {DININGTYPE.map((btn, i) => {
-                const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
-                const typeBoolean = isDiningTypes.includes(type);
+              <Progress>
+                {DININGTYPE.map((btn, i) => {
+                  const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
+                  const typeBoolean = isDiningTypes.includes(type);
 
-                return (
-                  <DiningPress
-                    key={i}
-                    disabled={!typeBoolean && true}
-                    onPress={() => {
-                      diningRef.current.setPage(i);
-                      setSliderValue(i);
-                    }}>
-                    <ProgressText type={typeBoolean} index={i}>
-                      {btn}
-                    </ProgressText>
-                  </DiningPress>
-                );
-              })}
-            </Progress>
-          </ProgressInner>
+                  return (
+                    <DiningPress
+                      key={i}
+                      disabled={!typeBoolean && true}
+                      onPress={() => {
+                        diningRef.current.setPage(i);
+                        setSliderValue(i);
+                      }}>
+                      <ProgressText type={typeBoolean} index={i}>
+                        {btn}
+                      </ProgressText>
+                    </DiningPress>
+                  );
+                })}
+              </Progress>
+            </ProgressInner>
 
-          {showSupportPrice && (
-            <MiniWrap
-              onPress={() => {
-                setModalVisible4(true);
-              }}>
-              <Typography2>일일 식사지원금</Typography2>
-              <QuestionPressable>
-                <QuestionCircleMonoIcon />
-              </QuestionPressable>
+            {showSupportPrice && (
+              <MiniWrap
+                onPress={() => {
+                  setModalVisible4(true);
+                }}>
+                <Typography2>일일 식사지원금</Typography2>
+                <QuestionPressable>
+                  <QuestionCircleMonoIcon />
+                </QuestionPressable>
 
-              {whenSupportPriceKor ? (
-                <Typography4>{supportPrice}</Typography4>
-              ) : (
-                <Typography3> {supportPrice}원</Typography3>
-              )}
-            </MiniWrap>
-          )}
-        </ProgressWrap>
+                {whenSupportPriceKor ? (
+                  <Typography4>{supportPrice}</Typography4>
+                ) : (
+                  <Typography3> {supportPrice}원</Typography3>
+                )}
+              </MiniWrap>
+            )}
+          </ProgressWrap>
+        )}
         {!userInfo?.isMembership && (
           <View>
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
@@ -906,6 +879,7 @@ const Pages = ({route}) => {
             ref={diningRef}
             overdrag={true}
             initialPage={nowPage}
+            overScrollMode={'always'}
             onPageScroll={
               Platform.OS === 'android' ? onPageScroll3 : onPageScrollAndroid
             }
@@ -1182,22 +1156,30 @@ const ReviewWrap = styled.View`
 
 export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[4]};
 `;
 
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[2]};
 `;
 
 const Price = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[2]};
 `;
 
 const MealDsc = styled(Typography).attrs({text: 'MealDes'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[4]};
   margin-top: 6px;
 `;
 
@@ -1208,27 +1190,35 @@ const ProgressText = styled(Typography).attrs({text: 'Title04SB'})`
 
 const PercentText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : '#DD5257'};
+    soldOut === 2 || soldOut === 6 ? theme.colors.grey[6] : '#DD5257'};
   margin-right: 4px;
 `;
 
 const OriginPrice = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[5]};
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[5]};
   text-decoration: line-through;
   text-decoration-color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[5]};
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[5]};
   margin-left: 6px;
 `;
 
 const ReviewText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[2]};
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[2]};
 `;
 
 const ReviewCount = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme, soldOut}) =>
-    soldOut === 0 ? theme.colors.grey[6] : theme.colors.grey[4]};
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[4]};
 `;
 
 const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`

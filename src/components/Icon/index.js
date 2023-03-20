@@ -35,3 +35,4 @@ export {default as ThumbsUpWithThreeStarsIcon} from './_components/ThumbsUpWithT
 
 export {default as CheckIcon} from './_components/CheckIcon';
 export {default as XCircleIcon} from './_components/XCircle';
+export {default as CongratulationsClapIcon} from './_components/CongratulationsClapIcon';

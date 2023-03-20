@@ -39,8 +39,8 @@ const Component = ({purchaseId, date, itemIndex}) => {
         orderId: purchase.id,
         id: id,
       };
-      const refundResult = await refundItem(req);
-      const refund = mealPurchase.map(o => {
+      await refundItem(req);
+      const refund = allPurchase.map(o => {
         return {
           ...o,
           orderItems: [
@@ -54,40 +54,36 @@ const Component = ({purchaseId, date, itemIndex}) => {
           ],
         };
       });
-      setMealPurchase(refund);
+      setAllPurchase(refund);
     } catch (error) {
       alert(error.toString().replace('error:', ''));
     }
   };
-  const changeItem = async id => {
-    try {
-      const req = {
-        orderId: purchase.id,
-        id: id,
+  const changeItem = async (id, serviceDate) => {
+    const req = {
+      orderId: purchase.id,
+      id: id,
+    };
+    await refundItem(req);
+    const refund = allPurchase.map(o => {
+      return {
+        ...o,
+        orderItems: [
+          ...o.orderItems.map(v => {
+            if (v.id === id) {
+              return {...v, orderStatus: 7};
+            } else {
+              return v;
+            }
+          }),
+        ],
       };
-      await refundItem(req);
-      const refund = mealPurchase.map(o => {
-        return {
-          ...o,
-          orderItems: [
-            ...o.orderItems.map(v => {
-              if (v.id === id) {
-                return {...v, orderStatus: 7};
-              } else {
-                return v;
-              }
-            }),
-          ],
-        };
-      });
-      setMealPurchase(refund);
-      navigation.navigate(BuyMealPageName, {
-        date: serviceDate ? serviceDate : formattedDate(new Date()),
-      });
-    } catch (error) {
-      alert(error.toString().replace('error:', ''));
-    }
+    });
+    setAllPurchase(refund);
 
+    navigation.navigate(BuyMealPageName, {
+      date: serviceDate ? serviceDate : formattedDate(new Date()),
+    });
   };
   return (
     <DateOrderItemListContainer isFirst={itemIndex === 0}>
@@ -218,7 +214,6 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   },
                                   {
                                     text: '메뉴 취소',
-
                                     onPress: () =>
                                       changeItem(order.id, order.serviceDate),
                                     style: 'destructive',
@@ -352,7 +347,7 @@ const ArrowRightIcon = styled(ArrowRight)`
 
 const ArrowUpIcon = styled(ArrowDown)`
   margin-left: 4px;
-  transform: rotateX(180deg);
+  transform: rotateX('180deg');
 `;
 
 const ArrowDownIcon = styled(ArrowDown)`

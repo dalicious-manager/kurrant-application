@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {useAtomValue} from 'jotai';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {Alert, Pressable, SafeAreaView, Text, View} from 'react-native';
+import {Alert, Dimensions, Pressable, ScrollView, View} from 'react-native';
 import styled from 'styled-components';
 
 import Arrow from '../../../../assets/icons/Group/arrowWhite.svg';
@@ -22,6 +22,7 @@ import {PAGE_NAME as ApartModifyAddressHoPageName} from '../../GroupApartment/Se
 import {PAGE_NAME as CreateGroupPageName} from '../../GroupCreate';
 import {PAGE_NAME as SelectSpotPageName} from '../../GroupManage';
 
+const WIDTH = Dimensions.get('screen').width;
 export const PAGE_NAME = 'P__GROUP__MANAGE__DETAIL';
 const Pages = ({route}) => {
   const routeId = route.params.id;
@@ -145,48 +146,35 @@ const Pages = ({route}) => {
   return (
     // <SafeView>
     <Wrap>
-      <SpotSelect>스팟 선택</SpotSelect>
+      <TitleWrap>
+        <SpotSelect>스팟 선택</SpotSelect>
+      </TitleWrap>
       <SpotView onPress={modalOpen}>
         <SpotName>{isDetailSpot?.spotName}</SpotName>
         <Arrow />
       </SpotView>
-      <ContentView>
-        <TextView>
-          <Title>배송지</Title>
-          <ContentText>{isDetailSpot?.address}</ContentText>
-        </TextView>
-        {isDetailSpot?.ho !== null && (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ContentView>
           <TextView>
-            <Title>세부 주소</Title>
-            <HoView
-              onPress={() => {
-                navigation.navigate(ApartModifyAddressHoPageName, {id: spotId});
-              }}>
-              <ContentText>{isDetailSpot?.ho}호</ContentText>
-              <PenIcon />
-            </HoView>
+            <Title>배송지</Title>
+            <ContentText>{isDetailSpot?.address}</ContentText>
           </TextView>
-        )}
-        <TextView>
-          <Title>멤버십 할인 마감 / 주문 마감 / 배송 시간</Title>
-          {isDetailSpot?.mealTypeInfoList?.map((el, idx) => {
-            const diningType =
-              el.diningType === 1
-                ? '아침'
-                : el.diningType === 2
-                ? '점심'
-                : '저녁';
-            return (
-              <ContentText key={idx}>
-                {diningType} 식사 {'\n'}({el.membershipBenefitTime} /{' '}
-                {el.lastOrderTime} / 당일{el.deliveryTime})
-              </ContentText>
-            );
-          })}
-        </TextView>
-        {supportPrice?.[0] !== null && (
+          {isDetailSpot?.ho !== null && (
+            <TextView>
+              <Title>세부 주소</Title>
+              <HoView
+                onPress={() => {
+                  navigation.navigate(ApartModifyAddressHoPageName, {
+                    id: spotId,
+                  });
+                }}>
+                <ContentText>{isDetailSpot?.ho}호</ContentText>
+                <PenIcon />
+              </HoView>
+            </TextView>
+          )}
           <TextView>
-            <Title>식사 지원금</Title>
+            <Title>멤버십 할인 마감 / 주문 마감 / 배송 시간</Title>
             {isDetailSpot?.mealTypeInfoList?.map((el, idx) => {
               const diningType =
                 el.diningType === 1
@@ -196,27 +184,46 @@ const Pages = ({route}) => {
                   : '저녁';
               return (
                 <ContentText key={idx}>
-                  {diningType} 식사 ({withCommas(el.supportPrice)}원)
+                  {diningType} 식사 {'\n'}({el.membershipBenefitTime} /{' '}
+                  {el.lastOrderTime} / 당일{el.deliveryTime})
                 </ContentText>
               );
             })}
           </TextView>
-        )}
-        <TextView>
-          <Title>스팟명</Title>
-          <ContentText>{isDetailSpot?.clientName}</ContentText>
-          <Withdraw>
-            <TextButton
-              size="label13R"
-              type="grey5"
-              label="스팟 탈퇴"
-              onPressEvent={() => {
-                withdrawPress();
-              }}
-            />
-          </Withdraw>
-        </TextView>
-      </ContentView>
+          {supportPrice?.[0] !== null && (
+            <TextView>
+              <Title>식사 지원금</Title>
+              {isDetailSpot?.mealTypeInfoList?.map((el, idx) => {
+                const diningType =
+                  el.diningType === 1
+                    ? '아침'
+                    : el.diningType === 2
+                    ? '점심'
+                    : '저녁';
+                return (
+                  <ContentText key={idx}>
+                    {diningType} 식사 ({withCommas(el.supportPrice)}원)
+                  </ContentText>
+                );
+              })}
+            </TextView>
+          )}
+          <TextView>
+            <Title>스팟명</Title>
+            <ContentText>{isDetailSpot?.clientName}</ContentText>
+            <Withdraw>
+              <TextButton
+                size="label13R"
+                type="grey5"
+                label="스팟 탈퇴"
+                onPressEvent={() => {
+                  withdrawPress();
+                }}
+              />
+            </Withdraw>
+          </TextView>
+        </ContentView>
+      </ScrollView>
 
       <BottomSheetSpot
         modalVisible={modalVisible}
@@ -229,6 +236,7 @@ const Pages = ({route}) => {
           anotherSpot(id);
         }}
       />
+
       <toast.ToastWrap message={'스팟이 설정됐어요'} icon={'checked'} />
       <BottomContainer>
         <ButtonBox>
@@ -264,7 +272,13 @@ const Wrap = styled.View`
   background-color: ${({theme}) => theme.colors.grey[0]};
   flex: 1;
   padding: 0px 24px;
-  align-items: center;
+  //align-items: center;
+  width: ${WIDTH}px;
+`;
+
+const TitleWrap = styled.View`
+  flex-direction: row;
+  justify-content: center;
 `;
 
 const SpotView = styled.Pressable`
@@ -285,6 +299,7 @@ const ContentView = styled.View`
   border-radius: 14px;
   border: 1px solid ${({theme}) => theme.colors.grey[7]};
   position: relative;
+  margin-bottom: 48px;
 `;
 
 const TextView = styled.View`
@@ -307,9 +322,9 @@ const SpotSelect = styled(Typography).attrs({text: 'Title04SB'})`
   margin-top: 40px;
 `;
 const BottomContainer = styled.View`
-  flex: 1;
   align-items: center;
   justify-content: flex-end;
+  margin-top: 12px;
   margin-bottom: 56px;
 `;
 const SpotName = styled(Typography).attrs({text: 'Body05R'})`

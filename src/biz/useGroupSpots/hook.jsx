@@ -28,8 +28,9 @@ const useGroupSpots = () => {
   const userGroupSpotCheck = async () => {
     try {
       const res = await Fetch.GroupSpotCheck();
-
+      // console.log(res, '스팟');
       setUserGroupSpotCheck(res.data);
+      return res;
     } catch (err) {
       console.log(err);
     }
@@ -42,7 +43,7 @@ const useGroupSpots = () => {
         ...body,
       });
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   };
 
