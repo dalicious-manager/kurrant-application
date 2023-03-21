@@ -225,7 +225,7 @@ const Pages = ({route}) => {
     </SafeView>
   );
 };
-const SafeView = styled.SafeAreaView`
+const SafeView = styled.View`
   flex: 1;
   background-color: white;
 `;
@@ -244,7 +244,7 @@ const LoginContainer = styled.View`
   justify-content: center;
   align-items: center;
   padding-bottom: 59px;
-  padding-top: 20%;
+  //padding-top: 20%;
 `;
 const LogoBox = styled.View`
   margin-bottom: 15px;

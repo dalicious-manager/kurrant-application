@@ -154,16 +154,19 @@ const Pages = () => {
           });
 
           const status = async () => {
-            const userStatus = await getStorage('token');
+            //const userStatus = await getStorage('token');
+            const userStatus = await getStorage('spotStatus');
+
             const result = await todayOrderMeal(start[0], end[0]);
-            const getUserStatus = Number(userStatus.spotStatus);
-            if (getUserStatus === 1) {
-              navigation.navigate(GroupSelectPageName);
-            }
-            if (getUserStatus === 2) {
-              navigation.navigate(GroupCreateMainPageName);
-            }
-            return result;
+            //const getUserStatus = JSON.parse(userStatus).spotStatus;
+            const getUserStatus = Number(userStatus);
+            // if (getUserStatus === 1) {
+            //   navigation.navigate(GroupSelectPageName);
+            // }
+            // if (getUserStatus === 2) {
+            //   navigation.navigate(GroupCreateMainPageName);
+            // }
+            // return result;
           };
           try {
             if (!(userRole === 'ROLE_GUEST')) {
@@ -242,11 +245,13 @@ const Pages = () => {
       console.log(err);
     }
   };
+
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
+
   // const date = formattedWeekDate(new Date());
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
@@ -288,7 +293,7 @@ const Pages = () => {
         ],
       );
     }
-    if (userGroupName) {
+    if (isUserGroupSpotCheck.length !== 0) {
       setModalVisible(true);
     } else {
       navigation.navigate(CreateGroupPageName);

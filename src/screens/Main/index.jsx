@@ -1352,7 +1352,7 @@ const Screen = () => {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: '오픈 스팟 찾기',
+            title: '스팟 찾기',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
