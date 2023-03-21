@@ -8,6 +8,7 @@ import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import Button from '../../../../../components/Button';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as MyGroupListPageName} from '../../../GroupManage/index';
+import Corp from '../../../../../assets/icons/Group/corpImg.svg';
 
 export const PAGE_NAME = 'P__GROUP__APARTMENT__SEARCH__ADD';
 
@@ -36,16 +37,29 @@ const Pages = ({route}) => {
   return (
     <Wrap>
       <Group>스팟명</Group>
-      <View>
-        <Apart />
-      </View>
+      <View>{data.spotType === 0 ? <Corp /> : <Apart />}</View>
       <ApartName>{data.name}</ApartName>
       <Address>{data.address}</Address>
+      {data.spotType === 0 && (
+        <InfoWrap>
+          <Info>
+            <Title>🚩프라이빗 스팟 안내</Title>
+            <InfoContent>해당 스팟은 프라이빗 스팟으로</InfoContent>
+            <InfoContent>
+              사내/단체내 담당자의 초대로 등록 가능합니다.
+            </InfoContent>
+          </Info>
+        </InfoWrap>
+      )}
       <ButtonWrap>
-        <Button
-          label="내 스팟에 추가"
-          onPressEvent={() => addOwnGroup(data.id)}
-        />
+        {data.spotType !== 0 ? (
+          <Button
+            label="내 스팟에 추가"
+            onPressEvent={() => addOwnGroup(data.id)}
+          />
+        ) : (
+          <Button label="뒤로가기" onPressEvent={() => navigation.goBack()} />
+        )}
       </ButtonWrap>
     </Wrap>
   );
@@ -78,4 +92,25 @@ const ApartName = styled(Typography).attrs({text: 'LargeTitle'})`
 
 const Address = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[2]};
+  margin-top: 4px;
+`;
+
+const Title = styled(Typography).attrs({text: 'Body06SB'})`
+  color: #3478f6;
+`;
+
+const Info = styled.View`
+  background-color: #eff2fe;
+  border-radius: 14px;
+  padding: 12px 0px 12px 24px;
+`;
+
+const InfoWrap = styled.View`
+  width: 100%;
+  padding: 0px 24px;
+  margin-top: 24px;
+`;
+
+const InfoContent = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
 `;
