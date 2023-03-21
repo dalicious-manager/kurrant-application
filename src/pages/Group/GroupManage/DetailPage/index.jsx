@@ -52,26 +52,40 @@ const Pages = ({route}) => {
   );
 
   const anotherSpot = async id => {
-    // setGroupState(groupId)
+    // setGroupState(groupId);
+    // try {
+    //   await groupSpotDetail(id);
+    //   toast.toastEvent();
+    // } catch (err) {
+    //   console.log(err, '-');
+    //   if (err) {
+    //     try {
+    //       const res = await userSpotRegister({
+    //         id: id,
+    //       });
+    //       console.log(res, 'dkdkdkd');
+    //       if (res.data === null) {
+    //         navigation.navigate(ApartRegisterSpotPageName, {id: id});
+    //       } else {
+    //         toast.toastEvent();
+    //         groupSpotDetail(id);
+    //       }
+    //     } catch (error) {
+    //       console.log(error, 'sisis');
+    //     }
+    //   }
+    // }
     try {
-      await groupSpotDetail(id);
-      toast.toastEvent();
-    } catch (err) {
-      if (err) {
-        try {
-          const res = await userSpotRegister({
-            id: id,
-          });
-          if (res.data === null) {
-            navigation.navigate(ApartRegisterSpotPageName, {id: id});
-          } else {
-            toast.toastEvent();
-            groupSpotDetail(id);
-          }
-        } catch (error) {
-          console.log(error, 'sisis');
-        }
+      const res = await userSpotRegister({id: id});
+      console.log(res, '----');
+      if (res.data === null) {
+        navigation.navigate(ApartRegisterSpotPageName, {id: id});
+      } else {
+        toast.toastEvent();
+        groupSpotDetail(id);
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 

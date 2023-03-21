@@ -142,6 +142,7 @@ const Pages = () => {
         }
       }
       const isTester = async () => {
+        const user = loadUser();
         if (!(userRole === 'ROLE_GUEST')) {
           const start = weekly.map(s => {
             const startData = formattedWeekDate(s[0]);
@@ -154,9 +155,12 @@ const Pages = () => {
           });
 
           const status = async () => {
-            const userStatus = await getStorage('token');
+            //const userStatus = await getStorage('token');
+            const userStatus = await getStorage('spotStatus');
+
             const result = await todayOrderMeal(start[0], end[0]);
-            const getUserStatus = Number(userStatus.spotStatus);
+            //const getUserStatus = JSON.parse(userStatus).spotStatus;
+            const getUserStatus = Number(userStatus);
             if (getUserStatus === 1) {
               navigation.navigate(GroupSelectPageName);
             }
@@ -167,7 +171,6 @@ const Pages = () => {
           };
           try {
             if (!(userRole === 'ROLE_GUEST')) {
-              const user = loadUser();
               if (user) {
                 const data = await status();
                 if (data.statusCode === 200) {
@@ -226,8 +229,6 @@ const Pages = () => {
       const res = await userSpotRegister({
         id: id,
       });
-
-      console.log(res.data, 'testst');
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
@@ -242,11 +243,13 @@ const Pages = () => {
       console.log(err);
     }
   };
+
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
+
   // const date = formattedWeekDate(new Date());
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
@@ -288,7 +291,7 @@ const Pages = () => {
         ],
       );
     }
-    if (userGroupName) {
+    if (isUserGroupSpotCheck.length !== 0) {
       setModalVisible(true);
     } else {
       navigation.navigate(CreateGroupPageName);

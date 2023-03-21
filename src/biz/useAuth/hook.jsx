@@ -157,7 +157,7 @@ const useAuth = () => {
         setUserRole(roles[0]);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', 'false');
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
 
         return res;
       }
@@ -172,14 +172,15 @@ const useAuth = () => {
         option,
       );
       if (res?.data?.isActive) {
+        console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
@@ -208,7 +209,7 @@ const useAuth = () => {
                   await setStorage('isLogin', body.autoLogin.toString());
                   await setStorage(
                     'spotStatus',
-                    res.data.spotStatus.toString(),
+                    res?.data?.spotStatus.toString(),
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
@@ -232,12 +233,13 @@ const useAuth = () => {
 
       const res = await Fetch.autoLogin();
       if (res?.data?.isActive) {
+        console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
@@ -266,7 +268,7 @@ const useAuth = () => {
                   await setStorage('isLogin', body.autoLogin.toString());
                   await setStorage(
                     'spotStatus',
-                    res.data.spotStatus.toString(),
+                    res?.data?.spotStatus.toString(),
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
@@ -300,12 +302,12 @@ const useAuth = () => {
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
@@ -334,7 +336,7 @@ const useAuth = () => {
                   await setStorage('isLogin', body.autoLogin.toString());
                   await setStorage(
                     'spotStatus',
-                    res.data.spotStatus.toString(),
+                    res?.data?.spotStatus.toString(),
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
@@ -365,12 +367,12 @@ const useAuth = () => {
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
-        await setStorage('spotStatus', res.data.spotStatus.toString());
+        await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
@@ -399,7 +401,7 @@ const useAuth = () => {
                   await setStorage('isLogin', body.autoLogin.toString());
                   await setStorage(
                     'spotStatus',
-                    res.data.spotStatus.toString(),
+                    res?.data?.spotStatus.toString(),
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
