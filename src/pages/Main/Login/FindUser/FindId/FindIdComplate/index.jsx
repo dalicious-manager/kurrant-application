@@ -181,7 +181,7 @@ const DateBox = styled.View`
   align-items: center;
   left: 24px;
   width: 100%;
-  margin-bottom: 48px;
+  margin-bottom: 8px;
 `;
 
 const SocialLoginView = styled.View`

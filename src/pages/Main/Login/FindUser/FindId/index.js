@@ -140,14 +140,18 @@ const Pages = () => {
                       // timer:900,
                     }}
                     rules={{
-                      required: '필수 입력 항목 입니다.',
+                      // required: '필수 입력 항목 입니다.',
+                      required: '',
                       pattern: {
                         value: /(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,
                         message: '올바른 휴대폰 번호를 입력해주세요.',
                       },
                     }}
                     style={inputStyle}
-                    caption="입력한 휴대폰 번호로 인증번호가 발송됩니다."
+                    caption={
+                      !phoneNumber &&
+                      '입력한 휴대폰 번호로 인증번호가 발송됩니다.'
+                    }
                     padding="4px 0px"
                   />
                   {progress >= 2 && isPhoneAuth && (
@@ -165,7 +169,8 @@ const Pages = () => {
                         timer: 180,
                       }}
                       rules={{
-                        required: '필수 입력 항목 입니다.',
+                        // required: '필수 입력 항목 입니다.',
+                        required: '',
                         minLength: {
                           value: 6,
                           message:
@@ -178,7 +183,10 @@ const Pages = () => {
                         },
                       }}
                       style={inputStyle}
-                      caption="휴대폰으로 발송된 6자리 인증번호를 입력해주세요."
+                      caption={
+                        !phoneAuth &&
+                        '휴대폰으로 발송된 6자리 인증번호를 입력해주세요.'
+                      }
                       padding="4px 0px"
                     />
                   )}
@@ -249,12 +257,13 @@ const Container = styled.View`
 const ButtonContainer = styled.View`
   position: absolute;
   bottom: 22px;
-  margin-bottom: 35px;
+  margin-bottom: 11px;
 `;
 
 const InfomationText = styled(Typography).attrs({text: 'Title04SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
-  margin: 24px;
+  /* margin: 24px; */
+  margin-bottom: 24px;
   margin-top: 40px;
 `;
 
