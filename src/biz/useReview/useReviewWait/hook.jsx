@@ -13,6 +13,9 @@ const useReviewWait = () => {
     try {
       const res = await Fetch.getReviewOrderMeal();
       // const res = await Fetch.orderMealMockData();
+
+      console.log(res.data.orderFoodList);
+
       setReviewWaitCount(res.data.count);
       setReviewWaitList(res.data.orderFoodList);
     } catch (err) {
@@ -24,7 +27,7 @@ const useReviewWait = () => {
   //   getReviewWait();
   // }, []);
 
-  return {getReviewWait, ReviewWaitListSupply};
+  return {getReviewWait, ReviewWaitListSupply, reviewWaitCount};
 };
 
 export default useReviewWait;
