@@ -140,20 +140,21 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     let price = null;
+    if (supportPrices) {
+      switch (sliderValue) {
+        case 0:
+          price = supportPrices['morningSupportPrice'];
+          break;
+        case 1:
+          price = supportPrices['lunchSupportPrice'];
+          break;
+        case 2:
+          price = supportPrices['dinnerSupportPrice'];
+          break;
+      }
 
-    switch (sliderValue) {
-      case 0:
-        price = supportPrices['morningSupportPrice'];
-        break;
-      case 1:
-        price = supportPrices['lunchSupportPrice'];
-        break;
-      case 2:
-        price = supportPrices['dinnerSupportPrice'];
-        break;
+      setSupportPrice(price);
     }
-
-    setSupportPrice(price);
   }, [sliderValue, supportPrices]);
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 

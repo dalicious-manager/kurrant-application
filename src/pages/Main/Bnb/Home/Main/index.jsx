@@ -142,6 +142,7 @@ const Pages = () => {
         }
       }
       const isTester = async () => {
+        const user = loadUser();
         if (!(userRole === 'ROLE_GUEST')) {
           const start = weekly.map(s => {
             const startData = formattedWeekDate(s[0]);
@@ -170,7 +171,6 @@ const Pages = () => {
           };
           try {
             if (!(userRole === 'ROLE_GUEST')) {
-              const user = loadUser();
               if (user) {
                 const data = await status();
                 if (data.statusCode === 200) {
@@ -229,8 +229,6 @@ const Pages = () => {
       const res = await userSpotRegister({
         id: id,
       });
-
-      console.log(res.data, 'testst');
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
