@@ -4,9 +4,7 @@ import {Dimensions} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
 
-const Component = ({}) => {
-  // const phoneWidth =
-
+const Component = () => {
   return (
     <Container>
       <BannerText>모든 리뷰 작성시 최대 500P</BannerText>
@@ -17,7 +15,6 @@ const Component = ({}) => {
 export default Component;
 
 const Container = styled.View`
-  /* width: 100%; */
   width: ${() => Dimensions.get('screen').width};
   justify-content: center;
   align-items: center;

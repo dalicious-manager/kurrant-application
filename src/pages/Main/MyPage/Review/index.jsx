@@ -22,20 +22,11 @@ export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 const Pages = () => {
   const {reviewWaitList, reviewWaitCount, getReviewWait} = useReviewWait();
 
-  // const [ReviewWaitList, setReviewWaitList] = useState(undefined);
   const [, setTotalReviewWaitList] = useAtom(totalReviewWaitList);
 
   useEffect(() => {
     getReviewWait();
   }, []);
-
-  // useEffect(() => {
-  //   if (!!ReviewWaitListYo) {
-  //     // setTotalReviewWaitList(calculateTotalReviewWaitList(ReviewWaitListYo));
-  //     setTotalReviewWaitList(reviewWaitCount);
-  //     // setReviewWaitList(ReviewWaitListYo);
-  //   }
-  // }, [ReviewWaitListYo]);
 
   useEffect(() => {
     setTotalReviewWaitList(reviewWaitCount);
@@ -43,9 +34,9 @@ const Pages = () => {
 
   const [popupShow, setPopupShow] = useState(false);
 
-  useEffect(() => {
-    console.log(reviewWaitList);
-  }, [reviewWaitList]);
+  // useEffect(() => {
+  //   console.log(reviewWaitList);
+  // }, [reviewWaitList]);
 
   return (
     <Container>
