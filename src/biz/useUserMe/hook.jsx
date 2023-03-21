@@ -273,6 +273,22 @@ const useUserMe = () => {
       setCardRegistedLoading(false);
     }
   };
+  const cardRegistedNice = async (body, option = {}) => {
+    try {
+      setCardRegistedLoading(true);
+      const res = await Fetch.cardRegistedNice(
+        {
+          ...body,
+        },
+        option,
+      );
+      return res;
+    } catch (err) {
+      throw err;
+    } finally {
+      setCardRegistedLoading(false);
+    }
+  };
   const getCardList = async () => {
     try {
       setCardListLoading(true);
@@ -385,6 +401,7 @@ const useUserMe = () => {
     settingEmail,
     settingPhoneNumber,
     cardRegisted,
+    cardRegistedNice,
     getCardList,
     cardSetting,
     setCardList,

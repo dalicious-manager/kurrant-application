@@ -42,7 +42,8 @@ const Pages = () => {
     await cardSetting(req);
   };
   const onSelectOpenModal = () => {
-    setModalVisible(true);
+    console.log(cardList);
+    // setModalVisible(true);
   };
   const onSelectOpenModal2 = () => {
     setModalVisible2(true);
@@ -110,7 +111,7 @@ const Pages = () => {
             를 선택해 주세요
           </Typography>
         </RegisteredTitleBox>
-        {/* <DefaultCardBox>
+        <DefaultCardBox>
           <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
             구매 대표카드
           </Typography>
@@ -119,7 +120,7 @@ const Pages = () => {
               {cardList
                 .map(card => {
                   if (card.defaultType === 1 || card.defaultType === 3)
-                    return `${card.cardCompany}카드(${card.cardNumber
+                    return `${card.cardCompany}(${card.cardNumber
                       ?.toString()
                       .slice(-4)})`;
                 })
@@ -129,7 +130,7 @@ const Pages = () => {
                 ? cardList
                     .map(card => {
                       if (card.defaultType === 1 || card.defaultType === 3)
-                        return `${card.cardCompany}카드(${card.cardNumber
+                        return `${card.cardCompany}(${card.cardNumber
                           ?.toString()
                           .slice(-4)})`;
                     })
@@ -140,7 +141,7 @@ const Pages = () => {
             </SpotName>
             <Arrow />
           </SpotView>
-        </DefaultCardBox> */}
+        </DefaultCardBox>
         <DefaultCardBox>
           <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
             멤버십 대표카드
@@ -150,7 +151,7 @@ const Pages = () => {
               {cardList
                 .map(card => {
                   if (card.defaultType === 2 || card.defaultType === 3)
-                    return `${card.cardCompany}카드(${card.cardNumber
+                    return `${card.cardCompany}(${card.cardNumber
                       ?.toString()
                       .slice(-4)})`;
                 })
@@ -160,7 +161,7 @@ const Pages = () => {
                 ? cardList
                     .map(card => {
                       if (card.defaultType === 2 || card.defaultType === 3)
-                        return `${card.cardCompany}카드(${card.cardNumber
+                        return `${card.cardCompany}(${card.cardNumber
                           ?.toString()
                           .slice(-4)})`;
                     })

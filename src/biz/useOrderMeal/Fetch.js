@@ -40,3 +40,11 @@ export async function order(body, option) {
 
   return fetchRes;
 }
+export async function orderNice(body, option) {
+  const fetchRes = await fetchJson(`/users/me/orders/nice`, 'POST', {
+    ...option,
+    body: JSON.stringify(body),
+  });
+
+  return fetchRes;
+}

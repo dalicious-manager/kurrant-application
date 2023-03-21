@@ -55,6 +55,17 @@ export async function cardRegisted(body, option) {
   });
   return fetchRes;
 }
+export async function cardRegistedNice(body, option) {
+  const fetchRes = await fetchJson(
+    `/users/me/orders/nice/create/billing`,
+    'POST',
+    {
+      ...option,
+      body: JSON.stringify(body),
+    },
+  );
+  return fetchRes;
+}
 export async function cardSetting(body, option) {
   const fetchRes = await fetchJson(`/users/me/cards/setting`, 'PATCH', {
     ...option,

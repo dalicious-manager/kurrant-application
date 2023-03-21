@@ -97,7 +97,7 @@ const Pages = ({route}) => {
 
   const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
-  const {order} = useOrderMeal();
+  const {order, orderNice} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
   const {
     getCardList,
@@ -142,7 +142,7 @@ const Pages = ({route}) => {
   const keyboardStatus = useKeyboardEvent();
 
   const handleEventPayments = () => {
-    orderPress(selected);
+    orderPress2(selected);
   };
 
   useEffect(() => {
@@ -284,6 +284,83 @@ const Pages = ({route}) => {
           flowMode: 'DIRECT',
           cardCompany: card,
         });
+      } else {
+        const result = await order({
+          amount: totalPrice,
+          orderId: orderId,
+          orderItems: data,
+        });
+
+        if (result?.data) {
+          const resetAction = StackActions.popToTop();
+          navigation.dispatch(resetAction);
+          navigation.navigate(PurchaseDetailPageName, {
+            id: result?.data,
+          });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const orderPress2 = async spotId => {
+    const data = {
+      spotId: spotId,
+      // "cardId": selectDefaultCard[0]?.id,
+      cartDailyFoodDtoList: lastArr,
+      totalPrice: medtronicSupportArr.includes(62471004)
+        ? medtronicTotalPrice
+        : totalPrice,
+      supportPrice: medtronicSupportArr.includes(62471004)
+        ? medtronicPrice
+        : usedSupportPrice,
+      deliveryFee: deliveryFee,
+      userPoint: point,
+    };
+    // console.log(data, 'data');
+    try {
+      // const res = await orderMeal(spotId,data);
+      // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
+      const firstName =
+        lastArr?.length > 0
+          ? lastArr[0].cartDailyFoods.length > 0 &&
+            lastArr[0].cartDailyFoods[0].name
+          : '';
+      const orderName =
+        totalCount > 1 ? `${firstName} 외 ${totalCount}건` : firstName;
+      // console.log(isUserInfo?.userId)
+      const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
+      loadMeal();
+      if (totalPrice > 0) {
+        const result = await orderNice({
+          cardId: selectDefaultCard[0]?.id,
+          orderName: orderName,
+          amount: totalPrice,
+          orderId: orderId,
+          orderItems: data,
+        });
+
+        if (result?.data) {
+          const resetAction = StackActions.popToTop();
+          navigation.dispatch(resetAction);
+          navigation.navigate(PurchaseDetailPageName, {
+            id: result?.data,
+          });
+        }
+      } else if (medtronicSupportArr.includes(62471004)) {
+        const result = await orderNice({
+          cardId: selectDefaultCard[0]?.id,
+          amount: medtronicTotalPrice,
+          orderId: orderId,
+          orderItems: data,
+        });
+        if (result?.data) {
+          const resetAction = StackActions.popToTop();
+          navigation.dispatch(resetAction);
+          navigation.navigate(PurchaseDetailPageName, {
+            id: result?.data,
+          });
+        }
       } else {
         const result = await order({
           amount: totalPrice,
@@ -598,7 +675,7 @@ const Pages = ({route}) => {
                         navigation.navigate(DefaultPaymentManagePageName);
                         // setModalVisible4(!modalVisible4);
                       }}>
-                      {!selectDefaultCard ? (
+                      {!selectDefaultCard.length > 0 ? (
                         <CardText>결제 카드 등록</CardText>
                       ) : (
                         <CardText>
@@ -661,7 +738,7 @@ const Pages = ({route}) => {
             disabled={
               !(
                 payments !== 'NOMAL' ||
-                card ||
+                selectDefaultCard.length > 0 ||
                 (medtronicSupportArr.includes(62471004)
                   ? medtronicTotalPrice <= 0
                   : totalPrice <= 0)

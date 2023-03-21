@@ -198,7 +198,7 @@ const Pages = ({route}) => {
               <Typography text="Title02SB" textColor={themeApp.colors.grey[2]}>
                 {myInfoPerson?.name}님
               </Typography>
-              {myInfoPerson.hasGeneralProvider && (
+              {myInfoPerson?.hasGeneralProvider && (
                 <Typography text="Body06R" textColor={themeApp.colors.grey[2]}>
                   {myInfoPerson?.email}
                 </Typography>
@@ -272,13 +272,13 @@ const Pages = ({route}) => {
           />
           <ListBox
             title={
-              !myInfoPerson.hasGeneralProvider
+              !myInfoPerson?.hasGeneralProvider
                 ? '이메일/비밀번호 설정'
                 : '비밀번호 변경'
             }
-            description={!myInfoPerson.hasGeneralProvider && '설정하기'}
+            description={!myInfoPerson?.hasGeneralProvider && '설정하기'}
             routeName={
-              !myInfoPerson.hasGeneralProvider
+              !myInfoPerson?.hasGeneralProvider
                 ? EmailSettingPageName
                 : PasswordSettingPageName
             }

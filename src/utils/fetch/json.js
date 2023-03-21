@@ -69,6 +69,7 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
+  console.log(ret);
   if (ret.error === 'E4030003') {
     const bodyData = {
       accessToken: token.accessToken,
@@ -80,10 +81,19 @@ async function json(url, method, options = {}) {
       body: JSON.stringify(bodyData),
     });
     const result = await reissue.json();
-
+    console.log(result);
     if (result.error === 'E4030002') {
       await AsyncStorage.clear();
       throw new Error(result.statusCode.toString());
+    } else if (result.error === 'E5000014') {
+      await mSleep(3000);
+      const bodyDatas = {
+        accessToken: token.accessToken,
+        refreshToken: token.refreshToken,
+      };
+      json(apiHostUrl + '/auth/reissue', 'POST', {
+        body: JSON.stringify(bodyDatas),
+      });
     } else {
       const resultData = {
         accessToken: result.data.accessToken,

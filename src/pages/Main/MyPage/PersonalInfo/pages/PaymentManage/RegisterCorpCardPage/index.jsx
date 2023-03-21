@@ -36,6 +36,7 @@ const Pages = ({route}) => {
   const keyboardEvent = useKeyboardEvent();
   const {
     cardRegisted,
+    cardRegistedNice,
     readableAtom: {cardList},
   } = useUserMe();
   const navigation = useNavigation();
@@ -50,7 +51,16 @@ const Pages = ({route}) => {
       cardVaildationCode: data.cardSecret,
       defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
     };
-    const result = await cardRegisted(req);
+    const reqNice = {
+      cardNumber: data.cardNumber.replace(/\W/gi, ''),
+      expirationYear: exp[1],
+      expirationMonth: exp[0],
+      cardPassword: data.cardPass,
+      identityNumber: data.cardCorpNumber,
+      defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
+    };
+    // const result = await cardRegisted(req);
+    const resultNice = await cardRegistedNice(reqNice);
     // navigation.navigate(PaymentManagePage)
     navigation.goBack();
   };
@@ -200,12 +210,14 @@ const Pages = ({route}) => {
               </RegiteredView>
             </CardRegisteredBox>
           </ScrollView>
-          <ButtonBox>
-            <Button
-              label="등록하기"
-              onPressEvent={form.handleSubmit(onSubmit)}
-            />
-          </ButtonBox>
+          {!keyboardEvent.isKeyboardActivate && (
+            <ButtonBox>
+              <Button
+                label="등록하기"
+                onPressEvent={form.handleSubmit(onSubmit)}
+              />
+            </ButtonBox>
+          )}
         </FormProvider>
       </Wrapper>
     </KeyboardAvoidingView>
@@ -226,5 +238,9 @@ const RegiteredView = styled.View`
 const ButtonBox = styled.View`
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: ${({isKeyboard}) => (isKeyboard ? '100px' : '24px')};
+  background-color: ${({isKeyboard}) =>
+    isKeyboard ? 'rgba(0,0,0,1)' : 'white'};
+  padding-left: 24px;
+  padding-right: 24px;
 `;

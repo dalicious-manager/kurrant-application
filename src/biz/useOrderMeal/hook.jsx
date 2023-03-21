@@ -36,6 +36,32 @@ const useOrderMeal = () => {
       }
     }
   };
+  const orderNice = async (body, option = {}) => {
+    try {
+      const res = await Fetch.orderNice(
+        {
+          ...body,
+        },
+        option,
+      );
+      return res;
+    } catch (err) {
+      if (err.toString().replace('Error:', '').trim() === '403') {
+        AsyncStorage.clear();
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: LoginPageName,
+              params: {
+                token: 'end',
+              },
+            },
+          ],
+        });
+      }
+    }
+  };
   const order = async (body, option = {}) => {
     try {
       const res = await Fetch.order(
@@ -154,6 +180,7 @@ const useOrderMeal = () => {
     refundAll,
     setOrderMeal,
     order,
+    orderNice,
     isOrderMeal,
     todayMeal,
     isOrderMealLoading,
