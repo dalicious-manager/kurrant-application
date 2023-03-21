@@ -617,13 +617,15 @@ const Pages = () => {
       console.log(err);
     }
   };
-
+  console.log(spotName[0]?.text, '00');
   return (
     <SafeView>
       <SpotView>
         <SpotPress onPress={PressSpotButton}>
           <SpotName>
-            {spotName[0]?.text ?? isUserInfo.group + '\u00a0' + isUserInfo.spot}
+            {spotName[0]?.text === undefined
+              ? '스팟 없음'
+              : isUserInfo.group + '\u00a0' + isUserInfo.spot}
           </SpotName>
           <ArrowIcon />
         </SpotPress>
