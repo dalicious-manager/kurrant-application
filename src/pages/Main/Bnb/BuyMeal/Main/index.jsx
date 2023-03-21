@@ -154,7 +154,7 @@ const Pages = ({route}) => {
     }
 
     setSupportPrice(price);
-  }, [sliderValue]);
+  }, [sliderValue, supportPrices]);
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {

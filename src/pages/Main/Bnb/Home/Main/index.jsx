@@ -125,7 +125,7 @@ const Pages = () => {
               userData?.spotId,
               formattedWeekDate(new Date()),
             );
-            // console.log(daily, '12313da');
+            console.log(daily, '12313da');
             if (daily) {
               if (!(userRole === 'ROLE_GUEST'))
                 await orderMeal(

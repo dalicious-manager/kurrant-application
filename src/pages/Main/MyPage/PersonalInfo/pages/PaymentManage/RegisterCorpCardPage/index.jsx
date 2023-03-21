@@ -2,7 +2,12 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import cardValidator from 'card-validator';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  NativeModules,
+} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 
 import Button from '~components/Button';
@@ -26,7 +31,7 @@ const Pages = ({route}) => {
     mode: 'all',
   });
   const [modalVisible, setModalVisible] = useState(false);
-
+  const {StatusBarManager} = NativeModules;
   const card = form.watch('cardNumber');
   const keyboardEvent = useKeyboardEvent();
   const {

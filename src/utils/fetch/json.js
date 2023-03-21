@@ -69,22 +69,19 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
-
   if (ret.error === 'E4030003') {
     const bodyData = {
       accessToken: token.accessToken,
       refreshToken: token.refreshToken,
     };
-
     const reissue = await fetch(apiHostUrl + '/auth/reissue', {
       headers: {'content-type': 'application/json'},
       method: 'POST',
       body: JSON.stringify(bodyData),
     });
     const result = await reissue.json();
-    console.log(result);
+
     if (result.error === 'E4030002') {
-      console.log(result);
       await AsyncStorage.clear();
       throw new Error(result.statusCode.toString());
     } else {

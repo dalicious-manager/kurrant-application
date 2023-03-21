@@ -77,8 +77,13 @@ const Pages = () => {
   const isValidation =
     (progress === 2 && emailAuth && !errors.eauth) ||
     (progress === 4 && phoneAuth && !errors.pauth) ||
-    (progress === 5 && userName && !errors.name);
-  // (progress === 3 && (password && passwordChecked) && (password === passwordChecked) && phoneNumber && !errors.phone);
+    (progress === 5 && userName && !errors.name) ||
+    (progress === 3 &&
+      password &&
+      passwordChecked &&
+      password === passwordChecked &&
+      phoneNumber &&
+      !errors.phone);
 
   const callMailAuth = async () => {
     try {
