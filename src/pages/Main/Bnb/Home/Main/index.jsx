@@ -160,13 +160,13 @@ const Pages = () => {
             const result = await todayOrderMeal(start[0], end[0]);
             //const getUserStatus = JSON.parse(userStatus).spotStatus;
             const getUserStatus = Number(userStatus);
-            // if (getUserStatus === 1) {
-            //   navigation.navigate(GroupSelectPageName);
-            // }
-            // if (getUserStatus === 2) {
-            //   navigation.navigate(GroupCreateMainPageName);
-            // }
-            // return result;
+            if (getUserStatus === 1) {
+              navigation.navigate(GroupSelectPageName);
+            }
+            if (getUserStatus === 2) {
+              navigation.navigate(GroupCreateMainPageName);
+            }
+            return result;
           };
           try {
             if (!(userRole === 'ROLE_GUEST')) {
