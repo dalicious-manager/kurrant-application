@@ -253,10 +253,10 @@ const Dot = styled.View`
 
 const Day = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({lastDay, theme, morning, lunch, dinner}) =>
-    morning || lunch || dinner
-      ? theme.colors.grey[2]
-      : lastDay
+    lastDay
       ? theme.colors.grey[5]
+      : morning || lunch || dinner
+      ? theme.colors.grey[2]
       : theme.colors.grey[5]};
   ${({color, now}) => now && getTodayColor(color)};
   ${({size}) => getFontStyle(size)};
