@@ -125,13 +125,13 @@ const Component = ({
 
                   // 서비스일
                   const morning =
-                    (sliderValue === 0 && morningServiceDays.includes(txt)) ||
+                    (sliderValue === 0 && morningServiceDays?.includes(txt)) ||
                     morningServiceDays?.includes(txt);
                   const lunch =
-                    (sliderValue === 1 && lunchServiceDays.includes(txt)) ||
+                    (sliderValue === 1 && lunchServiceDays?.includes(txt)) ||
                     lunchServiceDays?.includes(txt);
                   const dinner =
-                    (sliderValue === 2 && dinnerServiceDays.includes(txt)) ||
+                    (sliderValue === 2 && dinnerServiceDays?.includes(txt)) ||
                     dinnerServiceDays?.includes(txt);
 
                   const events = () => {
