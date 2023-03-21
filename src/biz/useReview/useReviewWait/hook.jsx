@@ -1,4 +1,5 @@
 import {useAtom} from 'jotai';
+import {useState} from 'react';
 
 import * as Fetch from './Fetch';
 import {reviewWaitListAtom} from './store';
@@ -6,10 +7,14 @@ import {reviewWaitListAtom} from './store';
 const useReviewWait = () => {
   const [ReviewWaitListSupply, setReviewWaitList] = useAtom(reviewWaitListAtom);
 
+  const [reviewWaitCount, setReviewWaitCount] = useState(0);
+
   const getReviewWait = async () => {
     try {
-      const res = await Fetch.orderMealMockData();
-      setReviewWaitList(res);
+      const res = await Fetch.getReviewOrderMeal();
+      // const res = await Fetch.orderMealMockData();
+      setReviewWaitCount(res.data.count);
+      setReviewWaitList(res.data.orderFoodList);
     } catch (err) {
       console.log(err);
     }

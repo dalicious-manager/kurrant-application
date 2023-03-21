@@ -18,8 +18,11 @@ import {useAtom} from 'jotai';
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
-  const {ReviewWaitListSupply: ReviewWaitListYo, getReviewWait} =
-    useReviewWait();
+  const {
+    ReviewWaitListSupply: ReviewWaitListYo,
+    reviewWaitCount,
+    getReviewWait,
+  } = useReviewWait();
 
   const [ReviewWaitList, setReviewWaitList] = useState(undefined);
   const [, setTotalReviewWaitList] = useAtom(totalReviewWaitList);
@@ -30,7 +33,8 @@ const Pages = () => {
 
   useEffect(() => {
     if (!!ReviewWaitListYo) {
-      setTotalReviewWaitList(calculateTotalReviewWaitList(ReviewWaitListYo));
+      // setTotalReviewWaitList(calculateTotalReviewWaitList(ReviewWaitListYo));
+      setTotalReviewWaitList(reviewWaitCount);
       setReviewWaitList(ReviewWaitListYo);
     }
   }, [ReviewWaitListYo]);
@@ -78,7 +82,7 @@ const Pages = () => {
         {/* 카드를 map한다 */}
 
         {popupShow && <Popup setPopupShow={setPopupShow} />}
-
+        {/* 
         {!!ReviewWaitList ? (
           <FlatListWrap>
             <FlatList
@@ -111,7 +115,7 @@ const Pages = () => {
             isArrayEmpty={!ReviewWaitList}
             message={`주문 후 리뷰를 작성해 보세요.`}
           />
-        )}
+        )} */}
       </View>
     </Container>
   );

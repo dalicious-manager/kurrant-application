@@ -1,5 +1,15 @@
 import mSleep from '../../../helpers/mSleep';
 
+export async function getReviewOrderMeal(startdate, enddate) {
+  const fetchRes = await fetchJson(
+    `/users/me/reviews/items`,
+
+    'GET',
+  );
+
+  return fetchRes;
+}
+
 export async function orderMealMockData() {
   await mSleep(3000);
 
