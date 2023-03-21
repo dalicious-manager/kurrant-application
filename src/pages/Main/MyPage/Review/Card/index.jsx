@@ -37,9 +37,6 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
 
-  console.log(serviceDate);
-  console.log(makersName);
-  console.log(reviewDDay);
   return (
     <Container>
       <DateText>
@@ -90,7 +87,7 @@ const Component = ({
                 onPress={() => {
                   navigation.navigate(CreateReviewScreenName);
                 }}>
-                <Text>리뷰작성</Text>
+                <TextText>리뷰작성</TextText>
               </ReviewFormWriteButton>
             )}
           </SmallColumnWrap>
@@ -217,6 +214,6 @@ const ReviewDDayExpired = styled.View`
   border-radius: 16px;
 `;
 
-const Text = styled(Typography).attrs({text: 'Button10SB'})`
+const TextText = styled(Typography).attrs({text: 'Button10SB'})`
   color: ${props => props.theme.colors.grey[3]};
 `;

@@ -15,6 +15,8 @@ import {calculateTotalReviewWaitList} from '../../../../biz/useReview/useReviewW
 import {totalReviewWaitList} from '../../../../biz/useReview/useReviewWait/store';
 import {useAtom} from 'jotai';
 
+import Banner from './Banner';
+
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
@@ -47,6 +49,8 @@ const Pages = () => {
 
   return (
     <Container>
+      <Banner />
+
       <View
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
@@ -54,18 +58,6 @@ const Pages = () => {
         {!!reviewWaitList && (
           <PlaneGreyBox>
             <SmallWrap>
-              <PlaneRowView>
-                <MiniWrap>
-                  <Typography1 variant="h400">포토후기</Typography1>
-
-                  <PointText>100P</PointText>
-                </MiniWrap>
-                <MiniWrap>
-                  <Typography1 variant="h400">텍스트 후기</Typography1>
-
-                  <PointText>50P</PointText>
-                </MiniWrap>
-              </PlaneRowView>
               <View>
                 <PlaneRowView>
                   <MiniWrap>
@@ -79,6 +71,18 @@ const Pages = () => {
                   </MiniWrap>
                 </PlaneRowView>
               </View>
+              <PlaneRowView>
+                <MiniWrap>
+                  <Typography1 variant="h400">포토후기</Typography1>
+
+                  <PointText>100P</PointText>
+                </MiniWrap>
+                <MiniWrap>
+                  <Typography1 variant="h400">텍스트 후기</Typography1>
+
+                  <PointText>50P</PointText>
+                </MiniWrap>
+              </PlaneRowView>
             </SmallWrap>
           </PlaneGreyBox>
         )}
@@ -90,7 +94,7 @@ const Pages = () => {
         {!!reviewWaitList ? (
           <FlatListWrap>
             <FlatList
-              contentContainerStyle={{paddingBottom: 90}}
+              contentContainerStyle={{paddingBottom: 190}}
               data={reviewWaitList}
               scrollEnabled={true}
               renderItem={({item}) => {
@@ -135,6 +139,7 @@ const Container = styled.View`
   width: 100%;
   height: 100%;
   padding: 24px 25px;
+  padding-top: 0px;
   background-color: #ffffff;
 `;
 
