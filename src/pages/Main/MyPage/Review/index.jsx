@@ -40,13 +40,13 @@ const Pages = () => {
 
   return (
     <Container>
-      <Banner />
+      {!!reviewWaitList && reviewWaitList.length > 0 && <Banner />}
 
       <View
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
         {/* 회색박스 포토후기, 텍스트후기  */}
-        {!!reviewWaitList && (
+        {!!reviewWaitList && reviewWaitList.length > 0 && (
           <PlaneGreyBox>
             <SmallWrap>
               <View>
@@ -82,7 +82,7 @@ const Pages = () => {
 
         {popupShow && <Popup setPopupShow={setPopupShow} />}
 
-        {!!reviewWaitList ? (
+        {!!reviewWaitList && reviewWaitList.length > 0 ? (
           <FlatListWrap>
             <FlatList
               contentContainerStyle={{paddingBottom: 190}}
@@ -115,7 +115,7 @@ const Pages = () => {
           </FlatListWrap>
         ) : (
           <NoOrder
-            isArrayEmpty={!reviewWaitList}
+            isArrayEmpty={true}
             message={`주문 후 리뷰를 작성해 보세요.`}
           />
         )}
