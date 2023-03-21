@@ -5,5 +5,5 @@ import {timeLeftIndicator} from '../../utils/dateFormatter';
 import {extractNumberOnly} from '../../utils/stringRegexFormatter';
 
 export const isDueDateCloseRenderRed = (dueDate, orderDate) => {
-  return timeLeftIndicator(dueDate, orderDate);
+  return timeLeftIndicator(dueDate, orderDate)[1];
 };
