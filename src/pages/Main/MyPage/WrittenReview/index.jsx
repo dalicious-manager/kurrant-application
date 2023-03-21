@@ -45,7 +45,7 @@ const Pages = () => {
               <View>
                 <Card
                   makersName={item.makersName}
-                  menuName={item.menuName}
+                  foodName={item.foodName}
                   writtenDate={item.writtenDate}
                   option={item.option}
                   rating={item.rating}

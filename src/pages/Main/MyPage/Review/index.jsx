@@ -18,28 +18,32 @@ import {useAtom} from 'jotai';
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
-  const {
-    ReviewWaitListSupply: ReviewWaitListYo,
-    reviewWaitCount,
-    getReviewWait,
-  } = useReviewWait();
+  const {reviewWaitList, reviewWaitCount, getReviewWait} = useReviewWait();
 
-  const [ReviewWaitList, setReviewWaitList] = useState(undefined);
+  // const [ReviewWaitList, setReviewWaitList] = useState(undefined);
   const [, setTotalReviewWaitList] = useAtom(totalReviewWaitList);
 
   useEffect(() => {
     getReviewWait();
   }, []);
 
+  // useEffect(() => {
+  //   if (!!ReviewWaitListYo) {
+  //     // setTotalReviewWaitList(calculateTotalReviewWaitList(ReviewWaitListYo));
+  //     setTotalReviewWaitList(reviewWaitCount);
+  //     // setReviewWaitList(ReviewWaitListYo);
+  //   }
+  // }, [ReviewWaitListYo]);
+
   useEffect(() => {
-    if (!!ReviewWaitListYo) {
-      // setTotalReviewWaitList(calculateTotalReviewWaitList(ReviewWaitListYo));
-      setTotalReviewWaitList(reviewWaitCount);
-      setReviewWaitList(ReviewWaitListYo);
-    }
-  }, [ReviewWaitListYo]);
+    setTotalReviewWaitList(reviewWaitCount);
+  }, [reviewWaitCount, setTotalReviewWaitList]);
 
   const [popupShow, setPopupShow] = useState(false);
+
+  useEffect(() => {
+    console.log(reviewWaitList);
+  }, [reviewWaitList]);
 
   return (
     <Container>
@@ -47,7 +51,7 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
         {/* 회색박스 포토후기, 텍스트후기  */}
-        {!!ReviewWaitList && (
+        {!!reviewWaitList && (
           <PlaneGreyBox>
             <SmallWrap>
               <PlaneRowView>
@@ -82,29 +86,33 @@ const Pages = () => {
         {/* 카드를 map한다 */}
 
         {popupShow && <Popup setPopupShow={setPopupShow} />}
-        {/* 
-        {!!ReviewWaitList ? (
+
+        {!!reviewWaitList ? (
           <FlatListWrap>
             <FlatList
               contentContainerStyle={{paddingBottom: 90}}
-              data={ReviewWaitList.orderFood}
+              data={reviewWaitList}
               scrollEnabled={true}
               renderItem={({item}) => {
                 return (
                   <View>
-                    {item.orderItemDtoList.map((value2, index2) => {
-                      return (
-                        <Card
-                          key={index2}
-                          orderDate={item.orderDate}
-                          menuName={value2.menuName}
-                          option={value2.option}
-                          imageUrl={value2.imageUrl}
-                          diningType={value2.diningType}
-                          restaurentName={value2.restaurentName}
-                        />
-                      );
-                    })}
+                    {item.items &&
+                      item.items.map((value2, index2) => {
+                        console.log(value2);
+
+                        return (
+                          <Card
+                            key={index2}
+                            serviceDate={item.serviceDate}
+                            foodName={value2.foodName}
+                            option={value2.option}
+                            imageLocation={value2.imageLocation}
+                            diningType={value2.diningType}
+                            makersName={value2.makersName}
+                            reviewDDay={value2.reviewDDay}
+                          />
+                        );
+                      })}
                   </View>
                 );
               }}
@@ -112,10 +120,10 @@ const Pages = () => {
           </FlatListWrap>
         ) : (
           <NoOrder
-            isArrayEmpty={!ReviewWaitList}
+            isArrayEmpty={!reviewWaitList}
             message={`주문 후 리뷰를 작성해 보세요.`}
           />
-        )} */}
+        )}
       </View>
     </Container>
   );

@@ -12,7 +12,7 @@ import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/
 
 const Component = ({
   makersName,
-  menuName,
+  foodName,
   writtenDate,
   option,
   rating,
@@ -28,7 +28,7 @@ const Component = ({
             {'['}
             {makersName}
             {']'}
-            {menuName}
+            {foodName}
           </RestaurentNameText>
           <ArrowRightGrey4 />
         </TitleWrap>

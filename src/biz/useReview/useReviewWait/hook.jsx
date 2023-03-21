@@ -5,7 +5,7 @@ import * as Fetch from './Fetch';
 import {reviewWaitListAtom} from './store';
 
 const useReviewWait = () => {
-  const [ReviewWaitListSupply, setReviewWaitList] = useAtom(reviewWaitListAtom);
+  const [reviewWaitList, setReviewWaitList] = useAtom(reviewWaitListAtom);
 
   const [reviewWaitCount, setReviewWaitCount] = useState(0);
 
@@ -13,8 +13,6 @@ const useReviewWait = () => {
     try {
       const res = await Fetch.getReviewOrderMeal();
       // const res = await Fetch.orderMealMockData();
-
-      console.log(res.data.orderFoodList);
 
       setReviewWaitCount(res.data.count);
       setReviewWaitList(res.data.orderFoodList);
@@ -27,7 +25,7 @@ const useReviewWait = () => {
   //   getReviewWait();
   // }, []);
 
-  return {getReviewWait, ReviewWaitListSupply, reviewWaitCount};
+  return {getReviewWait, reviewWaitList, reviewWaitCount};
 };
 
 export default useReviewWait;

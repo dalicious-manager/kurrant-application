@@ -10,63 +10,80 @@ import {SCREEN_NAME as CreateReviewScreenName} from '../../../../../screens/Main
 
 import {
   formattedMonthDay,
+  stringDateToJavascriptDate,
   timeLeftIndicator,
   timePassIndicator,
 } from '../../../../../utils/dateFormatter';
 
 /**
  * @param {object} props
- * @param {object} props.orderDate
- * @param {string} props.restaurentName
- * @param {string} props.menuName
+ * @param {object} props.serviceDate
+ * @param {string} props.makersName
+ * @param {string} props.foodName
  * @param {string} props.option
- * @param {string} props.imageUrl
+ * @param {string} props.imageLocation
  * @returns
  */
 
 const Component = ({
-  orderDate,
-  restaurentName,
-  menuName,
+  serviceDate,
+  makersName,
+  foodName,
   option,
-  imageUrl,
+  imageLocation,
   diningType,
+  reviewDDay,
   ...rest
 }) => {
   const navigation = useNavigation();
+
+  console.log(serviceDate);
+  console.log(makersName);
+  console.log(reviewDDay);
   return (
     <Container>
       <DateText>
-        {orderDate &&
-          `${formattedMonthDay(orderDate)} ${diningType} · ${timePassIndicator(
+        {serviceDate &&
+          `${formattedMonthDay(
+            serviceDate,
+          )} ${diningType} · ${timePassIndicator(
             new Date(Date.now()),
-            orderDate,
+
+            stringDateToJavascriptDate(serviceDate, '-'),
           )}`}
       </DateText>
 
       <CardContentBox>
         <MealImage
           source={{
-            uri: imageUrl,
+            uri: imageLocation,
           }}
         />
         <MetadataWrap>
           <SmallRowWrap>
             <RestaurentNameText>
               {'['}
-              {restaurentName}
+              {makersName}
               {']'}
             </RestaurentNameText>
-            <MenuNameText>{menuName}</MenuNameText>
+            <MenuNameText>{foodName}</MenuNameText>
+            {option && <OptionText>|{option} </OptionText>}
+
             <OptionText>|{option} </OptionText>
           </SmallRowWrap>
           <SmallColumnWrap>
-            <DDayText orderDate={orderDate}>
-              {timeLeftIndicator(5, orderDate)}
+            <DDayText serviceDate={serviceDate}>
+              {timeLeftIndicator(
+                5,
+
+                stringDateToJavascriptDate(serviceDate, '-'),
+              )}
             </DDayText>
             {!(
-              timeLeftIndicator(5, orderDate) ===
-              '리뷰 가능한 기한이 지났습니다'
+              timeLeftIndicator(
+                5,
+                stringDateToJavascriptDate(serviceDate, '-'),
+              ) === '리뷰 가능한 기한이 지났습니다'
             ) && (
               <ReviewFormWriteButton
                 onPress={() => {
@@ -124,10 +141,11 @@ const MetadataWrap = styled.View`
 
   padding: 0 16px;
   display: flex;
-  justify-content: space-between;
 `;
 
-const SmallRowWrap = styled.View``;
+const SmallRowWrap = styled.View`
+  margin-bottom: 15px;
+`;
 
 const SmallColumnWrap = styled.View`
   display: flex;
@@ -156,7 +174,7 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
 
 const DDayText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => {
-    if (isDueDateClose(5, props.orderDate)) {
+    if (isDueDateClose(5, stringDateToJavascriptDate(props.serviceDate, '-'))) {
       return props.theme.colors.red[500];
     } else {
       return props.theme.colors.grey[5];
