@@ -112,7 +112,8 @@ const Pages = () => {
     <Wrapper>
       <ScrollView>
         <TitleContainer>
-          <Title>{isUserInfo.name}님을 위한 특별한 혜택</Title>
+          {/* <Title>{isUserInfo.name}님을 위한 특별한 혜택</Title> */}
+          <Title>님을 위한 특별한 혜택</Title>
           <Description>지금 신청하면 다양한 혜택을 누릴 수 있어요!</Description>
           <TopLine />
           <SubTitle>멤버십 혜택</SubTitle>
@@ -130,23 +131,20 @@ const Pages = () => {
           </SubtractView>
           <SubtractView>
             <SubtractBox
-              text={
-                '정기식사, 마켓 상품 리뷰 등록 시\n추가 포인트 적립(준비중)'
-              }
+              text={'정기식사, 마켓 상품 리뷰 등록 시\n추가 포인트 적립'}
               disabled={true}>
               <CommentsIcon />
             </SubtractBox>
           </SubtractView>
           <SubtractView>
-            <SubtractBox
-              text={'마켓 상품 구매 시 포인트 적립(준비중)'}
-              disabled={true}>
+            <SubtractBox text={'마켓 상품 구매 시 포인트 적립'} disabled={true}>
               <PointIcon />
             </SubtractBox>
           </SubtractView>
+
           <SubtractView>
-            <SubtractBox text={'메뉴 추천 기능 오픈(준비중)'} disabled={true}>
-              <ThumbsUpWithThreeStarsIcon />
+            <SubtractBox text={'메뉴 추천 기능 오픈'} disabled={true}>
+              <ThumbsUpWithThreeStarsIcon additionalCss={`margin-right: 5px`} />
             </SubtractBox>
           </SubtractView>
         </SubtractWrapper>
