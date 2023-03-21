@@ -3,7 +3,7 @@ import React from 'react';
 
 import {Line} from 'react-native-svg';
 import styled from 'styled-components';
-import {isDueDateClose} from '../../../../../biz/useMypageReview';
+import {isDueDateCloseRenderRed} from '../../../../../biz/useMypageReview';
 
 import Typography from '../../../../../components/Typography';
 import {SCREEN_NAME as CreateReviewScreenName} from '../../../../../screens/Main/Review/CreateReview/Page1';
@@ -68,22 +68,23 @@ const Component = ({
             </RestaurentNameText>
             <MenuNameText>{foodName}</MenuNameText>
             {option && <OptionText>|{option} </OptionText>}
-
-            <OptionText>|{option} </OptionText>
           </SmallRowWrap>
           <SmallColumnWrap>
             <DDayText serviceDate={serviceDate}>
-              {timeLeftIndicator(
-                5,
+              {
+                timeLeftIndicator(
+                  5,
 
-                stringDateToJavascriptDate(serviceDate, '-'),
-              )}
+                  stringDateToJavascriptDate(serviceDate, '-'),
+                )[0]
+              }
             </DDayText>
+
             {!(
               timeLeftIndicator(
                 5,
                 stringDateToJavascriptDate(serviceDate, '-'),
-              ) === '리뷰 가능한 기한이 지났습니다'
+              )[0] === '리뷰 가능한 기한이 지났습니다'
             ) && (
               <ReviewFormWriteButton
                 onPress={() => {
@@ -141,6 +142,8 @@ const MetadataWrap = styled.View`
 
   padding: 0 16px;
   display: flex;
+  justify-content: space-between;
+  /* border: 1px solid black; */
 `;
 
 const SmallRowWrap = styled.View`
@@ -152,6 +155,8 @@ const SmallColumnWrap = styled.View`
   flex-flow: row;
   align-items: center;
   justify-content: space-between;
+
+  height: 32px;
 `;
 
 const RestaurentNameText = styled(Typography).attrs({text: 'Body05R'})`
@@ -174,7 +179,12 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
 
 const DDayText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => {
-    if (isDueDateClose(5, stringDateToJavascriptDate(props.serviceDate, '-'))) {
+    if (
+      isDueDateCloseRenderRed(
+        5,
+        stringDateToJavascriptDate(props.serviceDate, '-'),
+      )
+    ) {
       return props.theme.colors.red[500];
     } else {
       return props.theme.colors.grey[5];
@@ -186,6 +196,17 @@ const DDayText = styled(Typography).attrs({text: 'CaptionR'})`
 
 const ReviewFormWriteButton = styled.Pressable`
   /* text-align: center; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 77px;
+  /* line-height: 32px; */
+  border: 1px solid ${props => props.theme.colors.grey[7]};
+  height: 32px;
+  border-radius: 16px;
+`;
+
+const ReviewDDayExpired = styled.View`
   display: flex;
   justify-content: center;
   align-items: center;

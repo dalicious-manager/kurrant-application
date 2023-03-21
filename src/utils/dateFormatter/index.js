@@ -207,11 +207,11 @@ export const timeLeftIndicator = (criterionDayLength, compareDate) => {
   const leftDate = deadlineDate.getTime() - new Date(Date.now()).getTime();
 
   if (leftDate < 0) {
-    return '리뷰 가능한 기한이 지났습니다';
+    return ['리뷰 가능한 기한이 지났습니다', false];
   } else if (leftDate <= 1000 * 60 * 60 * 24) {
-    return '기한 D-Day';
+    return ['기한 마지막 날', true];
   } else {
-    return `기한 D-${Math.floor(leftDate / (1000 * 60 * 60 * 24))}`;
+    return [`기한 D-${Math.floor(leftDate / (1000 * 60 * 60 * 24))}`, true];
   }
 };
 

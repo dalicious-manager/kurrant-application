@@ -4,6 +4,6 @@ export * as Fetch from './Fetch';
 import {timeLeftIndicator} from '../../utils/dateFormatter';
 import {extractNumberOnly} from '../../utils/stringRegexFormatter';
 
-export const isDueDateClose = (dueDate, orderDate) => {
-  return extractNumberOnly(timeLeftIndicator(dueDate, orderDate)) <= 3;
+export const isDueDateCloseRenderRed = (dueDate, orderDate) => {
+  return timeLeftIndicator(dueDate, orderDate);
 };
