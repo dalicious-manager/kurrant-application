@@ -1,7 +1,7 @@
 import mSleep from '../../../helpers/mSleep';
 import {fetchJson} from '../../../utils/fetch';
 
-export async function getReviewOrderMeal(startdate, enddate) {
+export async function getReviewOrderMeal() {
   const fetchRes = await fetchJson(
     `/users/me/reviews/items`,
 

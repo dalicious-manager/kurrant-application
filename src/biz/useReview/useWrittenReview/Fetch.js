@@ -1,6 +1,18 @@
 import {DefaultProfile} from '../../../assets';
 import mSleep from '../../../helpers/mSleep';
 
+import {fetchJson} from '../../../utils/fetch';
+
+export async function getReviewOrderMeal() {
+  const fetchRes = await fetchJson(
+    `/users/me/reviews`,
+
+    'GET',
+  );
+
+  return fetchRes;
+}
+
 export async function writtenReviewMockData() {
   await mSleep(3000);
 

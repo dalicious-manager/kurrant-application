@@ -10,6 +10,11 @@ import AdminReview from './AdminReview';
 import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
+import OnlyForMakers from './OnlyForMakers';
+
+// const onlyForMakers = true;
+const onlyForMakers = false;
+
 const Component = ({
   makersName,
   foodName,
@@ -63,59 +68,67 @@ const Component = ({
 
         <PostDateText>{writtenDate} 작성</PostDateText>
       </RowWrap>
-      <ImagesWrap>
-        <ImageWrap>
-          <MealImage
-            source={{
-              uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-            }}
-          />
-        </ImageWrap>
-        <ImageWrap>
-          <MealImage
-            source={{
-              uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-            }}
-          />
-        </ImageWrap>
-        <ImageWrap>
-          <MealImage
-            source={{
-              uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-            }}
-          />
-        </ImageWrap>
-        <ImageWrap>
-          <MealImage
-            source={{
-              uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-            }}
-          />
-        </ImageWrap>
-        <ImageWrap>
-          <MealImage
-            source={{
-              uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-            }}
-          />
-        </ImageWrap>
-        <ImageWrap>
-          <DefaultImage />
-        </ImageWrap>
-      </ImagesWrap>
-      <ReviewWrap>
-        <ReviewText>{reviewText}</ReviewText>
-      </ReviewWrap>
-      <CommentWrap>
-        {adminReview && (
+
+      {onlyForMakers ? (
+        <>
+          <ImagesWrap>
+            <ImageWrap>
+              <MealImage
+                source={{
+                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+                }}
+              />
+            </ImageWrap>
+            <ImageWrap>
+              <MealImage
+                source={{
+                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+                }}
+              />
+            </ImageWrap>
+            <ImageWrap>
+              <MealImage
+                source={{
+                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+                }}
+              />
+            </ImageWrap>
+            <ImageWrap>
+              <MealImage
+                source={{
+                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+                }}
+              />
+            </ImageWrap>
+            <ImageWrap>
+              <MealImage
+                source={{
+                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+                }}
+              />
+            </ImageWrap>
+            <ImageWrap>
+              <DefaultImage />
+            </ImageWrap>
+          </ImagesWrap>
+          <ReviewWrap>
+            <ReviewText>{reviewText}</ReviewText>
+          </ReviewWrap>
+        </>
+      ) : (
+        <OnlyForMakers />
+      )}
+
+      {adminReview && (
+        <CommentWrap>
           <AdminReview
             pngLink={adminReview.pngLink}
             adminName={adminReview.adminName}
             writtenDate={adminReview.writtenDate}
             message={adminReview.message}
           />
-        )}
-      </CommentWrap>
+        </CommentWrap>
+      )}
     </Container>
   );
 };

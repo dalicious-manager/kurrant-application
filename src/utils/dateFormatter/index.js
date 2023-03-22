@@ -239,6 +239,20 @@ export const stringDateToJavascriptDate = (stringDate, seperator) => {
   return process3;
 };
 
+// 2023-03-22T12:14:50.559+09:00 -> 2023. 03. 22
+
+export const convertDateFormat1 = stringDate => {
+  // 1. 앞에 날짜 자르기
+
+  const date1 = stringDate.slice(0, 10);
+
+  // 2. - -> '. '
+
+  date1.replace('-', '. ');
+
+  return date1;
+};
+
 // export function daysLeft(endDate) {
 //   const dayNow = new Date();
 
