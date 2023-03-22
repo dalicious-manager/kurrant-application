@@ -8,7 +8,7 @@ export async function OrderMeal(startdate, enddate) {
 
   return fetchRes;
 }
-export async function refundItem(body, option) {
+export async function refundItemTest(body, option) {
   const req = {
     id: body.id,
   };
@@ -24,8 +24,32 @@ export async function refundItem(body, option) {
   return fetchRes;
 }
 
-export async function refundAll(body, option) {
+export async function refundAllTest(body, option) {
   const fetchRes = await fetchJson(`/users/me/orders/refund`, 'POST', {
+    ...option,
+    body: JSON.stringify(body),
+  });
+
+  return fetchRes;
+}
+export async function refundItem(body, option) {
+  const req = {
+    id: body.id,
+  };
+  const fetchRes = await fetchJson(
+    `/users/me/orders/dailyFoods/refund/nice`,
+    'POST',
+    {
+      ...option,
+      body: JSON.stringify(req),
+    },
+  );
+
+  return fetchRes;
+}
+
+export async function refundAll(body, option) {
+  const fetchRes = await fetchJson(`/users/me/orders/refund/nice`, 'POST', {
     ...option,
     body: JSON.stringify(body),
   });

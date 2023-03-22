@@ -23,7 +23,7 @@ import Balloon from '../../../../../components/Balloon';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import CalendarButton from '../../../../../components/CalendarButton';
-import Calendar from '../../../../../components/Calendar';
+import BuyCalendar from '../../../../../components/BuyCalendar';
 import Label from '../../../../../components/Label';
 import Typography from '../../../../../components/Typography';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
@@ -787,7 +787,7 @@ const Pages = ({route}) => {
         <CalendarButton pager={pager} daily chk={chk} />
       </Animated.View>
       <CalendarWrap>
-        <Calendar
+        <BuyCalendar
           BooleanValue={false}
           type={'grey2'}
           color={'white'}
