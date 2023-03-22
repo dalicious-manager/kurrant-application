@@ -13,6 +13,7 @@ import UploadPhoto from '../../../../../components/UploadPhoto';
 import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
 import {useRoute} from '@react-navigation/native';
+import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/Fetch';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -84,16 +85,45 @@ const Screen = () => {
 
     const formData = new FormData();
 
+    const myHeaders = new Headers();
+
+    myHeaders.append(
+      'Authorization',
+      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0NjUzNjEsImV4cCI6MTY3OTQ3MjU2MX0.F-cYizRPLV8__NnNsRxViHuiZLrYzOwVNbPnkMZvNhA',
+    );
+    myHeaders.append('Content-Type', 'multipart/form-data');
+
     formData.append(
       'reviewDto',
-
-      {
-        orderItemId: 95,
+      JSON.stringify({
+        orderItemId: 3665,
         satisfaction: 5,
         content: 'This is Review. LaLaLa',
         forMakers: false,
-      },
+      }),
     );
+
+    try {
+      console.log('잘 됬어요!');
+      fetch('http://3.35.197.186:8882/v1/users/me/reviews', {
+        method: 'POST',
+        // headers: {
+        //   Authorization:
+        //     'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0NjUzNjEsImV4cCI6MTY3OTQ3MjU2MX0.F-cYizRPLV8__NnNsRxViHuiZLrYzOwVNbPnkMZvNhA',
+
+        //   'Content-Type': 'multipart/form-data',
+        // },
+        headers: myHeaders,
+        body: formData,
+        redirect: 'follow',
+      })
+        .then(response => response.text())
+        .then(result => console.log(result));
+
+      // createReview(formData);
+    } catch (err) {
+      console.log(err);
+    }
 
     console.log('input registered');
   };

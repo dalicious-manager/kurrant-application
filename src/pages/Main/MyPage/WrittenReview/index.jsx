@@ -41,23 +41,20 @@ const Pages = () => {
     <Container
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}>
-      {!!reviewList ? (
+      {!!reviewList && reviewList.length > 0 ? (
         <FlatList
           data={reviewList}
           scrollEnabled={true}
           renderItem={({item}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
 
-            // console.log(typeof item.satisfaction);
-            // console.log(item.createDate);
-            // console.log(convertDateFormat1(item.createDate));
             const item2 = {
               id: item.reviewId,
               image: item.imageLocation,
               reviewText: item.content,
               rating: item.satisfaction,
               writtenDate: convertDateFormat1(item.createDate),
-              // updateDate
+
               makersName: item.makersName,
               foodName: item.itemName,
               option: item.option,
@@ -80,10 +77,7 @@ const Pages = () => {
           }}
         />
       ) : (
-        <NoOrder
-          isArrayEmpty={!reviewList}
-          message={`아직 작성한 리뷰가 없어요.`}
-        />
+        <NoOrder isArrayEmpty={true} message={`아직 작성한 리뷰가 없어요.`} />
       )}
     </Container>
   );
