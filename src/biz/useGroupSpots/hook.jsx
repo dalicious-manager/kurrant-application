@@ -42,6 +42,7 @@ const useGroupSpots = () => {
       const res = await Fetch.UserGroupAdd({
         ...body,
       });
+      return res;
     } catch (err) {
       throw err;
     }
@@ -53,7 +54,7 @@ const useGroupSpots = () => {
     try {
       setDetailSpot();
       const res = await Fetch.GroupDetail(id);
-      console.log(res, '22');
+
       setDetailSpot(res.data);
     } catch (err) {
       throw err;

@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
+import CarouselImage from '../components/CarouselImage';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -269,7 +270,7 @@ const Pages = ({route}) => {
             ) : (
               <StatusBar barStyle="light-content" />
             )}
-            <FastImage
+            {/* <FastImage
               source={{
                 uri: `${isFoodDetail?.image}`,
                 priority: FastImage.priority.high,
@@ -286,7 +287,8 @@ const Pages = ({route}) => {
                   'rgba(255, 255, 255, 0) ',
                 ]}
               />
-            </FastImage>
+            </FastImage> */}
+            <CarouselImage img={isFoodDetail?.imageList} />
             <Content>
               <View>
                 <MakersName>{isFoodDetail?.makersName}</MakersName>
