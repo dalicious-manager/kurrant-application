@@ -20,6 +20,7 @@ const Component = ({
   adminReview,
 }) => {
   const navigation = useNavigation();
+
   return (
     <Container>
       <TopWrap>
