@@ -74,12 +74,26 @@ const Screen = () => {
     // photos : photosArray | ([{id: number, uri: '이미지uri'}])
     // review : data.review | string
     // isExclusive : input.isExclusive |  boolean
+
     console.log({
       rating: starRating,
       photos: photosArray,
       review: data.review,
       isExclusive: input.isExclusive,
     });
+
+    const formData = new FormData();
+
+    formData.append(
+      'reviewDto',
+
+      {
+        orderItemId: 95,
+        satisfaction: 5,
+        content: 'This is Review. LaLaLa',
+        forMakers: false,
+      },
+    );
 
     console.log('input registered');
   };
