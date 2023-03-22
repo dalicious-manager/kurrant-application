@@ -1,8 +1,11 @@
 import React from 'react';
 
 import styled from 'styled-components';
+import {GreyLockerIcon} from '../../../../../../components/Icon';
 
 import Typography from '../../../../../../components/Typography';
+
+const sampleOnlyForReviewers = true;
 
 const Component = ({pngLink, adminName, writtenDate, message}) => {
   return (
@@ -12,12 +15,24 @@ const Component = ({pngLink, adminName, writtenDate, message}) => {
       </AdminImageWrap>
 
       <MessageWrap>
-        <TitleWrap>
-          <AdminName>{adminName}</AdminName>
-          <WrittenDate> {writtenDate}</WrittenDate>
-        </TitleWrap>
+        {sampleOnlyForReviewers ? (
+          <OnlyForReviewersContainer>
+            <GreyLockerIcon />
 
-        <Message>{message}</Message>
+            <OnlyForReviewersText>
+              작성자에게만 보이는 리뷰에요.
+            </OnlyForReviewersText>
+          </OnlyForReviewersContainer>
+        ) : (
+          <>
+            <TitleWrap>
+              <AdminName>{adminName}</AdminName>
+              <WrittenDate> {writtenDate}</WrittenDate>
+            </TitleWrap>
+
+            <Message>{message}</Message>
+          </>
+        )}
       </MessageWrap>
     </Container>
   );
@@ -30,6 +45,18 @@ const Container = styled.View`
   flex-direction: row;
   width: 100%;
   margin-top: 12px;
+`;
+
+const OnlyForReviewersContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+`;
+
+const OnlyForReviewersText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[5]};
+  margin-left: 6px;
 `;
 
 const AdminImageWrap = styled.View`
