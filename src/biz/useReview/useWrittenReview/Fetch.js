@@ -13,6 +13,17 @@ export async function getReviewOrderMeal() {
   return fetchRes;
 }
 
+export async function deleteReview(id) {
+  // const fetchRes = await
+
+  const fetchRes = await fetchJson(
+    `/users/me/reviews/delete?id=${id}`,
+
+    'PATCH',
+  );
+  return fetchRes;
+}
+
 export async function writtenReviewMockData() {
   await mSleep(3000);
 
