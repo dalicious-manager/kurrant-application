@@ -5,7 +5,7 @@ import {getStorage, setStorage} from '../../../asyncStorage';
 import {getCheck} from '../restApis/getRestApis';
 import Config from 'react-native-config';
 import SseService from '../../SseService/SseService';
-import {eventSourceMsgAtom} from '../store';
+import {eventSourceMsgAtom, eventSourceMsgBundleAtom} from '../store';
 import {useAtom} from 'jotai';
 
 const apiHostUrl =
@@ -15,10 +15,9 @@ const apiHostUrl =
 
 const useSse = () => {
   const [eventSourceMsg, setEventSourceMsg] = useAtom(eventSourceMsgAtom);
-
-  const [myEventSource, setMyEventSource] = useState();
-
-  // const [token, setToken] = useState(undefined);
+  const [eventSourceMsgBundle, setEventSourceMsgBundle] = useAtom(
+    eventSourceMsgBundleAtom,
+  );
 
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
@@ -31,21 +30,10 @@ const useSse = () => {
     return yo?.accessToken;
   }, []);
 
-  // const SseServiceKit = useMemo(async () => {
-  //   const tokenYo = await getToken();
-  //   // console.log(apiHostUrl);
-  //   // console.log(tokenYo);
-
-  //   const yoyoyo = new SseService(apiHostUrl, tokenYo);
-
-  //   setMyEventSource(yoyoyo);
-  //   return yoyoyo;
-  // }, [apiHostUrl, getToken]);
-
   const getSseServiceInstance = useCallback(async () => {
     const tokenYo = await getToken();
     const yoyoyo = new SseService(apiHostUrl, tokenYo);
-    setMyEventSource(yoyoyo);
+
     return yoyoyo;
   }, [apiHostUrl, getToken]);
 
@@ -64,10 +52,22 @@ const useSse = () => {
           if (message.includes('EventStream')) {
             console.log(1);
             console.log('EventStream 연결 되었답니다');
+
+            const yes = {...eventSourceMsgBundle};
+
+            yes['first-connect'] = message;
+
+            setEventSourceMsgBundle(yes);
           } else {
             console.log(2);
-
+            console.log(JSON.parse(message));
             setEventSourceMsg(JSON.parse(message));
+
+            const yes = {...eventSourceMsgBundle};
+
+            yes['purchaseMeal'] = JSON.parse(message).content;
+
+            setEventSourceMsgBundle(yes);
           }
         }
       });

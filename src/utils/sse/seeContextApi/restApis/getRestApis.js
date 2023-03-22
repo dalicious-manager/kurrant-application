@@ -25,6 +25,7 @@ export const sendDone = async (type, setEventSourceMsg) => {
     console.log('클릭되었네요');
     setEventSourceMsg(undefined);
   } catch (err) {
+    console.log('랄랄라 확인 안됨 ');
     console.log(err);
   }
 };

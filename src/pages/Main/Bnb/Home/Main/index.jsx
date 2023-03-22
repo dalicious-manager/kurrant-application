@@ -76,6 +76,7 @@ const Pages = () => {
     //
     console.log('홈에서 나오는 메세지입니다');
     if (eventSourceMsg) {
+      console.log(eventSourceMsg);
       console.log(eventSourceMsg.content);
     }
   }, [eventSourceMsg]);
