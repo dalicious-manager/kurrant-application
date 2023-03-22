@@ -74,12 +74,13 @@ const Pages = () => {
             {searchTerm !== '' &&
               filtered.map(el => {
                 return (
-                  <ResultView key={el.id}>
-                    <Pressable
-                      onPress={() => {
-                        setTouch(el.id);
-                        navigation.navigate(AddpartmentPageName, {data: el});
-                      }}>
+                  <ResultView
+                    key={el.id}
+                    onPress={() => {
+                      setTouch(el.id);
+                      navigation.navigate(AddpartmentPageName, {data: el});
+                    }}>
+                    <View>
                       {el.name.includes(searchTerm) && (
                         <NameWrap>
                           <ApartName>
@@ -100,7 +101,7 @@ const Pages = () => {
                         </NameWrap>
                       )}
                       <ApartAddress>{el.address}</ApartAddress>
-                    </Pressable>
+                    </View>
                     <SearchArrow />
                   </ResultView>
                 );
@@ -109,12 +110,13 @@ const Pages = () => {
               searchTerm === '' &&
               isApartSearch?.map((el, idx) => {
                 return (
-                  <ResultView key={el.id}>
-                    <Pressable
-                      onPress={() => {
-                        setTouch(el.id);
-                        navigation.navigate(AddpartmentPageName, {data: el});
-                      }}>
+                  <ResultView
+                    key={el.id}
+                    onPress={() => {
+                      setTouch(el.id);
+                      navigation.navigate(AddpartmentPageName, {data: el});
+                    }}>
+                    <View>
                       <NameWrap>
                         <ApartName>{el.name}</ApartName>
                         <View style={{marginLeft: 8}}>
@@ -127,7 +129,7 @@ const Pages = () => {
                         </View>
                       </NameWrap>
                       <ApartAddress>{el.address}</ApartAddress>
-                    </Pressable>
+                    </View>
                     <SearchArrow />
                   </ResultView>
                 );
@@ -160,7 +162,7 @@ const SearchIcon = styled(Search)`
   z-index: 99;
 `;
 
-const ResultView = styled.View`
+const ResultView = styled.Pressable`
   margin: 8px 28px 8px 56px;
   flex-direction: row;
   justify-content: space-between;

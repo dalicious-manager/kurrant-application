@@ -72,7 +72,7 @@ const Pages = () => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const toast = Toast();
-
+  //console.log(isUserGroupSpotCheck);
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
   const mealCheck = isOrderMeal?.map(el => {

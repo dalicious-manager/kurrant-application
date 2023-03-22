@@ -342,6 +342,7 @@ const Icons = styled.View`
   ${BarDisplay};
   //width: 68px;
 
+  margin-top: 12px;
   margin-right: -6px;
 `;
 const CsIconPress = styled.Pressable`
