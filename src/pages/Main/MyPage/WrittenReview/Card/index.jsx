@@ -16,6 +16,7 @@ import OnlyForMakers from './OnlyForMakers';
 const onlyForMakers = false;
 
 const Component = ({
+  id,
   makersName,
   foodName,
   writtenDate,
@@ -25,6 +26,10 @@ const Component = ({
   adminReview,
 }) => {
   const navigation = useNavigation();
+
+  const handleDelete = () => {
+    console.log('ㅗㅑㅗㅑㅗㅑㅑ ' + id);
+  };
 
   return (
     <Container>
@@ -46,7 +51,10 @@ const Component = ({
             }}>
             <EditText>수정</EditText>
           </Pressable>
-          <Pressable>
+          <Pressable
+            onPress={() => {
+              handleDelete();
+            }}>
             <DeleteText>삭제</DeleteText>
           </Pressable>
         </EditWrap>

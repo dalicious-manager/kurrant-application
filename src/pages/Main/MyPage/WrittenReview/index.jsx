@@ -51,6 +51,9 @@ const Pages = () => {
             // console.log(typeof item.satisfaction);
             // console.log(item.createDate);
             // console.log(convertDateFormat1(item.createDate));
+
+            console.log(item);
+
             const item2 = {
               id: item.reviewId,
               image: item.imageLocation,
@@ -66,6 +69,7 @@ const Pages = () => {
             return (
               <View>
                 <Card
+                  id={item2.id}
                   makersName={item2.makersName}
                   foodName={item2.foodName}
                   writtenDate={item2.writtenDate}
