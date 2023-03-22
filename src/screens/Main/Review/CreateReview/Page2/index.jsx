@@ -83,37 +83,115 @@ const Screen = () => {
       isExclusive: input.isExclusive,
     });
 
+    // var myHeaders = new Headers();
+    // myHeaders.append(
+    //   'Authorization',
+    //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0Nzc4OTgsImV4cCI6MTY3OTQ4NTA5OH0.0439hhXri-CymVhMvcQNSkgcqYsSmHOOgthp8ss3hDU',
+    // );
+
+    const dataa = {
+      orderItemId: 3928,
+      satisfaction: 5,
+      content: 'This is Review.Lalala',
+      forMakers: false,
+    };
+
+    /////////////
+    // 방법 1  포스트맨 그대로 베끼기
+
+    // var myHeaders = new Headers();
+    // myHeaders.append(
+    //   'Authorization',
+    //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0ODcyMzAsImV4cCI6MTY3OTQ5NDQzMH0.LqqPTwpelEHxKFjXY13mbIyssOrhF8wWFoxZYU1NVj8',
+    // );
+
+    // var formdata = new FormData();
+    // formdata.append(
+    //   'reviewDto',
+    //   JSON.stringify(dataa),
+    //   // '{"orderItemId":3552, "satisfaction":5, "content" : "This is Review. LaLaLa", "forMakers": false}',
+    // );
+
+    // var requestOptions = {
+    //   method: 'POST',
+    //   headers: myHeaders,
+    //   body: formdata,
+    //   redirect: 'follow',
+    // };
+
+    // fetch('http://3.35.197.186:8882/v1/users/me/reviews', requestOptions)
+    //   .then(response => response.text())
+    //   .then(result => console.log(result))
+    //   .catch(error => console.log('error', error));
+
+    /////////////
+    // 방법 2 admin 코드 이용하기
+
+    // const json = JSON.stringify(dataa);
+    // const blob = new Blob([json], {type: 'application/json'});
+
+    // var formdata = new FormData();
+    // formdata.append(
+    //   'reviewDto',
+
+    //   // JSON.stringify(data)
+    //   blob,
+    // );
+
+    // var requestOptions = {
+    //   method: 'POST',
+    //   // headers: myHeaders,
+    //   headers: {
+    //     Authorization:
+    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0Nzc4OTgsImV4cCI6MTY3OTQ4NTA5OH0.0439hhXri-CymVhMvcQNSkgcqYsSmHOOgthp8ss3hDU',
+    //     'Content-Type': 'multipart/form-data',
+    //   },
+    //   body: formdata,
+    //   redirect: 'follow',
+    // };
+
+    // fetch('http://3.35.197.186:8882/v1/users/me/reviews', requestOptions)
+    //   .then(response => response.text())
+    //   .then(result => console.log(result))
+    //   .catch(error => console.log('error', error));
+
+    ///////////////////////////////
+    // 방법 3
+
     const formData = new FormData();
 
     const myHeaders = new Headers();
 
     myHeaders.append(
       'Authorization',
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0NjUzNjEsImV4cCI6MTY3OTQ3MjU2MX0.F-cYizRPLV8__NnNsRxViHuiZLrYzOwVNbPnkMZvNhA',
+      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0OTEyMzMsImV4cCI6MTY3OTQ5ODQzM30.M4RtEMfHeUXoadBOcbvzBowTdrhgNxbiDAovDpvqPmQ',
     );
     myHeaders.append('Content-Type', 'multipart/form-data');
 
-    formData.append(
-      'reviewDto',
-      JSON.stringify({
-        orderItemId: 3665,
-        satisfaction: 5,
-        content: 'This is Review. LaLaLa',
-        forMakers: false,
-      }),
-    );
+    const yoyo = {
+      orderItemId: 3665,
+      satisfaction: 5,
+      content: 'This is Review. LaLaLa',
+      forMakers: false,
+    };
+    const blob = new Blob([yoyo], {type: 'application/json'});
+
+    // formData.append('reviewDto', blob);
+    formData.append('reviewDto', JSON.stringify(yoyo));
+
+    console.log(myHeaders.map);
 
     try {
-      console.log('잘 됬어요!');
+      console.log('여기');
       fetch('http://3.35.197.186:8882/v1/users/me/reviews', {
         method: 'POST',
         // headers: {
         //   Authorization:
-        //     'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0NjUzNjEsImV4cCI6MTY3OTQ3MjU2MX0.F-cYizRPLV8__NnNsRxViHuiZLrYzOwVNbPnkMZvNhA',
+        //     'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0OTEyMzMsImV4cCI6MTY3OTQ5ODQzM30.M4RtEMfHeUXoadBOcbvzBowTdrhgNxbiDAovDpvqPmQ',
 
         //   'Content-Type': 'multipart/form-data',
         // },
-        headers: myHeaders,
+        headers: myHeaders.map,
         body: formData,
         redirect: 'follow',
       })
