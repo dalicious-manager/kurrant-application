@@ -11,7 +11,7 @@ import styled from 'styled-components/native';
  * @returns
  */
 
-const Component = ({children}) => {
+const Component = ({children, sseReceive = undefined}) => {
   return (
     <Container>
       <RedDot />
