@@ -35,6 +35,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
 
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot';
+
 import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
 
 import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
@@ -165,11 +167,14 @@ const Pages = () => {
           */}
           <InfomationContainer>
             <InfomationBox>
-              <InfomationText
-                text={'Title02SB'}
-                textColor={themeApp.colors.grey[5]}>
-                0
-              </InfomationText>
+              <SseRedDot>
+                <InfomationText
+                  text={'Title02SB'}
+                  textColor={themeApp.colors.grey[5]}>
+                  0
+                </InfomationText>
+              </SseRedDot>
+
               <InfomationLabel
                 text={'CaptionR'}
                 textColor={themeApp.colors.grey[5]}>
