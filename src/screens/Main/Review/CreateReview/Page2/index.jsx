@@ -14,6 +14,7 @@ import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
 import {useRoute} from '@react-navigation/native';
 import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/Fetch';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -89,149 +90,104 @@ const Screen = () => {
     //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0Nzc4OTgsImV4cCI6MTY3OTQ4NTA5OH0.0439hhXri-CymVhMvcQNSkgcqYsSmHOOgthp8ss3hDU',
     // );
 
+    /////////////
+    // 방법 1  포스트맨 그대로 베끼기
+
+    // blob으로 보낼떄
+
     const sendData = {
       orderItemId: 3552,
       satisfaction: 5,
       content: 'This is Review.Lalala',
       forMakers: false,
     };
+    // const formData = new FormData();
+    // const json = JSON.stringify(sendData);
 
-    /////////////
-    // 방법 1  포스트맨 그대로 베끼기
+    // // console.log(json);
+    // const blob = new Blob([json], {type: 'application/json'});
+    // // console.log(blob);
+    // formData.append('reviewDto', blob);
+    // formData.append('reviewDto2', json);
 
-    // var myHeaders = new Headers();
-    // myHeaders.append(
-    //   'Authorization',
-    //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1MzYxMTUsImV4cCI6MTY3OTU0MzMxNX0.GVhvFx0zFLj901lHFhVCGOBFhZARqHoyHQw2NOFlbeA',
-    // );
-    // myHeaders.append('Content-Type', 'multipart/form-data');
+    // console.log(formData);
+    // console.log(formData);
+    // console.log(formData.has('reviewDto'));
 
-    const formdata = new FormData();
-    // formdata.append(
-    //   'reviewDto',
-    //   JSON.stringify(dataa),
-    //   // '{"orderItemId":3552, "satisfaction":5, "content" : "This is Review. LaLaLa", "forMakers": false}',
-    // );
+    ////////////////////////////////////////
+    /////////////////////////////////////////////////////
+    // 라이브러리 써보기 rnFetchBlob
 
-    // blob으로 보낼떄
-
-    const json = JSON.stringify(sendData);
-
-    // console.log(json);
-    const blob = new Blob([json], {type: 'application/json'});
-    // console.log(blob);
-    formdata.append('reviewDto', blob);
-
-    console.log(typeof formdata);
-
-    // for (let value of formdata.values()) {
-    //   console.log('안녕');
-    //   console.log(value);
-    // }
-    for (let key of formdata.keys()) {
-      console.log('안녕');
-      console.log(key);
-    }
-
-    // json으로 보낼떄
-
-    // const json2 = JSON.stringify(sendData);
-    // formdata.append('reviewDto', json2);
-
-    var requestOptions = {
-      method: 'POST',
-      // headers: myHeaders,
-      // headers: myHeaders.map,
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NDA1ODUsImV4cCI6MTY3OTU0Nzc4NX0.-l38IIwbnhXeAlqMdmUR4k7RSGhJdDfhfiYkrqu9Up8',
-        'Content-Type': 'multipart/form-data',
-      },
-
-      body: formdata,
-      // redirect: 'follow',
-    };
-
-    fetch('http://3.35.197.186:8882/v1/users/me/reviews', requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
-
-    /////////////
-    // 방법 2 admin 코드 이용하기
-
-    // var formdata = new FormData();
-    // formdata.append(
-    //   'reviewDto',
-
-    //   // JSON.stringify(data)
-    //   blob,
-    // );
-
-    // var requestOptions = {
-    //   method: 'POST',
-    //   // headers: myHeaders,
-    //   headers: {
+    // RNFetchBlob.fetch(
+    //   'POST',
+    //   'http://www.example.com/upload-form',
+    //   {
     //     Authorization:
-    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0Nzc4OTgsImV4cCI6MTY3OTQ4NTA5OH0.0439hhXri-CymVhMvcQNSkgcqYsSmHOOgthp8ss3hDU',
+    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NTEzNDAsImV4cCI6MTY3OTU1ODU0MH0.BDOD6_lCpIE8As78JmLPwulxvsw4YCkbtndv_11ABjQ',
+
     //     'Content-Type': 'multipart/form-data',
     //   },
-    //   body: formdata,
-    //   redirect: 'follow',
-    // };
+    //   [{name: 'reviewDto', data: json}],
+    // ).then(resp => {
+    //   console.log(resp);
+    // });
 
-    // fetch('http://3.35.197.186:8882/v1/users/me/reviews', requestOptions)
-    //   .then(response => response.text())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
+    const sendFormDataWithToken = (formData, token) => {
+      const url = 'http://3.35.197.186:8882/v1/users/me/reviews';
 
-    ///////////////////////////////
-    // 방법 3
+      // Create the request headers
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      };
 
-    // const formData = new FormData();
+      // Send the request
+      return RNFetchBlob.fetch(
+        'POST',
+        url,
+        headers,
 
-    // const myHeaders = new Headers();
+        [
+          {
+            name: 'reviewDto',
+            data: JSON.stringify(sendData),
+          },
 
-    // myHeaders.append(
-    //   'Authorization',
-    //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0OTEyMzMsImV4cCI6MTY3OTQ5ODQzM30.M4RtEMfHeUXoadBOcbvzBowTdrhgNxbiDAovDpvqPmQ',
-    // );
-    // myHeaders.append('Content-Type', 'multipart/form-data');
+          // {
+          //   name: 'reviewDto',
+          //   data: RNFetchBlob.wrap(formData),
+          // },
+        ],
+      );
+    };
 
-    // const yoyo = {
-    //   orderItemId: 3665,
-    //   satisfaction: 5,
-    //   content: 'This is Review. LaLaLa',
-    //   forMakers: false,
-    // };
-    // const blob = new Blob([yoyo], {type: 'application/json'});
+    // const jsonBlob = new Blob([JSON.stringify(sendData)], {
+    //   type: 'application/json',
+    // });
 
-    // // formData.append('reviewDto', blob);
-    // formData.append('reviewDto', JSON.stringify(yoyo));
+    const formData = new FormData();
 
-    // console.log(myHeaders.map);
+    // formData.append('reviewDto', jsonBlob);
+    // formData.append('reviewDto', sendData);
+    // formData.append('reviewDto', JSON.stringify(sendData));
 
-    // try {
-    //   console.log('여기');
-    //   fetch('http://3.35.197.186:8882/v1/users/me/reviews', {
-    //     method: 'POST',
-    //     // headers: {
-    //     //   Authorization:
-    //     //     'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0OTEyMzMsImV4cCI6MTY3OTQ5ODQzM30.M4RtEMfHeUXoadBOcbvzBowTdrhgNxbiDAovDpvqPmQ',
+    // formData.append('avatar', {
+    //   uri: 'file:///path/to/avatar.jpg',
+    //   name: 'avatar.jpg',
+    //   type: 'image/jpeg',
+    // });
 
-    //     //   'Content-Type': 'multipart/form-data',
-    //     // },
-    //     headers: myHeaders.map,
-    //     body: formData,
-    //     redirect: 'follow',
-    //   })
-    //     .then(response => response.text())
-    //     .then(result => console.log(result));
+    const token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NTUyMzcsImV4cCI6MTY3OTU2MjQzN30.6QiiUy2fQxF-fM9rg_otVSmO9KPVvLcjdacGVCnNnVM';
 
-    //   // createReview(formData);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    sendFormDataWithToken(formData, token)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
 
     console.log('input registered');
   };
