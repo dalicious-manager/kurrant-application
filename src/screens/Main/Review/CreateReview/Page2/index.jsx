@@ -89,8 +89,8 @@ const Screen = () => {
     //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0Nzc4OTgsImV4cCI6MTY3OTQ4NTA5OH0.0439hhXri-CymVhMvcQNSkgcqYsSmHOOgthp8ss3hDU',
     // );
 
-    const dataa = {
-      orderItemId: 3928,
+    const sendData = {
+      orderItemId: 3552,
       satisfaction: 5,
       content: 'This is Review.Lalala',
       forMakers: false,
@@ -102,33 +102,63 @@ const Screen = () => {
     // var myHeaders = new Headers();
     // myHeaders.append(
     //   'Authorization',
-    //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0ODcyMzAsImV4cCI6MTY3OTQ5NDQzMH0.LqqPTwpelEHxKFjXY13mbIyssOrhF8wWFoxZYU1NVj8',
+    //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1MzYxMTUsImV4cCI6MTY3OTU0MzMxNX0.GVhvFx0zFLj901lHFhVCGOBFhZARqHoyHQw2NOFlbeA',
     // );
+    // myHeaders.append('Content-Type', 'multipart/form-data');
 
-    // var formdata = new FormData();
+    const formdata = new FormData();
     // formdata.append(
     //   'reviewDto',
     //   JSON.stringify(dataa),
     //   // '{"orderItemId":3552, "satisfaction":5, "content" : "This is Review. LaLaLa", "forMakers": false}',
     // );
 
-    // var requestOptions = {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   body: formdata,
-    //   redirect: 'follow',
-    // };
+    // blob으로 보낼떄
 
-    // fetch('http://3.35.197.186:8882/v1/users/me/reviews', requestOptions)
-    //   .then(response => response.text())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
+    const json = JSON.stringify(sendData);
+
+    // console.log(json);
+    const blob = new Blob([json], {type: 'application/json'});
+    // console.log(blob);
+    formdata.append('reviewDto', blob);
+
+    console.log(typeof formdata);
+
+    // for (let value of formdata.values()) {
+    //   console.log('안녕');
+    //   console.log(value);
+    // }
+    for (let key of formdata.keys()) {
+      console.log('안녕');
+      console.log(key);
+    }
+
+    // json으로 보낼떄
+
+    // const json2 = JSON.stringify(sendData);
+    // formdata.append('reviewDto', json2);
+
+    var requestOptions = {
+      method: 'POST',
+      // headers: myHeaders,
+      // headers: myHeaders.map,
+      headers: {
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NDA1ODUsImV4cCI6MTY3OTU0Nzc4NX0.-l38IIwbnhXeAlqMdmUR4k7RSGhJdDfhfiYkrqu9Up8',
+        'Content-Type': 'multipart/form-data',
+      },
+
+      body: formdata,
+      // redirect: 'follow',
+    };
+
+    fetch('http://3.35.197.186:8882/v1/users/me/reviews', requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
 
     /////////////
     // 방법 2 admin 코드 이용하기
-
-    // const json = JSON.stringify(dataa);
-    // const blob = new Blob([json], {type: 'application/json'});
 
     // var formdata = new FormData();
     // formdata.append(
@@ -158,50 +188,50 @@ const Screen = () => {
     ///////////////////////////////
     // 방법 3
 
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    const myHeaders = new Headers();
+    // const myHeaders = new Headers();
 
-    myHeaders.append(
-      'Authorization',
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0OTEyMzMsImV4cCI6MTY3OTQ5ODQzM30.M4RtEMfHeUXoadBOcbvzBowTdrhgNxbiDAovDpvqPmQ',
-    );
-    myHeaders.append('Content-Type', 'multipart/form-data');
+    // myHeaders.append(
+    //   'Authorization',
+    //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0OTEyMzMsImV4cCI6MTY3OTQ5ODQzM30.M4RtEMfHeUXoadBOcbvzBowTdrhgNxbiDAovDpvqPmQ',
+    // );
+    // myHeaders.append('Content-Type', 'multipart/form-data');
 
-    const yoyo = {
-      orderItemId: 3665,
-      satisfaction: 5,
-      content: 'This is Review. LaLaLa',
-      forMakers: false,
-    };
-    const blob = new Blob([yoyo], {type: 'application/json'});
+    // const yoyo = {
+    //   orderItemId: 3665,
+    //   satisfaction: 5,
+    //   content: 'This is Review. LaLaLa',
+    //   forMakers: false,
+    // };
+    // const blob = new Blob([yoyo], {type: 'application/json'});
 
-    // formData.append('reviewDto', blob);
-    formData.append('reviewDto', JSON.stringify(yoyo));
+    // // formData.append('reviewDto', blob);
+    // formData.append('reviewDto', JSON.stringify(yoyo));
 
-    console.log(myHeaders.map);
+    // console.log(myHeaders.map);
 
-    try {
-      console.log('여기');
-      fetch('http://3.35.197.186:8882/v1/users/me/reviews', {
-        method: 'POST',
-        // headers: {
-        //   Authorization:
-        //     'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0OTEyMzMsImV4cCI6MTY3OTQ5ODQzM30.M4RtEMfHeUXoadBOcbvzBowTdrhgNxbiDAovDpvqPmQ',
+    // try {
+    //   console.log('여기');
+    //   fetch('http://3.35.197.186:8882/v1/users/me/reviews', {
+    //     method: 'POST',
+    //     // headers: {
+    //     //   Authorization:
+    //     //     'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0OTEyMzMsImV4cCI6MTY3OTQ5ODQzM30.M4RtEMfHeUXoadBOcbvzBowTdrhgNxbiDAovDpvqPmQ',
 
-        //   'Content-Type': 'multipart/form-data',
-        // },
-        headers: myHeaders.map,
-        body: formData,
-        redirect: 'follow',
-      })
-        .then(response => response.text())
-        .then(result => console.log(result));
+    //     //   'Content-Type': 'multipart/form-data',
+    //     // },
+    //     headers: myHeaders.map,
+    //     body: formData,
+    //     redirect: 'follow',
+    //   })
+    //     .then(response => response.text())
+    //     .then(result => console.log(result));
 
-      // createReview(formData);
-    } catch (err) {
-      console.log(err);
-    }
+    //   // createReview(formData);
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
     console.log('input registered');
   };
