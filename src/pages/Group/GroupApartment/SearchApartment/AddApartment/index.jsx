@@ -20,15 +20,18 @@ const Pages = ({route}) => {
 
   const addOwnGroup = async id => {
     try {
-      await userGroupAdd({
+      const res = await userGroupAdd({
         id: id,
       });
+
       navigation.navigate(MyGroupListPageName);
     } catch (err) {
       Alert.alert('메세지', '등록 가능한 그룹의 개수를 초과했습니다.', [
         {
           text: '확인',
-          onPress: () => {},
+          onPress: () => {
+            navigation.goBack();
+          },
         },
       ]);
       console.log(err);

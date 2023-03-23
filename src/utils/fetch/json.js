@@ -136,6 +136,11 @@ async function json(url, method, options = {}) {
     await mSleep(diff);
   }
 
+  if (ret.error) {
+    const errors = new Error(ret.message);
+    errors.name = 'error';
+    throw errors;
+  }
   return ret;
 }
 
