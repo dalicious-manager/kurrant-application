@@ -42,7 +42,7 @@ const Pages = () => {
       <ScrollView>
         <TitleTextBox>
           <Title text="Title02SB" textColor={themeApp.colors.grey[2]}>
-            {isUserInfo.name}님, 잠시만요!{'\n'}멤버십을 해지하면 혜택이
+            {isUserInfo?.name}님, 잠시만요!{'\n'}멤버십을 해지하면 혜택이
           </Title>
         </TitleTextBox>
         <SubTitle>멤버십 혜택</SubTitle>

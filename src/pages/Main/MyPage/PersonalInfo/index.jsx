@@ -163,8 +163,8 @@ const Pages = ({route}) => {
     );
   };
 
-  const spotId = isUserInfo.spotId;
-  const groupId = isUserInfo.groupId;
+  const spotId = isUserInfo?.spotId;
+  const groupId = isUserInfo?.groupId;
   useFocusEffect(
     useCallback(() => {
       getData();
@@ -258,10 +258,10 @@ const Pages = ({route}) => {
             </SNSBox>
           </SNSContainer>
           <Line />
-          {isUserInfo.name === '이름없음' && (
+          {isUserInfo?.name === '이름없음' && (
             <ListBox
               title={'이름 설정'}
-              description={isUserInfo.name === '이름없음' && '설정하기'}
+              description={isUserInfo?.name === '이름없음' && '설정하기'}
               routeName={NameSettingPageName}
             />
           )}

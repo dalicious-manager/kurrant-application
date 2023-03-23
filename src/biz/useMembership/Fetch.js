@@ -8,7 +8,7 @@ export async function getMembershipProduct(option) {
   return fetchRes;
 }
 
-export async function membershipJoin(body, option) {
+export async function membershipJoinTest(body, option) {
   const fetchRes = await fetchJson(`/users/membership`, 'POST', {
     ...option,
     body: JSON.stringify(body),
@@ -16,7 +16,7 @@ export async function membershipJoin(body, option) {
 
   return fetchRes;
 }
-export async function membershipJoinNice(body, option) {
+export async function membershipJoin(body, option) {
   const fetchRes = await fetchJson(`/users/membership/nice`, 'POST', {
     ...option,
     body: JSON.stringify(body),
@@ -25,14 +25,14 @@ export async function membershipJoinNice(body, option) {
   return fetchRes;
 }
 
-export async function membershipTerminate(option) {
+export async function membershipTerminateTest(option) {
   const fetchRes = await fetchJson(`/users/membership/unsubscribing`, 'GET', {
     ...option,
   });
 
   return fetchRes;
 }
-export async function membershipTerminateNice(option) {
+export async function membershipTerminate(option) {
   const fetchRes = await fetchJson(
     `/users/membership/unsubscribing/nice`,
     'GET',

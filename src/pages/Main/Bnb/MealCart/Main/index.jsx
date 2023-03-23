@@ -85,7 +85,7 @@ const Pages = () => {
   const [show, setShow] = useState(false);
   const {isUserInfo} = useUserInfo();
   const {getCardList} = useUserMe();
-  const [selected, setSelected] = useState(isUserInfo.spotId);
+  const [selected, setSelected] = useState(isUserInfo?.spotId);
   const [name, setName] = useState();
   const [date, setDate] = useState();
   const [type, setType] = useState();
@@ -327,8 +327,7 @@ const Pages = () => {
     Math.round(discountPrice / 20) * 10;
 
   // 총 할인금액
-  const totalDiscountPrice =
-    membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
+  const totalDiscountPrice = totalMealPrice - discountPrice;
   const totals = lastArr?.map(v => {
     const totalDateMealPrice = v.cartDailyFoods
       ?.map(p => p.count * p.price)
@@ -625,7 +624,7 @@ const Pages = () => {
           <SpotName>
             {spotName[0]?.text === undefined
               ? '스팟 없음'
-              : isUserInfo.group + '\u00a0' + isUserInfo.spot}
+              : isUserInfo?.group + '\u00a0' + isUserInfo?.spot}
           </SpotName>
           <ArrowIcon />
         </SpotPress>
@@ -865,7 +864,7 @@ const Pages = () => {
               </PaymentView>
               <Border />
               {/* <UserPointView>
-                        <UserPointText>보유포인트 <UserHavePoint>{isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserHavePoint>(결제시 적용가능)</UserPointText>
+                        <UserPointText>보유포인트 <UserHavePoint>{isUserInfo?.point === 0 ? 0 : withCommas(isUserInfo?.point)}P</UserHavePoint>(결제시 적용가능)</UserPointText>
                     </UserPointView> */}
             </PaymentWrap>
           </View>

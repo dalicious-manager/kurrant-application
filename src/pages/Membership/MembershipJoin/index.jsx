@@ -112,7 +112,7 @@ const Pages = () => {
     <Wrapper>
       <ScrollView>
         <TitleContainer>
-          {/* <Title>{isUserInfo.name}님을 위한 특별한 혜택</Title> */}
+          {/* <Title>{isUserInfo?.name}님을 위한 특별한 혜택</Title> */}
           <Title>님을 위한 특별한 혜택</Title>
           <Description>지금 신청하면 다양한 혜택을 누릴 수 있어요!</Description>
           <TopLine />

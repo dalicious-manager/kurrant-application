@@ -126,7 +126,7 @@ const Pages = () => {
                 <Typography
                   text="Title02SB"
                   textColor={themeApp.colors.grey[2]}>
-                  {isUserInfo.name}님
+                  {isUserInfo?.name}님
                 </Typography>
               </LoginIdBox>
               <Pressable

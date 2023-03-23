@@ -401,7 +401,7 @@ const Pages = ({route}) => {
               <DeliveryTitle>주문자 정보</DeliveryTitle>
               <DeliveryText>
                 {isUserInfo?.name}
-                {isUserInfo.phone === null ? '' : `(${isUserInfo.phone})`}
+                {isUserInfo?.phone === null ? '' : `(${isUserInfo?.phone})`}
               </DeliveryText>
             </View>
           </Container>
@@ -534,7 +534,7 @@ const Pages = ({route}) => {
               원
             </PaymentText>
           </PaymentView>
-          <DiscountView>
+          {/* <DiscountView>
             <Bar />
             <DiscountTextWrap>
               <DiscountTextView>
@@ -565,7 +565,7 @@ const Pages = ({route}) => {
                 </DiscountText>
               </DiscountTextView>
             </DiscountTextWrap>
-          </DiscountView>
+          </DiscountView> */}
           <PaymentView>
             <PaymentText>배송비</PaymentText>
             <PaymentText>
@@ -582,7 +582,7 @@ const Pages = ({route}) => {
                                 <Text>- </Text>
                                 <PointInputWrap>
                                     <PointInput keyboardType="number-pad" ref={inputRef} 
-                                    defaultValue={isUserInfo.point === 0 ? '0' : withCommas(isUserInfo.point.toString())}
+                                    defaultValue={isUserInfo?.point === 0 ? '0' : withCommas(isUserInfo?.point.toString())}
                                     onChange={(text)=>setPoint(text)}
                                     />
                                     <XIcon onPress={clearInput}/>
@@ -592,7 +592,7 @@ const Pages = ({route}) => {
                         
                       </PaymentView> */}
           {/* <UserPointView>
-                            <UserPointText>잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserPointText>
+                            <UserPointText>잔여 {isUserInfo?.point === 0 ? 0 : withCommas(isUserInfo?.point)}P</UserPointText>
                       </UserPointView> */}
           <PaymentView>
             <TotalPriceTitle>총 결제금액</TotalPriceTitle>

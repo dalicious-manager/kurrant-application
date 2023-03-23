@@ -74,7 +74,7 @@ const Component = ({
                   <Text>[매장가]</Text>
                   <DscText>{withCommas(price)}원</DscText>
                 </ContentWrap>
-                {!isUserInfo.isMembership &&
+                {!isUserInfo?.isMembership &&
                   isfoodDetailDiscount.membershipDiscountRate !== 0 && (
                     <ContentWrap>
                       <Text>[멤버십 가입시 판매가]</Text>

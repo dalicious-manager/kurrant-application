@@ -268,7 +268,7 @@ const Pages = ({route}) => {
                       }>
                       {/* <CardText>결제 카드 등록</CardText> */}
                       <CardText>
-                        {card.cardCompany}카드(
+                        {card.cardCompany}(
                         {card.cardNumber?.toString().slice(-4)})
                       </CardText>
                       {/* <PayInfoWrap>
