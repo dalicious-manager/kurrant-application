@@ -36,6 +36,7 @@ import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipInt
 import {FoundersMembers} from '../../../../../assets';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
+import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -460,7 +461,8 @@ const Pages = () => {
             </CountWrap>
           </MembershipWrap>} */}
             {isUserInfo?.isMembership ? (
-              <MembershipWrap>
+              <MembershipWrap
+                onPress={() => navigation.navigate(MembershipInfoPageName)}>
                 <Membership>
                   <MembershipIcon />
                   <TitleText>멤버십</TitleText>
@@ -705,7 +707,7 @@ const MealCalendarTitle = styled.View`
   ${Display};
 `;
 
-const MembershipWrap = styled.View`
+const MembershipWrap = styled.Pressable`
   ${Display};
   width: 100%;
   border-radius: 14px;
