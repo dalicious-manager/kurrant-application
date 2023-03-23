@@ -22,8 +22,8 @@ import WrittenReview, {
 } from '../../../../../pages/Main/MyPage/WrittenReview';
 
 // '../../../pages/Main/MyPage/Review';
-// const onlyForMakers = true;
-const onlyForMakers = false;
+const onlyForMakers = true;
+// const onlyForMakers = false;
 
 const Component = ({
   id,
@@ -38,7 +38,7 @@ const Component = ({
   const navigation = useNavigation();
 
   const handleDelete = () => {
-    console.log('ㅗㅑㅗㅑㅗㅑㅑ ' + id);
+    console.log('id ' + id);
 
     Alert.alert(
       `리뷰 삭제`,
