@@ -48,6 +48,10 @@ const Component = ({photosArray, setPhotosArray}) => {
       const formdata = new FormData();
       formdata.append('file', res.assets[0].uri);
 
+      for (let value of formdata.values()) {
+        console.log(value);
+      }
+
       const fileSize = res.assets[0].fileSize;
       if (fileSize > 5000 * 1000) {
         Alert.alert('용량초과', '사진은 5MB이하 크리고 업로드해주세요', [
@@ -62,6 +66,7 @@ const Component = ({photosArray, setPhotosArray}) => {
       } else {
         setPhotosArray(
           [...photosArray, {id: Date.now(), uri: res.assets[0].uri}].reverse(),
+          // [...photosArray, {id: Date.now(), uri: res.assets[0]}].reverse(),
         );
       }
     });

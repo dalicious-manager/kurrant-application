@@ -101,14 +101,65 @@ const Screen = () => {
       content: 'This is Review.Lalala',
       forMakers: false,
     };
+
+    var myHeaders = new Headers();
+    myHeaders.append(
+      'Authorization',
+      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NjI0NzcsImV4cCI6MTY3OTU2OTY3N30.1MO8AOMHlOsTiAmMXuzhGUwCP7wSK0gJIfH_SysbdSw',
+    );
+
+    myHeaders.append('content-type', 'multipart/form-data');
+    myHeaders.append('Accept', 'application/json');
+    myHeaders.append('Connection', 'keep-alive');
+    myHeaders.append('Accept-Encoding', 'gzip, deflate, br');
+
+    let formdata = new FormData();
+
+    const json = JSON.stringify(sendData);
+
+    const blob = new Blob([sendData], {type: 'application/json'});
+    // console.log(blob);
+    // formData.append('reviewDto', blob);
+
+    formdata.append('reviewDto', blob);
+
+    /// formData 안에 값을 보고싶다면 아래 코드 사용하면 됨
+
+    // const field = formdata
+    //   .getParts()
+    //   .find(item => item.fieldName === 'reviewDto');
+    // if (field) {
+    //   const value = field.string;
+    //   console.log(value);
+    //   console.log(field);
+    // }
+
+    // formdata.append("reviewDto", "{\"orderItemId\":3552, \"satisfaction\":5, \"content\" : \"This is Review. LaLaLa\", \"forMakers\": false}");
+
+    // var requestOptions = {
+    //   method: 'POST',
+    //   headers: myHeaders,
+    //   // headers: {
+    //   //   Authorization:
+    //   //     'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NjI0NzcsImV4cCI6MTY3OTU2OTY3N30.1MO8AOMHlOsTiAmMXuzhGUwCP7wSK0gJIfH_SysbdSw',
+    //   //   'content-type': 'multipart/form-data',
+    //   // },
+    //   body: formdata,
+    //   redirect: 'follow',
+    // };
+
+    // fetch('http://3.35.197.186:8882/v1/users/me/reviews', {
+    //   method: 'POST',
+    //   headers: myHeaders,
+    //   body: formdata,
+    // })
+    //   .then(response => response.json())
+    //   .then(result => console.log(result))
+    //   .catch(error => console.log('error', error));
+
     // const formData = new FormData();
-    // const json = JSON.stringify(sendData);
 
     // // console.log(json);
-    // const blob = new Blob([json], {type: 'application/json'});
-    // // console.log(blob);
-    // formData.append('reviewDto', blob);
-    // formData.append('reviewDto2', json);
 
     // console.log(formData);
     // console.log(formData);
@@ -120,7 +171,7 @@ const Screen = () => {
 
     // RNFetchBlob.fetch(
     //   'POST',
-    //   'http://www.example.com/upload-form',
+    //   'http://3.35.197.186:8882/v1/users/me/reviews',
     //   {
     //     Authorization:
     //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NTEzNDAsImV4cCI6MTY3OTU1ODU0MH0.BDOD6_lCpIE8As78JmLPwulxvsw4YCkbtndv_11ABjQ',
@@ -132,7 +183,7 @@ const Screen = () => {
     //   console.log(resp);
     // });
 
-    const sendFormDataWithToken = (formData, token) => {
+    const sendFormDataWithToken = (formData, token, photosArray = []) => {
       const url = 'http://3.35.197.186:8882/v1/users/me/reviews';
 
       // Create the request headers
@@ -141,31 +192,54 @@ const Screen = () => {
         Authorization: `Bearer ${token}`,
       };
 
+      // create photos
+
+      console.log(photosArray);
+
+      const dataArray = photosArray.map((v, i) => {
+        console.log(v);
+        const yo = {
+          name: 'fileList',
+          filename: `sample_${i}`,
+          data: v.uri,
+        };
+        return yo;
+      });
+
       // Send the request
-      return RNFetchBlob.fetch(
-        'POST',
-        url,
-        headers,
+      return RNFetchBlob.fetch('POST', url, headers, [
+        // ...dataArray,
+        {
+          name: 'reviewDto',
+          data: JSON.stringify(sendData),
+          type: 'application/json',
+        },
 
-        [
-          {
-            name: 'reviewDto',
-            data: JSON.stringify(sendData),
-          },
-
-          // {
-          //   name: 'reviewDto',
-          //   data: RNFetchBlob.wrap(formData),
-          // },
-        ],
-      );
+        // {
+        //   name: 'reviewDto',
+        //   data: RNFetchBlob.wrap(formData),
+        // },
+      ]);
     };
+
+    const token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NjYxMzksImV4cCI6MTY3OTU3MzMzOX0.PdlJZ_XSPl1JsRsypRA6pOaCIyKH23ms1-HoBerXxOE';
+
+    sendFormDataWithToken(undefined, token, photosArray)
+      // sendFormDataWithToken(formData, token)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
 
     // const jsonBlob = new Blob([JSON.stringify(sendData)], {
     //   type: 'application/json',
     // });
 
-    const formData = new FormData();
+    // const formData = new FormData();
 
     // formData.append('reviewDto', jsonBlob);
     // formData.append('reviewDto', sendData);
@@ -176,18 +250,6 @@ const Screen = () => {
     //   name: 'avatar.jpg',
     //   type: 'image/jpeg',
     // });
-
-    const token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NTUyMzcsImV4cCI6MTY3OTU2MjQzN30.6QiiUy2fQxF-fM9rg_otVSmO9KPVvLcjdacGVCnNnVM';
-
-    sendFormDataWithToken(formData, token)
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
 
     console.log('input registered');
   };
@@ -239,6 +301,7 @@ const Screen = () => {
                             }}>
                             <XCircleIcon />
                           </DeleteButton>
+                          {/* <PhotoImage source={{uri: value.uri.uri}} /> */}
                           <PhotoImage source={{uri: value.uri}} />
                         </PhotoImageWrap>
                       );
