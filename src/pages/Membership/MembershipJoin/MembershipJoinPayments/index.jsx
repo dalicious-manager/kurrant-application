@@ -135,7 +135,7 @@ const Pages = ({route}) => {
           </MembershipText>
           <PriceSaleBox>
             <PriceTextSale textColor={themeApp.colors.green[500]}>
-              20%
+              {membershipTypeData?.periodDiscountPrice > 0 ? '50%' : '20%'}
             </PriceTextSale>
             <PriceText textColor={themeApp.colors.grey[4]}>
               {withCommas(membershipTypeData?.totalPrice)}
@@ -232,7 +232,8 @@ const Pages = ({route}) => {
                       : themeApp.colors.green[500]
                   }>
                   {withCommas(
-                    membershipTypeData?.yearDescriptionDiscountPrice,
+                    membershipTypeData?.yearDescriptionDiscountPrice +
+                      membershipTypeData?.periodDiscountPrice,
                   ) || 0}
                 </PaymentPriceText>{' '}
                 원
@@ -268,7 +269,7 @@ const Pages = ({route}) => {
                       }>
                       {/* <CardText>결제 카드 등록</CardText> */}
                       <CardText>
-                        {card.cardCompany}카드(
+                        {card.cardCompany}(
                         {card.cardNumber?.toString().slice(-4)})
                       </CardText>
                       {/* <PayInfoWrap>

@@ -34,7 +34,7 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/De
 import Toast from '../../../../../components/Toast';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
-import {FoundersMembers} from '../../../../../assets';
+import {BespinMembers, FoundersMembers} from '../../../../../assets';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
@@ -43,6 +43,7 @@ import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useMembership from '../../../../../biz/useMembership';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -68,13 +69,18 @@ const Pages = () => {
     todayOrderMeal,
     isOrderMealLoading,
   } = useOrderMeal();
+  const {
+    getMembershipHistory,
+    readableAtom: {membershipHistory},
+  } = useMembership();
   const {loadMeal} = useShoppingBasket();
   const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
+  const [eventSpot, setEventSpot] = useState(false);
+  const [eventSpotLoading, setEventSpotLoading] = useState(false);
   const toast = Toast();
-  //console.log(isUserGroupSpotCheck);
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
   const mealCheck = isOrderMeal?.map(el => {
@@ -116,7 +122,14 @@ const Pages = () => {
       await setStorage('balloonTime', JSON.stringify(expiryDate));
     }
   };
-
+  useEffect(() => {
+    const getHistory = async () => {
+      setEventSpotLoading(true);
+      await getMembershipHistory();
+      setEventSpotLoading(false);
+    };
+    getHistory();
+  }, [isUserInfo]);
   useFocusEffect(
     useCallback(() => {
       async function loadUser() {
@@ -127,7 +140,6 @@ const Pages = () => {
               userData?.spotId,
               formattedWeekDate(new Date()),
             );
-            console.log(daily, '12313da');
             if (daily) {
               if (!(userRole === 'ROLE_GUEST'))
                 await orderMeal(
@@ -202,6 +214,7 @@ const Pages = () => {
       } catch (e) {
         alert(e.toString().replace('error:'));
       }
+      console.log(membershipHistory.length);
     }, []),
   );
 
@@ -311,7 +324,7 @@ const Pages = () => {
       console.log(err);
     }
   };
-  if (isOrderMealLoading || isUserInfoLoading) {
+  if (isOrderMealLoading || isUserInfoLoading || eventSpotLoading) {
     return <SkeletonUI />;
   }
 
@@ -363,7 +376,6 @@ const Pages = () => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
                   {m.orderItemDtoList.map(meal => {
-                    console.log(meal);
                     return (
                       <MealInfoWrap
                         key={meal.id}
@@ -488,6 +500,16 @@ const Pages = () => {
                   )}
                 </View>
               </MembershipWrap>
+            ) : isUserInfo?.email.includes('@bespinglobal.com') &&
+              membershipHistory.length < 1 ? (
+              <MenbershipBanner
+                onPress={() =>
+                  navigation.navigate(MembershipIntro, {
+                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                  })
+                }>
+                <MembershipImages source={BespinMembers} resizeMode={'cover'} />
+              </MenbershipBanner>
             ) : isUserInfo?.leftFoundersNumber > 0 ? (
               <MenbershipBanner
                 onPress={() =>

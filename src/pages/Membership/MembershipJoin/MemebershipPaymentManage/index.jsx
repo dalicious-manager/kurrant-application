@@ -91,7 +91,7 @@ const Pages = () => {
               return (
                 <RegiteredView key={v.id} onPress={() => setNowCard([v])}>
                   <RegisteredBox
-                    cardName={`${v.cardCompany}카드`}
+                    cardName={`${v.cardCompany}`}
                     cardNumber={v.cardNumber}
                     isMembership={v.defaultType === 2 || v.defaultType === 3}
                     isDefault={false}
