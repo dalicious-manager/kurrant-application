@@ -185,7 +185,7 @@ const Pages = ({route}) => {
 
   // const todayMeal = mealInfo?.filter((m) => m.date === date);
   // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-  const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo.spotId;
+  const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
   // const spotId = 1;
   const [chk, setChk] = useState(0);
 
@@ -576,7 +576,7 @@ const Pages = ({route}) => {
         {
           dailyFoodId: id,
           count: 1,
-          spotId: userInfo.spotId,
+          spotId: userInf?.spotId,
         },
       ]);
       setShow(true);

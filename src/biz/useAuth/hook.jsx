@@ -11,6 +11,7 @@ import {
   isChangePasswordLoadingAtom,
   isFindEmailLoading,
   userRoleAtom,
+  fcmTokenAtom,
 } from './store';
 import {setStorage} from '../../utils/asyncStorage';
 import {isUserSpotStatusAtom} from '../useUserInfo/store';
@@ -40,6 +41,7 @@ const useAuth = () => {
     isChangePasswordLoadingAtom,
   );
   const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
+  const [fcmToken, setFcmToken] = useAtom(fcmTokenAtom);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
   const [userRole, setUserRole] = useAtom(userRoleAtom);
   const navigation = useNavigation();
@@ -428,6 +430,15 @@ const useAuth = () => {
     );
     return res;
   };
+  const saveFcmToken = async (body, option = {}) => {
+    const res = await Fetch.saveFcmToken(
+      {
+        ...body,
+      },
+      option,
+    );
+    return res;
+  };
   const nameSetting = async (body, option = {}) => {
     const res = await Fetch.nameSetting(
       {
@@ -461,10 +472,13 @@ const useAuth = () => {
     snsAppleLogin,
     terminateUser,
     logout,
+    saveFcmToken,
+    setFcmToken,
     readableAtom: {
       isPhoneAuthLoading,
       isEmailAuthLoading,
       userRole,
+      fcmToken,
       isConfirmPhoneLoading,
       isConfirmEmailLoading,
       isCheckedAuthLoading,

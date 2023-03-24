@@ -51,7 +51,8 @@ const Pages = () => {
   const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
     useUserInfo();
   const {
-    readableAtom: {userRole},
+    saveFcmToken,
+    readableAtom: {userRole, fcmToken},
   } = useAuth();
   const {
     userGroupSpotCheck,
@@ -143,6 +144,11 @@ const Pages = () => {
       }
       const isTester = async () => {
         const user = loadUser();
+        if (fcmToken) {
+          saveFcmToken({
+            token: fcmToken,
+          });
+        }
         if (!(userRole === 'ROLE_GUEST')) {
           const start = weekly.map(s => {
             const startData = formattedWeekDate(s[0]);
@@ -249,7 +255,7 @@ const Pages = () => {
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
-  console.log(isUserInfo, '유저인포');
+  // console.log(isUserInfo, '유저인포');
   // const date = formattedWeekDate(new Date());
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);

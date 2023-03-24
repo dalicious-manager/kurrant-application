@@ -37,6 +37,7 @@ import Config from 'react-native-config';
 import useUserMe from '../../../../biz/useUserMe';
 import {PAGE_NAME as FAQListPageName} from '../../MyPage/FAQ';
 import VersionCheck from 'react-native-version-check';
+import messaging from '@react-native-firebase/messaging';
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -78,7 +79,14 @@ const Pages = ({route}) => {
     setSelectDefaultCard,
     readableAtom: {selectDefaultCard},
   } = useUserMe();
-  const {login, autoLogin} = useAuth();
+
+  const {
+    login,
+    autoLogin,
+    setFcmToken,
+    saveFcmToken,
+    readableAtom: {fcmToken},
+  } = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
@@ -151,7 +159,13 @@ const Pages = ({route}) => {
           const getToken = JSON.parse(token);
           if (getToken?.accessToken) {
             const res = await autoLogin();
+
             if (res?.statusCode === 200) {
+              if (fcmToken) {
+                saveFcmToken({
+                  token: fcmToken,
+                });
+              }
               navigation.reset({
                 index: 0,
                 routes: [
@@ -195,12 +209,30 @@ const Pages = ({route}) => {
         }
       });
     };
-    // getData();
+    getData();
     setLoginLoading(true);
     isAutoLogin();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    async function requestUserPermission() {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+        if (Platform.OS === 'ios') {
+          // ios의 경우 필수가 아니라고도 하고 필수라고도 하고.. 그냥 넣어버렸다.
+          messaging().registerDeviceForRemoteMessages();
+        }
+        const token = await messaging().getToken();
+        if (token) setFcmToken(token);
+      }
+    }
+    requestUserPermission();
+  }, []);
   // if(isLoginLoading){
   //   return<ActivityIndicator size="large" />
   // }
