@@ -54,7 +54,7 @@ const Pages = ({route}) => {
     setSelectDefaultCard,
     readableAtom: {selectDefaultCard},
   } = useUserMe();
-  const {login} = useAuth();
+  const {login, autoLogin} = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
@@ -118,25 +118,25 @@ const Pages = ({route}) => {
   useEffect(() => {
     const isAutoLogin = async () => {
       const isLogin = await getStorage('isLogin');
-      const userCard = await getStorage('selectCard');
 
       if (isLogin !== 'false') {
         const token = await getStorage('token');
-        if (userCard) {
-          setSelectDefaultCard(userCard);
-        }
+
         setLoginLoading(false);
         if (token) {
           const getToken = JSON.parse(token);
           if (getToken?.accessToken) {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: SCREEN_NAME,
-                },
-              ],
-            });
+            const res = await autoLogin();
+            if (res?.statusCode === 200) {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              });
+            }
           }
         }
       } else {
@@ -225,7 +225,7 @@ const Pages = ({route}) => {
     </SafeView>
   );
 };
-const SafeView = styled.SafeAreaView`
+const SafeView = styled.View`
   flex: 1;
   background-color: white;
 `;
@@ -244,7 +244,7 @@ const LoginContainer = styled.View`
   justify-content: center;
   align-items: center;
   padding-bottom: 59px;
-  padding-top: 20%;
+  //padding-top: 20%;
 `;
 const LogoBox = styled.View`
   margin-bottom: 15px;
@@ -289,6 +289,7 @@ const Icons = styled.View`
   ${BarDisplay};
   //width: 68px;
 
+  margin-top: 12px;
   margin-right: -6px;
 `;
 const CsIconPress = styled.Pressable`

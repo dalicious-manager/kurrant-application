@@ -23,7 +23,7 @@ import Balloon from '../../../../../components/Balloon';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import CalendarButton from '../../../../../components/CalendarButton';
-import Calendar from '../../../../../components/Calendar';
+import BuyCalendar from '../../../../../components/BuyCalendar';
 import Label from '../../../../../components/Label';
 import Typography from '../../../../../components/Typography';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
@@ -140,20 +140,21 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     let price = null;
+    if (supportPrices) {
+      switch (sliderValue) {
+        case 0:
+          price = supportPrices['morningSupportPrice'];
+          break;
+        case 1:
+          price = supportPrices['lunchSupportPrice'];
+          break;
+        case 2:
+          price = supportPrices['dinnerSupportPrice'];
+          break;
+      }
 
-    switch (sliderValue) {
-      case 0:
-        price = supportPrices['morningSupportPrice'];
-        break;
-      case 1:
-        price = supportPrices['lunchSupportPrice'];
-        break;
-      case 2:
-        price = supportPrices['dinnerSupportPrice'];
-        break;
+      setSupportPrice(price);
     }
-
-    setSupportPrice(price);
   }, [sliderValue, supportPrices]);
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
@@ -786,7 +787,7 @@ const Pages = ({route}) => {
         <CalendarButton pager={pager} daily chk={chk} />
       </Animated.View>
       <CalendarWrap>
-        <Calendar
+        <BuyCalendar
           BooleanValue={false}
           type={'grey2'}
           color={'white'}

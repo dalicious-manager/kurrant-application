@@ -21,6 +21,7 @@ import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
@@ -36,6 +37,7 @@ import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipInt
 import {FoundersMembers} from '../../../../../assets';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
+import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -72,7 +74,7 @@ const Pages = () => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const toast = Toast();
-
+  //console.log(isUserGroupSpotCheck);
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
   const mealCheck = isOrderMeal?.map(el => {
@@ -142,6 +144,7 @@ const Pages = () => {
         }
       }
       const isTester = async () => {
+        const user = loadUser();
         if (!(userRole === 'ROLE_GUEST')) {
           const start = weekly.map(s => {
             const startData = formattedWeekDate(s[0]);
@@ -154,9 +157,12 @@ const Pages = () => {
           });
 
           const status = async () => {
-            const userStatus = await getStorage('token');
+            //const userStatus = await getStorage('token');
+            const userStatus = await getStorage('spotStatus');
+
             const result = await todayOrderMeal(start[0], end[0]);
-            const getUserStatus = Number(userStatus.spotStatus);
+            //const getUserStatus = JSON.parse(userStatus).spotStatus;
+            const getUserStatus = Number(userStatus);
             if (getUserStatus === 1) {
               navigation.navigate(GroupSelectPageName);
             }
@@ -167,7 +173,6 @@ const Pages = () => {
           };
           try {
             if (!(userRole === 'ROLE_GUEST')) {
-              const user = loadUser();
               if (user) {
                 const data = await status();
                 if (data.statusCode === 200) {
@@ -226,8 +231,6 @@ const Pages = () => {
       const res = await userSpotRegister({
         id: id,
       });
-
-      console.log(res.data, 'testst');
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
@@ -242,11 +245,13 @@ const Pages = () => {
       console.log(err);
     }
   };
+
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
+
   // const date = formattedWeekDate(new Date());
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
@@ -288,7 +293,7 @@ const Pages = () => {
         ],
       );
     }
-    if (userGroupName) {
+    if (isUserGroupSpotCheck.length !== 0) {
       setModalVisible(true);
     } else {
       navigation.navigate(CreateGroupPageName);
@@ -358,6 +363,7 @@ const Pages = () => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
                   {m.orderItemDtoList.map(meal => {
+                    console.log(meal);
                     return (
                       <MealInfoWrap
                         key={meal.id}
@@ -383,6 +389,9 @@ const Pages = () => {
                               </View>
                             </View>
                             <MealCount>
+                              <GreyTxt status={meal.orderStatus}>
+                                {formattedMealFoodStatus(meal.orderStatus)}
+                              </GreyTxt>
                               <GreyTxt>{meal.count}개</GreyTxt>
                             </MealCount>
                           </MealText>
@@ -414,15 +423,17 @@ const Pages = () => {
         </MainWrap>
         {/* 오늘의 식사 시간 지나면 나오는 View */}
         {/* <MealCheckWrap>
-            <MealCheckText>
-              메뉴 확인 후 수령하셨나요?
-            </MealCheckText>
-            <MealCheckButton>
-              <MealCheckButtonText>
-                네, 확인했어요
-              </MealCheckButtonText>
-            </MealCheckButton>
-          </MealCheckWrap> */}
+          <MealCheckText>메뉴 확인 후 수령하셨나요?</MealCheckText>
+          <MealCheckButton>
+            <MealCheckButtonText>네, 확인했어요</MealCheckButtonText>
+          </MealCheckButton>
+        </MealCheckWrap>
+        <MealCheckWrap>
+          <MealCheckText>식사 맛있게 하셨나요?</MealCheckText>
+          <MealCheckButton>
+            <MealCheckButtonText>맛 평가하기</MealCheckButtonText>
+          </MealCheckButton>
+        </MealCheckWrap> */}
 
         <Wrap>
           <MainWrap>
@@ -457,7 +468,8 @@ const Pages = () => {
             </CountWrap>
           </MembershipWrap>} */}
             {isUserInfo?.isMembership ? (
-              <MembershipWrap>
+              <MembershipWrap
+                onPress={() => navigation.navigate(MembershipInfoPageName)}>
                 <Membership>
                   <MembershipIcon />
                   <TitleText>멤버십</TitleText>
@@ -676,6 +688,8 @@ const MealText = styled.View`
 
 const MealCount = styled.View`
   align-self: flex-end;
+  justify-content: flex-end;
+  align-items: flex-end;
 `;
 
 const MealCalendar = styled.View`
@@ -702,7 +716,7 @@ const MealCalendarTitle = styled.View`
   ${Display};
 `;
 
-const MembershipWrap = styled.View`
+const MembershipWrap = styled.Pressable`
   ${Display};
   width: 100%;
   border-radius: 14px;
@@ -798,7 +812,8 @@ const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
 `;
 
 const GreyTxt = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${props => props.theme.colors.grey[5]};
+  color: ${({theme, status}) =>
+    status === 8 ? theme.colors.blue[500] : theme.colors.grey[5]};
 `;
 
 const PointText = styled(Typography).attrs({text: 'Body05SB'})`
