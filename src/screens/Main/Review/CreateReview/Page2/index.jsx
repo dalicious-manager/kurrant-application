@@ -15,16 +15,22 @@ import {starRatingAtom} from './store';
 import {useRoute} from '@react-navigation/native';
 import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/Fetch';
 import RNFetchBlob from 'rn-fetch-blob';
-import {ReactNativeBlobUtil} from 'rn-fetch-blob';
+
+import Config from 'react-native-config';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
 
-const Screen = () => {
+const apiHostUrl =
+  Config.NODE_ENV === 'dev'
+    ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.API_HOST_URL + '/' + Config.API_VERSION;
+
+const Screen = ({route}) => {
   const [photosArray, setPhotosArray] = useState([]);
   const [starRating, setStarRating] = useAtom(starRatingAtom);
 
-  const route = useRoute();
+  const orderItemId = route?.params?.orderItemId;
 
   useEffect(() => {
     if (route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2') {
@@ -69,48 +75,25 @@ const Screen = () => {
   }, [input]);
 
   const onSignInPressed = data => {
-    // 여기에서 작성이냐, 수정이냐 나눠야 된다
-    // 라우터 이름으로 판단하면 된다  console.log(route.name);
-
-    // 서버에 보내는 데이터 구조
-    // rating : starRating | number
-    // photos : photosArray | ([{id: number, uri: '이미지uri'}])
-    // review : data.review | string
-    // isExclusive : input.isExclusive |  boolean
-
-    // console.log({
-    //   rating: starRating,
-    //   photos: photosArray,
-    //   review: data.review,
-    //   isExclusive: input.isExclusive,
-    // });
-
-    /////////////
-    // 방법 1  포스트맨 그대로 베끼기
-
-    // blob으로 보낼떄
-
     const sendData = {
-      orderItemId: 3928,
-      satisfaction: 5,
-      content: 'This is Review.Lalala',
-      forMakers: false,
+      orderItemId: orderItemId,
+      satisfaction: starRating,
+      content: data.review,
+      forMakers: input.isExclusive,
     };
 
     /// formData 안에 값을 보고싶다면 아래 코드 사용하면 됨
 
+    // const storage = await getStorage('token');
+
     const sendFormDataWithToken = (token, photosArray = []) => {
-      const url = 'http://3.35.197.186:8882/v1/users/me/reviews';
+      const url = `${apiHostUrl}/users/me/reviews`;
 
       // Create the request headers
       const headers = {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       };
-
-      console.log(photosArray);
-
-      // create photos
 
       // Send the request
       return RNFetchBlob.fetch('POST', url, headers, [
@@ -127,14 +110,11 @@ const Screen = () => {
       const yo = {
         name: 'fileList',
         filename: v.fileName,
-        // data: RNFetchBlob.wrap(v.uri),
         data: RNFetchBlob.wrap(v.uri.slice(8)),
         type: 'image/jpeg',
       };
       return yo;
     });
-
-    // console.log(dataArray);
 
     const token =
       'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk2MjAxMDgsImV4cCI6MTY3OTYyNzMwOH0.jUucgHC6h-LXvPUmDad-I7MzXH_QVNjFZe6Cz6_OVrA';
