@@ -15,6 +15,7 @@ import {starRatingAtom} from './store';
 import {useRoute} from '@react-navigation/native';
 import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/Fetch';
 import RNFetchBlob from 'rn-fetch-blob';
+import {ReactNativeBlobUtil} from 'rn-fetch-blob';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -77,18 +78,12 @@ const Screen = () => {
     // review : data.review | string
     // isExclusive : input.isExclusive |  boolean
 
-    console.log({
-      rating: starRating,
-      photos: photosArray,
-      review: data.review,
-      isExclusive: input.isExclusive,
-    });
-
-    // var myHeaders = new Headers();
-    // myHeaders.append(
-    //   'Authorization',
-    //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk0Nzc4OTgsImV4cCI6MTY3OTQ4NTA5OH0.0439hhXri-CymVhMvcQNSkgcqYsSmHOOgthp8ss3hDU',
-    // );
+    // console.log({
+    //   rating: starRating,
+    //   photos: photosArray,
+    //   review: data.review,
+    //   isExclusive: input.isExclusive,
+    // });
 
     /////////////
     // 방법 1  포스트맨 그대로 베끼기
@@ -96,94 +91,15 @@ const Screen = () => {
     // blob으로 보낼떄
 
     const sendData = {
-      orderItemId: 3552,
+      orderItemId: 3928,
       satisfaction: 5,
       content: 'This is Review.Lalala',
       forMakers: false,
     };
 
-    var myHeaders = new Headers();
-    myHeaders.append(
-      'Authorization',
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NjI0NzcsImV4cCI6MTY3OTU2OTY3N30.1MO8AOMHlOsTiAmMXuzhGUwCP7wSK0gJIfH_SysbdSw',
-    );
-
-    myHeaders.append('content-type', 'multipart/form-data');
-    myHeaders.append('Accept', 'application/json');
-    myHeaders.append('Connection', 'keep-alive');
-    myHeaders.append('Accept-Encoding', 'gzip, deflate, br');
-
-    let formdata = new FormData();
-
-    const json = JSON.stringify(sendData);
-
-    const blob = new Blob([sendData], {type: 'application/json'});
-    // console.log(blob);
-    // formData.append('reviewDto', blob);
-
-    formdata.append('reviewDto', blob);
-
     /// formData 안에 값을 보고싶다면 아래 코드 사용하면 됨
 
-    // const field = formdata
-    //   .getParts()
-    //   .find(item => item.fieldName === 'reviewDto');
-    // if (field) {
-    //   const value = field.string;
-    //   console.log(value);
-    //   console.log(field);
-    // }
-
-    // formdata.append("reviewDto", "{\"orderItemId\":3552, \"satisfaction\":5, \"content\" : \"This is Review. LaLaLa\", \"forMakers\": false}");
-
-    // var requestOptions = {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   // headers: {
-    //   //   Authorization:
-    //   //     'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NjI0NzcsImV4cCI6MTY3OTU2OTY3N30.1MO8AOMHlOsTiAmMXuzhGUwCP7wSK0gJIfH_SysbdSw',
-    //   //   'content-type': 'multipart/form-data',
-    //   // },
-    //   body: formdata,
-    //   redirect: 'follow',
-    // };
-
-    // fetch('http://3.35.197.186:8882/v1/users/me/reviews', {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   body: formdata,
-    // })
-    //   .then(response => response.json())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
-
-    // const formData = new FormData();
-
-    // // console.log(json);
-
-    // console.log(formData);
-    // console.log(formData);
-    // console.log(formData.has('reviewDto'));
-
-    ////////////////////////////////////////
-    /////////////////////////////////////////////////////
-    // 라이브러리 써보기 rnFetchBlob
-
-    // RNFetchBlob.fetch(
-    //   'POST',
-    //   'http://3.35.197.186:8882/v1/users/me/reviews',
-    //   {
-    //     Authorization:
-    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NTEzNDAsImV4cCI6MTY3OTU1ODU0MH0.BDOD6_lCpIE8As78JmLPwulxvsw4YCkbtndv_11ABjQ',
-
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    //   [{name: 'reviewDto', data: json}],
-    // ).then(resp => {
-    //   console.log(resp);
-    // });
-
-    const sendFormDataWithToken = (formData, token, photosArray = []) => {
+    const sendFormDataWithToken = (token, photosArray = []) => {
       const url = 'http://3.35.197.186:8882/v1/users/me/reviews';
 
       // Create the request headers
@@ -192,41 +108,38 @@ const Screen = () => {
         Authorization: `Bearer ${token}`,
       };
 
-      // create photos
-
       console.log(photosArray);
 
-      const dataArray = photosArray.map((v, i) => {
-        console.log(v);
-        const yo = {
-          name: 'fileList',
-          filename: `sample_${i}`,
-          data: v.uri,
-        };
-        return yo;
-      });
+      // create photos
 
       // Send the request
       return RNFetchBlob.fetch('POST', url, headers, [
-        // ...dataArray,
+        ...photosArray,
         {
           name: 'reviewDto',
           data: JSON.stringify(sendData),
           type: 'application/json',
         },
-
-        // {
-        //   name: 'reviewDto',
-        //   data: RNFetchBlob.wrap(formData),
-        // },
       ]);
     };
 
-    const token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1NjYxMzksImV4cCI6MTY3OTU3MzMzOX0.PdlJZ_XSPl1JsRsypRA6pOaCIyKH23ms1-HoBerXxOE';
+    const dataArray = photosArray.map((v, i) => {
+      const yo = {
+        name: 'fileList',
+        filename: v.fileName,
+        // data: RNFetchBlob.wrap(v.uri),
+        data: RNFetchBlob.wrap(v.uri.slice(8)),
+        type: 'image/jpeg',
+      };
+      return yo;
+    });
 
-    sendFormDataWithToken(undefined, token, photosArray)
-      // sendFormDataWithToken(formData, token)
+    // console.log(dataArray);
+
+    const token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk2MjAxMDgsImV4cCI6MTY3OTYyNzMwOH0.jUucgHC6h-LXvPUmDad-I7MzXH_QVNjFZe6Cz6_OVrA';
+
+    sendFormDataWithToken(token, dataArray)
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);
@@ -234,22 +147,6 @@ const Screen = () => {
       .catch(error => {
         console.error('Error:', error);
       });
-
-    // const jsonBlob = new Blob([JSON.stringify(sendData)], {
-    //   type: 'application/json',
-    // });
-
-    // const formData = new FormData();
-
-    // formData.append('reviewDto', jsonBlob);
-    // formData.append('reviewDto', sendData);
-    // formData.append('reviewDto', JSON.stringify(sendData));
-
-    // formData.append('avatar', {
-    //   uri: 'file:///path/to/avatar.jpg',
-    //   name: 'avatar.jpg',
-    //   type: 'image/jpeg',
-    // });
 
     console.log('input registered');
   };
