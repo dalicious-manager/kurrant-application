@@ -32,9 +32,16 @@ const apiHostUrl =
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 const Screen = ({route}) => {
-  const [photosArray, setPhotosArray] = useState([]);
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
+
+  // 모든 사진
+  const [photosArray, setPhotosArray] = useState([]);
+  // 웹에서 받아오는 사진 따로
+  const [photosFromServer, setPhotosFromServer] = useState([]);
+  // 사진첩에서 등록할 사진 따로
+  const [photosFromLocal, setPhotosFromLocal] = useState([]);
+
   const {getWrittenReview} = useWrittenReview();
   const id = route?.params?.id;
   const status = route?.params?.status;
@@ -105,11 +112,6 @@ const Screen = ({route}) => {
       forMakers: input.isExclusive,
     };
 
-    const sendEditData = {
-      satisfaction: starRating,
-      content: data.review,
-    };
-
     /// formData 안에 값을 보고싶다면 아래 코드 사용하면 됨
 
     const createReview = async (photosArray = []) => {
@@ -136,13 +138,39 @@ const Screen = ({route}) => {
 
       const token = await getToken();
 
+      // photosArray에서 웹에있는 데이터, 로컬인 데이터 배열 둘로 나눠야됨
+
+      let webArray = [];
+      let localArray = [];
+
+      photosArray.forEach((v, i) => {
+        // 웹에서온 데이터랑, 로컬에서부터의 데이터랑 서로 나누기
+
+        if (v.uri.slice(0, 8) === 'file:///') {
+          localArray.push({
+            name: 'fileList',
+            filename: v.fileName,
+            data: RNFetchBlob.wrap(v.uri.slice(8)),
+            type: 'image/jpeg',
+          });
+        } else {
+          webArray.push(v.uri);
+        }
+      });
+
+      const sendEditData = {
+        satisfaction: starRating,
+        content: data.review,
+        images: webArray,
+      };
+
       const headers = {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       };
 
-      return RNFetchBlob.fetch('POST', url, headers, [
-        ...photosArray,
+      return RNFetchBlob.fetch('PATCH', url, headers, [
+        ...localArray,
         {
           name: 'updateReqDto',
           data: JSON.stringify(sendEditData),
@@ -158,30 +186,6 @@ const Screen = ({route}) => {
         data: RNFetchBlob.wrap(v.uri.slice(8)),
         type: 'image/jpeg',
       };
-    });
-
-    const editPhotoDataArray = photosArray.map((v, i) => {
-      // 웹이서 가져온 경우와 폴더에서 선택하는 경우 나누기
-
-      console.log(v.uri);
-
-      if (v.uri.slice(0, 8) === 'file:///') {
-        return {
-          name: 'fileList',
-          filename: v.fileName,
-          data: RNFetchBlob.wrap(v.uri.slice(8)),
-          type: 'image/jpeg',
-        };
-      } else {
-        // 서버에서 받아온 이미지 uri는 여기로 올리면 안될텐데....
-        return {
-          name: 'fileList',
-          filename: v.fileName,
-          data: RNFetchBlob.wrap(v.uri),
-
-          type: 'image/jpeg',
-        };
-      }
     });
 
     if (status === 'create') {
@@ -217,7 +221,7 @@ const Screen = ({route}) => {
     } else if (status === 'edit') {
       console.log('edit 이여');
 
-      editReview(id, editPhotoDataArray)
+      editReview(id, photosArray)
         .then(response => response.json())
         .then(data => {
           console.log('Success:', data);
