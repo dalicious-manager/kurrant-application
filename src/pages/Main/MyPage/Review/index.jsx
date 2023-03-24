@@ -98,6 +98,7 @@ const Pages = () => {
                         return (
                           <Card
                             key={index2}
+                            orderItemId={value2.orderItemId}
                             serviceDate={item.serviceDate}
                             foodName={value2.foodName}
                             option={value2.option}

@@ -1,5 +1,5 @@
 import {useAtom} from 'jotai';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 
 import styled from 'styled-components';
@@ -13,34 +13,42 @@ import UploadPhoto from '../../../../../components/UploadPhoto';
 import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
 import {useRoute} from '@react-navigation/native';
+import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/Fetch';
+import RNFetchBlob from 'rn-fetch-blob';
+
+import Config from 'react-native-config';
+import {getStorage} from '../../../../../utils/asyncStorage';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
 
-const Screen = () => {
+const apiHostUrl =
+  Config.NODE_ENV === 'dev'
+    ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.API_HOST_URL + '/' + Config.API_VERSION;
+
+const Screen = ({route}) => {
   const [photosArray, setPhotosArray] = useState([]);
   const [starRating, setStarRating] = useAtom(starRatingAtom);
+  const [clickAvaliable, setClickAvaliable] = useState(false);
 
-  const route = useRoute();
+  const orderItemId = route?.params?.orderItemId;
 
-  useEffect(() => {
-    if (route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2') {
-      // 리뷰 수정 페이지로 들어오면
-      // 1. 서버에서 데이터를 받아온다
-      // 2. 데이터들을 업ㅔㅣ트시킨다
-      // 1. setStarRating
-      // 2. 포토 받기
-      // 3. input.review
-      // 4. input.isExclusive
+  const getToken = useCallback(async () => {
+    const token = await getStorage('token');
+
+    let yo;
+    if (token) {
+      yo = JSON.parse(token);
     }
+
+    return yo?.accessToken;
   }, []);
 
   const [input, setInput] = useState({
     review: '',
     isExclusive: false,
   });
-
-  const [clickAvaliable, setClickAvaliable] = useState(false);
 
   const form = useForm({
     mode: 'all',
@@ -66,34 +74,57 @@ const Screen = () => {
   }, [input]);
 
   const onSignInPressed = data => {
-    // 여기에서 작성이냐, 수정이냐 나눠야 된다
-    // 라우터 이름으로 판단하면 된다  console.log(route.name);
+    const sendData = {
+      orderItemId: orderItemId,
+      satisfaction: starRating,
+      content: data.review,
+      forMakers: input.isExclusive,
+    };
 
-    // 서버에 보내는 데이터 구조
-    // rating : starRating | number
-    // photos : photosArray | ([{id: number, uri: '이미지uri'}])
-    // review : data.review | string
-    // isExclusive : input.isExclusive |  boolean
+    /// formData 안에 값을 보고싶다면 아래 코드 사용하면 됨
 
-    console.log({
-      rating: starRating,
-      photos: photosArray,
-      review: data.review,
-      isExclusive: input.isExclusive,
+    const sendFormDataWithToken = async (photosArray = []) => {
+      const url = `${apiHostUrl}/users/me/reviews`;
+
+      const token = await getToken();
+
+      // Create the request headers
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      };
+
+      console.log(sendData);
+
+      // Send the request
+      return RNFetchBlob.fetch('POST', url, headers, [
+        ...photosArray,
+        {
+          name: 'reviewDto',
+          data: JSON.stringify(sendData),
+          type: 'application/json',
+        },
+      ]);
+    };
+
+    const dataArray = photosArray.map((v, i) => {
+      const yo = {
+        name: 'fileList',
+        filename: v.fileName,
+        data: RNFetchBlob.wrap(v.uri.slice(8)),
+        type: 'image/jpeg',
+      };
+      return yo;
     });
 
-    const formData = new FormData();
-
-    formData.append(
-      'reviewDto',
-
-      {
-        orderItemId: 95,
-        satisfaction: 5,
-        content: 'This is Review. LaLaLa',
-        forMakers: false,
-      },
-    );
+    sendFormDataWithToken(dataArray)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
 
     console.log('input registered');
   };
@@ -145,6 +176,7 @@ const Screen = () => {
                             }}>
                             <XCircleIcon />
                           </DeleteButton>
+                          {/* <PhotoImage source={{uri: value.uri.uri}} /> */}
                           <PhotoImage source={{uri: value.uri}} />
                         </PhotoImageWrap>
                       );

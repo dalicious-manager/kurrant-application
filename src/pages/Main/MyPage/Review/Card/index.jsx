@@ -26,6 +26,7 @@ import {
  */
 
 const Component = ({
+  orderItemId,
   serviceDate,
   makersName,
   foodName,
@@ -85,7 +86,9 @@ const Component = ({
             ) && (
               <ReviewFormWriteButton
                 onPress={() => {
-                  navigation.navigate(CreateReviewScreenName);
+                  navigation.navigate(CreateReviewScreenName, {
+                    orderItemId: orderItemId,
+                  });
                 }}>
                 <TextText>리뷰작성</TextText>
               </ReviewFormWriteButton>

@@ -61,7 +61,15 @@ const Component = ({photosArray, setPhotosArray}) => {
         ]);
       } else {
         setPhotosArray(
-          [...photosArray, {id: Date.now(), uri: res.assets[0].uri}].reverse(),
+          [
+            ...photosArray,
+            {
+              id: Date.now(),
+              uri: res.assets[0].uri,
+              fileName: res.assets[0].fileName,
+            },
+          ].reverse(),
+          // [...photosArray, {id: Date.now(), uri: res.assets[0]}].reverse(),
         );
       }
     });

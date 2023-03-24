@@ -12,8 +12,10 @@ import {starRatingAtom} from '../Page2/store';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_1';
 
-const Screens = () => {
+const Screens = ({route}) => {
   const navigation = useNavigation();
+
+  const orderItemId = route.params.orderItemId;
 
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [disable, setDisable] = useState(false);
@@ -39,7 +41,9 @@ const Screens = () => {
             setDisable(true);
             await mSleep(300);
 
-            navigation.navigate(CreateReviewPage2ScreenName);
+            navigation.navigate(CreateReviewPage2ScreenName, {
+              orderItemId: orderItemId,
+            });
             setDisable(false);
           }}
         />
