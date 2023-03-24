@@ -18,6 +18,10 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 import Config from 'react-native-config';
 import {getStorage} from '../../../../../utils/asyncStorage';
+import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+
+import Review, {SCREEN_NAME as ReviewScreenName} from '../../../Review';
+import {Alert} from 'react-native';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -31,7 +35,7 @@ const Screen = ({route}) => {
   const [photosArray, setPhotosArray] = useState([]);
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
-
+  const {getWrittenReview} = useWrittenReview();
   const orderItemId = route?.params?.orderItemId;
 
   const getToken = useCallback(async () => {
@@ -121,6 +125,28 @@ const Screen = ({route}) => {
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);
+
+        if (data.statusCode === 200) {
+          Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
+            {
+              text: '확인',
+              onPress: async () => {
+                getWrittenReview();
+                navigation.reset({routes: [{name: ReviewScreenName}]});
+              },
+              style: 'cancel',
+            },
+          ]);
+          console.log('작성한 리뷰 다시 불러오기');
+        } else if (data.statusCode === 400) {
+          Alert.alert('작성 실패', data.message, [
+            {
+              text: '확인',
+              onPress: async () => {},
+              style: 'cancel',
+            },
+          ]);
+        }
       })
       .catch(error => {
         console.error('Error:', error);

@@ -1768,7 +1768,10 @@ const Screen = () => {
                       {
                         text: `작성종료`,
                         onPress: () => {
-                          navigation.navigate(ReviewScreenName);
+                          // navigation.navigate(ReviewScreenName);
+                          navigation.reset({
+                            routes: [{name: ReviewScreenName}],
+                          });
                           return;
                         },
 

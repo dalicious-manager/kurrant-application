@@ -101,7 +101,7 @@ const Component = ({
         <EditWrap>
           <Pressable
             onPress={() => {
-              navigation.navigate(EditReviewPage2ScreenName);
+              navigation.navigate(EditReviewPage2ScreenName, {});
             }}>
             <EditText>수정</EditText>
           </Pressable>
@@ -136,8 +136,6 @@ const Component = ({
           <ImagesWrap>
             {imageLocationToSix.map((v, i) => {
               if (v) {
-                console.log(v);
-
                 return (
                   <ImageWrap>
                     <MealImage
