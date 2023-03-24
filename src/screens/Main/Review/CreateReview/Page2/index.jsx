@@ -1,5 +1,5 @@
 import {useAtom} from 'jotai';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 
 import styled from 'styled-components';
@@ -17,6 +17,7 @@ import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/
 import RNFetchBlob from 'rn-fetch-blob';
 
 import Config from 'react-native-config';
+import {getStorage} from '../../../../../utils/asyncStorage';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -29,27 +30,25 @@ const apiHostUrl =
 const Screen = ({route}) => {
   const [photosArray, setPhotosArray] = useState([]);
   const [starRating, setStarRating] = useAtom(starRatingAtom);
+  const [clickAvaliable, setClickAvaliable] = useState(false);
 
   const orderItemId = route?.params?.orderItemId;
 
-  useEffect(() => {
-    if (route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2') {
-      // 리뷰 수정 페이지로 들어오면
-      // 1. 서버에서 데이터를 받아온다
-      // 2. 데이터들을 업ㅔㅣ트시킨다
-      // 1. setStarRating
-      // 2. 포토 받기
-      // 3. input.review
-      // 4. input.isExclusive
+  const getToken = useCallback(async () => {
+    const token = await getStorage('token');
+
+    let yo;
+    if (token) {
+      yo = JSON.parse(token);
     }
+
+    return yo?.accessToken;
   }, []);
 
   const [input, setInput] = useState({
     review: '',
     isExclusive: false,
   });
-
-  const [clickAvaliable, setClickAvaliable] = useState(false);
 
   const form = useForm({
     mode: 'all',
@@ -84,16 +83,18 @@ const Screen = ({route}) => {
 
     /// formData 안에 값을 보고싶다면 아래 코드 사용하면 됨
 
-    // const storage = await getStorage('token');
-
-    const sendFormDataWithToken = (token, photosArray = []) => {
+    const sendFormDataWithToken = async (photosArray = []) => {
       const url = `${apiHostUrl}/users/me/reviews`;
+
+      const token = await getToken();
 
       // Create the request headers
       const headers = {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       };
+
+      console.log(sendData);
 
       // Send the request
       return RNFetchBlob.fetch('POST', url, headers, [
@@ -116,10 +117,7 @@ const Screen = ({route}) => {
       return yo;
     });
 
-    const token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk2MjAxMDgsImV4cCI6MTY3OTYyNzMwOH0.jUucgHC6h-LXvPUmDad-I7MzXH_QVNjFZe6Cz6_OVrA';
-
-    sendFormDataWithToken(token, dataArray)
+    sendFormDataWithToken(dataArray)
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);
