@@ -422,7 +422,7 @@ const Pages = () => {
           </MealInfoWrap>  */}
         </MainWrap>
         {/* 오늘의 식사 시간 지나면 나오는 View */}
-        <MealCheckWrap>
+        {/* <MealCheckWrap>
           <MealCheckText>메뉴 확인 후 수령하셨나요?</MealCheckText>
           <MealCheckButton>
             <MealCheckButtonText>네, 확인했어요</MealCheckButtonText>
@@ -433,7 +433,7 @@ const Pages = () => {
           <MealCheckButton>
             <MealCheckButtonText>맛 평가하기</MealCheckButtonText>
           </MealCheckButton>
-        </MealCheckWrap>
+        </MealCheckWrap> */}
 
         <Wrap>
           <MainWrap>
