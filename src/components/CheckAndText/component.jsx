@@ -22,9 +22,9 @@ const Component = ({
       <CheckBox
         checked={input[inputCheck]}
         onPress={() => {
-          const yo = {...input};
-          yo[inputCheck] = !input[inputCheck];
-          setInput(yo);
+          const checkboxStatus = {...input};
+          checkboxStatus[inputCheck] = !input[inputCheck];
+          setInput(checkboxStatus);
         }}>
         <CheckIcon
           style={{width: 15, height: 10}}

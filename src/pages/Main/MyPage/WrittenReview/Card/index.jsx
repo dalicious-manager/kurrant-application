@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Alert, Dimensions} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
@@ -20,6 +20,7 @@ import Review, {
 import WrittenReview, {
   PAGE_NAME as WrittenReviewPageName,
 } from '../../../../../pages/Main/MyPage/WrittenReview';
+import {getStorage} from '../../../../../utils/asyncStorage';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -37,8 +38,19 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
 
-  const handleDelete = () => {
-    console.log('id ' + id);
+  const getToken = useCallback(async () => {
+    const token = await getStorage('token');
+
+    let tokenBox;
+    if (token) {
+      tokenBox = JSON.parse(token);
+    }
+
+    return tokenBox?.accessToken;
+  }, []);
+
+  const handleDelete = async () => {
+    const token = await getToken();
 
     Alert.alert(
       `리뷰 삭제`,
@@ -54,7 +66,7 @@ const Component = ({
         {
           text: `삭제`,
           onPress: async () => {
-            await deleteReview(id);
+            await deleteReview(id, token);
 
             navigation.navigate(WrittenReviewPageName);
             return;

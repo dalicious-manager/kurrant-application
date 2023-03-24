@@ -37,12 +37,12 @@ const Screen = ({route}) => {
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
 
-    let yo;
+    let tokenBox;
     if (token) {
-      yo = JSON.parse(token);
+      tokenBox = JSON.parse(token);
     }
 
-    return yo?.accessToken;
+    return tokenBox?.accessToken;
   }, []);
 
   const [input, setInput] = useState({
@@ -176,11 +176,10 @@ const Screen = ({route}) => {
                             }}>
                             <XCircleIcon />
                           </DeleteButton>
-                          {/* <PhotoImage source={{uri: value.uri.uri}} /> */}
+
                           <PhotoImage source={{uri: value.uri}} />
                         </PhotoImageWrap>
                       );
-                      // return <PhotoImage key={index} source={{uri: value}} />;
                     })}
                 </PhotosView>
               </PhotosScrollViewWrap>

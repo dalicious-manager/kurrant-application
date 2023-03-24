@@ -1,7 +1,13 @@
+import Config from 'react-native-config';
 import {DefaultProfile} from '../../../assets';
 import mSleep from '../../../helpers/mSleep';
 
 import {fetchJson} from '../../../utils/fetch';
+
+const apiHostUrl =
+  Config.NODE_ENV === 'dev'
+    ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 export async function getReviewOrderMeal() {
   const fetchRes = await fetchJson(
@@ -13,14 +19,24 @@ export async function getReviewOrderMeal() {
   return fetchRes;
 }
 
-export async function deleteReview(id) {
-  // const fetchRes = await
+export async function deleteReview(id, token) {
+  const url = `${apiHostUrl}/users/me/reviews/delete?id=${id}`;
 
-  const fetchRes = await fetchJson(
-    `/users/me/reviews/delete?id=${id}`,
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
 
-    'PATCH',
-  );
+  var requestOptions = {
+    method: 'PATCH',
+    headers: headers,
+  };
+
+  fetch(url, requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+
+  const fetchRes = fetch();
   return fetchRes;
 }
 
