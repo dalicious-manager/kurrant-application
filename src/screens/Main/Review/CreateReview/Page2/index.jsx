@@ -39,17 +39,11 @@ const Screen = ({route}) => {
   const id = route?.params?.id;
   const status = route?.params?.status;
   const editItem = route?.params?.editItem;
-  // console.log(route.params);
-  // console.log(editItem);
 
   // editItem 있으면 등록하기
 
   useEffect(() => {
     if (editItem) {
-      // console.log(editItem);
-      // console.log(editItem.image);
-      // console.log([...editItem.image].length);
-
       const yo = editItem.image.map(v => {
         // 이름 추출하기
         let fileName = v.split('/').pop();
@@ -59,8 +53,6 @@ const Screen = ({route}) => {
           fileName: fileName,
         };
       });
-
-      console.log(yo);
 
       setPhotosArray(yo);
     }
@@ -168,6 +160,30 @@ const Screen = ({route}) => {
       };
     });
 
+    const editPhotoDataArray = photosArray.map((v, i) => {
+      // 웹이서 가져온 경우와 폴더에서 선택하는 경우 나누기
+
+      console.log(v.uri);
+
+      if (v.uri.slice(0, 8) === 'file:///') {
+        return {
+          name: 'fileList',
+          filename: v.fileName,
+          data: RNFetchBlob.wrap(v.uri.slice(8)),
+          type: 'image/jpeg',
+        };
+      } else {
+        // 서버에서 받아온 이미지 uri는 여기로 올리면 안될텐데....
+        return {
+          name: 'fileList',
+          filename: v.fileName,
+          data: RNFetchBlob.wrap(v.uri),
+
+          type: 'image/jpeg',
+        };
+      }
+    });
+
     if (status === 'create') {
       createReview(photoDataArray)
         .then(response => response.json())
@@ -199,37 +215,37 @@ const Screen = ({route}) => {
           console.error('Error:', error);
         });
     } else if (status === 'edit') {
-      console.log(photoDataArray);
+      console.log('edit 이여');
 
-      // editReview(id, photoDataArray)
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log('Success:', data);
+      editReview(id, editPhotoDataArray)
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
 
-      //     if (data.statusCode === 200) {
-      //       Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
-      //         {
-      //           text: '확인',
-      //           onPress: async () => {
-      //             getWrittenReview();
-      //             navigation.reset({routes: [{name: ReviewScreenName}]});
-      //           },
-      //           style: 'cancel',
-      //         },
-      //       ]);
-      //     } else if (data.statusCode === 400) {
-      //       Alert.alert('작성 실패', data.message, [
-      //         {
-      //           text: '확인',
-      //           onPress: async () => {},
-      //           style: 'cancel',
-      //         },
-      //       ]);
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.error('Error:', error);
-      //   });
+          if (data.statusCode === 200) {
+            Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
+              {
+                text: '확인',
+                onPress: async () => {
+                  getWrittenReview();
+                  navigation.reset({routes: [{name: ReviewScreenName}]});
+                },
+                style: 'cancel',
+              },
+            ]);
+          } else if (data.statusCode === 400) {
+            Alert.alert('작성 실패', data.message, [
+              {
+                text: '확인',
+                onPress: async () => {},
+                style: 'cancel',
+              },
+            ]);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     }
 
     console.log('input registered');
@@ -298,7 +314,11 @@ const Screen = ({route}) => {
                 해주세요
               </Title3>
 
-              <ReviewInput />
+              <ReviewInput
+                editContentInput={
+                  editItem.reviewText ? editItem.reviewText : undefined
+                }
+              />
 
               <ShowOnlyToOwnerWrap>
                 <CheckBox

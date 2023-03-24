@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
 import {Text, TextInput, View} from 'react-native';
 import styled from 'styled-components';
 
-const ReviewInput = () => {
+const ReviewInput = ({editContentInput}) => {
   const {
     control,
     formState: {errors},
@@ -15,6 +15,14 @@ const ReviewInput = () => {
     editable: true,
     autoCapitalize: 'none',
   };
+
+  const [editContent, setEditContent] = useState(undefined);
+
+  useEffect(() => {
+    if (editContentInput) {
+      setEditContent(editContentInput);
+    }
+  }, [editContentInput]);
 
   return (
     <>
@@ -29,6 +37,7 @@ const ReviewInput = () => {
           <ViewWrap>
             <Input
               {...textInputProps}
+              defaultValue={editContent ? editContent : undefined}
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
