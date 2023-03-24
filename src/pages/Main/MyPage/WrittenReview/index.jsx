@@ -54,7 +54,7 @@ const Pages = () => {
               reviewText: item.content,
               rating: item.satisfaction,
               writtenDate: convertDateFormat1(item.createDate),
-
+              imageLocation: item.imageLocation,
               makersName: item.makersName,
               foodName: item.itemName,
               option: item.option,
@@ -70,6 +70,7 @@ const Pages = () => {
                   option={item2.option}
                   rating={item2.rating}
                   reviewText={item2.reviewText}
+                  imageLocation={item2.imageLocation}
                   // adminReview={item2.adminReview}
                   adminReview={sampleAdminReview}
                 />

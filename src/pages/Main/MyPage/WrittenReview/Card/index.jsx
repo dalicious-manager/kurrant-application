@@ -35,6 +35,7 @@ const Component = ({
   rating,
   reviewText,
   adminReview,
+  imageLocation,
 }) => {
   const navigation = useNavigation();
 
@@ -48,6 +49,12 @@ const Component = ({
 
     return tokenBox?.accessToken;
   }, []);
+
+  let imageLocationToSix = [];
+
+  for (let i = 0; i < 6; i++) {
+    imageLocationToSix.push(imageLocation[i]);
+  }
 
   const handleDelete = async () => {
     const token = await getToken();
@@ -127,44 +134,27 @@ const Component = ({
       {onlyForMakers ? (
         <>
           <ImagesWrap>
-            <ImageWrap>
-              <MealImage
-                source={{
-                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-                }}
-              />
-            </ImageWrap>
-            <ImageWrap>
-              <MealImage
-                source={{
-                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-                }}
-              />
-            </ImageWrap>
-            <ImageWrap>
-              <MealImage
-                source={{
-                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-                }}
-              />
-            </ImageWrap>
-            <ImageWrap>
-              <MealImage
-                source={{
-                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-                }}
-              />
-            </ImageWrap>
-            <ImageWrap>
-              <MealImage
-                source={{
-                  uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
-                }}
-              />
-            </ImageWrap>
-            <ImageWrap>
-              <DefaultImage />
-            </ImageWrap>
+            {imageLocationToSix.map((v, i) => {
+              if (v) {
+                console.log(v);
+
+                return (
+                  <ImageWrap>
+                    <MealImage
+                      source={{
+                        uri: v,
+                      }}
+                    />
+                  </ImageWrap>
+                );
+              } else {
+                return (
+                  <ImageWrap>
+                    <DefaultImage />
+                  </ImageWrap>
+                );
+              }
+            })}
           </ImagesWrap>
           <ReviewWrap>
             <ReviewText>{reviewText}</ReviewText>
