@@ -21,6 +21,7 @@ import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
@@ -362,6 +363,7 @@ const Pages = () => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
                   {m.orderItemDtoList.map(meal => {
+                    console.log(meal);
                     return (
                       <MealInfoWrap
                         key={meal.id}
@@ -387,6 +389,9 @@ const Pages = () => {
                               </View>
                             </View>
                             <MealCount>
+                              <GreyTxt status={meal.orderStatus}>
+                                {formattedMealFoodStatus(meal.orderStatus)}
+                              </GreyTxt>
                               <GreyTxt>{meal.count}개</GreyTxt>
                             </MealCount>
                           </MealText>
@@ -417,16 +422,18 @@ const Pages = () => {
           </MealInfoWrap>  */}
         </MainWrap>
         {/* 오늘의 식사 시간 지나면 나오는 View */}
-        {/* <MealCheckWrap>
-            <MealCheckText>
-              메뉴 확인 후 수령하셨나요?
-            </MealCheckText>
-            <MealCheckButton>
-              <MealCheckButtonText>
-                네, 확인했어요
-              </MealCheckButtonText>
-            </MealCheckButton>
-          </MealCheckWrap> */}
+        <MealCheckWrap>
+          <MealCheckText>메뉴 확인 후 수령하셨나요?</MealCheckText>
+          <MealCheckButton>
+            <MealCheckButtonText>네, 확인했어요</MealCheckButtonText>
+          </MealCheckButton>
+        </MealCheckWrap>
+        <MealCheckWrap>
+          <MealCheckText>식사 맛있게 하셨나요?</MealCheckText>
+          <MealCheckButton>
+            <MealCheckButtonText>맛 평가하기</MealCheckButtonText>
+          </MealCheckButton>
+        </MealCheckWrap>
 
         <Wrap>
           <MainWrap>
@@ -681,6 +688,8 @@ const MealText = styled.View`
 
 const MealCount = styled.View`
   align-self: flex-end;
+  justify-content: flex-end;
+  align-items: flex-end;
 `;
 
 const MealCalendar = styled.View`
@@ -803,7 +812,8 @@ const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
 `;
 
 const GreyTxt = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${props => props.theme.colors.grey[5]};
+  color: ${({theme, status}) =>
+    status === 8 ? theme.colors.blue[500] : theme.colors.grey[5]};
 `;
 
 const PointText = styled(Typography).attrs({text: 'Body05SB'})`
