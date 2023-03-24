@@ -26,8 +26,8 @@ const Component = ({photosArray, setPhotosArray}) => {
     //   },
     // );
 
-    if (photosArray.length >= 5) {
-      Alert.alert('사진 업로드는 5장까지만 가능합니다');
+    if (photosArray.length >= 6) {
+      Alert.alert('사진 업로드는 6장까지만 가능합니다');
       return;
     }
 

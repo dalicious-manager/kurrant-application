@@ -38,7 +38,33 @@ const Screen = ({route}) => {
   const {getWrittenReview} = useWrittenReview();
   const id = route?.params?.id;
   const status = route?.params?.status;
-  console.log(route.params);
+  const editItem = route?.params?.editItem;
+  // console.log(route.params);
+  // console.log(editItem);
+
+  // editItem 있으면 등록하기
+
+  useEffect(() => {
+    if (editItem) {
+      // console.log(editItem);
+      // console.log(editItem.image);
+      // console.log([...editItem.image].length);
+
+      const yo = editItem.image.map(v => {
+        // 이름 추출하기
+        let fileName = v.split('/').pop();
+        return {
+          id: v,
+          uri: v,
+          fileName: fileName,
+        };
+      });
+
+      console.log(yo);
+
+      setPhotosArray(yo);
+    }
+  }, [editItem]);
 
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
@@ -230,7 +256,7 @@ const Screen = ({route}) => {
 
             <UploadPhotosWrap>
               <Title2Wrap>
-                <Title2> 사진 업로드 {photosArray.length}/5 </Title2>
+                <Title2> 사진 업로드 {photosArray.length}/6 </Title2>
                 <NotMandatory>(선택)</NotMandatory>
               </Title2Wrap>
 

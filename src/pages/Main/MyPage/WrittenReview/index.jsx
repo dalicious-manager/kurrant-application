@@ -64,6 +64,7 @@ const Pages = () => {
               <View>
                 <Card
                   id={item2.id}
+                  editItem={item2}
                   makersName={item2.makersName}
                   foodName={item2.foodName}
                   writtenDate={item2.writtenDate}

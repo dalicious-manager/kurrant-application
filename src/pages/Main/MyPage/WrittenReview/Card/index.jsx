@@ -33,6 +33,7 @@ const Component = ({
   writtenDate,
   option,
   rating,
+  editItem,
   reviewText,
   adminReview,
   imageLocation,
@@ -104,6 +105,7 @@ const Component = ({
               navigation.navigate(EditReviewPage2ScreenName, {
                 id: id,
                 status: 'edit',
+                editItem,
               });
             }}>
             <EditText>수정</EditText>
@@ -140,7 +142,7 @@ const Component = ({
             {imageLocationToSix.map((v, i) => {
               if (v) {
                 return (
-                  <ImageWrap>
+                  <ImageWrap key={i}>
                     <MealImage
                       source={{
                         uri: v,
@@ -150,7 +152,7 @@ const Component = ({
                 );
               } else {
                 return (
-                  <ImageWrap>
+                  <ImageWrap key={i}>
                     <DefaultImage />
                   </ImageWrap>
                 );
