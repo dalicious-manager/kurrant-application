@@ -36,7 +36,9 @@ const Screen = ({route}) => {
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
   const {getWrittenReview} = useWrittenReview();
-  const orderItemId = route?.params?.orderItemId;
+  const id = route?.params?.id;
+  const status = route?.params?.status;
+  console.log(route.params);
 
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
@@ -78,79 +80,131 @@ const Screen = ({route}) => {
   }, [input]);
 
   const onSignInPressed = data => {
-    const sendData = {
-      orderItemId: orderItemId,
+    const sendCreateData = {
+      orderItemId: id,
       satisfaction: starRating,
       content: data.review,
       forMakers: input.isExclusive,
     };
 
+    const sendEditData = {
+      satisfaction: starRating,
+      content: data.review,
+    };
+
     /// formData 안에 값을 보고싶다면 아래 코드 사용하면 됨
 
-    const sendFormDataWithToken = async (photosArray = []) => {
+    const createReview = async (photosArray = []) => {
       const url = `${apiHostUrl}/users/me/reviews`;
 
       const token = await getToken();
 
-      // Create the request headers
       const headers = {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       };
 
-      console.log(sendData);
-
-      // Send the request
       return RNFetchBlob.fetch('POST', url, headers, [
         ...photosArray,
         {
           name: 'reviewDto',
-          data: JSON.stringify(sendData),
+          data: JSON.stringify(sendCreateData),
+          type: 'application/json',
+        },
+      ]);
+    };
+    const editReview = async (editId, photosArray = []) => {
+      const url = `${apiHostUrl}/users/me/reviews/update?id=${editId}`;
+
+      const token = await getToken();
+
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      };
+
+      return RNFetchBlob.fetch('POST', url, headers, [
+        ...photosArray,
+        {
+          name: 'updateReqDto',
+          data: JSON.stringify(sendEditData),
           type: 'application/json',
         },
       ]);
     };
 
-    const dataArray = photosArray.map((v, i) => {
-      const yo = {
+    const photoDataArray = photosArray.map((v, i) => {
+      return {
         name: 'fileList',
         filename: v.fileName,
         data: RNFetchBlob.wrap(v.uri.slice(8)),
         type: 'image/jpeg',
       };
-      return yo;
     });
 
-    sendFormDataWithToken(dataArray)
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
+    if (status === 'create') {
+      createReview(photoDataArray)
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
 
-        if (data.statusCode === 200) {
-          Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
-            {
-              text: '확인',
-              onPress: async () => {
-                getWrittenReview();
-                navigation.reset({routes: [{name: ReviewScreenName}]});
+          if (data.statusCode === 200) {
+            Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
+              {
+                text: '확인',
+                onPress: async () => {
+                  getWrittenReview();
+                  navigation.reset({routes: [{name: ReviewScreenName}]});
+                },
+                style: 'cancel',
               },
-              style: 'cancel',
-            },
-          ]);
-          console.log('작성한 리뷰 다시 불러오기');
-        } else if (data.statusCode === 400) {
-          Alert.alert('작성 실패', data.message, [
-            {
-              text: '확인',
-              onPress: async () => {},
-              style: 'cancel',
-            },
-          ]);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+            ]);
+          } else if (data.statusCode === 400) {
+            Alert.alert('작성 실패', data.message, [
+              {
+                text: '확인',
+                onPress: async () => {},
+                style: 'cancel',
+              },
+            ]);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } else if (status === 'edit') {
+      console.log(photoDataArray);
+
+      // editReview(id, photoDataArray)
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     console.log('Success:', data);
+
+      //     if (data.statusCode === 200) {
+      //       Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
+      //         {
+      //           text: '확인',
+      //           onPress: async () => {
+      //             getWrittenReview();
+      //             navigation.reset({routes: [{name: ReviewScreenName}]});
+      //           },
+      //           style: 'cancel',
+      //         },
+      //       ]);
+      //     } else if (data.statusCode === 400) {
+      //       Alert.alert('작성 실패', data.message, [
+      //         {
+      //           text: '확인',
+      //           onPress: async () => {},
+      //           style: 'cancel',
+      //         },
+      //       ]);
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.error('Error:', error);
+      //   });
+    }
 
     console.log('input registered');
   };

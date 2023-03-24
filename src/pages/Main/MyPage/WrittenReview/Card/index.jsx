@@ -101,7 +101,10 @@ const Component = ({
         <EditWrap>
           <Pressable
             onPress={() => {
-              navigation.navigate(EditReviewPage2ScreenName, {});
+              navigation.navigate(EditReviewPage2ScreenName, {
+                id: id,
+                status: 'edit',
+              });
             }}>
             <EditText>수정</EditText>
           </Pressable>

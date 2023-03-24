@@ -89,8 +89,6 @@ const Pages = () => {
                   <View>
                     {item.items &&
                       item.items.map((value2, index2) => {
-                        console.log(value2);
-
                         return (
                           <Card
                             key={index2}

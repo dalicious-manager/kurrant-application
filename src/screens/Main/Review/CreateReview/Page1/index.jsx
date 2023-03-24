@@ -42,7 +42,7 @@ const Screens = ({route}) => {
             await mSleep(300);
 
             navigation.navigate(CreateReviewPage2ScreenName, {
-              orderItemId: orderItemId,
+              id: orderItemId,
               status: 'create',
             });
             setDisable(false);
