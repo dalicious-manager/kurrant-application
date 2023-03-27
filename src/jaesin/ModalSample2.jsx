@@ -11,9 +11,10 @@ const ModalSample2 = () => {
   return (
     <View>
       <Modal
+        // transparent={false}
         transparent={false}
         visible={modalVisible}
-        presentationStyle={'fullScreen'}>
+        presentationStyle={'truecreen'}>
         <View>
           <BackgroundView>
             <ContainerView>
@@ -33,8 +34,14 @@ const ModalSample2 = () => {
 export default ModalSample2;
 
 const BackgroundView = styled.View`
-  height: 100%;
-  background-color: transparent;
+  position: relative;
+  top: 300px;
+
+  height: 50%;
+  /* background-color: transparent; */
+  background-color: blue;
+  border: 1px solid black;
+
   display: flex;
   justify-content: center;
   align-items: center;

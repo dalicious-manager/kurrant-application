@@ -1,10 +1,10 @@
 import React, {useRef, useState} from 'react';
 import {FormProvider, useForm, useFormContext} from 'react-hook-form';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import styled from 'styled-components';
 import useWrittenReview from '../biz/useReview/useWrittenReview/hook';
 import Button from '../components/Button';
-import Modal from '../components/Modal';
+// import Modal from '../components/Modal';
 import RateStars from '../components/RateStars';
 import RefTextInput from '../components/RefTextInput';
 import ReviewPopup from '../pages/Main/MyPage/Review/Popup';
@@ -14,12 +14,18 @@ import ModalSample from './ModalSample';
 import ModalSample2 from './ModalSample2';
 import SseTestOnSpring from './SseSample';
 
+import Modal from '../components/UseModal';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import ModalSample3 from './ModalSample3';
+
 export const PAGE_NAME = 'P_JAESIN';
 
 const Pages = () => {
   const [sseTestOpen, setSseTestOpen] = useState(false);
 
   const emailRef = useRef(null);
+
+  const {ModalWrapper, close, open} = Modal();
 
   const form = useForm({
     mode: 'all',
@@ -29,6 +35,8 @@ const Pages = () => {
   //   formState: {errors, dirtyFields},
   // } = useFormContext();
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <Container>
       <Text>hi</Text>
@@ -37,6 +45,21 @@ const Pages = () => {
       <ModalSample2 />
 
       <ReviewPopup /> */}
+
+      {/* <ModalSample2 /> */}
+
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.textStyle}>Show Modal</Text>
+      </Pressable>
+
+      <ModalSample3
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
+
+      {/* <ModalWrapper title={'모달임'} content={<Text>하이</Text>} /> */}
 
       {sseTestOpen && <SseTestOnSpring />}
 
@@ -55,6 +78,22 @@ const Pages = () => {
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
 
 export default Pages;
 
