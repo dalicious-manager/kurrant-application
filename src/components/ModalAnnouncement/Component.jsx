@@ -45,10 +45,6 @@ const Component = ({modalVisible, data}) => {
         visible={modalOffPriorityOne && !modalVisible[data.id.toString()]}>
         <CenteredView>
           <ModalView>
-            {/* <TitleText>{`${data.title}`}</TitleText> */}
-
-            {/* <ContentText>{`${data.content}`}</ContentText> */}
-            {/* <ContentText>{`${replaced}`}</ContentText> */}
             <ContenContainer>
               <HTML
                 contentWidth={Dimensions.get('window').width}

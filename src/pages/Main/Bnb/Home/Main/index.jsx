@@ -91,12 +91,8 @@ const Pages = () => {
 
   // 전체 공지사항
 
-  const {
-    getAnnouncements,
-    announcements,
-    announcementModalVisible,
-    setAnnouncementModalVisible,
-  } = useGetAnnouncements();
+  const {getAnnouncements, announcements, announcementModalVisible} =
+    useGetAnnouncements();
 
   useEffect(() => {
     getAnnouncements(0);
@@ -349,7 +345,6 @@ const Pages = () => {
                 key={v.id}
                 data={v}
                 modalVisible={announcementModalVisible}
-                setModalVisible={setAnnouncementModalVisible}
               />
             );
           })}
