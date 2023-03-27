@@ -16,6 +16,7 @@ const Screens = ({route}) => {
   const navigation = useNavigation();
 
   const orderItemId = route.params.orderItemId;
+  const imageLocation = route.params.imageLocation;
 
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [disable, setDisable] = useState(false);
@@ -26,7 +27,7 @@ const Screens = ({route}) => {
         <Title>만족도를 알려주세요</Title>
         <MenuImage
           source={{
-            uri: 'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg',
+            uri: imageLocation,
           }}
         />
         <MenuName>[풀어스] 라코타 치즈 샐러드</MenuName>

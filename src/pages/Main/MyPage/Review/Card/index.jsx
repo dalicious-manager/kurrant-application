@@ -26,6 +26,7 @@ import {
  */
 
 const Component = ({
+  wholeItem,
   orderItemId,
   serviceDate,
   makersName,
@@ -88,6 +89,7 @@ const Component = ({
                 onPress={() => {
                   navigation.navigate(CreateReviewScreenName, {
                     orderItemId: orderItemId,
+                    imageLocation: imageLocation,
                   });
                 }}>
                 <TextText>리뷰작성</TextText>
