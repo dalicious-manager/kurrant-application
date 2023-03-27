@@ -43,6 +43,8 @@ import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
+import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -71,6 +73,7 @@ const Pages = () => {
   const {loadMeal} = useShoppingBasket();
   const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
+
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const toast = Toast();
@@ -82,6 +85,23 @@ const Pages = () => {
   });
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
+  // 전체 공지사항
+
+  const {
+    getAnnouncements,
+    announcements,
+    announcementModalVisible,
+    setAnnouncementModalVisible,
+  } = useGetAnnouncements();
+
+  useEffect(() => {
+    getAnnouncements(0);
+  }, []);
+  // useEffect(() => {
+  //   console.log(announcements);
+  // }, [announcements]);
+
+  //
   useEffect(() => {
     const handleShowModal = async () => {
       const VISITED_BEFORE_DATE = await getStorage('balloonTime');
@@ -321,6 +341,25 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
+        {Array.isArray(announcements) &&
+          announcements.length > 0 &&
+          announcements.map(v => {
+            return (
+              <ModalAnnouncement
+                key={v.id}
+                data={v}
+                modalVisible={announcementModalVisible}
+                setModalVisible={setAnnouncementModalVisible}
+              />
+            );
+          })}
+
+        {/* <ModalAnnouncement
+          data={{title: 'hoho', content: '컨텐츠'}}
+          modalVisible={announcementModalVisible['3']}
+          setModalVisible={setAnnouncementModalVisible}
+        /> */}
+
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
             <SpotNameText>
