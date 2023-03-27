@@ -97,11 +97,7 @@ const Pages = () => {
   useEffect(() => {
     getAnnouncements(0);
   }, []);
-  // useEffect(() => {
-  //   console.log(announcements);
-  // }, [announcements]);
 
-  //
   useEffect(() => {
     const handleShowModal = async () => {
       const VISITED_BEFORE_DATE = await getStorage('balloonTime');
@@ -353,12 +349,6 @@ const Pages = () => {
               />
             );
           })}
-
-        {/* <ModalAnnouncement
-          data={{title: 'hoho', content: '컨텐츠'}}
-          modalVisible={announcementModalVisible['3']}
-          setModalVisible={setAnnouncementModalVisible}
-        /> */}
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>

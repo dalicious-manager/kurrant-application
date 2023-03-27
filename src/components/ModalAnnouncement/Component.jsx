@@ -1,28 +1,50 @@
 import React, {useState} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 import Typography from '../Typography';
 
+import HTML, {defaultSystemFonts} from 'react-native-render-html';
+
+import {Dimensions, ScrollView} from 'react-native';
+
 const Component = ({modalVisible, setModalVisible, data}) => {
-  console.log('모달비지블');
-  console.log(modalVisible);
+  const themeApp = useTheme();
 
-  // <br>지우기
+  // // <br>지우기
 
-  const replaced = data.content.replace('<br>', '');
+  // const replaced = data.content.replace('<br>', '');
+
+  const systemFonts = [
+    ...defaultSystemFonts,
+    'Pretendard-Regular',
+    'Pretendard-SemiBold',
+  ];
+
+  const source = {
+    html: `<div style='padding-left:24px; padding-right:20px; '> 
+        <div style="margin:0; padding: 0 ; width:100%; font-weight: 600; fontFamily:'Pretendard-SemiBold'; font-size:20px; line-height:26px; color:${themeApp.colors.grey[2]}">${data.title}</div>
+        <div style="margin:0; padding: 0 ; margin-top:4px; font-weight: 400; fontFamily:'Pretendard-Regular'; font-size:13px; line-height:19px; color:${themeApp.colors.grey[4]}">${data.updated}</div>
+        <div style="width:100%; height:1px; margin:24px 0px; background-color:${themeApp.colors.grey[8]}"></div>
+        ${data.content}
+        </div>`,
+  };
 
   return (
-    // <View style={styles.centeredView}>
-
-    // </View>
     <CenteredView>
       <Modal transparent={true} visible={modalVisible[data.id.toString()]}>
         <CenteredView>
           <ModalView>
-            <TitleText>{`${data.title}`}</TitleText>
+            {/* <TitleText>{`${data.title}`}</TitleText> */}
 
             {/* <ContentText>{`${data.content}`}</ContentText> */}
-            <ContentText>{`${replaced}`}</ContentText>
+            {/* <ContentText>{`${replaced}`}</ContentText> */}
+            <ContenContainer>
+              <HTML
+                contentWidth={Dimensions.get('window').width}
+                source={source}
+                systemFonts={systemFonts}
+              />
+            </ContenContainer>
 
             <MessageReadPressable
               onPress={() => {
@@ -43,49 +65,9 @@ const Component = ({modalVisible, setModalVisible, data}) => {
 
 export default Component;
 
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-});
+const ContenContainer = styled(ScrollView)`
+  padding-bottom: 24px;
+`;
 
 const CenteredView = styled.View`
   flex: 1;
@@ -97,8 +79,11 @@ const ModalView = styled.View`
   margin: 20px;
   background-color: white;
   /* border-radius: 20px; */
-  padding: 35px;
-  width: 70%;
+  padding: 10px;
+  padding-top: 20px;
+  padding-bottom: 24px;
+
+  width: 80%;
   height: 70%;
   position: relative;
 
@@ -120,5 +105,5 @@ const MessageReadPressable = styled.Pressable`
 `;
 
 const ModalText = styled.Text`
-  font-size: 12px;
+  font-size: 14px;
 `;
