@@ -6,6 +6,7 @@ import Typography from '../Typography';
 import HTML, {defaultSystemFonts} from 'react-native-render-html';
 
 import {Dimensions, ScrollView} from 'react-native';
+import {setStorage} from '../../utils/asyncStorage';
 
 const Component = ({modalVisible, setModalVisible, data}) => {
   const themeApp = useTheme();
@@ -29,6 +30,16 @@ const Component = ({modalVisible, setModalVisible, data}) => {
         </div>`,
   };
 
+  //
+
+  const handleMessageRead = () => {
+    const modalStatus = {};
+
+    modalStatus[data.id.toString()] = false;
+
+    setModalVisible(modalStatus);
+  };
+
   return (
     <CenteredView>
       <Modal transparent={true} visible={modalVisible[data.id.toString()]}>
@@ -48,13 +59,9 @@ const Component = ({modalVisible, setModalVisible, data}) => {
 
             <MessageReadPressable
               onPress={() => {
-                const yes = {};
-
-                yes[data.id.toString()] = false;
-
-                setModalVisible(yes);
+                handleMessageRead();
               }}>
-              <ModalText>일주일간 보지 않기x</ModalText>
+              <ModalText>일주일간 보지 않기 x</ModalText>
             </MessageReadPressable>
           </ModalView>
         </CenteredView>
