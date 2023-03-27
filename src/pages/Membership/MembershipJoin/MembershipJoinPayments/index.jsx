@@ -33,6 +33,8 @@ const Pages = ({route}) => {
   const fadeAnim = useRef(
     new Animated.Value(period === 'month' ? 86 : 108),
   ).current;
+  const {membershipProduct} = useMembership();
+  const {isUserInfo} = useUserInfo();
   const rotateAnim = useRef(new Animated.Value(1)).current;
   const themeApp = useTheme();
   const {getMembershipType, membershipJoin} = useMembership();
@@ -86,13 +88,46 @@ const Pages = ({route}) => {
         totalPrice: membershipTypeData.totalPrice,
         cardId: selectMembershipCard[0]?.id || -1,
       };
-      console.log(req);
-      const result = await membershipJoin(req);
-      console.log(result);
-      if (result.statusCode === 200) {
-        const resetAction = StackActions.pop(3);
-        navigation.dispatch(resetAction);
-        navigation.navigate(MembershipJoinComplatePageName);
+      if (
+        isUserInfo?.email.includes('@bespinglobal.com') &&
+        membershipProduct.readableAtom.membershipHistory.length < 1
+      ) {
+        Alert.alert(
+          '멤버십 구매',
+          '멤버십 할인 혜택은 최초 1회만 제공됩니다.\n선택한 멤버십으로 구매 하시겠어요?',
+          [
+            {
+              text: '취소',
+              onPress: async () => {},
+              style: 'destructive',
+            },
+            {
+              text: '확인',
+              onPress: () => {
+                const membershipJoin = async () => {
+                  console.log(req);
+                  const result = await membershipJoin(req);
+                  console.log(result);
+                  if (result.statusCode === 200) {
+                    const resetAction = StackActions.pop(3);
+                    navigation.dispatch(resetAction);
+                    navigation.navigate(MembershipJoinComplatePageName);
+                  }
+                };
+                membershipJoin();
+              },
+            },
+          ],
+        );
+      } else {
+        console.log(req);
+        const result = await membershipJoin(req);
+        console.log(result);
+        if (result.statusCode === 200) {
+          const resetAction = StackActions.pop(3);
+          navigation.dispatch(resetAction);
+          navigation.navigate(MembershipJoinComplatePageName);
+        }
       }
     } else {
       Alert.alert('결제 진행 을 동의해주세요');
@@ -135,7 +170,7 @@ const Pages = ({route}) => {
           </MembershipText>
           <PriceSaleBox>
             <PriceTextSale textColor={themeApp.colors.green[500]}>
-              20%
+              {membershipTypeData?.periodDiscountPrice > 0 ? '50%' : '20%'}
             </PriceTextSale>
             <PriceText textColor={themeApp.colors.grey[4]}>
               {withCommas(membershipTypeData?.totalPrice)}
@@ -232,7 +267,8 @@ const Pages = ({route}) => {
                       : themeApp.colors.green[500]
                   }>
                   {withCommas(
-                    membershipTypeData?.yearDescriptionDiscountPrice,
+                    membershipTypeData?.yearDescriptionDiscountPrice +
+                      membershipTypeData?.periodDiscountPrice,
                   ) || 0}
                 </PaymentPriceText>{' '}
                 원
@@ -268,7 +304,7 @@ const Pages = ({route}) => {
                       }>
                       {/* <CardText>결제 카드 등록</CardText> */}
                       <CardText>
-                        {card.cardCompany}카드(
+                        {card.cardCompany}(
                         {card.cardNumber?.toString().slice(-4)})
                       </CardText>
                       {/* <PayInfoWrap>

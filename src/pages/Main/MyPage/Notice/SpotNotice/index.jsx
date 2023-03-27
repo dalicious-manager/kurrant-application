@@ -54,7 +54,6 @@ const Pages = () => {
   return (
     <Wrapper>
       {spotNotice?.map(v => {
-        console.log(v);
         return (
           <ListBox
             key={v.id}

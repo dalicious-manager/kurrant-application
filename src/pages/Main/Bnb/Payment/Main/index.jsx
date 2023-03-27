@@ -86,7 +86,7 @@ const Pages = ({route}) => {
   const {StatusBarManager} = NativeModules;
   const navigation = useNavigation();
   const pointRef = useRef();
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);

@@ -12,7 +12,7 @@ import {useAtom, useAtomValue} from 'jotai';
 import React, {useEffect, useRef, useState} from 'react';
 import {Pressable, View, Text} from 'react-native';
 import PagerView from 'react-native-pager-view';
-import styled from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 
 import {weekAtom} from '../../biz/useBanner/store';
 import useFoodDaily from '../../biz/useDailyFood/hook';
@@ -160,15 +160,16 @@ const Component = ({
                             })
                           : onPressEvent2 && events();
                       }}>
-                      <Day
+                      <DayWeek
                         lastDay={lastDay}
                         color={color}
                         size={size}
                         morning={morning}
                         lunch={lunch}
+                        now={now}
                         dinner={dinner}>
-                        {txt}
-                      </Day>
+                        {now ? '오늘' : txt}
+                      </DayWeek>
                       <TodayCircle
                         now={now}
                         type={type}
@@ -234,7 +235,6 @@ const TodayCircle = styled.View`
   justify-content: center;
   background-color: ${({currentPress, day, pressDay}) =>
     formattedDate(currentPress) === formattedDate(day) ? '#E4E3E7' : 'white'};
-  ${({type, now}) => now && getCircleColor(type)};
 `;
 
 const DotWrap = styled.View`
@@ -252,12 +252,22 @@ const Dot = styled.View`
 `;
 
 const Day = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({lastDay, theme, morning, lunch, dinner}) =>
+  color: ${({lastDay, theme, morning, lunch, dinner, now}) =>
     lastDay
       ? theme.colors.grey[5]
       : morning || lunch || dinner
       ? theme.colors.grey[2]
       : theme.colors.grey[5]};
-  ${({color, now}) => now && getTodayColor(color)};
+  ${({size}) => getFontStyle(size)};
+`;
+const DayWeek = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({lastDay, theme, morning, lunch, dinner, now}) =>
+    lastDay
+      ? theme.colors.grey[5]
+      : morning || lunch || dinner
+      ? now
+        ? theme.colors.yellow[500]
+        : theme.colors.grey[2]
+      : theme.colors.grey[5]};
   ${({size}) => getFontStyle(size)};
 `;

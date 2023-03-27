@@ -274,3 +274,34 @@ export const convertDateFormat1 = stringDate => {
 //     return 0;
 //   }
 // }
+
+// 스트링날짜 Date객체로 변환
+// 예) '2022-12-27 -> 2022-12-26T15:00:00.000Z
+
+export const stringDateToJavascriptDate = (stringDate, seperator) => {
+  const process1 = stringDate.trim();
+
+  const process2 = process1.split(seperator);
+
+  const process3 = new Date(
+    parseInt(process2[0]),
+    parseInt(process2[1]) - 1,
+    parseInt(process2[2]),
+  );
+
+  return process3;
+};
+
+// 두 날짜의 차이가 해당 일수 보다 더 크다 -> true, 더 작다 -> false
+// 예) isTimeDifference(자바스크립트 날짜객체1, 자바스크립트 날짜객체2, 차이(몇 일) )
+
+export const isTimeDifferenceLarger = (date1, date2, dateLength) => {
+  // 날짜들을 getTime화 하기
+
+  const date1GetTime = date1.getTime();
+  const date2GetTime = date2.getTime();
+
+  // 차이 계산하기
+
+  return date2GetTime - date1GetTime > dateLength * 1000 * 60 * 60 * 24;
+};

@@ -7,6 +7,7 @@ import {
   Dimensions,
   FlatList,
   Pressable,
+  View,
   PanResponder,
 } from 'react-native';
 import styled from 'styled-components/native';
@@ -14,6 +15,8 @@ import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
 import Typography from '../Typography';
+import Label from '../Label';
+
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 
@@ -163,7 +166,17 @@ const BottomSheetSpot = props => {
             renderItem={({item}) => (
               <>
                 <ItemContainer>
-                  <GroupName>{item.clientName}</GroupName>
+                  <GroupView>
+                    <GroupName>{item.clientName}</GroupName>
+                    <View style={{marginLeft: 8}}>
+                      <Label
+                        label={
+                          item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
+                        }
+                        type="grey8"
+                      />
+                    </View>
+                  </GroupView>
                   <Border />
                 </ItemContainer>
 
@@ -289,6 +302,11 @@ const ManagePressView = styled.Pressable`
   height: 100px;
   padding: 19px 24px 55px 24px;
   background-color: white;
+`;
+
+const GroupView = styled.View`
+  flex-direction: row;
+  align-items: center;
 `;
 
 export default BottomSheetSpot;

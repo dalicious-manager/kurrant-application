@@ -150,22 +150,22 @@ const Pages = () => {
               {cardList
                 .map(card => {
                   if (card.defaultType === 2 || card.defaultType === 3)
-                    return `${card.cardCompany}카드(${card.cardNumber
+                    return `${card.cardCompany}(${card.cardNumber
                       ?.toString()
                       .slice(-4)})`;
                 })
                 ?.join()
-                .replace(',', '')
+                .replace('/,/g', '')
                 .toString().length > 1
                 ? cardList
                     .map(card => {
                       if (card.defaultType === 2 || card.defaultType === 3)
-                        return `${card.cardCompany}카드(${card.cardNumber
+                        return `${card.cardCompany}(${card.cardNumber
                           ?.toString()
                           .slice(-4)})`;
                     })
                     .join()
-                    .replace(',', '')
+                    .replace('/,/g', '')
                     .toString()
                 : '선택'}
             </SpotName>

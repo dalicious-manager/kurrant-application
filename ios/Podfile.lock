@@ -433,7 +433,7 @@ PODS:
     - react-native-config/App (= 1.5.0)
   - react-native-config/App (1.5.0):
     - React-Core
-  - react-native-document-picker (8.1.4):
+  - react-native-document-picker (8.2.0):
     - React-Core
   - react-native-fbsdk-next (11.1.0):
     - React-Core
@@ -927,7 +927,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 1363be638eccfe1aea1b10dd42e632b0397e5ec8
   React-logger: 7bd569e3857d74ed412ce0a5c51f421ff7d4ca7f
   react-native-config: 5330c8258265c1e5fdb8c009d2cabd6badd96727
-  react-native-document-picker: a9bd26996d1b2e4f412dd186041714c79af381d0
+  react-native-document-picker: 495c444c0c773c6e83a5d91165890ecb1c0a399a
   react-native-fbsdk-next: c78dede90e3c50ab6936a7d56c43e1a9eb37e25a
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-pager-view: b58cb9e9f42f64e50cab3040815772c1d119a2e2
