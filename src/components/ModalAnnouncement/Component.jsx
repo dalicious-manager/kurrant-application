@@ -8,12 +8,10 @@ import HTML, {defaultSystemFonts} from 'react-native-render-html';
 import {Dimensions, ScrollView} from 'react-native';
 import {setStorage} from '../../utils/asyncStorage';
 
-const Component = ({modalVisible, setModalVisible, data}) => {
+const Component = ({modalVisible, data}) => {
   const themeApp = useTheme();
 
-  // // <br>지우기
-
-  // const replaced = data.content.replace('<br>', '');
+  const [modalOffPriorityOne, setModalOffPriorityOne] = useState(true);
 
   const systemFonts = [
     ...defaultSystemFonts,
@@ -30,22 +28,21 @@ const Component = ({modalVisible, setModalVisible, data}) => {
         </div>`,
   };
 
-  //
+  const handleMessageRead = async () => {
+    const modalStatus = {...modalVisible};
 
-  const handleMessageRead = () => {
-    const modalStatus = {};
+    modalStatus[data.id.toString()] = Date.now();
 
-    modalStatus[data.id.toString()] = false;
+    await setStorage('announcementsClickedDates', JSON.stringify(modalStatus));
 
-    setModalVisible(modalStatus);
+    setModalOffPriorityOne(false);
   };
-
-  console.log('모달 비지블~~~');
-  console.log(modalVisible);
 
   return (
     <CenteredView>
-      <Modal transparent={true} visible={!modalVisible[data.id.toString()]}>
+      <Modal
+        transparent={true}
+        visible={modalOffPriorityOne && !modalVisible[data.id.toString()]}>
         <CenteredView>
           <ModalView>
             {/* <TitleText>{`${data.title}`}</TitleText> */}

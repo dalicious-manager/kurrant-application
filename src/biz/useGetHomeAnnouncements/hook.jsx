@@ -12,21 +12,17 @@ const useGetAnnouncements = () => {
 
   const getAnnouncements = async id => {
     try {
-      // 서버에서 데이터 가져오기
-
-      console.log('일단 get불러옴 1');
-
       const res = await Fetch.getAnnouncements(id);
-
-      // 로컬스토리지 클릭여부확인하기
 
       const getClickedDate = await getStorage('announcementsClickedDates');
 
-      // const clickedDate = getClickedDate && JSON.parse(getClickedDate);
-      const clickedDate = {
-        3: 1678892400000, // 3월 16일
-        // 3: 1679756400000, // 3월 26일
-      };
+      const clickedDate = getClickedDate && JSON.parse(getClickedDate);
+
+      // 테스트용
+      // const clickedDate = {
+      //   3: 1678892400000, // 3월 16일
+      //   // 3: 1679756400000, // 3월 26일
+      // };
 
       const yes = {};
 
@@ -34,6 +30,18 @@ const useGetAnnouncements = () => {
 
       if (!clickedDate) {
         console.log('지금 로컬 스토리지에 아무 값도 없음');
+
+        setAnnouncements([...res.data]);
+
+        // 다 넣기
+
+        setAnnouncementModalVisible(
+          [...res.data].map(v => {
+            return v.id.toString();
+          }),
+        );
+      } else {
+        console.log(clickedDate);
       }
 
       res.data.forEach(k => {
@@ -87,7 +95,7 @@ const useGetAnnouncements = () => {
 
       setAnnouncementModalVisible(yes);
 
-      return res;
+      // return res;
     } catch (err) {
       throw err;
     }

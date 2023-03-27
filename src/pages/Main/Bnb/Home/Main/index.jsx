@@ -28,7 +28,11 @@ import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {
+  getStorage,
+  setStorage,
+  removeItemFromStorage,
+} from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import Toast from '../../../../../components/Toast';
@@ -97,17 +101,6 @@ const Pages = () => {
   useEffect(() => {
     getAnnouncements(0);
   }, []);
-
-  useEffect(() => {
-    console.log('홈 모달 객체 확인');
-    console.log(announcementModalVisible);
-  }, [announcementModalVisible]);
-
-  useEffect(() => {
-    console.log('객체 배열');
-
-    console.log(announcements);
-  }, [announcements]);
 
   useEffect(() => {
     const handleShowModal = async () => {
