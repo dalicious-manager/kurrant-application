@@ -320,7 +320,9 @@ const Screen = ({route}) => {
 
               <ReviewInput
                 editContentInput={
-                  editItem.reviewText ? editItem.reviewText : undefined
+                  editItem && editItem.reviewText
+                    ? editItem.reviewText
+                    : undefined
                 }
               />
 

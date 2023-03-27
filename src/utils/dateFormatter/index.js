@@ -215,30 +215,6 @@ export const timeLeftIndicator = (criterionDayLength, compareDate) => {
   }
 };
 
-// "2023-03-14" 형식을 자바스크립트 데이트 포멧으로 변경하기
-
-export const stringDateToJavascriptDate = (stringDate, seperator) => {
-  // 1. 옆에 빈칸 지우기
-  const process1 = stringDate.trim();
-
-  // 2. 구분자 해석하기
-
-  // 숫  자 아닌 것들 다
-
-  const process2 = process1.split(seperator);
-
-  // 3. 날짜 다시 집어 넣어서 자바스크립트로 만들기
-
-  console.log(process2[2]);
-  const process3 = new Date(
-    parseInt(process2[0]),
-    parseInt(process2[1]) - 1,
-    parseInt(process2[2]),
-  );
-
-  return process3;
-};
-
 // 2023-03-22T12:14:50.559+09:00 -> 2023. 03. 22
 
 export const convertDateFormat1 = stringDate => {
