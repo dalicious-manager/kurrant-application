@@ -99,6 +99,17 @@ const Pages = () => {
   }, []);
 
   useEffect(() => {
+    console.log('홈 모달 객체 확인');
+    console.log(announcementModalVisible);
+  }, [announcementModalVisible]);
+
+  useEffect(() => {
+    console.log('객체 배열');
+
+    console.log(announcements);
+  }, [announcements]);
+
+  useEffect(() => {
     const handleShowModal = async () => {
       const VISITED_BEFORE_DATE = await getStorage('balloonTime');
 

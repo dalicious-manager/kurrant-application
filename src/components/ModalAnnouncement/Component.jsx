@@ -40,9 +40,12 @@ const Component = ({modalVisible, setModalVisible, data}) => {
     setModalVisible(modalStatus);
   };
 
+  console.log('모달 비지블~~~');
+  console.log(modalVisible);
+
   return (
     <CenteredView>
-      <Modal transparent={true} visible={modalVisible[data.id.toString()]}>
+      <Modal transparent={true} visible={!modalVisible[data.id.toString()]}>
         <CenteredView>
           <ModalView>
             {/* <TitleText>{`${data.title}`}</TitleText> */}
