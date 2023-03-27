@@ -1,6 +1,6 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   View,
+  Linking,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled, {css} from 'styled-components/native';
@@ -35,6 +36,8 @@ import useAuth from '../../../../biz/useAuth';
 import Config from 'react-native-config';
 import useUserMe from '../../../../biz/useUserMe';
 import {PAGE_NAME as FAQListPageName} from '../../MyPage/FAQ';
+import VersionCheck from 'react-native-version-check';
+import messaging from '@react-native-firebase/messaging';
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -42,19 +45,48 @@ const rawNonce = uuid();
 const state = uuid();
 
 const screenHeight = Dimensions.get('screen').height;
+const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
+// 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
+const GOOGLE_PLAY_STORE_WEB_LINK =
+  'https://play.google.com/store/apps/details?id=com.dalicious.kurrant';
+// 애플 앱 스토어 링크
+const APPLE_APP_STORE_LINK = 'itms-apps://itunes.apple.com/us/app/id1663407738';
+// 애플 앱 스토어가 설치되어 있지 않을 때 웹 링크
+const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 const Pages = ({route}) => {
   const params = route?.params;
   const navigation = useNavigation();
   const toast = Toast();
   const [isLoginLoading, setLoginLoading] = useState();
+  const [versionChecked, setVersionChecked] = useState(false);
+  const currentVersion = VersionCheck.getCurrentVersion();
+  const handlePress = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
   const {
     setSelectDefaultCard,
     readableAtom: {selectDefaultCard},
   } = useUserMe();
-  const {login, autoLogin} = useAuth();
+
+  const {
+    login,
+    autoLogin,
+    setFcmToken,
+    saveFcmToken,
+    readableAtom: {fcmToken},
+  } = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
@@ -127,7 +159,13 @@ const Pages = ({route}) => {
           const getToken = JSON.parse(token);
           if (getToken?.accessToken) {
             const res = await autoLogin();
+
             if (res?.statusCode === 200) {
+              if (fcmToken) {
+                saveFcmToken({
+                  token: fcmToken,
+                });
+              }
               navigation.reset({
                 index: 0,
                 routes: [
@@ -143,11 +181,58 @@ const Pages = ({route}) => {
         setLoginLoading(false);
       }
     };
+
+    const getData = async () => {
+      await VersionCheck.getLatestVersion().then(latestVersion => {
+        console.log(currentVersion, latestVersion);
+        if (currentVersion !== latestVersion) {
+          Alert.alert(
+            '앱 업데이트',
+            '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
+            [
+              {
+                text: '확인',
+                onPress: async () => {
+                  if (Platform.OS === 'android') {
+                    handlePress(
+                      GOOGLE_PLAY_STORE_LINK,
+                      GOOGLE_PLAY_STORE_WEB_LINK,
+                    );
+                  } else {
+                    handlePress(APPLE_APP_STORE_LINK, APPLE_APP_STORE_WEB_LINK);
+                  }
+                },
+                style: 'destructive',
+              },
+            ],
+          );
+        }
+      });
+    };
+    // getData();
     setLoginLoading(true);
     isAutoLogin();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    async function requestUserPermission() {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+        if (Platform.OS === 'ios') {
+          // ios의 경우 필수가 아니라고도 하고 필수라고도 하고.. 그냥 넣어버렸다.
+          messaging().registerDeviceForRemoteMessages();
+        }
+        const token = await messaging().getToken();
+        if (token) setFcmToken(token);
+      }
+    }
+    requestUserPermission();
+  }, []);
   // if(isLoginLoading){
   //   return<ActivityIndicator size="large" />
   // }
@@ -282,13 +367,11 @@ const BarWrap = styled.View`
   display: flex;
   margin: 34px 0px;
   padding: 0px 24px;
-
   align-items: center;
 `;
 const Icons = styled.View`
   ${BarDisplay};
   //width: 68px;
-
   margin-top: 12px;
   margin-right: -6px;
 `;
