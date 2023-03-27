@@ -260,6 +260,7 @@ import CompanyInfo, {
 import Credit, {
   PAGE_NAME as CreditPageName,
 } from '../../pages/Main/MyPage/Credit';
+import {PointMainPage, PointMainPageName} from '../../pages/Main/MyPage/Point';
 import CloseButton from '../../components/CloseButton';
 // Pages > Exchange
 // Pages > IndexCard
@@ -274,7 +275,7 @@ const Screen = () => {
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
   return (
-    <MainRoot.Navigator>
+    <MainRoot.Navigator initialRouteName={PointMainPageName}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -1686,6 +1687,26 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PointMainPageName}
+          component={PointMainPage}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '포인트',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+
             headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />

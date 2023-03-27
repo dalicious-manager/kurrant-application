@@ -24,6 +24,7 @@ import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
 import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
+import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
@@ -216,7 +217,8 @@ const Pages = () => {
               }
               params={{isFounders: isUserInfo?.leftFoundersNumber > 0}}
             />
-            {/* <ListBox title='커런트 포인트' /> */}
+
+            <ListBox title="커런트 포인트" routeName={PointMainPageName} />
             {isApplicationList.length !== 0 && (
               <ListBox
                 title="스팟 개설 요청 내역"
