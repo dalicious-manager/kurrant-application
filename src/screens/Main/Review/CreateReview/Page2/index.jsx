@@ -2,7 +2,7 @@ import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 
 import Button from '../../../../../components/Button';
 import {CheckIcon, XCircleIcon} from '../../../../../components/Icon';
@@ -21,7 +21,7 @@ import {getStorage} from '../../../../../utils/asyncStorage';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 
 import Review, {SCREEN_NAME as ReviewScreenName} from '../../../Review';
-import {Alert} from 'react-native';
+import {Alert, Text} from 'react-native';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -47,14 +47,17 @@ const Screen = ({route}) => {
   const status = route?.params?.status;
   const editItem = route?.params?.editItem;
 
+  const theme = useTheme();
+
   // editItem 있으면 등록하기
 
   const navigation = useNavigation();
 
+  // 받아온 editItem에서 이미지 추출해서 등록하기
   useEffect(() => {
     if (editItem) {
       const yo = editItem.image.map(v => {
-        // 이름 추출하기
+        //
         let fileName = v.split('/').pop();
         return {
           id: v,
@@ -331,19 +334,28 @@ const Screen = ({route}) => {
               />
 
               <ShowOnlyToOwnerWrap>
-                <CheckBox
-                  checked={input.isExclusive}
-                  onPress={() => {
-                    // setChecked(!checked);
+                {editItem && editItem.forMakers ? (
+                  <>
+                    <CheckBox disabled={true}>
+                      <CheckIcon
+                        style={{width: 15, height: 10}}
+                        color={theme.colors.grey[7]}
+                      />
+                    </CheckBox>
+                  </>
+                ) : (
+                  <CheckBox
+                    checked={input.isExclusive}
+                    onPress={() => {
+                      setInput({...input, isExclusive: !input.isExclusive});
+                    }}>
+                    <CheckIcon
+                      style={{width: 15, height: 10}}
+                      color={'#ffffff'}
+                    />
+                  </CheckBox>
+                )}
 
-                    setInput({...input, isExclusive: !input.isExclusive});
-                  }}>
-                  <CheckIcon
-                    style={{width: 15, height: 10}}
-                    // size={36}
-                    color={'#ffffff'}
-                  />
-                </CheckBox>
                 <Title4>사장님에게만 보이기 </Title4>
               </ShowOnlyToOwnerWrap>
             </ReviewWrap>
@@ -466,6 +478,16 @@ const CheckBox = styled.Pressable`
       return props.theme.colors.grey[7];
     }
   }};
+
+  ${({disabled}) => {
+    if (disabled) {
+      return `
+      background-color: white;
+      
+      `;
+    }
+  }}
+
   border-radius: 7px;
   margin-right: 8px;
   justify-content: center;

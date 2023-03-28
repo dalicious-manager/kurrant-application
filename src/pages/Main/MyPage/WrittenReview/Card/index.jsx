@@ -138,6 +138,7 @@ const Component = ({
         <PostDateText>{writtenDate} 작성</PostDateText>
       </RowWrap>
 
+      {/* 사장님에게만 보이는 리뷰(forMakers) */}
       {!forMakers ? (
         <>
           <ImagesWrap>
