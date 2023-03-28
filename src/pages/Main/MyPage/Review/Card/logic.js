@@ -7,10 +7,8 @@ export const calculateReviewDDay = reviewDDay => {
   // 넘어가면 ' 리뷰 가능한 기한이 지났습니다'
 
   if (reviewDDay > 3) {
-    console.log(reviewDDay + ' grey');
     return [`기한 D-${reviewDDay}`, 'grey'];
   } else if (reviewDDay > 0 && reviewDDay < 3) {
-    console.log(reviewDDay + ' red');
     return [`기한 D-${reviewDDay}`, 'red'];
   } else {
     return ['리뷰 가능한 기한이 지났습니다.', 'grey'];

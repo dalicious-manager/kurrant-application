@@ -73,15 +73,6 @@ const Component = ({
             {option && <OptionText>|{option} </OptionText>}
           </SmallRowWrap>
           <SmallColumnWrap>
-            {/* <DDayText serviceDate={serviceDate} > */}
-
-            {/* {
-                timeLeftIndicator(
-                  5,
-
-                  stringDateToJavascriptDate(serviceDate, '-'),
-                )[0]
-              } */}
             <DDayText calculateReviewDDay={calculateReviewDDay(reviewDDay)[1]}>
               {calculateReviewDDay(reviewDDay)[0]}
             </DDayText>
@@ -185,11 +176,8 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
 const DDayText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => {
     if (props.calculateReviewDDay === 'grey') {
-      console.log('여교여교');
-      console.log(props.calculateReviewDDay[1]);
       return props.theme.colors.grey[5];
     } else if (props.calculateReviewDDay === 'red') {
-      console.log('여기여여기여');
       return props.theme.colors.red[500];
     }
   }};
