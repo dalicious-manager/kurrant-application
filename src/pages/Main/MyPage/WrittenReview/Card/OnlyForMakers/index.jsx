@@ -22,6 +22,9 @@ const Container = styled.View`
   flex-direction: row;
   width: 100%;
   align-items: center;
+  margin-bottom: 9px;
+  /* border: 1px solid black; */
+  padding-left: 2px;
 `;
 
 const OnlyForMakersText = styled(Typography).attrs({text: 'Body06R'})`

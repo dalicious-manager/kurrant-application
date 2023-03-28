@@ -139,7 +139,7 @@ const Component = ({
       </RowWrap>
 
       {/* 사장님에게만 보이는 리뷰(forMakers) */}
-      {!forMakers ? (
+      {/* {!forMakers ? (
         <>
           <ImagesWrap>
             {imageLocationToSix.map((v, i) => {
@@ -168,7 +168,36 @@ const Component = ({
         </>
       ) : (
         <OnlyForMakers />
-      )}
+      )} */}
+
+      {!forMakers && <OnlyForMakers />}
+
+      <>
+        <ImagesWrap>
+          {imageLocationToSix.map((v, i) => {
+            if (v) {
+              return (
+                <ImageWrap key={i}>
+                  <MealImage
+                    source={{
+                      uri: v,
+                    }}
+                  />
+                </ImageWrap>
+              );
+            } else {
+              return (
+                <ImageWrap key={i}>
+                  <DefaultImage />
+                </ImageWrap>
+              );
+            }
+          })}
+        </ImagesWrap>
+        <ReviewWrap>
+          <ReviewText>{reviewText}</ReviewText>
+        </ReviewWrap>
+      </>
 
       {adminReview && (
         <CommentWrap>
