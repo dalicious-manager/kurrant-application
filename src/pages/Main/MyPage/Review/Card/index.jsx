@@ -14,6 +14,7 @@ import {
   timeLeftIndicator,
   timePassIndicator,
 } from '../../../../../utils/dateFormatter';
+import {calculateReviewDDay} from './logic';
 
 /**
  * @param {object} props
@@ -38,6 +39,9 @@ const Component = ({
   ...rest
 }) => {
   const navigation = useNavigation();
+
+  console.log('리뷰 데이터');
+  console.log(wholeItem);
 
   return (
     <Container>
@@ -69,22 +73,20 @@ const Component = ({
             {option && <OptionText>|{option} </OptionText>}
           </SmallRowWrap>
           <SmallColumnWrap>
-            <DDayText serviceDate={serviceDate}>
-              {
+            {/* <DDayText serviceDate={serviceDate} > */}
+
+            {/* {
                 timeLeftIndicator(
                   5,
 
                   stringDateToJavascriptDate(serviceDate, '-'),
                 )[0]
-              }
+              } */}
+            <DDayText calculateReviewDDay={calculateReviewDDay(reviewDDay)[1]}>
+              {calculateReviewDDay(reviewDDay)[0]}
             </DDayText>
 
-            {!(
-              timeLeftIndicator(
-                5,
-                stringDateToJavascriptDate(serviceDate, '-'),
-              )[0] === '리뷰 가능한 기한이 지났습니다'
-            ) && (
+            {reviewDDay > 0 && (
               <ReviewFormWriteButton
                 onPress={() => {
                   navigation.navigate(CreateReviewScreenName, {
@@ -182,15 +184,13 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
 
 const DDayText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => {
-    if (
-      isDueDateCloseRenderRed(
-        5,
-        stringDateToJavascriptDate(props.serviceDate, '-'),
-      )
-    ) {
-      return props.theme.colors.red[500];
-    } else {
+    if (props.calculateReviewDDay === 'grey') {
+      console.log('여교여교');
+      console.log(props.calculateReviewDDay[1]);
       return props.theme.colors.grey[5];
+    } else if (props.calculateReviewDDay === 'red') {
+      console.log('여기여여기여');
+      return props.theme.colors.red[500];
     }
   }};
   margin-left: 1px;
