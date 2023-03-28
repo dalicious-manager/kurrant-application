@@ -12,7 +12,7 @@ import Typography from '../../../../../components/Typography';
 import UploadPhoto from '../../../../../components/UploadPhoto';
 import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/Fetch';
 import RNFetchBlob from 'rn-fetch-blob';
 
@@ -49,6 +49,8 @@ const Screen = ({route}) => {
 
   // editItem 있으면 등록하기
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     if (editItem) {
       const yo = editItem.image.map(v => {
@@ -80,6 +82,8 @@ const Screen = ({route}) => {
     review: '',
     isExclusive: false,
   });
+
+  // 사장님에게만 보이기옵션은 수정할 수 없다
 
   const form = useForm({
     mode: 'all',

@@ -6,7 +6,7 @@ import Typography from '../../../../../components/Typography';
 import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
 import StarRating from '../../../../../components/StarRating/StarRating';
 
-import AdminReview from './AdminReview';
+import AdminOrMakersReview from './AdminOrMakersReview';
 import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
@@ -28,14 +28,16 @@ const onlyForMakers = true;
 
 const Component = ({
   id,
+  editItem,
   makersName,
   foodName,
   writtenDate,
   option,
   rating,
-  editItem,
   reviewText,
   adminReview,
+  makersComment,
+  forMakers,
   imageLocation,
 }) => {
   const navigation = useNavigation();
@@ -136,7 +138,7 @@ const Component = ({
         <PostDateText>{writtenDate} 작성</PostDateText>
       </RowWrap>
 
-      {onlyForMakers ? (
+      {!forMakers ? (
         <>
           <ImagesWrap>
             {imageLocationToSix.map((v, i) => {
@@ -169,11 +171,21 @@ const Component = ({
 
       {adminReview && (
         <CommentWrap>
-          <AdminReview
+          <AdminOrMakersReview
             pngLink={adminReview.pngLink}
-            adminName={adminReview.adminName}
-            writtenDate={adminReview.writtenDate}
-            message={adminReview.message}
+            writtenDate={adminReview.createDate}
+            message={adminReview.content}
+          />
+        </CommentWrap>
+      )}
+
+      {makersComment && (
+        <CommentWrap>
+          <AdminOrMakersReview
+            makersName={makersName}
+            pngLink={makersComment.pngLink}
+            writtenDate={makersComment.createDate}
+            message={makersComment.content}
           />
         </CommentWrap>
       )}

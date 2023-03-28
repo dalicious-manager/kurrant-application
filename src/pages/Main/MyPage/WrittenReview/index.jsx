@@ -28,13 +28,8 @@ const Pages = () => {
     getWrittenReview();
   }, []);
 
-  // ReviewList -> ReviewList
-
   useEffect(() => {
-    setTotalWrittenReviewList(
-      // calculateTotalWrittenReviewList(ReviewList),
-      writtenReviewCount,
-    );
+    setTotalWrittenReviewList(writtenReviewCount);
   }, [writtenReviewCount]);
 
   return (
@@ -48,8 +43,10 @@ const Pages = () => {
           renderItem={({item}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
 
+            // console.log(item.forMakers);
             const item2 = {
               id: item.reviewId,
+              createDate: item.createDate,
               image: item.imageLocation,
               reviewText: item.content,
               rating: item.satisfaction,
@@ -58,6 +55,9 @@ const Pages = () => {
               makersName: item.makersName,
               foodName: item.itemName,
               option: item.option,
+              forMakers: item.forMakers,
+              adminReview: item.adminComment,
+              makersComment: item.makersComment,
             };
 
             return (
@@ -72,8 +72,10 @@ const Pages = () => {
                   rating={item2.rating}
                   reviewText={item2.reviewText}
                   imageLocation={item2.imageLocation}
-                  // adminReview={item2.adminReview}
-                  adminReview={sampleAdminReview}
+                  forMakers={item2.forMakers}
+                  adminReview={item2.adminReview}
+                  makersComment={item2.makersComment}
+                  // adminReview={sampleAdminReview}
                 />
               </View>
             );

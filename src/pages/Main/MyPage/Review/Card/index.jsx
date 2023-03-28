@@ -90,6 +90,7 @@ const Component = ({
                   navigation.navigate(CreateReviewScreenName, {
                     orderItemId: orderItemId,
                     imageLocation: imageLocation,
+                    foodName,
                   });
                 }}>
                 <TextText>리뷰작성</TextText>

@@ -5,16 +5,23 @@ import {GreyLockerIcon} from '../../../../../../components/Icon';
 
 import Typography from '../../../../../../components/Typography';
 
-const sampleOnlyForReviewers = true;
+// const sampleOnlyForReviewers = true;
+const sampleOnlyForReviewers = false;
 
-const Component = ({pngLink, adminName, writtenDate, message}) => {
+const Component = ({
+  makersName,
+  pngLink,
+
+  writtenDate: createDate,
+  message: content,
+}) => {
   return (
     <Container>
       <AdminImageWrap>
         <AdminImage source={pngLink} resizeMode="cover" />
       </AdminImageWrap>
 
-      <MessageWrap>
+      <MessageWrap onlyForReviewers={sampleOnlyForReviewers}>
         {sampleOnlyForReviewers ? (
           <OnlyForReviewersContainer>
             <GreyLockerIcon />
@@ -26,11 +33,11 @@ const Component = ({pngLink, adminName, writtenDate, message}) => {
         ) : (
           <>
             <TitleWrap>
-              <AdminName>{adminName}</AdminName>
-              <WrittenDate> {writtenDate}</WrittenDate>
+              <AdminName>{makersName ? makersName : '운영자'}</AdminName>
+              <WrittenDate> {createDate} 작성</WrittenDate>
             </TitleWrap>
 
-            <Message>{message}</Message>
+            <Message>{content}</Message>
           </>
         )}
       </MessageWrap>
@@ -84,7 +91,11 @@ const MessageWrap = styled.View`
   margin-left: 4px;
   background-color: ${props => props.theme.colors.grey[8]};
   border-radius: 7px;
-  padding: 16px;
+  /* padding: 16px; */
+
+  ${({onlyForReviewers}) =>
+    onlyForReviewers ? 'padding: 16px;' : 'padding: 12px 16px;'}
+
   flex: 1;
 `;
 const TitleWrap = styled.View`

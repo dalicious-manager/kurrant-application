@@ -17,6 +17,7 @@ const Screens = ({route}) => {
 
   const orderItemId = route.params.orderItemId;
   const imageLocation = route.params.imageLocation;
+  const foodName = route.params.foodName;
 
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [disable, setDisable] = useState(false);
@@ -30,7 +31,7 @@ const Screens = ({route}) => {
             uri: imageLocation,
           }}
         />
-        <MenuName>[풀어스] 라코타 치즈 샐러드</MenuName>
+        <MenuName>{foodName}</MenuName>
 
         <RateStars
           ratingInput={0}
