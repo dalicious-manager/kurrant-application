@@ -46,8 +46,8 @@ const useGetAnnouncements = () => {
         },
       ];
 
-      // const dataFromDb = res.data;
-      const dataFromDb = sampleArray;
+      const dataFromDb = res.data;
+      // const dataFromDb = sampleArray;
 
       const getClickedDate = await getStorage('announcementsClickedDates');
 
@@ -110,9 +110,9 @@ const useGetAnnouncements = () => {
         }
       });
 
-      console.log('-----------');
-      console.log(yes);
-      console.log('-----------');
+      // console.log('-----------');
+      // console.log(yes);
+      // console.log('-----------');
       // console.log(yes2);
 
       setAnnouncementModalVisible(yes);
