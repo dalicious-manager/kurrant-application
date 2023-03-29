@@ -75,10 +75,21 @@ const Component = ({
         },
         {
           text: `삭제`,
-          onPress: async () => {
-            await deleteReview(id, token);
+          onPress: () => {
+            Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
+              {
+                text: '확인',
+                onPress: async () => {
+                  await deleteReview(id, token);
 
-            navigation.navigate(WrittenReviewPageName);
+                  navigation.reset({routes: [{name: WrittenReviewPageName}]});
+
+                  return;
+                },
+                style: 'cancel',
+              },
+            ]);
+
             return;
           },
 
@@ -170,7 +181,7 @@ const Component = ({
         <OnlyForMakers />
       )} */}
 
-      {!forMakers && <OnlyForMakers />}
+      {forMakers && <OnlyForMakers />}
 
       <>
         <ImagesWrap>

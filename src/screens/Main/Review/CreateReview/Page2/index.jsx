@@ -33,7 +33,7 @@ const apiHostUrl =
 
 const Screen = ({route}) => {
   const [starRating, setStarRating] = useAtom(starRatingAtom);
-  const [clickAvaliable, setClickAvaliable] = useState(false);
+  const [clickDisable, setClickDisable] = useState(false);
 
   // 모든 사진
   const [photosArray, setPhotosArray] = useState([]);
@@ -46,6 +46,9 @@ const Screen = ({route}) => {
   const id = route?.params?.id;
   const status = route?.params?.status;
   const editItem = route?.params?.editItem;
+
+  console.log('진짜 징하다');
+  console.log(editItem);
 
   const theme = useTheme();
 
@@ -96,6 +99,12 @@ const Screen = ({route}) => {
     setInput({...input, review: form.watch('review')});
   }, [form.watch('review')]);
 
+  // 데이터 있으면 input에 바로등록하기
+
+  useEffect(() => {
+    setInput({...input, review: editItem.reviewText});
+  }, [editItem.reviewText]);
+
   const handlePhotoRemove = photoId => {
     const thisPhotoArray = [...photosArray];
     const returnArray = thisPhotoArray.filter(value => value.id !== photoId);
@@ -103,13 +112,18 @@ const Screen = ({route}) => {
   };
 
   useEffect(() => {
-    setClickAvaliable(false);
-    if (input.review?.length >= 10 && input.review?.length <= 500) {
-      return;
-    }
+    // 처음아닐때  되게하기
+    // if (!isMount) return;
 
-    setClickAvaliable(true);
+    if (input.review?.length >= 10 && input.review?.length <= 500) {
+      setClickDisable(false);
+      return;
+    } else {
+      setClickDisable(true);
+    }
   }, [input]);
+
+  // 여기가 완료 클릭
 
   const onSignInPressed = data => {
     const sendCreateData = {
@@ -118,8 +132,6 @@ const Screen = ({route}) => {
       content: data.review,
       forMakers: input.isExclusive,
     };
-
-    /// formData 안에 값을 보고싶다면 아래 코드 사용하면 됨
 
     const createReview = async (photosArray = []) => {
       const url = `${apiHostUrl}/users/me/reviews`;
@@ -140,6 +152,7 @@ const Screen = ({route}) => {
         },
       ]);
     };
+
     const editReview = async (editId, photosArray = []) => {
       const url = `${apiHostUrl}/users/me/reviews/update?id=${editId}`;
 
@@ -169,6 +182,7 @@ const Screen = ({route}) => {
         satisfaction: starRating,
         content: data.review,
         images: webArray,
+        forMakers: editItem.forMakers ? true : input.isExclusive,
       };
 
       const headers = {
@@ -371,7 +385,7 @@ const Screen = ({route}) => {
             size="full"
             label="완료"
             text={'Button09SB'}
-            disabled={clickAvaliable}
+            disabled={clickDisable}
             onPressEvent={form.handleSubmit(onSignInPressed)}
           />
         </FormProvider>
