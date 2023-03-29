@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 import Typography from '../Typography';
@@ -6,10 +6,17 @@ import Typography from '../Typography';
 import HTML, {defaultSystemFonts} from 'react-native-render-html';
 
 import {Dimensions, ScrollView} from 'react-native';
-import {setStorage} from '../../utils/asyncStorage';
+import {getStorage, setStorage} from '../../utils/asyncStorage';
 
-const Component = ({modalVisible, data}) => {
+const Component = ({
+  modalVisible,
+  data,
+  announcementHandle,
+  setAnnouncementHandle,
+}) => {
   const themeApp = useTheme();
+
+  // console.log(modalVisible);
 
   const [modalOffPriorityOne, setModalOffPriorityOne] = useState(true);
 
@@ -29,14 +36,45 @@ const Component = ({modalVisible, data}) => {
   };
 
   const handleMessageRead = async () => {
+    // const yes = await getStorage('announcementsClickedDates');
+    // 있을떄
+
+    // 아예 없을때
+    console.log('랄랄라2');
+    // console.log(modalVisible);
+
     const modalStatus = {...modalVisible};
+    // console.log(modalStatus);
+
+    // modalVisible.forEach(v => {
+    //   modalStatus[v.toString()] = undefined
+    // });
 
     modalStatus[data.id.toString()] = Date.now();
 
+    // console.log(`close ${data.id}`);
+
+    console.log(modalStatus);
+    // {"3": 1680072040934, "4": undefined}
+
     await setStorage('announcementsClickedDates', JSON.stringify(modalStatus));
 
-    setModalOffPriorityOne(false);
+    // // 팝업 지우게하기
+
+    const yes2 = {...announcementHandle};
+    yes2[data.id.toString()] = false;
+    console.log(yes2);
+
+    setAnnouncementHandle(yes2);
+
+    // setModalOffPriorityOne(false);
   };
+
+  useEffect(() => {
+    return () => {
+      console.log('컴포넌트 없어짐' + data.id);
+    };
+  }, []);
 
   return (
     <CenteredView>
