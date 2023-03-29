@@ -163,8 +163,8 @@ const Pages = ({route}) => {
     );
   };
 
-  const spotId = isUserInfo.spotId;
-  const groupId = isUserInfo.groupId;
+  const spotId = isUserInfo?.spotId;
+  const groupId = isUserInfo?.groupId;
   useFocusEffect(
     useCallback(() => {
       getData();
@@ -198,7 +198,7 @@ const Pages = ({route}) => {
               <Typography text="Title02SB" textColor={themeApp.colors.grey[2]}>
                 {myInfoPerson?.name}님
               </Typography>
-              {myInfoPerson.hasGeneralProvider && (
+              {myInfoPerson?.hasGeneralProvider && (
                 <Typography text="Body06R" textColor={themeApp.colors.grey[2]}>
                   {myInfoPerson?.email}
                 </Typography>
@@ -258,10 +258,10 @@ const Pages = ({route}) => {
             </SNSBox>
           </SNSContainer>
           <Line />
-          {isUserInfo.name === '이름없음' && (
+          {isUserInfo?.name === '이름없음' && (
             <ListBox
               title={'이름 설정'}
-              description={isUserInfo.name === '이름없음' && '설정하기'}
+              description={isUserInfo?.name === '이름없음' && '설정하기'}
               routeName={NameSettingPageName}
             />
           )}
@@ -272,13 +272,13 @@ const Pages = ({route}) => {
           />
           <ListBox
             title={
-              !myInfoPerson.hasGeneralProvider
+              !myInfoPerson?.hasGeneralProvider
                 ? '이메일/비밀번호 설정'
                 : '비밀번호 변경'
             }
-            description={!myInfoPerson.hasGeneralProvider && '설정하기'}
+            description={!myInfoPerson?.hasGeneralProvider && '설정하기'}
             routeName={
-              !myInfoPerson.hasGeneralProvider
+              !myInfoPerson?.hasGeneralProvider
                 ? EmailSettingPageName
                 : PasswordSettingPageName
             }

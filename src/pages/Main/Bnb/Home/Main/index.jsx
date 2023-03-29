@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useAtomValue} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, Alert, StatusBar} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -28,7 +28,11 @@ import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {
+  getStorage,
+  setStorage,
+  removeItemFromStorage,
+} from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import Toast from '../../../../../components/Toast';
@@ -43,7 +47,10 @@ import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
+import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
 import useMembership from '../../../../../biz/useMembership';
+import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -54,7 +61,8 @@ const Pages = () => {
   const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
     useUserInfo();
   const {
-    readableAtom: {userRole},
+    saveFcmToken,
+    readableAtom: {userRole, fcmToken},
   } = useAuth();
   const {
     userGroupSpotCheck,
@@ -76,10 +84,12 @@ const Pages = () => {
   const {loadMeal} = useShoppingBasket();
   const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
+
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const [eventSpot, setEventSpot] = useState(false);
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
+  const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
@@ -87,6 +97,15 @@ const Pages = () => {
     return el.serviceDate;
   });
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
+
+  // 전체 공지사항
+
+  const {getAnnouncements, announcements, announcementModalVisible} =
+    useGetAnnouncements();
+
+  useEffect(() => {
+    getAnnouncements(0);
+  }, []);
 
   useEffect(() => {
     const handleShowModal = async () => {
@@ -157,6 +176,11 @@ const Pages = () => {
       }
       const isTester = async () => {
         const user = loadUser();
+        if (fcmToken) {
+          saveFcmToken({
+            token: fcmToken,
+          });
+        }
         if (!(userRole === 'ROLE_GUEST')) {
           const start = weekly.map(s => {
             const startData = formattedWeekDate(s[0]);
@@ -178,7 +202,8 @@ const Pages = () => {
             if (getUserStatus === 1) {
               navigation.navigate(GroupSelectPageName);
             }
-            if (getUserStatus === 2) {
+            if (getUserStatus === 2 && !isCancelSpot) {
+              console.log(isCancelSpot, 'test');
               navigation.navigate(GroupCreateMainPageName);
             }
             return result;
@@ -215,7 +240,7 @@ const Pages = () => {
         alert(e.toString().replace('error:'));
       }
       console.log(membershipHistory.length);
-    }, []),
+    }, [isCancelSpot]),
   );
 
   useEffect(() => {
@@ -264,7 +289,7 @@ const Pages = () => {
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
-
+  // console.log(isUserInfo, '유저인포');
   // const date = formattedWeekDate(new Date());
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
@@ -334,6 +359,18 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
+        {Array.isArray(announcements) &&
+          announcements.length > 0 &&
+          announcements.map(v => {
+            return (
+              <ModalAnnouncement
+                key={v.id}
+                data={v}
+                modalVisible={announcementModalVisible}
+              />
+            );
+          })}
+
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
             <SpotNameText>

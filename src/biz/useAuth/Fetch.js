@@ -127,3 +127,10 @@ export async function logout(body, option) {
   });
   return fetchRes;
 }
+export async function saveFcmToken(body, option) {
+  const fetchRes = await fetchJson(`/users/me/save/token`, 'POST', {
+    ...option,
+    body: JSON.stringify(body),
+  });
+  return fetchRes;
+}

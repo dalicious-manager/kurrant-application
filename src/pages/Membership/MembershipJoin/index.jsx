@@ -79,7 +79,7 @@ const Pages = () => {
   };
   const handleSubmitError = () => {
     try {
-      Alert.alert('필수동의', '필수동의사항에 동의해주세요.');
+      Alert.alert('필수 동의', '필수동의사항에 동의해주세요.');
     } catch (error) {
       console.log(error);
     }

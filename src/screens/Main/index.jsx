@@ -1154,7 +1154,7 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
-            headerLeft: () => <CloseIcon />,
+            headerLeft: () => <CloseIcon isSpot={true} />,
           }}
         />
         {/* 아파트 스팟 신청 */}

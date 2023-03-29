@@ -96,17 +96,18 @@ const Pages = ({route}) => {
   const [modalVisible4, setModalVisible4] = useState(false);
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [payments, setPayments] = useState('NOMAL');
+  const [isPay, setIsPay] = useState(false);
   const [point, setPoint] = useState(0);
 
   const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
-  const {order} = useOrderMeal();
+  const {order, orderNice, orderLoading} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
   const {
-    setSelectDefaultCard,
+    getCardList,
     readableAtom: {selectDefaultCard},
   } = useUserMe();
-  const [card, setCard] = useState(Number(selectDefaultCard));
+  const [card, setCard] = useState(selectDefaultCard);
   const inputRef = useRef(null);
   const form = useForm();
   const {
@@ -137,9 +138,9 @@ const Pages = ({route}) => {
     medtronicSupportArr,
   } = route.params;
   const selectCard = async (text, id) => {
-    await setStorage('selectCard', id.toString());
+    // await setStorage('selectCard', id.toString());
     console.log(text, id);
-    setSelectDefaultCard(id.toString());
+    // setSelectDefaultCard(id.toString());
   };
 
   const fundButton = () => {
@@ -191,31 +192,44 @@ const Pages = ({route}) => {
   const keyboardStatus = useKeyboardEvent();
 
   const handleEventPayments = () => {
-    orderPress(selected);
+    orderPress2(selected);
   };
 
   useEffect(() => {
+    const getCard = async () => {
+      // const nowCard = await getStorage('selectCard');
+      // const easyPay = await getStorage('easyPay');
+      // if (easyPay) {
+      //   setPayments(easyPay);
+      // }
+      // if (nowCard) {
+      //   setCard(Number(nowCard));
+      // }
+      await getCardList();
+    };
+    getCard();
     Platform.OS === 'ios'
       ? StatusBarManager.getHeight(statusBarFrameData => {
           setStatusBarHeight(statusBarFrameData.height);
         })
       : null;
   }, []);
-  useFocusEffect(
-    useCallback(() => {
-      const getCard = async () => {
-        const nowCard = await getStorage('selectCard');
-        const easyPay = await getStorage('easyPay');
-        if (easyPay) {
-          setPayments(easyPay);
-        }
-        if (nowCard) {
-          setCard(Number(nowCard));
-        }
-      };
-      getCard();
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const getCard = async () => {
+  //       // const nowCard = await getStorage('selectCard');
+  //       // const easyPay = await getStorage('easyPay');
+  //       // if (easyPay) {
+  //       //   setPayments(easyPay);
+  //       // }
+  //       // if (nowCard) {
+  //       //   setCard(Number(nowCard));
+  //       // }
+  //       await getCardList();
+  //     };
+  //     getCard();
+  //   }, []),
+  // );
 
   const registerCard = () => {
     navigation.navigate(RegisterCardPageName, {defaultType: 1});
@@ -262,6 +276,7 @@ const Pages = ({route}) => {
   });
 
   const orderPress = async spotId => {
+    setIsPay(true);
     const data = {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
@@ -321,6 +336,87 @@ const Pages = ({route}) => {
           cardCompany: card,
         });
       } else {
+        if (!orderLoading) {
+          const result = await order({
+            amount: totalPrice,
+            orderId: orderId,
+            orderItems: data,
+          });
+
+          if (result?.data) {
+            const resetAction = StackActions.popToTop();
+            navigation.dispatch(resetAction);
+            navigation.navigate(PurchaseDetailPageName, {
+              id: result?.data,
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsPay(false);
+    }
+  };
+  const orderPress2 = async spotId => {
+    const data = {
+      spotId: spotId,
+      // "cardId": selectDefaultCard[0]?.id,
+      cartDailyFoodDtoList: lastArr,
+      totalPrice: medtronicSupportArr.includes(62471004)
+        ? medtronicTotalPrice
+        : totalPrice,
+      supportPrice: medtronicSupportArr.includes(62471004)
+        ? medtronicPrice
+        : usedSupportPrice,
+      deliveryFee: deliveryFee,
+      userPoint: point,
+    };
+    // console.log(data, 'data');
+    try {
+      // const res = await orderMeal(spotId,data);
+      // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
+      const firstName =
+        lastArr?.length > 0
+          ? lastArr[0].cartDailyFoods.length > 0 &&
+            lastArr[0].cartDailyFoods[0].name
+          : '';
+      const orderName =
+        totalCount > 1 ? `${firstName} 외 ${totalCount}건` : firstName;
+      // console.log(isUserInfo?.userId)
+      const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
+      loadMeal();
+      if (totalPrice > 0) {
+        const result = await orderNice({
+          cardId: selectDefaultCard[0]?.id,
+          orderName: orderName,
+          amount: totalPrice,
+          orderId: orderId,
+          orderItems: data,
+        });
+
+        if (result?.data) {
+          const resetAction = StackActions.popToTop();
+          navigation.dispatch(resetAction);
+          navigation.navigate(PurchaseDetailPageName, {
+            id: result?.data,
+          });
+        }
+      } else if (medtronicSupportArr.includes(62471004)) {
+        const result = await orderNice({
+          cardId: selectDefaultCard[0]?.id,
+          amount: medtronicTotalPrice,
+          orderId: orderId,
+          orderItems: data,
+        });
+        if (result?.data) {
+          const resetAction = StackActions.popToTop();
+          navigation.dispatch(resetAction);
+          navigation.navigate(PurchaseDetailPageName, {
+            id: result?.data,
+          });
+        }
+      } else {
         const result = await order({
           amount: totalPrice,
           orderId: orderId,
@@ -360,7 +456,7 @@ const Pages = ({route}) => {
               <DeliveryTitle>주문자 정보</DeliveryTitle>
               <DeliveryText>
                 {isUserInfo?.name}
-                {isUserInfo.phone === null ? '' : `(${isUserInfo.phone})`}
+                {isUserInfo?.phone === null ? '' : `(${isUserInfo?.phone})`}
               </DeliveryText>
             </View>
           </Container>
@@ -493,7 +589,7 @@ const Pages = ({route}) => {
               원
             </PaymentText>
           </PaymentView>
-          <DiscountView>
+          {/* <DiscountView>
             <Bar />
             <DiscountTextWrap>
               <DiscountTextView>
@@ -524,13 +620,14 @@ const Pages = ({route}) => {
                 </DiscountText>
               </DiscountTextView>
             </DiscountTextWrap>
-          </DiscountView>
+          </DiscountView> */}
           <PaymentView>
             <PaymentText>배송비</PaymentText>
             <PaymentText>
               {deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원
             </PaymentText>
           </PaymentView>
+
           <PaymentView style={{paddingBottom: 8}}>
             <PressableView onPress={pointButton}>
               <PaymentText>포인트 사용금액</PaymentText>
@@ -554,6 +651,7 @@ const Pages = ({route}) => {
               잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
             </UserPointText>
           </UserPointView>
+
           <PaymentView>
             <TotalPriceWrap>
               <TotalPriceTitle>총 결제금액</TotalPriceTitle>
@@ -601,7 +699,7 @@ const Pages = ({route}) => {
                 name={'NAVERPAY'}
               />
             </AgreeTextBox> */}
-            <CardSelectContainer>
+            {/*<CardSelectContainer>
               {payments === 'NOMAL' && (
                 <View>
                   {card ? (
@@ -616,6 +714,52 @@ const Pages = ({route}) => {
                       ) : (
                         <CardText>{formattedCardCode(card)}</CardText>
                       )}
+                       <PayInfoWrap>
+                                <PayInfo>
+                                <PayError />
+                                <PayText>결제불가</PayText>
+                                </PayInfo>
+                                <ArrowRight />
+                            </PayInfoWrap> 
+                      <ArrowRight />
+                    </Card>
+                  ) : (
+                    <Card
+                      onPress={() =>
+                        // navigation.navigate(DefaultPaymentManagePageName)
+                        setModalVisible4(!modalVisible4)
+                      }>
+                      <CardText>결제 수단 선택</CardText>
+                      <ArrowRight />
+                    </Card>
+                  )}
+                </View>
+              )}
+            </CardSelectContainer>*/}
+            <CardSelectContainer>
+              {payments === 'NOMAL' && (
+                <View>
+                  {selectDefaultCard ? (
+                    <Card
+                      key={selectDefaultCard}
+                      onPress={() => {
+                        // console.log(selectDefaultCard);
+                        navigation.navigate(DefaultPaymentManagePageName);
+                        // setModalVisible4(!modalVisible4);
+                      }}>
+                      {!selectDefaultCard.length > 0 ? (
+                        <CardText>결제 카드 등록</CardText>
+                      ) : (
+                        <CardText>
+                          {selectDefaultCard[0].cardCompany +
+                            '(' +
+                            selectDefaultCard[0].cardNumber.substring(
+                              selectDefaultCard[0].cardNumber.length - 4,
+                              selectDefaultCard[0].cardNumber.length,
+                            ) +
+                            ')'}
+                        </CardText>
+                      )}
                       {/* <PayInfoWrap>
                                 <PayInfo>
                                 <PayError />
@@ -627,9 +771,9 @@ const Pages = ({route}) => {
                     </Card>
                   ) : (
                     <Card
-                      onPress={() =>
-                        // navigation.navigate(DefaultPaymentManagePageName)
-                        setModalVisible4(!modalVisible4)
+                      onPress={
+                        () => navigation.navigate(DefaultPaymentManagePageName)
+                        // setModalVisible4(!modalVisible4)
                       }>
                       <CardText>결제 수단 선택</CardText>
                       <ArrowRight />
@@ -667,11 +811,11 @@ const Pages = ({route}) => {
             disabled={
               !(
                 payments !== 'NOMAL' ||
-                card ||
+                selectDefaultCard.length > 0 ||
                 (medtronicSupportArr.includes(62471004)
                   ? medtronicTotalPrice <= 0
                   : totalPrice <= 0)
-              )
+              ) || isPay
             }
             onPressEvent={() => {
               handleEventPayments();
@@ -711,7 +855,7 @@ const Pages = ({route}) => {
         onPressEvent1={closeModal}
       />
       {/* <BottomSheet title='일반 카드 선택' modalVisible={modalVisible4} setModalVisible={setModalVisible4} setSelected={setCard} selected={card} data={cardListData} setValue={selectCard}/> */}
-      <BottomSheetCard
+      {/* <BottomSheetCard
         modalVisible={modalVisible4}
         setModalVisible={setModalVisible4}
         title="일반 카드 선택"
@@ -719,7 +863,7 @@ const Pages = ({route}) => {
         selected={card}
         setSelected={setCard}
         onPressEvent={selectCard}
-      />
+      /> */}
     </SafeArea>
   );
 };
@@ -836,6 +980,7 @@ const Bar = styled.View`
 
 const DiscountText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[5]};
+  white-space: nowrap;
 `;
 
 const DiscountView = styled.View`
@@ -846,12 +991,14 @@ const DiscountView = styled.View`
 const DiscountTextWrap = styled.View`
   justify-content: space-between;
   padding-left: 12px;
+  white-space: nowrap;
   width: 100%;
 `;
 
 const DiscountTextView = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  white-space: nowrap;
 `;
 
 const KeyContainer = styled.KeyboardAvoidingView`

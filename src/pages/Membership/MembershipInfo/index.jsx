@@ -47,7 +47,9 @@ const Pages = () => {
           <TextCenterField
             text={'LargeTitle'}
             textColor={themeApp.colors.neutral[0]}>
-            {isUserInfo.name}님은{'\n'}멤버십 이용중
+
+            {isUserInfo?.name}님은{'\n'}멤버십 이용중
+
           </TextCenterField>
           <MembershipLabelBox>
             <LabelBox>
@@ -168,6 +170,7 @@ const Pages = () => {
               </Typography>
             </SaleTextBox>
           </InfoContainer>
+
         </Container>
         <ButtonContainer>
           <ButtonBox>

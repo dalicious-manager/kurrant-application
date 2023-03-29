@@ -127,7 +127,7 @@ const Pages = () => {
                 <Typography
                   text="Title02SB"
                   textColor={themeApp.colors.grey[2]}>
-                  {isUserInfo.name}님
+                  {isUserInfo?.name}님
                 </Typography>
               </LoginIdBox>
               <Pressable
@@ -219,6 +219,7 @@ const Pages = () => {
 
             <ListBox title="커런트 포인트" routeName={PointMainPageName} />
             {isApplicationList.length !== 0 && (
+
               <ListBox
                 title="스팟 개설 요청 내역"
                 routeName={GroupApplicationCheckPageName}

@@ -34,6 +34,7 @@ const Pages = ({route}) => {
   const {StatusBarManager} = NativeModules;
   const {
     cardRegisted,
+    cardRegistedNice,
     readableAtom: {cardList},
   } = useUserMe();
   const card = form.watch('cardNumber');
@@ -49,9 +50,23 @@ const Pages = ({route}) => {
       cardVaildationCode: data.cardSecret,
       defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
     };
-    const result = await cardRegisted(req);
-    console.log(result);
-    navigation.goBack();
+    const reqNice = {
+      cardNumber: data.cardNumber.replace(/\W/gi, ''),
+      expirationYear: exp[1],
+      expirationMonth: exp[0],
+      cardPassword: data.cardPass,
+      identityNumber: data.cardBirthDay.substring(2),
+      defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
+    };
+    // const result = await cardRegisted(req);
+    try {
+      const resultNice = await cardRegistedNice(reqNice);
+      console.log(resultNice);
+      // navigation.navigate(PaymentManagePage)
+      navigation.goBack();
+    } catch (error) {
+      alert(error.toString().replace('error:', ''));
+    }
   };
   useFocusEffect(
     useCallback(() => {
@@ -199,14 +214,14 @@ const Pages = ({route}) => {
           </FormProvider>
         </ScrollView>
 
-        <ButtonBox isKeyboard={keyboardEvent.isKeyboardActivate}>
-          {!keyboardEvent.isKeyboardActivate && (
+        {!keyboardEvent.isKeyboardActivate && (
+          <ButtonBox isKeyboard={keyboardEvent.isKeyboardActivate}>
             <Button
               label="등록하기"
               onPressEvent={form.handleSubmit(onSubmit)}
             />
-          )}
-        </ButtonBox>
+          </ButtonBox>
+        )}
       </Wrapper>
     </KeyboardAvoidingView>
   );
