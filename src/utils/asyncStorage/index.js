@@ -13,3 +13,11 @@ export const getStorage = async (key, callback = () => {}) => {
   // console.log(result)
   return result;
 };
+
+export const removeItemFromStorage = async (
+  key,
+
+  callback = () => console.log('저장'),
+) => {
+  return await AsyncStorage.removeItem(key, callback);
+};

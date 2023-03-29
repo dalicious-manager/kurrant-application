@@ -28,7 +28,11 @@ import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {
+  getStorage,
+  setStorage,
+  removeItemFromStorage,
+} from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import Toast from '../../../../../components/Toast';
@@ -43,6 +47,8 @@ import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
+import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
 import useMembership from '../../../../../biz/useMembership';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 
@@ -77,6 +83,7 @@ const Pages = () => {
   const {loadMeal} = useShoppingBasket();
   const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
+
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const [eventSpot, setEventSpot] = useState(false);
@@ -89,6 +96,15 @@ const Pages = () => {
     return el.serviceDate;
   });
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
+
+  // 전체 공지사항
+
+  const {getAnnouncements, announcements, announcementModalVisible} =
+    useGetAnnouncements();
+
+  useEffect(() => {
+    getAnnouncements(0);
+  }, []);
 
   useEffect(() => {
     const handleShowModal = async () => {
@@ -337,6 +353,18 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
+        {Array.isArray(announcements) &&
+          announcements.length > 0 &&
+          announcements.map(v => {
+            return (
+              <ModalAnnouncement
+                key={v.id}
+                data={v}
+                modalVisible={announcementModalVisible}
+              />
+            );
+          })}
+
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
             <SpotNameText>
