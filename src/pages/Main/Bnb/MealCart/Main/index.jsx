@@ -616,7 +616,7 @@ const Pages = () => {
       console.log(err);
     }
   };
-  console.log(spotName[0]?.text, '00');
+
   return (
     <SafeView>
       <SpotView>
@@ -863,9 +863,17 @@ const Pages = () => {
                 </TotalPrice>
               </PaymentView>
               <Border />
-              {/* <UserPointView>
-                        <UserPointText>보유포인트 <UserHavePoint>{isUserInfo?.point === 0 ? 0 : withCommas(isUserInfo?.point)}P</UserHavePoint>(결제시 적용가능)</UserPointText>
-                    </UserPointView> */}
+
+              <UserPointView>
+                <UserPointText>
+                  보유포인트{' '}
+                  <UserHavePoint>
+                    {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
+                  </UserHavePoint>
+                  (결제시 적용가능)
+                </UserPointText>
+              </UserPointView>
+
             </PaymentWrap>
           </View>
         )}
@@ -1143,7 +1151,7 @@ export const PointInputWrap = styled.View`
   border-radius: 7px;
   border: 1px solid ${({theme}) => theme.colors.grey[7]};
   background-color: ${({theme}) => theme.colors.grey[0]};
-  padding: 0px 28px 0px 12px;
+  padding: 0px 38px 0px 12px;
   flex-direction: row;
   text-align: center;
   align-items: center;

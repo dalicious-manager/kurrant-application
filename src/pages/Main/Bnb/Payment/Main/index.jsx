@@ -10,18 +10,20 @@ import React, {
   forwardRef,
   useCallback,
 } from 'react';
-import {useForm} from 'react-hook-form';
+import {FormProvider, useForm} from 'react-hook-form';
 import {
   View,
   Alert,
   Text,
   Platform,
+  TextInput,
   KeyboardAvoidingView,
   NativeModules,
+  Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
 import styled from 'styled-components/native';
-
+import {KeyboardAccessoryView} from 'react-native-keyboard-accessory';
 import FastImage from 'react-native-fast-image';
 import ArrowUpIcon from '../../../../../assets/icons/Payment/arrow.svg';
 import ArrowDownIcon from '../../../../../assets/icons/Payment/arrowDown.svg';
@@ -78,6 +80,7 @@ import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import BottomSheetCard from '../../../../../components/BottomSheetCard';
 import PaymentsList from './components/PaymentsList';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
+import Point from './components/Point/Point';
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -106,6 +109,15 @@ const Pages = ({route}) => {
   } = useUserMe();
   const [card, setCard] = useState(selectDefaultCard);
   const inputRef = useRef(null);
+  const form = useForm();
+  const {
+    formState: {errors},
+    watch,
+    handleSubmit,
+    setValue,
+  } = form;
+  const points = watch('point');
+
   const {
     totalCount,
     totalMealPrice,
@@ -130,16 +142,53 @@ const Pages = ({route}) => {
     console.log(text, id);
     // setSelectDefaultCard(id.toString());
   };
-  // console.log(totalPrice, medtronicPrice, '090999');
+
   const fundButton = () => {
     setModalVisible3(true);
   };
 
+  const pointButton = () => {
+    setModalVisible2(true);
+  };
   const closeModal = () => {
     setModalVisible2(false);
     setModalVisible3(false);
   };
 
+  // returnKeyTpye
+  const pointHandlePress = () => {
+    if (points === '') {
+      return setValue('point', '0');
+    }
+
+    if (medtronicSupportArr.includes(62471004)) {
+      if (points > isUserInfo.point && isUserInfo.point > medtronicTotalPrice) {
+        return setValue('point', medtronicTotalPrice.toString());
+      }
+    } else {
+      if (points > isUserInfo.point && isUserInfo.point > totalPrice) {
+        return setValue('point', totalPrice.toString());
+      }
+    }
+
+    if (points > isUserInfo.point) {
+      return setValue('point', isUserInfo.point.toString());
+    }
+  };
+
+  // pointDismiss
+  const onBlurPress = e => {
+    e.preventDefault();
+    pointHandlePress();
+  };
+
+  const clearPoint = () => {
+    setValue('point', '0');
+  };
+
+  const onFocusInput = () => {
+    setValue('point', '');
+  };
   const keyboardStatus = useKeyboardEvent();
 
   const handleEventPayments = () => {
@@ -181,10 +230,6 @@ const Pages = ({route}) => {
   //     getCard();
   //   }, []),
   // );
-
-  const onBlurPress = e => {
-    e.preventDefault();
-  };
 
   const registerCard = () => {
     navigation.navigate(RegisterCardPageName, {defaultType: 1});
@@ -237,15 +282,15 @@ const Pages = ({route}) => {
       // "cardId": selectDefaultCard[0]?.id,
       cartDailyFoodDtoList: lastArr,
       totalPrice: medtronicSupportArr.includes(62471004)
-        ? medtronicTotalPrice
-        : totalPrice,
+        ? medtronicTotalPrice - Number(points)
+        : totalPrice - Number(points),
       supportPrice: medtronicSupportArr.includes(62471004)
         ? medtronicPrice
         : usedSupportPrice,
       deliveryFee: deliveryFee,
-      userPoint: point,
+      userPoint: points,
     };
-    // console.log(data, 'data');
+
     try {
       // const res = await orderMeal(spotId,data);
       // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
@@ -259,12 +304,12 @@ const Pages = ({route}) => {
       // console.log(isUserInfo?.userId)
       const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
       loadMeal();
-      if (totalPrice > 0) {
+      if (totalPrice - Number(points) > 0) {
         // setLoadMeal([])
         // const resetAction = StackActions.popToTop();
         // navigation.dispatch(resetAction);
         return navigation.navigate(MealPaymentPageName, {
-          amount: totalPrice,
+          amount: totalPrice - Number(points),
           orderName: orderName,
           orderId: orderId,
           email: isUserInfo?.email,
@@ -274,9 +319,13 @@ const Pages = ({route}) => {
           flowMode: 'DIRECT',
           cardCompany: card,
         });
-      } else if (medtronicSupportArr.includes(62471004)) {
+      } else if (
+        medtronicSupportArr.includes(62471004) &&
+        medtronicTotalPrice - Number(points) > 0
+      ) {
+        console.log(medtronicTotalPrice - Number(points), '0000000');
         return navigation.navigate(MealPaymentPageName, {
-          amount: medtronicTotalPrice,
+          amount: medtronicTotalPrice - Number(points),
           orderName: orderName,
           orderId: orderId,
           email: isUserInfo?.email,
@@ -578,36 +627,53 @@ const Pages = ({route}) => {
               {deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원
             </PaymentText>
           </PaymentView>
-          {/* <PaymentView>
-                        <PressableView onPress={pointButton}>
-                            <PaymentText>포인트 사용금액</PaymentText>
-                            <QuestionIcon />
-                        </PressableView>
-                        
-                            <PointWrap>
-                                <Text>- </Text>
-                                <PointInputWrap>
-                                    <PointInput keyboardType="number-pad" ref={inputRef} 
-                                    defaultValue={isUserInfo?.point === 0 ? '0' : withCommas(isUserInfo?.point.toString())}
-                                    onChange={(text)=>setPoint(text)}
-                                    />
-                                    <XIcon onPress={clearInput}/>
-                                </PointInputWrap>
-                                <PointUnitText>P</PointUnitText>
-                            </PointWrap>
-                        
-                      </PaymentView> */}
-          {/* <UserPointView>
-                            <UserPointText>잔여 {isUserInfo?.point === 0 ? 0 : withCommas(isUserInfo?.point)}P</UserPointText>
-                      </UserPointView> */}
+
+          <PaymentView style={{paddingBottom: 8}}>
+            <PressableView onPress={pointButton}>
+              <PaymentText>포인트 사용금액</PaymentText>
+              <QuestionIcon />
+            </PressableView>
+            <FormProvider {...form}>
+              <Point
+                handlePress={pointHandlePress}
+                clearPoint={clearPoint}
+                inputRef={inputRef}
+                totalPrice={totalPrice}
+                onFocusInput={onFocusInput}
+                userPoint={isUserInfo.point}
+                medtronicTotalPrice={medtronicTotalPrice}
+                medtronicSupportArr={medtronicSupportArr}
+              />
+            </FormProvider>
+          </PaymentView>
+          <UserPointView>
+            <UserPointText>
+              잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
+            </UserPointText>
+          </UserPointView>
+
           <PaymentView>
-            <TotalPriceTitle>총 결제금액</TotalPriceTitle>
-            <TotalPrice>
-              {medtronicSupportArr.includes(62471004)
-                ? withCommas(medtronicTotalPrice)
-                : withCommas(totalPrice)}
-              원
-            </TotalPrice>
+            <TotalPriceWrap>
+              <TotalPriceTitle>총 결제금액</TotalPriceTitle>
+              <TotalPrice>
+                {medtronicSupportArr.includes(62471004)
+                  ? withCommas(
+                      points > medtronicTotalPrice
+                        ? 0
+                        : points > isUserInfo.point
+                        ? medtronicTotalPrice - isUserInfo.point
+                        : medtronicTotalPrice - Number(points),
+                    )
+                  : withCommas(
+                      points > totalPrice
+                        ? 0
+                        : points > isUserInfo.point
+                        ? totalPrice - isUserInfo.point
+                        : totalPrice - Number(points),
+                    )}
+                원
+              </TotalPrice>
+            </TotalPriceWrap>
           </PaymentView>
         </BorderWrap>
         <BorderWrap>
@@ -723,7 +789,7 @@ const Pages = ({route}) => {
           </Label>
         </BorderWrap>
       </ViewScroll>
-      <KeyContainer
+      {/* <KeyContainer
         keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         {keyboardStatus.isKeyboardActivate && (
@@ -735,8 +801,9 @@ const Pages = ({route}) => {
             </KeyboardInner>
           </TouchableWithoutFeedback>
         )}
-      </KeyContainer>
+      </KeyContainer> */}
       {/* ;handleEventPayments() */}
+
       {!keyboardStatus.isKeyboardActivate && (
         <ButtonWrap>
           <Button
@@ -781,7 +848,7 @@ const Pages = ({route}) => {
         setModalVisible={setModalVisible2}
         title={'포인트란?'}
         description={
-          '고객님의 스팟에서 지원하는 식사 지원금 및 구독 메뉴 취소시 적립되는 환불 포인트입니다. 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
+          '고객님의 스팟에서 지원하는 식사 지원금 및 \n 구독 메뉴 취소시 적립되는 환불 포인트입니다.\n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
         }
         buttonTitle1={'확인했어요'}
         buttonType1={'grey7'}
@@ -806,7 +873,7 @@ export default Pages;
 const SafeArea = styled.View`
   flex: 1;
   background-color: ${props => props.theme.colors.grey[0]};
-  padding-bottom: 60px;
+  //padding-bottom: 60px;
 `;
 
 const ViewScroll = styled.ScrollView`
@@ -816,6 +883,7 @@ const Label = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[4]};
   padding: 24px;
   padding-bottom: 48px;
+  margin-bottom: 60px;
 `;
 const BorderWrap = styled.View`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
@@ -971,4 +1039,29 @@ const CountWrap = styled.View`
   position: absolute;
   right: 0px;
   bottom: 0px;
+`;
+
+const UserPointView = styled.View`
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 0px 24px;
+`;
+
+const UserPointText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+  //margin-top: 16px;
+`;
+
+const TotalPriceWrap = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 24px;
+  width: 100%;
+`;
+
+const ClearInputButton = styled.Pressable`
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
 `;

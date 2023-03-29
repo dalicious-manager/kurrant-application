@@ -47,7 +47,9 @@ const Pages = () => {
           <TextCenterField
             text={'LargeTitle'}
             textColor={themeApp.colors.neutral[0]}>
+
             {isUserInfo?.name}님은{'\n'}멤버십 이용중
+
           </TextCenterField>
           <MembershipLabelBox>
             <LabelBox>
@@ -130,24 +132,45 @@ const Pages = () => {
             </SaleTextBox>
           </InfoContainer>
           {/* 포인트 할인혜택 */}
-          {/* <InfoContainer>
-                <SaleTextBox>
-                  <Typography text={'Title04SB'} textColor={themeApp.colors.grey[2]}>포인트 혜택</Typography>
-                  <Typography text={'Title04SB'} textColor={themeApp.colors.green[500]}>총 {withCommas(membershipInfo?.totalPointBenefitPrice || 0} 점</Typography>
-                </SaleTextBox>
-                <SaleTextBox>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>정기식사 리뷰작성</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.dailyFoodReviewPoint)} 점</Typography>
-                </SaleTextBox>
-                <SaleTextBox>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>마켓 상품 리뷰작성</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.productReviewPoint)} 점</Typography>
-                </SaleTextBox>
-                <SaleTextBox>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>마켓 상품 구매</Typography>
-                  <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>{withCommas(membershipInfo?.productBuyPoint)} 점</Typography>
-                </SaleTextBox>                
-              </InfoContainer> */}
+          <InfoContainer>
+            <SaleTextBox>
+              <Typography
+                text={'Title04SB'}
+                textColor={themeApp.colors.grey[2]}>
+                포인트 혜택
+              </Typography>
+              <Typography
+                text={'Title04SB'}
+                textColor={themeApp.colors.green[500]}>
+                총 {withCommas(membershipInfo?.totalPointBenefitPrice || 0)} 점
+              </Typography>
+            </SaleTextBox>
+            <SaleTextBox>
+              <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>
+                정기식사 리뷰작성
+              </Typography>
+              <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>
+                {withCommas(membershipInfo?.dailyFoodReviewPoint)} 점
+              </Typography>
+            </SaleTextBox>
+            <SaleTextBox>
+              <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>
+                마켓 상품 리뷰작성
+              </Typography>
+              <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>
+                {withCommas(membershipInfo?.productReviewPoint)} 점
+              </Typography>
+            </SaleTextBox>
+            <SaleTextBox>
+              <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>
+                마켓 상품 구매
+              </Typography>
+              <Typography text={'Body06R'} textColor={themeApp.colors.grey[2]}>
+                {withCommas(membershipInfo?.productBuyPoint)} 점
+              </Typography>
+            </SaleTextBox>
+          </InfoContainer>
+
         </Container>
         <ButtonContainer>
           <ButtonBox>
@@ -237,7 +260,7 @@ const SaleTextBox = styled.View`
 `;
 const ButtonContainer = styled.View`
   background-color: white;
-  padding-top: 150px;
+  padding-top: 12px;
   padding-bottom: 35px;
   padding-left: 20px;
   padding-right: 20px;
