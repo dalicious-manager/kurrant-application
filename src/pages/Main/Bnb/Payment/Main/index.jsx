@@ -93,11 +93,12 @@ const Pages = ({route}) => {
   const [modalVisible4, setModalVisible4] = useState(false);
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [payments, setPayments] = useState('NOMAL');
+  const [isPay, setIsPay] = useState(false);
   const [point, setPoint] = useState(0);
 
   const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
-  const {order} = useOrderMeal();
+  const {order, orderLoading} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
   const {
     setSelectDefaultCard,
@@ -217,6 +218,7 @@ const Pages = ({route}) => {
   });
 
   const orderPress = async spotId => {
+    setIsPay(true);
     const data = {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
@@ -272,22 +274,26 @@ const Pages = ({route}) => {
           cardCompany: card,
         });
       } else {
-        const result = await order({
-          amount: totalPrice,
-          orderId: orderId,
-          orderItems: data,
-        });
-
-        if (result?.data) {
-          const resetAction = StackActions.popToTop();
-          navigation.dispatch(resetAction);
-          navigation.navigate(PurchaseDetailPageName, {
-            id: result?.data,
+        if (!orderLoading) {
+          const result = await order({
+            amount: totalPrice,
+            orderId: orderId,
+            orderItems: data,
           });
+
+          if (result?.data) {
+            const resetAction = StackActions.popToTop();
+            navigation.dispatch(resetAction);
+            navigation.navigate(PurchaseDetailPageName, {
+              id: result?.data,
+            });
+          }
         }
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsPay(false);
     }
   };
 
@@ -606,7 +612,7 @@ const Pages = ({route}) => {
                 (medtronicSupportArr.includes(62471004)
                   ? medtronicTotalPrice <= 0
                   : totalPrice <= 0)
-              )
+              ) || isPay
             }
             onPressEvent={() => {
               handleEventPayments();
@@ -770,6 +776,7 @@ const Bar = styled.View`
 
 const DiscountText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[5]};
+  white-space: nowrap;
 `;
 
 const DiscountView = styled.View`
@@ -780,12 +787,14 @@ const DiscountView = styled.View`
 const DiscountTextWrap = styled.View`
   justify-content: space-between;
   padding-left: 12px;
+  white-space: nowrap;
   width: 100%;
 `;
 
 const DiscountTextView = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  white-space: nowrap;
 `;
 
 const KeyContainer = styled.KeyboardAvoidingView`

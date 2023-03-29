@@ -76,6 +76,7 @@ const Pages = () => {
         }
         setPhoneAuth(true);
       } catch (err) {
+        console.log(err.toString());
         setModalVisible(true);
       }
     }

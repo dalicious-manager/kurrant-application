@@ -37,7 +37,10 @@ const Pages = () => {
   };
 
   const filtered = isApartSearch?.filter(itemList => {
-    return itemList.name.includes(searchTerm);
+    return (
+      itemList.name.includes(searchTerm) ||
+      itemList.address.includes(searchTerm)
+    );
   });
 
   useEffect(() => {
@@ -73,6 +76,9 @@ const Pages = () => {
           <ResultScrollView>
             {searchTerm !== '' &&
               filtered.map(el => {
+                if (el.name.includes(searchTerm)) {
+                  console.log(el);
+                }
                 return (
                   <ResultView
                     key={el.id}
@@ -81,11 +87,14 @@ const Pages = () => {
                       navigation.navigate(AddpartmentPageName, {data: el});
                     }}>
                     <View>
-                      {el.name.includes(searchTerm) && (
+                      {(el.name.includes(searchTerm) ||
+                        el.address.includes(searchTerm)) && (
                         <NameWrap>
                           <ApartName>
                             {el.name.split(searchTerm)[0]}
-                            <SearchText>{searchTerm}</SearchText>
+                            {el.name.includes(searchTerm) && (
+                              <SearchText>{searchTerm}</SearchText>
+                            )}
                             {el.name.split(searchTerm)[1]}
                           </ApartName>
                           <View style={{marginLeft: 8}}>
@@ -100,7 +109,13 @@ const Pages = () => {
                           </View>
                         </NameWrap>
                       )}
-                      <ApartAddress>{el.address}</ApartAddress>
+                      <ApartAddress>
+                        {el.address.split(searchTerm)[0]}
+                        {el.address.includes(searchTerm) && (
+                          <SearchAddressText>{searchTerm}</SearchAddressText>
+                        )}
+                        {el.address.split(searchTerm)[1]}
+                      </ApartAddress>
                     </View>
                     <SearchArrow />
                   </ResultView>
@@ -180,6 +195,9 @@ const ApartAddress = styled(Typography).attrs({text: 'CaptionR'})`
 `;
 
 const SearchText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.blue[500]};
+`;
+const SearchAddressText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.blue[500]};
 `;
 

@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useAtomValue} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, Alert, StatusBar} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -44,6 +44,7 @@ import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useMembership from '../../../../../biz/useMembership';
+import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -80,6 +81,7 @@ const Pages = () => {
   const [selected, setSelected] = useState();
   const [eventSpot, setEventSpot] = useState(false);
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
+  const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
@@ -178,7 +180,8 @@ const Pages = () => {
             if (getUserStatus === 1) {
               navigation.navigate(GroupSelectPageName);
             }
-            if (getUserStatus === 2) {
+            if (getUserStatus === 2 && !isCancelSpot) {
+              console.log(isCancelSpot, 'test');
               navigation.navigate(GroupCreateMainPageName);
             }
             return result;
@@ -215,7 +218,7 @@ const Pages = () => {
         alert(e.toString().replace('error:'));
       }
       console.log(membershipHistory.length);
-    }, []),
+    }, [isCancelSpot]),
   );
 
   useEffect(() => {
