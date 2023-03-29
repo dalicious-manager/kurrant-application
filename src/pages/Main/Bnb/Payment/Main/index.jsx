@@ -157,24 +157,20 @@ const Pages = ({route}) => {
   // returnKeyTpye
   const pointHandlePress = () => {
     if (points === '') {
-      console.log(1);
       return setValue('point', '0');
     }
 
     if (medtronicSupportArr.includes(62471004)) {
       if (points > isUserInfo.point && isUserInfo.point > medtronicTotalPrice) {
-        console.log(3);
         return setValue('point', medtronicTotalPrice.toString());
       }
     } else {
       if (points > isUserInfo.point && isUserInfo.point > totalPrice) {
-        console.log(2);
         return setValue('point', totalPrice.toString());
       }
     }
 
     if (points > isUserInfo.point) {
-      console.log(4);
       return setValue('point', isUserInfo.point.toString());
     }
   };
