@@ -343,12 +343,7 @@ const Pages = ({route}) => {
       console.log(err);
     }
   };
-  console.log(
-    medtronicTotalPrice,
-    points,
-    medtronicTotalPrice - Number(points),
-    '3',
-  );
+
   return (
     <SafeArea>
       <ViewScroll onBlur={onBlurPress}>
