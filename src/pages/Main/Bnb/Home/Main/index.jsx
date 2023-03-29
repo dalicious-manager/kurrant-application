@@ -380,6 +380,7 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
+        {/* 홈 강제 공지사항 띄우기 */}
         {Array.isArray(announcements) &&
           announcements.length > 0 &&
           announcements.map(v => {
