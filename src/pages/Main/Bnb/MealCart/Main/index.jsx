@@ -1061,6 +1061,7 @@ const PaymentWrap = styled.View`
 export const PaymentView = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  white-space: nowrap;
   margin: 0px 24px;
   padding-bottom: 16px;
 `;
@@ -1086,11 +1087,13 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
 
 export const PaymentText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[4]};
+  white-space: nowrap;
   //padding-bottom:16px;
 `;
 
 export const PointText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.green[500]};
+  white-space: nowrap;
 `;
 
 export const TotalPriceTitle = styled(Typography).attrs({text: 'Title03SB'})`
@@ -1103,6 +1106,7 @@ export const TotalPrice = styled(Typography).attrs({text: 'Title03SB'})`
 const NoMealText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-bottom: 16px;
+  white-space: nowrap;
 `;
 
 const InnerView = styled.View`
@@ -1157,6 +1161,7 @@ export const XIcon = styled(X)`
 
 export const PointUnitText = styled(Typography).attrs({text: 'Title04R'})`
   color: ${({theme}) => theme.colors.grey[2]};
+  white-space: nowrap;
   margin-left: 8px;
 `;
 

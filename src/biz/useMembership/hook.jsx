@@ -4,20 +4,35 @@ import * as Fetch from './Fetch';
 import {
   isMembershipProductAtom,
   isMembershipJoinAtom,
-isMembershipTerminateAtom,
-isMembershipHistoryAtom,
-isMembershipInfoLoadingAtom,
-membershipInfoAtom,
+  isMembershipTerminateAtom,
+  isMembershipHistoryAtom,
+  isMembershipInfoLoadingAtom,
+  membershipInfoAtom,
+  isMembershipHistoryLoadingAtom,
 } from './store';
 
 const useBanner = () => {
-  const [isMembershipProductLoading, setMembershipProductLoading] = useAtom(isMembershipProductAtom);
-  const [isMembershipJoinLoading, setMembershipJoinLoading] = useAtom(isMembershipJoinAtom);
-  const [isMembershipTerminateLoading, setMembershipTerminateLoading] = useAtom(isMembershipTerminateAtom);
-  const [isMembershipHistoryLoading, setMembershipHistoryLoading] = useAtom(isMembershipHistoryAtom);
-  const [isMembershipTypeLoading, setMembershipTypeLoading] = useAtom(isMembershipHistoryAtom);
+  const [isMembershipProductLoading, setMembershipProductLoading] = useAtom(
+    isMembershipProductAtom,
+  );
+  const [isMembershipJoinLoading, setMembershipJoinLoading] =
+    useAtom(isMembershipJoinAtom);
+  const [isMembershipTerminateLoading, setMembershipTerminateLoading] = useAtom(
+    isMembershipTerminateAtom,
+  );
+  const [membershipHistory, setMembershipHistory] = useAtom(
+    isMembershipHistoryAtom,
+  );
+  const [isMembershipHistoryLoading, setMembershipHistoryLoading] = useAtom(
+    isMembershipHistoryLoadingAtom,
+  );
+  const [isMembershipTypeLoading, setMembershipTypeLoading] = useAtom(
+    isMembershipHistoryLoadingAtom,
+  );
   const [membershipInfo, setMembershipInfo] = useAtom(membershipInfoAtom);
-  const [isMembershipInfoLoading, setMembershipInfoLoading] = useAtom(isMembershipInfoLoadingAtom);
+  const [isMembershipInfoLoading, setMembershipInfoLoading] = useAtom(
+    isMembershipInfoLoadingAtom,
+  );
 
   const getMembershipProduct = async (option = {}) => {
     try {
@@ -30,15 +45,15 @@ const useBanner = () => {
       setMembershipProductLoading(false);
     }
   };
-  const membershipJoin = async (body,option = {}) => {
+  const membershipJoin = async (body, option = {}) => {
     try {
       setMembershipJoinLoading(true);
       const fetchRes = await Fetch.membershipJoin(
         {
-          ...body
-        }
-        ,option
-        );
+          ...body,
+        },
+        option,
+      );
       return fetchRes;
     } catch (err) {
       throw err;
@@ -61,6 +76,8 @@ const useBanner = () => {
     try {
       setMembershipHistoryLoading(true);
       const fetchRes = await Fetch.getMembershipHistory(option);
+      console.log(fetchRes.data);
+      setMembershipHistory(fetchRes.data);
       return fetchRes;
     } catch (err) {
       throw err;
@@ -68,10 +85,10 @@ const useBanner = () => {
       setMembershipHistoryLoading(false);
     }
   };
-  const getMembershipType = async (type,option = {}) => {
+  const getMembershipType = async (type, option = {}) => {
     try {
       setMembershipTypeLoading(true);
-      const fetchRes = await Fetch.getMembershipType(type,option);
+      const fetchRes = await Fetch.getMembershipType(type, option);
       return fetchRes;
     } catch (err) {
       throw err;
@@ -84,7 +101,7 @@ const useBanner = () => {
     try {
       setMembershipInfoLoading(true);
       const res = await Fetch.getMembershipInfo();
-      setMembershipInfo(res.data)
+      setMembershipInfo(res.data);
       return res.data;
     } catch (err) {
       throw err;
@@ -107,7 +124,8 @@ const useBanner = () => {
       isMembershipHistoryLoading,
       isMembershipTypeLoading,
       isMembershipInfoLoading,
-      membershipInfo
+      membershipInfo,
+      membershipHistory,
     },
   };
 };

@@ -156,7 +156,7 @@ const Pages = () => {
                       .slice(-4)})`;
                 })
                 ?.join()
-                .replace(',', '')
+                .replace('/,/g', '')
                 .toString().length > 1
                 ? cardList
                     .map(card => {
@@ -166,7 +166,7 @@ const Pages = () => {
                           .slice(-4)})`;
                     })
                     .join()
-                    .replace(',', '')
+                    .replace('/,/g', '')
                     .toString()
                 : '선택'}
             </SpotName>

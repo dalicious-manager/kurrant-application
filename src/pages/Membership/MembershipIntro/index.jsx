@@ -13,6 +13,10 @@ import Button from '../../../components/Button';
 import Images from '../../../components/Image';
 import FastImage from 'react-native-fast-image';
 import {PAGE_NAME as MembershipJoinPageName} from '../MembershipJoin';
+import useGroupSpots from '../../../biz/useGroupSpots';
+import useMembership from '../../../biz/useMembership';
+import useUserInfo from '../../../biz/useUserInfo';
+import {BespinMembershipImage} from '../../../assets';
 
 export const PAGE_NAME = 'P__MEMBERSHIP__INTRO';
 const {width} = Dimensions.get('screen');
@@ -20,6 +24,12 @@ const Pages = ({route}) => {
   const params = route.params;
   const [height, setHeight] = useState(0);
   const [isImageLoading, setImageLoading] = useState(false);
+  const [eventSpotLoading, setEventSpotLoading] = useState(false);
+  const {isUserInfo, isUserInfoLoading} = useUserInfo();
+  const {
+    getMembershipHistory,
+    readableAtom: {membershipHistory},
+  } = useMembership();
   const navigation = useNavigation();
   useEffect(() => {
     const resizeImage = async () => {
@@ -36,7 +46,16 @@ const Pages = ({route}) => {
     };
     resizeImage();
   }, []);
-  if (isImageLoading) {
+  //베스핀 글로벌 체크
+  useEffect(() => {
+    const getHistory = async () => {
+      setEventSpotLoading(true);
+      await getMembershipHistory();
+      setEventSpotLoading(false);
+    };
+    getHistory();
+  }, [isUserInfo]);
+  if (isImageLoading || isUserInfoLoading || eventSpotLoading) {
     return <ActivityIndicator size={'large'} />;
   }
   return (
@@ -44,12 +63,17 @@ const Pages = ({route}) => {
       <ScrollView>
         <FastImage
           style={{width: width, height: height - 100}}
-          source={{
-            uri: params.isFounders
-              ? 'https://asset.kurrant.co/img/common/foundersmembership.png'
-              : 'https://asset.kurrant.co/img/common/kurrantmembership.png',
-            priority: FastImage.priority.high,
-          }}
+          source={
+            isUserInfo?.email.includes('@bespinglobal.com') &&
+            membershipHistory.length < 1
+              ? BespinMembershipImage
+              : {
+                  uri: params.isFounders
+                    ? 'https://asset.kurrant.co/img/common/foundersmembership.png'
+                    : 'https://asset.kurrant.co/img/common/kurrantmembership.png',
+                  priority: FastImage.priority.high,
+                }
+          }
         />
         <ButtonSame>
           {/* <Button type='yellow' label="멤버십 가입하기"  onPressEvent={()=>{

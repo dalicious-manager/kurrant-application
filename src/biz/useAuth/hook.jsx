@@ -472,8 +472,8 @@ const useAuth = () => {
     snsAppleLogin,
     terminateUser,
     logout,
-    saveFcmToken,
     setFcmToken,
+    saveFcmToken,
     readableAtom: {
       isPhoneAuthLoading,
       isEmailAuthLoading,
@@ -485,6 +485,7 @@ const useAuth = () => {
       isChangePasswordLoading,
       isEmailLoading,
       isLoginLoading,
+      fcmToken,
     },
   };
 };

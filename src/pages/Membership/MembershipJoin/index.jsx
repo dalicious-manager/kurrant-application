@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
+import useGroupSpots from '../../../biz/useGroupSpots';
 
 import useMembership from '../../../biz/useMembership';
 import useUserInfo from '../../../biz/useUserInfo';
@@ -27,6 +28,7 @@ const Pages = () => {
   const signUpCheck = useForm();
   const navigation = useNavigation();
   const membershipProduct = useMembership();
+  const [eventSpot, setEventSpot] = useState(false);
   const {isUserInfo} = useUserInfo();
   const [membershipData, setMembershipData] = useState();
   const {
@@ -72,7 +74,7 @@ const Pages = () => {
           period === '월간구독' ? membershipData[1] : membershipData[0],
       });
     } else {
-      Alert.alert('필수동의사항에 동의해주세요.');
+      Alert.alert('필수동의', '필수동의사항에 동의해주세요.');
     }
   };
   const handleSubmitError = () => {
@@ -84,7 +86,13 @@ const Pages = () => {
   };
 
   const disabledCheck = signUpCheck1 && signUpCheck2 && signUpCheck3;
-
+  //베스핀 글로벌 체크
+  useEffect(() => {
+    const getHistory = async () => {
+      await membershipProduct.getMembershipHistory();
+    };
+    getHistory();
+  }, []);
   useFocusEffect(
     useCallback(() => {
       getMembershipData();
@@ -112,8 +120,8 @@ const Pages = () => {
     <Wrapper>
       <ScrollView>
         <TitleContainer>
-          {/* <Title>{isUserInfo?.name}님을 위한 특별한 혜택</Title> */}
-          <Title>님을 위한 특별한 혜택</Title>
+          <Title>{isUserInfo?.name}님을 위한 특별한 혜택</Title>
+          {/* <Title>님을 위한 특별한 혜택</Title> */}
           <Description>지금 신청하면 다양한 혜택을 누릴 수 있어요!</Description>
           <TopLine />
           <SubTitle>멤버십 혜택</SubTitle>
@@ -184,11 +192,17 @@ const Pages = () => {
           </CheckWrap>
           <ButtonContainer>
             {membershipData?.map(membership => {
+              console.log(membership);
               return (
                 <ButtonBox key={membership.membershipSubscriptionType}>
                   <MembershipButton
                     label={membership.membershipSubscriptionType}
                     isSale={membership.discountRate}
+                    isEvent={
+                      isUserInfo?.email.includes('@bespinglobal.com') &&
+                      membershipProduct.readableAtom.membershipHistory.length <
+                        1
+                    }
                     payments={membership.price}
                     dicountPayments={membership.discountedPrice}
                     onPressEvent={

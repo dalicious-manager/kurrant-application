@@ -683,7 +683,7 @@ const Pages = ({route}) => {
                 ((100 - m.makersDiscountRate) * 0.01) *
                 ((100 - m.periodDiscountRate) * 0.01) *
                 100;
-            console.log(m.discountedPrice, 'test');
+            // console.log(m.discountedPrice, 'test');
             const totalDiscount =
               m.membershipDiscountPrice +
               m.makersDiscountPrice +

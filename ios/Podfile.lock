@@ -433,7 +433,7 @@ PODS:
     - react-native-config/App (= 1.5.0)
   - react-native-config/App (1.5.0):
     - React-Core
-  - react-native-document-picker (8.1.3):
+  - react-native-document-picker (8.2.0):
     - React-Core
   - react-native-fbsdk-next (11.1.0):
     - React-Core
@@ -538,7 +538,7 @@ PODS:
     - React-perflogger (= 0.70.1)
   - RNAppleAuthentication (2.2.2):
     - React-Core
-  - RNCAsyncStorage (1.17.11):
+  - RNCAsyncStorage (1.17.12):
     - React-Core
   - RNCClipboard (1.11.2):
     - React-Core
@@ -927,7 +927,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 1363be638eccfe1aea1b10dd42e632b0397e5ec8
   React-logger: 7bd569e3857d74ed412ce0a5c51f421ff7d4ca7f
   react-native-config: 5330c8258265c1e5fdb8c009d2cabd6badd96727
-  react-native-document-picker: 958e2bc82e128be69055be261aeac8d872c8d34c
+  react-native-document-picker: 495c444c0c773c6e83a5d91165890ecb1c0a399a
   react-native-fbsdk-next: c78dede90e3c50ab6936a7d56c43e1a9eb37e25a
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-pager-view: b58cb9e9f42f64e50cab3040815772c1d119a2e2
@@ -950,7 +950,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: a11d0c2e14140baf1e449264ca9168ae9ae6bbd0
   ReactCommon: 7f86326b92009925c6dcf93f8e825060171c379f
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
-  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
+  RNCAsyncStorage: 09fc8595e6d6f6d5abf16b23a56b257d9c6b7c5b
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
   RNDateTimePicker: 65e1d202799460b286ff5e741d8baf54695e8abd

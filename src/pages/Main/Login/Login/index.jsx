@@ -367,13 +367,11 @@ const BarWrap = styled.View`
   display: flex;
   margin: 34px 0px;
   padding: 0px 24px;
-
   align-items: center;
 `;
 const Icons = styled.View`
   ${BarDisplay};
   //width: 68px;
-
   margin-top: 12px;
   margin-right: -6px;
 `;

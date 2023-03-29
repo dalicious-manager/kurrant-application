@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useAtomValue} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, Alert, StatusBar} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -21,26 +21,36 @@ import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {
+  getStorage,
+  setStorage,
+  removeItemFromStorage,
+} from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import Toast from '../../../../../components/Toast';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
-import {FoundersMembers} from '../../../../../assets';
+import {BespinMembers, FoundersMembers} from '../../../../../assets';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
+import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
+import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
+import useMembership from '../../../../../biz/useMembership';
+import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -67,19 +77,35 @@ const Pages = () => {
     todayOrderMeal,
     isOrderMealLoading,
   } = useOrderMeal();
+  const {
+    getMembershipHistory,
+    readableAtom: {membershipHistory},
+  } = useMembership();
   const {loadMeal} = useShoppingBasket();
   const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
+
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
+  const [eventSpot, setEventSpot] = useState(false);
+  const [eventSpotLoading, setEventSpotLoading] = useState(false);
+  const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
-  //console.log(isUserGroupSpotCheck);
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
   const mealCheck = isOrderMeal?.map(el => {
     return el.serviceDate;
   });
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
+
+  // 전체 공지사항
+
+  const {getAnnouncements, announcements, announcementModalVisible} =
+    useGetAnnouncements();
+
+  useEffect(() => {
+    getAnnouncements(0);
+  }, []);
 
   useEffect(() => {
     const handleShowModal = async () => {
@@ -115,7 +141,14 @@ const Pages = () => {
       await setStorage('balloonTime', JSON.stringify(expiryDate));
     }
   };
-
+  useEffect(() => {
+    const getHistory = async () => {
+      setEventSpotLoading(true);
+      await getMembershipHistory();
+      setEventSpotLoading(false);
+    };
+    getHistory();
+  }, [isUserInfo]);
   useFocusEffect(
     useCallback(() => {
       async function loadUser() {
@@ -126,7 +159,6 @@ const Pages = () => {
               userData?.spotId,
               formattedWeekDate(new Date()),
             );
-            console.log(daily, '12313da');
             if (daily) {
               if (!(userRole === 'ROLE_GUEST'))
                 await orderMeal(
@@ -170,7 +202,8 @@ const Pages = () => {
             if (getUserStatus === 1) {
               navigation.navigate(GroupSelectPageName);
             }
-            if (getUserStatus === 2) {
+            if (getUserStatus === 2 && !isCancelSpot) {
+              console.log(isCancelSpot, 'test');
               navigation.navigate(GroupCreateMainPageName);
             }
             return result;
@@ -206,7 +239,8 @@ const Pages = () => {
       } catch (e) {
         alert(e.toString().replace('error:'));
       }
-    }, []),
+      console.log(membershipHistory.length);
+    }, [isCancelSpot]),
   );
 
   useEffect(() => {
@@ -315,7 +349,7 @@ const Pages = () => {
       console.log(err);
     }
   };
-  if (isOrderMealLoading || isUserInfoLoading) {
+  if (isOrderMealLoading || isUserInfoLoading || eventSpotLoading) {
     return <SkeletonUI />;
   }
 
@@ -325,6 +359,18 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
+        {Array.isArray(announcements) &&
+          announcements.length > 0 &&
+          announcements.map(v => {
+            return (
+              <ModalAnnouncement
+                key={v.id}
+                data={v}
+                modalVisible={announcementModalVisible}
+              />
+            );
+          })}
+
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
             <SpotNameText>
@@ -392,6 +438,9 @@ const Pages = () => {
                               </View>
                             </View>
                             <MealCount>
+                              <GreyTxt status={meal.orderStatus}>
+                                {formattedMealFoodStatus(meal.orderStatus)}
+                              </GreyTxt>
                               <GreyTxt>{meal.count}개</GreyTxt>
                             </MealCount>
                           </MealText>
@@ -423,15 +472,17 @@ const Pages = () => {
         </MainWrap>
         {/* 오늘의 식사 시간 지나면 나오는 View */}
         {/* <MealCheckWrap>
-            <MealCheckText>
-              메뉴 확인 후 수령하셨나요?
-            </MealCheckText>
-            <MealCheckButton>
-              <MealCheckButtonText>
-                네, 확인했어요
-              </MealCheckButtonText>
-            </MealCheckButton>
-          </MealCheckWrap> */}
+          <MealCheckText>메뉴 확인 후 수령하셨나요?</MealCheckText>
+          <MealCheckButton>
+            <MealCheckButtonText>네, 확인했어요</MealCheckButtonText>
+          </MealCheckButton>
+        </MealCheckWrap>
+        <MealCheckWrap>
+          <MealCheckText>식사 맛있게 하셨나요?</MealCheckText>
+          <MealCheckButton>
+            <MealCheckButtonText>맛 평가하기</MealCheckButtonText>
+          </MealCheckButton>
+        </MealCheckWrap> */}
 
         <Wrap>
           <MainWrap>
@@ -466,7 +517,8 @@ const Pages = () => {
             </CountWrap>
           </MembershipWrap>} */}
             {isUserInfo?.isMembership ? (
-              <MembershipWrap>
+              <MembershipWrap
+                onPress={() => navigation.navigate(MembershipInfoPageName)}>
                 <Membership>
                   <MembershipIcon />
                   <TitleText>멤버십</TitleText>
@@ -485,6 +537,16 @@ const Pages = () => {
                   )}
                 </View>
               </MembershipWrap>
+            ) : isUserInfo?.email.includes('@bespinglobal.com') &&
+              membershipHistory.length < 1 ? (
+              <MenbershipBanner
+                onPress={() =>
+                  navigation.navigate(MembershipIntro, {
+                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                  })
+                }>
+                <MembershipImages source={BespinMembers} resizeMode={'cover'} />
+              </MenbershipBanner>
             ) : isUserInfo?.leftFoundersNumber > 0 ? (
               <MenbershipBanner
                 onPress={() =>
@@ -685,6 +747,8 @@ const MealText = styled.View`
 
 const MealCount = styled.View`
   align-self: flex-end;
+  justify-content: flex-end;
+  align-items: flex-end;
 `;
 
 const MealCalendar = styled.View`
@@ -711,7 +775,7 @@ const MealCalendarTitle = styled.View`
   ${Display};
 `;
 
-const MembershipWrap = styled.View`
+const MembershipWrap = styled.Pressable`
   ${Display};
   width: 100%;
   border-radius: 14px;
@@ -807,7 +871,8 @@ const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
 `;
 
 const GreyTxt = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${props => props.theme.colors.grey[5]};
+  color: ${({theme, status}) =>
+    status === 8 ? theme.colors.blue[500] : theme.colors.grey[5]};
 `;
 
 const PointText = styled(Typography).attrs({text: 'Body05SB'})`
