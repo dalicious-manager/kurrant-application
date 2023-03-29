@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {FormProvider, useForm, useFormContext} from 'react-hook-form';
 import {StyleSheet, Text, View} from 'react-native';
 import styled from 'styled-components';
@@ -17,6 +17,7 @@ import SseTestOnSpring from './SseSample';
 import Modal from '../components/UseModal';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import ModalSample3 from './ModalSample3';
+import ModalSample4 from './ModalSample4';
 
 export const PAGE_NAME = 'P_JAESIN';
 
@@ -36,6 +37,14 @@ const Pages = () => {
   // } = useFormContext();
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+
+  useEffect(() => {
+    setModalVisible(true);
+    setTimeout(() => {
+      setModalVisible2(true);
+    }, 500);
+  }, [setModalVisible2]);
 
   return (
     <Container>
@@ -53,10 +62,19 @@ const Pages = () => {
         onPress={() => setModalVisible(true)}>
         <Text style={styles.textStyle}>Show Modal</Text>
       </Pressable>
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible2(true)}>
+        <Text style={styles.textStyle}>Show Modal2</Text>
+      </Pressable>
 
       <ModalSample3
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+      />
+      <ModalSample4
+        modalVisible={modalVisible2}
+        setModalVisible={setModalVisible2}
       />
 
       {/* <ModalWrapper title={'모달임'} content={<Text>하이</Text>} /> */}

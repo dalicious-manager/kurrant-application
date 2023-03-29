@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
 
-const ModalSample3 = ({modalVisible, setModalVisible}) => {
+const ModalSample4 = ({modalVisible, setModalVisible}) => {
   return (
     <View style={styles.centeredView}>
       <Modal transparent={true} visible={modalVisible}>
@@ -20,7 +20,7 @@ const ModalSample3 = ({modalVisible, setModalVisible}) => {
   );
 };
 
-export default ModalSample3;
+export default ModalSample4;
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     position: 'relative',
-    top: 35,
+    top: -35,
+    left: 60,
     padding: 35,
     alignItems: 'center',
     shadowColor: '#000',
