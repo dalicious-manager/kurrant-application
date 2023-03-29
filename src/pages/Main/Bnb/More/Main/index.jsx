@@ -35,7 +35,7 @@ import useUserInfo from '../../../../../biz/useUserInfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
-
+import PointBox from './PointBox';
 import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -159,9 +159,8 @@ const Pages = () => {
             isMembership={isUserInfo?.isMembership}
             membershipPeriod={isUserInfo?.membershipUsingPeriod}
           />
-          {/* 포인트 활성시
-            <PointBox point={41030}/> 
-          */}
+          <PointBox point={41030} />
+
           <InfomationContainer>
             <InfomationBox>
               <InfomationText

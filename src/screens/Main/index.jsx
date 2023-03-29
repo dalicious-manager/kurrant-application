@@ -275,7 +275,7 @@ const Screen = () => {
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
   return (
-    <MainRoot.Navigator initialRouteName={PointMainPageName}>
+    <MainRoot.Navigator>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
