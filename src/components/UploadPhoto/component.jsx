@@ -60,6 +60,17 @@ const Component = ({photosArray, setPhotosArray}) => {
           },
         ]);
       } else {
+        // 같은 사진일때 구분해줘야함
+        // 원래 있던 파일이면 (1)(2)를 추가해준다
+
+        const photosNameArray = photosArray.map(v => {
+          return v.fileName;
+        });
+
+        if (photosNameArray.includes(res.assets[0].fileName)) {
+        } else {
+        }
+
         setPhotosArray(
           [
             ...photosArray,

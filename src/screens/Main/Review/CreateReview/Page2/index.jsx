@@ -102,8 +102,10 @@ const Screen = ({route}) => {
   // 데이터 있으면 input에 바로등록하기
 
   useEffect(() => {
-    setInput({...input, review: editItem.reviewText});
-  }, [editItem.reviewText]);
+    if (editItem && editItem.reviewText) {
+      setInput({...input, review: editItem.reviewText});
+    }
+  }, [editItem]);
 
   const handlePhotoRemove = photoId => {
     const thisPhotoArray = [...photosArray];
@@ -142,7 +144,7 @@ const Screen = ({route}) => {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       };
-
+      console.log(sendCreateData);
       return RNFetchBlob.fetch('POST', url, headers, [
         ...photosArray,
         {
@@ -189,6 +191,15 @@ const Screen = ({route}) => {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       };
+
+      console.log([
+        ...localArray,
+        {
+          name: 'updateReqDto',
+          data: JSON.stringify(sendEditData),
+          type: 'application/json',
+        },
+      ]);
 
       return RNFetchBlob.fetch('PATCH', url, headers, [
         ...localArray,
@@ -248,7 +259,7 @@ const Screen = ({route}) => {
           console.log('Success:', data);
 
           if (data.statusCode === 200) {
-            Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
+            Alert.alert('수정 완료', '리뷰가 수정되었습니다 ', [
               {
                 text: '확인',
                 onPress: async () => {
@@ -258,8 +269,8 @@ const Screen = ({route}) => {
                 style: 'cancel',
               },
             ]);
-          } else if (data.statusCode === 400) {
-            Alert.alert('작성 실패', data.message, [
+          } else {
+            Alert.alert('수정 실패', data.message, [
               {
                 text: '확인',
                 onPress: async () => {},
@@ -267,6 +278,16 @@ const Screen = ({route}) => {
               },
             ]);
           }
+
+          // if (data.statusCode === 400) {
+          //   Alert.alert('작성 실패', data.message, [
+          //     {
+          //       text: '확인',
+          //       onPress: async () => {},
+          //       style: 'cancel',
+          //     },
+          //   ]);
+          // }
         })
         .catch(error => {
           console.error('Error:', error);
