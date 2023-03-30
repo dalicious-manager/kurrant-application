@@ -36,6 +36,9 @@ const ReviewInput = ({editContentInput}) => {
         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
           <ViewWrap>
             <Input
+              style={{
+                textAlignVertical: 'top',
+              }}
               {...textInputProps}
               defaultValue={editContent ? editContent : undefined}
               value={value}
@@ -63,11 +66,6 @@ const Input = styled.TextInput`
   border: 1px solid ${props => props.theme.colors.grey[7]};
   padding: 17px 20px;
   height: 168px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: justify;
-
-  /* margin-bottom: 19px; */
 `;
 
 const ViewWrap = styled.View`

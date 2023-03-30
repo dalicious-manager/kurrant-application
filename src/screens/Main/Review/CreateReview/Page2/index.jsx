@@ -157,7 +157,7 @@ const Screen = ({route}) => {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       };
-      console.log(sendCreateData);
+
       return RNFetchBlob.fetch('POST', url, headers, [
         ...photosArray,
         {
@@ -202,7 +202,7 @@ const Screen = ({route}) => {
 
       const sendEditData = {
         satisfaction: starRating,
-        content: !data.reviewed ? editItem.reviewText : data.reviewed,
+        content: input.review,
         images: webArray,
         // 무조건
         forMakers: editItem.forMakers ? true : input.isExclusive,
@@ -213,8 +213,11 @@ const Screen = ({route}) => {
         Authorization: `Bearer ${token}`,
       };
 
-      console.log('이게 수정할때 보내는 데이터임');
-      console.log(sendEditData);
+      // console.log('이게 수정할때 보내는 데이터임');
+
+      // console.log(data.reviewed);
+
+      // console.log(sendEditData);
 
       return RNFetchBlob.fetch('PATCH', url, headers, [
         ...localArray,
@@ -380,15 +383,10 @@ const Screen = ({route}) => {
                 scrollEnabled={true}
                 horizontal={true}
                 contentContainerStyle={{
-                  height: 120,
+                  height: 100,
                   alignItems: 'center',
                 }}
                 renderItem={({item}) => {
-                  // 아이템 여기여
-                  console.log('아이템 여기여');
-                  console.log(item);
-                  console.log(typeof item);
-
                   if (typeof item === 'object') {
                     return (
                       <>
@@ -569,7 +567,7 @@ const FlatListWrapper = styled.View`
 `;
 
 const FlatFlatList = styled.FlatList`
-  height: 120px;
+  height: 100px;
 `;
 
 const ShowOnlyToOwnerWrap = styled.View`
