@@ -21,7 +21,7 @@ import {getStorage} from '../../../../../utils/asyncStorage';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 
 import Review, {SCREEN_NAME as ReviewScreenName} from '../../../Review';
-import {Alert, Text} from 'react-native';
+import {Alert, FlatList, Text, View} from 'react-native';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -37,10 +37,20 @@ const Screen = ({route}) => {
 
   // 모든 사진
   const [photosArray, setPhotosArray] = useState([]);
-  // 웹에서 받아오는 사진 따로
-  const [photosFromServer, setPhotosFromServer] = useState([]);
-  // 사진첩에서 등록할 사진 따로
-  const [photosFromLocal, setPhotosFromLocal] = useState([]);
+
+  // FlatList 에 넣을 배열 만들기
+
+  const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
+
+  useEffect(() => {
+    // 사진 채우기 기능 추가
+
+    setPhotosArrayForFlatList(['addPic', ...photosArray]);
+  }, [photosArray]);
+
+  useEffect(() => {
+    console.log(photosArrayForFlatList);
+  }, [photosArrayForFlatList]);
 
   const {getWrittenReview} = useWrittenReview();
   const id = route?.params?.id;
@@ -298,7 +308,8 @@ const Screen = ({route}) => {
         <FormProvider {...form}>
           <Container
             showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}>
+            showsHorizontalScrollIndicator={false}
+            nestedScrollEnabled={true}>
             <SatisfactionTitle>
               <Title1>만족도를 알려주세요</Title1>
               <RateStars
@@ -317,10 +328,15 @@ const Screen = ({route}) => {
                 <NotMandatory>(선택)</NotMandatory>
               </Title2Wrap>
 
-              <PhotosScrollViewWrap
+              {/* <PhotosScrollViewWrap
                 // style={{flex: 1}}
                 showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}>
+                showsHorizontalScrollIndicator={false}
+                nestedScrollEnabled={true}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  height: 100,
+                }}>
                 <PhotosView>
                   <UploadPhoto
                     width="80px"
@@ -345,7 +361,62 @@ const Screen = ({route}) => {
                       );
                     })}
                 </PhotosView>
-              </PhotosScrollViewWrap>
+              </PhotosScrollViewWrap> */}
+
+              {/* <FlatListWrapper nestedScrollEnabled={true}>
+                <UploadPhoto
+                  width="80px"
+                  height="80px"
+                  input={input}
+                  photosArray={photosArray}
+                  setPhotosArray={setPhotosArray}
+                />
+
+               
+              </FlatListWrapper> */}
+
+              <FlatFlatList
+                data={photosArrayForFlatList}
+                scrollEnabled={true}
+                horizontal={true}
+                contentContainerStyle={{
+                  height: 120,
+                  alignItems: 'center',
+                }}
+                renderItem={({item}) => {
+                  // 아이템 여기여
+                  console.log('아이템 여기여');
+                  console.log(item);
+                  console.log(typeof item);
+
+                  if (typeof item === 'object') {
+                    return (
+                      <>
+                        <PhotoImageWrap>
+                          <DeleteButton
+                            onPress={() => {
+                              handlePhotoRemove(item.id);
+                            }}>
+                            <XCircleIcon />
+                          </DeleteButton>
+
+                          <PhotoImage source={{uri: item.uri}} />
+                        </PhotoImageWrap>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <UploadPhoto
+                        width="80px"
+                        height="80px"
+                        input={input}
+                        photosArray={photosArray}
+                        setPhotosArray={setPhotosArray}
+                      />
+                    );
+                  }
+                }}
+              />
             </UploadPhotosWrap>
 
             <ReviewWrap>
@@ -491,6 +562,14 @@ const ReviewWrap = styled.View``;
 const Title3 = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-bottom: 12px;
+`;
+
+const FlatListWrapper = styled.View`
+  flex-direction: row;
+`;
+
+const FlatFlatList = styled.FlatList`
+  height: 120px;
 `;
 
 const ShowOnlyToOwnerWrap = styled.View`

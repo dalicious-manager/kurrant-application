@@ -62,7 +62,6 @@ const Component = ({
   // imageLocation이 널일 경우 null 을 빈 배열로 고쳐주기
   let importImageLocation = [];
   if (!imageLocation) {
-    importImageLocation = [];
   } else {
     importImageLocation = imageLocation;
   }
