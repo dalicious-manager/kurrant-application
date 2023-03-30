@@ -432,7 +432,7 @@ const Screen = ({route}) => {
                 }
               />
 
-              <ShowOnlyToOwnerWrap>
+              {/* <ShowOnlyToOwnerWrap>
                 {editItem && editItem.forMakers ? (
                   <>
                     <CheckBox disabled={true}>
@@ -456,6 +456,34 @@ const Screen = ({route}) => {
                 )}
 
                 <Title4>사장님에게만 보이기 </Title4>
+              </ShowOnlyToOwnerWrap> */}
+
+              <ShowOnlyToOwnerWrap>
+                {!editItem && (
+                  <>
+                    <CheckBox
+                      checked={input.isExclusive}
+                      onPress={() => {
+                        setInput({...input, isExclusive: !input.isExclusive});
+                      }}>
+                      <CheckIcon
+                        style={{width: 15, height: 10}}
+                        color={'#ffffff'}
+                      />
+                    </CheckBox>
+                  </>
+                )}
+
+                {editItem ? (
+                  <Title4 isEditItem={!!editItem}>
+                    {' '}
+                    {editItem.forMakers
+                      ? '사장님에게만 보이는 리뷰'
+                      : '모두에게 보이는 리뷰'}{' '}
+                  </Title4>
+                ) : (
+                  <Title4 isEditItem={!!editItem}>사장님에게만 보이기 </Title4>
+                )}
               </ShowOnlyToOwnerWrap>
             </ReviewWrap>
 
@@ -574,6 +602,8 @@ const ShowOnlyToOwnerWrap = styled.View`
   flex-direction: row;
   align-items: center;
   margin-bottom: 24px;
+
+  position: relative;
 `;
 const CheckBox = styled.Pressable`
   width: 24px;
@@ -601,7 +631,15 @@ const CheckBox = styled.Pressable`
   align-items: center;
 `;
 const Title4 = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${props => props.theme.colors.grey[2]};
+  position: relative;
+  left: -3px;
+  color: ${props => {
+    if (props.isEditItem) {
+      return props.theme.colors.grey[5];
+    } else {
+      return props.theme.colors.grey[2];
+    }
+  }};
 `;
 const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
