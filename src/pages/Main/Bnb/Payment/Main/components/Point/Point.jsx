@@ -32,40 +32,43 @@ const Point = ({
       control={control}
       name="point"
       defaultValue={'0'}
-      render={({field: {onChange, value}}) => (
-        <PointWrap>
-          <Text>-{`\u00A0`}</Text>
-          <PointInputWrap>
-            <PointInput
-              returnKeyType="done"
-              keyboardType="number-pad"
-              ref={inputRef}
-              onFocus={onFocusInput}
-              value={
-                medtronicSupportArr.includes(62471004)
-                  ? userPoint > medtronicTotalPrice &&
-                    Number(value) > medtronicTotalPrice
-                    ? medtronicTotalPrice.toString()
-                    : userPoint < medtronicTotalPrice &&
-                      Number(value) > userPoint
+      render={({field: {onChange, value}}) => {
+        console.log(value, 'aaaaaa');
+        return (
+          <PointWrap>
+            <Text>-{`\u00A0`}</Text>
+            <PointInputWrap>
+              <PointInput
+                returnKeyType="done"
+                keyboardType="number-pad"
+                ref={inputRef}
+                onFocus={onFocusInput}
+                value={
+                  medtronicSupportArr.includes(62471004)
+                    ? userPoint > medtronicTotalPrice &&
+                      Number(value) > medtronicTotalPrice
+                      ? medtronicTotalPrice.toString()
+                      : userPoint < medtronicTotalPrice &&
+                        Number(value) > userPoint
+                      ? userPoint.toString()
+                      : value
+                    : userPoint > totalPrice && Number(value) > totalPrice
+                    ? totalPrice.toString()
+                    : userPoint < totalPrice && Number(value) > userPoint
                     ? userPoint.toString()
                     : value
-                  : userPoint > totalPrice && Number(value) > totalPrice
-                  ? totalPrice.toString()
-                  : userPoint < totalPrice && Number(value) > userPoint
-                  ? userPoint.toString()
-                  : value
-              }
-              onChangeText={onChange}
-              onSubmitEditing={handlePress}
-            />
-            <ClearInputButton onPress={clearPoint}>
-              <XIcon />
-            </ClearInputButton>
-          </PointInputWrap>
-          <PointUnitText>P</PointUnitText>
-        </PointWrap>
-      )}
+                }
+                onChangeText={onChange}
+                onSubmitEditing={handlePress}
+              />
+              <ClearInputButton onPress={clearPoint}>
+                <XIcon />
+              </ClearInputButton>
+            </PointInputWrap>
+            <PointUnitText>P</PointUnitText>
+          </PointWrap>
+        );
+      }}
     />
   );
 };

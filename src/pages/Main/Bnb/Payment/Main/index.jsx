@@ -162,11 +162,11 @@ const Pages = ({route}) => {
     }
 
     if (medtronicSupportArr.includes(62471004)) {
-      if (points > isUserInfo.point && isUserInfo.point > medtronicTotalPrice) {
+      if (points > medtronicTotalPrice) {
         return setValue('point', medtronicTotalPrice.toString());
       }
     } else {
-      if (points > isUserInfo.point && isUserInfo.point > totalPrice) {
+      if (points > totalPrice) {
         return setValue('point', totalPrice.toString());
       }
     }
@@ -364,15 +364,15 @@ const Pages = ({route}) => {
       // "cardId": selectDefaultCard[0]?.id,
       cartDailyFoodDtoList: lastArr,
       totalPrice: medtronicSupportArr.includes(62471004)
-        ? medtronicTotalPrice
-        : totalPrice,
+        ? medtronicTotalPrice - Number(points)
+        : totalPrice - Number(points),
       supportPrice: medtronicSupportArr.includes(62471004)
         ? medtronicPrice
         : usedSupportPrice,
       deliveryFee: deliveryFee,
-      userPoint: point,
+      userPoint: watch('point'),
     };
-    // console.log(data, 'data');
+    console.log(data, '백다방');
     try {
       // const res = await orderMeal(spotId,data);
       // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
@@ -386,11 +386,11 @@ const Pages = ({route}) => {
       // console.log(isUserInfo?.userId)
       const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
       loadMeal();
-      if (totalPrice > 0) {
+      if (totalPrice - Number(points) > 0) {
         const result = await orderNice({
           cardId: selectDefaultCard[0]?.id,
           orderName: orderName,
-          amount: totalPrice,
+          amount: totalPrice - Number(points),
           orderId: orderId,
           orderItems: data,
         });
@@ -402,10 +402,13 @@ const Pages = ({route}) => {
             id: result?.data,
           });
         }
-      } else if (medtronicSupportArr.includes(62471004)) {
+      } else if (
+        medtronicSupportArr.includes(62471004) &&
+        medtronicTotalPrice - Number(points) > 0
+      ) {
         const result = await orderNice({
           cardId: selectDefaultCard[0]?.id,
-          amount: medtronicTotalPrice,
+          amount: medtronicTotalPrice - Number(points),
           orderId: orderId,
           orderItems: data,
         });
@@ -418,7 +421,7 @@ const Pages = ({route}) => {
         }
       } else {
         const result = await order({
-          amount: totalPrice,
+          amount: totalPrice - Number(points),
           orderId: orderId,
           orderItems: data,
         });

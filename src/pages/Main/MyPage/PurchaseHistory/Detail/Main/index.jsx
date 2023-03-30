@@ -121,6 +121,8 @@ const Pages = ({route}) => {
       </SafeView>
     );
   }
+
+  console.log(purchaseDetail, 'd0d0d0');
   return (
     <SafeView>
       <ScrollView>
