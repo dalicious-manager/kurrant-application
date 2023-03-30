@@ -576,7 +576,7 @@ const Pages = ({route}) => {
         {
           dailyFoodId: id,
           count: 1,
-          spotId: userInf?.spotId,
+          spotId: userInfo?.spotId,
         },
       ]);
       setShow(true);

@@ -376,44 +376,21 @@ const Pages = ({route}) => {
                   </InfoTextWrap>
                 </InfoTextView>
               </InfoWrap>
-
-              {isUserInfo?.spotType === 0 ? (
-                <InfoWrap>
-                  <InfoTitleView>
-                    <InfoTitle>배송 정보</InfoTitle>
-                  </InfoTitleView>
-                  <InfoTextView>
-                    <InfoTextWrap>
-                      <Info>단체 배송</Info>
-                      <InfoText>25,000(50개 마다 부과)</InfoText>
-                    </InfoTextWrap>
-                    <InfoTextWrap>
-                      <Info>개별 배송</Info>
-                      <InfoText>3,500원</InfoText>
-                    </InfoTextWrap>
-                    <InfoTextWrap>
-                      <Info>멤버십 회원</Info>
-                      <InfoText>무료 배송</InfoText>
-                    </InfoTextWrap>
-                  </InfoTextView>
-                </InfoWrap>
-              ) : (
-                <InfoWrap>
-                  <InfoTitleView>
-                    <InfoTitle>배송 정보</InfoTitle>
-                  </InfoTitleView>
-                  <InfoTextView>
-                    <InfoTextWrap>
-                      <Info>개별 배송</Info>
-                      <InfoText>3,500원</InfoText>
-                    </InfoTextWrap>
-                    <InfoTextWrap>
-                      <Info>멤버십 회원</Info>
-                      <InfoText>무료 배송</InfoText>
-                    </InfoTextWrap>
-                  </InfoTextView>
-                </InfoWrap>
-              )}
+              <InfoWrap>
+                <InfoTitleView>
+                  <InfoTitle>배송 정보</InfoTitle>
+                </InfoTitleView>
+                <InfoTextView>
+                  <InfoTextWrap>
+                    <Info>개별 배송</Info>
+                    <InfoText>3,500원</InfoText>
+                  </InfoTextWrap>
+                  <InfoTextWrap>
+                    <Info>멤버십 회원</Info>
+                    <InfoText>무료 배송</InfoText>
+                  </InfoTextWrap>
+                </InfoTextView>
+              </InfoWrap>
             </Content>
 
             {/* 리뷰자리 */}

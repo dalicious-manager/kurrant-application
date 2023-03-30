@@ -616,7 +616,7 @@ const Pages = () => {
       console.log(err);
     }
   };
-
+  const selectSpotName = mealCartSpot.filter(el => el.id === selected);
   return (
     <SafeView>
       <SpotView>
@@ -624,7 +624,7 @@ const Pages = () => {
           <SpotName>
             {spotName[0]?.text === undefined
               ? '스팟 없음'
-              : isUserInfo?.group + '\u00a0' + isUserInfo?.spot}
+              : selectSpotName[0].text}
           </SpotName>
           <ArrowIcon />
         </SpotPress>
@@ -873,7 +873,6 @@ const Pages = () => {
                   (결제시 적용가능)
                 </UserPointText>
               </UserPointView>
-
             </PaymentWrap>
           </View>
         )}
