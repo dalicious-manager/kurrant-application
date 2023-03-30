@@ -9,6 +9,8 @@ const useReviewWait = () => {
 
   const [reviewWaitCount, setReviewWaitCount] = useState(0);
 
+  const [redeemablePoints, setRedeemablePoints] = useState(0);
+
   const getReviewWait = async () => {
     try {
       const res = await Fetch.getReviewOrderMeal();
@@ -16,6 +18,8 @@ const useReviewWait = () => {
 
       setReviewWaitCount(res.data.count);
       setReviewWaitList(res.data.orderFoodList);
+      setRedeemablePoints(res.data.redeemablePoints);
+
       // setReviewWaitList([]);
     } catch (err) {
       console.log(err);
@@ -26,7 +30,7 @@ const useReviewWait = () => {
   //   getReviewWait();
   // }, []);
 
-  return {getReviewWait, reviewWaitList, reviewWaitCount};
+  return {getReviewWait, reviewWaitList, reviewWaitCount, redeemablePoints};
 };
 
 export default useReviewWait;

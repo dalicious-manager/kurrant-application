@@ -20,7 +20,13 @@ import Banner from './Banner';
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
 const Pages = () => {
-  const {reviewWaitList, reviewWaitCount, getReviewWait} = useReviewWait();
+  const {reviewWaitList, reviewWaitCount, getReviewWait, redeemablePoints} =
+    useReviewWait();
+
+  useEffect(() => {
+    console.log('yoyoyoyoyo');
+    console.log(redeemablePoints);
+  }, [redeemablePoints]);
 
   const [, setTotalReviewWaitList] = useAtom(totalReviewWaitList);
 
@@ -36,7 +42,9 @@ const Pages = () => {
 
   return (
     <Container>
-      {!!reviewWaitList && reviewWaitList.length > 0 && <Banner />}
+      {!!reviewWaitList && reviewWaitList.length > 0 && (
+        <Banner redeemablePoints={redeemablePoints} />
+      )}
 
       <View
         showsVerticalScrollIndicator={false}

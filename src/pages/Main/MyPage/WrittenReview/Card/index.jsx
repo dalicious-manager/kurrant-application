@@ -206,7 +206,7 @@ const Component = ({
         </>
       )}
 
-      {adminReview && (
+      {adminReview && adminReview.createDate && (
         <CommentWrap>
           <AdminOrMakersReview
             pngLink={adminReview.pngLink}
@@ -216,7 +216,7 @@ const Component = ({
         </CommentWrap>
       )}
 
-      {makersComment && (
+      {makersComment && makersComment.createDate && (
         <CommentWrap>
           <AdminOrMakersReview
             makersName={makersName}

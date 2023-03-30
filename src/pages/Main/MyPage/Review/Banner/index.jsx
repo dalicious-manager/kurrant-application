@@ -4,10 +4,10 @@ import {Dimensions} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
 
-const Component = () => {
+const Component = ({redeemablePoints}) => {
   return (
     <Container>
-      <BannerText>모든 리뷰 작성시 최대 500P</BannerText>
+      <BannerText>모든 리뷰 작성시 최대 {redeemablePoints}P</BannerText>
     </Container>
   );
 };
