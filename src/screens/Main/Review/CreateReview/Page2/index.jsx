@@ -20,7 +20,13 @@ import Config from 'react-native-config';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 
-import Review, {SCREEN_NAME as ReviewScreenName} from '../../../Review';
+import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
+import {PAGE_NAME as ReviewPageName} from '../../../../../pages/Main/MyPage/Review';
+
+// 수정후 여기로 오게 하기
+import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
+// } from '../../../pages/Main/MyPage/WrittenReview';
+
 import {Alert, FlatList, Text, View} from 'react-native';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
@@ -246,7 +252,26 @@ const Screen = ({route}) => {
                 text: '확인',
                 onPress: async () => {
                   getWrittenReview();
-                  navigation.reset({routes: [{name: ReviewScreenName}]});
+
+                  navigation.reset({
+                    routes: [
+                      {
+                        name: ReviewScreenName,
+
+                        state: {
+                          index: 1,
+                          routes: [
+                            {
+                              name: ReviewPageName,
+                            },
+                            {
+                              name: WrittenReviewPageName,
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  });
                 },
                 style: 'cancel',
               },
@@ -278,7 +303,25 @@ const Screen = ({route}) => {
                 text: '확인',
                 onPress: async () => {
                   getWrittenReview();
-                  navigation.reset({routes: [{name: ReviewScreenName}]});
+                  navigation.reset({
+                    routes: [
+                      {
+                        name: ReviewScreenName,
+
+                        state: {
+                          index: 1,
+                          routes: [
+                            {
+                              name: ReviewPageName,
+                            },
+                            {
+                              name: WrittenReviewPageName,
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  });
                 },
                 style: 'cancel',
               },
@@ -362,18 +405,6 @@ const Screen = ({route}) => {
                 </PhotosView>
               </PhotosScrollViewWrap> */}
 
-              {/* <FlatListWrapper nestedScrollEnabled={true}>
-                <UploadPhoto
-                  width="80px"
-                  height="80px"
-                  input={input}
-                  photosArray={photosArray}
-                  setPhotosArray={setPhotosArray}
-                />
-
-               
-              </FlatListWrapper> */}
-
               <FlatFlatList
                 data={photosArrayForFlatList}
                 scrollEnabled={true}
@@ -427,32 +458,6 @@ const Screen = ({route}) => {
                     : undefined
                 }
               />
-
-              {/* <ShowOnlyToOwnerWrap>
-                {editItem && editItem.forMakers ? (
-                  <>
-                    <CheckBox disabled={true}>
-                      <CheckIcon
-                        style={{width: 15, height: 10}}
-                        color={theme.colors.grey[7]}
-                      />
-                    </CheckBox>
-                  </>
-                ) : (
-                  <CheckBox
-                    checked={input.isExclusive}
-                    onPress={() => {
-                      setInput({...input, isExclusive: !input.isExclusive});
-                    }}>
-                    <CheckIcon
-                      style={{width: 15, height: 10}}
-                      color={'#ffffff'}
-                    />
-                  </CheckBox>
-                )}
-
-                <Title4>사장님에게만 보이기 </Title4>
-              </ShowOnlyToOwnerWrap> */}
 
               <ShowOnlyToOwnerWrap>
                 {!editItem && (

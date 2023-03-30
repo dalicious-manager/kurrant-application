@@ -277,6 +277,9 @@ import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
 } from './Review/ReportReview';
 
+import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
+import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
+
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
@@ -1815,8 +1818,27 @@ const Screen = () => {
                       {
                         text: '수정종료',
                         onPress: () => {
+                          // navigation.reset({
+                          //   routes: [{name: ReviewScreenName}],
+                          // });
                           navigation.reset({
-                            routes: [{name: ReviewScreenName}],
+                            routes: [
+                              {
+                                name: ReviewScreenName,
+
+                                state: {
+                                  index: 1,
+                                  routes: [
+                                    {
+                                      name: ReviewPageName,
+                                    },
+                                    {
+                                      name: WrittenReviewPageName,
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
                           });
 
                           return;

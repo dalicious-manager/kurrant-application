@@ -86,16 +86,6 @@ const Component = ({
                 <TextText>리뷰작성</TextText>
               </ReviewFormWriteButton>
             )}
-            {/* <ReviewFormWriteButton
-              onPress={() => {
-                navigation.navigate(CreateReviewScreenName, {
-                  orderItemId: orderItemId,
-                  imageLocation: imageLocation,
-                  foodName,
-                });
-              }}>
-              <TextText>리뷰작성</TextText>
-            </ReviewFormWriteButton> */}
           </SmallColumnWrap>
         </MetadataWrap>
       </CardContentBox>

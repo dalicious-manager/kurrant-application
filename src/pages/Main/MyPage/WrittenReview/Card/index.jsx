@@ -16,7 +16,7 @@ import OnlyForMakers from './OnlyForMakers';
 import Review, {
   PAGE_NAME as ReviewPageName,
 } from '../../../../../pages/Main/MyPage/Review';
-
+import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
 import WrittenReview, {
   PAGE_NAME as WrittenReviewPageName,
 } from '../../../../../pages/Main/MyPage/WrittenReview';
@@ -43,9 +43,9 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
 
-  console.log('여기가 보여주는 데이터임 여기 확인해라');
-  console.log(foodName);
-  console.log(forMakers);
+  // console.log('여기가 보여주는 데이터임 여기 확인해라');
+  // console.log(foodName);
+  // console.log(forMakers);
 
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
@@ -90,7 +90,23 @@ const Component = ({
           onPress: async () => {
             await deleteReview(id, token, () => {
               navigation.reset({
-                routes: [{name: WrittenReviewPageName}],
+                routes: [
+                  {
+                    name: ReviewScreenName,
+
+                    state: {
+                      index: 1,
+                      routes: [
+                        {
+                          name: ReviewPageName,
+                        },
+                        {
+                          name: WrittenReviewPageName,
+                        },
+                      ],
+                    },
+                  },
+                ],
               });
             });
 
