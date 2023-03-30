@@ -4,7 +4,7 @@ import {useAtom} from 'jotai';
 import React, {useLayoutEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';
 import useMypageReview from '../../../biz/useMypageReview/hook';
-import {totalReviewWaitList} from '../../../biz/useReview/useReviewWait/store';
+import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
 import {totalWrittenReview} from '../../../biz/useReview/useWrittenReview/store';
 
 export const SCREEN_NAME = 'S_MAIN__REVIEW';
@@ -19,7 +19,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const Screen = () => {
   const theme = useTheme();
-  const [total, iAmNotUsingThis] = useAtom(totalReviewWaitList);
+  const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
 
   const [totalWritten, AmNotUsingTHis] = useAtom(totalWrittenReview);
 

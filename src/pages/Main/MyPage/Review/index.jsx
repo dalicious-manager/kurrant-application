@@ -12,7 +12,7 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import Popup from './Popup';
 import useReviewWait from '../../../../biz/useReview/useReviewWait';
 
-import {totalReviewWaitList} from '../../../../biz/useReview/useReviewWait/store';
+import {totalReviewWaitListAtom} from '../../../../biz/useReview/useReviewWait/store';
 import {useAtom} from 'jotai';
 
 import Banner from './Banner';
@@ -28,7 +28,7 @@ const Pages = () => {
     console.log(redeemablePoints);
   }, [redeemablePoints]);
 
-  const [, setTotalReviewWaitList] = useAtom(totalReviewWaitList);
+  const [, setTotalReviewWaitList] = useAtom(totalReviewWaitListAtom);
 
   useEffect(() => {
     getReviewWait();

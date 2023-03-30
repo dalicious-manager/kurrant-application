@@ -2,14 +2,14 @@ import {useAtom} from 'jotai';
 import {useState} from 'react';
 
 import * as Fetch from './Fetch';
-import {reviewWaitListAtom} from './store';
+import {redeemablePointsAtom, reviewWaitListAtom} from './store';
 
 const useReviewWait = () => {
   const [reviewWaitList, setReviewWaitList] = useAtom(reviewWaitListAtom);
 
   const [reviewWaitCount, setReviewWaitCount] = useState(0);
 
-  const [redeemablePoints, setRedeemablePoints] = useState(0);
+  const [redeemablePoints, setRedeemablePoints] = useAtom(redeemablePointsAtom);
 
   const getReviewWait = async () => {
     try {

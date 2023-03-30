@@ -40,6 +40,8 @@ import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/Grou
 import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
 import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
 import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
+import {redeemablePointsAtom} from '../../../../../biz/useReview/useReviewWait/store';
+import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -55,6 +57,9 @@ const Pages = () => {
   const {
     readableAtom: {userRole},
   } = useAuth();
+
+  const [redeemablePoints] = useAtom(redeemablePointsAtom);
+
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
   const {isUserInfo} = useUserInfo();
@@ -214,13 +219,15 @@ const Pages = () => {
 
             <ListBox
               title="리뷰 관리"
-              description={`모두 작성시 최대 `}
+              description={redeemablePoints > 0 && `모두 작성시 최대 `}
               effect={
-                <Typography
-                  test={'CaptionR'}
-                  textColor={themeApp.colors.blue[500]}>
-                  500P
-                </Typography>
+                redeemablePoints > 0 && (
+                  <Typography
+                    test={'CaptionR'}
+                    textColor={themeApp.colors.blue[500]}>
+                    {redeemablePoints}P
+                  </Typography>
+                )
               }
               routeName={ReviewScreenName}
             />
