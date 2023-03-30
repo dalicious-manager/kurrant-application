@@ -47,8 +47,8 @@ const Screen = ({route}) => {
   const status = route?.params?.status;
   const editItem = route?.params?.editItem;
 
-  console.log('진짜 징하다');
-  console.log(editItem);
+  // console.log('진짜 징하다');
+  // console.log(editItem);
 
   const theme = useTheme();
 
@@ -57,19 +57,22 @@ const Screen = ({route}) => {
   const navigation = useNavigation();
 
   // 받아온 editItem에서 이미지 추출해서 등록하기
+  //
   useEffect(() => {
     if (editItem) {
-      const yo = editItem.image.map(v => {
-        //
-        let fileName = v.split('/').pop();
-        return {
-          id: v,
-          uri: v,
-          fileName: fileName,
-        };
-      });
+      const editItemModify = editItem.image
+        ? editItem.image.map(v => {
+            //
+            let fileName = v.split('/').pop();
+            return {
+              id: v,
+              uri: v,
+              fileName: fileName,
+            };
+          })
+        : [];
 
-      setPhotosArray(yo);
+      setPhotosArray(editItemModify);
     }
   }, [editItem]);
 
@@ -162,6 +165,13 @@ const Screen = ({route}) => {
 
       // photosArray에서 웹에있는 데이터, 로컬인 데이터 배열 둘로 나눠야됨
 
+      console.log('보내는 데이터임');
+      console.log(data);
+
+      // editItem && editItem.reviewText
+      // ? editItem.reviewText
+      // data.review 가 없으면 editItem을 바로 받아오게하기
+
       let webArray = [];
       let localArray = [];
 
@@ -182,8 +192,9 @@ const Screen = ({route}) => {
 
       const sendEditData = {
         satisfaction: starRating,
-        content: data.review,
+        content: !data.reviewed ? editItem.reviewText : data.reviewed,
         images: webArray,
+        // 무조건
         forMakers: editItem.forMakers ? true : input.isExclusive,
       };
 
@@ -192,14 +203,8 @@ const Screen = ({route}) => {
         Authorization: `Bearer ${token}`,
       };
 
-      console.log([
-        ...localArray,
-        {
-          name: 'updateReqDto',
-          data: JSON.stringify(sendEditData),
-          type: 'application/json',
-        },
-      ]);
+      console.log('이게 수정할때 보내는 데이터임');
+      console.log(sendEditData);
 
       return RNFetchBlob.fetch('PATCH', url, headers, [
         ...localArray,
@@ -278,16 +283,6 @@ const Screen = ({route}) => {
               },
             ]);
           }
-
-          // if (data.statusCode === 400) {
-          //   Alert.alert('작성 실패', data.message, [
-          //     {
-          //       text: '확인',
-          //       onPress: async () => {},
-          //       style: 'cancel',
-          //     },
-          //   ]);
-          // }
         })
         .catch(error => {
           console.error('Error:', error);

@@ -40,8 +40,8 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
 
-  console.log('리뷰 데이터');
-  console.log(wholeItem);
+  // console.log('리뷰 데이터');
+  // console.log(wholeItem);
 
   return (
     <Container>

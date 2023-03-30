@@ -42,6 +42,10 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
 
+  console.log('여기가 보여주는 데이터임 여기 확인해라');
+  console.log(foodName);
+  console.log(forMakers);
+
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
 
@@ -55,8 +59,16 @@ const Component = ({
 
   let imageLocationToSix = [];
 
+  // imageLocation이 널일 경우 null 을 빈 배열로 고쳐주기
+  let importImageLocation = [];
+  if (!imageLocation) {
+    importImageLocation = [];
+  } else {
+    importImageLocation = imageLocation;
+  }
+
   for (let i = 0; i < 6; i++) {
-    imageLocationToSix.push(imageLocation[i]);
+    imageLocationToSix.push(importImageLocation[i]);
   }
 
   const handleDelete = async () => {
@@ -82,6 +94,8 @@ const Component = ({
                 onPress: async () => {
                   await deleteReview(id, token);
 
+                  // 여기가 널이레??
+                  console.log('여기가 널이래 확인점');
                   navigation.reset({routes: [{name: WrittenReviewPageName}]});
 
                   return;
@@ -148,38 +162,6 @@ const Component = ({
 
         <PostDateText>{writtenDate} 작성</PostDateText>
       </RowWrap>
-
-      {/* 사장님에게만 보이는 리뷰(forMakers) */}
-      {/* {!forMakers ? (
-        <>
-          <ImagesWrap>
-            {imageLocationToSix.map((v, i) => {
-              if (v) {
-                return (
-                  <ImageWrap key={i}>
-                    <MealImage
-                      source={{
-                        uri: v,
-                      }}
-                    />
-                  </ImageWrap>
-                );
-              } else {
-                return (
-                  <ImageWrap key={i}>
-                    <DefaultImage />
-                  </ImageWrap>
-                );
-              }
-            })}
-          </ImagesWrap>
-          <ReviewWrap>
-            <ReviewText>{reviewText}</ReviewText>
-          </ReviewWrap>
-        </>
-      ) : (
-        <OnlyForMakers />
-      )} */}
 
       {forMakers && <OnlyForMakers />}
 

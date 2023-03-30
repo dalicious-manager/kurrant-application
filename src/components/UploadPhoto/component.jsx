@@ -63,13 +63,39 @@ const Component = ({photosArray, setPhotosArray}) => {
         // 같은 사진일때 구분해줘야함
         // 원래 있던 파일이면 (1)(2)를 추가해준다
 
-        const photosNameArray = photosArray.map(v => {
-          return v.fileName;
-        });
+        //  이름이 같을때 안 같을 떄? 구분
 
-        if (photosNameArray.includes(res.assets[0].fileName)) {
-        } else {
-        }
+        // const photosNameArray = photosArray.map((v) => {
+        //   return v.fileName
+
+        // })
+
+        // const photosNameSet = new Set(photosNameArray)
+
+        // console.log('여기 들어옴 0');
+        // console.log(res.assets[0].fileName);
+
+        // if (photosArray.map(v => v.fileName).includes(res.assets[0].fileName)) {
+        //   console.log('여기 들어옴 1');
+
+        //   let k = 1;
+
+        //   const myString = res.assets[0].fileName;
+        //   const myArray = myString.split(/\./);
+
+        //   while (
+        //     photosArray.map(v => v.fileName).includes(res.assets[0].fileName)
+        //   ) {
+        //     // 이름뒤에 정수를 넣어준다
+
+        //     myArray.splice(myArray.length - 2, 0, `(${k})`);
+
+        //     k++;
+        //   }
+        //   const result = myArray.join('');
+        //   console.log('여기 결과 2');
+        //   console.log(result);
+        // }
 
         setPhotosArray(
           [
