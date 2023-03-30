@@ -40,6 +40,8 @@ const Component = ({
   makersComment,
   forMakers,
   imageLocation,
+  createDate,
+  updateDate,
 }) => {
   const navigation = useNavigation();
 
@@ -166,37 +168,43 @@ const Component = ({
           <StarRating rating={rating} width="66px" margin="1px" />
         </StarsWrap>
 
-        <PostDateText>{writtenDate} 작성</PostDateText>
+        <PostDateText>
+          {writtenDate} {createDate === updateDate ? '작성' : '수정'}
+        </PostDateText>
       </RowWrap>
 
       {forMakers && <OnlyForMakers />}
 
-      <>
-        <ImagesWrap>
-          {imageLocationToSix.map((v, i) => {
-            if (v) {
-              return (
-                <ImageWrap key={i}>
-                  <MealImage
-                    source={{
-                      uri: v,
-                    }}
-                  />
-                </ImageWrap>
-              );
-            } else {
-              return (
-                <ImageWrap key={i}>
-                  <DefaultImage />
-                </ImageWrap>
-              );
-            }
-          })}
-        </ImagesWrap>
-        <ReviewWrap>
-          <ReviewText>{reviewText}</ReviewText>
-        </ReviewWrap>
-      </>
+      {imageLocation && imageLocation.length > 0 && (
+        <>
+          <ImagesWrap>
+            {imageLocationToSix.map((v, i) => {
+              if (v) {
+                return (
+                  <ImageWrap key={i}>
+                    <MealImage
+                      source={{
+                        uri: v,
+                      }}
+                    />
+                  </ImageWrap>
+                );
+              } else {
+                return (
+                  <ImageWrap key={i}>
+                    <DefaultImage />
+                  </ImageWrap>
+                );
+              }
+            })}
+          </ImagesWrap>
+          <ReviewWrap>
+            <ReviewText numberOfLines={3} ellipsizeMode="tail">
+              {reviewText}
+            </ReviewText>
+          </ReviewWrap>
+        </>
+      )}
 
       {adminReview && (
         <CommentWrap>

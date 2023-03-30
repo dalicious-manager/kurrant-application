@@ -47,6 +47,7 @@ const Pages = () => {
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,
+              updateDate: item.updateDate,
               image: item.imageLocation,
               reviewText: item.content,
               rating: item.satisfaction,
@@ -65,6 +66,8 @@ const Pages = () => {
                 <Card
                   id={item2.id}
                   editItem={item2}
+                  createDate={item2.createDate}
+                  updateDate={item2.updateDate}
                   makersName={item2.makersName}
                   foodName={item2.foodName}
                   writtenDate={item2.writtenDate}

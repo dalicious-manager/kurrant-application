@@ -126,8 +126,11 @@ const Screen = ({route}) => {
 
   useEffect(() => {
     // 길이 실시간 측정
-
-    setCharLength(input.review.length);
+    if (input.review) {
+      setCharLength(input.review.length);
+    } else {
+      setCharLength(0);
+    }
   }, [input, setCharLength]);
 
   const handlePhotoRemove = photoId => {
