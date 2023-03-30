@@ -48,6 +48,8 @@ const Screen = ({route}) => {
 
   const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
 
+  const [charLength, setCharLength] = useState(0);
+
   useEffect(() => {
     // 사진 채우기 기능 추가
 
@@ -121,6 +123,12 @@ const Screen = ({route}) => {
       setInput({...input, review: editItem.reviewText});
     }
   }, [editItem]);
+
+  useEffect(() => {
+    // 길이 실시간 측정
+
+    setCharLength(input.review.length);
+  }, [input, setCharLength]);
 
   const handlePhotoRemove = photoId => {
     const thisPhotoArray = [...photosArray];
@@ -452,12 +460,24 @@ const Screen = ({route}) => {
               </Title3>
 
               <ReviewInput
+                charLength={charLength}
                 editContentInput={
                   editItem && editItem.reviewText
                     ? editItem.reviewText
                     : undefined
                 }
               />
+              {/* '최대 몇자인가' 보여주기 */}
+
+              {/* <ShowCurrentLettersLengthWrap>
+                <LengthText>
+                  (
+                  <LengthTextNum charLength={charLength > 500}>
+                    {charLength}
+                  </LengthTextNum>
+                  /500)
+                </LengthText>
+              </ShowCurrentLettersLengthWrap> */}
 
               <ShowOnlyToOwnerWrap>
                 {!editItem && (
@@ -650,4 +670,23 @@ const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
 const ButtonFinal = styled(Button)`
   position: relative;
   bottom: 20px;
+`;
+
+const ShowCurrentLettersLengthWrap = styled.View`
+  flex-direction: row-reverse;
+  margin-bottom: 10px;
+`;
+const LengthText = styled(Typography).attrs({text: ' CaptionR'})`
+  color: ${props => props.theme.colors.grey[4]};
+  /* margin-bottom: 32px; */
+`;
+
+const LengthTextNum = styled(Typography).attrs({text: ' CaptionR'})`
+  color: ${props => {
+    if (props.charLength) {
+      return props.theme.colors.red[500];
+    } else {
+      return props.theme.colors.grey[4];
+    }
+  }};
 `;

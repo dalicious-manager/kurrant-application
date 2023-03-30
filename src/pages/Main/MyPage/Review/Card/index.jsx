@@ -14,7 +14,10 @@ import {
   timeLeftIndicator,
   timePassIndicator,
 } from '../../../../../utils/dateFormatter';
+
 import {calculateReviewDDay} from './logic';
+
+import {PAGE_NAME as MealDetailPageName} from '../../../../../pages/Main/Bnb/MealDetail/Main';
 
 /**
  * @param {object} props
@@ -40,6 +43,9 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
 
+  console.log('오더 아이템 아이디');
+  console.log(orderItemId);
+
   return (
     <Container>
       <DateText>
@@ -54,11 +60,18 @@ const Component = ({
       </DateText>
 
       <CardContentBox>
-        <MealImage
-          source={{
-            uri: imageLocation,
-          }}
-        />
+        <ImagePressable
+          onPress={e => {
+            navigation.navigate(MealDetailPageName, {dailyFoodId: orderItemId});
+            e.stopPropagation();
+          }}>
+          <MealImage
+            source={{
+              uri: imageLocation,
+            }}
+          />
+        </ImagePressable>
+
         <MetadataWrap>
           <SmallRowWrap>
             <RestaurentNameText>
@@ -123,6 +136,7 @@ const CardContentBox = styled.View`
   flex-flow: row;
   height: 114px;
 `;
+const ImagePressable = styled.Pressable``;
 const MealImage = styled.Image`
   width: 114px;
   height: 114px;
