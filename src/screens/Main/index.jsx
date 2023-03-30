@@ -1815,7 +1815,10 @@ const Screen = () => {
                       {
                         text: '수정종료',
                         onPress: () => {
-                          navigation.navigate(ReviewScreenName);
+                          navigation.reset({
+                            routes: [{name: ReviewScreenName}],
+                          });
+
                           return;
                         },
 

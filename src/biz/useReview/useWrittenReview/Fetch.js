@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import Config from 'react-native-config';
 import {DefaultProfile} from '../../../assets';
 import mSleep from '../../../helpers/mSleep';
@@ -19,25 +20,59 @@ export async function getReviewOrderMeal() {
   return fetchRes;
 }
 
-export async function deleteReview(id, token) {
+export async function deleteReview(id, token, successCallback) {
   const url = `${apiHostUrl}/users/me/reviews/delete?id=${id}`;
 
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
-  var requestOptions = {
+  const requestOptions = {
     method: 'PATCH',
     headers: headers,
   };
 
   fetch(url, requestOptions)
     .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+    .then(result => {
+      console.log('확인하기');
 
-  const fetchRes = fetch();
-  return fetchRes;
+      const parseResult = JSON.parse(result);
+      if (parseResult.statusCode !== 200) {
+        Alert.alert('작성 실패', `${parseResult.message}`, [
+          {
+            text: '확인',
+            onPress: () => {},
+            style: 'cancel',
+          },
+        ]);
+      } else {
+        console.log(result);
+        Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
+          {
+            text: '확인',
+            onPress: async () => {
+              successCallback();
+            },
+            style: 'cancel',
+          },
+        ]);
+      }
+    })
+    .catch(error => {
+      console.log('삭제 에러뜸');
+      console.log(error);
+
+      Alert.alert('작성 실패', '', [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
+    });
+
+  // return res;
 }
 
 export async function writtenReviewMockData() {

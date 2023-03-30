@@ -40,9 +40,6 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
 
-  // console.log('리뷰 데이터');
-  // console.log(wholeItem);
-
   return (
     <Container>
       <DateText>
@@ -77,7 +74,7 @@ const Component = ({
               {calculateReviewDDay(reviewDDay)[0]}
             </DDayText>
 
-            {/* {reviewDDay > 0 && (
+            {reviewDDay > 0 && (
               <ReviewFormWriteButton
                 onPress={() => {
                   navigation.navigate(CreateReviewScreenName, {
@@ -88,8 +85,8 @@ const Component = ({
                 }}>
                 <TextText>리뷰작성</TextText>
               </ReviewFormWriteButton>
-            )} */}
-            <ReviewFormWriteButton
+            )}
+            {/* <ReviewFormWriteButton
               onPress={() => {
                 navigation.navigate(CreateReviewScreenName, {
                   orderItemId: orderItemId,
@@ -98,7 +95,7 @@ const Component = ({
                 });
               }}>
               <TextText>리뷰작성</TextText>
-            </ReviewFormWriteButton>
+            </ReviewFormWriteButton> */}
           </SmallColumnWrap>
         </MetadataWrap>
       </CardContentBox>

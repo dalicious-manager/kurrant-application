@@ -11,7 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
 import OnlyForMakers from './OnlyForMakers';
-import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
+// import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
 import Review, {
   PAGE_NAME as ReviewPageName,
@@ -21,6 +21,7 @@ import WrittenReview, {
   PAGE_NAME as WrittenReviewPageName,
 } from '../../../../../pages/Main/MyPage/WrittenReview';
 import {getStorage} from '../../../../../utils/asyncStorage';
+import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -86,22 +87,12 @@ const Component = ({
         },
         {
           text: `삭제`,
-          onPress: () => {
-            Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-              {
-                text: '확인',
-                onPress: async () => {
-                  await deleteReview(id, token);
-
-                  // 여기가 널이레??
-                  console.log('여기가 널이래 확인점');
-                  navigation.reset({routes: [{name: WrittenReviewPageName}]});
-
-                  return;
-                },
-                style: 'cancel',
-              },
-            ]);
+          onPress: async () => {
+            await deleteReview(id, token, () => {
+              navigation.reset({
+                routes: [{name: WrittenReviewPageName}],
+              });
+            });
 
             return;
           },

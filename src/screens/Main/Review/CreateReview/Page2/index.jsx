@@ -48,10 +48,6 @@ const Screen = ({route}) => {
     setPhotosArrayForFlatList(['addPic', ...photosArray]);
   }, [photosArray]);
 
-  useEffect(() => {
-    console.log(photosArrayForFlatList);
-  }, [photosArrayForFlatList]);
-
   const {getWrittenReview} = useWrittenReview();
   const id = route?.params?.id;
   const status = route?.params?.status;
