@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Modal, SafeAreaView, StyleSheet, Text, Image} from 'react-native';
 import styled from 'styled-components';
 import Carousel from 'react-native-reanimated-carousel';
@@ -12,28 +12,16 @@ const ImageModal = ({
   imageLocation,
   firstClickedImageIndex,
 }) => {
-  //   const [visible, setVisible] = useState(false);
+  const [index, setIndex] = useState(0);
 
   const show = () => setVisible(true);
   const hide = () => setVisible(false);
 
-  console.log('이미지 로케이션');
-  console.log(imageLocation);
-  console.log(imageLocation?.length);
+  // 현재 페이지 인덱스 알기
 
-  //   Image.getSize(
-  //     'https://your-image-url.com/image.jpg',
-  //     (width, height) => {
-  //       if (width > height) {
-  //         console.log('Image is horizontal');
-  //       } else {
-  //         console.log('Image is vertical');
-  //       }
-  //     },
-  //     error => {
-  //       console.error(error);
-  //     }
-  //   );
+  useEffect(() => {
+    setIndex(firstClickedImageIndex);
+  }, [firstClickedImageIndex]);
 
   return (
     <>
@@ -47,7 +35,10 @@ const ImageModal = ({
             <CarouselImage
               img={imageLocation}
               firstClickedImageIndex={firstClickedImageIndex}
+              setIndex={setIndex}
             />
+
+            <Text>{index}</Text>
           </Container>
         </SafeAreaView>
       </Modal>
@@ -58,11 +49,14 @@ export default ImageModal;
 
 const styles = StyleSheet.create({
   fill: {flex: 1},
-  grey: {backgroundColor: '#5A1EFF'},
+  //   grey: {backgroundColor: '#5A1EFF'},
+  grey: {backgroundColor: '#ffffff'},
 });
 
 const ShowPressable = styled.Pressable``;
 const HidePressable = styled.Pressable``;
 const Container = styled.View`
+  display: flex;
   align-items: center;
+  justify-content: center;
 `;
