@@ -258,6 +258,11 @@ const Pages = ({route}) => {
     return <Skeleton />;
   }
 
+  useEffect(() => {
+    console.log('푸드 디테일 이미지리스트');
+    console.log(isFoodDetail?.imageList);
+  }, [isFoodDetail]);
+
   return (
     <>
       <Wrap>

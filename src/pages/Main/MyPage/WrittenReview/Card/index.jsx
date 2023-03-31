@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect} from 'react';
-import {Alert, Dimensions, Text} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Alert, Dimensions, Image, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
@@ -24,6 +24,7 @@ import {getStorage} from '../../../../../utils/asyncStorage';
 import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
+import ImageModal from './ImageModal/ImageModal';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -47,9 +48,7 @@ const Component = ({
 }) => {
   const navigation = useNavigation();
 
-  // console.log('여기가 보여주는 데이터임 여기 확인해라');
-  // console.log(foodName);
-  // console.log(forMakers);
+  const [imageModalVisible, setImageModalVisible] = useState(false);
 
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
@@ -125,25 +124,6 @@ const Component = ({
     );
   };
 
-  // useEffect(() => {
-  //   if (makersComment && makersComment.createDate) {
-  //     console.log(makersComment?.createDate);
-  //     console.log(stringDateToJavascriptDate(makersComment?.createDate, '-'));
-  //   }
-
-  //   if (adminComment && adminComment.createDate) {
-  //     console.log(adminComment?.createDate);
-  //     console.log(stringDateToJavascriptDate(adminComment?.createDate, '-'));
-  //   }
-
-  //   if (makersComment?.createDate && adminComment?.createDate) {
-  //     const date1 = stringDateToJavascriptDate(makersComment?.createDate, '-');
-  //     const date2 = stringDateToJavascriptDate(adminComment?.createDate, '-');
-
-  //     console.log(date1 < date2);
-  //   }
-  // }, [makersComment, adminComment]);
-
   return (
     <Container>
       <TopWrap>
@@ -200,17 +180,23 @@ const Component = ({
 
       {imageLocation && imageLocation.length > 0 && (
         <>
-          <ImagesWrap>
+          <ImagesWrapper>
             {imageLocationToSix.map((v, i) => {
               if (v) {
+                // 이미지가 수직 이미지인가 수평이미지인가 확인하기
+
                 return (
-                  <ImageWrap key={i}>
+                  <ImagePressable
+                    key={i}
+                    onPress={() => {
+                      setImageModalVisible(true);
+                    }}>
                     <MealImage
                       source={{
                         uri: v,
                       }}
                     />
-                  </ImageWrap>
+                  </ImagePressable>
                 );
               }
               // defaultPicture 기각됨
@@ -222,9 +208,15 @@ const Component = ({
               //   );
               // }
             })}
-          </ImagesWrap>
+          </ImagesWrapper>
         </>
       )}
+
+      <ImageModal
+        visible={imageModalVisible}
+        setVisible={setImageModalVisible}
+        imageLocation={imageLocation}
+      />
 
       <ReviewWrap>
         <ReviewText numberOfLines={3} ellipsizeMode="tail">
@@ -305,10 +297,6 @@ const Component = ({
           )}
         </>
       )}
-
-      {/* 순서 sorting하기  */}
-
-      {}
     </Container>
   );
 };
@@ -365,12 +353,12 @@ const PostDateText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
 `;
-const ImagesWrap = styled.View`
+const ImagesWrapper = styled.Pressable`
   flex-direction: row;
   margin-bottom: 9px;
 `;
 
-const ImageWrap = styled.View`
+const ImagePressable = styled.Pressable`
   ${() => {
     const widthyo = (Dimensions.get('screen').width - 48) / 6;
 
