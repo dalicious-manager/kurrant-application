@@ -7,9 +7,52 @@ import styled from 'styled-components';
 
 const phoneWidth = Dimensions.get('window').width;
 const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
-  //   const [imageHeight, setImageHeight] = useState(380);
+  const [imageHeight, setImageHeight] = useState([]);
 
   // 판별해서 배열에 넣어주고 해야겠다
+
+  useEffect(() => {
+    console.log(img);
+
+    const yo = img.map(v => {
+      let imageStyle;
+
+      Image.getSize(
+        v,
+        (width, height) => {
+          if (width > height) {
+            console.log(`width: ${width} height: ${height}`);
+
+            imageStyle = {
+              maxWidth: phoneWidth,
+              height: 282,
+            };
+            setImageHeight([...imageHeight, [v, imageStyle]]);
+          } else if (width < height) {
+            console.log(`width: ${width} height: ${height}`);
+            imageStyle = {
+              maxWidth: phoneWidth,
+              height: 563,
+            };
+            setImageHeight([...imageHeight, [v, imageStyle]]);
+          } else {
+            console.log(`width: ${width} height: ${height}`);
+
+            imageStyle = {
+              maxWidth: phoneWidth,
+              height: phoneWidth,
+            };
+            setImageHeight([...imageHeight, [v, imageStyle]]);
+          }
+        },
+        error => {
+          console.error(error);
+        },
+      );
+    });
+
+    console.log(yo);
+  }, [img]);
 
   return (
     <View>
@@ -18,7 +61,7 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
         width={phoneWidth}
         height={563}
         // autoPlay={true}
-        data={img}
+        data={imageHeight}
         scrollAnimationDuration={600}
         // autoplay={true}, autoPlayInterval={null} : 자동으로 카루셀 되는거 막기
         autoplay={true}
@@ -32,53 +75,15 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
         renderItem={({item}) => {
           // 이미지가 가로인가 세로인가 판별하기 ( )
 
-          let imageStyle = {};
-
-          console.log(item);
-          Image.getSize(
-            item,
-            (width, height) => {
-              if (width > height) {
-                console.log(`width: ${width} height: ${height}`);
-
-                imageStyle = {
-                  maxWidth: phoneWidth,
-                  height: 282,
-                };
-              } else if (width < height) {
-                console.log(`width: ${width} height: ${height}`);
-                imageStyle = {
-                  maxWidth: phoneWidth,
-                  height: 563,
-                };
-              } else {
-                console.log(`width: ${width} height: ${height}`);
-
-                imageStyle = {
-                  maxWidth: phoneWidth,
-                  height: phoneWidth,
-                };
-              }
-            },
-            error => {
-              console.error(error);
-            },
-          );
-
-          console.log(imageStyle);
-
           return (
             <View>
               <FastImage
                 source={{
-                  uri: `${item}`,
+                  uri: `${item[0]}`,
                   priority: FastImage.priority.high,
                 }}
                 // style={imageStyle}
-                style={{
-                  maxWidth: 120,
-                  height: 60,
-                }}>
+                style={item[1]}>
                 <FilterImage
                   colors={[
                     'rgba(0, 0, 0, 0.45)',
