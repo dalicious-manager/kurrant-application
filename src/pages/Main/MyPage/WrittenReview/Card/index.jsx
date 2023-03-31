@@ -189,13 +189,15 @@ const Component = ({
                     />
                   </ImageWrap>
                 );
-              } else {
-                return (
-                  <ImageWrap key={i}>
-                    <DefaultImage />
-                  </ImageWrap>
-                );
               }
+              // defaultPicture 기각됨
+              // else {
+              //   return (
+              //     <ImageWrap key={i}>
+              //       <DefaultImage />
+              //     </ImageWrap>
+              //   );
+              // }
             })}
           </ImagesWrap>
         </>
