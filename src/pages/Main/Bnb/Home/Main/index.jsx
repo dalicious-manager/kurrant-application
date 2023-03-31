@@ -381,7 +381,7 @@ const Pages = () => {
       }}>
       <View>
         {/* 홈 강제 공지사항 띄우기 */}
-        {Array.isArray(announcements) &&
+        {/* {Array.isArray(announcements) &&
           announcements.length > 0 &&
           announcements.map(v => {
             if (announcementHandle[v.id.toString()]) {
@@ -397,7 +397,7 @@ const Pages = () => {
             } else {
               return;
             }
-          })}
+          })} */}
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
