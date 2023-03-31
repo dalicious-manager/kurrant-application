@@ -2,10 +2,16 @@ import {useState} from 'react';
 import {Modal, SafeAreaView, StyleSheet, Text, Image} from 'react-native';
 import styled from 'styled-components';
 import Carousel from 'react-native-reanimated-carousel';
+import CarouselImage from './CarouselImage';
 
 // https://www.youtube.com/watch?v=Nw1St1h5Ylc&t=81s 여기서 베낌
 
-const ImageModal = ({visible, setVisible, imageLocation}) => {
+const ImageModal = ({
+  visible,
+  setVisible,
+  imageLocation,
+  firstClickedImageIndex,
+}) => {
   //   const [visible, setVisible] = useState(false);
 
   const show = () => setVisible(true);
@@ -31,22 +37,17 @@ const ImageModal = ({visible, setVisible, imageLocation}) => {
 
   return (
     <>
-      <Modal
-        visible={visible}
-        // 2. 애니메이션 타입
-        // fade : 페이드인 페이드아웃
-        // slide :  밑에서 위로 올라 옴
-
-        animationType="fade"
-        //   animationType="slide"
-
-        // 3. 뒤로가기 같은거 누를때 modal 을 없애줘야한다
-        onRequestClose={hide}>
+      <Modal visible={visible} animationType="fade" onRequestClose={hide}>
         <SafeAreaView style={[styles.fill, styles.grey]}>
           <Container>
             <HidePressable onPress={hide}>
               <Text>hide</Text>
             </HidePressable>
+
+            <CarouselImage
+              img={imageLocation}
+              firstClickedImageIndex={firstClickedImageIndex}
+            />
           </Container>
         </SafeAreaView>
       </Modal>

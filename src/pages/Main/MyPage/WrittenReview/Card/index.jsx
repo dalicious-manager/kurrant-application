@@ -50,6 +50,8 @@ const Component = ({
 
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
+  const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
+
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
 
@@ -189,6 +191,7 @@ const Component = ({
                   <ImagePressable
                     key={i}
                     onPress={() => {
+                      setFirstClickedImageIndex(i);
                       setImageModalVisible(true);
                     }}>
                     <MealImage
@@ -216,6 +219,7 @@ const Component = ({
         visible={imageModalVisible}
         setVisible={setImageModalVisible}
         imageLocation={imageLocation}
+        firstClickedImageIndex={firstClickedImageIndex}
       />
 
       <ReviewWrap>
