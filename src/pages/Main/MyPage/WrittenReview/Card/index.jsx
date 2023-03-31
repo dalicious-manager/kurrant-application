@@ -36,7 +36,7 @@ const Component = ({
   option,
   rating,
   reviewText,
-  adminReview,
+  adminReview: adminComment,
   makersComment,
   forMakers,
   imageLocation,
@@ -198,20 +198,21 @@ const Component = ({
               }
             })}
           </ImagesWrap>
-          <ReviewWrap>
-            <ReviewText numberOfLines={3} ellipsizeMode="tail">
-              {reviewText}
-            </ReviewText>
-          </ReviewWrap>
         </>
       )}
 
-      {adminReview && adminReview.createDate && (
+      <ReviewWrap>
+        <ReviewText numberOfLines={3} ellipsizeMode="tail">
+          {reviewText}
+        </ReviewText>
+      </ReviewWrap>
+
+      {adminComment && adminComment.createDate && (
         <CommentWrap>
           <AdminOrMakersReview
-            pngLink={adminReview.pngLink}
-            writtenDate={adminReview.createDate}
-            message={adminReview.content}
+            pngLink={adminComment.pngLink}
+            writtenDate={adminComment.createDate}
+            message={adminComment.content}
           />
         </CommentWrap>
       )}

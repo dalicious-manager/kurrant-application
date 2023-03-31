@@ -15,6 +15,8 @@ const Component = ({
   writtenDate: createDate,
   message: content,
 }) => {
+  console.log(content);
+
   return (
     <Container>
       <AdminImageWrap>
