@@ -38,7 +38,7 @@ import useGroupSpots from '../../../../../biz/useGroupSpots';
 import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
 
 import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
+
 import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
 import {redeemablePointsAtom} from '../../../../../biz/useReview/useReviewWait/store';
 import {useAtom} from 'jotai';
@@ -230,14 +230,6 @@ const Pages = () => {
                 )
               }
               routeName={ReviewScreenName}
-            />
-            <ListBox
-              title="조재신 업무파악용(테스트)"
-              routeName={testPageName}
-            />
-            <ListBox
-              title="리뷰 신고(테스트)"
-              routeName={ReportReviewPageName}
             />
 
             <ListBox

@@ -272,7 +272,7 @@ import CreateReviewPage2, {
 } from './Review/CreateReview/Page2';
 
 import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
-import test, {PAGE_NAME as testPageName} from '../../jaesin/test';
+
 import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
 } from './Review/ReportReview';
@@ -1851,26 +1851,6 @@ const Screen = () => {
                 }}
               />
             ),
-          }}
-        />
-      </MainRoot.Group>
-
-      {/* 조재신 업무 파악용(맘대로 지워도 됩니다) */}
-      <MainRoot.Group>
-        <MainRoot.Screen
-          name={testPageName}
-          component={test}
-          options={{
-            headerShown: true,
-            title: '조재신 엄무파학용',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              fontFamily: 'Pretendard-SemiBold',
-              fontSize: 14,
-              lineHeight: 22,
-            },
-            headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
           }}
         />
       </MainRoot.Group>
