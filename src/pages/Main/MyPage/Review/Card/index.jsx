@@ -38,13 +38,11 @@ const Component = ({
   option,
   imageLocation,
   diningType,
+  dailyFoodId,
   reviewDDay,
   ...rest
 }) => {
   const navigation = useNavigation();
-
-  console.log('오더 아이템 아이디');
-  console.log(orderItemId);
 
   return (
     <Container>
@@ -62,7 +60,7 @@ const Component = ({
       <CardContentBox>
         <ImagePressable
           onPress={e => {
-            navigation.navigate(MealDetailPageName, {dailyFoodId: orderItemId});
+            navigation.navigate(MealDetailPageName, {dailyFoodId: dailyFoodId});
             e.stopPropagation();
           }}>
           <MealImage

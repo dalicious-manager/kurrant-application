@@ -23,11 +23,6 @@ const Pages = () => {
   const {reviewWaitList, reviewWaitCount, getReviewWait, redeemablePoints} =
     useReviewWait();
 
-  useEffect(() => {
-    console.log('yoyoyoyoyo');
-    console.log(redeemablePoints);
-  }, [redeemablePoints]);
-
   const [, setTotalReviewWaitList] = useAtom(totalReviewWaitListAtom);
 
   useEffect(() => {
@@ -109,6 +104,7 @@ const Pages = () => {
                             diningType={value2.diningType}
                             makersName={value2.makersName}
                             reviewDDay={value2.reviewDDay}
+                            dailyFoodId={value2.dailyFoodId}
                           />
                         );
                       })}

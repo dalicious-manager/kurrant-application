@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react';
-import {Alert, Dimensions} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
+import {Alert, Dimensions, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
@@ -22,6 +22,8 @@ import WrittenReview, {
 } from '../../../../../pages/Main/MyPage/WrittenReview';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
+
+import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -73,6 +75,8 @@ const Component = ({
     imageLocationToSix.push(importImageLocation[i]);
   }
 
+  // 운영자 메이커스 댓글 늦게 작성한 댓글이 위에 있게 sorting해야됨
+
   const handleDelete = async () => {
     const token = await getToken();
 
@@ -120,6 +124,25 @@ const Component = ({
       ],
     );
   };
+
+  // useEffect(() => {
+  //   if (makersComment && makersComment.createDate) {
+  //     console.log(makersComment?.createDate);
+  //     console.log(stringDateToJavascriptDate(makersComment?.createDate, '-'));
+  //   }
+
+  //   if (adminComment && adminComment.createDate) {
+  //     console.log(adminComment?.createDate);
+  //     console.log(stringDateToJavascriptDate(adminComment?.createDate, '-'));
+  //   }
+
+  //   if (makersComment?.createDate && adminComment?.createDate) {
+  //     const date1 = stringDateToJavascriptDate(makersComment?.createDate, '-');
+  //     const date2 = stringDateToJavascriptDate(adminComment?.createDate, '-');
+
+  //     console.log(date1 < date2);
+  //   }
+  // }, [makersComment, adminComment]);
 
   return (
     <Container>
@@ -209,26 +232,83 @@ const Component = ({
         </ReviewText>
       </ReviewWrap>
 
-      {adminComment && adminComment.createDate && (
-        <CommentWrap>
-          <AdminOrMakersReview
-            pngLink={adminComment.pngLink}
-            writtenDate={adminComment.createDate}
-            message={adminComment.content}
-          />
-        </CommentWrap>
+      {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}
+
+      {adminComment?.createDate && makersComment?.createDate ? (
+        stringDateToJavascriptDate(makersComment?.createDate, '-') <
+        stringDateToJavascriptDate(adminComment?.createDate, '-') ? (
+          <>
+            {makersComment?.createDate && (
+              <CommentWrap>
+                <AdminOrMakersReview
+                  makersName={makersName}
+                  pngLink={makersComment.pngLink}
+                  writtenDate={makersComment.createDate}
+                  message={makersComment.content}
+                />
+              </CommentWrap>
+            )}
+            {adminComment?.createDate && (
+              <CommentWrap>
+                <AdminOrMakersReview
+                  pngLink={adminComment.pngLink}
+                  writtenDate={adminComment.createDate}
+                  message={adminComment.content}
+                />
+              </CommentWrap>
+            )}
+          </>
+        ) : (
+          <>
+            {adminComment?.createDate && (
+              <CommentWrap>
+                <AdminOrMakersReview
+                  pngLink={adminComment.pngLink}
+                  writtenDate={adminComment.createDate}
+                  message={adminComment.content}
+                />
+              </CommentWrap>
+            )}
+            {makersComment?.createDate && (
+              <CommentWrap>
+                <AdminOrMakersReview
+                  makersName={makersName}
+                  pngLink={makersComment.pngLink}
+                  writtenDate={makersComment.createDate}
+                  message={makersComment.content}
+                />
+              </CommentWrap>
+            )}
+          </>
+        )
+      ) : (
+        <>
+          {adminComment?.createDate && (
+            <CommentWrap>
+              <AdminOrMakersReview
+                pngLink={adminComment.pngLink}
+                writtenDate={adminComment.createDate}
+                message={adminComment.content}
+              />
+            </CommentWrap>
+          )}
+
+          {makersComment?.createDate && (
+            <CommentWrap>
+              <AdminOrMakersReview
+                makersName={makersName}
+                pngLink={makersComment.pngLink}
+                writtenDate={makersComment.createDate}
+                message={makersComment.content}
+              />
+            </CommentWrap>
+          )}
+        </>
       )}
 
-      {makersComment && makersComment.createDate && (
-        <CommentWrap>
-          <AdminOrMakersReview
-            makersName={makersName}
-            pngLink={makersComment.pngLink}
-            writtenDate={makersComment.createDate}
-            message={makersComment.content}
-          />
-        </CommentWrap>
-      )}
+      {/* 순서 sorting하기  */}
+
+      {}
     </Container>
   );
 };

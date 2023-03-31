@@ -45,9 +45,6 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
 
-  console.log('데일리 푸드 아이디');
-  console.log(dailyFoodId);
-
   const isFocused = useIsFocused();
 
   const closeModal = () => {
