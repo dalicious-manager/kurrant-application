@@ -900,7 +900,7 @@ const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
 
 const GreyTxt = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme, status}) =>
-    status === 8 ? theme.colors.blue[500] : theme.colors.grey[5]};
+    status === 9 ? theme.colors.blue[500] : theme.colors.grey[5]};
 `;
 
 const PointText = styled(Typography).attrs({text: 'Body05SB'})`

@@ -122,9 +122,9 @@ const Component = ({purchaseId, date, itemIndex}) => {
                 switch (order.orderStatus) {
                   case 7:
                     return themeApp.colors.red[500];
-                  case 11:
-                    return themeApp.colors.red[500];
                   case 12:
+                    return themeApp.colors.red[500];
+                  case 13:
                     return themeApp.colors.red[500];
                   default:
                     return themeApp.colors.grey[2];
@@ -224,7 +224,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                           />
                         </ButtonContainer>
                       )}
-                      {order.orderStatus === 9 && (
+                      {order.orderStatus === 10 && (
                         <ButtonContainer>
                           <ButtonMeal label={'수령확인'} />
                         </ButtonContainer>
