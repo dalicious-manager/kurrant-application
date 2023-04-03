@@ -63,11 +63,12 @@ export default function Password({route}) {
     try {
       const data = await submitPasswordCheck({payNumber: state});
       if (data.statusCode === 200) {
-        if (agreeCheck.watch(agreeCheck).agreeCheck) {
-          await setStorage('payNumber', state);
-        } else {
-          await setStorage('payNumber', '');
-        }
+        //비밀번호 저장 주석
+        // if (agreeCheck.watch(agreeCheck).agreeCheck) {
+        //   await setStorage('payNumber', state);
+        // } else {
+        //   await setStorage('payNumber', '');
+        // }
         const result = await orderNice({
           ...JSON.parse(params?.orderData),
         });
@@ -99,13 +100,14 @@ export default function Password({route}) {
         })
       : null;
   }, []);
-  useEffect(() => {
-    const setPassword = async () => {
-      const password = await getStorage('payNumber');
-      setState(password);
-    };
-    setPassword();
-  }, []);
+  //비밀번호 저장 주석
+  // useEffect(() => {
+  //   const setPassword = async () => {
+  //     const password = await getStorage('payNumber');
+  //     setState(password);
+  //   };
+  //   setPassword();
+  // }, []);
   return (
     <KeyboardAvoidingView
       style={{
@@ -146,7 +148,7 @@ export default function Password({route}) {
             <Button
               type="yellow"
               label={'완료'}
-              disabled={!isValidation && clickLoading}
+              disabled={!isValidation || clickLoading}
               onPressEvent={onSubmit}
             />
           </ButtonContainer>
@@ -163,7 +165,8 @@ export default function Password({route}) {
           </RePassword>
         </Pressable>
       </RightBlocks>
-      <RightBlock>
+      {/* 비밀번호 저장 주석 */}
+      {/* <RightBlock>
         <FormProvider {...agreeCheck}>
           <Check name="agreeCheck" value={true}>
             <Label text="Body06R" textColor={themeApp.colors.grey[4]}>
@@ -171,11 +174,11 @@ export default function Password({route}) {
             </Label>
           </Check>
         </FormProvider>
-      </RightBlock>
+      </RightBlock> */}
       <KeyboardButton
         isKeyboardActivate={keyboardStatus.isKeyboardActivate}
         label={'완료'}
-        disabled={!isValidation && clickLoading}
+        disabled={!isValidation || clickLoading}
         onPressEvent={onSubmit}
       />
     </KeyboardAvoidingView>

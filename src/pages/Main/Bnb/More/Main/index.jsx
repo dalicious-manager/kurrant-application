@@ -159,7 +159,7 @@ const Pages = () => {
             isMembership={isUserInfo?.isMembership}
             membershipPeriod={isUserInfo?.membershipUsingPeriod}
           />
-          <PointBox point={41030} />
+          <PointBox point={isUserInfo?.point} />
 
           <InfomationContainer>
             <InfomationBox>
