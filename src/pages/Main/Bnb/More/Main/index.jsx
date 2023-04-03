@@ -24,6 +24,7 @@ import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
 import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
+import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
@@ -34,7 +35,7 @@ import useUserInfo from '../../../../../biz/useUserInfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
-
+import PointBox from './PointBox';
 import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -126,7 +127,7 @@ const Pages = () => {
                 <Typography
                   text="Title02SB"
                   textColor={themeApp.colors.grey[2]}>
-                  {isUserInfo.name}님
+                  {isUserInfo?.name}님
                 </Typography>
               </LoginIdBox>
               <Pressable
@@ -158,9 +159,8 @@ const Pages = () => {
             isMembership={isUserInfo?.isMembership}
             membershipPeriod={isUserInfo?.membershipUsingPeriod}
           />
-          {/* 포인트 활성시
-            <PointBox point={41030}/> 
-          */}
+          <PointBox point={isUserInfo?.point} />
+
           <InfomationContainer>
             <InfomationBox>
               <InfomationText
@@ -216,7 +216,8 @@ const Pages = () => {
               }
               params={{isFounders: isUserInfo?.leftFoundersNumber > 0}}
             />
-            {/* <ListBox title='커런트 포인트' /> */}
+
+            {/* <ListBox title="커런트 포인트" routeName={PointMainPageName} /> */}
             {isApplicationList.length !== 0 && (
               <ListBox
                 title="스팟 개설 요청 내역"

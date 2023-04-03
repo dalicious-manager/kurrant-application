@@ -225,6 +225,15 @@ const useUserMe = () => {
       setChangePasswordLoading(false);
     }
   };
+
+  const payCheckPassword = async (body, option = {}) => {
+    try {
+      const res = await Fetch.payCheckPassword();
+      return res;
+    } catch (err) {
+      throw err;
+    }
+  };
   const settingEmail = async (body, option = {}) => {
     try {
       setSettingEmailLoading(true);
@@ -273,6 +282,64 @@ const useUserMe = () => {
       setCardRegistedLoading(false);
     }
   };
+  const updatePayCheckPassword = async (body, option = {}) => {
+    try {
+      const res = await Fetch.updatePayCheckPassword(
+        {
+          ...body,
+        },
+        option,
+      );
+      return res;
+    } catch (err) {
+      throw err;
+    }
+  };
+  const submitPasswordCheck = async (body, option = {}) => {
+    try {
+      const res = await Fetch.submitPasswordCheck(
+        {
+          ...body,
+        },
+        option,
+      );
+      return res;
+    } catch (err) {
+      throw err;
+    }
+  };
+  const cardRegistedNice = async (body, option = {}) => {
+    try {
+      setCardRegistedLoading(true);
+      const res = await Fetch.cardRegistedNice(
+        {
+          ...body,
+        },
+        option,
+      );
+      return res;
+    } catch (err) {
+      throw err;
+    } finally {
+      setCardRegistedLoading(false);
+    }
+  };
+  const cardRegistedNiceFirst = async (body, option = {}) => {
+    try {
+      setCardRegistedLoading(true);
+      const res = await Fetch.cardRegistedNiceFirst(
+        {
+          ...body,
+        },
+        option,
+      );
+      return res;
+    } catch (err) {
+      throw err;
+    } finally {
+      setCardRegistedLoading(false);
+    }
+  };
   const getCardList = async () => {
     try {
       setCardListLoading(true);
@@ -283,7 +350,7 @@ const useUserMe = () => {
         res.data.map((v, idx) => {
           return {
             id: v.id,
-            text: `${v.cardCompany}카드(${v.cardNumber?.toString().slice(-4)})`,
+            text: `${v.cardCompany}(${v.cardNumber?.toString().slice(-4)})`,
           };
         }),
       );
@@ -385,6 +452,8 @@ const useUserMe = () => {
     settingEmail,
     settingPhoneNumber,
     cardRegisted,
+    cardRegistedNiceFirst,
+    cardRegistedNice,
     getCardList,
     cardSetting,
     setCardList,
@@ -393,6 +462,9 @@ const useUserMe = () => {
     setSelectDefaultCard,
     setAlarm,
     setAgree,
+    updatePayCheckPassword,
+    submitPasswordCheck,
+    payCheckPassword,
     readableAtom: {
       myInfo,
       myInfoPerson,

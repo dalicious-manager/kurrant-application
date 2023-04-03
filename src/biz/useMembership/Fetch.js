@@ -1,5 +1,4 @@
-
-import { fetchJson } from '../../utils/fetch';
+import {fetchJson} from '../../utils/fetch';
 
 export async function getMembershipProduct(option) {
   const fetchRes = await fetchJson(`/public/membership`, 'GET', {
@@ -9,8 +8,7 @@ export async function getMembershipProduct(option) {
   return fetchRes;
 }
 
-
-export async function membershipJoin(body, option) {
+export async function membershipJoinTest(body, option) {
   const fetchRes = await fetchJson(`/users/membership`, 'POST', {
     ...option,
     body: JSON.stringify(body),
@@ -18,12 +16,30 @@ export async function membershipJoin(body, option) {
 
   return fetchRes;
 }
+export async function membershipJoin(body, option) {
+  const fetchRes = await fetchJson(`/users/membership/nice`, 'POST', {
+    ...option,
+    body: JSON.stringify(body),
+  });
 
+  return fetchRes;
+}
 
-export async function membershipTerminate(option) {
+export async function membershipTerminateTest(option) {
   const fetchRes = await fetchJson(`/users/membership/unsubscribing`, 'GET', {
     ...option,
   });
+
+  return fetchRes;
+}
+export async function membershipTerminate(option) {
+  const fetchRes = await fetchJson(
+    `/users/membership/unsubscribing/nice`,
+    'GET',
+    {
+      ...option,
+    },
+  );
 
   return fetchRes;
 }

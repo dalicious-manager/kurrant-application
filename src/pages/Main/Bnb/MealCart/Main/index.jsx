@@ -85,7 +85,7 @@ const Pages = () => {
   const [show, setShow] = useState(false);
   const {isUserInfo} = useUserInfo();
   const {getCardList} = useUserMe();
-  const [selected, setSelected] = useState(isUserInfo.spotId);
+  const [selected, setSelected] = useState(isUserInfo?.spotId);
   const [name, setName] = useState();
   const [date, setDate] = useState();
   const [type, setType] = useState();
@@ -328,8 +328,7 @@ const Pages = () => {
     Math.round(discountPrice / 20) * 10;
 
   // 총 할인금액
-  const totalDiscountPrice =
-    membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
+  const totalDiscountPrice = totalMealPrice - discountPrice;
   const totals = lastArr?.map(v => {
     const totalDateMealPrice = v.cartDailyFoods
       ?.map(p => p.count * p.price)
@@ -865,9 +864,16 @@ const Pages = () => {
                 </TotalPrice>
               </PaymentView>
               <Border />
-              {/* <UserPointView>
-                        <UserPointText>보유포인트 <UserHavePoint>{isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserHavePoint>(결제시 적용가능)</UserPointText>
-                    </UserPointView> */}
+
+              <UserPointView>
+                <UserPointText>
+                  보유포인트{' '}
+                  <UserHavePoint>
+                    {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
+                  </UserHavePoint>
+                  (결제시 적용가능)
+                </UserPointText>
+              </UserPointView>
             </PaymentWrap>
           </View>
         )}
@@ -1063,6 +1069,7 @@ const PaymentWrap = styled.View`
 export const PaymentView = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  white-space: nowrap;
   margin: 0px 24px;
   padding-bottom: 16px;
 `;
@@ -1088,11 +1095,13 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
 
 export const PaymentText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[4]};
+  white-space: nowrap;
   //padding-bottom:16px;
 `;
 
 export const PointText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.green[500]};
+  white-space: nowrap;
 `;
 
 export const TotalPriceTitle = styled(Typography).attrs({text: 'Title03SB'})`
@@ -1105,6 +1114,7 @@ export const TotalPrice = styled(Typography).attrs({text: 'Title03SB'})`
 const NoMealText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-bottom: 16px;
+  white-space: nowrap;
 `;
 
 const InnerView = styled.View`
@@ -1141,7 +1151,7 @@ export const PointInputWrap = styled.View`
   border-radius: 7px;
   border: 1px solid ${({theme}) => theme.colors.grey[7]};
   background-color: ${({theme}) => theme.colors.grey[0]};
-  padding: 0px 28px 0px 12px;
+  padding: 0px 38px 0px 12px;
   flex-direction: row;
   text-align: center;
   align-items: center;
@@ -1159,6 +1169,7 @@ export const XIcon = styled(X)`
 
 export const PointUnitText = styled(Typography).attrs({text: 'Title04R'})`
   color: ${({theme}) => theme.colors.grey[2]};
+  white-space: nowrap;
   margin-left: 8px;
 `;
 

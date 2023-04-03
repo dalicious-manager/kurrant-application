@@ -4,7 +4,12 @@ import {useAtom} from 'jotai';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
 import {formattedWeekDate} from '../../utils/dateFormatter';
 import * as Fetch from './Fetch';
-import {isOrderMealAtom, todayMealAtom, isOrderMealLoadingAtom} from './store';
+import {
+  isOrderMealAtom,
+  todayMealAtom,
+  isOrderMealLoadingAtom,
+  isOrderLoadingAtom,
+} from './store';
 
 const useOrderMeal = () => {
   const [isOrderMeal, setOrderMeal] = useAtom(isOrderMealAtom);
@@ -12,6 +17,7 @@ const useOrderMeal = () => {
   const [isOrderMealLoading, setOrderMealLoading] = useAtom(
     isOrderMealLoadingAtom,
   );
+  const [orderLoading, setOrderLoading] = useAtom(isOrderLoadingAtom);
   const navigation = useNavigation();
 
   const orderMeal = async (startdate, enddate) => {
@@ -36,9 +42,9 @@ const useOrderMeal = () => {
       }
     }
   };
-  const order = async (body, option = {}) => {
+  const orderNice = async (body, option = {}) => {
     try {
-      const res = await Fetch.order(
+      const res = await Fetch.orderNice(
         {
           ...body,
         },
@@ -60,6 +66,36 @@ const useOrderMeal = () => {
           ],
         });
       }
+    }
+  };
+  const order = async (body, option = {}) => {
+    try {
+      setOrderLoading(true);
+      const res = await Fetch.order(
+        {
+          ...body,
+        },
+        option,
+      );
+
+      return res;
+    } catch (err) {
+      if (err.toString().replace('Error:', '').trim() === '403') {
+        AsyncStorage.clear();
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: LoginPageName,
+              params: {
+                token: 'end',
+              },
+            },
+          ],
+        });
+      }
+    } finally {
+      setOrderLoading(false);
     }
   };
 
@@ -154,8 +190,10 @@ const useOrderMeal = () => {
     refundAll,
     setOrderMeal,
     order,
+    orderNice,
     isOrderMeal,
     todayMeal,
+    orderLoading,
     isOrderMealLoading,
   };
 };

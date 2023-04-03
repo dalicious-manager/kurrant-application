@@ -13,18 +13,25 @@ import Check from '~components/Check';
 import Form from '~components/Form';
 import {useForm} from 'react-hook-form';
 import {Dimensions, ScrollView} from 'react-native';
+import {useAtom} from 'jotai';
+import {registCardAtom} from '../../../../atoms/store';
+import Toast from '../../../../components/Toast';
 
 export const PAGE_NAME = 'P__MEMBERSHIP__PAYMENT_MANAGE';
 const windowHeight = Dimensions.get('window').height;
-const Pages = () => {
+const Pages = ({route}) => {
+  const params = route?.params;
   const themeApp = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
+  const [isCard, setIsCard] = useAtom(registCardAtom);
+
   const data = [
     {id: 0, text: '신용/체크카드'},
     // {id:1,text:'은행 계좌'},
   ];
   const agreeCheck = useForm();
   const navigation = useNavigation();
+  const toast = Toast();
   const {
     getCardList,
     cardSetting,
@@ -33,6 +40,7 @@ const Pages = () => {
   } = useUserMe();
   const [selectNowCard, setNowCard] = useState(selectMembershipCard);
   const onSelectEvent = () => {
+    setIsCard(4);
     navigation.navigate(RegisterCardScreenName, {
       defaultType: 2,
     });
@@ -53,6 +61,12 @@ const Pages = () => {
   };
   useFocusEffect(
     useCallback(() => {
+      if (params?.isRegist) {
+        toast.toastEvent();
+        navigation.setParams({
+          isRegist: false,
+        });
+      }
       const getData = async () => {
         await getCardList();
       };
@@ -128,6 +142,7 @@ const Pages = () => {
         setValue={onSelectEvent}
         height={200}
       />
+      <toast.ToastWrap message={'결제카드가 추가됐어요'} icon={'checked'} />
     </Wrapper>
   );
 };
