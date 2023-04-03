@@ -72,8 +72,8 @@ async function json(url, method, options = {}) {
   console.log(ret);
   if (ret.error === 'E4030003') {
     const bodyData = {
-      accessToken: token.accessToken,
-      refreshToken: token.refreshToken,
+      accessToken: token?.accessToken,
+      refreshToken: token?.refreshToken,
     };
     const reissue = await fetch(apiHostUrl + '/auth/reissue', {
       headers: {'content-type': 'application/json'},
@@ -86,19 +86,19 @@ async function json(url, method, options = {}) {
       await AsyncStorage.clear();
       throw new Error(result.statusCode.toString());
     } else if (result.error === 'E5000014') {
-      await mSleep(3000);
+      await mSleep(1000);
       const bodyDatas = {
-        accessToken: token.accessToken,
-        refreshToken: token.refreshToken,
+        accessToken: token?.accessToken,
+        refreshToken: token?.refreshToken,
       };
       json(apiHostUrl + '/auth/reissue', 'POST', {
         body: JSON.stringify(bodyDatas),
       });
     } else {
       const resultData = {
-        accessToken: result.data.accessToken,
-        expiresIn: result.data.accessTokenExpiredIn,
-        refreshToken: result.data.refreshToken,
+        accessToken: result?.data?.accessToken,
+        expiresIn: result?.data?.accessTokenExpiredIn,
+        refreshToken: result?.data?.refreshToken,
         spotStatus: token.spotStatus,
       };
       setStorage('token', JSON.stringify(resultData));

@@ -310,8 +310,8 @@ const Pages = ({route}) => {
                   const token = await getStorage('token');
                   const getToken = JSON.parse(token);
                   await logout({
-                    accessToken: getToken.accessToken,
-                    refreshToken: getToken.refreshToken,
+                    accessToken: getToken?.accessToken,
+                    refreshToken: getToken?.refreshToken,
                   });
                   await AsyncStorage.clear().then(() => {
                     navigation.reset({

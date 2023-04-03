@@ -102,3 +102,40 @@ export async function alarmLookup() {
   const fetchRes = await fetchJson(`/users/me/setting`, 'GET');
   return fetchRes;
 }
+export async function payCheckPassword() {
+  const fetchRes = await fetchJson(`/users/me/payment/password`, 'GET');
+  return fetchRes;
+}
+export async function cardRegistedNiceFirst(body, option) {
+  const fetchRes = await fetchJson(
+    `/users/me/orders/nice/create/billing/first`,
+    'POST',
+    {
+      ...option,
+      body: JSON.stringify(body),
+    },
+  );
+  return fetchRes;
+}
+export async function updatePayCheckPassword(body, option) {
+  const fetchRes = await fetchJson(
+    `/users/me/payment/password/reset`,
+    'PATCH',
+    {
+      ...option,
+      body: JSON.stringify(body),
+    },
+  );
+  return fetchRes;
+}
+export async function submitPasswordCheck(body, option) {
+  const fetchRes = await fetchJson(`/users/me/payment/password/check`, 'POST', {
+    ...option,
+    body: JSON.stringify(body),
+  });
+  return fetchRes;
+}
+// export async function payCheckPassword() {
+//   const fetchRes = await fetchJson(`/users/me/password`, 'GET');
+//   return fetchRes;
+// }

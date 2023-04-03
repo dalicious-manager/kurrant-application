@@ -236,7 +236,7 @@ export default () => {
 
     await snsLogin(
       {
-        snsAccessToken: token.accessToken,
+        snsAccessToken: token?.accessToken,
         autoLogin: true,
       },
       'KAKAO',

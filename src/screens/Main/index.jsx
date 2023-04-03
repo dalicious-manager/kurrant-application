@@ -101,6 +101,27 @@ import MembershipTerminateComplate, {
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
+import PayCheckPassword, {
+  PAGE_NAME as PayCheckPasswordPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
+import PayCheckPasswordPay, {
+  PAGE_NAME as PayCheckPasswordPayPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordPay';
+import PayCheckPasswordCheck, {
+  PAGE_NAME as PayCheckPasswordCheckPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordCheck';
+import RePayCheckEmail, {
+  PAGE_NAME as RePayCheckEmailPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordEmail';
+import RePayCheckPassword, {
+  PAGE_NAME as RePayCheckPasswordPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPassword';
+import RePayCheckPasswordCheck, {
+  PAGE_NAME as RePayCheckPasswordCheckPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordCheck';
+import PayCheckEmail, {
+  PAGE_NAME as PayCheckEmailPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordEmail';
 import RegisterCard, {
   SCREEN_NAME as RegisterCardScreenName,
 } from './RegisterCard';
@@ -451,6 +472,133 @@ const Screen = () => {
           options={{
             headerShown: true,
             title: '카드 등록',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayCheckPasswordPageName}
+          component={PayCheckPassword}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayCheckPasswordCheckPageName}
+          component={PayCheckPasswordCheck}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayCheckEmailPageName}
+          component={PayCheckEmail}
+          options={{
+            headerShown: true,
+            title: '이메일 인증',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={RePayCheckPasswordPageName}
+          component={RePayCheckPassword}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={RePayCheckPasswordCheckPageName}
+          component={RePayCheckPasswordCheck}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={RePayCheckEmailPageName}
+          component={RePayCheckEmail}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 재설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayCheckPasswordPayPageName}
+          component={PayCheckPasswordPay}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 입력',
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitleStyle: {
