@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Dimensions, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
@@ -6,7 +6,7 @@ import Carousel from 'react-native-reanimated-carousel';
 import styled from 'styled-components';
 
 const phoneWidth = Dimensions.get('window').width;
-const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
+const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
   const [imgHandledArray, setImgHandledArray] = useState([]);
 
   // 판별해서 배열에 넣어주고 해야겠다
@@ -19,7 +19,6 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
         (width, height) => {
           Image.getSize(imageUrl, (width, height) => {
             if (width > height) {
-              //   console.log(`width: ${width} height: ${height}`);
               resolve([
                 imageUrl,
                 (imageStyle = {
@@ -28,7 +27,6 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
                 }),
               ]);
             } else if (width < height) {
-              //   console.log(`width: ${width} height: ${height}`);
               resolve([
                 imageUrl,
                 (imageStyle = {
@@ -37,7 +35,6 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
                 }),
               ]);
             } else {
-              //   console.log(`width: ${width} height: ${height}`);
               resolve([
                 imageUrl,
                 (imageStyle = {
@@ -65,13 +62,30 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
     });
   }, [img, setImgHandledArray]);
 
+  // index 가 바뀌면 swipe되게 하기
+
+  const carouselRef = useRef(null);
+
+  const handleScroll = index => {
+    carouselRef.current.scrollTo({
+      index: index,
+      animated: true,
+    });
+  };
+
+  useEffect(() => {
+    handleScroll(index);
+  }, [index]);
+
   return (
     <View>
       <Carousel
-        loop={img?.length !== 1}
+        // loop={img?.length !== 1}
+        loop
+        // index가 바뀔때 위의 화면을 바꾸게 하고 싶으면 ref의 current scrollTo를 이용하면된다
+        ref={carouselRef}
         width={phoneWidth}
         height={563}
-        // autoPlay={true}
         data={imgHandledArray}
         scrollAnimationDuration={600}
         // autoplay={true}, autoPlayInterval={null} : 자동으로 카루셀 되는거 막기
@@ -80,12 +94,9 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
         onSnapToItem={index => {
           // setActiveIndex
           setIndex(index);
-          console.log('current index:', index);
         }}
         defaultIndex={firstClickedImageIndex}
         renderItem={({item}) => {
-          // 이미지가 가로인가 세로인가 판별하기 ( )
-
           return (
             <Container>
               <MyView>
@@ -94,7 +105,6 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
                     uri: `${item[0]}`,
                     priority: FastImage.priority.high,
                   }}
-                  // style={imageStyle}
                   style={item[1]}>
                   <FilterImage
                     colors={[

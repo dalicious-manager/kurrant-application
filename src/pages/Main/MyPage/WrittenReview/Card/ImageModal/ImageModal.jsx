@@ -1,9 +1,17 @@
 import {useEffect, useState} from 'react';
-import {Modal, SafeAreaView, StyleSheet, Text, Image} from 'react-native';
+import {
+  Modal,
+  SafeAreaView as View,
+  StyleSheet,
+  Text,
+  Image,
+  StatusBar,
+} from 'react-native';
 import styled from 'styled-components';
-import Carousel from 'react-native-reanimated-carousel';
+
 import CarouselImage from './CarouselImage';
-import {SmallXVectorIcon, XVectorIcon} from '../../../../../../components/Icon';
+import {SmallXVectorIcon} from '../../../../../../components/Icon';
+import DotPagination from './DotPagination';
 
 // https://www.youtube.com/watch?v=Nw1St1h5Ylc&t=81s 여기서 베낌
 
@@ -15,7 +23,6 @@ const ImageModal = ({
 }) => {
   const [index, setIndex] = useState(0);
 
-  const show = () => setVisible(true);
   const hide = () => setVisible(false);
 
   // 현재 페이지 인덱스 알기
@@ -27,7 +34,11 @@ const ImageModal = ({
   return (
     <>
       <Modal visible={visible} animationType="fade" onRequestClose={hide}>
-        <SafeAreaView style={[styles.fill, styles.black]}>
+        {/* <SafeAreaView style={[styles.fill, styles.black]}> */}
+
+        {/* <StatusBar backgroundColor="white" /> */}
+        <StatusBar backgroundColor="white" barStyle="light-content" />
+        <View style={[styles.fill, styles.black]}>
           <Container>
             <PressableContainer>
               <HidePressable onPress={hide}>
@@ -39,11 +50,16 @@ const ImageModal = ({
               img={imageLocation}
               firstClickedImageIndex={firstClickedImageIndex}
               setIndex={setIndex}
+              index={index}
             />
 
-            <Text>{index}</Text>
+            <DotPagination
+              setIndex={setIndex}
+              index={index}
+              totalLength={imageLocation?.length}
+            />
           </Container>
-        </SafeAreaView>
+        </View>
       </Modal>
     </>
   );
@@ -68,9 +84,7 @@ const Container = styled.View`
 `;
 const PressableContainer = styled.View`
   width: 100%;
-  /* background-color: aquamarine; */
-  /* position: absolute;
-  top: 0; */
+
   flex-direction: row;
   padding: 0 28px;
 `;
