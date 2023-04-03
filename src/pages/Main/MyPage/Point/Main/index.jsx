@@ -5,13 +5,15 @@ import Typography from '../../../../../components/Typography';
 import Button from './components/Button';
 import TextLable from '../../../../../components/TextButton';
 import ArrowRight from '../../../../../assets/icons/Arrow/arrowRight.svg';
+import {useGetPointList} from '../../../../../hook/usePoint';
 
 export const PAGE_NAME = 'P__MY_PAGE__POINT';
 const Pages = () => {
+  const {data: pointList} = useGetPointList();
   const [touch, setTouch] = useState([0]);
   const tempPlus = 0;
   const tempMinus = 1;
-  console.log(touch);
+  console.log(pointList);
   return (
     <Wrapper>
       <PointWrap>
