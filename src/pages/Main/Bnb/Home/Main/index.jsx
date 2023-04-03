@@ -83,6 +83,8 @@ const Pages = () => {
   const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
+
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const [eventSpot, setEventSpot] = useState(false);
@@ -370,6 +372,9 @@ const Pages = () => {
       console.log(err);
     }
   };
+
+  const mockStatus = false;
+
   if (isOrderMealLoading || isUserInfoLoading || eventSpotLoading) {
     return <SkeletonUI />;
   }
@@ -432,7 +437,7 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {todayMeal?.length === 0 ? (
+          {/* {todayMeal?.length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
@@ -479,7 +484,63 @@ const Pages = () => {
                 </React.Fragment>
               );
             })
-          )}
+          )} */}
+
+          {/* UI만들기용 */}
+          <MealInfoWrapper>
+            <MealInfoWrap
+              // shadow 적용
+              style={styles.shadow}
+              onPress={() => navigation.navigate(MealMainPageName)}>
+              <MealInfo>
+                <View
+                  style={{
+                    width: 64,
+                    height: 64,
+                    backgroundColor: 'grey',
+                    borderTopLeftRadius: 14,
+                    borderBottomLeftRadius: 14,
+                  }}
+                />
+
+                <MealText>
+                  <View>
+                    <DiningType>{`오늘 점점심`}</DiningType>
+                    <View>
+                      <MealTxt>구현경 셀러드</MealTxt>
+                    </View>
+                  </View>
+                  <MealCount>
+                    <GreyTxt status={9}>{formattedMealFoodStatus(9)}</GreyTxt>
+
+                    <GreyTxt>36개</GreyTxt>
+                  </MealCount>
+                </MealText>
+              </MealInfo>
+            </MealInfoWrap>
+
+            <OrderStatusWrap>
+              <CommentText>
+                {deliveryConfirmed
+                  ? '식사 맛있게 하셨나요?'
+                  : '배송완료! 메뉴 확인후 수령하셨나요?'}
+              </CommentText>
+
+              <ConfirmPressable
+                onPress={() => {
+                  if (!deliveryConfirmed) {
+                    setDeliveryConfirmed(true);
+                  } else {
+                    // 리뷰로 가기
+                  }
+                }}>
+                <ConfirmText>
+                  {deliveryConfirmed ? '맛 평가하기' : '네 확인했어요'}
+                </ConfirmText>
+              </ConfirmPressable>
+            </OrderStatusWrap>
+          </MealInfoWrapper>
+
           {/* 메뉴 수령 그림자 styles.shadow */}
           {/* <MealInfoWrap style={styles.shadow}>
             <MealInfo>
@@ -736,6 +797,10 @@ const MainWrap = styled.View`
   margin: 0px 24px;
 `;
 
+const MealInfoWrapper = styled.View`
+  margin-bottom: 16px;
+`;
+
 const MealInfoWrap = styled.Pressable`
   ${Display};
   height: 64px;
@@ -745,6 +810,25 @@ const MealInfoWrap = styled.Pressable`
   padding: 16px;
   justify-content: space-between;
   padding-left: 0px;
+`;
+
+const OrderStatusWrap = styled.View`
+  align-items: center;
+`;
+const CommentText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[1]};
+  margin-bottom: 4px;
+`;
+const ConfirmPressable = styled.Pressable`
+  background-color: ${({theme}) => theme.colors.purple[500]};
+  border-radius: 999px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+`;
+const ConfirmText = styled(Typography).attrs({text: 'Button09SB'})`
+  color: white;
 `;
 
 const NoMealInfo = styled.View`
