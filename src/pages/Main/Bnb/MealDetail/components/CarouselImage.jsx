@@ -1,22 +1,28 @@
 import React, {useState} from 'react';
-import {View, Text, Dimensions} from 'react-native';
+import {View, Text, Dimensions, ScrollView} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel from 'react-native-reanimated-carousel';
 import styled from 'styled-components';
 
 const width = Dimensions.get('window').width;
-const CarouselImage = ({img}) => {
+const CarouselImage = ({img, setImgScroll}) => {
   return (
-    <View>
+    <GestureHandlerRootView
+      style={{flex: 1}}
+      onTouchMove={() => {
+        setImgScroll(false);
+      }}>
       <Carousel
+        enabled={img?.length !== 1}
         loop={img?.length !== 1}
         width={width}
         height={380}
         autoPlay={true}
         data={img}
-        scrollAnimationDuration={2000}
-        // onSnapToItem={index => console.log('current index:', index)}
+        onSnapToItem={index => setImgScroll(true)}
+        scrollAnimationDuration={2500}
         renderItem={({item}) => (
           <View>
             <FastImage
@@ -40,7 +46,7 @@ const CarouselImage = ({img}) => {
           </View>
         )}
       />
-    </View>
+    </GestureHandlerRootView>
   );
 };
 

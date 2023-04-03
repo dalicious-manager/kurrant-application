@@ -246,7 +246,7 @@ const Pages = ({route}) => {
             ...v,
             cartDailyFoods: [
               ...v.cartDailyFoods.filter(food => {
-                return food.status !== 2;
+                return food.status !== 6;
               }),
             ],
           };
@@ -477,7 +477,7 @@ const Pages = ({route}) => {
                     {selected === el.spotId &&
                       el.cartDailyFoodDtoList.map((m, i) => {
                         const arr = m.cartDailyFoods.filter(
-                          v => v.status !== 2,
+                          v => v.status !== 6,
                         );
 
                         return (

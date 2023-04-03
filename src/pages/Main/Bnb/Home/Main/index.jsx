@@ -98,14 +98,45 @@ const Pages = () => {
   });
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
-  // 전체 공지사항
+  // 홈 전체 공지사항
 
-  const {getAnnouncements, announcements, announcementModalVisible} =
-    useGetAnnouncements();
+  // const {getAnnouncements, announcements, announcementModalVisible} =
+  //   useGetAnnouncements();
 
-  useEffect(() => {
-    // getAnnouncements(0);
-  }, []);
+
+  // useEffect(() => {
+  //   // 공지사항 이용하기
+  //   // 0: 비활성 공지 보기
+  //   // 1: 활성 공지 보기
+  //   // 2: 팝업 공지보기
+  //   // 3: 스팟 공지보기(스팟 공지는 스팟아이디를 두번째 인자로 추가해줘야 볼 수 있음)
+  //   getAnnouncements(2);
+  // }, []);
+
+  // //팝업
+  // const [announcementHandle, setAnnouncementHandle] = useState();
+
+  // useEffect(() => {
+  //   const yes = {};
+
+  //   announcements.forEach(v => {
+  //     yes[v.id] = true;
+  //   });
+
+  //   console.log(yes);
+
+  //   setAnnouncementHandle(yes);
+  // }, [announcements]);
+
+  // useEffect(() => {
+  //   console.log('랄랄라1');
+  //   console.log(announcements);
+  //   console.log(announcements.length);
+  // }, [announcements]);
+
+  // useEffect(() => {
+  //   removeItemFromStorage('announcementsClickedDates');
+  // }, []);
 
   useEffect(() => {
     const handleShowModal = async () => {
@@ -363,17 +394,24 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
-        {Array.isArray(announcements) &&
+        {/* 홈 강제 공지사항 띄우기 */}
+        {/* {Array.isArray(announcements) &&
           announcements.length > 0 &&
           announcements.map(v => {
-            return (
-              <ModalAnnouncement
-                key={v.id}
-                data={v}
-                modalVisible={announcementModalVisible}
-              />
-            );
-          })}
+            if (announcementHandle[v.id.toString()]) {
+              return (
+                <ModalAnnouncement
+                  key={v.id}
+                  data={v}
+                  modalVisible={announcementModalVisible}
+                  announcementHandle={announcementHandle}
+                  setAnnouncementHandle={setAnnouncementHandle}
+                />
+              );
+            } else {
+              return;
+            }
+          })} */}
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
@@ -876,7 +914,7 @@ const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
 
 const GreyTxt = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme, status}) =>
-    status === 8 ? theme.colors.blue[500] : theme.colors.grey[5]};
+    status === 9 ? theme.colors.blue[500] : theme.colors.grey[5]};
 `;
 
 const PointText = styled(Typography).attrs({text: 'Body05SB'})`

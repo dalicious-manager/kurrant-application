@@ -104,7 +104,7 @@ const Pages = () => {
                                   ? '프라이빗 스팟'
                                   : '오픈 스팟'
                               }
-                              type="grey8"
+                              type={el.spotType === 0 ? 'red' : 'green'}
                             />
                           </View>
                         </NameWrap>
@@ -124,6 +124,7 @@ const Pages = () => {
             {focus &&
               searchTerm === '' &&
               isApartSearch?.map((el, idx) => {
+                console.log(el.spotType);
                 return (
                   <ResultView
                     key={el.id}
@@ -139,7 +140,7 @@ const Pages = () => {
                             label={
                               el.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
                             }
-                            type="grey8"
+                            type={el.spotType === 0 ? 'red' : 'green'}
                           />
                         </View>
                       </NameWrap>
