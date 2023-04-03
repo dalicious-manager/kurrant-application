@@ -1,6 +1,14 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useState, useRef, useEffect, useLayoutEffect} from 'react';
-import {View, StatusBar, Dimensions, Alert, Pressable} from 'react-native';
+import {
+  View,
+  StatusBar,
+  Dimensions,
+  Alert,
+  Pressable,
+  Platform,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import styled from 'styled-components';
 import analytics from '@react-native-firebase/analytics';
 import LinearGradient from 'react-native-linear-gradient';
@@ -35,6 +43,7 @@ const Pages = ({route}) => {
   const [focus, setFocus] = useState(false);
   const [count, setCount] = useState(1);
   const [scroll, setScroll] = useState(0);
+  const [imgScroll, setImgScroll] = useState(true);
   const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
   const {isFoodDetail, isFoodDetailLoading, foodDetail} = useFoodDetail(); // 상세정보
   const {
@@ -247,6 +256,7 @@ const Pages = ({route}) => {
     isFoodDetail?.makersDiscountedPrice +
     isFoodDetail?.periodDiscountedPrice;
 
+  const snapOffsets = [0, 0];
   useEffect(() => {
     async function detail() {
       await foodDetailDiscount(dailyFoodId);
@@ -261,6 +271,7 @@ const Pages = ({route}) => {
     <>
       <Wrap>
         <ScrollViewWrap
+          scrollEnabled={Platform.OS === 'android' ? imgScroll : true}
           showsVerticalScrollIndicator={false}
           onScroll={e => handleScroll(e)}
           scrollEventThrottle={16}>
@@ -270,80 +281,89 @@ const Pages = ({route}) => {
             ) : (
               <StatusBar barStyle="light-content" />
             )}
-            <CarouselImage img={isFoodDetail?.imageList} />
-            <Content>
-              <View>
-                <MakersName>{isFoodDetail?.makersName}</MakersName>
-                <MealTitle>{isFoodDetail?.name}</MealTitle>
-                <Line>
-                  {/* <ReviewWrap>
+            <CarouselImage
+              img={isFoodDetail?.imageList}
+              setImgScroll={setImgScroll}
+            />
+            <TouchableWithoutFeedback onPressIn={() => setImgScroll(true)}>
+              <Content>
+                <View>
+                  <MakersName>{isFoodDetail?.makersName}</MakersName>
+                  <MealTitle>{isFoodDetail?.name}</MealTitle>
+                  <Line>
+                    {/* <ReviewWrap>
                                 <StartIcon/>
                                 <ReviewPoint>4.0</ReviewPoint>
                                 <ReviewCount>(132)</ReviewCount>
                             </ReviewWrap> */}
-                  <InformationWrap
-                    onPress={() => {
-                      navigation.navigate(MealInformationPageName, {
-                        data: isFoodDetail?.origins,
-                        data2: isFoodDetail?.allergies,
-                      });
-                    }}>
-                    <InformationText>알레르기/원산지</InformationText>
-                  </InformationWrap>
-                </Line>
-                <MealDsc>{isFoodDetail?.description}</MealDsc>
+                    <InformationWrap
+                      onPress={() => {
+                        navigation.navigate(MealInformationPageName, {
+                          data: isFoodDetail?.origins,
+                          data2: isFoodDetail?.allergies,
+                        });
+                      }}>
+                      <InformationText>알레르기/원산지</InformationText>
+                    </InformationWrap>
+                  </Line>
+                  <MealDsc>{isFoodDetail?.description}</MealDsc>
 
-                {isFoodDetail?.spicy !== null && (
-                  <Label label={`${isFoodDetail?.spicy}`} />
-                )}
-                <PriceTitleWrap>
-                  <PriceTitle>최종 판매가</PriceTitle>
-                  <ModalWrap>
-                    <Modal
-                      id={dailyFoodId}
-                      price={isFoodDetail?.price}
-                      membershipDiscountedPrice={
-                        isFoodDetail?.membershipDiscountedPrice
-                      }
-                      membershipDiscountedRate={
-                        isFoodDetail?.membershipDiscountedRate
-                      }
-                      makersDiscountedPrice={
-                        isFoodDetail?.makersDiscountedPrice
-                      }
-                      makersDiscountedRate={isFoodDetail?.makersDiscountedRate}
-                      periodDiscountedPrice={
-                        isFoodDetail?.periodDiscountedPrice
-                      }
-                      periodDiscountedRate={isFoodDetail?.periodDiscountedRate}
-                      totalDiscountRate={realToTalDiscountRate}
-                      discountPrice={discountPrice}
-                    />
-                  </ModalWrap>
-                </PriceTitleWrap>
-                <PriceWrap>
-                  {realToTalDiscountRate !== 0 && (
-                    <Percent>
-                      {Math.round(realToTalDiscountRate * 100) / 100}%
-                    </Percent>
+                  {isFoodDetail?.spicy !== null && (
+                    <Label label={`${isFoodDetail?.spicy}`} />
                   )}
-                  {realToTalDiscountRate !== 0 && (
-                    <SalePrice>
-                      {withCommas(isFoodDetail?.price - discountPrice)}원
-                    </SalePrice>
-                  )}
+                  <PriceTitleWrap>
+                    <PriceTitle>최종 판매가</PriceTitle>
+                    <ModalWrap>
+                      <Modal
+                        id={dailyFoodId}
+                        price={isFoodDetail?.price}
+                        membershipDiscountedPrice={
+                          isFoodDetail?.membershipDiscountedPrice
+                        }
+                        membershipDiscountedRate={
+                          isFoodDetail?.membershipDiscountedRate
+                        }
+                        makersDiscountedPrice={
+                          isFoodDetail?.makersDiscountedPrice
+                        }
+                        makersDiscountedRate={
+                          isFoodDetail?.makersDiscountedRate
+                        }
+                        periodDiscountedPrice={
+                          isFoodDetail?.periodDiscountedPrice
+                        }
+                        periodDiscountedRate={
+                          isFoodDetail?.periodDiscountedRate
+                        }
+                        totalDiscountRate={realToTalDiscountRate}
+                        discountPrice={discountPrice}
+                      />
+                    </ModalWrap>
+                  </PriceTitleWrap>
+                  <PriceWrap>
+                    {realToTalDiscountRate !== 0 && (
+                      <Percent>
+                        {Math.round(realToTalDiscountRate * 100) / 100}%
+                      </Percent>
+                    )}
+                    {realToTalDiscountRate !== 0 && (
+                      <SalePrice>
+                        {withCommas(isFoodDetail?.price - discountPrice)}원
+                      </SalePrice>
+                    )}
 
-                  {realToTalDiscountRate === 0 && (
-                    <NoSalePrice>
-                      {withCommas(isFoodDetail?.price)}원
-                    </NoSalePrice>
-                  )}
-                  {realToTalDiscountRate !== 0 && (
-                    <Price>{withCommas(isFoodDetail?.price)}원</Price>
-                  )}
-                </PriceWrap>
-              </View>
-            </Content>
+                    {realToTalDiscountRate === 0 && (
+                      <NoSalePrice>
+                        {withCommas(isFoodDetail?.price)}원
+                      </NoSalePrice>
+                    )}
+                    {realToTalDiscountRate !== 0 && (
+                      <Price>{withCommas(isFoodDetail?.price)}원</Price>
+                    )}
+                  </PriceWrap>
+                </View>
+              </Content>
+            </TouchableWithoutFeedback>
             <Content>
               <InfoWrap>
                 <InfoTitleView>
