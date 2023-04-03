@@ -69,6 +69,7 @@
     "react-native-version-check": "^3.4.6",
     "react-native-webview": "^11.26.1",
     "react-native-weekly-calendar": "^0.2.0",
+    "react-query": "^3.39.3",
     "styled-components": "^5.3.6",
     "uuid": "^9.0.0"
   },
