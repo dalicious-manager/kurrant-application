@@ -88,22 +88,24 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
 
           return (
             <Container>
-              <FastImage
-                source={{
-                  uri: `${item[0]}`,
-                  priority: FastImage.priority.high,
-                }}
-                // style={imageStyle}
-                style={item[1]}>
-                <FilterImage
-                  colors={[
-                    'rgba(0, 0, 0, 0.45)',
-                    'rgba(7, 7, 8, 0.25)',
-                    'rgba(255, 255, 255, 0)',
-                    'rgba(255, 255, 255, 0) ',
-                  ]}
-                />
-              </FastImage>
+              <MyView>
+                <MyFastImage
+                  source={{
+                    uri: `${item[0]}`,
+                    priority: FastImage.priority.high,
+                  }}
+                  // style={imageStyle}
+                  style={item[1]}>
+                  <FilterImage
+                    colors={[
+                      'rgba(0, 0, 0, 0.45)',
+                      'rgba(7, 7, 8, 0.25)',
+                      'rgba(255, 255, 255, 0)',
+                      'rgba(255, 255, 255, 0) ',
+                    ]}
+                  />
+                </MyFastImage>
+              </MyView>
             </Container>
           );
         }}
@@ -120,10 +122,14 @@ const FilterImage = styled(LinearGradient)`
 `;
 
 const Container = styled.View`
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
-  background-color: bisque;
-  border: 1px solid black;
+  align-items: center;
+
   height: 100%;
 `;
+
+const MyView = styled.View`
+  width: 100%;
+  margin: auto;
+`;
+
+const MyFastImage = styled(FastImage)``;

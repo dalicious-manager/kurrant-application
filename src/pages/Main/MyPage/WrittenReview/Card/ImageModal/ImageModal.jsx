@@ -64,11 +64,13 @@ const Container = styled.View`
   align-items: center;
   justify-content: space-between;
   height: 100%;
+  position: relative;
 `;
 const PressableContainer = styled.View`
   width: 100%;
   /* background-color: aquamarine; */
-
+  /* position: absolute;
+  top: 0; */
   flex-direction: row;
   padding: 0 28px;
 `;
