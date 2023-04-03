@@ -3,6 +3,7 @@ import {Modal, SafeAreaView, StyleSheet, Text, Image} from 'react-native';
 import styled from 'styled-components';
 import Carousel from 'react-native-reanimated-carousel';
 import CarouselImage from './CarouselImage';
+import {SmallXVectorIcon, XVectorIcon} from '../../../../../../components/Icon';
 
 // https://www.youtube.com/watch?v=Nw1St1h5Ylc&t=81s 여기서 베낌
 
@@ -26,11 +27,13 @@ const ImageModal = ({
   return (
     <>
       <Modal visible={visible} animationType="fade" onRequestClose={hide}>
-        <SafeAreaView style={[styles.fill, styles.grey]}>
+        <SafeAreaView style={[styles.fill, styles.black]}>
           <Container>
-            <HidePressable onPress={hide}>
-              <Text>hide</Text>
-            </HidePressable>
+            <PressableContainer>
+              <HidePressable onPress={hide}>
+                <SmallXVectorIcon size="15" />
+              </HidePressable>
+            </PressableContainer>
 
             <CarouselImage
               img={imageLocation}
@@ -49,8 +52,9 @@ export default ImageModal;
 
 const styles = StyleSheet.create({
   fill: {flex: 1},
-  //   grey: {backgroundColor: '#5A1EFF'},
-  grey: {backgroundColor: '#ffffff'},
+  grey: {backgroundColor: '#5A1EFF'},
+  black: {backgroundColor: '#1E1E1E'},
+  // grey: {backgroundColor: '#ffffff'},
 });
 
 const ShowPressable = styled.Pressable``;
@@ -58,5 +62,13 @@ const HidePressable = styled.Pressable``;
 const Container = styled.View`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  height: 100%;
+`;
+const PressableContainer = styled.View`
+  width: 100%;
+  /* background-color: aquamarine; */
+
+  flex-direction: row;
+  padding: 0 28px;
 `;
