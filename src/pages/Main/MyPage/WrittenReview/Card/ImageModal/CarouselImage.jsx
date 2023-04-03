@@ -7,52 +7,113 @@ import styled from 'styled-components';
 
 const phoneWidth = Dimensions.get('window').width;
 const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
-  const [imageHeight, setImageHeight] = useState([]);
+  const [imgHandledArray, setImgHandledArray] = useState([]);
 
   // 판별해서 배열에 넣어주고 해야겠다
 
-  useEffect(() => {
-    console.log(img);
+  //   useEffect(() => {
+  //     console.log(img);
 
-    const yo = img.map(v => {
-      let imageStyle;
+  //     img.forEach(v => {
+  //       let imageStyle;
 
+  //       Image.getSize(
+  //         v,
+  //         (width, height) => {
+  //           if (width > height) {
+  //             console.log(`width: ${width} height: ${height}`);
+
+  //             imageStyle = {
+  //               maxWidth: phoneWidth,
+  //               height: 282,
+  //             };
+  //             setImgHandledArray([...imgHandledArray, [v, imageStyle]]);
+  //           } else if (width < height) {
+  //             console.log(`width: ${width} height: ${height}`);
+  //             imageStyle = {
+  //               maxWidth: phoneWidth,
+  //               height: 563,
+  //             };
+  //             setImgHandledArray([...imgHandledArray, [v, imageStyle]]);
+  //           } else {
+  //             console.log(`width: ${width} height: ${height}`);
+
+  //             imageStyle = {
+  //               maxWidth: phoneWidth,
+  //               height: phoneWidth,
+  //             };
+  //             setImgHandledArray([...imgHandledArray, [v, imageStyle]]);
+  //           }
+  //         },
+  //         error => {
+  //           console.error(error);
+  //         },
+  //       );
+  //     });
+  //   }, [img]);
+
+  // 1. promise
+  const getImageSize = imageUrl => {
+    return new Promise((resolve, reject) => {
       Image.getSize(
-        v,
+        imageUrl,
         (width, height) => {
-          if (width > height) {
-            console.log(`width: ${width} height: ${height}`);
-
-            imageStyle = {
-              maxWidth: phoneWidth,
-              height: 282,
-            };
-            setImageHeight([...imageHeight, [v, imageStyle]]);
-          } else if (width < height) {
-            console.log(`width: ${width} height: ${height}`);
-            imageStyle = {
-              maxWidth: phoneWidth,
-              height: 563,
-            };
-            setImageHeight([...imageHeight, [v, imageStyle]]);
-          } else {
-            console.log(`width: ${width} height: ${height}`);
-
-            imageStyle = {
-              maxWidth: phoneWidth,
-              height: phoneWidth,
-            };
-            setImageHeight([...imageHeight, [v, imageStyle]]);
-          }
+          Image.getSize(imageUrl, (width, height) => {
+            if (width > height) {
+              //   console.log(`width: ${width} height: ${height}`);
+              resolve([imageUrl, 'horizontal']);
+            } else if (width < height) {
+              //   console.log(`width: ${width} height: ${height}`);
+              resolve([imageUrl, 'vertical']);
+            } else {
+              //   console.log(`width: ${width} height: ${height}`);
+              resolve([imageUrl, 'square']);
+            }
+          });
         },
         error => {
-          console.error(error);
+          reject(error);
         },
       );
     });
+  };
 
-    console.log(yo);
-  }, [img]);
+  useEffect(() => {
+    Promise.all(
+      img.map(v => {
+        return getImageSize(v);
+      }),
+    ).then(v => {
+      console.log('프로미스 올 써보기');
+      console.log(v);
+
+      setImgHandledArray(v);
+    });
+  }, [img, setImgHandledArray]);
+
+  //   const handleDimension = imgArray => {
+  //     imgArray.forEach(v => {
+  //       Image.getSize(v, (width, height) => {
+  //         if (width > height) {
+  //           console.log(`width: ${width} height: ${height}`);
+
+  //           return 'horizontal';
+  //         } else if (width < height) {
+  //           console.log(`width: ${width} height: ${height}`);
+
+  //           return 'vertical';
+  //         } else {
+  //           console.log(`width: ${width} height: ${height}`);
+
+  //           return 'square';
+  //         }
+  //       });
+  //     });
+  //   };
+
+  //   useEffect(() => {
+  //     console.log(handleDimension(img));
+  //   }, [img]);
 
   return (
     <View>
@@ -61,7 +122,7 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex}) => {
         width={phoneWidth}
         height={563}
         // autoPlay={true}
-        data={imageHeight}
+        data={imgHandledArray}
         scrollAnimationDuration={600}
         // autoplay={true}, autoPlayInterval={null} : 자동으로 카루셀 되는거 막기
         autoplay={true}
