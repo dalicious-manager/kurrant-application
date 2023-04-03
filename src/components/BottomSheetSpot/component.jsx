@@ -173,7 +173,7 @@ const BottomSheetSpot = props => {
                         label={
                           item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
                         }
-                        type="grey8"
+                        type={item.spotType === 0 ? 'red' : 'green'}
                       />
                     </View>
                   </GroupView>

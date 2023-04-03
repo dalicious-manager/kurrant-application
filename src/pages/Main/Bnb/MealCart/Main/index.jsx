@@ -211,7 +211,7 @@ const Pages = () => {
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
       el.cartDailyFoodDtoList?.map(v =>
-        v.cartDailyFoods.filter(c => c.status !== 2),
+        v.cartDailyFoods.filter(c => c.status !== 6),
       ),
     )
     .flat();
@@ -229,10 +229,11 @@ const Pages = () => {
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
       el.cartDailyFoodDtoList?.map(v =>
-        v.cartDailyFoods.filter(c => c.status === 2),
+        v.cartDailyFoods.filter(c => c.status === 6),
       ),
     )
     .flat();
+
   const deadlineArr = deadlineArrs.reduce((acc, val) => [...acc, ...val], []);
   const deadline = deadlineArr
     .map(p => p.count)
@@ -251,7 +252,7 @@ const Pages = () => {
             ...v,
             cartDailyFoods: [
               ...v.cartDailyFoods.filter(food => {
-                return food.status !== 2;
+                return food.status !== 6;
               }),
             ],
           };
@@ -416,7 +417,7 @@ const Pages = () => {
     totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
 
   // 품절
-  const soldout = arr.filter(el => el.status === 0);
+  const soldout = arr.filter(el => el.status === 2);
 
   // 클라 타입
   const clientType = clientStatus.filter(p => p.spotId === selected);
@@ -617,7 +618,7 @@ const Pages = () => {
       console.log(err);
     }
   };
-  console.log(spotName[0]?.text, '00');
+  const selectSpotName = mealCartSpot.filter(el => el.id === selected);
   return (
     <SafeView>
       <SpotView>
@@ -625,7 +626,7 @@ const Pages = () => {
           <SpotName>
             {spotName[0]?.text === undefined
               ? '스팟 없음'
-              : isUserInfo.group + '\u00a0' + isUserInfo.spot}
+              : selectSpotName[0].text}
           </SpotName>
           <ArrowIcon />
         </SpotPress>
@@ -714,7 +715,7 @@ const Pages = () => {
                                   borderRadius: 7,
                                   marginRight: 12,
                                 }}>
-                                {food.status === 2 && <BlurView />}
+                                {food.status === 6 && <BlurView />}
                               </FastImage>
                               <MealNameView>
                                 <MealName
@@ -736,7 +737,7 @@ const Pages = () => {
                                     </SalePrice>
                                   )}
                                 </SalePriceWrap>
-                                {food.status === 0 && (
+                                {food.status === 2 && (
                                   <SoldOutView>
                                     <SoldOutIcon status={food.status} />
                                     <SoldOutText status={food.status}>
@@ -744,7 +745,7 @@ const Pages = () => {
                                     </SoldOutText>
                                   </SoldOutView>
                                 )}
-                                {food.status === 2 && (
+                                {food.status === 6 && (
                                   <SoldOutView>
                                     <SoldOutIcon status={food.status} />
                                     <SoldOutText status={food.status}>
@@ -763,7 +764,7 @@ const Pages = () => {
                                   )}
                               </MealNameView>
                             </ContentWrap>
-                            {food.status === 0 && (
+                            {food.status === 2 && (
                               <MenuChangeView
                                 onPress={() => {
                                   changeMealPress(food.count, food.id);
@@ -788,7 +789,7 @@ const Pages = () => {
                               setShow={setShow}
                             />
                             <CountWrap>
-                              {food.status !== 2 && (
+                              {food.status !== 6 && (
                                 <Count
                                   onPressEvent={() => {
                                     bodyRef.current.focus();
@@ -1021,15 +1022,15 @@ export const ContentWrap = styled.View`
 
 export const Price = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[4]};
+    status === 6 ? theme.colors.grey[6] : theme.colors.grey[4]};
 `;
 
 export const SalePrice = styled(Typography).attrs({text: 'Body06R'})`
   text-decoration: line-through;
   text-decoration-color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[5]};
+    status === 6 ? theme.colors.grey[6] : theme.colors.grey[5]};
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[5]};
+    status === 6 ? theme.colors.grey[6] : theme.colors.grey[5]};
   margin-left: 4px;
 `;
 
@@ -1239,13 +1240,13 @@ const MenuChangeView = styled.Pressable`
 
 const SoldOutIcon = styled(SoldOut)`
   color: ${({theme, status}) =>
-    status === 0 ? theme.colors.red[500] : theme.colors.grey[4]};
+    status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
   margin-right: 4px;
 `;
 
 const SoldOutText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme, status}) =>
-    status === 0 ? theme.colors.red[500] : theme.colors.grey[4]};
+    status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
 `;
 
 const SoldOutView = styled.View`
