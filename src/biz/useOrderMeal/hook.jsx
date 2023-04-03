@@ -125,6 +125,14 @@ const useOrderMeal = () => {
       const res = await Fetch.OrderMeal(startdate, enddate);
 
       const todayMeal = res.data?.filter(m => m.serviceDate === date);
+
+      console.log('라ㄹ랄라');
+
+      console.log(`startdate: ${startdate}, enddate: ${enddate}`);
+
+      console.log(res.data);
+      console.log(todayMeal);
+
       setTodayMeal(todayMeal);
       return res;
     } catch (err) {

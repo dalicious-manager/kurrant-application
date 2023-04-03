@@ -51,6 +51,8 @@ import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Compo
 import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
 import useMembership from '../../../../../biz/useMembership';
 
+import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
+
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   const navigation = useNavigation();
@@ -82,8 +84,6 @@ const Pages = () => {
   const {loadMeal} = useShoppingBasket();
   const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
-
-  const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
 
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
@@ -373,7 +373,7 @@ const Pages = () => {
     }
   };
 
-  const mockStatus = false;
+  const mockStatus = 10;
 
   if (isOrderMealLoading || isUserInfoLoading || eventSpotLoading) {
     return <SkeletonUI />;
@@ -437,7 +437,7 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {/* {todayMeal?.length === 0 ? (
+          {todayMeal?.length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
@@ -447,99 +447,49 @@ const Pages = () => {
                 <React.Fragment key={`${m.id} ${idx}`}>
                   {m.orderItemDtoList.map(meal => {
                     return (
-                      <MealInfoWrap
-                        key={meal.id}
-                        onPress={() => navigation.navigate(MealMainPageName)}>
-                        <MealInfo>
-                          <FastImage
-                            source={{
-                              uri: `${meal.image}`,
-                              priority: FastImage.priority.high,
-                            }}
-                            style={{
-                              width: 64,
-                              height: 64,
-                              borderTopLeftRadius: 14,
-                              borderBottomLeftRadius: 14,
-                            }}
-                          />
-                          <MealText>
-                            <View>
-                              <DiningType>{`오늘 ${m.diningType}`}</DiningType>
-                              <View>
-                                <MealTxt>{meal.name}</MealTxt>
-                              </View>
-                            </View>
-                            <MealCount>
-                              <GreyTxt status={meal.orderStatus}>
-                                {formattedMealFoodStatus(meal.orderStatus)}
-                              </GreyTxt>
-                              <GreyTxt>{meal.count}개</GreyTxt>
-                            </MealCount>
-                          </MealText>
-                        </MealInfo>
-                      </MealInfoWrap>
+                      <MealInfoComponent m={m} meal={meal} />
+
+                      // <MealInfoWrap
+                      //   key={meal.id}
+                      //   onPress={() => navigation.navigate(MealMainPageName)}>
+                      //   <MealInfo>
+                      //     <FastImage
+                      //       source={{
+                      //         uri: `${meal.image}`,
+                      //         priority: FastImage.priority.high,
+                      //       }}
+                      //       style={{
+                      //         width: 64,
+                      //         height: 64,
+                      //         borderTopLeftRadius: 14,
+                      //         borderBottomLeftRadius: 14,
+                      //       }}
+                      //     />
+                      //     <MealText>
+                      //       <View>
+                      //         <DiningType>{`오늘 ${m.diningType}`}</DiningType>
+                      //         <View>
+                      //           <MealTxt>{meal.name}</MealTxt>
+                      //         </View>
+                      //       </View>
+                      //       <MealCount>
+                      //         <GreyTxt status={meal.orderStatus}>
+                      //           {formattedMealFoodStatus(meal.orderStatus)}
+                      //         </GreyTxt>
+                      //         <GreyTxt>{meal.count}개</GreyTxt>
+                      //       </MealCount>
+                      //     </MealText>
+                      //   </MealInfo>
+                      // </MealInfoWrap>
                     );
                   })}
                 </React.Fragment>
               );
             })
-          )} */}
+          )}
 
           {/* UI만들기용 */}
-          <MealInfoWrapper>
-            <MealInfoWrap
-              // shadow 적용
-              style={styles.shadow}
-              onPress={() => navigation.navigate(MealMainPageName)}>
-              <MealInfo>
-                <View
-                  style={{
-                    width: 64,
-                    height: 64,
-                    backgroundColor: 'grey',
-                    borderTopLeftRadius: 14,
-                    borderBottomLeftRadius: 14,
-                  }}
-                />
-
-                <MealText>
-                  <View>
-                    <DiningType>{`오늘 점점심`}</DiningType>
-                    <View>
-                      <MealTxt>구현경 셀러드</MealTxt>
-                    </View>
-                  </View>
-                  <MealCount>
-                    <GreyTxt status={9}>{formattedMealFoodStatus(9)}</GreyTxt>
-
-                    <GreyTxt>36개</GreyTxt>
-                  </MealCount>
-                </MealText>
-              </MealInfo>
-            </MealInfoWrap>
-
-            <OrderStatusWrap>
-              <CommentText>
-                {deliveryConfirmed
-                  ? '식사 맛있게 하셨나요?'
-                  : '배송완료! 메뉴 확인후 수령하셨나요?'}
-              </CommentText>
-
-              <ConfirmPressable
-                onPress={() => {
-                  if (!deliveryConfirmed) {
-                    setDeliveryConfirmed(true);
-                  } else {
-                    // 리뷰로 가기
-                  }
-                }}>
-                <ConfirmText>
-                  {deliveryConfirmed ? '맛 평가하기' : '네 확인했어요'}
-                </ConfirmText>
-              </ConfirmPressable>
-            </OrderStatusWrap>
-          </MealInfoWrapper>
+          {/* <MealInfoComponent meal={{}} mockStatus={mockStatus} /> */}
 
           {/* 메뉴 수령 그림자 styles.shadow */}
           {/* <MealInfoWrap style={styles.shadow}>
@@ -724,23 +674,6 @@ const Pages = () => {
     </SafeView>
   );
 };
-
-const styles = StyleSheet.create({
-  shadow: {
-    zIndex: 999,
-    // ios
-    shadowColor: '#5A1EFF',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-
-    // android
-    elevation: 10,
-  },
-});
 
 export default Pages;
 
