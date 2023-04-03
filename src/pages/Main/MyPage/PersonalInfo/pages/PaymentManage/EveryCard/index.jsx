@@ -1,4 +1,5 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import styled, {useTheme} from 'styled-components/native';
 import useUserMe from '~biz/useUserMe';
@@ -8,13 +9,18 @@ import Button from '~components/Button';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
+import {registCardAtom} from '../../../../../../../atoms/store';
+import Toast from '../../../../../../../components/Toast';
 import RegisteredBox from '../RegisteredBox';
 import Skeleton from '../SelectedDefaultCard/Skeleton';
 
 export const PAGE_NAME = 'P__MY_PAGE__EVERY_CARD';
 
-const Pages = () => {
+const Pages = ({route}) => {
+  const params = route.params;
   const navigation = useNavigation();
+  const [isCard, setIsCard] = useAtom(registCardAtom);
+  const toast = Toast();
   const {
     getCardList,
     cardDelete,
@@ -22,6 +28,7 @@ const Pages = () => {
   } = useUserMe();
   const themeApp = useTheme();
   const onSelectEvent = () => {
+    setIsCard(2);
     navigation.navigate(RegisterCardScreenName);
   };
   console.log(cardList);
@@ -39,6 +46,12 @@ const Pages = () => {
         await getCardList();
       };
       getData();
+      if (params?.isRegist) {
+        toast.toastEvent();
+        navigation.setParams({
+          isRegist: false,
+        });
+      }
       navigation.setOptions({
         tabBarLabelStyle: {
           fontSize: 15,
@@ -46,6 +59,7 @@ const Pages = () => {
           fontFamily: 'Pretendard-SemiBold',
         },
       });
+
       return () => {
         navigation.setOptions({
           tabBarLabelStyle: {
@@ -55,7 +69,7 @@ const Pages = () => {
           },
         });
       };
-    }, []),
+    }, [params?.isRegist]),
   );
   // if(isCardListLoading){
   //     return <Skeleton/>
@@ -96,6 +110,7 @@ const Pages = () => {
           onPressEvent={onSelectEvent}
         />
       </ButtonBox>
+      <toast.ToastWrap message={'결제카드가 추가됐어요'} icon={'checked'} />
     </Wrapper>
   );
 };

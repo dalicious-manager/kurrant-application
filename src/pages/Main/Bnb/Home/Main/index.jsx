@@ -104,7 +104,7 @@ const Pages = () => {
     useGetAnnouncements();
 
   useEffect(() => {
-    getAnnouncements(0);
+    // getAnnouncements(0);
   }, []);
 
   useEffect(() => {
@@ -155,18 +155,21 @@ const Pages = () => {
         try {
           const userData = await userInfo();
           if (userData?.email) {
-            const daily = await dailyFood(
-              userData?.spotId,
-              formattedWeekDate(new Date()),
-            );
-            if (daily) {
-              if (!(userRole === 'ROLE_GUEST'))
-                await orderMeal(
-                  formattedWeekDate(weekly[0][0]),
-                  formattedWeekDate(
-                    weekly[weekly?.length - 1][weekly[0].length - 1],
-                  ),
-                );
+            console.log(userData, 'test');
+            if (userSpotId) {
+              const daily = await dailyFood(
+                userSpotId,
+                formattedWeekDate(new Date()),
+              );
+              if (daily) {
+                if (!(userRole === 'ROLE_GUEST'))
+                  await orderMeal(
+                    formattedWeekDate(weekly[0][0]),
+                    formattedWeekDate(
+                      weekly[weekly?.length - 1][weekly[0].length - 1],
+                    ),
+                  );
+              }
             }
           }
           return true;
@@ -176,11 +179,11 @@ const Pages = () => {
       }
       const isTester = async () => {
         const user = loadUser();
-        if (fcmToken) {
-          saveFcmToken({
-            token: fcmToken,
-          });
-        }
+        // if (fcmToken) {
+        //   saveFcmToken({
+        //     token: fcmToken,
+        //   });
+        // }
         if (!(userRole === 'ROLE_GUEST')) {
           const start = weekly.map(s => {
             const startData = formattedWeekDate(s[0]);
@@ -296,12 +299,13 @@ const Pages = () => {
   useEffect(() => {
     async function dailys() {
       try {
-        await dailyFood(userSpotId, formattedWeekDate(new Date()));
+        if (userSpotId)
+          await dailyFood(userSpotId, formattedWeekDate(new Date()));
       } catch (err) {
         console.log(err);
       }
     }
-    dailys();
+    // dailys();
   }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {

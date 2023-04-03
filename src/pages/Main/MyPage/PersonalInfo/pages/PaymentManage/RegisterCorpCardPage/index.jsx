@@ -16,7 +16,7 @@ import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import useKeyboardEvent from '~hook/useKeyboardEvent';
 
-import {PAGE_NAME as PaymentManagePage} from '..';
+import {PAGE_NAME as PayCheckPasswordPageName} from '../../PayCheckPassword';
 import useUserMe from '../../../../../../../biz/useUserMe';
 import {
   checkCorporateRegiNumber,
@@ -37,10 +37,19 @@ const Pages = ({route}) => {
   const {
     cardRegisted,
     cardRegistedNice,
+    payCheckPassword,
     readableAtom: {cardList},
   } = useUserMe();
+  const {
+    formState: {errors},
+    handleSubmit,
+    watch,
+  } = form;
   const navigation = useNavigation();
   const onSubmit = async data => {
+    const paycheck = await payCheckPassword();
+    console.log(paycheck);
+
     const exp = data.cardExpDate.split('/');
     const req = {
       cardNumber: data.cardNumber.replace(/\W/gi, ''),
@@ -59,11 +68,21 @@ const Pages = ({route}) => {
       identityNumber: data.cardCorpNumber,
       defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
     };
+    navigation.navigate(PayCheckPasswordPageName, {
+      isFirst: !paycheck.data,
+      cardData: JSON.stringify(reqNice),
+    });
     // const result = await cardRegisted(req);
-    const resultNice = await cardRegistedNice(reqNice);
+    // const resultNice = await cardRegistedNice(reqNice);
     // navigation.navigate(PaymentManagePage)
-    navigation.goBack();
+    // navigation.goBack();
   };
+  const isValidate =
+    watch('cardNumber') &&
+    watch('cardExpDate') &&
+    watch('cardSecret') &&
+    watch('cardPass') &&
+    watch('cardCorpNumber');
   useFocusEffect(
     useCallback(() => {
       navigation.setOptions({
@@ -214,7 +233,8 @@ const Pages = ({route}) => {
             <ButtonBox>
               <Button
                 label="등록하기"
-                onPressEvent={form.handleSubmit(onSubmit)}
+                disabled={!isValidate}
+                onPressEvent={handleSubmit(onSubmit)}
               />
             </ButtonBox>
           )}
@@ -241,6 +261,4 @@ const ButtonBox = styled.View`
   margin-bottom: ${({isKeyboard}) => (isKeyboard ? '100px' : '24px')};
   background-color: ${({isKeyboard}) =>
     isKeyboard ? 'rgba(0,0,0,1)' : 'white'};
-  padding-left: 24px;
-  padding-right: 24px;
 `;

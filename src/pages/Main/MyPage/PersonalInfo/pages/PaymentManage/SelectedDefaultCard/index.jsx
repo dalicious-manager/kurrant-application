@@ -9,15 +9,20 @@ import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
 import Skeleton from './Skeleton';
+import Toast from '../../../../../../../components/Toast';
+import {useAtom} from 'jotai';
+import {registCardAtom} from '../../../../../../../atoms/store';
+import {Alert} from 'react-native';
 
 export const PAGE_NAME = 'P__MY_PAGE__SELECTED_DEFAULT_CARD';
 
-const Pages = () => {
+const Pages = ({route}) => {
+  const params = route?.params;
   const themeApp = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [isCard, setIsCard] = useAtom(registCardAtom);
   const [modalVisible2, setModalVisible2] = useState(false);
-
+  const toast = Toast();
   const navigation = useNavigation();
   const {
     getCardList,
@@ -25,7 +30,9 @@ const Pages = () => {
     setCardList,
     readableAtom: {cardList, cardSimpleList, isCardListLoading},
   } = useUserMe();
-  const onSelectEvent = async (text, id) => {
+  const [selectDefault, setSelectDefault] = useState(0);
+  const onSelectEvent = async id => {
+    setSelectDefault(id);
     const req = {
       cardId: id,
       defaultType: 1,
@@ -43,13 +50,55 @@ const Pages = () => {
   };
   const onSelectOpenModal = () => {
     console.log(cardList);
-    // setModalVisible(true);
+    if (cardList.length > 0) {
+      setModalVisible(true);
+    } else {
+      Alert.alert(
+        '결제카드',
+        '등록된 카드가 없어요 \n 카드를 등록하시겠어요?',
+        [
+          {
+            text: '취소',
+            onPress: async () => {},
+            style: 'destructive',
+          },
+          {
+            text: '확인',
+            onPress: () => {
+              onPageRegistedCard();
+            },
+          },
+        ],
+      );
+    }
   };
   const onSelectOpenModal2 = () => {
-    setModalVisible2(true);
+    console.log(cardList);
+    if (cardList.length > 0) {
+      setModalVisible2(true);
+    } else {
+      Alert.alert(
+        '멤버십카드',
+        '등록된 카드가 없어요 \n 카드를 등록하시겠어요?',
+        [
+          {
+            text: '취소',
+            onPress: async () => {},
+            style: 'destructive',
+          },
+          {
+            text: '확인',
+            onPress: () => {
+              onPageRegistedCard();
+            },
+          },
+        ],
+      );
+    }
   };
 
   const onPageRegistedCard = () => {
+    setIsCard(1);
     navigation.navigate(RegisterCardScreenName);
   };
   // useEffect(()=>{
@@ -63,6 +112,12 @@ const Pages = () => {
       const getData = async () => {
         await getCardList();
       };
+      if (params?.isRegist) {
+        toast.toastEvent();
+        navigation.setParams({
+          isRegist: false,
+        });
+      }
       getData();
       navigation.setOptions({
         tabBarLabelStyle: {
@@ -80,7 +135,7 @@ const Pages = () => {
           },
         });
       };
-    }, []),
+    }, [params?.isRegist]),
   );
   useEffect(() => {
     setSelectMembership(
@@ -125,7 +180,7 @@ const Pages = () => {
                       .slice(-4)})`;
                 })
                 ?.join()
-                .replace(',', '')
+                .replace(/,/g, '')
                 .toString().length > 1
                 ? cardList
                     .map(card => {
@@ -135,7 +190,7 @@ const Pages = () => {
                           .slice(-4)})`;
                     })
                     ?.join()
-                    .replace(',', '')
+                    .replace(/,/g, '')
                     .toString()
                 : '선택'}
             </SpotName>
@@ -156,7 +211,7 @@ const Pages = () => {
                       .slice(-4)})`;
                 })
                 ?.join()
-                .replace('/,/g', '')
+                .replace(/,/g, '')
                 .toString().length > 1
                 ? cardList
                     .map(card => {
@@ -166,7 +221,7 @@ const Pages = () => {
                           .slice(-4)})`;
                     })
                     .join()
-                    .replace('/,/g', '')
+                    .replace(/,/g, '')
                     .toString()
                 : '선택'}
             </SpotName>
@@ -186,7 +241,8 @@ const Pages = () => {
         setModalVisible={setModalVisible}
         title="구매 대표카드"
         data={cardSimpleList}
-        setValue={onSelectEvent}
+        selected={selectDefault}
+        setSelected={onSelectEvent}
         height={200}
       />
       <BottomSheet
@@ -199,6 +255,7 @@ const Pages = () => {
         // setValue={onSelectEvent2}
         height={200}
       />
+      <toast.ToastWrap message={'결제카드가 추가됐어요'} icon={'checked'} />
     </Wrapper>
   );
 };
