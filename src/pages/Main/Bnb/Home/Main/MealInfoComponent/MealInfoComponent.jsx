@@ -71,6 +71,8 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
             <ConfirmPressable
               onPress={() => {
                 if (meal.orderStatus === 10 && deliveryConfirmed) {
+                  // 주문상태변경 - 수령완료 api보내야함
+
                   setDeliveryConfirmed(true);
                 } else {
                   // 리뷰로 가기
