@@ -78,12 +78,12 @@ export default function PasswordCheck({route}) {
     console.log(ds);
 
     try {
-      // const data = await cardRegistedNiceFirst({
-      //   ...JSON.parse(ds),
-      //   payNumber: params?.password,
-      //   key: watch('eauth'),
-      // });
-      // console.log(data);
+      const data = await cardRegistedNiceFirst({
+        ...JSON.parse(ds),
+        payNumber: params?.password,
+        key: watch('eauth'),
+      });
+      console.log(data);
 
       // const resetAction = StackActions.pop(5);
       // navigation.dispatch(resetAction);
