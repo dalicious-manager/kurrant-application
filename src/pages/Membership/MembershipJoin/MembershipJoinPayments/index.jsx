@@ -21,6 +21,7 @@ import withCommas from '../../../../utils/withCommas';
 import {PAGE_NAME as MembershipJoinComplatePageName} from '../MembershipJoinComplate';
 import {PAGE_NAME as MemebershipPaymentManagePageName} from '../MemebershipPaymentManage';
 import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
+import useUserInfo from '../../../../biz/useUserInfo';
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_PAYMENTS';
 const Pages = ({route}) => {
   const {period, membershipData} = route.params;
@@ -33,7 +34,7 @@ const Pages = ({route}) => {
   const fadeAnim = useRef(
     new Animated.Value(period === 'month' ? 86 : 108),
   ).current;
-  const {membershipProduct} = useMembership();
+  const membershipProduct = useMembership();
   const {isUserInfo} = useUserInfo();
   const rotateAnim = useRef(new Animated.Value(1)).current;
   const themeApp = useTheme();
@@ -88,6 +89,7 @@ const Pages = ({route}) => {
         totalPrice: membershipTypeData.totalPrice,
         cardId: selectMembershipCard[0]?.id || -1,
       };
+
       if (
         isUserInfo?.email.includes('@bespinglobal.com') &&
         membershipProduct.readableAtom.membershipHistory.length < 1
@@ -103,26 +105,19 @@ const Pages = ({route}) => {
             },
             {
               text: '확인',
-              onPress: () => {
-                const membershipJoin = async () => {
-                  console.log(req);
-                  const result = await membershipJoin(req);
-                  console.log(result);
-                  if (result.statusCode === 200) {
-                    const resetAction = StackActions.pop(3);
-                    navigation.dispatch(resetAction);
-                    navigation.navigate(MembershipJoinComplatePageName);
-                  }
-                };
-                membershipJoin();
+              onPress: async () => {
+                const results = await membershipJoin(req);
+                if (results.statusCode === 200) {
+                  const resetAction = StackActions.pop(3);
+                  navigation.dispatch(resetAction);
+                  navigation.navigate(MembershipJoinComplatePageName);
+                }
               },
             },
           ],
         );
       } else {
-        console.log(req);
         const result = await membershipJoin(req);
-        console.log(result);
         if (result.statusCode === 200) {
           const resetAction = StackActions.pop(3);
           navigation.dispatch(resetAction);

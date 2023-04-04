@@ -11,6 +11,7 @@ import {
   isChangePasswordLoadingAtom,
   isFindEmailLoading,
   userRoleAtom,
+  fcmTokenAtom,
 } from './store';
 import {setStorage} from '../../utils/asyncStorage';
 import {isUserSpotStatusAtom} from '../useUserInfo/store';
@@ -40,6 +41,7 @@ const useAuth = () => {
     isChangePasswordLoadingAtom,
   );
   const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
+  const [fcmToken, setFcmToken] = useAtom(fcmTokenAtom);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
   const [userRole, setUserRole] = useAtom(userRoleAtom);
   const navigation = useNavigation();
@@ -184,7 +186,7 @@ const useAuth = () => {
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
-          '탈퇴한 계정입니다 계정을 복구 하시겠습니까?',
+          `탈퇴한 계정입니다 계정을 복구 하시겠습니까?\n탈퇴까지 남은 기간${res?.data?.leftWithdrawDays}일 남음`,
           [
             {
               text: '취소',
@@ -311,7 +313,7 @@ const useAuth = () => {
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
-          '탈퇴한 계정입니다 계정을 복구 하시겠습니까?',
+          `탈퇴한 계정입니다 계정을 복구 하시겠습니까?\n탈퇴까지 남은 기간${res?.data?.leftWithdrawDays}일 남음`,
           [
             {
               text: '취소',
@@ -376,7 +378,7 @@ const useAuth = () => {
         setUserRole('NOMAL');
         Alert.alert(
           '탈퇴한 계정 입니다.',
-          '탈퇴한 계정입니다 계정을 복구 하시겠습니까?',
+          `탈퇴한 계정입니다 계정을 복구 하시겠습니까?\n탈퇴까지 남은 기간${res?.data?.leftWithdrawDays}일 남음`,
           [
             {
               text: '취소',
@@ -428,6 +430,15 @@ const useAuth = () => {
     );
     return res;
   };
+  const saveFcmToken = async (body, option = {}) => {
+    const res = await Fetch.saveFcmToken(
+      {
+        ...body,
+      },
+      option,
+    );
+    return res;
+  };
   const nameSetting = async (body, option = {}) => {
     const res = await Fetch.nameSetting(
       {
@@ -461,16 +472,20 @@ const useAuth = () => {
     snsAppleLogin,
     terminateUser,
     logout,
+    setFcmToken,
+    saveFcmToken,
     readableAtom: {
       isPhoneAuthLoading,
       isEmailAuthLoading,
       userRole,
+      fcmToken,
       isConfirmPhoneLoading,
       isConfirmEmailLoading,
       isCheckedAuthLoading,
       isChangePasswordLoading,
       isEmailLoading,
       isLoginLoading,
+      fcmToken,
     },
   };
 };

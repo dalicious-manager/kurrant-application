@@ -16,7 +16,7 @@ import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import useKeyboardEvent from '~hook/useKeyboardEvent';
 
-import {PAGE_NAME as PaymentManagePage} from '..';
+import {PAGE_NAME as PayCheckPasswordPageName} from '../../PayCheckPassword';
 import useUserMe from '../../../../../../../biz/useUserMe';
 import {
   checkCorporateRegiNumber,
@@ -36,10 +36,20 @@ const Pages = ({route}) => {
   const keyboardEvent = useKeyboardEvent();
   const {
     cardRegisted,
+    cardRegistedNice,
+    payCheckPassword,
     readableAtom: {cardList},
   } = useUserMe();
+  const {
+    formState: {errors},
+    handleSubmit,
+    watch,
+  } = form;
   const navigation = useNavigation();
   const onSubmit = async data => {
+    const paycheck = await payCheckPassword();
+    console.log(paycheck);
+
     const exp = data.cardExpDate.split('/');
     const req = {
       cardNumber: data.cardNumber.replace(/\W/gi, ''),
@@ -50,10 +60,29 @@ const Pages = ({route}) => {
       cardVaildationCode: data.cardSecret,
       defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
     };
-    const result = await cardRegisted(req);
+    const reqNice = {
+      cardNumber: data.cardNumber.replace(/\W/gi, ''),
+      expirationYear: exp[1],
+      expirationMonth: exp[0],
+      cardPassword: data.cardPass,
+      identityNumber: data.cardCorpNumber,
+      defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
+    };
+    navigation.navigate(PayCheckPasswordPageName, {
+      isFirst: !paycheck.data,
+      cardData: JSON.stringify(reqNice),
+    });
+    // const result = await cardRegisted(req);
+    // const resultNice = await cardRegistedNice(reqNice);
     // navigation.navigate(PaymentManagePage)
-    navigation.goBack();
+    // navigation.goBack();
   };
+  const isValidate =
+    watch('cardNumber') &&
+    watch('cardExpDate') &&
+    watch('cardSecret') &&
+    watch('cardPass') &&
+    watch('cardCorpNumber');
   useFocusEffect(
     useCallback(() => {
       navigation.setOptions({
@@ -200,12 +229,15 @@ const Pages = ({route}) => {
               </RegiteredView>
             </CardRegisteredBox>
           </ScrollView>
-          <ButtonBox>
-            <Button
-              label="등록하기"
-              onPressEvent={form.handleSubmit(onSubmit)}
-            />
-          </ButtonBox>
+          {!keyboardEvent.isKeyboardActivate && (
+            <ButtonBox>
+              <Button
+                label="등록하기"
+                disabled={!isValidate}
+                onPressEvent={handleSubmit(onSubmit)}
+              />
+            </ButtonBox>
+          )}
         </FormProvider>
       </Wrapper>
     </KeyboardAvoidingView>
@@ -226,5 +258,7 @@ const RegiteredView = styled.View`
 const ButtonBox = styled.View`
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: ${({isKeyboard}) => (isKeyboard ? '100px' : '24px')};
+  background-color: ${({isKeyboard}) =>
+    isKeyboard ? 'rgba(0,0,0,1)' : 'white'};
 `;

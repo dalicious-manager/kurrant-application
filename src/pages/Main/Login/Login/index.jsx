@@ -161,11 +161,11 @@ const Pages = ({route}) => {
             const res = await autoLogin();
 
             if (res?.statusCode === 200) {
-              if (fcmToken) {
-                saveFcmToken({
-                  token: fcmToken,
-                });
-              }
+              // if (fcmToken) {
+              //   saveFcmToken({
+              //     token: fcmToken,
+              //   });
+              // }
               navigation.reset({
                 index: 0,
                 routes: [
@@ -209,7 +209,7 @@ const Pages = ({route}) => {
         }
       });
     };
-    // getData();
+    getData();
     setLoginLoading(true);
     isAutoLogin();
     // eslint-disable-next-line react-hooks/exhaustive-deps
