@@ -140,8 +140,13 @@ android {
         applicationId "com.dalicious.kurrant"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+<<<<<<< Updated upstream
         versionCode 34
         versionName "1.3.4"
+=======
+        versionCode 36
+        versionName "1.3.6"
+>>>>>>> Stashed changes
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
