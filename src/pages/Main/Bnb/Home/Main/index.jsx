@@ -489,7 +489,38 @@ const Pages = () => {
           )}
 
           {/* UI만들기용 */}
-          {/* <MealInfoComponent meal={{}} mockStatus={mockStatus} /> */}
+          <MealInfoComponent
+            m={{diningType: '점심'}}
+            meal={{
+              id: 8169,
+              dailyFoodId: 15415,
+              name: '하노이 돼지고기와 누들 샐러드',
+              orderStatus: 10,
+              makers: '라이브볼',
+              image:
+                'https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/0001678239783246/%ED%95%98%EB%85%B8%EC%9D%B4%20%EB%8F%BC%EC%A7%80%EA%B3%A0%EA%B8%B0%EC%99%80%20%EB%88%84%EB%93%A4%20%EC%83%90%EB%9F%AC%EB%93%9C.png',
+              count: 1,
+              groupName: '달리셔스',
+              spotName: '상경빌딩 3F',
+            }}
+            mockStatus={mockStatus}
+          />
+          <MealInfoComponent
+            m={{diningType: '점심'}}
+            meal={{
+              id: 8169,
+              dailyFoodId: 15415,
+              name: '하노이 돼지고기와 누들 샐러드',
+              orderStatus: 11,
+              makers: '라이브볼',
+              image:
+                'https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/0001678239783246/%ED%95%98%EB%85%B8%EC%9D%B4%20%EB%8F%BC%EC%A7%80%EA%B3%A0%EA%B8%B0%EC%99%80%20%EB%88%84%EB%93%A4%20%EC%83%90%EB%9F%AC%EB%93%9C.png',
+              count: 1,
+              groupName: '달리셔스',
+              spotName: '상경빌딩 3F',
+            }}
+            mockStatus={mockStatus}
+          />
 
           {/* 메뉴 수령 그림자 styles.shadow */}
           {/* <MealInfoWrap style={styles.shadow}>

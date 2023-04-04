@@ -11,6 +11,13 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
 
+  console.log('값 확인');
+  console.log(m);
+  console.log(meal);
+
+  // status 11일떄 메뉴확인 수령클릭
+  // {}
+
   return (
     <>
       <MealInfoWrapper>
