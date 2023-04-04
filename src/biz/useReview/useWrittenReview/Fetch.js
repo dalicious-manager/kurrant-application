@@ -20,57 +20,64 @@ export async function getReviewOrderMeal() {
   return fetchRes;
 }
 
-export async function deleteReview(id, token, successCallback) {
-  const url = `${apiHostUrl}/users/me/reviews/delete?id=${id}`;
+export async function deleteReview(body, option = {}, successCallback) {
+  const fetchRes = await fetchJson(`/users/me/reviews/delete`, 'PATCH', {
+    ...option,
+    body: JSON.stringify(body),
+  });
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
+  return fetchRes;
 
-  const requestOptions = {
-    method: 'PATCH',
-    headers: headers,
-  };
+  // const url = `${apiHostUrl}/users/me/reviews/delete?id=${id}`;
 
-  fetch(url, requestOptions)
-    .then(response => response.text())
-    .then(result => {
-      console.log('확인하기');
+  // const headers = {
+  //   Authorization: `Bearer ${token}`,
+  // };
 
-      const parseResult = JSON.parse(result);
-      if (parseResult.statusCode !== 200) {
-        Alert.alert('작성 실패', `${parseResult.message}`, [
-          {
-            text: '확인',
-            onPress: () => {},
-            style: 'cancel',
-          },
-        ]);
-      } else {
-        console.log(result);
-        Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-          {
-            text: '확인',
-            onPress: async () => {
-              successCallback();
-            },
-            style: 'cancel',
-          },
-        ]);
-      }
-    })
-    .catch(error => {
-      console.log('삭제 에러뜸');
-      console.log(error);
+  // const requestOptions = {
+  //   method: 'PATCH',
+  //   headers: headers,
+  // };
 
-      Alert.alert('작성 실패', '', [
-        {
-          text: '확인',
-          onPress: () => {},
-          style: 'cancel',
-        },
-      ]);
-    });
+  // fetch(url, requestOptions)
+  //   .then(response => response.text())
+  //   .then(result => {
+  //     console.log('확인하기');
+
+  //     const parseResult = JSON.parse(result);
+  //     if (parseResult.statusCode !== 200) {
+  //       Alert.alert('작성 실패', `${parseResult.message}`, [
+  //         {
+  //           text: '확인',
+  //           onPress: () => {},
+  //           style: 'cancel',
+  //         },
+  //       ]);
+  //     } else {
+  //       console.log(result);
+  //       Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
+  //         {
+  //           text: '확인',
+  //           onPress: async () => {
+  //             successCallback();
+  //           },
+  //           style: 'cancel',
+  //         },
+  //       ]);
+  //     }
+  //   })
+  //   .catch(error => {
+  //     console.log('삭제 에러뜸');
+  //     console.log(error);
+
+  //     Alert.alert('작성 실패', '', [
+  //       {
+  //         text: '확인',
+  //         onPress: () => {},
+  //         style: 'cancel',
+  //       },
+  //     ]);
+  //   });
 
   // return res;
 }

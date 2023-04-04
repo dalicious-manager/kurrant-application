@@ -80,7 +80,7 @@ const Component = ({
   // 운영자 메이커스 댓글 늦게 작성한 댓글이 위에 있게 sorting해야됨
 
   const handleDelete = async () => {
-    const token = await getToken();
+    // const token = await getToken();
 
     Alert.alert(
       `리뷰 삭제`,
@@ -96,26 +96,26 @@ const Component = ({
         {
           text: `삭제`,
           onPress: async () => {
-            await deleteReview(id, token, () => {
-              navigation.reset({
-                routes: [
-                  {
-                    name: ReviewScreenName,
+            await deleteReview({id: id}, {});
 
-                    state: {
-                      index: 1,
-                      routes: [
-                        {
-                          name: ReviewPageName,
-                        },
-                        {
-                          name: WrittenReviewPageName,
-                        },
-                      ],
-                    },
+            navigation.reset({
+              routes: [
+                {
+                  name: ReviewScreenName,
+
+                  state: {
+                    index: 1,
+                    routes: [
+                      {
+                        name: ReviewPageName,
+                      },
+                      {
+                        name: WrittenReviewPageName,
+                      },
+                    ],
                   },
-                ],
-              });
+                },
+              ],
             });
 
             return;
@@ -257,78 +257,6 @@ const Component = ({
             );
           }
         })}
-
-      {/* {adminComment?.createDate && makersComment?.createDate ? (
-        stringDateToJavascriptDate(makersComment?.createDate, '-') <
-        stringDateToJavascriptDate(adminComment?.createDate, '-') ? (
-          <>
-            {makersComment?.createDate && (
-              <CommentWrap>
-                <AdminOrMakersReview
-                  makersName={makersName}
-                  pngLink={makersComment.pngLink}
-                  writtenDate={makersComment.createDate}
-                  message={makersComment.content}
-                />
-              </CommentWrap>
-            )}
-            {adminComment?.createDate && (
-              <CommentWrap>
-                <AdminOrMakersReview
-                  pngLink={adminComment.pngLink}
-                  writtenDate={adminComment.createDate}
-                  message={adminComment.content}
-                />
-              </CommentWrap>
-            )}
-          </>
-        ) : (
-          <>
-            {adminComment?.createDate && (
-              <CommentWrap>
-                <AdminOrMakersReview
-                  pngLink={adminComment.pngLink}
-                  writtenDate={adminComment.createDate}
-                  message={adminComment.content}
-                />
-              </CommentWrap>
-            )}
-            {makersComment?.createDate && (
-              <CommentWrap>
-                <AdminOrMakersReview
-                  makersName={makersName}
-                  pngLink={makersComment.pngLink}
-                  writtenDate={makersComment.createDate}
-                  message={makersComment.content}
-                />
-              </CommentWrap>
-            )}
-          </>
-        )
-      ) : (
-        <>
-          {adminComment?.createDate && (
-            <CommentWrap>
-              <AdminOrMakersReview
-                pngLink={adminComment.pngLink}
-                writtenDate={adminComment.createDate}
-                message={adminComment.content}
-              />
-            </CommentWrap>
-          )}
-
-          {makersComment?.createDate && (
-            <CommentWrap>
-              <AdminOrMakersReview
-                makersName={makersName}
-                pngLink={makersComment.pngLink}
-                writtenDate={makersComment.createDate}
-                message={makersComment.content}
-              />
-            </CommentWrap>
-          )}
-        </>
-      )} */}
     </Container>
   );
 };
