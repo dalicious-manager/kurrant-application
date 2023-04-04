@@ -20,64 +20,65 @@ export async function getReviewOrderMeal() {
   return fetchRes;
 }
 
-export async function deleteReview(body, option = {}, successCallback) {
-  const fetchRes = await fetchJson(`/users/me/reviews/delete`, 'PATCH', {
-    ...option,
+export async function deleteReview(body, token, successCallback) {
+  console.log(body);
+
+  const url = `${apiHostUrl}/users/me/reviews/delete`;
+
+  console.log('token');
+  console.log(token);
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const requestOptions = {
+    method: 'PATCH',
+    headers: headers,
     body: JSON.stringify(body),
-  });
+  };
 
-  return fetchRes;
+  fetch(url, requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      console.log('확인하기');
 
-  // const url = `${apiHostUrl}/users/me/reviews/delete?id=${id}`;
+      const parseResult = JSON.parse(result);
 
-  // const headers = {
-  //   Authorization: `Bearer ${token}`,
-  // };
+      if (parseResult.statusCode !== 200) {
+        console.log(parseResult);
+        Alert.alert('작성 실패', `${parseResult.message}`, [
+          {
+            text: '확인',
+            onPress: () => {},
+            style: 'cancel',
+          },
+        ]);
+      } else {
+        console.log(result);
+        Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
+          {
+            text: '확인',
+            onPress: async () => {
+              successCallback();
+            },
+            style: 'cancel',
+          },
+        ]);
+      }
+    })
+    .catch(error => {
+      console.log('삭제 에러뜸');
+      console.log(error);
 
-  // const requestOptions = {
-  //   method: 'PATCH',
-  //   headers: headers,
-  // };
-
-  // fetch(url, requestOptions)
-  //   .then(response => response.text())
-  //   .then(result => {
-  //     console.log('확인하기');
-
-  //     const parseResult = JSON.parse(result);
-  //     if (parseResult.statusCode !== 200) {
-  //       Alert.alert('작성 실패', `${parseResult.message}`, [
-  //         {
-  //           text: '확인',
-  //           onPress: () => {},
-  //           style: 'cancel',
-  //         },
-  //       ]);
-  //     } else {
-  //       console.log(result);
-  //       Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-  //         {
-  //           text: '확인',
-  //           onPress: async () => {
-  //             successCallback();
-  //           },
-  //           style: 'cancel',
-  //         },
-  //       ]);
-  //     }
-  //   })
-  //   .catch(error => {
-  //     console.log('삭제 에러뜸');
-  //     console.log(error);
-
-  //     Alert.alert('작성 실패', '', [
-  //       {
-  //         text: '확인',
-  //         onPress: () => {},
-  //         style: 'cancel',
-  //       },
-  //     ]);
-  //   });
+      Alert.alert('작성 실패', '', [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
+    });
 
   // return res;
 }
@@ -135,4 +136,13 @@ export async function writtenReviewMockData() {
       },
     ],
   };
+}
+
+export async function deleteReview2(body, option) {
+  const fetchRes = await fetchJson(`/users/me/reviews/delete`, 'PATCH', {
+    ...option,
+    body: JSON.stringify(body),
+  });
+
+  return fetchRes;
 }

@@ -43,7 +43,6 @@ const Pages = () => {
           renderItem={({item}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
 
-            // console.log(item.forMakers);
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,
@@ -58,8 +57,6 @@ const Pages = () => {
               option: item.option,
               forMakers: item.forMakers,
               commentList: item.commentList,
-              // adminReview: item.adminComment,
-              // makersComment: item.makersComment,
             };
 
             return (
@@ -78,9 +75,6 @@ const Pages = () => {
                   imageLocation={item2.imageLocation}
                   forMakers={item2.forMakers}
                   commentList={item2.commentList}
-                  // adminReview={item2.adminReview}
-                  // makersComment={item2.makersComment}
-                  // adminReview={sampleAdminReview}
                 />
               </View>
             );
@@ -102,5 +96,3 @@ const Container = styled.View`
   padding-top: 0px;
   background-color: #ffffff;
 `;
-
-///////////////

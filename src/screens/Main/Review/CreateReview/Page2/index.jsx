@@ -28,6 +28,7 @@ import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPa
 // } from '../../../pages/Main/MyPage/WrittenReview';
 
 import {Alert, FlatList, Text, View} from 'react-native';
+import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -57,6 +58,9 @@ const Screen = ({route}) => {
   }, [photosArray]);
 
   const {getWrittenReview} = useWrittenReview();
+
+  const {getReviewWait} = useReviewWait();
+
   const id = route?.params?.id;
   const status = route?.params?.status;
   const editItem = route?.params?.editItem;
@@ -226,12 +230,6 @@ const Screen = ({route}) => {
         Authorization: `Bearer ${token}`,
       };
 
-      // console.log('이게 수정할때 보내는 데이터임');
-
-      // console.log(data.reviewed);
-
-      // console.log(sendEditData);
-
       return RNFetchBlob.fetch('PATCH', url, headers, [
         ...localArray,
         {
@@ -263,25 +261,13 @@ const Screen = ({route}) => {
                 text: '확인',
                 onPress: async () => {
                   getWrittenReview();
+                  getReviewWait();
 
-                  navigation.reset({
-                    routes: [
-                      {
-                        name: ReviewScreenName,
-
-                        state: {
-                          index: 1,
-                          routes: [
-                            {
-                              name: ReviewPageName,
-                            },
-                            {
-                              name: WrittenReviewPageName,
-                            },
-                          ],
-                        },
-                      },
-                    ],
+                  navigation.navigate(WrittenReviewPageName, {
+                    screen: ReviewScreenName,
+                    params: {
+                      tabIndex: 1,
+                    },
                   });
                 },
                 style: 'cancel',
@@ -314,24 +300,12 @@ const Screen = ({route}) => {
                 text: '확인',
                 onPress: async () => {
                   getWrittenReview();
-                  navigation.reset({
-                    routes: [
-                      {
-                        name: ReviewScreenName,
-
-                        state: {
-                          index: 1,
-                          routes: [
-                            {
-                              name: ReviewPageName,
-                            },
-                            {
-                              name: WrittenReviewPageName,
-                            },
-                          ],
-                        },
-                      },
-                    ],
+                  getReviewWait();
+                  navigation.navigate(WrittenReviewPageName, {
+                    screen: ReviewScreenName,
+                    params: {
+                      tabIndex: 1,
+                    },
                   });
                 },
                 style: 'cancel',

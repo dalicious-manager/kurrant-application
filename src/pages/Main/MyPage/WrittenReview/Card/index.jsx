@@ -21,10 +21,14 @@ import WrittenReview, {
   PAGE_NAME as WrittenReviewPageName,
 } from '../../../../../pages/Main/MyPage/WrittenReview';
 import {getStorage} from '../../../../../utils/asyncStorage';
-import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
+import {
+  deleteReview,
+  deleteReview2,
+} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 import ImageModal from './ImageModal/ImageModal';
+import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -39,8 +43,7 @@ const Component = ({
   option,
   rating,
   reviewText,
-  // adminReview: adminComment,
-  // makersComment,
+
   forMakers,
   imageLocation,
   createDate,
@@ -50,6 +53,8 @@ const Component = ({
   const navigation = useNavigation();
 
   const [imageModalVisible, setImageModalVisible] = useState(false);
+
+  const {getWrittenReview} = useWrittenReview();
 
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
@@ -97,63 +102,88 @@ const Component = ({
         {
           text: `삭제`,
           onPress: async () => {
-            await deleteReview({id: id}, {})
-              .then(response => response.text())
-              .then(result => {
-                console.log('확인하기');
+            try {
+              const response = await deleteReview2({id: id});
 
-                const parseResult = JSON.parse(result);
-                if (parseResult.statusCode !== 200) {
-                  Alert.alert('작성 실패', `${parseResult.message}`, [
-                    {
-                      text: '확인',
-                      onPress: () => {},
-                      style: 'cancel',
-                    },
-                  ]);
-                } else {
-                  console.log(result);
-                  Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-                    {
-                      text: '확인',
-                      onPress: async () => {
-                        navigation.reset({
-                          routes: [
-                            {
-                              name: ReviewScreenName,
-
-                              state: {
-                                index: 1,
-                                routes: [
-                                  {
-                                    name: ReviewPageName,
-                                  },
-                                  {
-                                    name: WrittenReviewPageName,
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        });
-                      },
-                      style: 'cancel',
-                    },
-                  ]);
-                }
-              })
-              .catch(error => {
-                console.log('삭제 에러뜸');
-                console.log(error);
-
-                Alert.alert('작성 실패', '', [
+              if (response.statusCode !== 200) {
+                console.log(response);
+                Alert.alert('리뷰 삭제 실패', `${response.message}`, [
                   {
                     text: '확인',
                     onPress: () => {},
                     style: 'cancel',
                   },
                 ]);
-              });
+              } else {
+                Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
+                  {
+                    text: '확인',
+                    onPress: async () => {
+                      getWrittenReview();
+                      navigation.navigate(WrittenReviewPageName, {
+                        screen: ReviewScreenName,
+                        params: {
+                          tabIndex: 1,
+                        },
+                      });
+
+                      // navigation.reset({
+                      //   routes: [
+                      //     {
+                      //       name: ReviewScreenName,
+
+                      //       state: {
+                      //         index: 1,
+                      //         routes: [
+                      //           {
+                      //             name: ReviewPageName,
+                      //           },
+                      //           {
+                      //             name: WrittenReviewPageName,
+                      //           },
+                      //         ],
+                      //       },
+                      //     },
+                      //   ],
+                      // });
+                    },
+                    style: 'cancel',
+                  },
+                ]);
+              }
+            } catch (err) {
+              console.log('리뷰 삭제 에러뜸');
+              console.log(err);
+              Alert.alert('리뷰 삭제 실패', '', [
+                {
+                  text: '확인',
+                  onPress: () => {},
+                  style: 'cancel',
+                },
+              ]);
+            }
+
+            // await deleteReview({id: id}, token, () => {
+            //   navigation.reset({
+            //     routes: [
+            //       {
+            //         name: ReviewScreenName,
+
+            //         state: {
+            //           index: 1,
+            //           routes: [
+            //             {
+            //               name: ReviewPageName,
+            //             },
+            //             {
+            //               name: WrittenReviewPageName,
+            //             },
+            //           ],
+            //         },
+            //       },
+            //     ],
+            //   });
+            // });
 
             return;
           },

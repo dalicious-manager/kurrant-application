@@ -16,9 +16,6 @@ export const calculateReviewDDay = reviewDDay => {
 
   const myRegex = /\:/g;
 
-  console.log('리뷰디데이');
-  console.log(reviewDDay);
-
   if (!!reviewDDay.match(myRegex)) {
     // 하루남음
 

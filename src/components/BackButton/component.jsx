@@ -24,6 +24,8 @@ const Component = ({
   const theme = useTheme();
 
   const handleBackPress = () => {
+    // navigation.goBack();
+    console.log(navigation.canGoBack());
     if (navigation.canGoBack()) {
       navigation.goBack();
     } else {
@@ -48,6 +50,8 @@ const Component = ({
     <Wrpaper
       margin={margin}
       onPress={() => {
+        console.log('눌리고 있음');
+
         onPressEvent();
         handleBackPress();
       }}>
