@@ -23,11 +23,10 @@ const Pages = () => {
   const {reviewWaitList, reviewWaitCount, getReviewWait, redeemablePoints} =
     useReviewWait();
 
-  const [, setTotalReviewWaitList] = useAtom(totalReviewWaitListAtom);
-
   useEffect(() => {
     getReviewWait();
   }, []);
+  const [, setTotalReviewWaitList] = useAtom(totalReviewWaitListAtom);
 
   useEffect(() => {
     setTotalReviewWaitList(reviewWaitCount);

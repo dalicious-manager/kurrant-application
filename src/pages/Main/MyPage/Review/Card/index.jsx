@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {Line} from 'react-native-svg';
 import styled from 'styled-components';
@@ -15,9 +15,12 @@ import {
   timePassIndicator,
 } from '../../../../../utils/dateFormatter';
 
+import {Alert} from 'react-native';
+
 import {calculateReviewDDay} from './logic';
 
 import {PAGE_NAME as MealDetailPageName} from '../../../../../pages/Main/Bnb/MealDetail/Main';
+import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 
 /**
  * @param {object} props
@@ -43,6 +46,39 @@ const Component = ({
   ...rest
 }) => {
   const navigation = useNavigation();
+
+  const {reviewWaitList, reviewWaitCount, getReviewWait, redeemablePoints} =
+    useReviewWait();
+
+  useEffect(() => {
+    getReviewWait();
+  }, []);
+
+  const handleReviewFormWriteButton = () => {
+    // 시간이 지났을 지도 모르니 get한번더 해와서 확인 해보고 확인이 되면 보낸다
+
+    if (!reviewWaitList) {
+      Alert.alert('작성할 수 있는 리뷰가 없습니다.');
+    }
+
+    let orderItemIdArray = [];
+
+    reviewWaitList.forEach(v => {
+      v.items.forEach(v2 => {
+        orderItemIdArray.push(parseInt(v2.orderItemId));
+      });
+    });
+
+    if (orderItemIdArray.includes(orderItemId)) {
+      navigation.navigate(CreateReviewScreenName, {
+        orderItemId: orderItemId,
+        imageLocation: imageLocation,
+        foodName,
+      });
+    } else {
+      Alert.alert('리뷰 작성하실수 있는 시간이 지났습니다.');
+    }
+  };
 
   return (
     <Container>
@@ -87,11 +123,7 @@ const Component = ({
 
             <ReviewFormWriteButton
               onPress={() => {
-                navigation.navigate(CreateReviewScreenName, {
-                  orderItemId: orderItemId,
-                  imageLocation: imageLocation,
-                  foodName,
-                });
+                handleReviewFormWriteButton();
               }}>
               <TextText>리뷰작성</TextText>
             </ReviewFormWriteButton>

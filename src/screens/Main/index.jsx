@@ -301,6 +301,7 @@ import ReportReview, {
 
 import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
+import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -1888,7 +1889,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon />,
+            headerLeft: () => <ReviewCloseIcon />,
           }}
         />
 
@@ -1926,7 +1927,7 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             headerLeft: () => (
-              <CloseIcon
+              <ReviewCloseIcon
                 alertCallback={() => {
                   Alert.alert(
                     `작성 종료`,
@@ -1973,7 +1974,7 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             headerLeft: () => (
-              <CloseIcon
+              <ReviewCloseIcon
                 alertCallback={() => {
                   Alert.alert(
                     '수정 종료',
@@ -2042,7 +2043,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon />,
+            headerLeft: () => <ReviewCloseIcon />,
           }}
         />
       </MainRoot.Group>
