@@ -20,7 +20,9 @@ const Component = ({point}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
   return (
-    <Container onPress={() => navigation.navigate(PointMainPageName)}>
+    <Container>
+      {/* 나중에 링크 연결 */}
+      {/* onPress={() => navigation.navigate(PointMainPageName)} */}
       <TitleBox>
         <PointBadge style={{marginRight: 8}} />
         <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>
