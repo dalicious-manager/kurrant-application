@@ -39,12 +39,13 @@ const Component = ({
   option,
   rating,
   reviewText,
-  adminReview: adminComment,
-  makersComment,
+  // adminReview: adminComment,
+  // makersComment,
   forMakers,
   imageLocation,
   createDate,
   updateDate,
+  commentList,
 }) => {
   const navigation = useNavigation();
 
@@ -230,7 +231,37 @@ const Component = ({
 
       {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}
 
-      {adminComment?.createDate && makersComment?.createDate ? (
+      {commentList &&
+        commentList.length > 0 &&
+        commentList.map(v => {
+          console.log('랄랄라~~');
+          console.log(v);
+
+          if (v.writer === 'admin') {
+            return (
+              <CommentWrap>
+                <AdminOrMakersReview
+                  // pngLink={v.pngLink}
+                  writtenDate={v.createDate}
+                  message={v.content}
+                />
+              </CommentWrap>
+            );
+          } else {
+            return (
+              <CommentWrap>
+                <AdminOrMakersReview
+                  makersName={v.writer}
+                  // pngLink={v.pngLink}
+                  writtenDate={v.createDate}
+                  message={v.content}
+                />
+              </CommentWrap>
+            );
+          }
+        })}
+
+      {/* {adminComment?.createDate && makersComment?.createDate ? (
         stringDateToJavascriptDate(makersComment?.createDate, '-') <
         stringDateToJavascriptDate(adminComment?.createDate, '-') ? (
           <>
@@ -300,7 +331,7 @@ const Component = ({
             </CommentWrap>
           )}
         </>
-      )}
+      )} */}
     </Container>
   );
 };

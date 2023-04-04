@@ -2,6 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import {GreyLockerIcon} from '../../../../../../components/Icon';
+import {DefaultHumanIcon} from '../../../../../../components/Icon';
 
 import Typography from '../../../../../../components/Typography';
 
@@ -15,12 +16,14 @@ const Component = ({
   writtenDate: createDate,
   message: content,
 }) => {
-  console.log(content);
-
   return (
     <Container>
       <AdminImageWrap>
-        <AdminImage source={pngLink} resizeMode="cover" />
+        {pngLink ? (
+          <AdminImage source={pngLink} resizeMode="cover" />
+        ) : (
+          <DefaultHumanIcon />
+        )}
       </AdminImageWrap>
 
       <MessageWrap onlyForReviewers={sampleOnlyForReviewers}>

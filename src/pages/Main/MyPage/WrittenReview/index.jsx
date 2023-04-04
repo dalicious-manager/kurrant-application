@@ -57,8 +57,9 @@ const Pages = () => {
               foodName: item.itemName,
               option: item.option,
               forMakers: item.forMakers,
-              adminReview: item.adminComment,
-              makersComment: item.makersComment,
+              commentList: item.commentList,
+              // adminReview: item.adminComment,
+              // makersComment: item.makersComment,
             };
 
             return (
@@ -76,8 +77,9 @@ const Pages = () => {
                   reviewText={item2.reviewText}
                   imageLocation={item2.imageLocation}
                   forMakers={item2.forMakers}
-                  adminReview={item2.adminReview}
-                  makersComment={item2.makersComment}
+                  commentList={item2.commentList}
+                  // adminReview={item2.adminReview}
+                  // makersComment={item2.makersComment}
                   // adminReview={sampleAdminReview}
                 />
               </View>
