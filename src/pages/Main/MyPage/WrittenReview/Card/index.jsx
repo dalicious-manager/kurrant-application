@@ -96,27 +96,63 @@ const Component = ({
         {
           text: `삭제`,
           onPress: async () => {
-            await deleteReview({id: id}, {});
+            await deleteReview({id: id}, {})
+              .then(response => response.text())
+              .then(result => {
+                console.log('확인하기');
 
-            navigation.reset({
-              routes: [
-                {
-                  name: ReviewScreenName,
+                const parseResult = JSON.parse(result);
+                if (parseResult.statusCode !== 200) {
+                  Alert.alert('작성 실패', `${parseResult.message}`, [
+                    {
+                      text: '확인',
+                      onPress: () => {},
+                      style: 'cancel',
+                    },
+                  ]);
+                } else {
+                  console.log(result);
+                  Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
+                    {
+                      text: '확인',
+                      onPress: async () => {
+                        navigation.reset({
+                          routes: [
+                            {
+                              name: ReviewScreenName,
 
-                  state: {
-                    index: 1,
-                    routes: [
-                      {
-                        name: ReviewPageName,
+                              state: {
+                                index: 1,
+                                routes: [
+                                  {
+                                    name: ReviewPageName,
+                                  },
+                                  {
+                                    name: WrittenReviewPageName,
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        });
                       },
-                      {
-                        name: WrittenReviewPageName,
-                      },
-                    ],
+                      style: 'cancel',
+                    },
+                  ]);
+                }
+              })
+              .catch(error => {
+                console.log('삭제 에러뜸');
+                console.log(error);
+
+                Alert.alert('작성 실패', '', [
+                  {
+                    text: '확인',
+                    onPress: () => {},
+                    style: 'cancel',
                   },
-                },
-              ],
-            });
+                ]);
+              });
 
             return;
           },

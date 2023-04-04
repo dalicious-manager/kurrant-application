@@ -82,22 +82,19 @@ const Component = ({
           </SmallRowWrap>
           <SmallColumnWrap>
             <DDayText calculateReviewDDay={calculateReviewDDay(reviewDDay)[1]}>
-              {/* {calculateReviewDDay(reviewDDay)[0]} */}
-              {reviewDDay}
+              {calculateReviewDDay(reviewDDay)[0]}
             </DDayText>
 
-            {reviewDDay > 0 && (
-              <ReviewFormWriteButton
-                onPress={() => {
-                  navigation.navigate(CreateReviewScreenName, {
-                    orderItemId: orderItemId,
-                    imageLocation: imageLocation,
-                    foodName,
-                  });
-                }}>
-                <TextText>리뷰작성</TextText>
-              </ReviewFormWriteButton>
-            )}
+            <ReviewFormWriteButton
+              onPress={() => {
+                navigation.navigate(CreateReviewScreenName, {
+                  orderItemId: orderItemId,
+                  imageLocation: imageLocation,
+                  foodName,
+                });
+              }}>
+              <TextText>리뷰작성</TextText>
+            </ReviewFormWriteButton>
           </SmallColumnWrap>
         </MetadataWrap>
       </CardContentBox>
