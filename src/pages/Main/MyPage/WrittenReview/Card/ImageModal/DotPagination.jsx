@@ -20,10 +20,13 @@ const DotPagination = ({index, totalLength, setIndex}) => {
     <Container>
       {thisArray.map((v, i) => {
         if (i === index) {
-          return <Dot color={'white'} onPress={() => handleDotPress(i)} />;
+          return (
+            <Dot key={i} color={'white'} onPress={() => handleDotPress(i)} />
+          );
         } else {
           return (
             <Dot
+              key={i}
               color={theme.colors.grey[3]}
               onPress={() => handleDotPress(i)}
             />

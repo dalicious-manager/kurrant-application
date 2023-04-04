@@ -52,6 +52,7 @@ const Component = ({
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
+  const [elaborateComment, setElaborateComment] = useState(false);
 
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
@@ -259,11 +260,18 @@ const Component = ({
         firstClickedImageIndex={firstClickedImageIndex}
       />
 
-      <ReviewWrap>
-        <ReviewText numberOfLines={3} ellipsizeMode="tail">
-          {reviewText}
-        </ReviewText>
-      </ReviewWrap>
+      <ReviewPressable
+        onPress={() => {
+          setElaborateComment(!elaborateComment);
+        }}>
+        {elaborateComment ? (
+          <ReviewText>{reviewText}</ReviewText>
+        ) : (
+          <ReviewText numberOfLines={3} ellipsizeMode="tail">
+            {reviewText}
+          </ReviewText>
+        )}
+      </ReviewPressable>
 
       {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}
 
@@ -272,7 +280,7 @@ const Component = ({
         commentList.map((v, i) => {
           if (v.writer === 'admin') {
             return (
-              <CommentWrap key={i}>
+              <CommentWrap key={`${JSON.stringify(v)}${i}`}>
                 <AdminOrMakersReview
                   // pngLink={v.pngLink}
                   writtenDate={v.createDate}
@@ -282,7 +290,7 @@ const Component = ({
             );
           } else {
             return (
-              <CommentWrap key={i}>
+              <CommentWrap key={`${JSON.stringify(v)}${i}`}>
                 <AdminOrMakersReview
                   makersName={v.writer}
                   // pngLink={v.pngLink}
@@ -379,7 +387,7 @@ const DefaultImage = styled.View`
   background-color: #d9d9d9;
 `;
 
-const ReviewWrap = styled.View``;
+const ReviewPressable = styled.Pressable``;
 
 const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[2]};
