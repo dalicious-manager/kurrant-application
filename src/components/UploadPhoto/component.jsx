@@ -49,7 +49,9 @@ const Component = ({photosArray, setPhotosArray}) => {
       formdata.append('file', res.assets[0].uri);
 
       const fileSize = res.assets[0].fileSize;
-      if (fileSize > 5000 * 1000) {
+      console.log('파일 사이즈');
+      console.log(fileSize);
+      if (fileSize > 4900 * 1000) {
         Alert.alert('용량초과', '사진은 5MB이하 크리고 업로드해주세요', [
           {
             text: '확인',

@@ -42,6 +42,7 @@ import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Revie
 import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
 import {redeemablePointsAtom} from '../../../../../biz/useReview/useReviewWait/store';
 import {useAtom} from 'jotai';
+import useReviewWait from '../../../../../biz/useReview/useReviewWait';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -58,7 +59,18 @@ const Pages = () => {
     readableAtom: {userRole},
   } = useAuth();
 
+  const {getReviewWait} = useReviewWait();
+
+  useEffect(() => {
+    getReviewWait();
+  }, []);
+
   const [redeemablePoints] = useAtom(redeemablePointsAtom);
+
+  useEffect(() => {
+    console.log('획득 가능한 포인트 확인');
+    console.log(redeemablePoints);
+  }, [redeemablePoints]);
 
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();

@@ -82,7 +82,8 @@ const Component = ({
           </SmallRowWrap>
           <SmallColumnWrap>
             <DDayText calculateReviewDDay={calculateReviewDDay(reviewDDay)[1]}>
-              {calculateReviewDDay(reviewDDay)[0]}
+              {/* {calculateReviewDDay(reviewDDay)[0]} */}
+              {reviewDDay}
             </DDayText>
 
             {reviewDDay > 0 && (

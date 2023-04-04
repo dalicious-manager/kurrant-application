@@ -233,13 +233,10 @@ const Component = ({
 
       {commentList &&
         commentList.length > 0 &&
-        commentList.map(v => {
-          console.log('랄랄라~~');
-          console.log(v);
-
+        commentList.map((v, i) => {
           if (v.writer === 'admin') {
             return (
-              <CommentWrap>
+              <CommentWrap key={i}>
                 <AdminOrMakersReview
                   // pngLink={v.pngLink}
                   writtenDate={v.createDate}
@@ -249,7 +246,7 @@ const Component = ({
             );
           } else {
             return (
-              <CommentWrap>
+              <CommentWrap key={i}>
                 <AdminOrMakersReview
                   makersName={v.writer}
                   // pngLink={v.pngLink}
