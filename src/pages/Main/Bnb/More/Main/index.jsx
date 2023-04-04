@@ -41,7 +41,10 @@ import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/Grou
 import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
 
 import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
-import {redeemablePointsAtom} from '../../../../../biz/useReview/useReviewWait/store';
+import {
+  redeemablePointsAtom,
+  totalReviewWaitListAtom,
+} from '../../../../../biz/useReview/useReviewWait/store';
 import {useAtom} from 'jotai';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait';
 
@@ -66,12 +69,19 @@ const Pages = () => {
     getReviewWait();
   }, []);
 
+  const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
+
   const [redeemablePoints] = useAtom(redeemablePointsAtom);
 
   useEffect(() => {
     console.log('획득 가능한 포인트 확인');
     console.log(redeemablePoints);
   }, [redeemablePoints]);
+
+  useEffect(() => {
+    console.log('토탈');
+    console.log(total);
+  }, [total]);
 
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
@@ -188,12 +198,12 @@ const Pages = () => {
               <InfomationText
                 text={'Title02SB'}
                 textColor={themeApp.colors.grey[5]}>
-                0
+                {total}
               </InfomationText>
               <InfomationLabel
                 text={'CaptionR'}
                 textColor={themeApp.colors.grey[5]}>
-                준비중
+                {total === 0 ? '준비중' : '구매후기'}
               </InfomationLabel>
             </InfomationBox>
             <InfomationBox>

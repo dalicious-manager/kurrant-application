@@ -282,7 +282,7 @@ const Component = ({
             return (
               <CommentWrap key={`${JSON.stringify(v)}${i}`}>
                 <AdminOrMakersReview
-                  // pngLink={v.pngLink}
+                  pngLink={v.pngLink}
                   writtenDate={v.createDate}
                   message={v.content}
                 />
@@ -293,7 +293,7 @@ const Component = ({
               <CommentWrap key={`${JSON.stringify(v)}${i}`}>
                 <AdminOrMakersReview
                   makersName={v.writer}
-                  // pngLink={v.pngLink}
+                  pngLink={v.pngLink}
                   writtenDate={v.createDate}
                   message={v.content}
                 />

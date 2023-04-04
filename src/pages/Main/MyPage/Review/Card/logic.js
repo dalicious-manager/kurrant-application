@@ -16,6 +16,9 @@ export const calculateReviewDDay = reviewDDay => {
 
   const myRegex = /\:/g;
 
+  console.log('리뷰디데이');
+  console.log(reviewDDay);
+
   if (!!reviewDDay.match(myRegex)) {
     // 하루남음
 
@@ -29,7 +32,7 @@ export const calculateReviewDDay = reviewDDay => {
     }
   } else {
     // 하루 이상 남음
-    if (parseInt(reviewDDay > 3)) {
+    if (parseInt(reviewDDay) > 3) {
       return [`${reviewDDay}일 남음`, 'grey'];
     } else {
       return [`${reviewDDay}일 남음`, 'red'];

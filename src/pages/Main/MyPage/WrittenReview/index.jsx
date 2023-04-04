@@ -99,5 +99,8 @@ const Container = styled.View`
   width: 100%;
   height: 100%;
   padding: 24px 25px;
+  padding-top: 0px;
   background-color: #ffffff;
 `;
+
+///////////////

@@ -14,7 +14,7 @@ const NoOrderText = styled(Typography).attrs({text: 'Body05R'})`
 
   ${({isArrayEmpty}) => {
     if (isArrayEmpty) {
-      return `margin-top: 80%`;
+      return `margin-top: 90%`;
     }
   }}
 

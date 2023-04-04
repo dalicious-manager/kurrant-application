@@ -12,9 +12,6 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import Popup from './Popup';
 import useReviewWait from '../../../../biz/useReview/useReviewWait';
 
-import {totalReviewWaitListAtom} from '../../../../biz/useReview/useReviewWait/store';
-import {useAtom} from 'jotai';
-
 import Banner from './Banner';
 
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
@@ -26,11 +23,6 @@ const Pages = () => {
   useEffect(() => {
     getReviewWait();
   }, []);
-  const [, setTotalReviewWaitList] = useAtom(totalReviewWaitListAtom);
-
-  useEffect(() => {
-    setTotalReviewWaitList(reviewWaitCount);
-  }, [reviewWaitCount, setTotalReviewWaitList]);
 
   const [popupShow, setPopupShow] = useState(false);
 
@@ -43,7 +35,6 @@ const Pages = () => {
       <View
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
-        {/* 회색박스 포토후기, 텍스트후기  */}
         {!!reviewWaitList && reviewWaitList.length > 0 && (
           <PlaneGreyBox>
             <SmallWrap>
@@ -75,8 +66,6 @@ const Pages = () => {
             </SmallWrap>
           </PlaneGreyBox>
         )}
-
-        {/* 카드를 map한다 */}
 
         {popupShow && <Popup setPopupShow={setPopupShow} />}
 
@@ -177,5 +166,3 @@ const Typography2 = styled(Typography).attrs({text: 'CaptionR'})`
   margin-right: 4px;
   color: ${({theme}) => theme.colors.grey[4]};
 `;
-
-// 리뷰작성 카드 맵하기
