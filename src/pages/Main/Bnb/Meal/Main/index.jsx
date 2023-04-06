@@ -36,9 +36,10 @@ const Pages = ({route}) => {
   // console.log(data);
   const {dailyFood, isServiceDays} = useFoodDaily();
   const {isUserInfo, userInfo} = useUserInfo();
+
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
-  const {isOrderMeal, refundItem, setOrderMeal} = useOrderMeal();
+  const {isOrderMeal, orderMeal, refundItem, setOrderMeal} = useOrderMeal();
   const pagerRef = useRef();
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
@@ -134,6 +135,7 @@ const Pages = ({route}) => {
     async function loadUser() {
       try {
         const userData = await userInfo();
+        await orderMeal();
         await dailyFood(userData?.spotId, formattedWeekDate(new Date()));
       } catch (err) {
         console.log(err);
