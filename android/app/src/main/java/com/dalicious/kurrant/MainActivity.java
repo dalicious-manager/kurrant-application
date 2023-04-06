@@ -11,9 +11,9 @@ import com.dooboolab.naverlogin.RNNaverLoginModule;
 public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    SplashScreen.show(this);
     super.onCreate(null);
     RNNaverLoginModule.initialize(this);
+    SplashScreen.show(this);
   }
 
   /**
