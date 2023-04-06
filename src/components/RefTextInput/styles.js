@@ -12,7 +12,7 @@ export const weightStyles = {
   `,
   N: css`
     font-weight: 600;
-  `
+  `,
 };
 
 export const optionStyles = {
@@ -80,12 +80,12 @@ export const textStyles = {
     font-size: 22px;
     line-height: 30px;
     font-family: 'Pretendard-Regular';
-`,
+  `,
   Title02RB: css`
     font-size: 22px;
     line-height: 30px;
     font-family: 'Pretendard-SemiBold';
-`,
+  `,
   Title03R: css`
     font-size: 20px;
     line-height: 28px;
@@ -130,13 +130,13 @@ export const textStyles = {
     font-size: 13px;
     line-height: 19px;
     font-family: 'Pretendard-Regular';
-    letter-spacing:-0.3px;
-    `,
+    letter-spacing: -0.3px;
+  `,
   CaptionSB: css`
     font-size: 13px;
     line-height: 19px;
     font-family: 'Pretendard-SemiBold';
-    letter-spacing:-0.3px;
+    letter-spacing: -0.3px;
   `,
   BottomButtonR: css`
     font-size: 17px;
@@ -177,7 +177,7 @@ export const textStyles = {
     font-size: 12px;
     line-height: 14px;
     font-family: 'Pretendard-Regular';
-    letter-spacing:-0.5px;
+    letter-spacing: -0.5px;
   `,
   InputText: css`
     font-size: 20px;
@@ -189,6 +189,4 @@ export const textStyles = {
     line-height: 12px;
     font-family: 'Pretendard-Regular';
   `,
-  
-
 };

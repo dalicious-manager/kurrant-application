@@ -17,17 +17,19 @@ export function formattedMealFoodStatus(data) {
     case 6:
       return '배송대기';
     case 7:
-      return '주문취소';
+      return '취소';
     case 8:
-      return '배송중';
+      return '취소대기';
     case 9:
-      return '배송완료';
+      return '배송중';
     case 10:
-      return '수령완료';
+      return '배송완료';
     case 11:
-      return '환불';
+      return '수령완료';
     case 12:
-      return '환불';
+      return '수동 환불';
+    case 13:
+      return '자동 환불';
     default:
       break;
   }

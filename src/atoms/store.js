@@ -1,6 +1,6 @@
-import { atomWithReset } from 'jotai/utils';
+import {atomWithReset} from 'jotai/utils';
 
-import { PAGE_NAME as LoginPageName } from '../pages/Main/Login/Login';
-
+import {PAGE_NAME as LoginPageName} from '../pages/Main/Login/Login';
 
 export const pageNameAtom = atomWithReset(LoginPageName);
+export const registCardAtom = atomWithReset(0);

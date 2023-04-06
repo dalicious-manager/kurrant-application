@@ -70,6 +70,7 @@ import useUserMe from '../../../../../biz/useUserMe';
 import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
 import {PurchaseDetailPageName} from '../../../../../pages/Main/MyPage/PurchaseHistory/Detail';
 import {PAGE_NAME as DefaultPaymentManagePageName} from '../DefaultPaymentManage';
+import {PAGE_NAME as PayCheckPasswordPayPageName} from '../../../MyPage/PersonalInfo/pages/PayCheckPasswordPay';
 import {PAGE_NAME as MealPaymentPageName} from '../MealPayment';
 import {
   cardListData,
@@ -387,38 +388,30 @@ const Pages = ({route}) => {
       const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
       loadMeal();
       if (totalPrice - Number(points) > 0) {
-        const result = await orderNice({
+        const orderData = {
           cardId: selectDefaultCard[0]?.id,
           orderName: orderName,
           amount: totalPrice - Number(points),
           orderId: orderId,
           orderItems: data,
+        };
+        navigation.navigate(PayCheckPasswordPayPageName, {
+          orderData: JSON.stringify(orderData),
         });
-
-        if (result?.data) {
-          const resetAction = StackActions.popToTop();
-          navigation.dispatch(resetAction);
-          navigation.navigate(PurchaseDetailPageName, {
-            id: result?.data,
-          });
-        }
       } else if (
         medtronicSupportArr.includes(62471004) &&
         medtronicTotalPrice - Number(points) > 0
       ) {
-        const result = await orderNice({
+        const orderData = {
           cardId: selectDefaultCard[0]?.id,
+          orderName: orderName,
           amount: medtronicTotalPrice - Number(points),
           orderId: orderId,
           orderItems: data,
+        };
+        navigation.navigate(PayCheckPasswordPayPageName, {
+          orderData: JSON.stringify(orderData),
         });
-        if (result?.data) {
-          const resetAction = StackActions.popToTop();
-          navigation.dispatch(resetAction);
-          navigation.navigate(PurchaseDetailPageName, {
-            id: result?.data,
-          });
-        }
       } else {
         const result = await order({
           amount: totalPrice - Number(points),
@@ -592,7 +585,7 @@ const Pages = ({route}) => {
               원
             </PaymentText>
           </PaymentView>
-          {/* <DiscountView>
+          <DiscountView>
             <Bar />
             <DiscountTextWrap>
               <DiscountTextView>
@@ -623,7 +616,7 @@ const Pages = ({route}) => {
                 </DiscountText>
               </DiscountTextView>
             </DiscountTextWrap>
-          </DiscountView> */}
+          </DiscountView>
           <PaymentView>
             <PaymentText>배송비</PaymentText>
             <PaymentText>

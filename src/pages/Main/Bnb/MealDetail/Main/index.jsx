@@ -53,6 +53,7 @@ const Pages = ({route}) => {
   const {isUserInfo} = useUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
+
   const isFocused = useIsFocused();
 
   const closeModal = () => {
@@ -266,6 +267,11 @@ const Pages = ({route}) => {
   if (isFoodDetailLoading) {
     return <Skeleton />;
   }
+
+  useEffect(() => {
+    console.log('푸드 디테일 이미지리스트');
+    console.log(isFoodDetail?.imageList);
+  }, [isFoodDetail]);
 
   return (
     <>

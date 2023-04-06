@@ -15,7 +15,7 @@ import RefTextInput from '~components/RefTextInput';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import useKeyboardEvent from '~hook/useKeyboardEvent';
-
+import {PAGE_NAME as PayCheckPasswordPageName} from '../../PayCheckPassword';
 import {PAGE_NAME as PaymentManagePage} from '..';
 import useUserMe from '../../../../../../../biz/useUserMe';
 import {isValidCardNumber} from '../../../../../../../utils/cardFormatter';
@@ -30,26 +30,23 @@ const Pages = ({route}) => {
   const keyboardEvent = useKeyboardEvent();
 
   const [modalVisible, setModalVisible] = useState(false);
-
   const {StatusBarManager} = NativeModules;
   const {
     cardRegisted,
     cardRegistedNice,
+    payCheckPassword,
     readableAtom: {cardList},
   } = useUserMe();
   const card = form.watch('cardNumber');
+  const {
+    formState: {errors},
+    handleSubmit,
+    watch,
+  } = form;
   const navigation = useNavigation();
   const onSubmit = async data => {
+    const paycheck = await payCheckPassword();
     const exp = data.cardExpDate.split('/');
-    const req = {
-      cardNumber: data.cardNumber.replace(/\W/gi, ''),
-      expirationYear: exp[1],
-      expirationMonth: exp[0],
-      cardPassword: data.cardPass,
-      identityNumber: data.cardBirthDay,
-      cardVaildationCode: data.cardSecret,
-      defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
-    };
     const reqNice = {
       cardNumber: data.cardNumber.replace(/\W/gi, ''),
       expirationYear: exp[1],
@@ -58,16 +55,37 @@ const Pages = ({route}) => {
       identityNumber: data.cardBirthDay.substring(2),
       defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
     };
-    // const result = await cardRegisted(req);
-    try {
-      const resultNice = await cardRegistedNice(reqNice);
-      console.log(resultNice);
-      // navigation.navigate(PaymentManagePage)
-      navigation.goBack();
-    } catch (error) {
-      alert(error.toString().replace('error:', ''));
-    }
+    navigation.navigate(PayCheckPasswordPageName, {
+      isFirst: !paycheck.data,
+      cardData: JSON.stringify(reqNice),
+    });
+    //
+    // const req = {
+    //   cardNumber: data.cardNumber.replace(/\W/gi, ''),
+    //   expirationYear: exp[1],
+    //   expirationMonth: exp[0],
+    //   cardPassword: data.cardPass,
+    //   identityNumber: data.cardBirthDay,
+    //   cardVaildationCode: data.cardSecret,
+    //   defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
+    // };
+
+    // // const result = await cardRegisted(req);
+    // try {
+    //   const resultNice = await cardRegistedNice(reqNice);
+    //   console.log(resultNice);
+    //   // navigation.navigate(PaymentManagePage)
+    //   navigation.goBack();
+    // } catch (error) {
+    //   alert(error.toString().replace('error:', ''));
+    // }
   };
+  const isValidate =
+    watch('cardNumber') &&
+    watch('cardExpDate') &&
+    watch('cardSecret') &&
+    watch('cardPass') &&
+    watch('cardBirthDay');
   useFocusEffect(
     useCallback(() => {
       navigation.setOptions({
@@ -217,8 +235,9 @@ const Pages = ({route}) => {
         {!keyboardEvent.isKeyboardActivate && (
           <ButtonBox isKeyboard={keyboardEvent.isKeyboardActivate}>
             <Button
+              disabled={!isValidate}
               label="등록하기"
-              onPressEvent={form.handleSubmit(onSubmit)}
+              onPressEvent={handleSubmit(onSubmit)}
             />
           </ButtonBox>
         )}
@@ -246,6 +265,4 @@ const ButtonBox = styled.View`
   margin-bottom: ${({isKeyboard}) => (isKeyboard ? '100px' : '24px')};
   background-color: ${({isKeyboard}) =>
     isKeyboard ? 'rgba(0,0,0,1)' : 'white'};
-  padding-left: 24px;
-  padding-right: 24px;
 `;
