@@ -51,6 +51,7 @@ import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Compo
 import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
 import useMembership from '../../../../../biz/useMembership';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
+import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -103,7 +104,6 @@ const Pages = () => {
   // const {getAnnouncements, announcements, announcementModalVisible} =
   //   useGetAnnouncements();
 
-
   // useEffect(() => {
   //   // 공지사항 이용하기
   //   // 0: 비활성 공지 보기
@@ -137,6 +137,19 @@ const Pages = () => {
   // useEffect(() => {
   //   removeItemFromStorage('announcementsClickedDates');
   // }, []);
+
+  // 홈 공지사항 하나만 넣기
+
+  const {oneAnnouncement, getOneAnnouncement} = useGetOneAnnouncements();
+
+  useEffect(() => {
+    getOneAnnouncement(2);
+  }, []);
+
+  useEffect(() => {
+    console.log('아나운스먼트 여기여');
+    console.log(oneAnnouncement);
+  }, [oneAnnouncement]);
 
   useEffect(() => {
     const handleShowModal = async () => {

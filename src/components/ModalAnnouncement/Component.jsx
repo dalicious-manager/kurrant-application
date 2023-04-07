@@ -40,7 +40,7 @@ const Component = ({
     // 있을떄
 
     // 아예 없을때
-    console.log('랄랄라2');
+    // console.log('랄랄라2');
     // console.log(modalVisible);
 
     const modalStatus = {...modalVisible};
@@ -54,7 +54,7 @@ const Component = ({
 
     // console.log(`close ${data.id}`);
 
-    console.log(modalStatus);
+    // console.log(modalStatus);
     // {"3": 1680072040934, "4": undefined}
 
     await setStorage('announcementsClickedDates', JSON.stringify(modalStatus));
@@ -63,7 +63,7 @@ const Component = ({
 
     const yes2 = {...announcementHandle};
     yes2[data.id.toString()] = false;
-    console.log(yes2);
+    // console.log(yes2);
 
     setAnnouncementHandle(yes2);
 
