@@ -4,9 +4,14 @@ import {getStorage} from '../../utils/asyncStorage';
 import {isTimeDifferenceLarger} from '../../utils/dateFormatter';
 import * as Fetch from './Fetch';
 import {OneAnnouncementsAtom} from './store';
+import {toStringByFormatting} from './logic';
 
 const useGetOneAnnouncements = () => {
   const [oneAnnouncement, setOneAnnouncement] = useAtom(OneAnnouncementsAtom);
+
+  // 모달 보이게하기 state
+  const [isOneAnnouncementModalVisible, setIsOneAnnouncementModalVisible] =
+    useState(false);
 
   const getOneAnnouncement = async (id, spotId) => {
     try {
@@ -24,10 +29,54 @@ const useGetOneAnnouncements = () => {
         },
       ];
 
-      const dataFromDb = res.data;
+      // 데이터가 없거나 이상하면 아예 함수종료하기
+      if (!Array.isArray(res.data) || res.data.length <= 0) {
+        console.log('공지사항 없어요 모달 끕니다');
+        return;
+      }
+
+      const dataFromDb =
+        Array.isArray(res.data) && res.data.length > 0 && res.data;
 
       // oneAnnouncements에 하나만 넣기
-      setOneAnnouncement(dataFromDb[0]);
+
+      // 7일이 넘지 않았으면 넣어주고 넘었으면 넣어주지 말기
+
+      const timeObject = JSON.parse(
+        await getStorage('announcementsClickedOneDate'),
+      );
+
+      if (!!timeObject) {
+        if (
+          isTimeDifferenceLarger(
+            new Date(Object.values(timeObject)[0]),
+            new Date(Date.now()),
+            7,
+          )
+        ) {
+          // 데이터 새로 넣으면 됨
+
+          setOneAnnouncement(dataFromDb[0]);
+          setIsOneAnnouncementModalVisible(true);
+          console.log('7일이 지났음');
+        } else {
+          // undefine d넣어주면 됨
+
+          setOneAnnouncement(undefined);
+          setIsOneAnnouncementModalVisible(false);
+
+          console.log(`7일이 아직 안 지났음 `);
+          console.log(
+            toStringByFormatting(new Date(timeObject[dataFromDb[0].id])),
+          );
+        }
+      } else {
+        setOneAnnouncement(dataFromDb[0]);
+        setIsOneAnnouncementModalVisible(true);
+        console.log(
+          '로컬스토리지에 클릭한 기록이 없어서 받은데이터 그대로 넣어줌',
+        );
+      }
 
       //
     } catch (err) {
@@ -38,6 +87,8 @@ const useGetOneAnnouncements = () => {
   return {
     getOneAnnouncement,
     oneAnnouncement,
+    isOneAnnouncementModalVisible,
+    setIsOneAnnouncementModalVisible,
   };
 };
 
