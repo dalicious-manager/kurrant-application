@@ -24,6 +24,7 @@ const useOrderMeal = () => {
     try {
       const res = await Fetch.OrderMeal(startdate, enddate);
       setOrderMeal(res.data);
+      console.log(res.data, '123231');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
