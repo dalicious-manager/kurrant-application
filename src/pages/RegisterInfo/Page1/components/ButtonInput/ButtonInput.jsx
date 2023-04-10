@@ -21,6 +21,7 @@ const ButtonInput = ({title, dataList, callback}) => {
         {dataList.map(v => {
           return (
             <SelectButton
+              key={v.id}
               selectedId={selectedId}
               setSelectedId={setSelectedId}
               data={v}
