@@ -104,6 +104,9 @@ import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import PayCheckPassword, {
   PAGE_NAME as PayCheckPasswordPageName,
 } from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
+import PayEmailSetting, {
+  PAGE_NAME as PayEmailSettingPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayEmailSetting';
 import PayCheckPasswordPay, {
   PAGE_NAME as PayCheckPasswordPayPageName,
 } from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordPay';
@@ -490,6 +493,24 @@ const Screen = () => {
           options={{
             headerShown: true,
             title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayEmailSettingPageName}
+          component={PayEmailSetting}
+          options={{
+            headerShown: true,
+            title: '이메일/비밀번호 설정',
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitleStyle: {

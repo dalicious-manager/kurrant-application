@@ -59,10 +59,13 @@ export default function Password({route}) {
     } else {
       try {
         setRegistLoading(true);
-        await cardRegistedNice({
-          ...JSON.parse(params?.cardData),
-          payNumber: state,
-        });
+        await cardRegistedNice(
+          {
+            ...JSON.parse(params?.cardData),
+            payNumber: state,
+          },
+          1,
+        );
         // const resetAction = StackActions.pop(3);
         // navigation.dispatch(resetAction);
         if (isCard === 1) {

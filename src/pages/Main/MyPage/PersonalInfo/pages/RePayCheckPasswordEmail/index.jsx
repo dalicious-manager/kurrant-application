@@ -103,17 +103,17 @@ export default function PasswordCheck({route}) {
       }}
       keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
       behavior={Platform.OS === 'ios' && 'padding'}>
-      <StyledPassword>
-        <Description text={'Title04SB'} textColor={themeApp.colors.grey[2]}>
-          결제 비밀번호를 재설정하기 위해선{'\n'}
-          이메일 인증이 필요합니다.
-        </Description>
-        <DescriptionCaption
+      <FormProvider {...form}>
+        <StyledPassword>
+          <Description text={'Title04SB'} textColor={themeApp.colors.grey[2]}>
+            결제 비밀번호 재설정을 위해{'\n'}아래 이메일로 인증번호를
+            보내드려요.
+          </Description>
+          {/* <DescriptionCaption
           text={'CaptionR'}
           textColor={themeApp.colors.grey[4]}>
           아래의 이메일로 인증번호를 보내드려요.
-        </DescriptionCaption>
-        <FormProvider {...form}>
+        </DescriptionCaption> */}
           <RefTextInput
             name="name"
             label="이름"
@@ -194,18 +194,19 @@ export default function PasswordCheck({route}) {
           <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
             이메일로 발송된 6자리 인증번호를 입력해 주세요.
           </Typography>
-        </FormProvider>
-        {!keyboardStatuss.isKeyboardActivate && (
-          <ButtonContainer>
-            <Button
-              type="yellow"
-              label={'이메일 인증'}
-              disabled={!isValidation}
-              onPressEvent={onSubmit}
-            />
-          </ButtonContainer>
-        )}
-      </StyledPassword>
+
+          {!keyboardStatuss.isKeyboardActivate && (
+            <ButtonContainer>
+              <Button
+                type="yellow"
+                label={'이메일 인증'}
+                disabled={!isValidation}
+                onPressEvent={onSubmit}
+              />
+            </ButtonContainer>
+          )}
+        </StyledPassword>
+      </FormProvider>
       <KeyboardButton
         isKeyboardActivate={keyboardStatuss.isKeyboardActivate}
         label={'이메일 인증'}
