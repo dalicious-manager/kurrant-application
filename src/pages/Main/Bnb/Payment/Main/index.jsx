@@ -373,7 +373,7 @@ const Pages = ({route}) => {
       deliveryFee: deliveryFee,
       userPoint: watch('point'),
     };
-    console.log(data, '백다방');
+
     try {
       // const res = await orderMeal(spotId,data);
       // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");

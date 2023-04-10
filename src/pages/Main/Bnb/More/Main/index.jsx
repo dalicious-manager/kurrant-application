@@ -264,7 +264,7 @@ const Pages = () => {
               params={{isFounders: isUserInfo?.leftFoundersNumber > 0}}
             />
 
-            {/* <ListBox title="커런트 포인트" routeName={PointMainPageName} /> */}
+            <ListBox title="커런트 포인트" routeName={PointMainPageName} />
             {isApplicationList.length !== 0 && (
               <ListBox
                 title="스팟 개설 요청 내역"

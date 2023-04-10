@@ -17,7 +17,10 @@ import WrittenReview, {
 
 const Tab = createMaterialTopTabNavigator();
 
-const Screen = () => {
+const Screen = ({route}) => {
+  const point = route?.params?.from;
+  const pointId = route?.params?.id;
+
   const theme = useTheme();
   const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
 
@@ -25,6 +28,7 @@ const Screen = () => {
 
   return (
     <Tab.Navigator
+      initialRouteName={point === 'point' && WrittenReviewPageName}
       screenOptions={{
         tabBarIndicatorStyle: {
           backgroundColor: theme.colors.grey[1],
@@ -48,6 +52,7 @@ const Screen = () => {
       />
 
       <Tab.Screen
+        initialParams={{id: pointId}}
         name={WrittenReviewPageName}
         component={WrittenReview}
         options={{

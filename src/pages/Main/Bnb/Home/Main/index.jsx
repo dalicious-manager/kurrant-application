@@ -103,7 +103,6 @@ const Pages = () => {
   // const {getAnnouncements, announcements, announcementModalVisible} =
   //   useGetAnnouncements();
 
-
   // useEffect(() => {
   //   // 공지사항 이용하기
   //   // 0: 비활성 공지 보기
@@ -187,9 +186,9 @@ const Pages = () => {
           const userData = await userInfo();
           if (userData?.email) {
             console.log(userData, 'test');
-            if (userSpotId) {
+            if (userData?.spotId) {
               const daily = await dailyFood(
-                userSpotId,
+                userData?.spotId,
                 formattedWeekDate(new Date()),
               );
               if (daily) {

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, Text, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, FlatList, Text, View} from 'react-native';
 import styled from 'styled-components';
 import {DefaultProfile} from '../../../../assets';
 import Card from './Card';
@@ -19,10 +19,16 @@ const sampleAdminReview = {
     '다음에는 더 맛있는 메뉴를준비해보겠습니다. 이용해주셔서 다시한번 감사드리고 새해에는 더더더더더복 많이 받으세요 사랑합니다.',
 };
 
-const Pages = () => {
+const Pages = ({route}) => {
+  const pointId = route?.params?.id;
+  const flatListRef = useRef(null);
+
   const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
 
   const [, setTotalWrittenReviewList] = useAtom(totalWrittenReview);
+
+  // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
+  const idx = reviewList?.findIndex(el => el.reviewId === pointId);
 
   useEffect(() => {
     getWrittenReview();
@@ -38,6 +44,17 @@ const Pages = () => {
       showsHorizontalScrollIndicator={false}>
       {!!reviewList && reviewList.length > 0 ? (
         <FlatList
+          ref={flatListRef}
+          initialScrollIndex={idx}
+          onScrollToIndexFailed={info => {
+            const wait = new Promise(resolve => setTimeout(resolve, 500));
+            wait.then(() => {
+              flatListRef.current?.scrollToIndex({
+                index: info.index,
+                animated: true,
+              });
+            });
+          }}
           data={reviewList}
           scrollEnabled={true}
           renderItem={({item}) => {

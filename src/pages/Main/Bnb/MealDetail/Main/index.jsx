@@ -36,6 +36,7 @@ import CarouselImage from '../components/CarouselImage';
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
 const Pages = ({route}) => {
+  console.log(route.params, 'iii');
   const bodyRef = useRef();
   const navigation = useNavigation();
   const {balloonEvent, BalloonWrap} = Balloon();
@@ -267,11 +268,6 @@ const Pages = ({route}) => {
   if (isFoodDetailLoading) {
     return <Skeleton />;
   }
-
-  useEffect(() => {
-    console.log('푸드 디테일 이미지리스트');
-    console.log(isFoodDetail?.imageList);
-  }, [isFoodDetail]);
 
   return (
     <>
