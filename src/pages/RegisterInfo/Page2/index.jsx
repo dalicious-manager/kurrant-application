@@ -11,7 +11,7 @@ import {PAGE_NAME as RegisterInfoPage3PageName} from '../Page3';
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import Typography from '~components/Typography';
-import ButtonContainer from './components/ButtonContainer';
+import ButtonContainer from '../components/button/ButtonContainer';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE2';
 
@@ -77,6 +77,7 @@ const Pages = () => {
             {id: 10, name: '인도네아'},
           ]}
           callback={handleButtonClicked}
+          selectLimit={4}
         />
       </ScrollViewContainer>
 

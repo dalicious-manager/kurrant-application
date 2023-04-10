@@ -1,18 +1,27 @@
 import styled from 'styled-components';
 import Typography from '~components/Typography';
 
-const SelectButton = ({data, setSelectedIdList, selectedIdList}) => {
+const SelectButton = ({
+  data,
+  setSelectedIdList,
+  selectedIdList,
+  selectLimit = undefined,
+}) => {
   // data에 id, name, 들어있다
-  [].map;
+
   return (
     <Container
       onPress={() => {
-        if (selectedIdList.includes(data.id)) {
-          setSelectedIdList([...selectedIdList].filter(v => v !== data.id));
-        } else {
-          // 4개 이상일 경우
-          if (selectedIdList.length >= 4) return;
+        if (selectLimit) {
+          if (selectedIdList.includes(data.id)) {
+            setSelectedIdList([...selectedIdList].filter(v => v !== data.id));
+          } else {
+            // 4개 이상일 경우
+            if (selectedIdList.length >= selectLimit) return;
 
+            setSelectedIdList([...selectedIdList, data.id]);
+          }
+        } else {
           setSelectedIdList([...selectedIdList, data.id]);
         }
       }}
