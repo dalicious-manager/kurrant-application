@@ -571,7 +571,7 @@ PODS:
   - RNGoogleSignin (9.0.2):
     - GoogleSignIn (~> 6.2)
     - React-Core
-  - RNNaverLogin (3.0.0-rc.2):
+  - RNNaverLogin (2.3.1):
     - naveridlogin-sdk-ios (~> 4.1.5)
     - React
   - RNReanimated (2.15.0):
@@ -961,7 +961,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 04ecf12bae7543cd8df145f1b26d89d867594be7
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
-  RNNaverLogin: 01ca478665ea024e4ddaa02be38396845fcac0b6
+  RNNaverLogin: 55f822601e31a7c7feeaf167497029c0162115e6
   RNReanimated: 716842722e1c5b0b7c56cf718e586b7f6a712879
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
