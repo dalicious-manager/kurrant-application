@@ -25,18 +25,20 @@ import Config from 'react-native-config';
 import {NaverLogin} from '@react-native-seoul/naver-login';
 
 const nonce = uuid();
-
+const consumerKey = Config.NAVER_COSTOMER_KEY;
+const consumerSecret = Config.NAVER_SECRET_KEY;
+const appName = 'kurrant';
+const serviceUrlScheme = 'kurrant-naver';
 const naverData = () => {
   const data = {
     kConsumerKey: Config.NAVER_COSTOMER_KEY,
     kConsumerSecret: Config.NAVER_SECRET_KEY,
     kServiceAppName: 'kurrant',
-    kServiceAppUrlScheme: 'kurrant-naver',
   };
   if (Platform.OS === 'ios') {
     return {
       ...data,
-      serviceUrlScheme: 'kurrant-naver',
+      kServiceAppUrlScheme: 'kurrant-naver',
     };
   }
   return data;
@@ -46,29 +48,31 @@ export default () => {
   const navigation = useNavigation();
   const naverLogin = async () => {
     console.log('로그인');
-    const data = NaverLogin.login(naverData());
-    console.log(data);
-    // if (successResponse) {
-    //   console.log(successResponse);
-    //   // Clipboard.setString(successResponse.accessToken)
-    //   // const data = await NaverLogin.getProfile(successResponse.accessToken);
-    //   // console.log(data);
-    //   await snsLogin(
-    //     {
-    //       snsAccessToken: successResponse.accessToken,
-    //       autoLogin: true,
-    //     },
-    //     'NAVER',
-    //   );
-    //   navigation.reset({
-    //     index: 0,
-    //     routes: [
-    //       {
-    //         name: SCREEN_NAME,
-    //       },
-    //     ],
-    //   });
-    // }
+    const data = NaverLogin.login(
+      {
+        kConsumerKey: consumerKey,
+        kConsumerSecret: consumerSecret,
+        kServiceAppName: appName,
+        kServiceAppUrlScheme: serviceUrlScheme,
+      },
+      async (v, data) => {
+        await snsLogin(
+          {
+            snsAccessToken: data.accessToken,
+            autoLogin: true,
+          },
+          'NAVER',
+        );
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SCREEN_NAME,
+            },
+          ],
+        });
+      },
+    );
   };
 
   const googleLogin = async () => {
