@@ -2114,7 +2114,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <ReviewCloseIcon />,
           }}
         />
         <MainRoot.Screen
@@ -2130,7 +2130,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2146,7 +2146,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2162,7 +2162,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2178,7 +2178,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2194,7 +2194,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2210,7 +2210,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2226,7 +2226,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2242,7 +2242,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
       </MainRoot.Group>
