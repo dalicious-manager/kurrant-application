@@ -301,6 +301,35 @@ import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
 import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
 } from './Review/ReportReview';
+// 회원정보입력
+import RegisterInfoStart, {
+  PAGE_NAME as RegisterInfoStartPageName,
+} from '../../pages/RegisterInfo/Start';
+import RegisterInfoPage1, {
+  PAGE_NAME as RegisterInfoPage1PageName,
+} from '../../pages/RegisterInfo/Page1';
+import RegisterInfoPage2, {
+  PAGE_NAME as RegisterInfoPage2PageName,
+} from '../../pages/RegisterInfo/Page2';
+import RegisterInfoPage3, {
+  PAGE_NAME as RegisterInfoPage3PageName,
+} from '../../pages/RegisterInfo/Page3';
+import RegisterInfoPage4, {
+  PAGE_NAME as RegisterInfoPage4PageName,
+} from '../../pages/RegisterInfo/Page4';
+
+import RegisterInfoPage5, {
+  PAGE_NAME as RegisterInfoPage5PageName,
+} from '../../pages/RegisterInfo/Page5';
+import RegisterInfoPage6, {
+  PAGE_NAME as RegisterInfoPage6PageName,
+} from '../../pages/RegisterInfo/Page6';
+import RegisterInfoPage7, {
+  PAGE_NAME as RegisterInfoPage7PageName,
+} from '../../pages/RegisterInfo/Page7';
+import RegisterInfoFinish, {
+  PAGE_NAME as RegisterInfoFinishPageName,
+} from '../../pages/RegisterInfo/Finish';
 
 import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
@@ -2065,6 +2094,155 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             headerLeft: () => <ReviewCloseIcon />,
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 회원정보입력 */}
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={RegisterInfoStartPageName}
+          component={RegisterInfoStart}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage1PageName}
+          component={RegisterInfoPage1}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage2PageName}
+          component={RegisterInfoPage2}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage3PageName}
+          component={RegisterInfoPage3}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage4PageName}
+          component={RegisterInfoPage4}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage5PageName}
+          component={RegisterInfoPage5}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage6PageName}
+          component={RegisterInfoPage6}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage7PageName}
+          component={RegisterInfoPage7}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoFinishPageName}
+          component={RegisterInfoFinish}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
           }}
         />
       </MainRoot.Group>
