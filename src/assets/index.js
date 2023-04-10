@@ -35,3 +35,5 @@ export const FoundersNewMembers = require('../assets/images/newMembers.png');
 export const Members = require('../assets/images/members.png');
 export const NewMembers = require('../assets/images/newMembers.png');
 export const AIbackground = require('../assets/images/background.png');
+
+export const DefaultProfile = require('../assets/images/DefaultProfile.png');

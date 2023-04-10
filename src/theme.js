@@ -1,6 +1,6 @@
 // Grey
 export const grey = {
-  0: '#FFFFFF',  // white
+  0: '#FFFFFF', // white
   8: '#F5F5F5', // grey 8
   7: '#E4E3E7', // grey 7
   6: '#D5D4D9', // grey 6
@@ -8,8 +8,7 @@ export const grey = {
   4: '#88888E', // grey 4
   3: '#5F5E62', // grey 3
   2: '#343337', // grey 2
-  1: '#1D1C21'  // grey 1
-
+  1: '#1D1C21', // grey 1
 };
 
 export const neutral = {
@@ -27,13 +26,13 @@ export const neutral = {
 // Blue
 export const blue = {
   100: '#EFF2FE',
-  500: '#3478F6'
+  500: '#3478F6',
 };
 
 // Red
 export const red = {
   100: '#FFEAEA',
-  500: '#DD5257'
+  500: '#DD5257',
 };
 
 // Yellow
@@ -52,7 +51,7 @@ export const green = {
 export const purple = {
   100: '#F5F2FF',
   500: '#5A1EFF',
-  600: '#000046'
+  600: '#000046',
 };
 
 export const etc = {

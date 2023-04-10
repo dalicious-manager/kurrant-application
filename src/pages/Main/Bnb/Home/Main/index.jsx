@@ -187,7 +187,7 @@ const Pages = () => {
           if (userData?.email) {
             if (userData?.spotId) {
               const daily = await dailyFood(
-                userSpotId,
+                userData?.spotId,
                 formattedWeekDate(new Date()),
               );
               if (!(userRole === 'ROLE_GUEST')) {

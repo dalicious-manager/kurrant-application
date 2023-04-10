@@ -12,7 +12,7 @@ const Button = ({touch, setTouch}) => {
     }
     setTouch([idx]);
   };
-  console.log(touch);
+
   return (
     <Wrap>
       {title.map((el, idx) => {

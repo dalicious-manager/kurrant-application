@@ -36,6 +36,7 @@ import CarouselImage from '../components/CarouselImage';
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
 const Pages = ({route}) => {
+  console.log(route.params, 'iii');
   const bodyRef = useRef();
   const navigation = useNavigation();
   const {balloonEvent, BalloonWrap} = Balloon();
@@ -53,6 +54,7 @@ const Pages = ({route}) => {
   const {isUserInfo} = useUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
+
   const isFocused = useIsFocused();
 
   const closeModal = () => {
