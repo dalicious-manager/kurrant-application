@@ -234,6 +234,14 @@ const useUserMe = () => {
       throw err;
     }
   };
+  const payCheckEmail = async (body, option = {}) => {
+    try {
+      const res = await Fetch.payCheckEmail();
+      return res;
+    } catch (err) {
+      throw err;
+    }
+  };
   const settingEmail = async (body, option = {}) => {
     try {
       setSettingEmailLoading(true);
@@ -308,13 +316,14 @@ const useUserMe = () => {
       throw err;
     }
   };
-  const cardRegistedNice = async (body, option = {}) => {
+  const cardRegistedNice = async (body, type, option = {}) => {
     try {
       setCardRegistedLoading(true);
       const res = await Fetch.cardRegistedNice(
         {
           ...body,
         },
+        type,
         option,
       );
       return res;
@@ -465,6 +474,7 @@ const useUserMe = () => {
     updatePayCheckPassword,
     submitPasswordCheck,
     payCheckPassword,
+    payCheckEmail,
     readableAtom: {
       myInfo,
       myInfoPerson,

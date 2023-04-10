@@ -13,8 +13,11 @@ import styled, {css, useTheme} from 'styled-components/native';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
 import Typography from '../../../../../../components/Typography';
+import BottomModal from '../../../../../../components/BottomModal';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
 import {PAGE_NAME as PayCheckEmailPageName} from '../PayCheckPasswordEmail';
+import {PAGE_NAME as PayEmailSettingPageName} from '../PayEmailSetting';
+import useUserMe from '../../../../../../biz/useUserMe/hook';
 export const PAGE_NAME = 'P__MY_PAGE__PAYMENT_MANAGE__PAY_CHECK_PASSWORD_CHECK';
 const {StatusBarManager} = NativeModules;
 
@@ -24,23 +27,35 @@ export default function PasswordCheck({route}) {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const navigation = useNavigation();
   const keyboardStatuss = useKeyboardEvent();
+  const [modalVisible, setModalVisible] = useState(false);
   const inputRef = useRef(null);
   // input value
   const [state, setState] = useState('');
+  const {payCheckEmail} = useUserMe();
   const themeApp = useTheme();
   // input onChange
   const handleInputChange = e => {
     setState(e.nativeEvent.text);
   };
   const onSubmit = async () => {
-    console.log(params?.cardData, '결제 비밀번호');
-    if (params?.password === state)
-      navigation.navigate(PayCheckEmailPageName, {
-        password: state,
-        cardData: params?.cardData,
-      });
+    if (params?.password === state) {
+      const email = await payCheckEmail();
+      console.log(email);
+      if (email?.data === 2)
+        navigation.navigate(PayCheckEmailPageName, {
+          password: state,
+          cardData: params?.cardData,
+        });
+      if (email?.data === 3) setModalVisible(true);
+    }
   };
-
+  const closeModal = () => {
+    setModalVisible(false);
+    navigation.navigate(PayEmailSettingPageName, {
+      password: state,
+      cardData: params?.cardData,
+    });
+  };
   const isValidation = state.length >= 6 && params?.password === state;
   useEffect(() => {
     Platform.OS === 'ios'
@@ -100,6 +115,17 @@ export default function PasswordCheck({route}) {
         label={'이메일 인증'}
         disabled={!isValidation}
         onPressEvent={onSubmit}
+      />
+      <BottomModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        title={'계정 등록이 필요해요.'}
+        description={
+          '해당 계정은 SNS의 이메일 정보가\n비공개로 되어 있어요. 비밀번호 설정을\n위해서 커런트 계정 정보를 입력해 주세요.'
+        }
+        buttonTitle1={'계정 등록하기'}
+        buttonType1={'yellow'}
+        onPressEvent1={closeModal}
       />
     </KeyboardAvoidingView>
   );
