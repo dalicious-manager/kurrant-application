@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import Plus from '../../../../../assets/icons/Home/plus.svg';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import LabelButton from '../../../../../components/ButtonMeal';
-import Calendar from '../../../../../components/Calendar';
+import BuyCalendar from '../../../../../components/BuyCalendar';
 import Typography from '../../../../../components/Typography';
 import Toast from '../../../../../components/Toast';
 import {
@@ -155,7 +155,7 @@ const Pages = ({route}) => {
     <SafeView>
       <ScrollView>
         <CalendarWrap>
-          <Calendar
+          <BuyCalendar
             BooleanValue
             pagerRef={pagerRef}
             type={'grey2'}
