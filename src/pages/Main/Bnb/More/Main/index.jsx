@@ -24,6 +24,7 @@ import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
 import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
+import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
@@ -34,8 +35,19 @@ import useUserInfo from '../../../../../biz/useUserInfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
-
+import PointBox from './PointBox';
 import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
+
+import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+
+import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
+import {
+  redeemablePointsAtom,
+  totalReviewWaitListAtom,
+} from '../../../../../biz/useReview/useReviewWait/store';
+import {useAtom} from 'jotai';
+import useReviewWait from '../../../../../biz/useReview/useReviewWait';
+
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
 const Pages = () => {
@@ -50,6 +62,27 @@ const Pages = () => {
   const {
     readableAtom: {userRole},
   } = useAuth();
+
+  const {getReviewWait} = useReviewWait();
+
+  useEffect(() => {
+    getReviewWait();
+  }, []);
+
+  const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
+
+  const [redeemablePoints] = useAtom(redeemablePointsAtom);
+
+  useEffect(() => {
+    console.log('획득 가능한 포인트 확인');
+    console.log(redeemablePoints);
+  }, [redeemablePoints]);
+
+  useEffect(() => {
+    console.log('토탈');
+    console.log(total);
+  }, [total]);
+
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
   const {isUserInfo} = useUserInfo();
@@ -126,7 +159,7 @@ const Pages = () => {
                 <Typography
                   text="Title02SB"
                   textColor={themeApp.colors.grey[2]}>
-                  {isUserInfo.name}님
+                  {isUserInfo?.name}님
                 </Typography>
               </LoginIdBox>
               <Pressable
@@ -158,20 +191,19 @@ const Pages = () => {
             isMembership={isUserInfo?.isMembership}
             membershipPeriod={isUserInfo?.membershipUsingPeriod}
           />
-          {/* 포인트 활성시
-            <PointBox point={41030}/> 
-          */}
+          <PointBox point={isUserInfo?.point} />
+
           <InfomationContainer>
             <InfomationBox>
               <InfomationText
                 text={'Title02SB'}
                 textColor={themeApp.colors.grey[5]}>
-                0
+                {total}
               </InfomationText>
               <InfomationLabel
                 text={'CaptionR'}
                 textColor={themeApp.colors.grey[5]}>
-                준비중
+                {total === 0 ? '준비중' : '구매후기'}
               </InfomationLabel>
             </InfomationBox>
             <InfomationBox>
@@ -206,7 +238,22 @@ const Pages = () => {
             {/* <ListBox title='장바구니(마켓)' /> */}
             {/* <ListBox title='찜목록' /> */}
             <ListBox title="구매 내역" routeName={PurchaseHistoryName} />
-            {/* <ListBox title='리뷰 관리' description={`모두 작성시 최대 `} effect={<Typography test={'CaptionR'} textColor={themeApp.colors.blue[500]}>500P</Typography>} /> */}
+
+            <ListBox
+              title="리뷰 관리"
+              description={redeemablePoints > 0 && `모두 작성시 최대 `}
+              effect={
+                redeemablePoints > 0 && (
+                  <Typography
+                    test={'CaptionR'}
+                    textColor={themeApp.colors.blue[500]}>
+                    {redeemablePoints}P
+                  </Typography>
+                )
+              }
+              routeName={ReviewScreenName}
+            />
+
             <ListBox
               title="커런트 멤버십"
               routeName={
@@ -216,7 +263,8 @@ const Pages = () => {
               }
               params={{isFounders: isUserInfo?.leftFoundersNumber > 0}}
             />
-            {/* <ListBox title='커런트 포인트' /> */}
+
+            <ListBox title="커런트 포인트" routeName={PointMainPageName} />
             {isApplicationList.length !== 0 && (
               <ListBox
                 title="스팟 개설 요청 내역"

@@ -1,13 +1,12 @@
-import {useNavigation} from '@react-navigation/native';
-
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
 import styled from 'styled-components';
 
 import Plus from '../../../../../assets/icons/Home/plus.svg';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import LabelButton from '../../../../../components/ButtonMeal';
-import Calendar from '../../../../../components/Calendar';
+import BuyCalendar from '../../../../../components/BuyCalendar';
 import Typography from '../../../../../components/Typography';
 import Toast from '../../../../../components/Toast';
 import {
@@ -30,15 +29,18 @@ export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 const Pages = ({route}) => {
   const date = formattedWeekDate(new Date());
   const data = route?.params?.data === undefined ? date : route.params.data;
+  const isToday =
+    route?.params?.isToday === undefined ? false : route.params.isToday;
   const navigation = useNavigation();
   const meal = true;
   // console.log(data);
   const {dailyFood, isServiceDays} = useFoodDaily();
   const {isUserInfo, userInfo} = useUserInfo();
+
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
-  const {isOrderMeal, refundItem, setOrderMeal} = useOrderMeal();
-
+  const {isOrderMeal, orderMeal, refundItem, setOrderMeal} = useOrderMeal();
+  const pagerRef = useRef();
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
@@ -133,6 +135,7 @@ const Pages = ({route}) => {
     async function loadUser() {
       try {
         const userData = await userInfo();
+        await orderMeal();
         await dailyFood(userData?.spotId, formattedWeekDate(new Date()));
       } catch (err) {
         console.log(err);
@@ -140,12 +143,21 @@ const Pages = ({route}) => {
     }
     loadUser();
   }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (isToday) {
+        pressDay(formattedWeekDate(new Date()));
+        pagerRef.current.setPage(0);
+      }
+    }, [isToday]),
+  );
   return (
     <SafeView>
       <ScrollView>
         <CalendarWrap>
-          <Calendar
+          <BuyCalendar
             BooleanValue
+            pagerRef={pagerRef}
             type={'grey2'}
             color={'white'}
             size={'Body05R'}
@@ -153,6 +165,7 @@ const Pages = ({route}) => {
             selectDate={touchDate}
             meal={meal}
             margin={'0px 28px'}
+            sliderValue={isToday && 0}
             isServiceDays={isServiceDays}
           />
         </CalendarWrap>

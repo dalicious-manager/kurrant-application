@@ -6,7 +6,6 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import auth, {firebase} from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {login} from '@react-native-seoul/kakao-login';
-import NaverLogin from '@react-native-seoul/naver-login';
 import {useNavigation} from '@react-navigation/native';
 import {Alert, Platform} from 'react-native';
 import {
@@ -23,19 +22,23 @@ import {v4 as uuid} from 'uuid';
 import {PAGE_NAME as AppleLoginPageName} from '../../pages/Main/Login/AppleSignup';
 import jwtDecode from 'jwt-decode';
 import Config from 'react-native-config';
+import {NaverLogin} from '@react-native-seoul/naver-login';
 
 const nonce = uuid();
-
+const consumerKey = Config.NAVER_COSTOMER_KEY;
+const consumerSecret = Config.NAVER_SECRET_KEY;
+const appName = 'kurrant';
+const serviceUrlScheme = 'kurrant-naver';
 const naverData = () => {
   const data = {
-    consumerKey: Config.NAVER_COSTOMER_KEY,
-    consumerSecret: Config.NAVER_SECRET_KEY,
-    appName: 'kurrant',
+    kConsumerKey: Config.NAVER_COSTOMER_KEY,
+    kConsumerSecret: Config.NAVER_SECRET_KEY,
+    kServiceAppName: 'kurrant',
   };
   if (Platform.OS === 'ios') {
     return {
       ...data,
-      serviceUrlScheme: 'kurrant-naver',
+      kServiceAppUrlScheme: 'kurrant-naver',
     };
   }
   return data;
@@ -44,29 +47,32 @@ export default () => {
   const {snsLogin, snsAppleLogin} = useAuth();
   const navigation = useNavigation();
   const naverLogin = async () => {
-    // console.log('로그인')
-    const {successResponse} = await NaverLogin.login(naverData());
-    if (successResponse) {
-      // console.log(successResponse)
-      // Clipboard.setString(successResponse.accessToken)
-      // const data = await NaverLogin.getProfile(successResponse.accessToken);
-      // console.log(data);
-      await snsLogin(
-        {
-          snsAccessToken: successResponse.accessToken,
-          autoLogin: true,
-        },
-        'NAVER',
-      );
-      navigation.reset({
-        index: 0,
-        routes: [
+    console.log('로그인');
+    const data = NaverLogin.login(
+      {
+        kConsumerKey: consumerKey,
+        kConsumerSecret: consumerSecret,
+        kServiceAppName: appName,
+        kServiceAppUrlScheme: serviceUrlScheme,
+      },
+      async (v, data) => {
+        await snsLogin(
           {
-            name: SCREEN_NAME,
+            snsAccessToken: data.accessToken,
+            autoLogin: true,
           },
-        ],
-      });
-    }
+          'NAVER',
+        );
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SCREEN_NAME,
+            },
+          ],
+        });
+      },
+    );
   };
 
   const googleLogin = async () => {
@@ -236,7 +242,7 @@ export default () => {
 
     await snsLogin(
       {
-        snsAccessToken: token.accessToken,
+        snsAccessToken: token?.accessToken,
         autoLogin: true,
       },
       'KAKAO',

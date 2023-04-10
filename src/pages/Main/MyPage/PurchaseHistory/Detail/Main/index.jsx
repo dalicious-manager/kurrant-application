@@ -121,6 +121,8 @@ const Pages = ({route}) => {
       </SafeView>
     );
   }
+
+  console.log(purchaseDetail, 'd0d0d0');
   return (
     <SafeView>
       <ScrollView>
@@ -152,20 +154,20 @@ const Pages = ({route}) => {
             </PurchaseInfoList>
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
-                스팟
+                상세 스팟
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
                 {purchaseDetail?.groupName} / {purchaseDetail?.spotName}
               </Typography>
             </PurchaseInfoList>
-            <PurchaseInfoList>
+            {/* <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
                 세부 주소
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
                 {purchaseDetail?.ho || '-'}
               </Typography>
-            </PurchaseInfoList>
+            </PurchaseInfoList> */}
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
                 배송지
@@ -303,7 +305,10 @@ const Pages = ({route}) => {
                 포인트 사용금액
               </Typography>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                - {withCommas(purchaseDetail?.point)} P
+                {purchaseDetail?.point === 0
+                  ? 0
+                  : '-' + withCommas(purchaseDetail?.point)}{' '}
+                P
               </Typography>
             </PaymentsList>
             <TotalPriceBox>
@@ -374,7 +379,7 @@ const Pages = ({route}) => {
                   {withCommas(purchaseDetail?.refundDto?.refundDeliveryFee)} 원
                 </Typography>
               </PaymentsList>
-              <SaleContainer>
+              {/* <SaleContainer>
                 <DateBarBox>
                   <DateBar />
                 </DateBarBox>
@@ -388,9 +393,7 @@ const Pages = ({route}) => {
                     <Typography
                       text="CaptionR"
                       textColor={themeApp.colors.grey[5]}>
-                      {withCommas(
-                        purchaseDetail?.refundDto?.refundSupportPrice,
-                      )}{' '}
+                      {withCommas(purchaseDetail?.refundDto?.refundDeliveryFee)}{' '}
                       원
                     </Typography>
                   </SaleItem>
@@ -410,16 +413,16 @@ const Pages = ({route}) => {
                     </Typography>
                   </SaleItem>
                 </SaleBox>
-              </SaleContainer>
+              </SaleContainer> */}
               <PaymentsList>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
                   환불 차감
                 </Typography>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                  {withCommas(purchaseDetail?.refundDto?.refundDeduction)} P
+                  {withCommas(purchaseDetail?.refundDto?.refundDeduction)} 원
                 </Typography>
               </PaymentsList>
-              <SaleContainer>
+              {/* <SaleContainer>
                 <DateBarBox>
                   <DateBar />
                 </DateBarBox>
@@ -438,7 +441,7 @@ const Pages = ({route}) => {
                     </Typography>
                   </SaleItem>
                 </SaleBox>
-              </SaleContainer>
+              </SaleContainer> */}
               <TotalPriceBox>
                 <Typography
                   text="Title03SB"
@@ -503,9 +506,13 @@ const Pages = ({route}) => {
                     (영수증)
                   </ReceiptText>
                 </ReceiptTouch>
-              ) : (
+              ) : purchaseDetail?.cardNumber ? (
                 <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
                   ({purchaseDetail?.cardNumber})
+                </Typography>
+              ) : (
+                <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
+                  -
                 </Typography>
               )}
             </ReceiptBox>

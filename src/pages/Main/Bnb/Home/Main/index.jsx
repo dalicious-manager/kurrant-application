@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useAtomValue} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, Alert, StatusBar} from 'react-native';
 import styled, {css} from 'styled-components/native';
@@ -50,6 +50,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
 import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
 import useMembership from '../../../../../biz/useMembership';
+import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 
@@ -62,7 +63,8 @@ const Pages = () => {
   const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
     useUserInfo();
   const {
-    readableAtom: {userRole},
+    saveFcmToken,
+    readableAtom: {userRole, fcmToken},
   } = useAuth();
   const {
     userGroupSpotCheck,
@@ -89,6 +91,7 @@ const Pages = () => {
   const [selected, setSelected] = useState();
   const [eventSpot, setEventSpot] = useState(false);
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
+  const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
@@ -184,18 +187,19 @@ const Pages = () => {
         try {
           const userData = await userInfo();
           if (userData?.email) {
-            const daily = await dailyFood(
-              userData?.spotId,
-              formattedWeekDate(new Date()),
-            );
-            if (daily) {
-              if (!(userRole === 'ROLE_GUEST'))
+            if (userData?.spotId) {
+              const daily = await dailyFood(
+                userData?.spotId,
+                formattedWeekDate(new Date()),
+              );
+              if (!(userRole === 'ROLE_GUEST')) {
                 await orderMeal(
                   formattedWeekDate(weekly[0][0]),
                   formattedWeekDate(
                     weekly[weekly?.length - 1][weekly[0].length - 1],
                   ),
                 );
+              }
             }
           }
           return true;
@@ -205,6 +209,11 @@ const Pages = () => {
       }
       const isTester = async () => {
         const user = loadUser();
+        // if (fcmToken) {
+        //   saveFcmToken({
+        //     token: fcmToken,
+        //   });
+        // }
         if (!(userRole === 'ROLE_GUEST')) {
           const start = weekly.map(s => {
             const startData = formattedWeekDate(s[0]);
@@ -226,7 +235,8 @@ const Pages = () => {
             if (getUserStatus === 1) {
               navigation.navigate(GroupSelectPageName);
             }
-            if (getUserStatus === 2) {
+            if (getUserStatus === 2 && !isCancelSpot) {
+              console.log(isCancelSpot, 'test');
               navigation.navigate(GroupCreateMainPageName);
             }
             return result;
@@ -263,7 +273,7 @@ const Pages = () => {
         alert(e.toString().replace('error:'));
       }
       console.log(membershipHistory.length);
-    }, []),
+    }, [isCancelSpot]),
   );
 
   useEffect(() => {
@@ -312,19 +322,20 @@ const Pages = () => {
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
-
+  // console.log(isUserInfo, '유저인포');
   // const date = formattedWeekDate(new Date());
   // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
   //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
   useEffect(() => {
     async function dailys() {
       try {
-        await dailyFood(userSpotId, formattedWeekDate(new Date()));
+        if (userSpotId)
+          await dailyFood(userSpotId, formattedWeekDate(new Date()));
       } catch (err) {
         console.log(err);
       }
     }
-    dailys();
+    // dailys();
   }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {

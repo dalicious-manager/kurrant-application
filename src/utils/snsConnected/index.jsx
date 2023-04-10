@@ -52,10 +52,9 @@ export default () => {
         }
       } else if (social === 'KAKAO') {
         const token = await login();
-        console.log(token.accessToken);
         const res = await snsConnect(
           {
-            snsAccessToken: token.accessToken,
+            snsAccessToken: token?.accessToken,
           },
           'KAKAO',
         );

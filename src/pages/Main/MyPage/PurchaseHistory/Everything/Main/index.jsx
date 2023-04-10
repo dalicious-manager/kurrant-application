@@ -123,12 +123,10 @@ const Pages = () => {
   useEffect(() => {
     const purchaseHistory = async date => {
       if (date.startDate) {
-        console.log(date, 'dddsss');
         await getPurchaseHistory(date);
       }
     };
     const selectDate = searchDate.filter(v => v.isActive === true);
-    console.log(selectDate[0]);
     const dateArray = () => {
       var now = new Date();
       if (selectDate[0].id === 0) {

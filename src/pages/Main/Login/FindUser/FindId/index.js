@@ -76,6 +76,14 @@ const Pages = () => {
         }
         setPhoneAuth(true);
       } catch (err) {
+        Alert.alert('인증 오류', err.toString().replace('error:', ''), [
+          {
+            text: '확인',
+            onPress: () => {},
+            style: 'cancel',
+          },
+        ]);
+        console.log(err);
         setModalVisible(true);
       }
     }
