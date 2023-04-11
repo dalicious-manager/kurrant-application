@@ -30,6 +30,8 @@ export function formattedMealFoodStatus(data) {
       return '수동 환불';
     case 13:
       return '자동 환불';
+    case 14:
+      return '리뷰 작성 완료';
     default:
       break;
   }

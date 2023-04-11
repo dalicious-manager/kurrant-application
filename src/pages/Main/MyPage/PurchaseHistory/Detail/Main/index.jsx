@@ -23,6 +23,7 @@ export const PAGE_NAME = 'P_MAIN__PURCHASE_DETAIL';
 
 const Pages = ({route}) => {
   const {id} = route.params;
+
   const navigation = useNavigation();
   const themeApp = useTheme();
   const {
