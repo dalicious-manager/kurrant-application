@@ -194,16 +194,19 @@ const Pages = () => {
           <PointBox point={isUserInfo?.point} />
 
           <InfomationContainer>
-            <InfomationBox>
+            <InfomationBox
+              onPress={() => {
+                navigation.navigate(ReviewScreenName);
+              }}>
               <InfomationText
                 text={'Title02SB'}
-                textColor={themeApp.colors.grey[5]}>
+                textColor={themeApp.colors.grey[2]}>
                 {total}
               </InfomationText>
               <InfomationLabel
                 text={'CaptionR'}
-                textColor={themeApp.colors.grey[5]}>
-                {total === 0 ? '준비중' : '구매후기'}
+                textColor={themeApp.colors.grey[2]}>
+                구매후기
               </InfomationLabel>
             </InfomationBox>
             <InfomationBox>

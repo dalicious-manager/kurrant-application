@@ -23,6 +23,7 @@ import {
 
 import ImageModal from './ImageModal/ImageModal';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+import {changeSeperator} from '../../../../../utils/dateFormatter';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -192,10 +193,10 @@ const Component = ({
     <Container>
       <TopWrap>
         <TitleWrap>
-          <RestaurentNameText>
+          <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
             {'['}
             {makersName}
-            {']'}
+            {'] '}
             {foodName}
           </RestaurentNameText>
           <ArrowRightGrey4 />
@@ -236,7 +237,8 @@ const Component = ({
         </StarsWrap>
 
         <PostDateText>
-          {writtenDate} {createDate === updateDate ? '작성' : '수정'}
+          {changeSeperator(writtenDate, '-', '. ')}{' '}
+          {createDate === updateDate ? '작성' : '수정'}
         </PostDateText>
       </RowWrap>
 
@@ -346,6 +348,7 @@ const TopWrap = styled.View`
 const TitleWrap = styled.View`
   flex-direction: row;
   align-items: center;
+  width: 78%;
 `;
 
 const RestaurentNameText = styled(Typography).attrs({text: 'Body05SB'})`
@@ -377,7 +380,7 @@ const StarsWrap = styled.View`
   flex-direction: row;
 `;
 
-const PostDateText = styled(Typography).attrs({text: 'Body05R'})`
+const PostDateText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
 `;
