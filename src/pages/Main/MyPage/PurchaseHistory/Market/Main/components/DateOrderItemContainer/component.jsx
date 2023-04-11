@@ -205,7 +205,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                             onPressEvent={() =>
                               Alert.alert(
                                 '메뉴 변경',
-                                '현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?',
+                                '현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
                                 [
                                   {
                                     text: '아니요',

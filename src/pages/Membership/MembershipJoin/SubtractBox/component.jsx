@@ -15,7 +15,7 @@ const Component = ({children, text, disabled = false}) => {
           {text}
 
           {disabled && (
-            <OnPreparationText disabled={disabled}>(준비중)</OnPreparationText>
+            <OnPreparationText disabled={disabled}>(베타)</OnPreparationText>
           )}
         </MembershipText>
       </ContentsBox>
