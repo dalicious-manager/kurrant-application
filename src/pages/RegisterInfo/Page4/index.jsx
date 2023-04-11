@@ -3,19 +3,28 @@ import styled from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import ProgressBar from '~components/ProgressBar7';
 import Typography from '~components/Typography';
 
 import {PAGE_NAME as RegisterInfoPage5PageName} from '../Page5';
+import SelectButton from './components/button/SelectButton';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 
 const Pages = () => {
-  //   const [clickAvaliable, setClickAvaliable] = useState(false);
+  const [clickAvaliable, setClickAvaliable] = useState(false);
+
+  const [selectedId, setSelectedId] = useState(0);
 
   const navigation = useNavigation();
+
+  // 예: 일떄는 채식주의자 유형 필요함, 아니오:
+
+  useEffect(() => {
+    console.log(selectedId);
+  }, [selectedId]);
 
   const handlePress = () => {
     console.log('ㅗㅑ');
@@ -35,16 +44,32 @@ const Pages = () => {
           <Title>채식 정보</Title>
           <SemiTitle>평소에 채식을 하시나요?</SemiTitle>
         </TitleWrap>
+
+        <ButtonContainer>
+          {[
+            {id: 1, name: '예'},
+            {id: 2, name: '아니요'},
+          ].map((v, i) => {
+            return (
+              <SelectButton
+                data={v}
+                selectedId={selectedId}
+                setSelectedId={setSelectedId}
+              />
+            );
+          })}
+        </ButtonContainer>
       </ScrollViewContainer>
       <ButtonNext
         size="full"
         label="다음"
         text={'BottomButtonSB'}
-        // disabled={!clickAvaliable}
+        disabled={!clickAvaliable}
         onPressEvent={() => {
           handlePress();
         }}
       />
+      {/* <Bottom */}
     </Container>
   );
 };
@@ -80,4 +105,10 @@ const Title = styled(Typography).attrs({text: 'Title04SB'})`
 `;
 const SemiTitle = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[4]};
+`;
+
+const ButtonContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
