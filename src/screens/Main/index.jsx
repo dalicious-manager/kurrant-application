@@ -1964,10 +1964,10 @@ const Screen = () => {
                       {
                         text: `작성종료`,
                         onPress: () => {
-                          // navigation.navigate(ReviewScreenName);
-                          navigation.reset({
-                            routes: [{name: ReviewScreenName}],
-                          });
+                          navigation.navigate(ReviewScreenName);
+                          // navigation.reset({
+                          //   routes: [{name: ReviewScreenName}],
+                          // });
                           return;
                         },
 
@@ -2011,27 +2011,11 @@ const Screen = () => {
                       {
                         text: '수정종료',
                         onPress: () => {
-                          // navigation.reset({
-                          //   routes: [{name: ReviewScreenName}],
-                          // });
-                          navigation.reset({
-                            routes: [
-                              {
-                                name: ReviewScreenName,
-
-                                state: {
-                                  index: 1,
-                                  routes: [
-                                    {
-                                      name: ReviewPageName,
-                                    },
-                                    {
-                                      name: WrittenReviewPageName,
-                                    },
-                                  ],
-                                },
-                              },
-                            ],
+                          navigation.navigate(WrittenReviewPageName, {
+                            screen: ReviewScreenName,
+                            params: {
+                              tabIndex: 1,
+                            },
                           });
 
                           return;
