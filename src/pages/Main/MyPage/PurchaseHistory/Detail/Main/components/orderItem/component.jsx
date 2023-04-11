@@ -68,17 +68,21 @@ const Component = ({orderItem, onCancel = () => {}}) => {
                   type="blue"
                   size="label13R"
                   onPressEvent={() => {
-                    Alert.alert('메뉴 취소', '메뉴를 취소하시겠어요?', [
-                      {
-                        text: '아니요',
-                        onPress: () => {},
-                      },
-                      {
-                        text: '메뉴 취소',
-                        onPress: () => onCancel(id),
-                        style: 'destructive',
-                      },
-                    ]);
+                    Alert.alert(
+                      '메뉴 취소',
+                      '메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
+                      [
+                        {
+                          text: '아니요',
+                          onPress: () => {},
+                        },
+                        {
+                          text: '메뉴 취소',
+                          onPress: () => onCancel(id),
+                          style: 'destructive',
+                        },
+                      ],
+                    );
                   }}
                 />
               )}

@@ -455,7 +455,11 @@ const Pages = () => {
                     return (
                       <MealInfoWrap
                         key={meal.id}
-                        onPress={() => navigation.navigate(MealMainPageName)}>
+                        onPress={() =>
+                          navigation.navigate(MealMainPageName, {
+                            isToday: true,
+                          })
+                        }>
                         <MealInfo>
                           <FastImage
                             source={{

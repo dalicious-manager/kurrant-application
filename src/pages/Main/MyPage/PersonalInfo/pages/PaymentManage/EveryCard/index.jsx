@@ -13,6 +13,7 @@ import {registCardAtom} from '../../../../../../../atoms/store';
 import Toast from '../../../../../../../components/Toast';
 import RegisteredBox from '../RegisteredBox';
 import Skeleton from '../SelectedDefaultCard/Skeleton';
+import {ScrollView} from 'react-native';
 
 export const PAGE_NAME = 'P__MY_PAGE__EVERY_CARD';
 
@@ -77,7 +78,7 @@ const Pages = ({route}) => {
   return (
     <Wrapper paddingTop={24} paddingHorizontal={24}>
       {cardList.length > 0 ? (
-        <CardRegisteredBox>
+        <CardListView>
           {cardList.map(v => {
             return (
               <RegiteredView key={v.id}>
@@ -95,7 +96,7 @@ const Pages = ({route}) => {
           {/* <RegiteredView>
                     <RegisteredBox  cardName="국민카드" cardNumber="2222222222225473" />
                 </RegiteredView> */}
-        </CardRegisteredBox>
+        </CardListView>
       ) : (
         <NoneCardContainer>
           <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>
@@ -117,7 +118,9 @@ const Pages = ({route}) => {
 
 export default Pages;
 
-const CardRegisteredBox = styled.View``;
+const CardListView = styled(ScrollView)`
+  margin-bottom: 290px;
+`;
 const NoneCardContainer = styled.View`
   flex: 1;
   justify-content: center;

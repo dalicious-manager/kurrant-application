@@ -99,7 +99,7 @@ const Pages = ({route}) => {
   const [payments, setPayments] = useState('NOMAL');
   const [isPay, setIsPay] = useState(false);
   const [point, setPoint] = useState(0);
-
+  const viewRef = useRef();
   const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
   const {order, orderNice, orderLoading} = useOrderMeal();
@@ -360,6 +360,18 @@ const Pages = ({route}) => {
     }
   };
   const orderPress2 = async spotId => {
+    if (selectDefaultCard.length <= 0) {
+      Alert.alert('카드선택', '카드를 선택해주세요.', [
+        {
+          onPress: () => {
+            viewRef.current.scrollToEnd({animated: true});
+          },
+          text: '확인',
+        },
+      ]);
+
+      return;
+    }
     const data = {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
@@ -439,7 +451,7 @@ const Pages = ({route}) => {
         keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback>
-          <ViewScroll onBlur={onBlurPress}>
+          <ViewScroll ref={viewRef} onBlur={onBlurPress}>
             <BorderWrap>
               <Container>
                 <DeliveryTextWrap>
@@ -688,22 +700,22 @@ const Pages = ({route}) => {
                   선택한 결제 수단으로 결제가 진행됩니다.
                 </DeliveryTitle>
                 {/* <AgreeTextBox>
-              <PaymentsList
-                onSelectPress={setPayments}
-                select={payments}
-                name={'NOMAL'}
-              />
-              <PaymentsList
-                onSelectPress={setPayments}
-                select={payments}
-                name={'KAKAOPAY'}
-              />
-              <PaymentsList
-                onSelectPress={setPayments}
-                select={payments}
-                name={'NAVERPAY'}
-              />
-            </AgreeTextBox> */}
+                  <PaymentsList
+                    onSelectPress={setPayments}
+                    select={payments}
+                    name={'NOMAL'}
+                  />
+                  <PaymentsList
+                    onSelectPress={setPayments}
+                    select={payments}
+                    name={'KAKAOPAY'}
+                  />
+                  <PaymentsList
+                    onSelectPress={setPayments}
+                    select={payments}
+                    name={'NAVERPAY'}
+                  />
+                </AgreeTextBox> */}
                 {/*<CardSelectContainer>
               {payments === 'NOMAL' && (
                 <View>
@@ -806,7 +818,6 @@ const Pages = ({route}) => {
             disabled={
               !(
                 payments !== 'NOMAL' ||
-                selectDefaultCard.length > 0 ||
                 (medtronicSupportArr.includes(62471004)
                   ? medtronicTotalPrice <= 0
                   : totalPrice <= 0)
@@ -892,7 +903,7 @@ const Container = styled.View`
 
 const AgreeTextBox = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding-top: 24px;
   padding-bottom: 10px;
 `;
