@@ -1,12 +1,14 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {useAtom} from 'jotai';
-import React, {useLayoutEffect} from 'react';
+import React from 'react';
+import {Pressable} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import useMypageReview from '../../../biz/useMypageReview/hook';
 import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
 import {totalWrittenReview} from '../../../biz/useReview/useWrittenReview/store';
-
+import BackArrow from '../../../assets/icons/MealDetail/backArrow.svg';
+import BackButton from '../../../components/BackButton';
 export const SCREEN_NAME = 'S_MAIN__REVIEW';
 import Review, {
   PAGE_NAME as ReviewPageName,
@@ -14,18 +16,39 @@ import Review, {
 import WrittenReview, {
   PAGE_NAME as WrittenReviewPageName,
 } from '../../../pages/Main/MyPage/WrittenReview';
+import {useNavigation} from '@react-navigation/native';
+import {useLayoutEffect} from 'react';
+import {PAGE_NAME as MoreMainPageName} from '../../../pages/Main/Bnb/More/Main';
 
 const Tab = createMaterialTopTabNavigator();
 
 const Screen = ({route}) => {
   const point = route?.params?.from;
   const pointId = route?.params?.id;
-
+  const navigation = useNavigation();
   const theme = useTheme();
   const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
 
   const [totalWritten, AmNotUsingTHis] = useAtom(totalWrittenReview);
-
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () =>
+        point !== 'home' ? (
+          <BackButton margin={[10, 0]} />
+        ) : (
+          <Pressable
+            onPress={() => navigation.navigate(MoreMainPageName)}
+            style={{
+              marginLeft: 3,
+              width: 30,
+              height: 30,
+              justifyContent: 'center',
+            }}>
+            <BackArrow color={'#343337'} />
+          </Pressable>
+        ),
+    });
+  }, []);
   return (
     <Tab.Navigator
       initialRouteName={point === 'point' && WrittenReviewPageName}
