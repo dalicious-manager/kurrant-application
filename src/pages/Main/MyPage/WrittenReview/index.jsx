@@ -39,6 +39,10 @@ const Pages = ({route}) => {
     setTotalWrittenReviewList(writtenReviewCount);
   }, [writtenReviewCount]);
 
+  useEffect(() => {
+    console.log(reviewList);
+  }, [reviewList]);
+
   return (
     <Container>
       {!!reviewList && reviewList.length > 0 ? (

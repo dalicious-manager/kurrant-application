@@ -414,7 +414,10 @@ const DefaultImage = styled.View`
   background-color: #d9d9d9;
 `;
 
-const ReviewPressable = styled.Pressable``;
+const ReviewPressable = styled.Pressable`
+  width: 300px;
+  margin: auto;
+`;
 
 const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[2]};
