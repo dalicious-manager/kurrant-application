@@ -6,36 +6,38 @@ import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
 import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import {useConfirmOrderState} from '../../../../../../hook/useOrder';
+import {SCREEN_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
 
 const MealInfoComponent = ({m, meal, mockStatus}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
+  const {mutateAsync: orderState} = useConfirmOrderState();
 
-  console.log('값 확인');
-  console.log(m);
-  console.log(meal);
+  const deliveryConfirmPress = async () => {
+    await orderState({id: meal.id});
+    setDeliveryConfirmed(true);
+  };
 
-  // status 11일떄 메뉴확인 수령클릭
-  // {}
+  const goToReviewPage = (id, image, name) => {
+    navigation.navigate(reviewPage, {
+      orderItemId: id,
+      imageLocation: image,
+      foodName: name,
+    });
+  };
 
   return (
     <>
       <MealInfoWrapper>
         <MealInfoWrap
           // shadow 적용
-          style={meal.orderStatus === 10 && styles.shadow}
+          style={
+            (meal.orderStatus === 10 || meal.orderStatus === 11) &&
+            styles.shadow
+          }
           onPress={() => navigation.navigate(MealMainPageName)}>
           <MealInfo>
-            {/* <View
-              style={{
-                width: 64,
-                height: 64,
-                backgroundColor: 'grey',
-                borderTopLeftRadius: 14,
-                borderBottomLeftRadius: 14,
-              }}
-            /> */}
-
             <FastImage
               source={{
                 uri: `${meal.image}`,
@@ -67,26 +69,30 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
           </MealInfo>
         </MealInfoWrap>
 
-        {meal.orderStatus === 10 && (
+        {(meal.orderStatus === 10 || meal.orderStatus === 11) && (
           <OrderStatusWrap>
             <CommentText>
-              {deliveryConfirmed
+              {meal.orderStatus === 11
                 ? '식사 맛있게 하셨나요?'
-                : '배송완료! 메뉴 확인후 수령하셨나요?'}
+                : meal.orderStatus === 10 &&
+                  '배송완료! 메뉴 확인후 수령하셨나요?'}
             </CommentText>
 
             <ConfirmPressable
               onPress={() => {
-                if (meal.orderStatus === 10 && deliveryConfirmed) {
+                if (meal.orderStatus === 10) {
                   // 주문상태변경 - 수령완료 api보내야함
-
-                  setDeliveryConfirmed(true);
+                  console.log('000');
+                  deliveryConfirmPress();
                 } else {
                   // 리뷰로 가기
+                  goToReviewPage(meal.id, meal.image, meal.name);
                 }
               }}>
               <ConfirmText>
-                {deliveryConfirmed ? '맛 평가하기' : '네 확인했어요'}
+                {meal.orderStatus === 11
+                  ? '맛 평가하기'
+                  : meal.orderStatus === 10 && '네, 확인했어요'}
               </ConfirmText>
             </ConfirmPressable>
           </OrderStatusWrap>
