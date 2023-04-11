@@ -11,6 +11,8 @@ import Typography from '~components/Typography';
 import {PAGE_NAME as RegisterInfoPage5PageName} from '../Page5';
 import SelectButton from './components/button/SelectButton';
 
+import BottomSheet from '~components/BottomSheet';
+
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 
 const Pages = () => {
@@ -25,6 +27,12 @@ const Pages = () => {
 
   useEffect(() => {
     console.log(selectedId);
+
+    if (selectedId === 1) {
+      setBottomModalOpen(true);
+    } else {
+      setBottomModalOpen(false);
+    }
   }, [selectedId]);
 
   const handlePress = () => {
@@ -59,6 +67,7 @@ const Pages = () => {
           ].map((v, i) => {
             return (
               <SelectButton
+                key={i}
                 data={v}
                 selectedId={selectedId}
                 setSelectedId={setSelectedId}
@@ -84,7 +93,11 @@ const Pages = () => {
         data={[
           {id: 1, text: '비건'},
           {id: 2, text: '락토 베지터리언'},
-          {id: 3, text: '락토 베지터리언'},
+          {id: 3, text: '오보 베지테리언'},
+          {id: 4, text: '락토 오보 베지테리언'},
+          {id: 5, text: '페스코 베지테리언'},
+          {id: 6, text: '폴로 베지테리언'},
+          {id: 7, text: '플렉시테리언'},
         ]}
         selected={thisId}
         setSelected={handleSelectBottomModal}
