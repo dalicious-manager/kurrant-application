@@ -2,7 +2,12 @@ import styled from 'styled-components';
 import SelectButton from './SelectButton';
 import {useEffect, useState} from 'react';
 
-const ButtonContainer = ({dataList, selectLimit, callback = () => {}}) => {
+const ButtonContainer = ({
+  dataList,
+  selectLimit,
+  marginBottom = '0px',
+  callback = () => {},
+}) => {
   const [selectedIdList, setSelectedIdList] = useState([]);
 
   useEffect(() => {
@@ -12,7 +17,7 @@ const ButtonContainer = ({dataList, selectLimit, callback = () => {}}) => {
   // 4개 이상일 경우 더이상 선택하는 것을 못하게 막는다
 
   return (
-    <Container>
+    <Container marginBottom={marginBottom}>
       <ButtonWrap>
         {dataList.map(v => {
           return (
@@ -32,7 +37,9 @@ const ButtonContainer = ({dataList, selectLimit, callback = () => {}}) => {
 
 export default ButtonContainer;
 
-const Container = styled.View``;
+const Container = styled.View`
+  margin-bottom: ${({marginBottom}) => marginBottom};
+`;
 
 const ButtonWrap = styled.View`
   flex-wrap: wrap;

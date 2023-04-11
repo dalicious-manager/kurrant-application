@@ -72,40 +72,40 @@ const Pages = () => {
         <ButtonInput
           title={'아침식사 횟수'}
           dataList={[
-            {id: 1, name: '주 0회'},
-            {id: 2, name: '주 1~2회'},
-            {id: 3, name: '주 3~5회'},
-            {id: 4, name: '주 6~7회'},
+            {id: 0, name: '주 0회'},
+            {id: 1, name: '주 1~2회'},
+            {id: 2, name: '주 3~5회'},
+            {id: 3, name: '주 6~7회'},
           ]}
           callback={handleBreakfastCount}
         />
         <ButtonInput
           title={'야식 횟수'}
           dataList={[
-            {id: 1, name: '주 0회'},
-            {id: 2, name: '주 1~2회'},
-            {id: 3, name: '주 3~5회'},
-            {id: 4, name: '주 6~7회'},
+            {id: 0, name: '주 0회'},
+            {id: 1, name: '주 1~2회'},
+            {id: 2, name: '주 3~5회'},
+            {id: 3, name: '주 6~7회'},
           ]}
           callback={handleMidnightSnackCount}
         />
         <ButtonInput
           title={'운동 횟수(30분 이상)'}
           dataList={[
-            {id: 1, name: '주 0회'},
-            {id: 2, name: '주 1~2회'},
-            {id: 3, name: '주 3~5회'},
-            {id: 4, name: '주 6~7회'},
+            {id: 0, name: '주 0회'},
+            {id: 1, name: '주 1~2회'},
+            {id: 2, name: '주 3~5회'},
+            {id: 3, name: '주 6~7회'},
           ]}
           callback={handleExerciseCount}
         />
         <ButtonInput
           title={'음주 횟수'}
           dataList={[
-            {id: 1, name: '주 0회'},
-            {id: 2, name: '주 1~2회'},
-            {id: 3, name: '주 3~5회'},
-            {id: 4, name: '주 6~7회'},
+            {id: 0, name: '주 0회'},
+            {id: 1, name: '주 1~2회'},
+            {id: 2, name: '주 3~5회'},
+            {id: 3, name: '주 6~7회'},
           ]}
           callback={handleDrinkCount}
         />

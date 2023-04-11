@@ -1,62 +1,3 @@
-// import {Text} from 'react-native';
-// import styled from 'styled-components';
-
-// import Button from '../../../components/Button';
-// import {useNavigation} from '@react-navigation/native';
-// import {useState} from 'react';
-
-// import ProgressBar from '~components/ProgressBar7';
-
-// import {PAGE_NAME as RegisterInfoPage4PageName} from '../Page4';
-
-// export const PAGE_NAME = 'P__REGISTER_INFO_PAGE3';
-
-// const Pages = () => {
-//   //   const [clickAvaliable, setClickAvaliable] = useState(false);
-
-//   const navigation = useNavigation();
-
-//   const handlePress = () => {
-//     console.log('ㅗㅑ');
-//     navigation.navigate(RegisterInfoPage4PageName);
-//   };
-
-//   return (
-//     <Container
-//       paddingHorizontal={20}
-//       styles={{
-//         position: 'relative',
-//       }}>
-//       <ProgressBar progress={3} />
-//       <Text>레지스터 인포 page3</Text>
-
-//       <ButtonNext
-//         size="full"
-//         label="다음"
-//         text={'BottomButtonSB'}
-//         // disabled={!clickAvaliable}
-//         onPressEvent={() => {
-//           handlePress();
-//         }}
-//       />
-//     </Container>
-//   );
-// };
-// export default Pages;
-
-// const Container = styled.View`
-//   flex: 1;
-//   padding: 35px 20px;
-//   align-items: center;
-//   justify-content: space-between;
-// `;
-
-// const ButtonNext = styled(Button)`
-//   /* position: absolute; */
-//   /* bottom: 35px; */
-// `;
-
-import {Text} from 'react-native';
 import styled from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -74,7 +15,7 @@ import ButtonContainer from '../components/button/ButtonContainer';
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE3';
 
 const Pages = () => {
-  const [clickAvaliable, setClickAvaliable] = useState(false);
+  // const [clickAvaliable, setClickAvaliable] = useState(false);
 
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
@@ -82,22 +23,22 @@ const Pages = () => {
 
   const [page3Input, setPage2Input] = useState([]);
 
-  useEffect(() => {
-    if (page3Input.length > 0) {
-      setClickAvaliable(true);
-    } else {
-      setClickAvaliable(false);
-    }
-  }, [page3Input]);
+  // useEffect(() => {
+  //   if (page3Input.length > 0) {
+  //     setClickAvaliable(true);
+  //   } else {
+  //     setClickAvaliable(false);
+  //   }
+  // }, [page3Input]);
 
   const handlePress = () => {
     console.log({
       ...finalRegister,
-      favoriteCountryFood: page3Input.join(','),
+      allergyInfo: page3Input.join(','),
     });
     setFinalRegister({
       ...finalRegister,
-      favoriteCountryFood: page3Input.join(','),
+      allergyInfo: page3Input.join(','),
     });
 
     navigation.navigate(RegisterInfoPage4PageName);
@@ -106,6 +47,12 @@ const Pages = () => {
   const handleButtonClicked = list => {
     setPage2Input([...list]);
   };
+
+  const [value, setValue] = useState('');
+
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
 
   return (
     <Container
@@ -135,14 +82,29 @@ const Pages = () => {
             {id: 10, name: '인도네아'},
           ]}
           callback={handleButtonClicked}
+          marginBottom={'24px'}
         />
+
+        <InputWrap>
+          <InputTitle>기타 내용(선택)</InputTitle>
+
+          <Input
+            style={{
+              textAlignVertical: 'top',
+            }}
+            value={value}
+            onChangeText={setValue}
+            multiline
+            numberOfLines={20}
+            placeholder={'추가적으로 다른 알러지가 있다면 알려주세요!'}
+          />
+        </InputWrap>
       </ScrollViewContainer>
 
       <ButtonNext
         size="full"
         label="다음"
         text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
         onPressEvent={() => {
           handlePress();
         }}
@@ -174,6 +136,17 @@ const TitleWrap = styled.View`
   width: 100%;
   margin-top: 29px;
   margin-bottom: 24px;
+`;
+const InputWrap = styled.View``;
+const InputTitle = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  margin-bottom: 8px;
+`;
+const Input = styled.TextInput`
+  border: 1px solid ${props => props.theme.colors.grey[7]};
+  padding: 17px 20px;
+  height: 168px;
+  border-radius: 14px;
 `;
 
 const Title = styled(Typography).attrs({text: 'Title04SB'})`

@@ -22,7 +22,11 @@ const SelectButton = ({
             setSelectedIdList([...selectedIdList, data.id]);
           }
         } else {
-          setSelectedIdList([...selectedIdList, data.id]);
+          if (selectedIdList.includes(data.id)) {
+            setSelectedIdList([...selectedIdList].filter(v => v !== data.id));
+          } else {
+            setSelectedIdList([...selectedIdList, data.id]);
+          }
         }
       }}
       isClicked={selectedIdList.includes(data.id)}>
