@@ -456,9 +456,9 @@ const Pages = () => {
             todayMeal?.map((m, idx) => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
-                  {m.orderItemDtoList.map(meal => {
+                  {m.orderItemDtoList.map((meal, i) => {
                     return (
-                      <MealInfoComponent m={m} meal={meal} />
+                      <MealInfoComponent key={i} m={m} meal={meal} />
 
                       // <MealInfoWrap
                       //   key={meal.id}
