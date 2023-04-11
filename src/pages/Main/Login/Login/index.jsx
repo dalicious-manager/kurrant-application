@@ -209,7 +209,7 @@ const Pages = ({route}) => {
         }
       });
     };
-    //getData();
+    getData();
     setLoginLoading(true);
     isAutoLogin();
     // eslint-disable-next-line react-hooks/exhaustive-deps
