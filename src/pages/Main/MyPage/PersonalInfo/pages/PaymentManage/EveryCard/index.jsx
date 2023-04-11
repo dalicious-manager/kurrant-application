@@ -119,7 +119,7 @@ const Pages = ({route}) => {
 export default Pages;
 
 const CardListView = styled(ScrollView)`
-  margin-bottom: 290px;
+  margin-bottom: 110px;
 `;
 const NoneCardContainer = styled.View`
   flex: 1;

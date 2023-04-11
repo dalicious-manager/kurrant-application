@@ -819,12 +819,11 @@ const Pages = ({route}) => {
           <Button
             label={`총 ${totalCount}개 결제하기`}
             disabled={
-              !(
-                payments !== 'NOMAL' ||
-                (medtronicSupportArr.includes(62471004)
-                  ? medtronicTotalPrice <= 0
-                  : totalPrice <= 0)
-              ) || isPay
+              payments !== 'NOMAL' ||
+              (medtronicSupportArr.includes(62471004)
+                ? medtronicTotalPrice <= 0
+                : totalPrice <= 0) ||
+              isPay
             }
             onPressEvent={() => {
               handleEventPayments();
