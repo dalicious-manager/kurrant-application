@@ -17,6 +17,7 @@ const Pages = () => {
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
   const [selectedId, setSelectedId] = useState(0);
+  const [bottomModalOpen, setBottomModalOpen] = useState(false);
 
   const navigation = useNavigation();
 
@@ -29,6 +30,12 @@ const Pages = () => {
   const handlePress = () => {
     console.log('ㅗㅑ');
     navigation.navigate(RegisterInfoPage5PageName);
+  };
+
+  const thisId = 1;
+  const handleSelectBottomModal = id => {
+    console.log('여기여');
+    console.log(id);
   };
 
   return (
@@ -70,6 +77,20 @@ const Pages = () => {
         }}
       />
       {/* <Bottom */}
+      <BottomSheet
+        modalVisible={bottomModalOpen}
+        setModalVisible={setBottomModalOpen}
+        title="채식 정보 입력"
+        data={[
+          {id: 1, text: '비건'},
+          {id: 2, text: '락토 베지터리언'},
+          {id: 3, text: '락토 베지터리언'},
+        ]}
+        selected={thisId}
+        setSelected={handleSelectBottomModal}
+        // setValue={onSelectEvent2}
+        height={200}
+      />
     </Container>
   );
 };
