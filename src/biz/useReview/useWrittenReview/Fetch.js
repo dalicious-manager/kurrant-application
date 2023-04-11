@@ -21,12 +21,7 @@ export async function getReviewOrderMeal() {
 }
 
 export async function deleteReview(body, token, successCallback) {
-  console.log(body);
-
   const url = `${apiHostUrl}/users/me/reviews/delete`;
-
-  console.log('token');
-  console.log(token);
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -41,12 +36,9 @@ export async function deleteReview(body, token, successCallback) {
   fetch(url, requestOptions)
     .then(response => response.text())
     .then(result => {
-      console.log('확인하기');
-
       const parseResult = JSON.parse(result);
 
       if (parseResult.statusCode !== 200) {
-        console.log(parseResult);
         Alert.alert('작성 실패', `${parseResult.message}`, [
           {
             text: '확인',
@@ -55,7 +47,6 @@ export async function deleteReview(body, token, successCallback) {
           },
         ]);
       } else {
-        console.log(result);
         Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
           {
             text: '확인',
