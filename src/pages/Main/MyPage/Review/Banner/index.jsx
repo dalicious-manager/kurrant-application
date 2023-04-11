@@ -15,7 +15,9 @@ const Component = ({redeemablePoints}) => {
 export default Component;
 
 const Container = styled.View`
-  width: ${() => Dimensions.get('screen').width};
+  width: ${() => {
+    return `${Dimensions.get('screen').width}px`;
+  }};
   justify-content: center;
   align-items: center;
   position: relative;

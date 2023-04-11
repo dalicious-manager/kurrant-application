@@ -150,8 +150,6 @@ export default Component;
 const UploadPhotoPressable = styled.Pressable`
   width: 80px;
   height: 80px;
-  /* width: ${(widthNum, widthUnit) => `${widthNum}${widthUnit}`};
-  height: ${(heightNum, heightUnit) => `${heightNum}${heightUnit}`}; */
   border-radius: 7px;
   position: relative;
   align-items: center;

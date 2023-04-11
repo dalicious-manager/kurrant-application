@@ -82,6 +82,7 @@ import BottomSheetCard from '../../../../../components/BottomSheetCard';
 import PaymentsList from './components/PaymentsList';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import Point from './components/Point/Point';
+import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -100,6 +101,7 @@ const Pages = ({route}) => {
   const [isPay, setIsPay] = useState(false);
   const [point, setPoint] = useState(0);
   const viewRef = useRef();
+  const queryClient = useQueryClient();
   const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
   const {order, orderNice, orderLoading} = useOrderMeal();
@@ -439,6 +441,7 @@ const Pages = ({route}) => {
           });
         }
       }
+      queryClient.invalidateQueries('todayMeal');
     } catch (err) {
       console.log(err);
     }
