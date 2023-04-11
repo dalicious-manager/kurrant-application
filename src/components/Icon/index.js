@@ -40,3 +40,5 @@ export {default as GreyLockerIcon} from './_components/GreyLockerIcon';
 export {default as XVectorIcon} from './_components/XVector';
 export {default as SmallXVectorIcon} from './_components/SmallXVectorIcon';
 export {default as DefaultHumanIcon} from './_components/DefaultHumanIcon';
+export {default as YellowStar} from './_components/YellowStar';
+export {default as RightSkinnyArrow} from './_components/RightSkinnyArrow';
