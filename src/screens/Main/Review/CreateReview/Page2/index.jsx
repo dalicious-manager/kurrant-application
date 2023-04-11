@@ -31,6 +31,8 @@ import {Alert, FlatList, Text, View} from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import {useQueryClient} from 'react-query';
 
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
 
@@ -330,166 +332,123 @@ const Screen = ({route}) => {
 
   return (
     <>
-      <Container2>
+      <KeyboardViewContainer
+        // contentContainerStyle={{
+        //   flex: 1,
+        //   justifyContent: 'center',
+        //   alignItems: 'center',
+        //   paddingBottom: 50,
+        // }}
+        extraHeight={120}>
         <FormProvider {...form}>
-          <Container
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            nestedScrollEnabled={true}>
-            <SatisfactionTitle>
-              <Title1>만족도를 알려주세요</Title1>
-              <RateStars
-                width="160px"
-                margin="2px"
-                ratingInput={starRating}
-                callback={rating => {
-                  setStarRating(rating);
-                }}
-              />
-            </SatisfactionTitle>
+          <SatisfactionTitle>
+            <Title1>만족도를 알려주세요</Title1>
+            <RateStars
+              width="160px"
+              margin="2px"
+              ratingInput={starRating}
+              callback={rating => {
+                setStarRating(rating);
+              }}
+            />
+          </SatisfactionTitle>
 
-            <UploadPhotosWrap>
-              <Title2Wrap>
-                <Title2> 사진 업로드 {photosArray.length}/6 </Title2>
-                <NotMandatory>(선택)</NotMandatory>
-              </Title2Wrap>
+          <UploadPhotosWrap>
+            <Title2Wrap>
+              <Title2> 사진 업로드 {photosArray.length}/6 </Title2>
+              <NotMandatory>(선택)</NotMandatory>
+            </Title2Wrap>
 
-              {/* <PhotosScrollViewWrap
-                // style={{flex: 1}}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                nestedScrollEnabled={true}
-                contentContainerStyle={{
-                  flexDirection: 'row',
-                  height: 100,
-                }}>
-                <PhotosView>
-                  <UploadPhoto
-                    width="80px"
-                    height="80px"
-                    input={input}
-                    photosArray={photosArray}
-                    setPhotosArray={setPhotosArray}
-                  />
-                  {!!photosArray.length &&
-                    photosArray.map((value, index) => {
-                      return (
-                        <PhotoImageWrap key={value.id}>
-                          <DeleteButton
-                            onPress={() => {
-                              handlePhotoRemove(value.id);
-                            }}>
-                            <XCircleIcon />
-                          </DeleteButton>
+            <FlatFlatList
+              data={photosArrayForFlatList}
+              scrollEnabled={true}
+              horizontal={true}
+              contentContainerStyle={{
+                height: 100,
+                alignItems: 'center',
+              }}
+              renderItem={({item}) => {
+                if (typeof item === 'object') {
+                  return (
+                    <>
+                      <PhotoImageWrap>
+                        <DeleteButton
+                          onPress={() => {
+                            handlePhotoRemove(item.id);
+                          }}>
+                          <XCircleIcon />
+                        </DeleteButton>
 
-                          <PhotoImage source={{uri: value.uri}} />
-                        </PhotoImageWrap>
-                      );
-                    })}
-                </PhotosView>
-              </PhotosScrollViewWrap> */}
-
-              <FlatFlatList
-                data={photosArrayForFlatList}
-                scrollEnabled={true}
-                horizontal={true}
-                contentContainerStyle={{
-                  height: 100,
-                  alignItems: 'center',
-                }}
-                renderItem={({item}) => {
-                  if (typeof item === 'object') {
-                    return (
-                      <>
-                        <PhotoImageWrap>
-                          <DeleteButton
-                            onPress={() => {
-                              handlePhotoRemove(item.id);
-                            }}>
-                            <XCircleIcon />
-                          </DeleteButton>
-
-                          <PhotoImage source={{uri: item.uri}} />
-                        </PhotoImageWrap>
-                      </>
-                    );
-                  } else {
-                    return (
-                      <UploadPhoto
-                        width="80px"
-                        height="80px"
-                        input={input}
-                        photosArray={photosArray}
-                        setPhotosArray={setPhotosArray}
-                      />
-                    );
-                  }
-                }}
-              />
-            </UploadPhotosWrap>
-
-            <ReviewWrap>
-              <Title3>
-                리뷰를{' '}
-                {route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2' ? '수정' : '작성'}
-                해주세요
-              </Title3>
-
-              <ReviewInput
-                charLength={charLength}
-                editContentInput={
-                  editItem && editItem.reviewText
-                    ? editItem.reviewText
-                    : undefined
+                        <PhotoImage source={{uri: item.uri}} />
+                      </PhotoImageWrap>
+                    </>
+                  );
+                } else {
+                  return (
+                    <UploadPhoto
+                      width="80px"
+                      height="80px"
+                      input={input}
+                      photosArray={photosArray}
+                      setPhotosArray={setPhotosArray}
+                    />
+                  );
                 }
-              />
-              {/* '최대 몇자인가' 보여주기 */}
+              }}
+            />
+          </UploadPhotosWrap>
 
-              {/* <ShowCurrentLettersLengthWrap>
-                <LengthText>
-                  (
-                  <LengthTextNum charLength={charLength > 500}>
-                    {charLength}
-                  </LengthTextNum>
-                  /500)
-                </LengthText>
-              </ShowCurrentLettersLengthWrap> */}
+          <ReviewWrap>
+            <Title3>
+              리뷰를{' '}
+              {route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2' ? '수정' : '작성'}
+              해주세요
+            </Title3>
 
-              <ShowOnlyToOwnerWrap>
-                {!editItem && (
-                  <>
-                    <CheckBox
-                      checked={input.isExclusive}
-                      onPress={() => {
-                        setInput({...input, isExclusive: !input.isExclusive});
-                      }}>
-                      <CheckIcon
-                        style={{width: 15, height: 10}}
-                        color={'#ffffff'}
-                      />
-                    </CheckBox>
-                  </>
-                )}
+            <ReviewInput
+              charLength={charLength}
+              editContentInput={
+                editItem && editItem.reviewText
+                  ? editItem.reviewText
+                  : undefined
+              }
+            />
+            {/* '최대 몇자인가' 보여주기 */}
 
-                {editItem ? (
-                  <Title4 isEditItem={!!editItem}>
-                    {' '}
-                    {editItem.forMakers
-                      ? '사장님에게만 보이는 리뷰'
-                      : '모두에게 보이는 리뷰'}{' '}
-                  </Title4>
-                ) : (
-                  <Title4 isEditItem={!!editItem}>사장님에게만 보이기 </Title4>
-                )}
-              </ShowOnlyToOwnerWrap>
-            </ReviewWrap>
+            <ShowOnlyToOwnerWrap>
+              {!editItem && (
+                <>
+                  <CheckBox
+                    checked={input.isExclusive}
+                    onPress={() => {
+                      setInput({...input, isExclusive: !input.isExclusive});
+                    }}>
+                    <CheckIcon
+                      style={{width: 15, height: 10}}
+                      color={'#ffffff'}
+                    />
+                  </CheckBox>
+                </>
+              )}
 
-            <Warnings>
-              작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
-              서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
-              제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
-            </Warnings>
-          </Container>
+              {editItem ? (
+                <Title4 isEditItem={!!editItem}>
+                  {' '}
+                  {editItem.forMakers
+                    ? '사장님에게만 보이는 리뷰'
+                    : '모두에게 보이는 리뷰'}{' '}
+                </Title4>
+              ) : (
+                <Title4 isEditItem={!!editItem}>사장님에게만 보이기 </Title4>
+              )}
+            </ShowOnlyToOwnerWrap>
+          </ReviewWrap>
+
+          <Warnings>
+            작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
+            서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
+            제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
+          </Warnings>
 
           <ButtonFinal
             size="full"
@@ -499,7 +458,8 @@ const Screen = ({route}) => {
             onPressEvent={form.handleSubmit(onSignInPressed)}
           />
         </FormProvider>
-      </Container2>
+        <Filler />
+      </KeyboardViewContainer>
     </>
   );
 };
@@ -512,6 +472,19 @@ const Container2 = styled.View`
 
   flex: 1;
   background-color: #ffffff;
+`;
+
+const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
+  padding: 0 24px;
+  padding-top: 24px;
+
+  flex: 1;
+  background-color: #ffffff;
+`;
+
+const Filler = styled.View`
+  width: 100%;
+  height: 100px;
 `;
 
 const Container = styled.ScrollView`
@@ -666,3 +639,122 @@ const LengthTextNum = styled(Typography).attrs({text: ' CaptionR'})`
     }
   }};
 `;
+
+// <Container2>
+// <FormProvider {...form}>
+//   <Container
+//     showsVerticalScrollIndicator={false}
+//     showsHorizontalScrollIndicator={false}
+//     nestedScrollEnabled={true}>
+//     <SatisfactionTitle>
+//       <Title1>만족도를 알려주세요</Title1>
+//       <RateStars
+//         width="160px"
+//         margin="2px"
+//         ratingInput={starRating}
+//         callback={rating => {
+//           setStarRating(rating);
+//         }}
+//       />
+//     </SatisfactionTitle>
+
+//     <UploadPhotosWrap>
+//       <Title2Wrap>
+//         <Title2> 사진 업로드 {photosArray.length}/6 </Title2>
+//         <NotMandatory>(선택)</NotMandatory>
+//       </Title2Wrap>
+
+//       <FlatFlatList
+//         data={photosArrayForFlatList}
+//         scrollEnabled={true}
+//         horizontal={true}
+//         contentContainerStyle={{
+//           height: 100,
+//           alignItems: 'center',
+//         }}
+//         renderItem={({item}) => {
+//           if (typeof item === 'object') {
+//             return (
+//               <>
+//                 <PhotoImageWrap>
+//                   <DeleteButton
+//                     onPress={() => {
+//                       handlePhotoRemove(item.id);
+//                     }}>
+//                     <XCircleIcon />
+//                   </DeleteButton>
+
+//                   <PhotoImage source={{uri: item.uri}} />
+//                 </PhotoImageWrap>
+//               </>
+//             );
+//           } else {
+//             return (
+//               <UploadPhoto
+//                 width="80px"
+//                 height="80px"
+//                 input={input}
+//                 photosArray={photosArray}
+//                 setPhotosArray={setPhotosArray}
+//               />
+//             );
+//           }
+//         }}
+//       />
+//     </UploadPhotosWrap>
+
+//     <ReviewWrap>
+//       <Title3>
+//         리뷰를{' '}
+//         {route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2' ? '수정' : '작성'}
+//         해주세요
+//       </Title3>
+
+//       <ReviewInput
+//         charLength={charLength}
+//         editContentInput={
+//           editItem && editItem.reviewText
+//             ? editItem.reviewText
+//             : undefined
+//         }
+//       />
+//       {/* '최대 몇자인가' 보여주기 */}
+
+//       <ShowOnlyToOwnerWrap>
+//         {!editItem && (
+//           <>
+//             <CheckBox
+//               checked={input.isExclusive}
+//               onPress={() => {
+//                 setInput({...input, isExclusive: !input.isExclusive});
+//               }}>
+//               <CheckIcon
+//                 style={{width: 15, height: 10}}
+//                 color={'#ffffff'}
+//               />
+//             </CheckBox>
+//           </>
+//         )}
+
+//         {editItem ? (
+//           <Title4 isEditItem={!!editItem}>
+//             {' '}
+//             {editItem.forMakers
+//               ? '사장님에게만 보이는 리뷰'
+//               : '모두에게 보이는 리뷰'}{' '}
+//           </Title4>
+//         ) : (
+//           <Title4 isEditItem={!!editItem}>사장님에게만 보이기 </Title4>
+//         )}
+//       </ShowOnlyToOwnerWrap>
+//     </ReviewWrap>
+
+//     <Warnings>
+//       작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
+//       서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
+//       제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
+//     </Warnings>
+//   </Container>
+
+// </FormProvider>
+// </Container2>
