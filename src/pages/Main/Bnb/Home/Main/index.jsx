@@ -53,6 +53,7 @@ import useMembership from '../../../../../biz/useMembership';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
+import {useGetTodayMeal} from '../../../../../hook/useOrder';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -99,6 +100,18 @@ const Pages = () => {
     return el.serviceDate;
   });
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
+
+  // const start = weekly.map(s => {
+  //   const startData = formattedWeekDate(s[0]);
+  //   return startData;
+  // });
+
+  // const end = weekly.map(e => {
+  //   const endData = formattedWeekDate(e.slice(-1)[0]);
+  //   return endData;
+  // });
+  const date = formattedWeekDate(new Date());
+  const {data: todayMealList} = useGetTodayMeal(date);
 
   // 홈 전체 공지사항
 
@@ -209,28 +222,12 @@ const Pages = () => {
       }
       const isTester = async () => {
         const user = loadUser();
-        // if (fcmToken) {
-        //   saveFcmToken({
-        //     token: fcmToken,
-        //   });
-        // }
+
         if (!(userRole === 'ROLE_GUEST')) {
-          const start = weekly.map(s => {
-            const startData = formattedWeekDate(s[0]);
-            return startData;
-          });
-
-          const end = weekly.map(e => {
-            const endData = formattedWeekDate(e.slice(-1)[0]);
-            return endData;
-          });
-
           const status = async () => {
-            //const userStatus = await getStorage('token');
             const userStatus = await getStorage('spotStatus');
+            // const result = await todayOrderMeal(start[0], end[0]);
 
-            const result = await todayOrderMeal(start[0], end[0]);
-            //const getUserStatus = JSON.parse(userStatus).spotStatus;
             const getUserStatus = Number(userStatus);
             if (getUserStatus === 1) {
               navigation.navigate(GroupSelectPageName);
@@ -239,17 +236,16 @@ const Pages = () => {
               console.log(isCancelSpot, 'test');
               navigation.navigate(GroupCreateMainPageName);
             }
-            return result;
+            // return result;
           };
           try {
             if (!(userRole === 'ROLE_GUEST')) {
               if (user) {
                 const data = await status();
-                if (data.statusCode === 200) {
-                  const group = await userGroupSpotCheck();
-                  if (group.statusCode === 200) {
-                    await loadMeal();
-                  }
+
+                const group = await userGroupSpotCheck();
+                if (group.statusCode === 200) {
+                  await loadMeal();
                 }
               }
             }
@@ -448,122 +444,28 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {todayMeal?.length === 0 ? (
+          {todayMealList?.data?.length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
-            todayMeal?.map((m, idx) => {
+            todayMealList?.data?.map((m, idx) => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
                   {m.orderItemDtoList.map(meal => {
                     return (
-                      <MealInfoComponent m={m} meal={meal} />
-
-                      // <MealInfoWrap
-                      //   key={meal.id}
-                      //   onPress={() => navigation.navigate(MealMainPageName)}>
-                      //   <MealInfo>
-                      //     <FastImage
-                      //       source={{
-                      //         uri: `${meal.image}`,
-                      //         priority: FastImage.priority.high,
-                      //       }}
-                      //       style={{
-                      //         width: 64,
-                      //         height: 64,
-                      //         borderTopLeftRadius: 14,
-                      //         borderBottomLeftRadius: 14,
-                      //       }}
-                      //     />
-                      //     <MealText>
-                      //       <View>
-                      //         <DiningType>{`오늘 ${m.diningType}`}</DiningType>
-                      //         <View>
-                      //           <MealTxt>{meal.name}</MealTxt>
-                      //         </View>
-                      //       </View>
-                      //       <MealCount>
-                      //         <GreyTxt status={meal.orderStatus}>
-                      //           {formattedMealFoodStatus(meal.orderStatus)}
-                      //         </GreyTxt>
-                      //         <GreyTxt>{meal.count}개</GreyTxt>
-                      //       </MealCount>
-                      //     </MealText>
-                      //   </MealInfo>
-                      // </MealInfoWrap>
+                      <MealInfoComponent
+                        m={m}
+                        meal={meal}
+                        key={meal.dailyFoodId}
+                      />
                     );
                   })}
                 </React.Fragment>
               );
             })
           )}
-
-          {/* UI만들기용 */}
-          <MealInfoComponent
-            m={{diningType: '점심'}}
-            meal={{
-              id: 8169,
-              dailyFoodId: 15415,
-              name: '하노이 돼지고기와 누들 샐러드',
-              orderStatus: 10,
-              makers: '라이브볼',
-              image:
-                'https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/0001678239783246/%ED%95%98%EB%85%B8%EC%9D%B4%20%EB%8F%BC%EC%A7%80%EA%B3%A0%EA%B8%B0%EC%99%80%20%EB%88%84%EB%93%A4%20%EC%83%90%EB%9F%AC%EB%93%9C.png',
-              count: 1,
-              groupName: '달리셔스',
-              spotName: '상경빌딩 3F',
-            }}
-            mockStatus={mockStatus}
-          />
-          <MealInfoComponent
-            m={{diningType: '점심'}}
-            meal={{
-              id: 8169,
-              dailyFoodId: 15415,
-              name: '하노이 돼지고기와 누들 샐러드',
-              orderStatus: 11,
-              makers: '라이브볼',
-              image:
-                'https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/0001678239783246/%ED%95%98%EB%85%B8%EC%9D%B4%20%EB%8F%BC%EC%A7%80%EA%B3%A0%EA%B8%B0%EC%99%80%20%EB%88%84%EB%93%A4%20%EC%83%90%EB%9F%AC%EB%93%9C.png',
-              count: 1,
-              groupName: '달리셔스',
-              spotName: '상경빌딩 3F',
-            }}
-            mockStatus={mockStatus}
-          />
-
-          {/* 메뉴 수령 그림자 styles.shadow */}
-          {/* <MealInfoWrap style={styles.shadow}>
-            <MealInfo>
-              <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-              <MealText>
-                <View>
-                  <DiningType>점심</DiningType>
-                  <View>
-                    <MealTxt>훈제오리 애플시나몬 샐러드(L)</MealTxt>
-                  </View>
-                </View>
-                <MealCount>
-                  <GreyTxt>2개</GreyTxt>
-                </MealCount>
-              </MealText>
-            </MealInfo>
-          </MealInfoWrap>  */}
         </MainWrap>
-        {/* 오늘의 식사 시간 지나면 나오는 View */}
-        {/* <MealCheckWrap>
-          <MealCheckText>메뉴 확인 후 수령하셨나요?</MealCheckText>
-          <MealCheckButton>
-            <MealCheckButtonText>네, 확인했어요</MealCheckButtonText>
-          </MealCheckButton>
-        </MealCheckWrap>
-        <MealCheckWrap>
-          <MealCheckText>식사 맛있게 하셨나요?</MealCheckText>
-          <MealCheckButton>
-            <MealCheckButtonText>맛 평가하기</MealCheckButtonText>
-          </MealCheckButton>
-        </MealCheckWrap> */}
 
         <Wrap>
           <MainWrap>
