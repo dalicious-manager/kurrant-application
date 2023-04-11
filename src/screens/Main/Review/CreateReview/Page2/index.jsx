@@ -263,15 +263,12 @@ const Screen = ({route}) => {
                   getWrittenReview();
                   getReviewWait();
 
-                  navigation.navigate(ReviewScreenName, {
-                    from: 'point',
+                  navigation.navigate(WrittenReviewPageName, {
+                    screen: ReviewScreenName,
+                    params: {
+                      tabIndex: 1,
+                    },
                   });
-                  // navigation.navigate(WrittenReviewPageName, {
-                  //   screen: ReviewScreenName,
-                  //   params: {
-                  //     tabIndex: 1,
-                  //   },
-                  // });
                 },
                 style: 'cancel',
               },

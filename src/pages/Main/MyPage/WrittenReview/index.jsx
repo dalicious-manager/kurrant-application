@@ -39,11 +39,11 @@ const Pages = ({route}) => {
   }, [writtenReviewCount]);
 
   return (
-    <Container
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}>
+    <Container>
       {!!reviewList && reviewList.length > 0 ? (
         <FlatList
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           ref={flatListRef}
           initialScrollIndex={idx}
           onScrollToIndexFailed={info => {

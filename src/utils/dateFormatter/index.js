@@ -281,3 +281,14 @@ export const isTimeDifferenceLarger = (date1, date2, dateLength) => {
 
   return date2GetTime - date1GetTime > dateLength * 1000 * 60 * 60 * 24;
 };
+
+// 2024-02-12 -> 2024. 01. 11
+export const changeSeperator = (dateInput, inputSeperator, outputSeperator) => {
+  const process1 = dateInput.trim();
+
+  const process2 = process1.split(inputSeperator);
+
+  const process3 = process2.join(outputSeperator);
+
+  return process3;
+};

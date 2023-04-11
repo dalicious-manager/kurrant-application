@@ -23,6 +23,7 @@ import {
 
 import ImageModal from './ImageModal/ImageModal';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+import {changeSeperator} from '../../../../../utils/dateFormatter';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -195,7 +196,7 @@ const Component = ({
           <RestaurentNameText>
             {'['}
             {makersName}
-            {']'}
+            {'] '}
             {foodName}
           </RestaurentNameText>
           <ArrowRightGrey4 />
@@ -236,7 +237,8 @@ const Component = ({
         </StarsWrap>
 
         <PostDateText>
-          {writtenDate} {createDate === updateDate ? '작성' : '수정'}
+          {changeSeperator(writtenDate, '-', '. ')}{' '}
+          {createDate === updateDate ? '작성' : '수정'}
         </PostDateText>
       </RowWrap>
 
@@ -377,7 +379,7 @@ const StarsWrap = styled.View`
   flex-direction: row;
 `;
 
-const PostDateText = styled(Typography).attrs({text: 'Body05R'})`
+const PostDateText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
 `;
