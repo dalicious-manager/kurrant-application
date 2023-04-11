@@ -74,7 +74,12 @@ const styles = StyleSheet.create({
 });
 
 const ShowPressable = styled.Pressable``;
-const HidePressable = styled.Pressable``;
+const HidePressable = styled.Pressable`
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  margin-left: -10px;
+`;
 const Container = styled.View`
   display: flex;
   align-items: center;

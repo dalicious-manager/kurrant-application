@@ -193,7 +193,7 @@ const Component = ({
     <Container>
       <TopWrap>
         <TitleWrap>
-          <RestaurentNameText>
+          <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
             {'['}
             {makersName}
             {'] '}
@@ -348,6 +348,7 @@ const TopWrap = styled.View`
 const TitleWrap = styled.View`
   flex-direction: row;
   align-items: center;
+  width: 78%;
 `;
 
 const RestaurentNameText = styled(Typography).attrs({text: 'Body05SB'})`
