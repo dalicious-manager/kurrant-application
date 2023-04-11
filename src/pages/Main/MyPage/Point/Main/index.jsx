@@ -10,6 +10,7 @@ import withCommas from '../../../../../utils/withCommas';
 import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
 import {useNavigation} from '@react-navigation/native';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+import {PAGE_NAME as purchaseHistory} from '../../PurchaseHistory/Detail/Main';
 
 export const PAGE_NAME = 'P__MY_PAGE__POINT';
 const Pages = () => {
@@ -22,18 +23,24 @@ const Pages = () => {
 
   const noData = dataList?.map(el => el.items.pointHistoryDtos.length);
 
-  const detailPress = id => {
-    const review = reviewList?.filter(el => el.reviewId === id);
-    if (review.length === 0) {
-      Alert.alert('리뷰 삭제', '작성한 리뷰가 삭제되었습니다.', [
-        {
-          text: '확인',
-          onPress: () => {},
-        },
-      ]);
-    } else {
-      navigation.navigate(ReviewScreenName, {
-        from: 'point',
+  const detailPress = (id, status) => {
+    if (status === 0) {
+      const review = reviewList?.filter(el => el.reviewId === id);
+      if (review.length === 0) {
+        Alert.alert('리뷰 삭제', '작성한 리뷰가 삭제되었습니다.', [
+          {
+            text: '확인',
+            onPress: () => {},
+          },
+        ]);
+      } else {
+        navigation.navigate(ReviewScreenName, {
+          from: 'point',
+          id: id,
+        });
+      }
+    } else if (status === 2 || status === 3) {
+      navigation.navigate(purchaseHistory, {
         id: id,
       });
     }
@@ -111,7 +118,7 @@ const Pages = () => {
                               size="label13R"
                               type="grey5"
                               onPressEvent={() => {
-                                detailPress(el.contentId);
+                                detailPress(el.contentId, el.pointStatus);
                               }}
                             />
                             <ArrowIcon />

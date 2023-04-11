@@ -13,20 +13,14 @@ import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/
 import OnlyForMakers from './OnlyForMakers';
 // import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
-import Review, {
-  PAGE_NAME as ReviewPageName,
-} from '../../../../../pages/Main/MyPage/Review';
 import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import WrittenReview, {
-  PAGE_NAME as WrittenReviewPageName,
-} from '../../../../../pages/Main/MyPage/WrittenReview';
+import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import {
   deleteReview,
   deleteReview2,
 } from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
-import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 import ImageModal from './ImageModal/ImageModal';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 
