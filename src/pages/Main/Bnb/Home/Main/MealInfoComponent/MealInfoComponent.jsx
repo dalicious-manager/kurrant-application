@@ -167,16 +167,19 @@ const ConfirmText = styled(Typography).attrs({text: 'Button09SB'})`
 `;
 
 const MealCount = styled.View`
-  align-self: flex-end;
+  /* align-self: flex-end; */
   justify-content: flex-end;
   align-items: flex-end;
+  position: absolute;
+  right: 0px;
 `;
 
 const MealText = styled.View`
-  margin-left: 16px;
+  padding-left: 16px;
   flex-direction: row;
   flex: 1;
-  justify-content: space-between;
+  //justify-content: space-between;
+  position: relative;
 `;
 
 const DiningType = styled(Typography).attrs({text: 'CaptionSB'})`

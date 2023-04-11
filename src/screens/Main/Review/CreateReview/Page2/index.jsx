@@ -29,6 +29,7 @@ import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPa
 
 import {Alert, FlatList, Text, View} from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
+import {useQueryClient} from 'react-query';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -41,7 +42,7 @@ const apiHostUrl =
 const Screen = ({route}) => {
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [clickDisable, setClickDisable] = useState(false);
-
+  const queryClient = useQueryClient();
   // 모든 사진
   const [photosArray, setPhotosArray] = useState([]);
 
@@ -263,11 +264,8 @@ const Screen = ({route}) => {
                   getWrittenReview();
                   getReviewWait();
 
-                  navigation.navigate(WrittenReviewPageName, {
-                    screen: ReviewScreenName,
-                    params: {
-                      tabIndex: 1,
-                    },
+                  navigation.navigate(ReviewScreenName, {
+                    from: 'home',
                   });
                 },
                 style: 'cancel',
@@ -282,6 +280,7 @@ const Screen = ({route}) => {
               },
             ]);
           }
+          queryClient.invalidateQueries('todayMeal');
         })
         .catch(error => {
           console.error('Error:', error);

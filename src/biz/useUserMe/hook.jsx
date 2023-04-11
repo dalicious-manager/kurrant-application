@@ -85,7 +85,7 @@ const useUserMe = () => {
     try {
       setMyInfoLoading(true);
       const res = await Fetch.userMe();
-      console.log(res.data, '123123123');
+      // console.log(res.data, '123123123');
       setMyInfo(res.data);
     } catch (err) {
       console.log(
