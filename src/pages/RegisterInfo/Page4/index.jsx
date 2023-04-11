@@ -12,38 +12,80 @@ import {PAGE_NAME as RegisterInfoPage5PageName} from '../Page5';
 import SelectButton from './components/button/SelectButton';
 
 import BottomSheet from '~components/BottomSheet';
+import {finalRegisterAtom} from '../store';
+import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 
 const Pages = () => {
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
-  const [selectedId, setSelectedId] = useState(0);
+  const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
+
+  const [yesOrNo, setYesOrNo] = useState(0);
+  const [beganLevel, setBeganLevel] = useState(undefined);
+
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
 
   const navigation = useNavigation();
 
   // 예: 일떄는 채식주의자 유형 필요함, 아니오:
 
+  //모달 열기
   useEffect(() => {
-    console.log(selectedId);
+    console.log(yesOrNo);
 
-    if (selectedId === 1) {
+    if (yesOrNo === 1) {
       setBottomModalOpen(true);
     } else {
       setBottomModalOpen(false);
     }
-  }, [selectedId]);
+  }, [yesOrNo, setBottomModalOpen]);
+
+  // 버튼 열리기
+
+  useEffect(() => {
+    console.log('ㅛ내ㅛ내ㅛ내');
+    console.log(yesOrNo);
+
+    if (yesOrNo === 2) {
+      // 아니오거나
+      setClickAvaliable(true);
+    } else {
+      // 예 이고 beganLeve이 있을떄 열림
+
+      if (beganLevel) {
+        setClickAvaliable(true);
+      } else {
+        setClickAvaliable(false);
+      }
+    }
+
+    // if(){
+
+    // }
+  }, [yesOrNo, setClickAvaliable, beganLevel]);
+
+  const handleSelectBottomModal = id => {
+    setBeganLevel(id);
+  };
 
   const handlePress = () => {
     console.log('ㅗㅑ');
-    navigation.navigate(RegisterInfoPage5PageName);
-  };
 
-  const thisId = 1;
-  const handleSelectBottomModal = id => {
-    console.log('여기여');
-    console.log(id);
+    console.log({
+      ...finalRegister,
+      isBegan: yesOrNo === 1 ? true : false,
+      beganLevel: beganLevel,
+    });
+
+    setFinalRegister({
+      ...finalRegister,
+      isBegan: yesOrNo === 1 ? true : false,
+      beganLevel: beganLevel,
+    });
+
+    navigation.navigate(RegisterInfoPage5PageName);
   };
 
   return (
@@ -60,6 +102,8 @@ const Pages = () => {
           <SemiTitle>평소에 채식을 하시나요?</SemiTitle>
         </TitleWrap>
 
+        {beganLevel && <Text>{beganLevel}</Text>}
+
         <ButtonContainer>
           {[
             {id: 1, name: '예'},
@@ -69,8 +113,8 @@ const Pages = () => {
               <SelectButton
                 key={i}
                 data={v}
-                selectedId={selectedId}
-                setSelectedId={setSelectedId}
+                selectedId={yesOrNo}
+                setSelectedId={setYesOrNo}
               />
             );
           })}
@@ -99,7 +143,7 @@ const Pages = () => {
           {id: 6, text: '폴로 베지테리언'},
           {id: 7, text: '플렉시테리언'},
         ]}
-        selected={thisId}
+        selected={beganLevel}
         setSelected={handleSelectBottomModal}
         // setValue={onSelectEvent2}
         height={200}
