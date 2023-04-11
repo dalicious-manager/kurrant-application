@@ -27,7 +27,7 @@ import {PAGE_NAME as ReviewPageName} from '../../../../../pages/Main/MyPage/Revi
 import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
 
-import {Alert, FlatList, Text, View} from 'react-native';
+import {Alert, Dimensions, FlatList, Text, View} from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import {useQueryClient} from 'react-query';
 
@@ -331,16 +331,9 @@ const Screen = ({route}) => {
   };
 
   return (
-    <>
-      <KeyboardViewContainer
-        // contentContainerStyle={{
-        //   flex: 1,
-        //   justifyContent: 'center',
-        //   alignItems: 'center',
-        //   paddingBottom: 50,
-        // }}
-        extraHeight={120}>
-        <FormProvider {...form}>
+    <Container2>
+      <FormProvider {...form}>
+        <KeyboardViewContainer extraHeight={120}>
           <SatisfactionTitle>
             <Title1>만족도를 알려주세요</Title1>
             <RateStars
@@ -450,26 +443,23 @@ const Screen = ({route}) => {
             제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
           </Warnings>
 
-          <ButtonFinal
-            size="full"
-            label="완료"
-            text={'Button09SB'}
-            disabled={clickDisable}
-            onPressEvent={form.handleSubmit(onSignInPressed)}
-          />
-        </FormProvider>
-        <Filler />
-      </KeyboardViewContainer>
-    </>
+          <Filler />
+        </KeyboardViewContainer>
+        <ButtonFinal
+          size="full"
+          label="완료"
+          text={'Button09SB'}
+          disabled={clickDisable}
+          onPressEvent={form.handleSubmit(onSignInPressed)}
+        />
+      </FormProvider>
+    </Container2>
   );
 };
 
 export default Screen;
 
 const Container2 = styled.View`
-  padding: 0 24px;
-  padding-top: 24px;
-
   flex: 1;
   background-color: #ffffff;
 `;
@@ -480,11 +470,12 @@ const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
 
   flex: 1;
   background-color: #ffffff;
+  position: relative;
 `;
 
 const Filler = styled.View`
   width: 100%;
-  height: 100px;
+  height: 40px;
 `;
 
 const Container = styled.ScrollView`
@@ -619,6 +610,15 @@ const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
 const ButtonFinal = styled(Button)`
   position: relative;
   bottom: 20px;
+  margin: auto;
+  width: ${() => {
+    const yes = Dimensions.get('screen').width - 2 * 24;
+
+    return `${yes}px`;
+  }};
+
+  /* position: absolute;
+  bottom: 20px; */
 `;
 
 const ShowCurrentLettersLengthWrap = styled.View`
