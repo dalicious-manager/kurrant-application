@@ -114,7 +114,8 @@ const ModalView = styled.View`
 `;
 
 const TitleView = styled.View`
-  border-radius: 10px 10px 0px 0px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   background-color: white;
   display: flex;
   flex-direction: column;
