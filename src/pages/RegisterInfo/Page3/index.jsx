@@ -13,6 +13,7 @@ import Typography from '~components/Typography';
 import ButtonContainer from '../components/button/Page2_3/ButtonContainer';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dimensions} from 'react-native';
+import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hook';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE3';
 
@@ -22,6 +23,16 @@ const Pages = () => {
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
   const navigation = useNavigation();
+
+  const {
+    getAlergyList,
+
+    alergyList,
+  } = useGetRegisterInfo();
+
+  useEffect(() => {
+    getAlergyList();
+  }, []);
 
   const [page3Input, setPage2Input] = useState([]);
 
@@ -72,18 +83,7 @@ const Pages = () => {
           </TitleWrap>
 
           <ButtonContainer
-            dataList={[
-              {id: 1, name: '잣'},
-              {id: 2, name: '우유'},
-              {id: 3, name: '오징어'},
-              {id: 4, name: '호두'},
-              {id: 5, name: '중국s'},
-              {id: 6, name: '인도네아'},
-              {id: 7, name: '인도sss네시아'},
-              {id: 8, name: '한'},
-              {id: 9, name: '중s국s'},
-              {id: 10, name: '인도네아'},
-            ]}
+            dataList={alergyList}
             callback={handleButtonClicked}
             marginBottom={'24px'}
             marginLeft={'5px'}

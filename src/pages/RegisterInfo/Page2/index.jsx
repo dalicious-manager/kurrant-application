@@ -12,6 +12,7 @@ import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import Typography from '~components/Typography';
 import ButtonContainer from '../components/button/Page2_3/ButtonContainer';
+import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hook';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE2';
 
@@ -20,12 +21,22 @@ const Pages = () => {
 
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
+  const {
+    getCountryFoodList,
+
+    countryFoodList,
+  } = useGetRegisterInfo();
+
+  useEffect(() => {
+    getCountryFoodList();
+  }, []);
+
   const navigation = useNavigation();
 
   const [page2Input, setPage2Input] = useState([]);
 
   useEffect(() => {
-    if (page2Input.length === 4) {
+    if (page2Input.length > 0 && page2Input.length <= 4) {
       setClickAvaliable(true);
     } else {
       setClickAvaliable(false);
@@ -64,18 +75,7 @@ const Pages = () => {
         </TitleWrap>
 
         <ButtonContainer
-          dataList={[
-            {id: 1, name: '한국'},
-            {id: 2, name: '중국'},
-            {id: 3, name: '인도네시아'},
-            {id: 4, name: '한국'},
-            {id: 5, name: '중국s'},
-            {id: 6, name: '인도네아'},
-            {id: 7, name: '인도sss네시아'},
-            {id: 8, name: '한'},
-            {id: 9, name: '중s국s'},
-            {id: 10, name: '인도네아'},
-          ]}
+          dataList={countryFoodList}
           callback={handleButtonClicked}
           selectLimit={4}
         />
@@ -126,3 +126,16 @@ const Title = styled(Typography).attrs({text: 'Title04SB'})`
 const SemiTitle = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[4]};
 `;
+
+const sampleDataList = [
+  {id: 1, name: '한국'},
+  {id: 2, name: '중국'},
+  {id: 3, name: '인도네시아'},
+  {id: 4, name: '한국'},
+  {id: 5, name: '중국s'},
+  {id: 6, name: '인도네아'},
+  {id: 7, name: '인도sss네시아'},
+  {id: 8, name: '한'},
+  {id: 9, name: '중s국s'},
+  {id: 10, name: '인도네아'},
+];

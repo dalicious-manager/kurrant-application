@@ -11,9 +11,12 @@ const SelectInputBox = ({
   buttonOnClickCallback,
 }) => {
   return (
-    <Container width={width}>
+    <Container
+      onPress={() => {
+        buttonOnClickCallback();
+      }}
+      width={width}>
       <DataValue isValue={!!value}>{value ? value : placeholder}</DataValue>
-
       <BottomModalPressable
         onPress={() => {
           buttonOnClickCallback();
@@ -25,7 +28,7 @@ const SelectInputBox = ({
 };
 export default SelectInputBox;
 
-const Container = styled.View`
+const Container = styled.Pressable`
   width: ${({width}) => width};
   padding-bottom: 6px;
   padding-right: 10px;
