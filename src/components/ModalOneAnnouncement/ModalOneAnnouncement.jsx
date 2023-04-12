@@ -9,31 +9,33 @@ import {Dimensions, ScrollView} from 'react-native';
 import {setStorage} from '../../utils/asyncStorage';
 import {removeItemFromStorage} from '../../utils/asyncStorage';
 
-const Component = ({modalVisible, data, setModalVisible}) => {
-  const themeApp = useTheme();
+const MyCustomRenderer = ({children}) => (
+  // <View style={{fontFamily: PretendardRegular}}>{children}</View>
+  <View style={{fontFamily: 'Pretendard-Regular'}}>{children}</View>
+);
 
-  useEffect(() => {
-    console.log('모달은 떴어용');
-  }, []);
+const Component = ({modalVisible, data, setModalVisible}) => {
+  // useEffect(() => {
+  //   console.log('모달은 떴어용');
+  // }, []);
 
   const systemFonts = [
     ...defaultSystemFonts,
+    // 'Pretendard',
     'Pretendard-Regular',
     'Pretendard-SemiBold',
   ];
 
   const source = {
-    html: `<div style='padding-left:24px; padding-right:20px; '> 
-        <div style="margin:0; padding: 0 ; width:100%; font-weight: 600; fontFamily:'Pretendard-SemiBold'; font-size:20px; line-height:26px; color:${themeApp.colors.grey[2]}">${data.title}</div>
-        <div style="margin:0; padding: 0 ; margin-top:4px; font-weight: 400; fontFamily:'Pretendard-Regular'; font-size:13px; line-height:19px; color:${themeApp.colors.grey[4]}">${data.updated}</div>
-        <div style="width:100%; height:1px; margin:24px 0px; background-color:${themeApp.colors.grey[8]}"></div>
+    html: `<div style="font-family: 'Pretendard';  padding-left:24px; padding-right:20px; ">
+        
         ${data.content}
         </div>`,
   };
 
-  // console.log(data.content);
-  console.log(data.title);
-  console.log(data.updated);
+  console.log(data.content);
+  // console.log(data.title);
+  // console.log(data.updated);
 
   const handleMessageRead = async () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
@@ -52,10 +54,18 @@ const Component = ({modalVisible, data, setModalVisible}) => {
     setModalVisible(false);
   };
 
+  // 폰트 적용하기
+
+  const [fontLoaded, setFontLoaded] = useState(false);
+
   useEffect(() => {
-    return () => {
-      console.log('컴포넌트 없어짐' + data.id);
+    const loadFont = async () => {
+      await Font.loadAsync({
+        'Pretendard-Regular': require('../../assets/fonts/Pretendard/Pretendard-Regular.otf'),
+      });
+      setFontLoaded(true);
     };
+    loadFont();
   }, []);
 
   return (
@@ -77,11 +87,50 @@ const Component = ({modalVisible, data, setModalVisible}) => {
             </TitleView>
 
             <ContenContainerScrollView>
-              <HTML
+              {/* <HTML
                 contentWidth={Dimensions.get('window').width}
                 source={source}
                 systemFonts={systemFonts}
-              />
+              /> */}
+
+              {/* <Typography text={'Body06R'}>{data.content}</Typography> */}
+
+              {
+                <HTML
+                  contentWidth={Dimensions.get('window').width}
+                  source={source}
+                  systemFonts={systemFonts}
+                  tagsStyles={{
+                    div: {
+                      color: '#58585A',
+                      // textDecorationLine: 'none',
+                      fontSize: 14,
+                      fontFamily: 'Montserrat-Bold',
+
+                      // fontFamily: 'Pretendard',
+                      lineHeight: 22,
+                    },
+                  }}
+                  // customRenderer={[
+                  //   {
+                  //     tag: 'div',
+                  //     renderer: MyCustomRenderer,
+                  //   },
+                  // ]}
+                  // customHTMLElementModels={{
+                  //   span: {
+                  //     contentModel: 'mixed',
+                  //     isVoid: false,
+                  //     attrs: {
+                  //       style: {
+                  //         fontFamily: 'Pretendard-Regular',
+                  //       },
+                  //     },
+                  //   },
+                  // }}
+                />
+              }
+
               <Filler></Filler>
             </ContenContainerScrollView>
             <ConfirmPressable
@@ -115,8 +164,8 @@ const ModalView = styled.View`
   padding-top: 20px;
   padding-bottom: 24px;
 
-  width: 80%;
-  height: 70%;
+  width: 82%;
+  height: 71%;
   position: relative;
 
   align-items: center;
@@ -128,13 +177,18 @@ const TitleView = styled.View`
   background-color: white;
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  width: 100%;
+
+  padding: 0 24px;
+  padding-bottom: 24px;
   position: relative;
   top: 0;
+  /* border: 1px solid black; */
 `;
 
 const TitleText = styled(Typography).attrs({text: 'Title04SB'})`
   color: ${props => props.theme.colors.grey[2]};
+  margin-bottom: 6px;
 `;
 const DateText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
@@ -151,7 +205,7 @@ const Filler = styled.View`
 
 const MessageReadPressable = styled.Pressable`
   position: absolute;
-  top: -24px;
+  top: -25px;
   right: 2px;
   /* bottom: 5px;
   right: 10px; */
@@ -177,9 +231,18 @@ const ConfirmPressable = styled.Pressable`
   align-items: center;
   border-radius: 100px;
   position: absolute;
-  bottom: 10px;
+  bottom: 16px;
 `;
 
 const ConfirmText = styled(Typography).attrs({text: 'Button09SB'})`
   color: white;
 `;
+
+// const source = {
+//   html: `<div style='padding-left:24px; padding-right:20px; '>
+//        <div style="margin:0; padding: 0 ; width:100%; font-weight: 600; fontFamily:'Pretendard-SemiBold'; font-size:20px; line-height:26px; color:${themeApp.colors.grey[2]}">${data.title}</div>
+//        <div style="margin:0; padding: 0 ; margin-top:4px; font-weight: 400; fontFamily:'Pretendard-Regular'; font-size:13px; line-height:19px; color:${themeApp.colors.grey[4]}">${data.updated}</div>
+//       <div style="width:100%; height:1px; margin:24px 0px; background-color:${themeApp.colors.grey[8]}"></div>
+//       ${data.content}
+//       </div>`,
+// };
