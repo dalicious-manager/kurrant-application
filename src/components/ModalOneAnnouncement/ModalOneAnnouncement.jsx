@@ -6,19 +6,15 @@ import Typography from '../Typography';
 import HTML, {defaultSystemFonts} from 'react-native-render-html';
 
 import {Dimensions, ScrollView} from 'react-native';
-import {getStorage, setStorage} from '../../utils/asyncStorage';
+import {setStorage} from '../../utils/asyncStorage';
+import {removeItemFromStorage} from '../../utils/asyncStorage';
 
-const Component = ({
-  modalVisible,
-  data,
-  announcementHandle,
-  setAnnouncementHandle,
-}) => {
+const Component = ({modalVisible, data, setModalVisible}) => {
   const themeApp = useTheme();
 
-  // console.log(modalVisible);
-
-  const [modalOffPriorityOne, setModalOffPriorityOne] = useState(true);
+  useEffect(() => {
+    console.log('모달은 떴어용');
+  }, []);
 
   const systemFonts = [
     ...defaultSystemFonts,
@@ -36,38 +32,20 @@ const Component = ({
   };
 
   const handleMessageRead = async () => {
-    // const yes = await getStorage('announcementsClickedDates');
-    // 있을떄
+    // 1. 클릭하면 localstorage에 클릭한 날짜 저장
+    // 기존거 지우고 새로운거 올리기
+    await removeItemFromStorage('announcementsClickedOneDate');
 
-    // 아예 없을때
-    // console.log('랄랄라2');
-    // console.log(modalVisible);
+    const checkedTimeObject = {};
+    checkedTimeObject[data.id.toString()] = Date.now();
 
-    const modalStatus = {...modalVisible};
-    // console.log(modalStatus);
+    await setStorage(
+      'announcementsClickedOneDate',
+      JSON.stringify(checkedTimeObject),
+    );
 
-    // modalVisible.forEach(v => {
-    //   modalStatus[v.toString()] = undefined
-    // });
-
-    modalStatus[data.id.toString()] = Date.now();
-
-    // console.log(`close ${data.id}`);
-
-    // console.log(modalStatus);
-    // {"3": 1680072040934, "4": undefined}
-
-    await setStorage('announcementsClickedDates', JSON.stringify(modalStatus));
-
-    // // 팝업 지우게하기
-
-    const yes2 = {...announcementHandle};
-    yes2[data.id.toString()] = false;
-    // console.log(yes2);
-
-    setAnnouncementHandle(yes2);
-
-    // setModalOffPriorityOne(false);
+    // 2. modalVisible
+    setModalVisible(false);
   };
 
   useEffect(() => {
@@ -78,9 +56,7 @@ const Component = ({
 
   return (
     <CenteredView>
-      <Modal
-        transparent={true}
-        visible={modalOffPriorityOne && !modalVisible[data.id.toString()]}>
+      <Modal transparent={true} visible={modalVisible}>
         <CenteredView>
           <ModalView>
             <ContenContainer>

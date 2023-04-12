@@ -82,7 +82,7 @@ export default function PasswordCheck({route}) {
       const data = await cardRegistedNice(
         {
           ...JSON.parse(params?.cardData),
-          payNumber: state,
+          payNumber: params?.password,
         },
         2,
       );

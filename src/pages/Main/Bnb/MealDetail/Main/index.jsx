@@ -32,11 +32,11 @@ import useAuth from '../../../../../biz/useAuth';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import CarouselImage from '../components/CarouselImage';
+import MealDetailReview from './Review/MealDetailReview';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
 const Pages = ({route}) => {
-  console.log(route.params, 'iii');
   const bodyRef = useRef();
   const navigation = useNavigation();
   const {balloonEvent, BalloonWrap} = Balloon();
@@ -414,6 +414,8 @@ const Pages = ({route}) => {
                 </InfoTextView>
               </InfoWrap>
             </Content>
+
+            {/* <MealDetailReview /> */}
 
             {/* 리뷰자리 */}
             {/* <Content >

@@ -23,8 +23,6 @@ const useReviewWait = () => {
       setReviewWaitCount(res.data.count);
       setReviewWaitList(res.data.orderFoodList);
       setRedeemablePoints(res.data.redeemablePoints);
-
-      // setReviewWaitList([]);
     } catch (err) {
       console.log(err);
     }

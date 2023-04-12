@@ -49,9 +49,12 @@ import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useAuth from '../../../../../biz/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
+import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
+
 import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
 import useMembership from '../../../../../biz/useMembership';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
+import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {useGetTodayMeal} from '../../../../../hook/useOrder';
@@ -162,6 +165,26 @@ const Pages = () => {
       navigation.navigate(RegisterInfoPage1PageName);
     }
   }, []);
+
+  // 홈 공지사항 하나만 넣기
+
+  const {
+    getOneAnnouncement,
+    oneAnnouncement,
+    isOneAnnouncementModalVisible,
+    setIsOneAnnouncementModalVisible,
+  } = useGetOneAnnouncements();
+
+  useEffect(() => {
+    getOneAnnouncement(2);
+  }, []);
+
+  // useEffect(() => {
+  //   console.log('아나운스먼트 여기여');
+  //   console.log(oneAnnouncement);
+  // }, [oneAnnouncement]);
+
+  // 로컬스토리지 확인하기
 
   useEffect(() => {
     const handleShowModal = async () => {
@@ -403,6 +426,14 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
+        {!!oneAnnouncement && (
+          <ModalOneAnnouncement
+            data={oneAnnouncement}
+            modalVisible={isOneAnnouncementModalVisible}
+            setModalVisible={setIsOneAnnouncementModalVisible}
+          />
+        )}
+
         {/* 홈 강제 공지사항 띄우기 */}
         {/* {Array.isArray(announcements) &&
           announcements.length > 0 &&
@@ -591,7 +622,12 @@ const Pages = () => {
 
       <ButtonWrap>
         <Button
-          onPress={() => {
+          onPress={async () => {
+            // 임시 재신
+            // const lalala = await getData();
+            // console.log(lalala)
+            // removeItemFromStorage('announcementsClickedOneDate');
+
             if (userSpotId) {
               navigation.navigate(BuyMealPageName);
               closeBalloon();

@@ -9,6 +9,7 @@ import {useAtom} from 'jotai';
 import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/store';
 import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
 import {convertDateFormat1} from '../../../../utils/dateFormatter';
+import {useNavigation} from '@react-navigation/native';
 
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const sampleAdminReview = {
@@ -38,12 +39,16 @@ const Pages = ({route}) => {
     setTotalWrittenReviewList(writtenReviewCount);
   }, [writtenReviewCount]);
 
+  useEffect(() => {
+    console.log(reviewList);
+  }, [reviewList]);
+
   return (
-    <Container
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}>
+    <Container>
       {!!reviewList && reviewList.length > 0 ? (
         <FlatList
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           ref={flatListRef}
           initialScrollIndex={idx}
           onScrollToIndexFailed={info => {

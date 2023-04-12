@@ -1,5 +1,5 @@
 import {useAtom} from 'jotai';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {getStorage} from '../../utils/asyncStorage';
 import {isTimeDifferenceLarger} from '../../utils/dateFormatter';
 import * as Fetch from './Fetch';
@@ -13,8 +13,6 @@ const useGetAnnouncements = () => {
   const getAnnouncements = async (id, spotId) => {
     try {
       const res = await Fetch.getAnnouncements(id, spotId);
-
-      // console.log(res);
 
       const sampleArray = [
         {
@@ -47,7 +45,6 @@ const useGetAnnouncements = () => {
       ];
 
       const dataFromDb = res.data;
-      // const dataFromDb = sampleArray;
 
       const getClickedDate = await getStorage('announcementsClickedDates');
 
@@ -75,52 +72,58 @@ const useGetAnnouncements = () => {
             yes[v] = undefined;
           });
 
+        // 없을때 값 예시 : {"4": undefined}
+
         setAnnouncementModalVisible(yes);
+        setAnnouncements([...dataFromDb]);
         return;
       } else {
-        console.log(clickedDate);
+        const yes = {};
+
+        dataFromDb.forEach(k => {
+          if (Object.keys(clickedDate).includes(k.id.toString())) {
+            // clickedDate안에  db에서 온 id가 있으면
+
+            Object.entries(clickedDate).forEach(b => {
+              if (
+                isTimeDifferenceLarger(new Date(b[1]), new Date(Date.now()), 7)
+              ) {
+                // 확인한지 7일이  지나면
+                yes[k.id] = undefined;
+              } else {
+                // 힉ㅇ;ㄴ힞; 7ㅇ;ㄹㅇ; 인지나면
+                yes[k.id] = b[1];
+              }
+            });
+          } else {
+            // 없다? 새로 넣어준다
+            yes[k.id] = undefined;
+          }
+        });
+
+        let yes2 = [];
+
+        [...dataFromDb].forEach(v => {
+          if (Object.keys(yes).includes(v.id.toString())) {
+            if (!yes[v.id.toString()]) {
+              yes2.push(v);
+            }
+          }
+        });
+
+        setAnnouncementModalVisible(yes);
+        setAnnouncements([...yes2]);
       }
       //
-
-      const yes = {};
-
-      dataFromDb.forEach(k => {
-        if (Object.keys(clickedDate).includes(k.id.toString())) {
-          Object.entries(clickedDate).forEach(b => {
-            if (
-              isTimeDifferenceLarger(new Date(b[1]), new Date(Date.now()), 7)
-            ) {
-              yes[k.id] = undefined;
-            } else {
-              yes[k.id] = b[1];
-            }
-          });
-        } else {
-          yes[k.id] = undefined;
-        }
-      });
-
-      let yes2 = [];
-
-      [...dataFromDb].forEach(v => {
-        if (Object.keys(yes).includes(v.id.toString())) {
-          if (!yes[v.id.toString()]) {
-            yes2.push(v);
-          }
-        }
-      });
-
-      // console.log('-----------');
-      // console.log(yes);
-      // console.log('-----------');
-      // console.log(yes2);
-
-      setAnnouncementModalVisible(yes);
-      setAnnouncements([...yes2]);
     } catch (err) {
       throw err;
     }
   };
+
+  useEffect(() => {
+    console.log('일단 로컬스토리지에는 없어 리스판스 여기여~~~~');
+    console.log(announcementModalVisible);
+  }, [announcementModalVisible]);
 
   return {
     getAnnouncements,
