@@ -71,7 +71,7 @@ const Pages = ({route}) => {
 
   const callMailAuth = async () => {
     try {
-      await auth.requestEmailAuth({receivers: [email]}, 7);
+      await auth.requestEmailAuth({receivers: [email]}, 8);
       if (progress < 2) return setProgress(progressed => progressed + 1);
       navigation.goBack();
     } catch (err) {
@@ -308,7 +308,7 @@ const Pages = ({route}) => {
                         if (progress < 3) {
                           try {
                             if (progress <= 2) {
-                              await auth.confirmEmailAuth(emailAuth, 7);
+                              await auth.confirmEmailAuth(emailAuth, 8);
                               return setProgress(progress + 1);
                             }
                           } catch (err) {
@@ -339,7 +339,7 @@ const Pages = ({route}) => {
                 onPressEvent={async () => {
                   if (progress < 3) {
                     try {
-                      await auth.confirmEmailAuth(emailAuth, 7);
+                      await auth.confirmEmailAuth(emailAuth, 8);
                       return setProgress(progress + 1);
                     } catch (err) {
                       Alert.alert(
