@@ -193,7 +193,7 @@ const Pages = ({route}) => {
   const onFocusInput = () => {
     setValue('point', '');
   };
-  const keyboardStatus = useKeyboardEvent();
+  const keyboardStatus = useKeyboardEvent(inputRef);
 
   const handleEventPayments = () => {
     orderPress2(selected);
@@ -815,23 +815,24 @@ const Pages = ({route}) => {
       </KeyboardAwareScrollView>
       {/* ;handleEventPayments() */}
 
-      {!keyboardStatus.isKeyboardActivate && (
-        <ButtonWrap>
-          <Button
-            label={`총 ${totalCount}개 결제하기`}
-            disabled={
-              payments !== 'NOMAL' ||
-              (medtronicSupportArr.includes(62471004)
-                ? medtronicTotalPrice <= 0
-                : totalPrice <= 0) ||
-              isPay
-            }
-            onPressEvent={() => {
-              handleEventPayments();
-            }}
-          />
-        </ButtonWrap>
-      )}
+      {!inputRef?.current?.isFocused() &&
+        !keyboardStatus.isKeyboardActivate && (
+          <ButtonWrap>
+            <Button
+              label={`총 ${totalCount}개 결제하기`}
+              disabled={
+                payments !== 'NOMAL' ||
+                (medtronicSupportArr.includes(62471004)
+                  ? medtronicTotalPrice <= 0
+                  : totalPrice <= 0) ||
+                isPay
+              }
+              onPressEvent={() => {
+                handleEventPayments();
+              }}
+            />
+          </ButtonWrap>
+        )}
       <BottomModal
         modalVisible={modalVisible3}
         setModalVisible={setModalVisible3}
