@@ -37,7 +37,6 @@ import MealDetailReview from './Review/MealDetailReview';
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
 const Pages = ({route}) => {
-  console.log(route.params, 'iii');
   const bodyRef = useRef();
   const navigation = useNavigation();
   const {balloonEvent, BalloonWrap} = Balloon();
@@ -416,7 +415,7 @@ const Pages = ({route}) => {
               </InfoWrap>
             </Content>
 
-            <MealDetailReview />
+            {/* <MealDetailReview /> */}
 
             {/* 리뷰자리 */}
             {/* <Content >

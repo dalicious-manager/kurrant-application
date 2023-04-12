@@ -184,7 +184,7 @@ export const StyledPassword = styled.View`
   min-width: 200px;
 `;
 
-const PasswordText = styled.Text`
+const PasswordText = styled.View`
   width: 18px;
   height: 18px;
   border-radius: 50px;
