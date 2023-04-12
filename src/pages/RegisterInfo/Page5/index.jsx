@@ -9,6 +9,7 @@ import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
 import Typography from '~components/Typography';
+import YesOrNoButton from '../components/button/YesOrNoButton/YesOrNoButton';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE5';
 
@@ -45,7 +46,7 @@ const Pages = () => {
             {id: 2, name: '아니요'},
           ].map((v, i) => {
             return (
-              <SelectButton
+              <YesOrNoButton
                 key={i}
                 data={v}
                 selectedId={yesOrNo}

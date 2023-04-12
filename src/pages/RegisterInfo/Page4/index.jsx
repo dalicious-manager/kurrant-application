@@ -14,6 +14,7 @@ import SelectButton from './components/button/SelectButton';
 import BottomSheet from '~components/BottomSheet';
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
+import YesOrNoButton from '../components/button/YesOrNoButton/YesOrNoButton';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 
@@ -128,7 +129,7 @@ const Pages = () => {
             {id: 2, name: '아니요'},
           ].map((v, i) => {
             return (
-              <SelectButton
+              <YesOrNoButton
                 key={i}
                 data={v}
                 selectedId={yesOrNo}
