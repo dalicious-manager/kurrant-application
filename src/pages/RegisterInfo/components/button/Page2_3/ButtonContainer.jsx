@@ -6,6 +6,7 @@ const ButtonContainer = ({
   dataList,
   selectLimit,
   marginBottom = '0px',
+  marginLeft = '0px',
   callback = () => {},
 }) => {
   const [selectedIdList, setSelectedIdList] = useState([]);
@@ -17,7 +18,7 @@ const ButtonContainer = ({
   // 4개 이상일 경우 더이상 선택하는 것을 못하게 막는다
 
   return (
-    <Container marginBottom={marginBottom}>
+    <Container marginBottom={marginBottom} marginLeft={marginLeft}>
       <ButtonWrap>
         {dataList.map(v => {
           return (
@@ -39,6 +40,7 @@ export default ButtonContainer;
 
 const Container = styled.View`
   margin-bottom: ${({marginBottom}) => marginBottom};
+  margin-left: ${({marginLeft}) => marginLeft};
 `;
 
 const ButtonWrap = styled.View`

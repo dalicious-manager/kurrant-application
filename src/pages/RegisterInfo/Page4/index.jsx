@@ -173,7 +173,7 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  padding: 35px 20px;
+  padding: 0px 24px;
   align-items: center;
 
   background-color: #ffffff;
@@ -187,7 +187,7 @@ const ScrollViewContainer = styled.ScrollView`
 
 const ButtonNext = styled(Button)`
   position: relative;
-  bottom: 20px;
+  bottom: 35px;
 `;
 
 const TitleWrap = styled.View`

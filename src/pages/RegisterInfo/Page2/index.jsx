@@ -110,7 +110,7 @@ const ScrollViewContainer = styled.ScrollView`
 
 const ButtonNext = styled(Button)`
   position: relative;
-  bottom: 20px;
+  bottom: 35px;
 `;
 
 const TitleWrap = styled.View`

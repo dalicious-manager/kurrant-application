@@ -156,7 +156,6 @@ const Container = styled.View`
   flex: 1;
   padding: 35px 20px;
   align-items: center;
-
   background-color: #ffffff;
 `;
 
@@ -187,5 +186,5 @@ const ButtonContainer = styled.View`
 
 const ButtonNext = styled(Button)`
   position: relative;
-  bottom: 20px;
+  bottom: 35px;
 `;

@@ -8,6 +8,7 @@ import {PAGE_NAME as RegisterInfoPage1PageName} from '../Page1';
 import {PAGE_NAME as RegisterInfoPage2PageName} from '../Page2';
 import {PAGE_NAME as RegisterInfoPage3PageName} from '../Page3';
 import {PAGE_NAME as RegisterInfoPage4PageName} from '../Page4';
+import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_START';
 
@@ -19,7 +20,7 @@ const Pages = () => {
   const handlePress = () => {
     console.log('ㅗㅑ');
     // navigation.navigate(RegisterInfoPage1PageName);
-    navigation.navigate(RegisterInfoPage3PageName);
+    navigation.navigate(RegisterInfoPage6PageName);
   };
 
   return (

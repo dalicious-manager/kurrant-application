@@ -3,16 +3,35 @@ import styled from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {FormProvider, useForm} from 'react-hook-form';
 
+import Typography from '~components/Typography';
+import BottomSheet from '~components/BottomSheet';
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7';
+
+import RefTextInput from '~components/RefTextInput';
+import SelectInputBox from './components/SelectInputBox/SelectInputBox';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
 const Pages = () => {
   //   const [clickAvaliable, setClickAvaliable] = useState(false);
+
+  // 바텀 팝업 버튼들
+  const [birthdayModal, setBirthdayModal] = useState('');
+  const [genderModal, setGenderModal] = useState(undefined);
+  const [countryModal, setCountryModal] = useState('');
+  const [jobTypeModal, setJobTypeModal] = useState('');
+  const [detailJobTypeModal, setDetailJobTypeModal] = useState('');
+
+  const [birthday, setBirthday] = useState('');
+  const [gender, setGender] = useState('');
+  const [country, setCountry] = useState('');
+  const [jobType, setJobType] = useState('');
+  const [detailJobType, setDetailJobType] = useState('');
 
   const navigation = useNavigation();
 
@@ -27,8 +46,22 @@ const Pages = () => {
       styles={{
         position: 'relative',
       }}>
-      <ProgressBar progress={6} />
-      <Text>레지스터 인포 page6</Text>
+      <ContentContainer>
+        <ProgressBar progress={5} />
+
+        <TitleWrap>
+          <Title>기본정보</Title>
+        </TitleWrap>
+
+        <SelectInputBox
+          placeholder={'생년월일'}
+          value={birthday}
+          setValue={setBirthday}
+          buttonOnClickCallback={() => {
+            setBirthdayModal(true);
+          }}
+        />
+      </ContentContainer>
 
       <ButtonNext
         size="full"
@@ -39,6 +72,26 @@ const Pages = () => {
           handlePress();
         }}
       />
+
+      {/* <Bottom */}
+      <BottomSheet
+        modalVisible={birthdayModal}
+        setModalVisible={setBirthdayModal}
+        title="채식 정보 입력"
+        data={[
+          {id: 1, text: '비건'},
+          {id: 2, text: '락토 베지터리언'},
+          {id: 3, text: '오보 베지테리언'},
+          {id: 4, text: '락토 오보 베지테리언'},
+          {id: 5, text: '페스코 베지테리언'},
+          {id: 6, text: '폴로 베지테리언'},
+          {id: 7, text: '플렉시테리언'},
+        ]}
+        selected={birthday}
+        setSelected={setBirthday}
+        // setValue={onSelectEvent2}
+        height={200}
+      />
     </Container>
   );
 };
@@ -46,12 +99,29 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  padding: 35px 20px;
+  padding: 35px 24px;
   align-items: center;
   background-color: #ffffff;
 `;
 
+const ContentContainer = styled.View`
+  flex: 1;
+  width: 100%;
+  /* height: 90%; */
+  background-color: #ffffff;
+`;
+
+const TitleWrap = styled.View`
+  width: 100%;
+  margin-top: 29px;
+  margin-bottom: 24px;
+`;
+const Title = styled(Typography).attrs({text: 'Title04SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  margin-bottom: 8px;
+`;
+
 const ButtonNext = styled(Button)`
-  /* position: absolute; */
-  /* bottom: 35px; */
+  position: relative;
+  bottom: 20px;
 `;
