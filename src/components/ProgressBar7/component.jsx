@@ -7,6 +7,7 @@ import ProgressThree from '../../assets/icons/ProgressBar7/ProgressThree.svg';
 import ProgressFour from '../../assets/icons/ProgressBar7/ProgressFour.svg';
 import ProgressFive from '../../assets/icons/ProgressBar7/ProgressFive.svg';
 import ProgressSix from '../../assets/icons/ProgressBar7/ProgressSix.svg';
+import ProgressSeven from '../../assets/icons/ProgressBar7/ProgressSeven.svg';
 
 /** 예시 */
 
@@ -23,7 +24,8 @@ const Component = ({progress}) => {
     else if (progress === 3) return <ProgressThree />;
     else if (progress === 4) return <ProgressFour />;
     else if (progress === 5) return <ProgressFive />;
-    else if (progress >= 6) return <ProgressSix />;
+    else if (progress === 6) return <ProgressSix />;
+    else if (progress >= 7) return <ProgressSeven />;
   };
   return (
     <ProgressContainer>

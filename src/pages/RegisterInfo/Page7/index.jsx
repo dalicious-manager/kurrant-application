@@ -27,9 +27,10 @@ const Pages = () => {
       styles={{
         position: 'relative',
       }}>
-      <ProgressBar progress={6} />
-      <Text>음식선텍(page7)</Text>
-
+      <ScrollViewContainer showsVerticalScrollIndicator={false}>
+        <ProgressBar progress={7} />
+        <Text>음식선텍(page7)</Text>
+      </ScrollViewContainer>
       <ButtonNext
         size="full"
         label="다음"
@@ -46,12 +47,19 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  padding: 35px 20px;
+  /* padding: 35px 20px; */
+  padding: 15px 20px;
   align-items: center;
-  justify-content: space-between;
+  background-color: #ffffff;
+`;
+
+const ScrollViewContainer = styled.ScrollView`
+  width: 100%;
+  /* height: 90%; */
+  background-color: #ffffff;
 `;
 
 const ButtonNext = styled(Button)`
-  /* position: absolute; */
-  /* bottom: 35px; */
+  position: relative;
+  bottom: 35px;
 `;
