@@ -252,6 +252,7 @@ const RightBlocks = styled.View`
   align-items: flex-end;
   padding-right: 24px;
   padding-left: 24px;
+  margin-bottom: 24px;
 `;
 
 const Label = styled(Typography)``;

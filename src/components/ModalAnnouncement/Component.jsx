@@ -36,25 +36,10 @@ const Component = ({
   };
 
   const handleMessageRead = async () => {
-    // const yes = await getStorage('announcementsClickedDates');
-    // 있을떄
-
-    // 아예 없을때
-    // console.log('랄랄라2');
-    // console.log(modalVisible);
-
     const modalStatus = {...modalVisible};
-    // console.log(modalStatus);
-
-    // modalVisible.forEach(v => {
-    //   modalStatus[v.toString()] = undefined
-    // });
 
     modalStatus[data.id.toString()] = Date.now();
 
-    // console.log(`close ${data.id}`);
-
-    // console.log(modalStatus);
     // {"3": 1680072040934, "4": undefined}
 
     await setStorage('announcementsClickedDates', JSON.stringify(modalStatus));

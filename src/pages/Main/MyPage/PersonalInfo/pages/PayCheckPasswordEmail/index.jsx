@@ -158,7 +158,7 @@ export default function PasswordCheck({route}) {
               authPressEvent: callMailAuth,
               // timer:900,
             }}
-            additionalCssOnTextInput={'padding-right: 115px'}
+            additionalCssOnTextInput={'padding-right: 90px'}
             rules={{
               required: '필수 입력 항목 입니다.',
               pattern: {

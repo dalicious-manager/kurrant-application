@@ -36,7 +36,11 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
             (meal.orderStatus === 10 || meal.orderStatus === 11) &&
             styles.shadow
           }
-          onPress={() => navigation.navigate(MealMainPageName)}>
+          onPress={() =>
+            navigation.navigate(MealMainPageName, {
+              isToday: true,
+            })
+          }>
           <MealInfo>
             <FastImage
               source={{
