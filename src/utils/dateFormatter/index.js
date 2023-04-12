@@ -162,6 +162,73 @@ export function formattedDateType(data) {
       break;
   }
 }
+
+// '기준일로부터 몇일 전인가?'
+export const timePassIndicator = (criterionDate, compareDate) => {
+  const subtraction = criterionDate.getTime() - compareDate.getTime();
+
+  // if (subtraction < 1000 * 60) {
+  //   // return `${Math.floor(subtraction / 1000)}초전`;
+  //   return `몇 초전`;
+  // } else if (subtraction >= 1000 * 60 && subtraction < 1000 * 60 * 60) {
+  //   return `${Math.floor(subtraction / (1000 * 60))}분전`;
+  // } else if (
+  //   subtraction >= 1000 * 60 * 60 &&
+  //   subtraction < 1000 * 60 * 60 * 24
+  // ) {
+  //   return `${Math.floor(subtraction / (1000 * 60 * 60))}시간전`;
+  // } else
+
+  // if (subtraction >= 1000 * 60 * 60 && subtraction < 1000 * 60 * 60 * 24) {
+  if (subtraction <= 1000 * 60 * 60 * 24) {
+    return '오늘';
+  } else if (
+    subtraction >= 1000 * 60 * 60 * 24 &&
+    subtraction < 1000 * 60 * 60 * 24 * 2
+  ) {
+    return '어제';
+  } else if (
+    subtraction >= 1000 * 60 * 60 * 24 * 2 &&
+    subtraction < 1000 * 60 * 60 * 24 * 3
+  ) {
+    return '그저께';
+  } else {
+    return `${Math.floor(subtraction / (1000 * 60 * 60 * 24))}일전`;
+  }
+};
+
+// '기준일로부터 몇일 남았는가'
+export const timeLeftIndicator = (criterionDayLength, compareDate) => {
+  const subtraction =
+    compareDate.getTime() + criterionDayLength * 1000 * 60 * 60 * 24;
+
+  const deadlineDate = new Date(subtraction);
+
+  const leftDate = deadlineDate.getTime() - new Date(Date.now()).getTime();
+
+  if (leftDate < 0) {
+    return ['리뷰 가능한 기한이 지났습니다', false];
+  } else if (leftDate <= 1000 * 60 * 60 * 24) {
+    return ['기한 마지막 날', true];
+  } else {
+    return [`기한 D-${Math.floor(leftDate / (1000 * 60 * 60 * 24))}`, true];
+  }
+};
+
+// 2023-03-22T12:14:50.559+09:00 -> 2023. 03. 22
+
+export const convertDateFormat1 = stringDate => {
+  // 1. 앞에 날짜 자르기
+
+  const date1 = stringDate.slice(0, 10);
+
+  // 2. - -> '. '
+
+  date1.replace('-', '. ');
+
+  return date1;
+};
+
 // export function daysLeft(endDate) {
 //   const dayNow = new Date();
 
@@ -213,4 +280,15 @@ export const isTimeDifferenceLarger = (date1, date2, dateLength) => {
   // 차이 계산하기
 
   return date2GetTime - date1GetTime > dateLength * 1000 * 60 * 60 * 24;
+};
+
+// 2024-02-12 -> 2024. 01. 11
+export const changeSeperator = (dateInput, inputSeperator, outputSeperator) => {
+  const process1 = dateInput.trim();
+
+  const process2 = process1.split(inputSeperator);
+
+  const process3 = process2.join(outputSeperator);
+
+  return process3;
 };

@@ -55,15 +55,11 @@ export async function cardRegisted(body, option) {
   });
   return fetchRes;
 }
-export async function cardRegistedNice(body, option) {
-  const fetchRes = await fetchJson(
-    `/users/me/orders/nice/create/billing`,
-    'POST',
-    {
-      ...option,
-      body: JSON.stringify(body),
-    },
-  );
+export async function cardRegistedNice(body, type, option) {
+  const fetchRes = await fetchJson(`/users/me/cards/types/${type}`, 'POST', {
+    ...option,
+    body: JSON.stringify(body),
+  });
   return fetchRes;
 }
 export async function cardSetting(body, option) {
@@ -104,6 +100,10 @@ export async function alarmLookup() {
 }
 export async function payCheckPassword() {
   const fetchRes = await fetchJson(`/users/me/payment/password`, 'GET');
+  return fetchRes;
+}
+export async function payCheckEmail() {
+  const fetchRes = await fetchJson(`/users/me/check/hideEmail`, 'GET');
   return fetchRes;
 }
 export async function cardRegistedNiceFirst(body, option) {

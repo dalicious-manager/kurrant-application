@@ -32,4 +32,13 @@ export {default as NomalCardIcon} from './_components/NomalCardIcon';
 export {default as KakaoPayIcon} from './_components/KakaoPayIcon';
 export {default as NaverPayIcon} from './_components/NaverPayIcon';
 export {default as ThumbsUpWithThreeStarsIcon} from './_components/ThumbsUpWithThreeStarsIcon';
+
+export {default as CheckIcon} from './_components/CheckIcon';
+export {default as XCircleIcon} from './_components/XCircle';
 export {default as CongratulationsClapIcon} from './_components/CongratulationsClapIcon';
+export {default as GreyLockerIcon} from './_components/GreyLockerIcon';
+export {default as XVectorIcon} from './_components/XVector';
+export {default as SmallXVectorIcon} from './_components/SmallXVectorIcon';
+export {default as DefaultHumanIcon} from './_components/DefaultHumanIcon';
+export {default as YellowStar} from './_components/YellowStar';
+export {default as RightSkinnyArrow} from './_components/RightSkinnyArrow';

@@ -43,7 +43,7 @@ export default function PasswordCheck({route}) {
   const [isCard, setIsCard] = useAtom(registCardAtom);
   const [progress, setProgress] = useState(1);
   // 함수들은 Class 를 외부에서 생성하여 import를 하여 사용하였다.
-  const {cardRegistedNiceFirst} = useUserMe();
+  const {cardRegistedNice} = useUserMe();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const callMailAuth = async () => {
     try {
@@ -78,11 +78,19 @@ export default function PasswordCheck({route}) {
     console.log(ds);
 
     try {
-      const data = await cardRegistedNiceFirst({
-        ...JSON.parse(ds),
-        payNumber: params?.password,
-        key: watch('eauth'),
-      });
+      await auth.confirmEmailAuth(watch('eauth'), 7);
+      const data = await cardRegistedNice(
+        {
+          ...JSON.parse(params?.cardData),
+          payNumber: params?.password,
+        },
+        2,
+      );
+      // const data = await cardRegistedNiceFirst({
+      //   ...JSON.parse(ds),
+      //   payNumber: params?.password,
+      //   key: watch('eauth'),
+      // });
       console.log(data);
 
       // const resetAction = StackActions.pop(5);

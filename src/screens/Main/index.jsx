@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {Alert, View} from 'react-native';
@@ -104,6 +104,9 @@ import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import PayCheckPassword, {
   PAGE_NAME as PayCheckPasswordPageName,
 } from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
+import PayEmailSetting, {
+  PAGE_NAME as PayEmailSettingPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayEmailSetting';
 import PayCheckPasswordPay, {
   PAGE_NAME as PayCheckPasswordPayPageName,
 } from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordPay';
@@ -283,11 +286,25 @@ import Credit, {
 } from '../../pages/Main/MyPage/Credit';
 import {PointMainPage, PointMainPageName} from '../../pages/Main/MyPage/Point';
 import CloseButton from '../../components/CloseButton';
-// Pages > Exchange
-// Pages > IndexCard
-// Pages > Information
-// Pages > Investment
-// Pages > Statement
+
+// 리뷰 및 재신 개인
+import CreateReviewPage1, {
+  SCREEN_NAME as CreateReviewPage1ScreenName,
+} from './Review/CreateReview/Page1';
+import CreateReviewPage2, {
+  SCREEN_NAME as CreateReviewPage2ScreenName,
+  SCREEN_NAME2 as EditReviewPage2ScreenName,
+} from './Review/CreateReview/Page2';
+
+import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+
+import ReportReview, {
+  PAGE_NAME as ReportReviewPageName,
+} from './Review/ReportReview';
+
+import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
+import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
+import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -295,6 +312,7 @@ const Screen = () => {
   const [isLoginLoading] = useAtom(isLoginLoadingAtom);
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
+  const route = useRoute();
   return (
     <MainRoot.Navigator>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
@@ -490,6 +508,24 @@ const Screen = () => {
           options={{
             headerShown: true,
             title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayEmailSettingPageName}
+          component={PayEmailSetting}
+          options={{
+            headerShown: true,
+            title: '이메일/비밀번호 설정',
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitleStyle: {
@@ -906,6 +942,23 @@ const Screen = () => {
             headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
+        <MainRoot.Screen
+          name={ReviewScreenName}
+          component={Review}
+          options={{
+            headerShown: true,
+            title: '리뷰 관리',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+
         <MainRoot.Screen
           name={TermPageName}
           component={Term}
@@ -1840,7 +1893,27 @@ const Screen = () => {
         />
       </MainRoot.Group>
 
+      {/* 리뷰작성 및 수정 */}
+
       <MainRoot.Group>
+        <MainRoot.Screen
+          name={CreateReviewPage1ScreenName}
+          component={CreateReviewPage1}
+          options={{
+            headerShown: true,
+            title: '리뷰 작성',
+
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <ReviewCloseIcon />,
+          }}
+        />
+
         <MainRoot.Screen
           name={PointMainPageName}
           component={PointMainPage}
@@ -1848,14 +1921,134 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             title: '포인트',
+
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
               fontSize: 14,
               lineHeight: 22,
             },
+            headerShadowVisible: false,
 
             headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+
+        <MainRoot.Screen
+          name={CreateReviewPage2ScreenName}
+          component={CreateReviewPage2}
+          options={{
+            headerShown: true,
+            title: '리뷰 작성',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <ReviewCloseIcon
+                alertCallback={() => {
+                  Alert.alert(
+                    `작성 종료`,
+                    `작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?`,
+                    [
+                      {
+                        text: '아니요',
+                        onPress: () => {
+                          return;
+                        },
+                        style: 'cancel',
+                      },
+                      {
+                        text: `작성종료`,
+                        onPress: () => {
+                          navigation.navigate(ReviewScreenName);
+                          // navigation.reset({
+                          //   routes: [{name: ReviewScreenName}],
+                          // });
+                          return;
+                        },
+
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            ),
+          }}
+        />
+
+        <MainRoot.Screen
+          name={EditReviewPage2ScreenName}
+          component={CreateReviewPage2}
+          options={{
+            headerShown: true,
+            title: '리뷰 수정',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <ReviewCloseIcon
+                alertCallback={() => {
+                  Alert.alert(
+                    '수정 종료',
+                    '수정중인 내용이 삭제됩니다 \n  수정작성을 종료하시겠어요?',
+                    [
+                      {
+                        text: '아니요',
+                        onPress: () => {
+                          return;
+                        },
+                        style: 'cancel',
+                      },
+                      {
+                        text: '수정종료',
+                        onPress: () => {
+                          navigation.navigate(WrittenReviewPageName, {
+                            screen: ReviewScreenName,
+                            params: {
+                              tabIndex: 1,
+                            },
+                          });
+
+                          return;
+                        },
+
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            ),
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 리뷰 신고  */}
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={ReportReviewPageName}
+          component={ReportReview}
+          options={{
+            headerShown: true,
+            title: '신고하기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <ReviewCloseIcon />,
           }}
         />
       </MainRoot.Group>

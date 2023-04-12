@@ -24,6 +24,7 @@ const useOrderMeal = () => {
     try {
       const res = await Fetch.OrderMeal(startdate, enddate);
       setOrderMeal(res.data);
+      // console.log(res.data, '123231');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -161,6 +162,12 @@ const useOrderMeal = () => {
       const res = await Fetch.OrderMeal(startdate, enddate);
 
       const todayMeal = res.data?.filter(m => m.serviceDate === date);
+
+      // console.log(`startdate: ${startdate}, enddate: ${enddate}`);
+
+      // console.log(res.data);
+      // console.log(todayMeal);
+
       setTodayMeal(todayMeal);
       return res;
     } catch (err) {

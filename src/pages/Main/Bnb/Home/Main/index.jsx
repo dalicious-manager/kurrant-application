@@ -55,6 +55,9 @@ import useMembership from '../../../../../biz/useMembership';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 
+import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
+import {useGetTodayMeal} from '../../../../../hook/useOrder';
+
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   const navigation = useNavigation();
@@ -100,6 +103,18 @@ const Pages = () => {
     return el.serviceDate;
   });
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
+
+  // const start = weekly.map(s => {
+  //   const startData = formattedWeekDate(s[0]);
+  //   return startData;
+  // });
+
+  // const end = weekly.map(e => {
+  //   const endData = formattedWeekDate(e.slice(-1)[0]);
+  //   return endData;
+  // });
+  const date = formattedWeekDate(new Date());
+  const {data: todayMealList} = useGetTodayMeal(date);
 
   // 홈 전체 공지사항
 
@@ -208,20 +223,18 @@ const Pages = () => {
         try {
           const userData = await userInfo();
           if (userData?.email) {
-            console.log(userData, 'test');
-            if (userSpotId) {
+            if (userData?.spotId) {
               const daily = await dailyFood(
-                userSpotId,
+                userData?.spotId,
                 formattedWeekDate(new Date()),
               );
-              if (daily) {
-                if (!(userRole === 'ROLE_GUEST'))
-                  await orderMeal(
-                    formattedWeekDate(weekly[0][0]),
-                    formattedWeekDate(
-                      weekly[weekly?.length - 1][weekly[0].length - 1],
-                    ),
-                  );
+              if (!(userRole === 'ROLE_GUEST')) {
+                await orderMeal(
+                  formattedWeekDate(weekly[0][0]),
+                  formattedWeekDate(
+                    weekly[weekly?.length - 1][weekly[0].length - 1],
+                  ),
+                );
               }
             }
           }
@@ -232,28 +245,12 @@ const Pages = () => {
       }
       const isTester = async () => {
         const user = loadUser();
-        // if (fcmToken) {
-        //   saveFcmToken({
-        //     token: fcmToken,
-        //   });
-        // }
+
         if (!(userRole === 'ROLE_GUEST')) {
-          const start = weekly.map(s => {
-            const startData = formattedWeekDate(s[0]);
-            return startData;
-          });
-
-          const end = weekly.map(e => {
-            const endData = formattedWeekDate(e.slice(-1)[0]);
-            return endData;
-          });
-
           const status = async () => {
-            //const userStatus = await getStorage('token');
             const userStatus = await getStorage('spotStatus');
+            // const result = await todayOrderMeal(start[0], end[0]);
 
-            const result = await todayOrderMeal(start[0], end[0]);
-            //const getUserStatus = JSON.parse(userStatus).spotStatus;
             const getUserStatus = Number(userStatus);
             if (getUserStatus === 1) {
               navigation.navigate(GroupSelectPageName);
@@ -262,17 +259,16 @@ const Pages = () => {
               console.log(isCancelSpot, 'test');
               navigation.navigate(GroupCreateMainPageName);
             }
-            return result;
+            // return result;
           };
           try {
             if (!(userRole === 'ROLE_GUEST')) {
               if (user) {
                 const data = await status();
-                if (data.statusCode === 200) {
-                  const group = await userGroupSpotCheck();
-                  if (group.statusCode === 200) {
-                    await loadMeal();
-                  }
+
+                const group = await userGroupSpotCheck();
+                if (group.statusCode === 200) {
+                  await loadMeal();
                 }
               }
             }
@@ -406,6 +402,9 @@ const Pages = () => {
       console.log(err);
     }
   };
+
+  const mockStatus = 10;
+
   if (isOrderMealLoading || isUserInfoLoading || eventSpotLoading) {
     return <SkeletonUI />;
   }
@@ -476,85 +475,28 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {todayMeal?.length === 0 ? (
+          {todayMealList?.data?.length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
-            todayMeal?.map((m, idx) => {
+            todayMealList?.data?.map((m, idx) => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
-                  {m.orderItemDtoList.map(meal => {
+                  {m.orderItemDtoList.map((meal, i) => {
                     return (
-                      <MealInfoWrap
-                        key={meal.id}
-                        onPress={() => navigation.navigate(MealMainPageName)}>
-                        <MealInfo>
-                          <FastImage
-                            source={{
-                              uri: `${meal.image}`,
-                              priority: FastImage.priority.high,
-                            }}
-                            style={{
-                              width: 64,
-                              height: 64,
-                              borderTopLeftRadius: 14,
-                              borderBottomLeftRadius: 14,
-                            }}
-                          />
-                          <MealText>
-                            <View>
-                              <DiningType>{`오늘 ${m.diningType}`}</DiningType>
-                              <View>
-                                <MealTxt>{meal.name}</MealTxt>
-                              </View>
-                            </View>
-                            <MealCount>
-                              <GreyTxt status={meal.orderStatus}>
-                                {formattedMealFoodStatus(meal.orderStatus)}
-                              </GreyTxt>
-                              <GreyTxt>{meal.count}개</GreyTxt>
-                            </MealCount>
-                          </MealText>
-                        </MealInfo>
-                      </MealInfoWrap>
+                      <MealInfoComponent
+                        m={m}
+                        meal={meal}
+                        key={meal.dailyFoodId}
+                      />
                     );
                   })}
                 </React.Fragment>
               );
             })
           )}
-          {/* 메뉴 수령 그림자 styles.shadow */}
-          {/* <MealInfoWrap style={styles.shadow}>
-            <MealInfo>
-              <MealImage source={{uri:'https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg'}}/>
-              <MealText>
-                <View>
-                  <DiningType>점심</DiningType>
-                  <View>
-                    <MealTxt>훈제오리 애플시나몬 샐러드(L)</MealTxt>
-                  </View>
-                </View>
-                <MealCount>
-                  <GreyTxt>2개</GreyTxt>
-                </MealCount>
-              </MealText>
-            </MealInfo>
-          </MealInfoWrap>  */}
         </MainWrap>
-        {/* 오늘의 식사 시간 지나면 나오는 View */}
-        {/* <MealCheckWrap>
-          <MealCheckText>메뉴 확인 후 수령하셨나요?</MealCheckText>
-          <MealCheckButton>
-            <MealCheckButtonText>네, 확인했어요</MealCheckButtonText>
-          </MealCheckButton>
-        </MealCheckWrap>
-        <MealCheckWrap>
-          <MealCheckText>식사 맛있게 하셨나요?</MealCheckText>
-          <MealCheckButton>
-            <MealCheckButtonText>맛 평가하기</MealCheckButtonText>
-          </MealCheckButton>
-        </MealCheckWrap> */}
 
         <Wrap>
           <MainWrap>
@@ -713,23 +655,6 @@ const Pages = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  shadow: {
-    zIndex: 999,
-    // ios
-    shadowColor: '#5A1EFF',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-
-    // android
-    elevation: 10,
-  },
-});
-
 export default Pages;
 
 const BoxWrap = css`
@@ -785,6 +710,10 @@ const MainWrap = styled.View`
   margin: 0px 24px;
 `;
 
+const MealInfoWrapper = styled.View`
+  margin-bottom: 16px;
+`;
+
 const MealInfoWrap = styled.Pressable`
   ${Display};
   height: 64px;
@@ -794,6 +723,25 @@ const MealInfoWrap = styled.Pressable`
   padding: 16px;
   justify-content: space-between;
   padding-left: 0px;
+`;
+
+const OrderStatusWrap = styled.View`
+  align-items: center;
+`;
+const CommentText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[1]};
+  margin-bottom: 4px;
+`;
+const ConfirmPressable = styled.Pressable`
+  background-color: ${({theme}) => theme.colors.purple[500]};
+  border-radius: 999px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+`;
+const ConfirmText = styled(Typography).attrs({text: 'Button09SB'})`
+  color: white;
 `;
 
 const NoMealInfo = styled.View`

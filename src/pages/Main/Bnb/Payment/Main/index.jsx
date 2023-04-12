@@ -82,6 +82,7 @@ import BottomSheetCard from '../../../../../components/BottomSheetCard';
 import PaymentsList from './components/PaymentsList';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import Point from './components/Point/Point';
+import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -99,7 +100,8 @@ const Pages = ({route}) => {
   const [payments, setPayments] = useState('NOMAL');
   const [isPay, setIsPay] = useState(false);
   const [point, setPoint] = useState(0);
-
+  const viewRef = useRef();
+  const queryClient = useQueryClient();
   const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
   const {order, orderNice, orderLoading} = useOrderMeal();
@@ -360,6 +362,18 @@ const Pages = ({route}) => {
     }
   };
   const orderPress2 = async spotId => {
+    if (selectDefaultCard.length <= 0) {
+      Alert.alert('카드선택', '카드를 선택해주세요.', [
+        {
+          onPress: () => {
+            viewRef.current.scrollToEnd({animated: true});
+          },
+          text: '확인',
+        },
+      ]);
+
+      return;
+    }
     const data = {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
@@ -373,7 +387,7 @@ const Pages = ({route}) => {
       deliveryFee: deliveryFee,
       userPoint: watch('point'),
     };
-    console.log(data, '백다방');
+
     try {
       // const res = await orderMeal(spotId,data);
       // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
@@ -427,6 +441,7 @@ const Pages = ({route}) => {
           });
         }
       }
+      queryClient.invalidateQueries('todayMeal');
     } catch (err) {
       console.log(err);
     }
@@ -434,268 +449,277 @@ const Pages = ({route}) => {
 
   return (
     <SafeArea>
-      <ViewScroll onBlur={onBlurPress}>
-        <BorderWrap>
-          <Container>
-            <DeliveryTextWrap>
-              <DeliveryTitle>배송지</DeliveryTitle>
-              <DeliveryText>{spotName[0]?.text}</DeliveryText>
-            </DeliveryTextWrap>
-            <DeliveryTextWrap>
-              <DeliveryTitle>배송 일시</DeliveryTitle>
-              <DeliveryText>
-                {formattedDate(deliveryStart, '년월일')} -{' '}
-                {formattedDate(deliveryEnd, '년월일')}
-              </DeliveryText>
-            </DeliveryTextWrap>
-            <View>
-              <DeliveryTitle>주문자 정보</DeliveryTitle>
-              <DeliveryText>
-                {isUserInfo?.name}
-                {isUserInfo?.phone === null ? '' : `(${isUserInfo?.phone})`}
-              </DeliveryText>
-            </View>
-          </Container>
-        </BorderWrap>
-        <BorderWrap>
-          <Container>
-            <MealInfo onPress={() => setShow(!show)}>
-              <Title>주문 상품 정보</Title>
-              {show ? <ArrowUpIcon /> : <ArrowDownIcon />}
-            </MealInfo>
-          </Container>
-          {show && (
-            <ProductInfo>
-              {isLoadMeal?.map((el, idx) => {
-                const arrs =
-                  el.cartDailyFoodDtoList[el.cartDailyFoodDtoList.length - 1];
-                const lastArr =
-                  arrs.cartDailyFoods[arrs.cartDailyFoods.length - 1];
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <TouchableWithoutFeedback>
+          <ViewScroll ref={viewRef} onBlur={onBlurPress}>
+            <BorderWrap>
+              <Container>
+                <DeliveryTextWrap>
+                  <DeliveryTitle>배송지</DeliveryTitle>
+                  <DeliveryText>{spotName[0]?.text}</DeliveryText>
+                </DeliveryTextWrap>
+                <DeliveryTextWrap>
+                  <DeliveryTitle>배송 일시</DeliveryTitle>
+                  <DeliveryText>
+                    {formattedDate(deliveryStart, '년월일')} -{' '}
+                    {formattedDate(deliveryEnd, '년월일')}
+                  </DeliveryText>
+                </DeliveryTextWrap>
+                <View>
+                  <DeliveryTitle>주문자 정보</DeliveryTitle>
+                  <DeliveryText>
+                    {isUserInfo?.name}
+                    {isUserInfo?.phone === null ? '' : `(${isUserInfo?.phone})`}
+                  </DeliveryText>
+                </View>
+              </Container>
+            </BorderWrap>
+            <BorderWrap>
+              <Container>
+                <MealInfo onPress={() => setShow(!show)}>
+                  <Title>주문 상품 정보</Title>
+                  {show ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                </MealInfo>
+              </Container>
+              {show && (
+                <ProductInfo>
+                  {isLoadMeal?.map((el, idx) => {
+                    const arrs =
+                      el.cartDailyFoodDtoList[
+                        el.cartDailyFoodDtoList.length - 1
+                      ];
+                    const lastArr =
+                      arrs.cartDailyFoods[arrs.cartDailyFoods.length - 1];
 
-                return (
-                  <React.Fragment key={idx}>
-                    {selected === el.spotId &&
-                      el.cartDailyFoodDtoList.map((m, i) => {
-                        const arr = m.cartDailyFoods.filter(
-                          v => v.status !== 6,
-                        );
+                    return (
+                      <React.Fragment key={idx}>
+                        {selected === el.spotId &&
+                          el.cartDailyFoodDtoList.map((m, i) => {
+                            const arr = m.cartDailyFoods.filter(
+                              v => v.status !== 6,
+                            );
 
-                        return (
-                          <OrderWrap key={i}>
-                            {arr.map((meal, index) => {
-                              const price = meal.price * meal.count;
-                              const mealDiscountPrice =
-                                meal.membershipDiscountPrice +
-                                meal.makersDiscountPrice +
-                                meal.periodDiscountPrice;
-                              return (
-                                <React.Fragment key={index}>
-                                  <ContentHeader>
-                                    <DiningName>
-                                      {formattedMonthDay(m.serviceDate)}{' '}
-                                      {m.diningType}
-                                    </DiningName>
-                                  </ContentHeader>
-                                  <ContentsWrap>
-                                    <FastImage
-                                      source={{
-                                        uri: `${meal.image}`,
-                                        priority: FastImage.priority.high,
-                                      }}
-                                      style={{
-                                        width: 45,
-                                        height: 45,
-                                        borderRadius: 7,
-                                        marginRight: 12,
-                                      }}
-                                    />
-                                    <MealNameView>
-                                      <MealName
-                                        numberOfLines={1}
-                                        ellipsizeMode="tail">
-                                        [{meal.makers}] {meal.name}{' '}
-                                      </MealName>
+                            return (
+                              <OrderWrap key={i}>
+                                {arr.map((meal, index) => {
+                                  const price = meal.price * meal.count;
+                                  const mealDiscountPrice =
+                                    meal.membershipDiscountPrice +
+                                    meal.makersDiscountPrice +
+                                    meal.periodDiscountPrice;
+                                  return (
+                                    <React.Fragment key={index}>
+                                      <ContentHeader>
+                                        <DiningName>
+                                          {formattedMonthDay(m.serviceDate)}{' '}
+                                          {m.diningType}
+                                        </DiningName>
+                                      </ContentHeader>
+                                      <ContentsWrap>
+                                        <FastImage
+                                          source={{
+                                            uri: `${meal.image}`,
+                                            priority: FastImage.priority.high,
+                                          }}
+                                          style={{
+                                            width: 45,
+                                            height: 45,
+                                            borderRadius: 7,
+                                            marginRight: 12,
+                                          }}
+                                        />
+                                        <MealNameView>
+                                          <MealName
+                                            numberOfLines={1}
+                                            ellipsizeMode="tail">
+                                            [{meal.makers}] {meal.name}{' '}
+                                          </MealName>
 
-                                      <PriceView>
-                                        <Price>
-                                          {withCommas(
-                                            meal.price - mealDiscountPrice,
-                                          )}
-                                          원
-                                        </Price>
-                                        {mealDiscountPrice !== 0 && (
-                                          <SalePrice>
-                                            {withCommas(price)}원
-                                          </SalePrice>
-                                        )}
-                                      </PriceView>
-                                    </MealNameView>
+                                          <PriceView>
+                                            <Price>
+                                              {withCommas(
+                                                meal.price - mealDiscountPrice,
+                                              )}
+                                              원
+                                            </Price>
+                                            {mealDiscountPrice !== 0 && (
+                                              <SalePrice>
+                                                {withCommas(price)}원
+                                              </SalePrice>
+                                            )}
+                                          </PriceView>
+                                        </MealNameView>
 
-                                    <CountWrap>
-                                      <CountText>
-                                        수량: {meal.count}개
-                                      </CountText>
-                                    </CountWrap>
-                                  </ContentsWrap>
-                                  {lastArr !== meal && <Border />}
-                                </React.Fragment>
-                              );
-                            })}
-                          </OrderWrap>
-                        );
-                      })}
-                  </React.Fragment>
-                );
-              })}
-            </ProductInfo>
-          )}
-        </BorderWrap>
-        <BorderWrap>
-          <PriceTitle>
-            <Title>최종 결제금액</Title>
-          </PriceTitle>
-          <PaymentView>
-            <PaymentText>총 상품금액</PaymentText>
-            <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
-          </PaymentView>
-          {clientType[0]?.clientStatus === 1 && (
-            <PaymentView>
-              <PressableView onPress={fundButton}>
-                <PaymentText>식사 지원금 사용 금액</PaymentText>
-                <QuestionIcon />
-              </PressableView>
-              <PaymentText>
-                {medtronicSupportArr.includes(62471004)
-                  ? `-${withCommas(medtronicPrice)}`
-                  : usedSupportPrice === 0
-                  ? 0
-                  : discountPrice < usedSupportPrice
-                  ? `-${withCommas(discountPrice)}`
-                  : `-${withCommas(usedSupportPrice)}`}
-                원
-              </PaymentText>
-            </PaymentView>
-          )}
-          <PaymentView>
-            <PaymentText>총 할인금액</PaymentText>
-            <PaymentText>
-              {totalDiscountPrice === 0
-                ? 0
-                : `- ${withCommas(totalDiscountPrice)}`}{' '}
-              원
-            </PaymentText>
-          </PaymentView>
-          <DiscountView>
-            <Bar />
-            <DiscountTextWrap>
-              <DiscountTextView>
-                <DiscountText>멤버십 할인금액</DiscountText>
-                <DiscountText>
-                  {membershipDiscountPrice === 0
+                                        <CountWrap>
+                                          <CountText>
+                                            수량: {meal.count}개
+                                          </CountText>
+                                        </CountWrap>
+                                      </ContentsWrap>
+                                      {lastArr !== meal && <Border />}
+                                    </React.Fragment>
+                                  );
+                                })}
+                              </OrderWrap>
+                            );
+                          })}
+                      </React.Fragment>
+                    );
+                  })}
+                </ProductInfo>
+              )}
+            </BorderWrap>
+            <BorderWrap>
+              <PriceTitle>
+                <Title>최종 결제금액</Title>
+              </PriceTitle>
+              <PaymentView>
+                <PaymentText>총 상품금액</PaymentText>
+                <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
+              </PaymentView>
+              {clientType[0]?.clientStatus === 1 && (
+                <PaymentView>
+                  <PressableView onPress={fundButton}>
+                    <PaymentText>식사 지원금 사용 금액</PaymentText>
+                    <QuestionIcon />
+                  </PressableView>
+                  <PaymentText>
+                    {medtronicSupportArr.includes(62471004)
+                      ? `-${withCommas(medtronicPrice)}`
+                      : usedSupportPrice === 0
+                      ? 0
+                      : discountPrice < usedSupportPrice
+                      ? `-${withCommas(discountPrice)}`
+                      : `-${withCommas(usedSupportPrice)}`}
+                    원
+                  </PaymentText>
+                </PaymentView>
+              )}
+              <PaymentView>
+                <PaymentText>총 할인금액</PaymentText>
+                <PaymentText>
+                  {totalDiscountPrice === 0
                     ? 0
-                    : withCommas(membershipDiscountPrice)}{' '}
+                    : `- ${withCommas(totalDiscountPrice)}`}{' '}
                   원
-                </DiscountText>
-              </DiscountTextView>
-              <DiscountTextView>
-                <DiscountText>판매자 할인금액</DiscountText>
-                <DiscountText>
-                  {makersDiscountPrice === 0
-                    ? 0
-                    : withCommas(makersDiscountPrice)}{' '}
-                  원
-                </DiscountText>
-              </DiscountTextView>
-              <DiscountTextView>
-                <DiscountText>기간 할인금액</DiscountText>
-                <DiscountText>
-                  {periodDiscountPrice === 0
-                    ? 0
-                    : withCommas(periodDiscountPrice)}{' '}
-                  원
-                </DiscountText>
-              </DiscountTextView>
-            </DiscountTextWrap>
-          </DiscountView>
-          <PaymentView>
-            <PaymentText>배송비</PaymentText>
-            <PaymentText>
-              {deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원
-            </PaymentText>
-          </PaymentView>
-
-          <PaymentView style={{paddingBottom: 8}}>
-            <PressableView onPress={pointButton}>
-              <PaymentText>포인트 사용금액</PaymentText>
-              <QuestionIcon />
-            </PressableView>
-            <FormProvider {...form}>
-              <Point
-                handlePress={pointHandlePress}
-                clearPoint={clearPoint}
-                inputRef={inputRef}
-                totalPrice={totalPrice}
-                onFocusInput={onFocusInput}
-                userPoint={isUserInfo.point}
-                medtronicTotalPrice={medtronicTotalPrice}
-                medtronicSupportArr={medtronicSupportArr}
-              />
-            </FormProvider>
-          </PaymentView>
-          <UserPointView>
-            <UserPointText>
-              잔여 {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
-            </UserPointText>
-          </UserPointView>
-
-          <PaymentView>
-            <TotalPriceWrap>
-              <TotalPriceTitle>총 결제금액</TotalPriceTitle>
-              <TotalPrice>
-                {medtronicSupportArr.includes(62471004)
-                  ? withCommas(
-                      points > medtronicTotalPrice
+                </PaymentText>
+              </PaymentView>
+              <DiscountView>
+                <Bar />
+                <DiscountTextWrap>
+                  <DiscountTextView>
+                    <DiscountText>멤버십 할인금액</DiscountText>
+                    <DiscountText>
+                      {membershipDiscountPrice === 0
                         ? 0
-                        : points > isUserInfo.point
-                        ? medtronicTotalPrice - isUserInfo.point
-                        : medtronicTotalPrice - Number(points),
-                    )
-                  : withCommas(
-                      points > totalPrice
+                        : withCommas(membershipDiscountPrice)}{' '}
+                      원
+                    </DiscountText>
+                  </DiscountTextView>
+                  <DiscountTextView>
+                    <DiscountText>판매자 할인금액</DiscountText>
+                    <DiscountText>
+                      {makersDiscountPrice === 0
                         ? 0
-                        : points > isUserInfo.point
-                        ? totalPrice - isUserInfo.point
-                        : totalPrice - Number(points),
-                    )}
-                원
-              </TotalPrice>
-            </TotalPriceWrap>
-          </PaymentView>
-        </BorderWrap>
-        <BorderWrap>
-          <Container>
-            <Title>결제 수단</Title>
-            <DeliveryTitle>
-              선택한 결제 수단으로 결제가 진행됩니다.
-            </DeliveryTitle>
-            {/* <AgreeTextBox>
-              <PaymentsList
-                onSelectPress={setPayments}
-                select={payments}
-                name={'NOMAL'}
-              />
-              <PaymentsList
-                onSelectPress={setPayments}
-                select={payments}
-                name={'KAKAOPAY'}
-              />
-              <PaymentsList
-                onSelectPress={setPayments}
-                select={payments}
-                name={'NAVERPAY'}
-              />
-            </AgreeTextBox> */}
-            {/*<CardSelectContainer>
+                        : withCommas(makersDiscountPrice)}{' '}
+                      원
+                    </DiscountText>
+                  </DiscountTextView>
+                  <DiscountTextView>
+                    <DiscountText>기간 할인금액</DiscountText>
+                    <DiscountText>
+                      {periodDiscountPrice === 0
+                        ? 0
+                        : withCommas(periodDiscountPrice)}{' '}
+                      원
+                    </DiscountText>
+                  </DiscountTextView>
+                </DiscountTextWrap>
+              </DiscountView>
+              <PaymentView>
+                <PaymentText>배송비</PaymentText>
+                <PaymentText>
+                  {deliveryFee === 0 ? 0 : withCommas(deliveryFee)}원
+                </PaymentText>
+              </PaymentView>
+
+              <PaymentView style={{paddingBottom: 8}}>
+                <PressableView onPress={pointButton}>
+                  <PaymentText>포인트 사용금액</PaymentText>
+                  <QuestionIcon />
+                </PressableView>
+                <FormProvider {...form}>
+                  <Point
+                    handlePress={pointHandlePress}
+                    clearPoint={clearPoint}
+                    inputRef={inputRef}
+                    totalPrice={totalPrice}
+                    onFocusInput={onFocusInput}
+                    userPoint={isUserInfo.point}
+                    medtronicTotalPrice={medtronicTotalPrice}
+                    medtronicSupportArr={medtronicSupportArr}
+                  />
+                </FormProvider>
+              </PaymentView>
+
+              <UserPointView>
+                <UserPointText>
+                  잔여{' '}
+                  {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
+                </UserPointText>
+              </UserPointView>
+
+              <PaymentView>
+                <TotalPriceWrap>
+                  <TotalPriceTitle>총 결제금액</TotalPriceTitle>
+                  <TotalPrice>
+                    {medtronicSupportArr.includes(62471004)
+                      ? withCommas(
+                          points > medtronicTotalPrice
+                            ? 0
+                            : points > isUserInfo.point
+                            ? medtronicTotalPrice - isUserInfo.point
+                            : medtronicTotalPrice - Number(points),
+                        )
+                      : withCommas(
+                          points > totalPrice
+                            ? 0
+                            : points > isUserInfo.point
+                            ? totalPrice - isUserInfo.point
+                            : totalPrice - Number(points),
+                        )}
+                    원
+                  </TotalPrice>
+                </TotalPriceWrap>
+              </PaymentView>
+            </BorderWrap>
+            <BorderWrap>
+              <Container>
+                <Title>결제 수단</Title>
+                <DeliveryTitle>
+                  선택한 결제 수단으로 결제가 진행됩니다.
+                </DeliveryTitle>
+                {/* <AgreeTextBox>
+                  <PaymentsList
+                    onSelectPress={setPayments}
+                    select={payments}
+                    name={'NOMAL'}
+                  />
+                  <PaymentsList
+                    onSelectPress={setPayments}
+                    select={payments}
+                    name={'KAKAOPAY'}
+                  />
+                  <PaymentsList
+                    onSelectPress={setPayments}
+                    select={payments}
+                    name={'NAVERPAY'}
+                  />
+                </AgreeTextBox> */}
+                {/*<CardSelectContainer>
               {payments === 'NOMAL' && (
                 <View>
                   {card ? (
@@ -732,72 +756,62 @@ const Pages = ({route}) => {
                 </View>
               )}
             </CardSelectContainer>*/}
-            <CardSelectContainer>
-              {payments === 'NOMAL' && (
-                <View>
-                  {selectDefaultCard ? (
-                    <Card
-                      key={selectDefaultCard}
-                      onPress={() => {
-                        // console.log(selectDefaultCard);
-                        navigation.navigate(DefaultPaymentManagePageName);
-                        // setModalVisible4(!modalVisible4);
-                      }}>
-                      {!selectDefaultCard.length > 0 ? (
-                        <CardText>결제 카드 등록</CardText>
-                      ) : (
-                        <CardText>
-                          {selectDefaultCard[0].cardCompany +
-                            '(' +
-                            selectDefaultCard[0].cardNumber.substring(
-                              selectDefaultCard[0].cardNumber.length - 4,
-                              selectDefaultCard[0].cardNumber.length,
-                            ) +
-                            ')'}
-                        </CardText>
-                      )}
-                      {/* <PayInfoWrap>
+                <CardSelectContainer>
+                  {payments === 'NOMAL' && (
+                    <View>
+                      {selectDefaultCard ? (
+                        <Card
+                          key={selectDefaultCard}
+                          onPress={() => {
+                            // console.log(selectDefaultCard);
+                            navigation.navigate(DefaultPaymentManagePageName);
+                            // setModalVisible4(!modalVisible4);
+                          }}>
+                          {!selectDefaultCard.length > 0 ? (
+                            <CardText>결제 카드 등록</CardText>
+                          ) : (
+                            <CardText>
+                              {selectDefaultCard[0].cardCompany +
+                                '(' +
+                                selectDefaultCard[0].cardNumber.substring(
+                                  selectDefaultCard[0].cardNumber.length - 4,
+                                  selectDefaultCard[0].cardNumber.length,
+                                ) +
+                                ')'}
+                            </CardText>
+                          )}
+                          {/* <PayInfoWrap>
                                 <PayInfo>
                                 <PayError />
                                 <PayText>결제불가</PayText>
                                 </PayInfo>
                                 <ArrowRight />
                             </PayInfoWrap> */}
-                      <ArrowRight />
-                    </Card>
-                  ) : (
-                    <Card
-                      onPress={
-                        () => navigation.navigate(DefaultPaymentManagePageName)
-                        // setModalVisible4(!modalVisible4)
-                      }>
-                      <CardText>결제 수단 선택</CardText>
-                      <ArrowRight />
-                    </Card>
+                          <ArrowRight />
+                        </Card>
+                      ) : (
+                        <Card
+                          onPress={
+                            () =>
+                              navigation.navigate(DefaultPaymentManagePageName)
+                            // setModalVisible4(!modalVisible4)
+                          }>
+                          <CardText>결제 수단 선택</CardText>
+                          <ArrowRight />
+                        </Card>
+                      )}
+                    </View>
                   )}
-                </View>
-              )}
-            </CardSelectContainer>
-          </Container>
-          <Label>
-            위 주문 내용을 확인 하였으며, 회원 본인은 개인정보 이용 및 제공 및
-            결제에 동의합니다.
-          </Label>
-        </BorderWrap>
-      </ViewScroll>
-      {/* <KeyContainer
-        keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        {keyboardStatus.isKeyboardActivate && (
-          <TouchableWithoutFeedback>
-            <KeyboardInner ref={pointRef}>
-              <Pressable onPress={() => console.log('3343')}>
-                <PointApply>완료</PointApply>
-              </Pressable>
-            </KeyboardInner>
-          </TouchableWithoutFeedback>
-        )}
-      </KeyContainer> */}
+                </CardSelectContainer>
+              </Container>
+              <Label>
+                위 주문 내용을 확인 하였으며, 회원 본인은 개인정보 이용 및 제공
+                및 결제에 동의합니다.
+              </Label>
+            </BorderWrap>
+          </ViewScroll>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
       {/* ;handleEventPayments() */}
 
       {!keyboardStatus.isKeyboardActivate && (
@@ -805,13 +819,11 @@ const Pages = ({route}) => {
           <Button
             label={`총 ${totalCount}개 결제하기`}
             disabled={
-              !(
-                payments !== 'NOMAL' ||
-                selectDefaultCard.length > 0 ||
-                (medtronicSupportArr.includes(62471004)
-                  ? medtronicTotalPrice <= 0
-                  : totalPrice <= 0)
-              ) || isPay
+              payments !== 'NOMAL' ||
+              (medtronicSupportArr.includes(62471004)
+                ? medtronicTotalPrice <= 0
+                : totalPrice <= 0) ||
+              isPay
             }
             onPressEvent={() => {
               handleEventPayments();
@@ -893,7 +905,7 @@ const Container = styled.View`
 
 const AgreeTextBox = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding-top: 24px;
   padding-bottom: 10px;
 `;

@@ -36,9 +36,10 @@ const Pages = ({route}) => {
   // console.log(data);
   const {dailyFood, isServiceDays} = useFoodDaily();
   const {isUserInfo, userInfo} = useUserInfo();
+
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
-  const {isOrderMeal, refundItem, setOrderMeal} = useOrderMeal();
+  const {isOrderMeal, orderMeal, refundItem, setOrderMeal} = useOrderMeal();
   const pagerRef = useRef();
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
@@ -61,31 +62,35 @@ const Pages = ({route}) => {
       return el.orderItemDtoList.length !== 0;
     });
 
-    Alert.alert('메뉴 취소', '메뉴를 취소하시겠어요?', [
-      {
-        text: '아니요',
-        onPress: () => {},
-      },
-      {
-        text: '메뉴 취소',
-        onPress: async () => {
-          try {
-            await refundItem({
-              id: id,
-            });
-            setOrderMeal(listArr);
-            setShow(true);
-            toast.toastEvent();
-            setTimeout(() => {
-              setShow(false);
-            }, 2000);
-          } catch (err) {
-            console.log(err);
-          }
+    Alert.alert(
+      '메뉴 취소',
+      '메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
+      [
+        {
+          text: '아니요',
+          onPress: () => {},
         },
-        style: 'destructive',
-      },
-    ]);
+        {
+          text: '메뉴 취소',
+          onPress: async () => {
+            try {
+              await refundItem({
+                id: id,
+              });
+              setOrderMeal(listArr);
+              setShow(true);
+              toast.toastEvent();
+              setTimeout(() => {
+                setShow(false);
+              }, 2000);
+            } catch (err) {
+              console.log(err);
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+    );
   };
 
   const changeMealPress = (id, serviceDate) => {
@@ -102,7 +107,7 @@ const Pages = ({route}) => {
 
     Alert.alert(
       '메뉴 변경',
-      '현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?',
+      '현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
       [
         {
           text: '아니요',
@@ -134,6 +139,7 @@ const Pages = ({route}) => {
     async function loadUser() {
       try {
         const userData = await userInfo();
+        await orderMeal();
         await dailyFood(userData?.spotId, formattedWeekDate(new Date()));
       } catch (err) {
         console.log(err);

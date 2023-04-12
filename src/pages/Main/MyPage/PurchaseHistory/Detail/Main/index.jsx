@@ -18,11 +18,13 @@ import Wrapper from '../../../../../../components/Wrapper';
 import {formattedDateAndDay} from '../../../../../../utils/dateFormatter';
 import withCommas from '../../../../../../utils/withCommas';
 import OrderItem from './components/orderItem';
+import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'P_MAIN__PURCHASE_DETAIL';
 
 const Pages = ({route}) => {
   const {id} = route.params;
+  const queryClient = useQueryClient();
   const navigation = useNavigation();
   const themeApp = useTheme();
   const {
@@ -36,6 +38,7 @@ const Pages = ({route}) => {
       id: foodId,
     };
     await refundItem(req);
+    queryClient.invalidateQueries('pointList');
     const refund = {
       ...purchaseDetail,
       orderItems: [
@@ -77,6 +80,7 @@ const Pages = ({route}) => {
       purchaseId: id,
     };
     getPurchaseDetail(reqs);
+    queryClient.invalidateQueries('pointList');
   };
   const possibleOrder =
     purchaseDetail?.orderItems?.filter(v => v.orderStatus === 7)?.length > 0
@@ -122,7 +126,7 @@ const Pages = ({route}) => {
     );
   }
 
-  console.log(purchaseDetail, 'd0d0d0');
+  // console.log(purchaseDetail, 'd0d0d0');
   return (
     <SafeView>
       <ScrollView>

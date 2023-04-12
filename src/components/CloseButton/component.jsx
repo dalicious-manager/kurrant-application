@@ -43,6 +43,8 @@ const Component = ({margin = [0, 0], isSpot = false}) => {
     } else {
       if (Platform.OS === 'android') {
         BackHandler.exitApp();
+      } else {
+        navigation.goBack();
       }
     }
   };
