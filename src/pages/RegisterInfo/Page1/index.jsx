@@ -8,10 +8,11 @@ import {useEffect, useState} from 'react';
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage2PageName} from '../Page2';
-import ButtonInput from './components/ButtonInput/ButtonInput';
+
 import {useAtom} from 'jotai';
 import {finalRegisterAtom} from '../store';
 import Typography from '~components/Typography';
+import ButtonInput from '../components/button/Page1/ButtonInput';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE1';
 

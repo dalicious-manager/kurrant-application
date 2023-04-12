@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Typography from '~components/Typography';
 
-const YesOrNoButton = ({data, setSelectedId, selectedId}) => {
+const YesOrNoButton = ({data, setSelectedId, selectedId, width = '124px'}) => {
   // data에 id, name, 들어있다
 
   return (
@@ -9,6 +9,7 @@ const YesOrNoButton = ({data, setSelectedId, selectedId}) => {
       onPress={() => {
         setSelectedId(data.id);
       }}
+      width={width}
       isClicked={selectedId === data.id}>
       <BtnText isClicked={selectedId === data.id}>{data.name}</BtnText>
     </Container>
@@ -18,7 +19,7 @@ const YesOrNoButton = ({data, setSelectedId, selectedId}) => {
 export default YesOrNoButton;
 
 const Container = styled.Pressable`
-  width: 124px;
+  width: ${({width}) => width};
   height: 40px;
   background-color: ${({isClicked, theme}) =>
     isClicked ? theme.colors.grey[2] : theme.colors.grey[8]};

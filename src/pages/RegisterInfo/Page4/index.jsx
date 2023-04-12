@@ -9,12 +9,11 @@ import ProgressBar from '~components/ProgressBar7';
 import Typography from '~components/Typography';
 
 import {PAGE_NAME as RegisterInfoPage5PageName} from '../Page5';
-import SelectButton from './components/button/SelectButton';
 
 import BottomSheet from '~components/BottomSheet';
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
-import YesOrNoButton from '../components/button/YesOrNoButton/YesOrNoButton';
+import YesOrNoButton from '../components/button/Page4_5/YesOrNoButton';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 

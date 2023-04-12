@@ -3,13 +3,15 @@ import styled from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
 import Typography from '~components/Typography';
-import YesOrNoButton from '../components/button/YesOrNoButton/YesOrNoButton';
+import YesOrNoButton from '../components/button/Page4_5/YesOrNoButton';
+import {finalRegisterAtom} from '../store';
+import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE5';
 
@@ -17,12 +19,65 @@ const Pages = () => {
   //   const [clickAvaliable, setClickAvaliable] = useState(false);
 
   const navigation = useNavigation();
-
+  const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
+  const [clickAvaliable, setClickAvaliable] = useState(false);
   // yes: 1 no: 2
   const [yesOrNo, setYesOrNo] = useState(0);
+  // 두번째 아이디
+  const [proteinFrequency, setProteinFrequency] = useState(undefined);
+  // const [secondQuestionOpen, setSecondQuestionOpen] = useState(false)
+
+  // yesOrNo값이 1이면 secondQu
+
+  ///
+
+  useEffect(() => {
+    if (yesOrNo === 2) {
+      // 아니오거나
+      setClickAvaliable(true);
+    } else {
+      // 예 이고 beganLeve이 있을떄 열림
+
+      if (proteinFrequency) {
+        setClickAvaliable(true);
+      } else {
+        setClickAvaliable(false);
+      }
+    }
+
+    // if(){
+
+    // }
+  }, [yesOrNo, setClickAvaliable, proteinFrequency]);
 
   const handlePress = () => {
-    console.log('ㅗㅑ');
+    if (yesOrNo === 2) {
+      // began
+
+      console.log({
+        ...finalRegister,
+        isProtein: false,
+        proteinFrequency: 0,
+      });
+      setFinalRegister({
+        ...finalRegister,
+        isProtein: false,
+        proteinFrequency: 0,
+      });
+    } else {
+      console.log({
+        ...finalRegister,
+        isProtein: true,
+        proteinFrequency: proteinFrequency,
+      });
+
+      setFinalRegister({
+        ...finalRegister,
+        isProtein: yesOrNo === 1 ? true : false,
+        proteinFrequency: proteinFrequency,
+      });
+    }
+
     navigation.navigate(RegisterInfoPage6PageName);
   };
 
@@ -36,8 +91,8 @@ const Pages = () => {
         <ProgressBar progress={5} />
 
         <TitleWrap>
-          <Title>채식 정보</Title>
-          <SemiTitle>평소에 채식을 하시나요?</SemiTitle>
+          <Title>프로틴 정보</Title>
+          <SemiTitle>평소 프로틴 관련 제품을 따로 섭취하시나요?</SemiTitle>
         </TitleWrap>
 
         <ButtonContainer>
@@ -55,12 +110,39 @@ const Pages = () => {
             );
           })}
         </ButtonContainer>
+
+        {yesOrNo === 1 && (
+          <>
+            <TitleWrap>
+              <Title>프로틴 섭취 빈도</Title>
+              {/* <SemiTitle>평소 프로틴 관련 제품을 따로 섭취하시나요?</SemiTitle> */}
+            </TitleWrap>
+
+            <ButtonContainer>
+              {[
+                {id: 1, name: '주 1~2회'},
+                {id: 2, name: '주 3~5회'},
+                {id: 3, name: '주 6~7회'},
+              ].map((v, i) => {
+                return (
+                  <YesOrNoButton
+                    key={i}
+                    data={v}
+                    width={'103px'}
+                    selectedId={proteinFrequency}
+                    setSelectedId={setProteinFrequency}
+                  />
+                );
+              })}
+            </ButtonContainer>
+          </>
+        )}
       </ScrollViewContainer>
       <ButtonNext
         size="full"
         label="다음"
         text={'BottomButtonSB'}
-        // disabled={!clickAvaliable}
+        disabled={!clickAvaliable}
         onPressEvent={() => {
           handlePress();
         }}

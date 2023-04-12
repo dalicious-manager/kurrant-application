@@ -48,7 +48,7 @@ const Container = styled.View`
   flex: 1;
   padding: 35px 20px;
   align-items: center;
-  justify-content: space-between;
+  background-color: #ffffff;
 `;
 
 const ButtonNext = styled(Button)`
