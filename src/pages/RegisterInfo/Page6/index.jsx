@@ -17,6 +17,8 @@ import SelectInputBox from './components/SelectInputBox/SelectInputBox';
 import ModalCalendar from '../../../components/ModalCalendar/ModalCalendar';
 import {toStringByFormatting} from '../../../utils/dateFormatter';
 import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hook';
+import {finalRegisterAtom} from '../store';
+import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
@@ -31,7 +33,9 @@ const sampleData = [
 ];
 
 const Pages = () => {
-  //   const [clickAvaliable, setClickAvaliable] = useState(false);
+  const [clickAvaliable, setClickAvaliable] = useState(false);
+
+  const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
   const {
     getCountryFoodList,
@@ -67,12 +71,17 @@ const Pages = () => {
   const [jobTypeModal, setJobTypeModal] = useState(false);
   const [detailJobTypeModal, setDetailJobTypeModal] = useState(false);
 
-  const [birthday, setBirthday] = useState('');
+  // const [birthday, setBirthday] = useState('');
+  const [birthday, setBirthday] = useState(undefined);
   const [birthdayDateFormat, setBirthdayDateFormat] = useState(new Date());
-  const [gender, setGender] = useState('');
-  const [country, setCountry] = useState('');
-  const [jobType, setJobType] = useState('');
-  const [detailJobType, setDetailJobType] = useState('');
+  // const [gender, setGender] = useState('');
+  const [gender, setGender] = useState(undefined);
+  // const [country, setCountry] = useState('');
+  const [country, setCountry] = useState(undefined);
+  // const [jobType, setJobType] = useState('');
+  const [jobType, setJobType] = useState(undefined);
+  // const [detailJobType, setDetailJobType] = useState('');
+  const [detailJobType, setDetailJobType] = useState(undefined);
 
   const navigation = useNavigation();
 
@@ -90,6 +99,15 @@ const Pages = () => {
     }
   }, [birthdayDateFormat, birthdayModal]);
 
+  // 다음 버튼 열기
+  useEffect(() => {
+    if (birthday && gender && country && jobType && detailJobType) {
+      setClickAvaliable(true);
+    } else {
+      setClickAvaliable(false);
+    }
+  }, [birthday, gender, country, jobType, detailJobType, setClickAvaliable]);
+
   const handleConfirmPress = (setModal, setSelected) => {
     setSelected(birthdayDateFormat);
     setModal(false);
@@ -101,7 +119,36 @@ const Pages = () => {
   };
 
   const handlePress = () => {
-    console.log('ㅗㅑ');
+    const birthYear = birthday.split('. ')[0];
+    const birthMonth = birthday.split('. ')[1];
+    const birthDay = birthday.split('. ')[2];
+
+    console.log({
+      ...finalRegister,
+      userDefaultInfo: {
+        birthYear,
+        birthMonth,
+        birthDay,
+        gender: gender === '남자' ? 1 : 2,
+        country,
+        jobType,
+        detailJobType,
+      },
+    });
+
+    setFinalRegister({
+      ...finalRegister,
+      userDefaultInfo: {
+        birthYear,
+        birthMonth,
+        birthDay,
+        gender: gender === '남자' ? 1 : 2,
+        country,
+        jobType,
+        detailJobType,
+      },
+    });
+
     navigation.navigate(RegisterInfoPage7PageName);
   };
 
@@ -143,24 +190,29 @@ const Pages = () => {
           }}
         />
         <Wrap1>
-          <SelectInputBox
-            placeholder={'직종 분류'}
-            width={'50%'}
-            value={jobType}
-            setValue={setJobType}
-            buttonOnClickCallback={() => {
-              setJobTypeModal(true);
-            }}
-          />
-          <SelectInputBox
-            placeholder={'상세 직종'}
-            width={'50%'}
-            value={detailJobType}
-            setValue={setDetailJobType}
-            buttonOnClickCallback={() => {
-              setDetailJobTypeModal(true);
-            }}
-          />
+          <Wrap2>
+            <SelectInputBox
+              placeholder={'직종 분류'}
+              // width={'50%'}
+              value={jobType}
+              setValue={setJobType}
+              buttonOnClickCallback={() => {
+                setJobTypeModal(true);
+              }}
+            />
+          </Wrap2>
+
+          <Wrap2>
+            <SelectInputBox
+              placeholder={'상세 직종'}
+              // width={'50%'}
+              value={detailJobType}
+              setValue={setDetailJobType}
+              buttonOnClickCallback={() => {
+                setDetailJobTypeModal(true);
+              }}
+            />
+          </Wrap2>
         </Wrap1>
       </ContentContainer>
 
@@ -168,7 +220,7 @@ const Pages = () => {
         size="full"
         label="다음"
         text={'BottomButtonSB'}
-        // disabled={!clickAvaliable}
+        disabled={!clickAvaliable}
         onPressEvent={() => {
           handlePress();
         }}
@@ -180,8 +232,8 @@ const Pages = () => {
         setModalVisible={setGenderModal}
         title="성별"
         data={[
-          {id: 1, text: '남자'},
-          {id: 2, text: '여자'},
+          {id: '남자', text: '남자'},
+          {id: '여자', text: '여자'},
         ]}
         selected={gender}
         setSelected={setGender}
@@ -270,4 +322,10 @@ const Wrap1 = styled.View`
   width: 100%;
   display: flex;
   flex-direction: row;
+`;
+
+const Wrap2 = styled.View`
+  width: 50%;
+  display: flex;
+  flex-direction: column-reverse;
 `;
