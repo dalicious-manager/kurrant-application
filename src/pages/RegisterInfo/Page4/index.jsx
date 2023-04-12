@@ -23,6 +23,7 @@ const Pages = () => {
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
   const [yesOrNo, setYesOrNo] = useState(0);
+
   const [beganLevel, setBeganLevel] = useState(undefined);
 
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
@@ -73,17 +74,34 @@ const Pages = () => {
   const handlePress = () => {
     console.log('ㅗㅑ');
 
-    console.log({
-      ...finalRegister,
-      isBegan: yesOrNo === 1 ? true : false,
-      beganLevel: beganLevel,
-    });
+    // 예 일때 아니오일떄
 
-    setFinalRegister({
-      ...finalRegister,
-      isBegan: yesOrNo === 1 ? true : false,
-      beganLevel: beganLevel,
-    });
+    if (yesOrNo === 2) {
+      // began
+
+      console.log({
+        ...finalRegister,
+        isBegan: false,
+        beganLevel: 0,
+      });
+      setFinalRegister({
+        ...finalRegister,
+        isBegan: false,
+        beganLevel: 0,
+      });
+    } else {
+      console.log({
+        ...finalRegister,
+        isBegan: true,
+        beganLevel: beganLevel,
+      });
+
+      setFinalRegister({
+        ...finalRegister,
+        isBegan: yesOrNo === 1 ? true : false,
+        beganLevel: beganLevel,
+      });
+    }
 
     navigation.navigate(RegisterInfoPage5PageName);
   };
