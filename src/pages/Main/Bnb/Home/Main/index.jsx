@@ -168,9 +168,9 @@ const Pages = () => {
     getOneAnnouncement(2);
   }, []);
 
-  useEffect(() => {
-    removeItemFromStorage('announcementsClickedOneDate');
-  }, []);
+  // useEffect(() => {
+  //   removeItemFromStorage('announcementsClickedOneDate');
+  // }, []);
 
   // useEffect(() => {
   //   console.log('아나운스먼트 여기여');
