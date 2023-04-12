@@ -41,6 +41,7 @@ import {
   formattedMonthDay,
 } from '../../../../../utils/dateFormatter';
 import withCommas, {generateOrderCode} from '../../../../../utils/withCommas';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   ButtonWrap,
   ContentWrap,
@@ -449,10 +450,10 @@ const Pages = ({route}) => {
 
   return (
     <SafeArea>
-      <KeyboardAvoidingView
+      <KeyboardAwareScrollView
         style={{flex: 1}}
-        keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        extraScrollHeight={120}
+        enableOnAndroid={true}>
         <TouchableWithoutFeedback>
           <ViewScroll ref={viewRef} onBlur={onBlurPress}>
             <BorderWrap>
@@ -811,7 +812,7 @@ const Pages = ({route}) => {
             </BorderWrap>
           </ViewScroll>
         </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
       {/* ;handleEventPayments() */}
 
       {!keyboardStatus.isKeyboardActivate && (
