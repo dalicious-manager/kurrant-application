@@ -7,7 +7,7 @@ import {
   Pressable,
 } from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-import Typography from '../../../../../../components/Typography';
+import Typography from '../Typography';
 
 import DatePicker from '@react-native-community/datetimepicker';
 

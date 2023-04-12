@@ -23,7 +23,7 @@ import {formattedWeekDate} from '../../../../../../utils/dateFormatter';
 import {CalendarIcon} from '../../../../../../components/Icon';
 import DatePicker from '@react-native-community/datetimepicker';
 
-import ModalCalendar from './ModalCalendar';
+import ModalCalendar from '../../../../../../components/ModalCalendar/ModalCalendar';
 
 export const PAGE_NAME = 'P_MAIN__EVERYTHING__HISTORY';
 

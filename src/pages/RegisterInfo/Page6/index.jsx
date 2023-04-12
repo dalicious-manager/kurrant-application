@@ -14,6 +14,7 @@ import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7';
 
 import RefTextInput from '~components/RefTextInput';
 import SelectInputBox from './components/SelectInputBox/SelectInputBox';
+import ModalCalendar from '../../../components/ModalCalendar/ModalCalendar';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
@@ -21,19 +22,34 @@ const Pages = () => {
   //   const [clickAvaliable, setClickAvaliable] = useState(false);
 
   // 바텀 팝업 버튼들
-  const [birthdayModal, setBirthdayModal] = useState('');
+  const [birthdayModal, setBirthdayModal] = useState(false);
   const [genderModal, setGenderModal] = useState(undefined);
   const [countryModal, setCountryModal] = useState('');
   const [jobTypeModal, setJobTypeModal] = useState('');
   const [detailJobTypeModal, setDetailJobTypeModal] = useState('');
 
-  const [birthday, setBirthday] = useState('');
+  const [birthday, setBirthday] = useState(new Date());
   const [gender, setGender] = useState('');
   const [country, setCountry] = useState('');
   const [jobType, setJobType] = useState('');
   const [detailJobType, setDetailJobType] = useState('');
 
   const navigation = useNavigation();
+
+  // 생년월일
+
+  const handleConfirmPress = setModal => {
+    setModal(false);
+  };
+
+  useEffect(() => {
+    console.log('버스데이');
+    console.log(birthday);
+  }, [birthday]);
+
+  const handleOnChangeDate = (__, date, _, setSelected) => {
+    setSelected(date);
+  };
 
   const handlePress = () => {
     console.log('ㅗㅑ');
@@ -47,7 +63,7 @@ const Pages = () => {
         position: 'relative',
       }}>
       <ContentContainer>
-        <ProgressBar progress={5} />
+        <ProgressBar progress={6} />
 
         <TitleWrap>
           <Title>기본정보</Title>
@@ -74,7 +90,7 @@ const Pages = () => {
       />
 
       {/* <Bottom */}
-      <BottomSheet
+      {/* <BottomSheet
         modalVisible={birthdayModal}
         setModalVisible={setBirthdayModal}
         title="채식 정보 입력"
@@ -91,7 +107,21 @@ const Pages = () => {
         setSelected={setBirthday}
         // setValue={onSelectEvent2}
         height={200}
-      />
+      /> */}
+      <ModalCalendar
+        modalVisible={birthdayModal}
+        setModalVisible={setBirthdayModal}
+        calendarProps={{
+          selected: birthday,
+
+          onChange: handleOnChangeDate,
+
+          confirm: handleConfirmPress,
+
+          setModal: setBirthdayModal,
+
+          setSelected: setBirthday,
+        }}></ModalCalendar>
     </Container>
   );
 };
