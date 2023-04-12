@@ -204,6 +204,7 @@ const Pages = ({route}) => {
                         text: '메뉴 취소',
                         onPress: async () => {
                           cancelAll();
+                          queryClient.invalidateQueries('todayMeal');
                         },
                         style: 'destructive',
                       },

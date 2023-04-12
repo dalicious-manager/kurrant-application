@@ -1,5 +1,5 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useCallback} from 'react';
 import {
   ActivityIndicator,
@@ -147,6 +147,41 @@ const Pages = ({route}) => {
     googleSigninConfigure();
     facebookConfiguration();
   }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        await VersionCheck.getLatestVersion().then(latestVersion => {
+          console.log(currentVersion, latestVersion);
+          if (currentVersion !== latestVersion) {
+            Alert.alert(
+              '앱 업데이트',
+              '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
+              [
+                {
+                  text: '확인',
+                  onPress: async () => {
+                    if (Platform.OS === 'android') {
+                      handlePress(
+                        GOOGLE_PLAY_STORE_LINK,
+                        GOOGLE_PLAY_STORE_WEB_LINK,
+                      );
+                    } else {
+                      handlePress(
+                        APPLE_APP_STORE_LINK,
+                        APPLE_APP_STORE_WEB_LINK,
+                      );
+                    }
+                  },
+                  style: 'destructive',
+                },
+              ],
+            );
+          }
+        });
+      };
+      getData();
+    }, []),
+  );
   useEffect(() => {
     const isAutoLogin = async () => {
       const isLogin = await getStorage('isLogin');
@@ -182,34 +217,6 @@ const Pages = ({route}) => {
       }
     };
 
-    const getData = async () => {
-      await VersionCheck.getLatestVersion().then(latestVersion => {
-        console.log(currentVersion, latestVersion);
-        if (currentVersion !== latestVersion) {
-          Alert.alert(
-            '앱 업데이트',
-            '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
-            [
-              {
-                text: '확인',
-                onPress: async () => {
-                  if (Platform.OS === 'android') {
-                    handlePress(
-                      GOOGLE_PLAY_STORE_LINK,
-                      GOOGLE_PLAY_STORE_WEB_LINK,
-                    );
-                  } else {
-                    handlePress(APPLE_APP_STORE_LINK, APPLE_APP_STORE_WEB_LINK);
-                  }
-                },
-                style: 'destructive',
-              },
-            ],
-          );
-        }
-      });
-    };
-    getData();
     setLoginLoading(true);
     isAutoLogin();
     // eslint-disable-next-line react-hooks/exhaustive-deps

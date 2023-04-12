@@ -24,6 +24,7 @@ import FastImage from 'react-native-fast-image';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useUserInfo from '../../../../../biz/useUserInfo';
+import {useQueryClient} from 'react-query';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
@@ -37,6 +38,7 @@ const Pages = ({route}) => {
   const {dailyFood, isServiceDays} = useFoodDaily();
   const {isUserInfo, userInfo} = useUserInfo();
 
+  const queryClient = useQueryClient();
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
   const {isOrderMeal, orderMeal, refundItem, setOrderMeal} = useOrderMeal();
@@ -77,6 +79,7 @@ const Pages = ({route}) => {
               await refundItem({
                 id: id,
               });
+              queryClient.invalidateQueries('todayMeal');
               setOrderMeal(listArr);
               setShow(true);
               toast.toastEvent();
@@ -121,7 +124,7 @@ const Pages = ({route}) => {
                 id: id,
               });
               setOrderMeal(listArr);
-
+              queryClient.invalidateQueries('todayMeal');
               navigation.navigate(BuyMealPageName, {
                 date: serviceDate ? serviceDate : formattedDate(new Date()),
               });

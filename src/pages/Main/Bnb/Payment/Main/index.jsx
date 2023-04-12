@@ -21,6 +21,7 @@ import {
   NativeModules,
   Keyboard,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 import styled from 'styled-components/native';
 import {KeyboardAccessoryView} from 'react-native-keyboard-accessory';
@@ -280,7 +281,6 @@ const Pages = ({route}) => {
   });
 
   const orderPress = async spotId => {
-    setIsPay(true);
     const data = {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
@@ -363,16 +363,24 @@ const Pages = ({route}) => {
     }
   };
   const orderPress2 = async spotId => {
-    if (selectDefaultCard.length <= 0) {
-      Alert.alert('카드선택', '카드를 선택해주세요.', [
-        {
-          onPress: () => {
-            viewRef.current.scrollToEnd({animated: true});
+    if (
+      selectDefaultCard.length <= 0 &&
+      (medtronicSupportArr.includes(62471004)
+        ? medtronicTotalPrice > 0
+        : totalPrice > 0)
+    ) {
+      Alert.alert(
+        '카드선택',
+        '카드를 선택해주세요.\n카드 선택은 아래 결제 카드 등록 을 통해 할 수 잇습니다.',
+        [
+          {
+            onPress: () => {
+              viewRef?.current?.scrollToEnd();
+            },
+            text: '확인',
           },
-          text: '확인',
-        },
-      ]);
-
+        ],
+      );
       return;
     }
     const data = {
@@ -388,7 +396,7 @@ const Pages = ({route}) => {
       deliveryFee: deliveryFee,
       userPoint: watch('point'),
     };
-
+    setIsPay(true);
     try {
       // const res = await orderMeal(spotId,data);
       // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
@@ -445,17 +453,29 @@ const Pages = ({route}) => {
       queryClient.invalidateQueries('todayMeal');
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsPay(false);
     }
   };
 
+  if (isPay) {
+    return (
+      <SafeArea>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator size={'large'} />
+        </View>
+      </SafeArea>
+    );
+  }
   return (
     <SafeArea>
       <KeyboardAwareScrollView
         style={{flex: 1}}
         extraScrollHeight={120}
+        ref={viewRef}
         enableOnAndroid={true}>
         <TouchableWithoutFeedback>
-          <ViewScroll ref={viewRef} onBlur={onBlurPress}>
+          <ViewScroll onBlur={onBlurPress}>
             <BorderWrap>
               <Container>
                 <DeliveryTextWrap>
@@ -823,8 +843,8 @@ const Pages = ({route}) => {
               disabled={
                 payments !== 'NOMAL' ||
                 (medtronicSupportArr.includes(62471004)
-                  ? medtronicTotalPrice <= 0
-                  : totalPrice <= 0) ||
+                  ? medtronicTotalPrice < 0
+                  : totalPrice < 0) ||
                 isPay
               }
               onPressEvent={() => {

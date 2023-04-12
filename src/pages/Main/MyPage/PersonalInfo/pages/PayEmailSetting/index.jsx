@@ -71,9 +71,8 @@ const Pages = ({route}) => {
 
   const callMailAuth = async () => {
     try {
-      await auth.requestEmailAuth({receivers: [email]}, 7);
+      await auth.requestEmailAuth({receivers: [email]}, 8);
       if (progress < 2) return setProgress(progressed => progressed + 1);
-      navigation.goBack();
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
@@ -96,7 +95,7 @@ const Pages = ({route}) => {
           ...JSON.parse(params?.cardData),
           email: data.email,
           password: data.password,
-          payNumber: emailAuth,
+          payNumber: params?.password,
         },
         3,
       );
@@ -121,7 +120,7 @@ const Pages = ({route}) => {
         });
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('등록 실패', err.toString().replace('error: '));
     }
   };
 
@@ -308,7 +307,7 @@ const Pages = ({route}) => {
                         if (progress < 3) {
                           try {
                             if (progress <= 2) {
-                              await auth.confirmEmailAuth(emailAuth, 7);
+                              await auth.confirmEmailAuth(emailAuth, 8);
                               return setProgress(progress + 1);
                             }
                           } catch (err) {
@@ -339,7 +338,7 @@ const Pages = ({route}) => {
                 onPressEvent={async () => {
                   if (progress < 3) {
                     try {
-                      await auth.confirmEmailAuth(emailAuth, 7);
+                      await auth.confirmEmailAuth(emailAuth, 8);
                       return setProgress(progress + 1);
                     } catch (err) {
                       Alert.alert(
