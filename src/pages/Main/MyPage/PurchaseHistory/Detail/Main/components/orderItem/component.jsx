@@ -12,10 +12,12 @@ import {
 import withCommas from '../../../../../../../../utils/withCommas';
 import TextButton from '../../../../../../../../components/TextButton';
 import {formattedMealFoodStatus} from '../../../../../../../../utils/statusFormatter';
+import {useQueryClient} from 'react-query';
 
 const {width} = Dimensions.get('screen');
 const Component = ({orderItem, onCancel = () => {}}) => {
   const themeApp = useTheme();
+  const queryClient = useQueryClient();
   const {
     serviceDate,
     makers,
@@ -78,7 +80,10 @@ const Component = ({orderItem, onCancel = () => {}}) => {
                         },
                         {
                           text: '메뉴 취소',
-                          onPress: () => onCancel(id),
+                          onPress: () => {
+                            onCancel(id);
+                            queryClient.invalidateQueries('todayMeal');
+                          },
                           style: 'destructive',
                         },
                       ],

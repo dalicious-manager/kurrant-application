@@ -54,6 +54,7 @@ import BottomMenu from '../../../../../components/BottomSheetMenu';
 import Toast from '../../../../../components/Toast';
 import useUserMe from '../../../../../biz/useUserMe';
 import {surpportPrice} from '../../../../Group/GroupCorporations/CorporationsApplication/ThirdPage/Pages/function';
+import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
@@ -64,6 +65,7 @@ const Pages = () => {
   const boxRef = useRef();
   const [focus, setFocus] = useState(false);
   const [id, setId] = useState(null);
+  const queryClient = useQueryClient();
   const {
     isLoadMeal,
     isQuantity,
@@ -554,6 +556,7 @@ const Pages = () => {
           onPress: async () => {
             try {
               await deleteButton(id);
+              queryClient.invalidateQueries('todayMeal');
               setModalVisible3(true);
             } catch (err) {
               console.log(err);

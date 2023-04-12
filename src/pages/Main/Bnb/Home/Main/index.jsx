@@ -114,7 +114,7 @@ const Pages = () => {
   //   return endData;
   // });
   const date = formattedWeekDate(new Date());
-  const {data: todayMealList} = useGetTodayMeal(date);
+  const {data: todayMealList, refetch: todayRefetch} = useGetTodayMeal(date);
 
   // 홈 전체 공지사항
 
@@ -288,6 +288,7 @@ const Pages = () => {
       };
       try {
         isTester();
+        todayRefetch();
       } catch (e) {
         alert(e.toString().replace('error:'));
       }
@@ -354,7 +355,7 @@ const Pages = () => {
         console.log(err);
       }
     }
-    // dailys();
+    dailys();
   }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {
@@ -405,7 +406,7 @@ const Pages = () => {
 
   const mockStatus = 10;
 
-  if (isOrderMealLoading || isUserInfoLoading || eventSpotLoading) {
+  if (!isUserInfo) {
     return <SkeletonUI />;
   }
 

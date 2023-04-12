@@ -22,16 +22,19 @@ import {PurchaseDetailPageName} from '../../../../Detail';
 import useOrderMeal from '../../../../../../../../biz/useOrderMeal';
 import usePurchaseHistory from '../../../../../../../../biz/usePurchaseHistory';
 import {PAGE_NAME as BuyMealPageName} from '../../../../../../Bnb/BuyMeal/Main';
+import {useQueryClient} from 'react-query';
 const {width} = Dimensions.get('screen');
 const Component = ({purchaseId, date, itemIndex}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
   const {refundItem} = useOrderMeal();
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const {
     setMealPurchase,
     readAbleAtom: {mealPurchase},
   } = usePurchaseHistory();
+
   const purchase = mealPurchase.filter(v => v.id === purchaseId)[0];
   const cancelItem = async id => {
     try {
@@ -194,7 +197,12 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   },
                                   {
                                     text: '메뉴 취소',
-                                    onPress: () => cancelItem(order.id),
+                                    onPress: () => {
+                                      cancelItem(order.id);
+                                      queryClient.invalidateQueries(
+                                        'todayMeal',
+                                      );
+                                    },
                                     style: 'destructive',
                                   },
                                 ],
@@ -214,8 +222,12 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   },
                                   {
                                     text: '메뉴 취소',
-                                    onPress: () =>
-                                      changeItem(order.id, order.serviceDate),
+                                    onPress: () => {
+                                      changeItem(order.id, order.serviceDate);
+                                      queryClient.invalidateQueries(
+                                        'todayMeal',
+                                      );
+                                    },
                                     style: 'destructive',
                                   },
                                 ],
