@@ -81,7 +81,7 @@ export default function Password({route}) {
         if (isCard === 3) {
           console.log(state, '기본 카드 등록');
           navigation.navigate(DefaultPaymentManage, {
-            isRegist: true,
+            params: {isRegist: true},
           });
         }
         if (isCard === 4) {
@@ -155,16 +155,18 @@ export default function Password({route}) {
           </ButtonContainer>
         )}
       </StyledPassword>
-      <RightBlock>
-        <Pressable
-          onPress={() => {
-            navigation.navigate(RePayCheckPasswordEmailPageName);
-          }}>
-          <RePassword text={'CaptionR'} textColor={themeApp.colors.grey[4]}>
-            비밀번호 재설정
-          </RePassword>
-        </Pressable>
-      </RightBlock>
+      {!params?.isFirst && (
+        <RightBlock>
+          <Pressable
+            onPress={() => {
+              navigation.navigate(RePayCheckPasswordEmailPageName);
+            }}>
+            <RePassword text={'CaptionR'} textColor={themeApp.colors.grey[4]}>
+              비밀번호 재설정
+            </RePassword>
+          </Pressable>
+        </RightBlock>
+      )}
       <KeyboardButton
         isKeyboardActivate={keyboardStatus.isKeyboardActivate}
         label={'다음'}

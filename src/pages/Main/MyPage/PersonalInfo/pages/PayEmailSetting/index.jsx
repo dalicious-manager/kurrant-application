@@ -73,7 +73,6 @@ const Pages = ({route}) => {
     try {
       await auth.requestEmailAuth({receivers: [email]}, 8);
       if (progress < 2) return setProgress(progressed => progressed + 1);
-      navigation.goBack();
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
@@ -96,7 +95,7 @@ const Pages = ({route}) => {
           ...JSON.parse(params?.cardData),
           email: data.email,
           password: data.password,
-          payNumber: emailAuth,
+          payNumber: params?.password,
         },
         3,
       );
@@ -121,7 +120,7 @@ const Pages = ({route}) => {
         });
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('등록 실패', err.toString().replace('error: '));
     }
   };
 

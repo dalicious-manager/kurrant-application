@@ -363,7 +363,6 @@ const Pages = ({route}) => {
     }
   };
   const orderPress2 = async spotId => {
-    setIsPay(true);
     if (
       selectDefaultCard.length <= 0 &&
       (medtronicSupportArr.includes(62471004)
@@ -382,7 +381,6 @@ const Pages = ({route}) => {
           },
         ],
       );
-
       return;
     }
     const data = {
@@ -398,7 +396,7 @@ const Pages = ({route}) => {
       deliveryFee: deliveryFee,
       userPoint: watch('point'),
     };
-
+    setIsPay(true);
     try {
       // const res = await orderMeal(spotId,data);
       // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
