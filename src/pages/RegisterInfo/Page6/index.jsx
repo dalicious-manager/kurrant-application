@@ -15,6 +15,7 @@ import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7';
 import RefTextInput from '~components/RefTextInput';
 import SelectInputBox from './components/SelectInputBox/SelectInputBox';
 import ModalCalendar from '../../../components/ModalCalendar/ModalCalendar';
+import {toStringByFormatting} from '../../../utils/dateFormatter';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
@@ -28,7 +29,10 @@ const Pages = () => {
   const [jobTypeModal, setJobTypeModal] = useState('');
   const [detailJobTypeModal, setDetailJobTypeModal] = useState('');
 
-  const [birthday, setBirthday] = useState(new Date());
+  const [birthday, setBirthday] = useState('');
+  const [birthdayDateFormat, setBirthdayDateFormat] = useState(new Date());
+  // const [birthdayDateFormat, setBirthdayDateFormat] = useState();
+
   const [gender, setGender] = useState('');
   const [country, setCountry] = useState('');
   const [jobType, setJobType] = useState('');
@@ -38,14 +42,22 @@ const Pages = () => {
 
   // 생년월일
 
-  const handleConfirmPress = setModal => {
-    setModal(false);
-  };
+  const [isMount, setIsMount] = useState(false);
 
   useEffect(() => {
-    console.log('버스데이');
-    console.log(birthday);
-  }, [birthday]);
+    setIsMount(true);
+  }, []);
+
+  useEffect(() => {
+    if (!birthdayModal && isMount) {
+      setBirthday(toStringByFormatting(birthdayDateFormat, '. '));
+    }
+  }, [birthdayDateFormat, birthdayModal]);
+
+  const handleConfirmPress = (setModal, setSelected) => {
+    setSelected(birthdayDateFormat);
+    setModal(false);
+  };
 
   const handleOnChangeDate = (__, date, _, setSelected) => {
     setSelected(date);
@@ -112,7 +124,7 @@ const Pages = () => {
         modalVisible={birthdayModal}
         setModalVisible={setBirthdayModal}
         calendarProps={{
-          selected: birthday,
+          selected: birthdayDateFormat,
 
           onChange: handleOnChangeDate,
 
@@ -120,7 +132,7 @@ const Pages = () => {
 
           setModal: setBirthdayModal,
 
-          setSelected: setBirthday,
+          setSelected: setBirthdayDateFormat,
         }}></ModalCalendar>
     </Container>
   );

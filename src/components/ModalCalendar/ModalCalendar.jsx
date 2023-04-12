@@ -28,6 +28,8 @@ const ModalCalendar = props => {
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
 
+  // const [selectedDate, setSelectedDate] = useState(new Date());
+
   const themeApp = useTheme();
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
@@ -88,22 +90,29 @@ const ModalCalendar = props => {
                   <Cancel>취소</Cancel>
                 </Pressable>
                 <Pressable
-                  onPress={() => calendarProps.confirm(calendarProps.setModal)}>
+                  onPress={() =>
+                    calendarProps.confirm(
+                      calendarProps.setModal,
+                      calendarProps.setSelected,
+                      // selectedDate,
+                    )
+                  }>
                   <Confirm>완료</Confirm>
                 </Pressable>
               </IosButton>
             )}
             <DatePicker
               value={calendarProps.selected}
+              // value={undefined}
               display="spinner"
-              onChange={(event, date) =>
+              onChange={(event, date) => {
                 calendarProps.onChange(
                   event,
                   date,
                   calendarProps.setModal,
                   calendarProps.setSelected,
-                )
-              }
+                );
+              }}
               locale="ko-KR"
             />
           </React.Fragment>

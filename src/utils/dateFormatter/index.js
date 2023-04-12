@@ -292,3 +292,21 @@ export const changeSeperator = (dateInput, inputSeperator, outputSeperator) => {
 
   return process3;
 };
+
+// 2023-03-22T12:14:50.559+09:00 -> 2023. 03. 22
+
+export function toStringByFormatting(source, delimiter = '-') {
+  function leftPad(value) {
+    if (value >= 10) {
+      return value;
+    }
+
+    return `0${value}`;
+  }
+
+  const year = source.getFullYear();
+  const month = leftPad(source.getMonth() + 1);
+  const day = leftPad(source.getDate());
+
+  return [year, month, day].join(delimiter);
+}
