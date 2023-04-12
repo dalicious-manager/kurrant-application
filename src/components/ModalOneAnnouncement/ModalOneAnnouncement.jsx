@@ -3,39 +3,20 @@ import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 import Typography from '../Typography';
 
-import HTML, {defaultSystemFonts} from 'react-native-render-html';
+import HTML, {RenderHTML, defaultSystemFonts} from 'react-native-render-html';
 
 import {Dimensions, ScrollView} from 'react-native';
 import {setStorage} from '../../utils/asyncStorage';
 import {removeItemFromStorage} from '../../utils/asyncStorage';
 
-const MyCustomRenderer = ({children}) => (
-  // <View style={{fontFamily: PretendardRegular}}>{children}</View>
-  <View style={{fontFamily: 'Pretendard-Regular'}}>{children}</View>
-);
-
 const Component = ({modalVisible, data, setModalVisible}) => {
-  // useEffect(() => {
-  //   console.log('모달은 떴어용');
-  // }, []);
-
-  const systemFonts = [
-    ...defaultSystemFonts,
-    // 'Pretendard',
-    'Pretendard-Regular',
-    'Pretendard-SemiBold',
-  ];
+  const systemFonts = [...defaultSystemFonts, 'Pretendard'];
 
   const source = {
-    html: `<div style="font-family: 'Pretendard';  padding-left:24px; padding-right:20px; ">
-        
+    html: `<div style="  padding-left:24px; padding-right:20px; "> 
         ${data.content}
         </div>`,
   };
-
-  console.log(data.content);
-  // console.log(data.title);
-  // console.log(data.updated);
 
   const handleMessageRead = async () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
@@ -56,18 +37,6 @@ const Component = ({modalVisible, data, setModalVisible}) => {
 
   // 폰트 적용하기
 
-  const [fontLoaded, setFontLoaded] = useState(false);
-
-  useEffect(() => {
-    const loadFont = async () => {
-      await Font.loadAsync({
-        'Pretendard-Regular': require('../../assets/fonts/Pretendard/Pretendard-Regular.otf'),
-      });
-      setFontLoaded(true);
-    };
-    loadFont();
-  }, []);
-
   return (
     <CenteredView>
       <Modal transparent={true} visible={modalVisible}>
@@ -87,45 +56,17 @@ const Component = ({modalVisible, data, setModalVisible}) => {
             </TitleView>
 
             <ContenContainerScrollView>
-              {/* <HTML
-                contentWidth={Dimensions.get('window').width}
-                source={source}
-                systemFonts={systemFonts}
-              /> */}
-
-              {/* <Typography text={'Body06R'}>{data.content}</Typography> */}
-
               {
                 <HTML
                   contentWidth={Dimensions.get('window').width}
                   source={source}
                   systemFonts={systemFonts}
-                  tagsStyles={{
-                    div: {
-                      color: '#58585A',
-                      // textDecorationLine: 'none',
-                      fontSize: 14,
-                      fontFamily: 'Montserrat-Bold',
-
-                      // fontFamily: 'Pretendard',
-                      lineHeight: 22,
-                    },
-                  }}
-                  // customRenderer={[
-                  //   {
-                  //     tag: 'div',
-                  //     renderer: MyCustomRenderer,
-                  //   },
-                  // ]}
-                  // customHTMLElementModels={{
-                  //   span: {
-                  //     contentModel: 'mixed',
-                  //     isVoid: false,
-                  //     attrs: {
-                  //       style: {
-                  //         fontFamily: 'Pretendard-Regular',
-                  //       },
-                  //     },
+                  // tagsStyles={{
+                  //   div: {
+                  //     color: '#1e1e96',
+                  //     textDecorationLine: 'none',
+                  //     fontFamily: 'Pretendard',
+                  //     fontWeight: 'bold',
                   //   },
                   // }}
                 />
@@ -173,7 +114,7 @@ const ModalView = styled.View`
 `;
 
 const TitleView = styled.View`
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px 10px 0px 0px;
   background-color: white;
   display: flex;
   flex-direction: column;
