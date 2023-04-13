@@ -44,7 +44,7 @@ const Pages = ({route}) => {
   // }, [reviewList]);
 
   useEffect(() => {
-    if (flatListRef.current) {
+    if (flatListRef.current && idx !== -1) {
       flatListRef.current.scrollToIndex({animated: true, index: idx});
     }
   }, []);
