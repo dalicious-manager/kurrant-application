@@ -326,7 +326,7 @@ import RegisterInfoPage6, {
 } from '../../pages/RegisterInfo/Page6';
 import RegisterInfoPage7, {
   PAGE_NAME as RegisterInfoPage7PageName,
-} from '../../pages/RegisterInfo/Page7';
+} from '../../pages/RegisterInfo/Page7_8_9_10/Page7';
 // import RegisterInfoPage8, {
 //   PAGE_NAME8 as RegisterInfoPage8PageName,
 // } from '../../pages/RegisterInfo/Page7';

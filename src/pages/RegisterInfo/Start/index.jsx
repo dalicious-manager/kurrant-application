@@ -9,7 +9,7 @@ import {PAGE_NAME as RegisterInfoPage2PageName} from '../Page2';
 import {PAGE_NAME as RegisterInfoPage3PageName} from '../Page3';
 import {PAGE_NAME as RegisterInfoPage4PageName} from '../Page4';
 import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
-import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7';
+import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_START';
 
