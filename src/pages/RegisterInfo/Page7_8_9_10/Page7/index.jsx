@@ -80,7 +80,9 @@ const Pages = () => {
       selectedFoodId: selectedFoodIdPage7,
       unselectedFoodId: unselectedList,
     });
-    // setSelectedFoodIdPage7([]);
+
+    // selectedFoodId: [...finalRegister.selectedFoodId, ...selectedFoodIdPage8],
+    // unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
 
     navigation.navigate(RegisterInfoPage8PageName);
   };

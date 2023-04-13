@@ -7,9 +7,10 @@ import {useEffect, useState} from 'react';
 
 import ProgressBar from '~components/ProgressBar7';
 
-import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/hook';
-
+import {PAGE_NAME as RegisterInfoFinishPageName} from '../../Finish';
 import {PAGE_NAME as RegisterInfoPage9PageName} from '../Page9';
+
+import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/hook';
 
 import {finalRegisterAtom} from '../../store';
 import {useAtom} from 'jotai';
@@ -19,10 +20,17 @@ import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
 import {selectedFoodIdPage8Atom} from './store';
 
+// import TitleBox from '../components/TitleBox';
+// import {
+//   selectedFoodIdPage10Atom,
+//   selectedFoodIdPage7Atom,
+//   selectedFoodIdPage8Atom,
+//   selectedFoodIdPage9Atom,
+// } from '../../Page7/store';
+
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE8';
 
 const Pages = () => {
-  const navigation = useNavigation();
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
@@ -36,6 +44,12 @@ const Pages = () => {
     getFoodImageList();
   }, []);
 
+  // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
+
+  useEffect(() => {
+    console.log(selectedFoodIdPage8);
+  }, [selectedFoodIdPage8]);
+
   useEffect(() => {
     if (selectedFoodIdPage8.length >= 3) {
       setClickAvaliable(true);
@@ -44,9 +58,11 @@ const Pages = () => {
     }
   }, [selectedFoodIdPage8]);
 
-  // useEffect(() => {
-  //   console.log(finalRegister);
-  // }, [finalRegister]);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    console.log(finalRegister);
+  }, [finalRegister]);
 
   const handlePress = () => {
     console.log('ㅗㅑ');
@@ -61,7 +77,6 @@ const Pages = () => {
 
     setFinalRegister({
       ...finalRegister,
-
       selectedFoodId: [...finalRegister.selectedFoodId, ...selectedFoodIdPage8],
       unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
     });

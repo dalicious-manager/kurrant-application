@@ -8,6 +8,8 @@ import {useEffect, useState} from 'react';
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoFinishPageName} from '../../Finish';
+// import {PAGE_NAME as RegisterInfoPage10PageName} from '../Page10';
+
 import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/hook';
 
 import {finalRegisterAtom} from '../../store';
@@ -16,8 +18,15 @@ import {getUnselectedFoodIdList} from '../logic';
 
 import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
+import {selectedFoodIdPage10Atom} from './store';
 
-import selectedFoodIdPage10Atom from './store';
+// import TitleBox from '../components/TitleBox';
+// import {
+//   selectedFoodIdPage10Atom,
+//   selectedFoodIdPage7Atom,
+//   selectedFoodIdPage8Atom,
+//   selectedFoodIdPage9Atom,
+// } from '../../Page7/store';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE10';
 
@@ -34,6 +43,12 @@ const Pages = () => {
   useEffect(() => {
     getFoodImageList();
   }, []);
+
+  // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
+
+  useEffect(() => {
+    console.log(selectedFoodIdPage10);
+  }, [selectedFoodIdPage10]);
 
   useEffect(() => {
     if (selectedFoodIdPage10.length >= 3) {
@@ -62,7 +77,6 @@ const Pages = () => {
 
     setFinalRegister({
       ...finalRegister,
-
       selectedFoodId: [
         ...finalRegister.selectedFoodId,
         ...selectedFoodIdPage10,
