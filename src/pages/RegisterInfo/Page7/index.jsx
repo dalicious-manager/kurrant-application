@@ -14,6 +14,12 @@ import ImageBox from './components/ImageBox.jsx/ImageBox';
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import {getUnselectedFoodIdList} from './logic';
+import {
+  selectedFoodIdPage10Atom,
+  selectedFoodIdPage7Atom,
+  selectedFoodIdPage8Atom,
+  selectedFoodIdPage9Atom,
+} from './store';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE7';
 
@@ -24,15 +30,65 @@ const Pages = ({route}) => {
 
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
-  // route.params
 
   const {getFoodImageList, foodImageList} = useGetRegisterInfo();
 
   const [selectedIdList, setSelectedIdList] = useState([]);
+  const [selectedIdListPage7, setSelectedIdListPage7] = useAtom(
+    selectedFoodIdPage7Atom,
+  );
+  const [selectedIdListPage8, setSelectedIdListPage8] = useAtom(
+    selectedFoodIdPage8Atom,
+  );
+  const [selectedIdListPage9, setSelectedIdListPage9] = useAtom(
+    selectedFoodIdPage9Atom,
+  );
+  const [selectedIdListPage10, setSelectedIdListPage10] = useAtom(
+    selectedFoodIdPage10Atom,
+  );
 
+  // 유저가 뒤로가기 할떄 선택한 목록을 저장시켜놔야될듯
   useEffect(() => {
-    console.log(selectedIdList);
-  }, [selectedIdList]);
+    if (pageNow === 7) {
+      setSelectedIdListPage7([...selectedIdList]);
+    } else if (pageNow === 8) {
+      setSelectedIdListPage8([...selectedIdList]);
+    } else if (pageNow === 9) {
+      setSelectedIdListPage9([...selectedIdList]);
+    } else if (pageNow === 10) {
+      setSelectedIdListPage10([...selectedIdList]);
+    }
+  }, [
+    selectedIdList,
+    pageNow,
+    setSelectedIdListPage7,
+    setSelectedIdListPage8,
+    setSelectedIdListPage9,
+    setSelectedIdListPage10,
+  ]);
+
+  //유저가 뒤로가기할떄 전에 선택했던 리스트 다시 불러오기
+  useEffect(
+    () => {
+      if (pageNow === 7) {
+        setSelectedIdList([...selectedIdListPage7]);
+      } else if (pageNow === 8) {
+        setSelectedIdList([...selectedIdListPage8]);
+      } else if (pageNow === 9) {
+        setSelectedIdList([...selectedIdListPage9]);
+      } else if (pageNow === 10) {
+        setSelectedIdList([...selectedIdListPage10]);
+      }
+    },
+    [
+      // selectedIdListPage7,
+      // selectedIdListPage8,
+      // selectedIdListPage9,
+      // selectedIdListPage10,
+      // pageNow,
+      // setSelectedIdList,
+    ],
+  );
 
   useEffect(() => {
     getFoodImageList();
@@ -62,9 +118,6 @@ const Pages = ({route}) => {
       selectedIdList,
       foodImageList,
     );
-
-    console.log('라랄라라라라');
-    console.log(unselectedList);
 
     if (pageNow === 7) {
       setFinalRegister({
