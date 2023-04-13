@@ -21,7 +21,6 @@ export default function useKeyboardEvent(inputRef = null) {
       }
 
       if (inputRef?.current) {
-        inputRef.current.focus();
         inputRef.current.blur();
         // console.log(inputRef.current.isFocused());
       }

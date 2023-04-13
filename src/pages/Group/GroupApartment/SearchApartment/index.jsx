@@ -62,9 +62,9 @@ const Pages = () => {
             <SearchIcon />
 
             <RefTextInput
-              label="단체명/장소명"
+              label="단체명/장소명/도로명주소"
               name="apartName"
-              placeholder="단체명/장소명"
+              placeholder="단체명/장소명/도로명주소"
               padding="4px 8px 4px 30px"
               onChange={e => handleChange(e)}
               onFocus={() => {
