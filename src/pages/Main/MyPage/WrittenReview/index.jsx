@@ -71,7 +71,7 @@ const Pages = ({route}) => {
           scrollEnabled={true}
           renderItem={({item, index}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
-            console.log(item.itemName, index, idx, 'item_index');
+            // console.log(item.itemName, index, idx, 'item_index');
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,
