@@ -260,7 +260,6 @@ const Pages = () => {
               navigation.navigate(GroupSelectPageName);
             }
             if (getUserStatus === 2 && !isCancelSpot) {
-              console.log(isCancelSpot, 'test');
               navigation.navigate(GroupCreateMainPageName);
             }
             // return result;
@@ -310,7 +309,8 @@ const Pages = () => {
             'Notification caused app to open from quit state:',
             remoteMessage.data,
           );
-          navigation.navigate(remoteMessage.data.page);
+          if (remoteMessage.data.page !== 'HOME')
+            navigation.navigate(remoteMessage.data.page);
         }
       });
 
@@ -346,10 +346,7 @@ const Pages = () => {
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
-  // console.log(isUserInfo, '유저인포');
-  // const date = formattedWeekDate(new Date());
-  // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
-  //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
+
   useEffect(() => {
     async function dailys() {
       try {

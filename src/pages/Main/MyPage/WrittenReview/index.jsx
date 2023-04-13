@@ -39,9 +39,20 @@ const Pages = ({route}) => {
     setTotalWrittenReviewList(writtenReviewCount);
   }, [writtenReviewCount]);
 
+  // useEffect(() => {
+  //   console.log(reviewList);
+  // }, [reviewList]);
+
   useEffect(() => {
-    console.log(reviewList);
-  }, [reviewList]);
+    if (flatListRef.current && idx !== -1) {
+      // console.log(idx, 'idx');
+      flatListRef.current.scrollToIndex({
+        animated: true,
+        index: idx,
+        viewPosition: 0,
+      });
+    }
+  }, []);
 
   return (
     <Container>
@@ -52,19 +63,21 @@ const Pages = ({route}) => {
           ref={flatListRef}
           initialScrollIndex={idx}
           onScrollToIndexFailed={info => {
+            // console.log(info, '000000');
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
               flatListRef.current?.scrollToIndex({
                 index: info.index,
                 animated: true,
+                viewPosition: 0,
               });
             });
           }}
           data={reviewList}
           scrollEnabled={true}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
-
+            // console.log(item.itemName, index, idx, 'item_index');
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,

@@ -89,10 +89,8 @@ import {useQueryClient} from 'react-query';
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
 const Pages = ({route}) => {
-  const [test, setTest] = useState();
   const {StatusBarManager} = NativeModules;
   const navigation = useNavigation();
-  const pointRef = useRef();
   const [show, setShow] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -101,10 +99,8 @@ const Pages = ({route}) => {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [payments, setPayments] = useState('NOMAL');
   const [isPay, setIsPay] = useState(false);
-  const [point, setPoint] = useState(0);
   const viewRef = useRef();
   const queryClient = useQueryClient();
-  const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
   const {order, orderNice, orderLoading} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
@@ -113,6 +109,7 @@ const Pages = ({route}) => {
     readableAtom: {selectDefaultCard},
   } = useUserMe();
   const [card, setCard] = useState(selectDefaultCard);
+  const [isInputFocus, setIsInputFocus] = useState(true);
   const inputRef = useRef(null);
   const form = useForm();
   const {
@@ -120,6 +117,7 @@ const Pages = ({route}) => {
     watch,
     handleSubmit,
     setValue,
+    getValues,
   } = form;
   const points = watch('point');
 
@@ -185,6 +183,24 @@ const Pages = ({route}) => {
   const onBlurPress = e => {
     e.preventDefault();
     pointHandlePress();
+
+    const getPoint = getValues('point');
+    const checkPoint = Number.isInteger(Number(getPoint) / 100);
+
+    if (!checkPoint) {
+      Alert.alert('포인트', '포인트는 100원 단위로 사용가능합니다.', [
+        {
+          text: '확인',
+          onPress: () => {
+            setValue('point', '0');
+          },
+        },
+      ]);
+    }
+
+    if (Platform.OS === 'android') {
+      setIsInputFocus(true);
+    }
   };
 
   const clearPoint = () => {
@@ -192,7 +208,14 @@ const Pages = ({route}) => {
   };
 
   const onFocusInput = () => {
+    if (Platform.OS === 'android') {
+      setIsInputFocus(false);
+    }
+
     setValue('point', '');
+  };
+  const onBlurInput = () => {
+    setIsInputFocus(false);
   };
   const keyboardStatus = useKeyboardEvent(inputRef);
 
@@ -375,7 +398,7 @@ const Pages = ({route}) => {
         [
           {
             onPress: () => {
-              viewRef?.current?.scrollToEnd();
+              setValue('point', '0');
             },
             text: '확인',
           },
@@ -467,13 +490,15 @@ const Pages = ({route}) => {
       </SafeArea>
     );
   }
+
   return (
     <SafeArea>
       <KeyboardAwareScrollView
         style={{flex: 1}}
         extraScrollHeight={120}
         ref={viewRef}
-        enableOnAndroid={true}>
+        enableOnAndroid={true}
+        resetScrollToCoords={{x: 0, y: 10000}}>
         <TouchableWithoutFeedback>
           <ViewScroll onBlur={onBlurPress}>
             <BorderWrap>
@@ -679,6 +704,7 @@ const Pages = ({route}) => {
                     inputRef={inputRef}
                     totalPrice={totalPrice}
                     onFocusInput={onFocusInput}
+                    //onBlurInput={onBlurInput}
                     userPoint={isUserInfo.point}
                     medtronicTotalPrice={medtronicTotalPrice}
                     medtronicSupportArr={medtronicSupportArr}
@@ -687,6 +713,9 @@ const Pages = ({route}) => {
               </PaymentView>
 
               <UserPointView>
+                <PointInfoText>
+                  포인트는 100원 단위로 사용 가능합니다.
+                </PointInfoText>
                 <UserPointText>
                   잔여{' '}
                   {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
@@ -835,24 +864,23 @@ const Pages = ({route}) => {
       </KeyboardAwareScrollView>
       {/* ;handleEventPayments() */}
 
-      {!inputRef?.current?.isFocused() &&
-        !keyboardStatus.isKeyboardActivate && (
-          <ButtonWrap>
-            <Button
-              label={`총 ${totalCount}개 결제하기`}
-              disabled={
-                payments !== 'NOMAL' ||
-                (medtronicSupportArr.includes(62471004)
-                  ? medtronicTotalPrice < 0
-                  : totalPrice < 0) ||
-                isPay
-              }
-              onPressEvent={() => {
-                handleEventPayments();
-              }}
-            />
-          </ButtonWrap>
-        )}
+      {isInputFocus && !keyboardStatus.isKeyboardActivate && (
+        <ButtonWrap>
+          <Button
+            label={`총 ${totalCount}개 결제하기`}
+            disabled={
+              payments !== 'NOMAL' ||
+              (medtronicSupportArr.includes(62471004)
+                ? medtronicTotalPrice < 0
+                : totalPrice < 0) ||
+              isPay
+            }
+            onPressEvent={() => {
+              handleEventPayments();
+            }}
+          />
+        </ButtonWrap>
+      )}
       <BottomModal
         modalVisible={modalVisible3}
         setModalVisible={setModalVisible3}
@@ -1073,7 +1101,7 @@ const CountWrap = styled.View`
 
 const UserPointView = styled.View`
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin: 0px 24px;
 `;
 
@@ -1094,4 +1122,8 @@ const ClearInputButton = styled.Pressable`
   align-items: center;
   width: 30px;
   height: 30px;
+`;
+
+const PointInfoText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme}) => theme.colors.red[500]};
 `;
