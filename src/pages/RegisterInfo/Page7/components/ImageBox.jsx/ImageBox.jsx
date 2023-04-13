@@ -8,11 +8,8 @@ const ImageBox = ({
   setSelectedIdList,
   selectLimit = 0,
 }) => {
-  console.log(foodImageList);
-
   return (
     <Container>
-      {/* {foodImageListSample.map((v, i) => { */}
       {foodImageList.map((v, i) => {
         return (
           <SquareImage

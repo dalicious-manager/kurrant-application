@@ -11,10 +11,18 @@ import {PAGE_NAME as RegisterInfoFinishPageName} from '../Finish';
 import TitleBox from './components/TitleBox';
 import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hook';
 import ImageBox from './components/ImageBox.jsx/ImageBox';
+import {finalRegisterAtom} from '../store';
+import {useAtom} from 'jotai';
+import {getUnselectedFoodIdList} from './logic';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE7';
 
 const Pages = ({route}) => {
+  const pageNow = route?.params?.page || 7;
+
+  console.log(pageNow);
+
+  const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
   // route.params
 
@@ -40,10 +48,47 @@ const Pages = ({route}) => {
 
   const navigation = useNavigation();
 
+  useEffect(() => {
+    console.log(finalRegister);
+  }, [finalRegister]);
+
   const handlePress = () => {
     console.log('ㅗㅑ');
-    navigation.navigate(RegisterInfoFinishPageName);
+
+    // page7일떄, page8일떄
+    // selecteedIdList비우기, final에 데이터 집어넣기, 다음 컴포넌트로 넘어가기
+
+    const unselectedList = getUnselectedFoodIdList(
+      selectedIdList,
+      foodImageList,
+    );
+
+    console.log('라랄라라라라');
+    console.log(unselectedList);
+
+    if (pageNow === 7) {
+      setFinalRegister({
+        ...finalRegister,
+
+        selectedFoodId: selectedIdList.join(', '),
+        unselectedFoodId: unselectedList.join(', '),
+      });
+      setSelectedIdList([]);
+    } else if (pageNow === 8) {
+    } else if (pageNow === 9) {
+    } else if (pageNow === 10) {
+    }
+
+    if (pageNow < 10) {
+      navigation.navigate(PAGE_NAME, {
+        page: pageNow + 1,
+      });
+    } else {
+      navigation.navigate(RegisterInfoFinishPageName);
+    }
   };
+
+  //
 
   return (
     <Container
@@ -54,7 +99,17 @@ const Pages = ({route}) => {
       <ScrollViewContainer showsVerticalScrollIndicator={false}>
         <ProgressBar progress={7} />
         <TitleBox
-          num={1}
+          num={
+            pageNow === 7
+              ? 1
+              : pageNow === 8
+              ? 2
+              : pageNow === 9
+              ? 3
+              : pageNow === 10
+              ? 4
+              : 5
+          }
           title={`아래 음식 중 마음에 드는 \n음식 3개를 선택해 주세요`}
         />
 
@@ -69,7 +124,7 @@ const Pages = ({route}) => {
         size="full"
         label="다음"
         text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
+        // disabled={!clickAvaliable}
         onPressEvent={() => {
           handlePress();
         }}

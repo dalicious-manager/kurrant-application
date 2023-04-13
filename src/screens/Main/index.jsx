@@ -327,6 +327,9 @@ import RegisterInfoPage6, {
 import RegisterInfoPage7, {
   PAGE_NAME as RegisterInfoPage7PageName,
 } from '../../pages/RegisterInfo/Page7';
+// import RegisterInfoPage8, {
+//   PAGE_NAME8 as RegisterInfoPage8PageName,
+// } from '../../pages/RegisterInfo/Page7';
 import RegisterInfoFinish, {
   PAGE_NAME as RegisterInfoFinishPageName,
 } from '../../pages/RegisterInfo/Finish';
@@ -2213,6 +2216,7 @@ const Screen = () => {
             headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
+
         <MainRoot.Screen
           name={RegisterInfoFinishPageName}
           component={RegisterInfoFinish}
