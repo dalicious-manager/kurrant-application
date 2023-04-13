@@ -110,6 +110,7 @@ const Pages = () => {
           ]}
           callback={handleDrinkCount}
         />
+        <Filler></Filler>
       </ScrollViewContainer>
 
       <ButtonNext
@@ -139,6 +140,11 @@ const ScrollViewContainer = styled.ScrollView`
   width: 100%;
   /* height: 90%; */
   background-color: #ffffff;
+`;
+
+const Filler = styled.View`
+  width: 100%;
+  height: 30px;
 `;
 
 const ButtonNext = styled(Button)`

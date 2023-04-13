@@ -22,6 +22,8 @@ const Pages = () => {
 
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
+  const [value, setValue] = useState(undefined);
+
   const navigation = useNavigation();
 
   const {
@@ -49,10 +51,19 @@ const Pages = () => {
       ...finalRegister,
       allergyInfo: page3Input.join(','),
     });
-    setFinalRegister({
-      ...finalRegister,
-      allergyInfo: page3Input.join(','),
-    });
+
+    // 기타 내용이 있을경우 없을 경우
+
+    if (!value && value.length === 0) {
+      setFinalRegister({
+        ...finalRegister,
+      });
+    } else {
+      setFinalRegister({
+        ...finalRegister,
+        allergyInfo: page3Input.join(','),
+      });
+    }
 
     navigation.navigate(RegisterInfoPage4PageName);
   };
@@ -60,8 +71,6 @@ const Pages = () => {
   const handleButtonClicked = list => {
     setPage2Input([...list]);
   };
-
-  const [value, setValue] = useState('');
 
   useEffect(() => {
     console.log(value);

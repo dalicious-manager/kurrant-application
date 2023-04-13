@@ -22,7 +22,7 @@ const Pages = () => {
 
   const handlePress = () => {
     // navigation.navigate(RegisterInfoPage2PageName);
-    navigation.navigate(RegisterInfoPage7PageName);
+    navigation.navigate(RegisterInfoPage1PageName);
   };
 
   return (

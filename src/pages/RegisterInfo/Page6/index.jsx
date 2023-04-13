@@ -58,10 +58,6 @@ const Pages = () => {
     getDetailJobList();
   }, []);
 
-  useEffect(() => {
-    console.log(detailJobList);
-  }, [detailJobList]);
-
   // 바텀 팝업 버튼들
   const [birthdayModal, setBirthdayModal] = useState(false);
   const [isConfirmPress, setIsConfirmPress] = useState(false);
@@ -123,18 +119,18 @@ const Pages = () => {
     const birthMonth = birthday.split('. ')[1];
     const birthDay = birthday.split('. ')[2];
 
-    console.log({
-      ...finalRegister,
-      userDefaultInfo: {
-        birthYear,
-        birthMonth,
-        birthDay,
-        gender: gender === '남자' ? 1 : 2,
-        country,
-        jobType,
-        detailJobType,
-      },
-    });
+    // console.log({
+    //   ...finalRegister,
+    //   userDefaultInfo: {
+    //     birthYear,
+    //     birthMonth,
+    //     birthDay,
+    //     gender: gender === '남자' ? 1 : 2,
+    //     country,
+    //     jobType,
+    //     detailJobType,
+    //   },
+    // });
 
     setFinalRegister({
       ...finalRegister,
