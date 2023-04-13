@@ -179,7 +179,7 @@ const Pages = ({route}) => {
           }
         });
       };
-      getData();
+      // getData();
     }, []),
   );
   useEffect(() => {

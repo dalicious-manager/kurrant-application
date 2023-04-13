@@ -8,13 +8,19 @@ import {useEffect, useState} from 'react';
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoFinishPageName} from '../../Finish';
+import {PAGE_NAME as RegisterInfoPage8PageName} from '../Page8';
 
 import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/hook';
 
 import {finalRegisterAtom} from '../../store';
 import {useAtom} from 'jotai';
 import {getUnselectedFoodIdList} from '../logic';
+
 import TitleBox from '../components/TitleBox';
+import ImageBox from '../components/ImageBox.jsx/ImageBox';
+import {selectedFoodIdPage7Atom} from './store';
+
+// import TitleBox from '../components/TitleBox';
 // import {
 //   selectedFoodIdPage10Atom,
 //   selectedFoodIdPage7Atom,
@@ -30,19 +36,25 @@ const Pages = () => {
 
   const {getFoodImageList, foodImageList} = useGetRegisterInfo();
 
-  const [selectedIdList, setSelectedIdList] = useState([]);
+  const [selectedFoodIdPage7, setSelectedFoodIdPage7] = useAtom(
+    selectedFoodIdPage7Atom,
+  );
 
   useEffect(() => {
     getFoodImageList();
   }, []);
 
+  // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
+
+  useEffect(() => {}, [selectedFoodIdPage7]);
+
   useEffect(() => {
-    if (selectedIdList.length >= 3) {
+    if (selectedFoodIdPage7.length >= 3) {
       setClickAvaliable(true);
     } else {
       setClickAvaliable(false);
     }
-  }, [selectedIdList]);
+  }, [selectedFoodIdPage7]);
 
   const navigation = useNavigation();
 
@@ -57,19 +69,19 @@ const Pages = () => {
     // selecteedIdList비우기, final에 데이터 집어넣기, 다음 컴포넌트로 넘어가기
 
     const unselectedList = getUnselectedFoodIdList(
-      selectedIdList,
+      selectedFoodIdPage7,
       foodImageList,
     );
 
     setFinalRegister({
       ...finalRegister,
 
-      selectedFoodId: selectedIdList.join(', '),
+      selectedFoodId: selectedFoodIdPage7.join(', '),
       unselectedFoodId: unselectedList.join(', '),
     });
-    setSelectedIdList([]);
+    // setSelectedFoodIdPage7([]);
 
-    // navigation.navigate();
+    navigation.navigate(RegisterInfoPage8PageName);
   };
 
   //
@@ -90,15 +102,15 @@ const Pages = () => {
         <ImageBox
           selectLimit={3}
           foodImageList={foodImageList}
-          selectedIdList={selectedIdList}
-          setSelectedIdList={setSelectedIdList}
+          selectedIdList={selectedFoodIdPage7}
+          setSelectedIdList={setSelectedFoodIdPage7}
         />
       </ScrollViewContainer>
       <ButtonNext
         size="full"
         label="다음"
         text={'BottomButtonSB'}
-        // disabled={!clickAvaliable}
+        disabled={!clickAvaliable}
         onPressEvent={() => {
           handlePress();
         }}
