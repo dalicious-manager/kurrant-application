@@ -38,13 +38,17 @@ const Pages = () => {
       styles={{
         position: 'relative',
       }}>
+      {/* <Wrap4>
+        
+      </Wrap4> */}
       <BackgroundImage
+        resizeMode="contain"
         source={require('../../../assets/images/RegisterInfoBackground.png')}
       />
 
       <Wrap1
         style={{
-          marginTop: 24,
+          marginTop: 16,
           marginBottom: 16,
         }}>
         <QWrap>
@@ -56,7 +60,7 @@ const Pages = () => {
             <A />
           </AWrapWrap>
           <AText>
-            평소 식습관 관련해서 야식, 음주, 프로틴 섭 취 빈도나 운동 빈도,
+            평소 식습관 관련해서 야식, 음주, 프로틴 섭취 빈도나 운동 빈도,
             선호하는 음식 관련한 정보를 받아요.
           </AText>
         </AWrap>
@@ -111,6 +115,7 @@ const Container = styled.View`
 
 const BackgroundImage = styled.Image`
   width: ${() => `${Dimensions.get('screen').width}px`};
+  height: 266px;
 `;
 
 const ButtonNext = styled(Button)`
@@ -125,6 +130,8 @@ const Wrap1 = styled.View`
   padding: 16px;
   background-color: #ffffff;
 `;
+
+const Wrap4 = styled.View``;
 
 const QWrap = styled.View`
   display: flex;
