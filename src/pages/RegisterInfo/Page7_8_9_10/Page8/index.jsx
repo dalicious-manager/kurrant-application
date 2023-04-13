@@ -7,10 +7,9 @@ import {useEffect, useState} from 'react';
 
 import ProgressBar from '~components/ProgressBar7';
 
-import {PAGE_NAME as RegisterInfoFinishPageName} from '../../Finish';
-import {PAGE_NAME as RegisterInfoPage8PageName} from '../Page8';
-
 import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/hook';
+
+import {PAGE_NAME as RegisterInfoPage9PageName} from '../Page9';
 
 import {finalRegisterAtom} from '../../store';
 import {useAtom} from 'jotai';
@@ -20,17 +19,10 @@ import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
 import {selectedFoodIdPage8Atom} from './store';
 
-// import TitleBox from '../components/TitleBox';
-// import {
-//   selectedFoodIdPage10Atom,
-//   selectedFoodIdPage7Atom,
-//   selectedFoodIdPage8Atom,
-//   selectedFoodIdPage9Atom,
-// } from '../../Page7/store';
-
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE8';
 
 const Pages = () => {
+  const navigation = useNavigation();
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
@@ -52,11 +44,9 @@ const Pages = () => {
     }
   }, [selectedFoodIdPage8]);
 
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    console.log(finalRegister);
-  }, [finalRegister]);
+  // useEffect(() => {
+  //   console.log(finalRegister);
+  // }, [finalRegister]);
 
   const handlePress = () => {
     console.log('ㅗㅑ');
@@ -72,12 +62,11 @@ const Pages = () => {
     setFinalRegister({
       ...finalRegister,
 
-      selectedFoodId: selectedFoodIdPage8.join(', '),
-      unselectedFoodId: unselectedList.join(', '),
+      selectedFoodId: [...finalRegister.selectedFoodId, ...selectedFoodIdPage8],
+      unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
     });
-    setSelectedFoodIdPage8([]);
 
-    // navigation.navigate(RegisterInfoPage9PageName);
+    navigation.navigate(RegisterInfoPage9PageName);
   };
 
   //

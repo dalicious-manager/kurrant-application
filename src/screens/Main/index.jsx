@@ -330,6 +330,12 @@ import RegisterInfoPage7, {
 import RegisterInfoPage8, {
   PAGE_NAME as RegisterInfoPage8PageName,
 } from '../../pages/RegisterInfo/Page7_8_9_10/Page8';
+import RegisterInfoPage9, {
+  PAGE_NAME as RegisterInfoPage9PageName,
+} from '../../pages/RegisterInfo/Page7_8_9_10/Page9';
+import RegisterInfoPage10, {
+  PAGE_NAME as RegisterInfoPage10PageName,
+} from '../../pages/RegisterInfo/Page7_8_9_10/Page10';
 
 import RegisterInfoFinish, {
   PAGE_NAME as RegisterInfoFinishPageName,
@@ -2220,6 +2226,38 @@ const Screen = () => {
         <MainRoot.Screen
           name={RegisterInfoPage8PageName}
           component={RegisterInfoPage8}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage9PageName}
+          component={RegisterInfoPage9}
+          options={{
+            headerShown: true,
+            title: '회원 정보 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterInfoPage10PageName}
+          component={RegisterInfoPage10}
           options={{
             headerShown: true,
             title: '회원 정보 입력',

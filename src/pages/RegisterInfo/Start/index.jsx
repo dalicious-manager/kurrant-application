@@ -11,6 +11,8 @@ import {PAGE_NAME as RegisterInfoPage4PageName} from '../Page4';
 import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 
+// import BackgroundImage from './BackgroundImage';
+
 export const PAGE_NAME = 'P__REGISTER_INFO_START';
 
 const Pages = () => {
@@ -25,7 +27,7 @@ const Pages = () => {
 
   return (
     <Container
-      paddingHorizontal={20}
+      paddingHorizontal={24}
       styles={{
         position: 'relative',
       }}>
@@ -51,6 +53,8 @@ const Container = styled.View`
   align-items: center;
   justify-content: space-between;
 `;
+
+// const BackgroundImage = styled.Image``;
 
 const ButtonNext = styled(Button)`
   /* position: absolute; */

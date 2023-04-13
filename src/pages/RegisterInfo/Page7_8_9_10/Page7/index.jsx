@@ -46,7 +46,9 @@ const Pages = () => {
 
   // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
 
-  useEffect(() => {}, [selectedFoodIdPage7]);
+  useEffect(() => {
+    console.log(selectedFoodIdPage7);
+  }, [selectedFoodIdPage7]);
 
   useEffect(() => {
     if (selectedFoodIdPage7.length >= 3) {
@@ -75,9 +77,8 @@ const Pages = () => {
 
     setFinalRegister({
       ...finalRegister,
-
-      selectedFoodId: selectedFoodIdPage7.join(', '),
-      unselectedFoodId: unselectedList.join(', '),
+      selectedFoodId: selectedFoodIdPage7,
+      unselectedFoodId: unselectedList,
     });
     // setSelectedFoodIdPage7([]);
 
