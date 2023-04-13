@@ -27,11 +27,23 @@ import {PAGE_NAME as ReviewPageName} from '../../../../../pages/Main/MyPage/Revi
 import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
 
-import {Alert, Dimensions, FlatList, Text, View} from 'react-native';
+import {
+  Alert,
+  BackHandler,
+  Dimensions,
+  FlatList,
+  Text,
+  View,
+} from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import {useQueryClient} from 'react-query';
 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
+// import MoreMainPage, {
+//   PAGE_NAME as MoreMainPageName,
+// } from '../../../pages/Main/Bnb/More/Main';
+import {PAGE_NAME as MoreMainPageName} from '../../../../../pages/Main/Bnb/More/Main';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -53,6 +65,15 @@ const Screen = ({route}) => {
   const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
 
   const [charLength, setCharLength] = useState(0);
+
+  /// 안드로이드 뒤로가기 누르면 뒤로가야됨
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.navigate(MoreMainPageName);
+      return true;
+    });
+  }, []);
 
   useEffect(() => {
     // 사진 채우기 기능 추가
