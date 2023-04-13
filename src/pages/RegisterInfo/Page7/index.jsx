@@ -15,31 +15,28 @@ import ImageBox from './components/ImageBox.jsx/ImageBox';
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE7';
 
 const Pages = ({route}) => {
-  //   const [clickAvaliable, setClickAvaliable] = useState(false);
+  const [clickAvaliable, setClickAvaliable] = useState(false);
   // route.params
 
-  const {
-    getCountryFoodList,
-    getAlergyList,
-    getJobList,
-    getDetailJobList,
-    getCountryList,
-    getFoodImageList,
-    countryFoodList,
-    alergyList,
-    jobList,
-    detailJobList,
-    countryList,
-    foodImageList,
-  } = useGetRegisterInfo();
+  const {getFoodImageList, foodImageList} = useGetRegisterInfo();
+
+  const [selectedIdList, setSelectedIdList] = useState([]);
+
+  useEffect(() => {
+    console.log(selectedIdList);
+  }, [selectedIdList]);
 
   useEffect(() => {
     getFoodImageList();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(foodImageList);
-  // }, [foodImageList]);
+  useEffect(() => {
+    if (selectedIdList.length >= 3) {
+      setClickAvaliable(true);
+    } else {
+      setClickAvaliable(false);
+    }
+  }, [selectedIdList]);
 
   const navigation = useNavigation();
 
@@ -61,13 +58,18 @@ const Pages = ({route}) => {
           title={`아래 음식 중 마음에 드는 \n음식 3개를 선택해 주세요`}
         />
 
-        <ImageBox foodImageList={foodImageList} />
+        <ImageBox
+          selectLimit={3}
+          foodImageList={foodImageList}
+          selectedIdList={selectedIdList}
+          setSelectedIdList={setSelectedIdList}
+        />
       </ScrollViewContainer>
       <ButtonNext
         size="full"
         label="다음"
         text={'BottomButtonSB'}
-        // disabled={!clickAvaliable}
+        disabled={!clickAvaliable}
         onPressEvent={() => {
           handlePress();
         }}

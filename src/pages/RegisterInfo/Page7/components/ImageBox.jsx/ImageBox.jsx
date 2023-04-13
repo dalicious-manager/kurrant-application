@@ -1,23 +1,28 @@
 import {Dimensions} from 'react-native';
 import styled from 'styled-components';
+import SquareImage from './SquareImage';
 
-const ImageBox = ({foodImageList}) => {
+const ImageBox = ({
+  foodImageList,
+  selectedIdList,
+  setSelectedIdList,
+  selectLimit = 0,
+}) => {
   console.log(foodImageList);
-
-  const foodImageListSample = [...foodImageList, ...foodImageList];
 
   return (
     <Container>
-      {foodImageListSample.map((v, i) => {
-        if (i === 5) {
-          return;
-        }
-
+      {/* {foodImageListSample.map((v, i) => { */}
+      {foodImageList.map((v, i) => {
         return (
-          <PhotoImage
+          <SquareImage
             key={v.foodId}
             remainder={i % 3}
-            source={{uri: v.imageUrl}}
+            foodId={v.foodId}
+            imageUrl={v.imageUrl}
+            selectLimit={selectLimit}
+            selectedIdList={selectedIdList}
+            setSelectedIdList={setSelectedIdList}
           />
         );
       })}
