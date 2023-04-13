@@ -33,7 +33,6 @@ const Point = ({
       name="point"
       defaultValue={'0'}
       render={({field: {onChange, value}}) => {
-        // console.log(value, 'aaaaaa');
         return (
           <PointWrap>
             <Text>-{`\u00A0`}</Text>
