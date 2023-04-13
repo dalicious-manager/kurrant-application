@@ -147,7 +147,10 @@ const Pages = () => {
                             </TitleText>
                           )}
                         </TitleWrap>
-                        <BalanceWrap>
+                        <BalanceWrap
+                          onPress={() => {
+                            detailPress(el.contentId, el.pointStatus);
+                          }}>
                           {el.pointStatus === 3 || el.pointStatus === 5 ? (
                             <PriceText status={el.pointStatus}>
                               -{withCommas(el.point)}원
@@ -259,7 +262,7 @@ const Balance = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[5]};
 `;
 
-const BalanceWrap = styled.View`
+const BalanceWrap = styled.Pressable`
   align-items: flex-end;
   width: 30%;
 `;

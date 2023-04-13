@@ -45,7 +45,12 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     if (flatListRef.current && idx !== -1) {
-      flatListRef.current.scrollToIndex({animated: true, index: idx});
+      // console.log(idx, 'idx');
+      flatListRef.current.scrollToIndex({
+        animated: true,
+        index: idx,
+        viewPosition: 0,
+      });
     }
   }, []);
 
@@ -58,6 +63,7 @@ const Pages = ({route}) => {
           ref={flatListRef}
           initialScrollIndex={idx}
           onScrollToIndexFailed={info => {
+            // console.log(info, '000000');
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
               flatListRef.current?.scrollToIndex({
