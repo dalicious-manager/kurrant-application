@@ -287,8 +287,14 @@ const Screen = ({route}) => {
                   getWrittenReview();
                   getReviewWait();
 
+                  // navigation.navigate(ReviewScreenName, {
+                  //   from: 'home',
+                  // });
                   navigation.navigate(ReviewScreenName, {
-                    from: 'home',
+                    screen: ReviewScreenName,
+                    params: {
+                      tabIndex: 1,
+                    },
                   });
                 },
                 style: 'cancel',
