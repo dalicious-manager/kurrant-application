@@ -89,10 +89,8 @@ import {useQueryClient} from 'react-query';
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
 const Pages = ({route}) => {
-  const [test, setTest] = useState();
   const {StatusBarManager} = NativeModules;
   const navigation = useNavigation();
-  const pointRef = useRef();
   const [show, setShow] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -101,10 +99,8 @@ const Pages = ({route}) => {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [payments, setPayments] = useState('NOMAL');
   const [isPay, setIsPay] = useState(false);
-  const [point, setPoint] = useState(0);
   const viewRef = useRef();
   const queryClient = useQueryClient();
-  const [pointShow, setPointShow] = useState(false);
   const {isLoadMeal, loadMeal} = useShoppingBasket();
   const {order, orderNice, orderLoading} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
@@ -120,6 +116,7 @@ const Pages = ({route}) => {
     watch,
     handleSubmit,
     setValue,
+    getValues,
   } = form;
   const points = watch('point');
 
@@ -178,6 +175,20 @@ const Pages = ({route}) => {
 
     if (points > isUserInfo.point) {
       return setValue('point', isUserInfo.point.toString());
+    }
+
+    const getPoint = getValues('point');
+    const checkPoint = Number.isInteger(Number(getPoint) / 100);
+
+    if (!checkPoint) {
+      Alert.alert('포인트', '포인트는 100원 단위로 사용가능합니다.', [
+        {
+          text: '확인',
+          onPress: () => {
+            setValue('point', '0');
+          },
+        },
+      ]);
     }
   };
 
@@ -473,7 +484,8 @@ const Pages = ({route}) => {
         style={{flex: 1}}
         extraScrollHeight={120}
         ref={viewRef}
-        enableOnAndroid={true}>
+        enableOnAndroid={true}
+        resetScrollToCoords={{x: 0, y: 10000}}>
         <TouchableWithoutFeedback>
           <ViewScroll onBlur={onBlurPress}>
             <BorderWrap>
@@ -687,6 +699,9 @@ const Pages = ({route}) => {
               </PaymentView>
 
               <UserPointView>
+                <PointInfoText>
+                  포인트는 100원 단위로 사용 가능합니다.
+                </PointInfoText>
                 <UserPointText>
                   잔여{' '}
                   {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
@@ -1073,7 +1088,7 @@ const CountWrap = styled.View`
 
 const UserPointView = styled.View`
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin: 0px 24px;
 `;
 
@@ -1094,4 +1109,8 @@ const ClearInputButton = styled.Pressable`
   align-items: center;
   width: 30px;
   height: 30px;
+`;
+
+const PointInfoText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme}) => theme.colors.red[500]};
 `;

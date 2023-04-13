@@ -3,7 +3,7 @@ import {View, Text} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../../../components/Typography';
 
-const Button = ({touch, setTouch}) => {
+const Button = ({touch, setTouch, isDisabled}) => {
   const title = ['전체', '적립', '사용'];
 
   const onPressButton = idx => {
@@ -18,6 +18,7 @@ const Button = ({touch, setTouch}) => {
       {title.map((el, idx) => {
         return (
           <ButtonWrap
+            disabled={isDisabled}
             key={idx}
             onPress={() => {
               onPressButton(idx);

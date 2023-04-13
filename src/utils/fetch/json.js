@@ -69,7 +69,7 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
-  console.log(ret);
+  // console.log(ret);
   if (ret.error === 'E4030003') {
     const bodyData = {
       accessToken: token?.accessToken,
@@ -81,7 +81,7 @@ async function json(url, method, options = {}) {
       body: JSON.stringify(bodyData),
     });
     const result = await reissue.json();
-    console.log(result);
+    // console.log(result);
     if (result.error === 'E4030002') {
       await AsyncStorage.clear();
       throw new Error(result.statusCode.toString());

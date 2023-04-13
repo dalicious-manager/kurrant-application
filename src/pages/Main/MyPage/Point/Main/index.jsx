@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Pressable, FlatList, Alert} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
@@ -14,10 +14,12 @@ import {PAGE_NAME as purchaseHistory} from '../../PurchaseHistory/Detail/Main';
 
 export const PAGE_NAME = 'P__MY_PAGE__POINT';
 const Pages = () => {
+  const flatListRef = useRef(null);
   const [touch, setTouch] = useState([0]);
   const navigation = useNavigation();
   const {getWrittenReview, reviewList} = useWrittenReview();
-  const {data, hasNextPage, fetchNextPage, refetch} = useGetPointList(touch[0]);
+  const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
+    useGetPointList(touch[0]);
 
   const dataList = data?.pages;
 
@@ -52,6 +54,9 @@ const Pages = () => {
   };
   useEffect(() => {
     refetch();
+    if (touch) {
+      flatListRef?.current?.scrollToOffset({animated: true, offset: 0});
+    }
   }, [touch, refetch]);
 
   useEffect(() => {
@@ -72,7 +77,7 @@ const Pages = () => {
         </PointWrap>
         <BorderBar />
         <ButtonWrap>
-          <Button touch={touch} setTouch={setTouch} />
+          <Button touch={touch} setTouch={setTouch} isDisabled={isFetching} />
         </ButtonWrap>
         {/* 포인트 없을때 VIEW */}
         {noData?.includes(0) && (
@@ -87,6 +92,7 @@ const Pages = () => {
         )}
         <FlatList
           style={!hasNextPage && {marginBottom: 50}}
+          ref={flatListRef}
           onEndReached={onEndReached}
           data={dataList}
           renderItem={({item}) => {
