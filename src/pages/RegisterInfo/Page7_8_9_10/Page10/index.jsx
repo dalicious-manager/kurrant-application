@@ -18,15 +18,16 @@ import {getUnselectedFoodIdList} from '../logic';
 
 import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
-import {selectedFoodIdPage10Atom} from './store';
 
-// import TitleBox from '../components/TitleBox';
-// import {
-//   selectedFoodIdPage10Atom,
-//   selectedFoodIdPage7Atom,
-//   selectedFoodIdPage8Atom,
-//   selectedFoodIdPage9Atom,
-// } from '../../Page7/store';
+import {
+  selectedFoodIdPage10Atom,
+  selectedFoodIdPage7Atom,
+  selectedFoodIdPage8Atom,
+  selectedFoodIdPage9Atom,
+  unselectedFoodIdPage7Atom,
+  unselectedFoodIdPage8Atom,
+  unselectedFoodIdPage9Atom,
+} from '../store';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE10';
 
@@ -36,8 +37,32 @@ const Pages = () => {
 
   const {getFoodImageList, foodImageList} = useGetRegisterInfo();
 
+  /// 최종 제풀
+
+  const [selectedFoodIdPage7, setSelectedFoodIdPage7] = useAtom(
+    selectedFoodIdPage7Atom,
+  );
+
+  const [selectedFoodIdPage8, setSelectedFoodIdPage8] = useAtom(
+    selectedFoodIdPage8Atom,
+  );
+
+  const [selectedFoodIdPage9, setSelectedFoodIdPage9] = useAtom(
+    selectedFoodIdPage9Atom,
+  );
+
   const [selectedFoodIdPage10, setSelectedFoodIdPage10] = useAtom(
     selectedFoodIdPage10Atom,
+  );
+
+  const [unselectedFoodIdPage7, setUnselectedFoodIdPage7] = useAtom(
+    unselectedFoodIdPage7Atom,
+  );
+  const [unselectedFoodIdPage8, setUnselectedFoodIdPage8] = useAtom(
+    unselectedFoodIdPage8Atom,
+  );
+  const [unselectedFoodIdPage9, setUnselectedFoodIdPage9] = useAtom(
+    unselectedFoodIdPage9Atom,
   );
 
   useEffect(() => {
@@ -75,13 +100,22 @@ const Pages = () => {
       foodImageList,
     );
 
+    // 최종 제출
+
     setFinalRegister({
       ...finalRegister,
       selectedFoodId: [
-        ...finalRegister.selectedFoodId,
+        ...selectedFoodIdPage7,
+        ...selectedFoodIdPage8,
+        ...selectedFoodIdPage9,
         ...selectedFoodIdPage10,
-      ],
-      unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
+      ].join(', '),
+      unselectedFoodId: [
+        ...unselectedFoodIdPage7,
+        ...unselectedFoodIdPage8,
+        ...unselectedFoodIdPage9,
+        ...unselectedList,
+      ].join(', '),
     });
 
     navigation.navigate(RegisterInfoFinishPageName);

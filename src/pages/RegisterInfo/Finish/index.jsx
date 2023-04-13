@@ -3,14 +3,21 @@ import styled from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
-import {PAGE_NAME as RegisterInfoPage2PageName} from '../Page2';
+import {finalRegisterAtom} from '../store';
+import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_FINISH';
 
 const Pages = () => {
   const navigation = useNavigation();
+
+  const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
+
+  useEffect(() => {
+    console.log(finalRegister);
+  }, [finalRegister]);
 
   const handlePress = () => {
     console.log('마무리');

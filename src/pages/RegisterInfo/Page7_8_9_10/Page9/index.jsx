@@ -18,7 +18,7 @@ import {getUnselectedFoodIdList} from '../logic';
 
 import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
-import {selectedFoodIdPage9Atom} from './store';
+import {selectedFoodIdPage9Atom, unselectedFoodIdPage8Atom} from '../store';
 
 // import TitleBox from '../components/TitleBox';
 // import {
@@ -38,6 +38,10 @@ const Pages = () => {
 
   const [selectedFoodIdPage9, setSelectedFoodIdPage9] = useAtom(
     selectedFoodIdPage9Atom,
+  );
+
+  const [unselectedFoodIdPage8, setUnselectedFoodIdPage8] = useAtom(
+    unselectedFoodIdPage8Atom,
   );
 
   useEffect(() => {
@@ -75,11 +79,13 @@ const Pages = () => {
       foodImageList,
     );
 
-    setFinalRegister({
-      ...finalRegister,
-      selectedFoodId: [...finalRegister.selectedFoodId, ...selectedFoodIdPage9],
-      unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
-    });
+    setUnselectedFoodIdPage8(unselectedList);
+
+    // setFinalRegister({
+    //   ...finalRegister,
+    //   selectedFoodId: [...finalRegister.selectedFoodId, ...selectedFoodIdPage9],
+    //   unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
+    // });
 
     navigation.navigate(RegisterInfoPage10PageName);
   };
