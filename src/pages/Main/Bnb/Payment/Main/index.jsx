@@ -113,6 +113,7 @@ const Pages = ({route}) => {
     readableAtom: {selectDefaultCard},
   } = useUserMe();
   const [card, setCard] = useState(selectDefaultCard);
+  const [isInputFocus, setIsInputFocus] = useState(false);
   const inputRef = useRef(null);
   const form = useForm();
   const {
@@ -192,7 +193,11 @@ const Pages = ({route}) => {
   };
 
   const onFocusInput = () => {
+    setIsInputFocus(true);
     setValue('point', '');
+  };
+  const onBlurInput = () => {
+    setIsInputFocus(false);
   };
   const keyboardStatus = useKeyboardEvent(inputRef);
 
@@ -467,6 +472,7 @@ const Pages = ({route}) => {
       </SafeArea>
     );
   }
+
   return (
     <SafeArea>
       <KeyboardAwareScrollView
@@ -679,6 +685,7 @@ const Pages = ({route}) => {
                     inputRef={inputRef}
                     totalPrice={totalPrice}
                     onFocusInput={onFocusInput}
+                    onBlurInput={onBlurInput}
                     userPoint={isUserInfo.point}
                     medtronicTotalPrice={medtronicTotalPrice}
                     medtronicSupportArr={medtronicSupportArr}
@@ -835,24 +842,23 @@ const Pages = ({route}) => {
       </KeyboardAwareScrollView>
       {/* ;handleEventPayments() */}
 
-      {!inputRef?.current?.isFocused() &&
-        !keyboardStatus.isKeyboardActivate && (
-          <ButtonWrap>
-            <Button
-              label={`총 ${totalCount}개 결제하기`}
-              disabled={
-                payments !== 'NOMAL' ||
-                (medtronicSupportArr.includes(62471004)
-                  ? medtronicTotalPrice < 0
-                  : totalPrice < 0) ||
-                isPay
-              }
-              onPressEvent={() => {
-                handleEventPayments();
-              }}
-            />
-          </ButtonWrap>
-        )}
+      {!isInputFocus && (
+        <ButtonWrap>
+          <Button
+            label={`총 ${totalCount}개 결제하기`}
+            disabled={
+              payments !== 'NOMAL' ||
+              (medtronicSupportArr.includes(62471004)
+                ? medtronicTotalPrice < 0
+                : totalPrice < 0) ||
+              isPay
+            }
+            onPressEvent={() => {
+              handleEventPayments();
+            }}
+          />
+        </ButtonWrap>
+      )}
       <BottomModal
         modalVisible={modalVisible3}
         setModalVisible={setModalVisible3}

@@ -310,7 +310,8 @@ const Pages = () => {
             'Notification caused app to open from quit state:',
             remoteMessage.data,
           );
-          navigation.navigate(remoteMessage.data.page);
+          if (remoteMessage.data.page !== 'HOME')
+            navigation.navigate(remoteMessage.data.page);
         }
       });
 
