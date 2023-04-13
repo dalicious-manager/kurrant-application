@@ -1,5 +1,9 @@
 import messaging from '@react-native-firebase/messaging';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, Alert, StatusBar} from 'react-native';
@@ -20,7 +24,10 @@ import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
 import Typography from '../../../../../components/Typography';
-import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {
+  formattedWeekDate,
+  isTimeNumberDifferenceLarger,
+} from '../../../../../utils/dateFormatter';
 import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -156,16 +163,6 @@ const Pages = () => {
   //   removeItemFromStorage('announcementsClickedDates');
   // }, []);
 
-  // 회원 정보 입력
-
-  const goToUserInfoTrue = true;
-
-  useEffect(() => {
-    if (goToUserInfoTrue) {
-      navigation.navigate(RegisterInfoPage1PageName);
-    }
-  }, []);
-
   // 홈 공지사항 하나만 넣기
 
   const {
@@ -188,7 +185,41 @@ const Pages = () => {
   //   console.log(oneAnnouncement);
   // }, [oneAnnouncement]);
 
-  // 로컬스토리지 확인하기
+  // 회원 정보 입력 localStorage확인하기
+  // 회원 정보 입력
+
+  const [shouldOpenRegister, setShouldOpenRegister] = useState(false);
+
+  const isRegisterInfoPassTime = async () => {
+    const clickedDate = await getStorage('registerInfoClicked');
+
+    if (clickedDate) {
+      if (isTimeNumberDifferenceLarger(clickedDate, Date.now(), 1)) {
+        console.log('하루가 지났음 이제 열어줌');
+        setShouldOpenRegister(true);
+      } else {
+        console.log('하루가 아직 안지나서 아직 못 염');
+        setShouldOpenRegister(false);
+      }
+    } else {
+      console.log('첫 회원 등록임 그래서 열어줌');
+      setShouldOpenRegister(true);
+    }
+  };
+
+  useEffect(() => {
+    isRegisterInfoPassTime();
+  }, []);
+
+  useEffect(() => {
+    if (shouldOpenRegister) {
+      navigation.navigate(RegisterInfoPage1PageName);
+    }
+  }, [shouldOpenRegister]);
+
+  // useEffect(() => {
+  //   removeItemFromStorage('registerInfoClicked');
+  // }, []);
 
   useEffect(() => {
     const handleShowModal = async () => {

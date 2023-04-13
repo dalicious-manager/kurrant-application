@@ -15,7 +15,14 @@ import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 import {SmallXVectorIcon, XVectorIcon} from '../../../components/Icon';
 
+import {PAGE_NAME as HOME} from '../../Main/Bnb/Home';
+
+// import BuyMeal, {
+//   PAGE_NAME as BuyMealPageName,
+// } from '../../pages/Main/Bnb/BuyMeal/Main';
+
 import Typography from '~components/Typography';
+import {removeItemFromStorage, setStorage} from '../../../utils/asyncStorage';
 
 // import BackgroundImage from './BackgroundImage';
 
@@ -29,7 +36,22 @@ const Pages = () => {
 
   const handlePress = () => {
     // navigation.navigate(RegisterInfoPage2PageName);
+
+    // 1. 클릭하면 localstorage에 클릭한 날짜 저장
+    // 기존거 지우고 새로운거 올리기
+
     navigation.navigate(RegisterInfoPage1PageName);
+  };
+
+  const handleTodayPress = async () => {
+    await removeItemFromStorage('registerInfoClicked');
+
+    const checkedTime = Date.now();
+
+    await setStorage('registerInfoClicked', JSON.stringify(checkedTime));
+
+    // 홈으로 가기
+    navigation.navigate('P_MAIN__BNB__HOME');
   };
 
   return (
@@ -84,7 +106,10 @@ const Pages = () => {
       <SText>멤버십 가입시 식사 추천 기능 이용 가능</SText>
 
       <Wrap3>
-        <NotTodayPressable>
+        <NotTodayPressable
+          onPress={() => {
+            handleTodayPress();
+          }}>
           <NotTodayText>오늘 하루동안 이 페이지 보지 않기 </NotTodayText>
           <SmallXVectorIcon color={theme.colors.grey[2]} size={9} />
         </NotTodayPressable>
@@ -94,7 +119,6 @@ const Pages = () => {
         size="full"
         label="회원 정보 입력하기"
         text={'BottomButtonSB'}
-        // disabled={!clickAvaliable}
         onPressEvent={() => {
           handlePress();
         }}
