@@ -43,7 +43,7 @@ const Point = ({
                 keyboardType="number-pad"
                 ref={inputRef}
                 onFocus={onFocusInput}
-                onBlur={onBlurInput}
+                // onBlur={onBlurInput}
                 value={
                   medtronicSupportArr.includes(62471004)
                     ? userPoint > medtronicTotalPrice &&

@@ -109,7 +109,7 @@ const Pages = ({route}) => {
     readableAtom: {selectDefaultCard},
   } = useUserMe();
   const [card, setCard] = useState(selectDefaultCard);
-  const [isInputFocus, setIsInputFocus] = useState(false);
+  const [isInputFocus, setIsInputFocus] = useState(true);
   const inputRef = useRef(null);
   const form = useForm();
   const {
@@ -177,6 +177,12 @@ const Pages = ({route}) => {
     if (points > isUserInfo.point) {
       return setValue('point', isUserInfo.point.toString());
     }
+  };
+
+  // pointDismiss
+  const onBlurPress = e => {
+    e.preventDefault();
+    pointHandlePress();
 
     const getPoint = getValues('point');
     const checkPoint = Number.isInteger(Number(getPoint) / 100);
@@ -191,12 +197,10 @@ const Pages = ({route}) => {
         },
       ]);
     }
-  };
 
-  // pointDismiss
-  const onBlurPress = e => {
-    e.preventDefault();
-    pointHandlePress();
+    if (Platform.OS === 'android') {
+      setIsInputFocus(true);
+    }
   };
 
   const clearPoint = () => {
@@ -204,7 +208,10 @@ const Pages = ({route}) => {
   };
 
   const onFocusInput = () => {
-    setIsInputFocus(true);
+    if (Platform.OS === 'android') {
+      setIsInputFocus(false);
+    }
+
     setValue('point', '');
   };
   const onBlurInput = () => {
@@ -391,7 +398,7 @@ const Pages = ({route}) => {
         [
           {
             onPress: () => {
-              viewRef?.current?.scrollToEnd();
+              setValue('point', '0');
             },
             text: '확인',
           },
@@ -697,7 +704,7 @@ const Pages = ({route}) => {
                     inputRef={inputRef}
                     totalPrice={totalPrice}
                     onFocusInput={onFocusInput}
-                    onBlurInput={onBlurInput}
+                    //onBlurInput={onBlurInput}
                     userPoint={isUserInfo.point}
                     medtronicTotalPrice={medtronicTotalPrice}
                     medtronicSupportArr={medtronicSupportArr}
@@ -857,7 +864,7 @@ const Pages = ({route}) => {
       </KeyboardAwareScrollView>
       {/* ;handleEventPayments() */}
 
-      {!isInputFocus && (
+      {isInputFocus && !keyboardStatus.isKeyboardActivate && (
         <ButtonWrap>
           <Button
             label={`총 ${totalCount}개 결제하기`}

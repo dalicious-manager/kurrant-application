@@ -20,11 +20,12 @@ export default function useKeyboardEvent(inputRef = null) {
         setKeyboardHeight(0);
       }
 
-      if (inputRef?.current) {
-        inputRef.current.focus();
-        inputRef.current.blur();
-        // console.log(inputRef.current.isFocused());
-      }
+      if (inputRef) inputRef?.current?.blur();
+      // if (inputRef?.current) {
+      //   inputRef.current.focus();
+      //   inputRef.current.blur();
+      //   // console.log(inputRef.current.isFocused());
+      // }
     };
 
     if (Platform.OS === 'android') {
