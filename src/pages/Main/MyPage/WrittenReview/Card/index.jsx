@@ -556,6 +556,6 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
 const IconDiv = styled.Pressable`
   position: absolute;
 
-  bottom: 5;
+  bottom: 5px;
   right: -20px;
 `;
