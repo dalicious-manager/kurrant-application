@@ -24,6 +24,7 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
       orderItemId: id,
       imageLocation: image,
       foodName: name,
+      test: 'test',
     });
   };
 
