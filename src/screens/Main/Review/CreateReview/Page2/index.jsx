@@ -32,6 +32,7 @@ import {
   BackHandler,
   Dimensions,
   FlatList,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -69,10 +70,12 @@ const Screen = ({route}) => {
   /// 안드로이드 뒤로가기 누르면 뒤로가야됨
 
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      navigation.navigate(MoreMainPageName);
-      return true;
-    });
+    if (Platform.OS !== 'ios') {
+      BackHandler.addEventListener('hardwareBackPress', () => {
+        navigation.navigate(MoreMainPageName);
+        return true;
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -284,13 +287,14 @@ const Screen = ({route}) => {
               {
                 text: '확인',
                 onPress: async () => {
-                  getWrittenReview();
-                  getReviewWait();
-
+                  await getWrittenReview();
+                  console.log('받음1');
+                  await getReviewWait();
+                  console.log('받음2');
                   // navigation.navigate(ReviewScreenName, {
                   //   from: 'home',
                   // });
-                  navigation.navigate(ReviewScreenName, {
+                  navigation.navigate(WrittenReviewPageName, {
                     screen: ReviewScreenName,
                     params: {
                       tabIndex: 1,

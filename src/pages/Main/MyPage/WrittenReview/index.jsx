@@ -24,9 +24,7 @@ const Pages = ({route}) => {
   const pointId = route?.params?.id;
   const flatListRef = useRef(null);
 
-  const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
-
-  const [, setTotalWrittenReviewList] = useAtom(totalWrittenReview);
+  const {getWrittenReview, reviewList} = useWrittenReview();
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const idx = reviewList?.findIndex(el => el.reviewId === pointId);
@@ -35,9 +33,9 @@ const Pages = ({route}) => {
     getWrittenReview();
   }, []);
 
-  useEffect(() => {
-    setTotalWrittenReviewList(writtenReviewCount);
-  }, [writtenReviewCount]);
+  // useEffect(() => {
+  //   setTotalWrittenReviewList(writtenReviewCount);
+  // }, [writtenReviewCount]);
 
   // useEffect(() => {
   //   console.log(reviewList);
