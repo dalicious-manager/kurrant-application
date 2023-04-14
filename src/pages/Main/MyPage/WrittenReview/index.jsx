@@ -45,7 +45,6 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     if (flatListRef.current && idx !== -1) {
-      // console.log(idx, 'idx');
       flatListRef.current.scrollToIndex({
         animated: true,
         index: idx,
@@ -61,9 +60,7 @@ const Pages = ({route}) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           ref={flatListRef}
-          // initialScrollIndex={idx}
           onScrollToIndexFailed={info => {
-            // console.log(info, '000000');
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
               flatListRef.current?.scrollToIndex({
@@ -77,7 +74,6 @@ const Pages = ({route}) => {
           scrollEnabled={true}
           renderItem={({item, index}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
-            // console.log(item.itemName, index, idx, 'item_index');
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,
