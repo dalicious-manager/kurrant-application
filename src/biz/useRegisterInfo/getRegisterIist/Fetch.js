@@ -22,9 +22,9 @@ export async function getJobList() {
 
   return fetchRes;
 }
-export async function getDetailJobList() {
+export async function getDetailJobList(id) {
   const fetchRes = await fetchJson(
-    `/users/me/jobs?category=1`,
+    `/users/me/jobs?category=1?code=${id}`,
 
     'GET',
   );

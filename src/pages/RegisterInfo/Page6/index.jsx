@@ -55,7 +55,7 @@ const Pages = () => {
   useEffect(() => {
     getCountryList();
     getJobList();
-    getDetailJobList();
+    // getDetailJobList(id);
   }, []);
 
   // 바텀 팝업 버튼들
