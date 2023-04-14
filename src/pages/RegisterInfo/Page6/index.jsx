@@ -13,7 +13,7 @@ import ProgressBar from '~components/ProgressBar7';
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 
 import RefTextInput from '~components/RefTextInput';
-import SelectInputBox from './components/SelectInputBox/SelectInputBox';
+import SelectInputBox from '../components/SelectInputBox/SelectInputBox';
 import ModalCalendar from '../../../components/ModalCalendar/ModalCalendar';
 import {toStringByFormatting} from '../../../utils/dateFormatter';
 import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hook';

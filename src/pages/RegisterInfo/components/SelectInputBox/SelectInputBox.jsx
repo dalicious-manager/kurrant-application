@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {SkinnyArrowDown} from '../../../../../components/Icon';
+import {SkinnyArrowDown} from '../../../../components/Icon';
 
 import Typography from '~components/Typography';
 

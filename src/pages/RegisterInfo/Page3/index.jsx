@@ -54,7 +54,7 @@ const Pages = () => {
 
     // 기타 내용이 있을경우 없을 경우
 
-    if (!value && value.length === 0) {
+    if (!value) {
       setFinalRegister({
         ...finalRegister,
       });

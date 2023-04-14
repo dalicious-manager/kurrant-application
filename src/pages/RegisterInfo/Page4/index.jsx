@@ -14,6 +14,7 @@ import BottomSheet from '~components/BottomSheet';
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import YesOrNoButton from '../components/button/Page4_5/YesOrNoButton';
+import SelectInputBox from '../components/SelectInputBox/SelectInputBox';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 
@@ -34,8 +35,6 @@ const Pages = () => {
 
   //모달 열기
   useEffect(() => {
-    console.log(yesOrNo);
-
     if (yesOrNo === 1) {
       setBottomModalOpen(true);
     } else {
@@ -46,9 +45,6 @@ const Pages = () => {
   // 버튼 열리기
 
   useEffect(() => {
-    console.log('ㅛ내ㅛ내ㅛ내');
-    console.log(yesOrNo);
-
     if (yesOrNo === 2) {
       // 아니오거나
       setClickAvaliable(true);
@@ -137,6 +133,18 @@ const Pages = () => {
             );
           })}
         </ButtonContainer>
+
+        {/* 예일떄 여기 보이게 하기 */}
+        {
+          <SelectInputBox
+            placeholder={'채식 정보 입력'}
+            value={beganLevel}
+            setValue={setBeganLevel}
+            buttonOnClickCallback={() => {
+              setBottomModalOpen(true);
+            }}
+          />
+        }
       </ScrollViewContainer>
       <ButtonNext
         size="full"
