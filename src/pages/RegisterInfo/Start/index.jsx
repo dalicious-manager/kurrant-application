@@ -1,4 +1,4 @@
-import {Dimensions, Text} from 'react-native';
+import {Dimensions, ImageBackground, Text} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -14,6 +14,9 @@ import {PAGE_NAME as RegisterInfoPage4PageName} from '../Page4';
 import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 import {SmallXVectorIcon, XVectorIcon} from '../../../components/Icon';
+
+// import RegisterInfoBack from '../../../assets/icons/RegisterInfo/RegisterInfoBack.svg';
+import RegisterInfoBack from '../../../assets/images/RegisterInfo/RegisterInfoBack.png';
 
 import {PAGE_NAME as HOME} from '../../Main/Bnb/Home';
 
@@ -60,10 +63,9 @@ const Pages = () => {
       styles={{
         position: 'relative',
       }}>
-      {/* <Wrap4>
-        
-      </Wrap4> */}
-      <BackgroundImage
+      <Background source={RegisterInfoBack} resizeMode="cover"></Background>
+
+      {/* <BackgroundImage
         resizeMode="contain"
         source={require('../../../assets/images/RegisterInfoBackground.png')}
       />
@@ -103,7 +105,7 @@ const Pages = () => {
         </AWrap>
       </Wrap1>
 
-      <SText>멤버십 가입시 식사 추천 기능 이용 가능</SText>
+      <SText>멤버십 가입시 식사 추천 기능 이용 가능</SText> */}
 
       <Wrap3>
         <NotTodayPressable
@@ -134,17 +136,37 @@ const Container = styled.View`
   align-items: center;
   display: flex;
   background-color: ${({theme}) => theme.colors.grey[8]};
+  /* background-color: ${({theme}) => theme.colors.grey[1]}; */
   position: relative;
 `;
 
-const BackgroundImage = styled.Image`
-  width: ${() => `${Dimensions.get('screen').width}px`};
-  height: 266px;
+const Background = styled.ImageBackground`
+  flex: 1;
+
+  /* padding: 0 24px; */
+
+  width: 100%;
+`;
+
+const Wrap3 = styled.View`
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  position: absolute;
+  bottom: 107px;
+  right: 24px;
 `;
 
 const ButtonNext = styled(Button)`
+  width: ${() => `${Dimensions.get('screen').width - 48}px`};
   position: absolute;
   bottom: 35px;
+`;
+
+const BackgroundImage = styled.Image`
+  width: 100%;
+  height: 266px;
+  border: 1px solid black;
 `;
 
 const Wrap1 = styled.View`
@@ -189,12 +211,6 @@ const AText = styled(Typography).attrs({text: 'Body05R'})`
 const SText = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[4]};
   margin-bottom: 24px;
-`;
-
-const Wrap3 = styled.View`
-  width: 100%;
-  display: flex;
-  flex-direction: row-reverse;
 `;
 
 const NotTodayPressable = styled.Pressable`
