@@ -23,6 +23,7 @@ const Pages = () => {
   const isFocused = useIsFocused();
   const {
     getNotice,
+    getSpotNotice,
     readableAtom: {spotNotice, isGetNoticeLoading},
   } = useBoard();
   useFocusEffect(
@@ -47,7 +48,7 @@ const Pages = () => {
   );
   useEffect(() => {
     const getUseNotice = async () => {
-      await getNotice(1);
+      await getSpotNotice();
     };
     getUseNotice();
   }, []);
