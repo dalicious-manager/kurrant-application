@@ -52,7 +52,7 @@ const Pages = ({route}) => {
         viewPosition: 0,
       });
     }
-  }, []);
+  }, [flatListRef, idx]);
 
   return (
     <Container>
@@ -61,7 +61,7 @@ const Pages = ({route}) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           ref={flatListRef}
-          initialScrollIndex={idx}
+          // initialScrollIndex={idx}
           onScrollToIndexFailed={info => {
             // console.log(info, '000000');
             const wait = new Promise(resolve => setTimeout(resolve, 500));
@@ -93,11 +93,15 @@ const Pages = ({route}) => {
               forMakers: item.forMakers,
               commentList: item.commentList,
             };
-
+            console.log(
+              reviewList?.findIndex(el => el.reviewId === pointId),
+              'test',
+            );
             return (
               <View>
                 <Card
                   id={item2.id}
+                  focusId={pointId}
                   editItem={item2}
                   createDate={item2.createDate}
                   updateDate={item2.updateDate}
@@ -127,7 +131,7 @@ export default Pages;
 const Container = styled.View`
   width: 100%;
   height: 100%;
-  padding: 24px 25px;
+  // padding: 24px 25px;
   padding-top: 0px;
   background-color: #ffffff;
 `;
