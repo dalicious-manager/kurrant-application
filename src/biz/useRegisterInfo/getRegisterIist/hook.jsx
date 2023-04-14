@@ -60,9 +60,9 @@ const useGetRegisterInfo = () => {
   };
 
   // 상세 직종 조회
-  const getDetailJobList = async () => {
+  const getDetailJobList = async id => {
     try {
-      const res = await Fetch.getDetailJobList();
+      const res = await Fetch.getDetailJobList(id);
       setDetailJobList(makeArrayOfIdAndText(res.data));
     } catch (err) {
       console.log(err);
