@@ -250,7 +250,7 @@ const Pages = () => {
         modalVisible={jobTypeModal}
         setModalVisible={setJobTypeModal}
         title="직종 분류"
-        data={jobList}
+        data={jobType}
         selected={jobType}
         setSelected={setJobType}
         // setValue={onSelectEvent2}

@@ -1,4 +1,4 @@
-import {Text} from 'react-native';
+import {Dimensions, Text} from 'react-native';
 import styled from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -18,6 +18,16 @@ import SelectInputBox from '../components/SelectInputBox/SelectInputBox';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 
+const dataList = [
+  {id: 1, text: '비건'},
+  {id: 2, text: '락토 베지터리언'},
+  {id: 3, text: '오보 베지테리언'},
+  {id: 4, text: '락토 오보 베지테리언'},
+  {id: 5, text: '페스코 베지테리언'},
+  {id: 6, text: '폴로 베지테리언'},
+  {id: 7, text: '플렉시테리언'},
+];
+
 const Pages = () => {
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
@@ -29,6 +39,8 @@ const Pages = () => {
 
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
 
+  const [showVeganSelect, setShowVeganSelect] = useState(false);
+
   const navigation = useNavigation();
 
   // 예: 일떄는 채식주의자 유형 필요함, 아니오:
@@ -36,11 +48,13 @@ const Pages = () => {
   //모달 열기
   useEffect(() => {
     if (yesOrNo === 1) {
-      setBottomModalOpen(true);
+      // setBottomModalOpen(true);
+      setShowVeganSelect(true);
     } else {
-      setBottomModalOpen(false);
+      setShowVeganSelect(false);
+      // setBottomModalOpen(false);
     }
-  }, [yesOrNo, setBottomModalOpen]);
+  }, [yesOrNo, setBottomModalOpen, setShowVeganSelect]);
 
   // 버튼 열리기
 
@@ -68,8 +82,6 @@ const Pages = () => {
   };
 
   const handlePress = () => {
-    console.log('ㅗㅑ');
-
     // 예 일때 아니오일떄
 
     if (yesOrNo === 2) {
@@ -116,8 +128,6 @@ const Pages = () => {
           <SemiTitle>평소에 채식을 하시나요?</SemiTitle>
         </TitleWrap>
 
-        {beganLevel && <Text>{beganLevel}</Text>}
-
         <ButtonContainer>
           {[
             {id: 1, name: '예'},
@@ -135,16 +145,24 @@ const Pages = () => {
         </ButtonContainer>
 
         {/* 예일떄 여기 보이게 하기 */}
-        {
-          <SelectInputBox
-            placeholder={'채식 정보 입력'}
-            value={beganLevel}
-            setValue={setBeganLevel}
-            buttonOnClickCallback={() => {
-              setBottomModalOpen(true);
-            }}
-          />
-        }
+        {showVeganSelect && (
+          <Wrap3>
+            <SelectInputBox
+              placeholder={'채식 정보 입력'}
+              value={beganLevel}
+              convertData={dataList}
+              setValue={setBeganLevel}
+              buttonOnClickCallback={() => {
+                setBottomModalOpen(true);
+              }}
+            />
+            <VegiInfoImg
+              source={require('../../../assets/images/RegisterInfo/VegiTypeInfo.png')}
+              resizeMode="contain"
+            />
+          </Wrap3>
+        )}
+        <Filler />
       </ScrollViewContainer>
       <ButtonNext
         size="full"
@@ -160,15 +178,7 @@ const Pages = () => {
         modalVisible={bottomModalOpen}
         setModalVisible={setBottomModalOpen}
         title="채식 정보 입력"
-        data={[
-          {id: 1, text: '비건'},
-          {id: 2, text: '락토 베지터리언'},
-          {id: 3, text: '오보 베지테리언'},
-          {id: 4, text: '락토 오보 베지테리언'},
-          {id: 5, text: '페스코 베지테리언'},
-          {id: 6, text: '폴로 베지테리언'},
-          {id: 7, text: '플렉시테리언'},
-        ]}
+        data={dataList}
         selected={beganLevel}
         setSelected={handleSelectBottomModal}
         // setValue={onSelectEvent2}
@@ -193,6 +203,24 @@ const ScrollViewContainer = styled.ScrollView`
   background-color: #ffffff;
 `;
 
+const Wrap3 = styled.View`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const Filler = styled.View`
+  width: 100%;
+  height: 40px;
+`;
+
+const VegiInfoImg = styled.Image`
+  width: 100%;
+  height: ${() => `${(Dimensions.get('screen').width - 48) * (336 / 327)}px`};
+`;
+
 const ButtonNext = styled(Button)`
   position: relative;
   bottom: 35px;
@@ -215,4 +243,5 @@ const ButtonContainer = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 45px;
 `;

@@ -15,7 +15,7 @@ export async function getCountryList() {
 // 직종 조회
 export async function getJobList() {
   const fetchRes = await fetchJson(
-    `/users/me/jobs?code=0`,
+    `/users/me/jobs?category=0`,
 
     'GET',
   );
@@ -24,7 +24,7 @@ export async function getJobList() {
 }
 export async function getDetailJobList() {
   const fetchRes = await fetchJson(
-    `/users/me/jobs?code=1`,
+    `/users/me/jobs?category=1`,
 
     'GET',
   );

@@ -43,7 +43,7 @@ const Pages = () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
     // 기존거 지우고 새로운거 올리기
 
-    navigation.navigate(RegisterInfoPage3PageName);
+    navigation.navigate(RegisterInfoPage6PageName);
   };
 
   const handleTodayPress = async () => {
@@ -64,48 +64,6 @@ const Pages = () => {
         position: 'relative',
       }}>
       <Background source={RegisterInfoBack} resizeMode="cover"></Background>
-
-      {/* <BackgroundImage
-        resizeMode="contain"
-        source={require('../../../assets/images/RegisterInfoBackground.png')}
-      />
-
-      <Wrap1
-        style={{
-          marginTop: 16,
-          marginBottom: 16,
-        }}>
-        <QWrap>
-          <Q />
-          <QText>어떠한 정보를 입력하는 건가요?</QText>
-        </QWrap>
-        <AWrap>
-          <AWrapWrap>
-            <A />
-          </AWrapWrap>
-          <AText>
-            평소 식습관 관련해서 야식, 음주, 프로틴 섭취 빈도나 운동 빈도,
-            선호하는 음식 관련한 정보를 받아요.
-          </AText>
-        </AWrap>
-      </Wrap1>
-      <Wrap1 style={{marginBottom: 4}}>
-        <QWrap>
-          <Q />
-          <QText>입력하면 무엇이 좋은 건가요?</QText>
-        </QWrap>
-        <AWrap>
-          <AWrapWrap>
-            <A />
-          </AWrapWrap>
-
-          <AText>
-            회원 정보를 바탕으로 보다 정확한 식사 추천을 받으실 수 있어요.
-          </AText>
-        </AWrap>
-      </Wrap1>
-
-      <SText>멤버십 가입시 식사 추천 기능 이용 가능</SText> */}
 
       <Wrap3>
         <NotTodayPressable
@@ -161,56 +119,6 @@ const ButtonNext = styled(Button)`
   width: ${() => `${Dimensions.get('screen').width - 48}px`};
   position: absolute;
   bottom: 35px;
-`;
-
-const BackgroundImage = styled.Image`
-  width: 100%;
-  height: 266px;
-  border: 1px solid black;
-`;
-
-const Wrap1 = styled.View`
-  width: 100%;
-
-  border-radius: 14px;
-  padding: 16px;
-  background-color: #ffffff;
-`;
-
-const Wrap4 = styled.View``;
-
-const QWrap = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 12px;
-`;
-const QText = styled(Typography).attrs({text: 'Body05SB'})`
-  margin-left: 4px;
-
-  color: ${({theme}) => theme.colors.grey[2]};
-`;
-const AWrap = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const AWrapWrap = styled.View`
-  height: 100%;
-  padding-top: 3px;
-  /* border: 1px solid black; */
-`;
-
-const AText = styled(Typography).attrs({text: 'Body05R'})`
-  margin-left: 4px;
-  color: ${({theme}) => theme.colors.grey[2]};
-  flex-shrink: 1;
-`;
-
-const SText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[4]};
-  margin-bottom: 24px;
 `;
 
 const NotTodayPressable = styled.Pressable`

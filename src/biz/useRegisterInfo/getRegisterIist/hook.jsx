@@ -5,6 +5,7 @@ import * as Fetch from './Fetch';
 import {
   makeArrayOfIdAndName,
   makeArrayOfIdAndText,
+  makeYo,
 } from '../../../pages/RegisterInfo/logic';
 
 const useGetRegisterInfo = () => {
@@ -51,7 +52,8 @@ const useGetRegisterInfo = () => {
   const getJobList = async () => {
     try {
       const res = await Fetch.getJobList();
-      setJobList(makeArrayOfIdAndText(res.data));
+
+      setJobList(makeYo(res.data));
     } catch (err) {
       console.log(err);
     }

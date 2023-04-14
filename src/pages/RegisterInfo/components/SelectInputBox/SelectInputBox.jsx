@@ -5,11 +5,26 @@ import Typography from '~components/Typography';
 
 const SelectInputBox = ({
   placeholder,
+  convertData = [],
   setValue,
   value,
   width = '100%',
   buttonOnClickCallback,
 }) => {
+  // 값 고르기
+
+  const convertDataYes = (value, convertData) => {
+    let ko;
+
+    convertData.forEach(v => {
+      if (v.id === value) {
+        ko = v.text;
+      }
+    });
+
+    return ko;
+  };
+
   return (
     <Container
       onPress={() => {
@@ -23,7 +38,11 @@ const SelectInputBox = ({
       )}
       <Container2>
         <DataValue numberOfLines={1} ellipsizeMode="tail" isValue={!!value}>
-          {value ? value : placeholder}
+          {value
+            ? convertData.length > 0
+              ? convertDataYes(value, convertData)
+              : value
+            : placeholder}
         </DataValue>
         <BottomModalPressable
           onPress={() => {
