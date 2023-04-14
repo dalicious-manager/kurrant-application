@@ -42,7 +42,7 @@ const Pages = ({route}) => {
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
   const {isOrderMeal, orderMeal, refundItem, setOrderMeal} = useOrderMeal();
-  const pagerRef = useRef();
+  const pagerRef = useRef(null);
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
@@ -156,7 +156,8 @@ const Pages = ({route}) => {
         pressDay(formattedWeekDate(new Date()));
         pagerRef.current.setPage(0);
       }
-    }, [isToday]),
+      setTouchDate(data);
+    }, [isToday, data]),
   );
   return (
     <SafeView>
@@ -170,6 +171,7 @@ const Pages = ({route}) => {
             size={'Body05R'}
             onPressEvent2={pressDay}
             selectDate={touchDate}
+            daliy={true}
             meal={meal}
             margin={'0px 28px'}
             sliderValue={isToday && 0}
