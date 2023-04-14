@@ -2,7 +2,7 @@ import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, StatusBar} from 'react-native';
+import {View, StyleSheet, Alert, StatusBar, AppState} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
@@ -88,12 +88,12 @@ const Pages = () => {
     readableAtom: {membershipHistory},
   } = useMembership();
   const {loadMeal} = useShoppingBasket();
-  const {dailyFood, isServiceDays} = useFoodDaily();
+  const {dailyFood, isServiceDays, isDailyFoodLoading} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
 
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
-  const [eventSpot, setEventSpot] = useState(false);
+  const [appState, setAppState] = useState();
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
@@ -223,6 +223,7 @@ const Pages = () => {
   }, [isUserInfo]);
   useFocusEffect(
     useCallback(() => {
+      console.log('test');
       async function loadUser() {
         try {
           const userData = await userInfo();
@@ -248,8 +249,8 @@ const Pages = () => {
         }
       }
       const isTester = async () => {
-        const user = loadUser();
-
+        const user = await loadUser();
+        console.log(user, 'test');
         if (!(userRole === 'ROLE_GUEST')) {
           const status = async () => {
             const userStatus = await getStorage('spotStatus');
@@ -295,8 +296,7 @@ const Pages = () => {
       } catch (e) {
         alert(e.toString().replace('error:'));
       }
-      console.log(membershipHistory.length);
-    }, [isCancelSpot]),
+    }, [isCancelSpot, appState]),
   );
 
   useEffect(() => {
@@ -404,10 +404,18 @@ const Pages = () => {
       console.log(err);
     }
   };
-
+  const handleStatus = e => {
+    setAppState(e);
+    todayRefetch();
+  };
   const mockStatus = 10;
-
-  if (!isUserInfo) {
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', handleStatus);
+    return () => {
+      listener.remove();
+    };
+  }, []);
+  if (!isUserInfo || isOrderMealLoading || isDailyFoodLoading) {
     return <SkeletonUI />;
   }
 
