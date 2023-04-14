@@ -15,8 +15,7 @@ import useUserMe from '../../../../../../biz/useUserMe';
 import {formattedDate} from '../../../../../../utils/dateFormatter';
 import ListBox from '../../ListBox';
 import {PAGE_NAME as MarketingAgreePageName} from '../MarketingAgree';
-import {useGetAlramSetting} from '../../../../../../hook/useAlram';
-export const PAGE_NAME = 'P__MY_PAGE__NOTIFICATION_SETTING';
+export const PAGE_NAME = 'P__MY_PAGE__NOTIFICATION_SETTING2';
 const Pages = () => {
   const form = useForm();
   const {
@@ -26,7 +25,6 @@ const Pages = () => {
     setAgree,
     readableAtom: {alarm, isAlarmSettingLoading, agree},
   } = useUserMe();
-  const {data: alramData} = useGetAlramSetting();
   const navigation = useNavigation();
   const [toggleData, setToggleData] = useState([]);
 
@@ -115,9 +113,7 @@ const Pages = () => {
     };
     getData();
   }, []);
-  useEffect(() => {
-    console.log(alramData?.data);
-  }, [alramData]);
+
   return (
     <Wrapper paddingTop={24}>
       <FormProvider {...form}>
