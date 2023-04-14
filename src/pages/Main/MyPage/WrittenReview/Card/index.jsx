@@ -194,6 +194,7 @@ const Component = ({
   const [numLines, setNumLines] = useState(1);
 
   useEffect(() => {
+    console.log('라인 숫자 세기');
     console.log(numLines);
   }, [numLines]);
 
@@ -295,7 +296,7 @@ const Component = ({
       />
 
       <ReviewPressable>
-        {numLines >= 3 && !elaborateComment && (
+        {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
           <IconDiv
             onPress={() => {
               setElaborateComment(!elaborateComment);
@@ -352,9 +353,34 @@ const Component = ({
           </>
         ) : (
           <>
-            {numLines >= 3 && elaborateComment ? (
+            <ReviewTextTextInputAndroid
+              onContentSizeChange={event =>
+                setNumLines(
+                  Math.max(
+                    Math.ceil(event.nativeEvent.contentSize.height / 18),
+                    1,
+                  ),
+                )
+              }
+              value={reviewText}
+              multiline={true}
+              onPressIn={() => {
+                setElaborateComment(!elaborateComment);
+              }}
+              editable={false}
+            />
+
+            {/* {numLines >= 3 && elaborateComment ? (
               // <ReviewTextTextInput value={reviewText} editable={false} />
               <ReviewTextTextInputAndroid
+                onContentSizeChange={event =>
+                  setNumLines(
+                    Math.max(
+                      Math.ceil(event.nativeEvent.contentSize.height / 18),
+                      1,
+                    ),
+                  )
+                }
                 value={reviewText}
                 multiline={true}
                 onPressIn={() => {
@@ -364,16 +390,25 @@ const Component = ({
               />
             ) : (
               <ReviewTextTextInputAndroid
+                onContentSizeChange={event =>
+                  setNumLines(
+                    Math.max(
+                      Math.ceil(event.nativeEvent.contentSize.height / 18),
+                      1,
+                    ),
+                  )
+                }
                 value={reviewText}
                 multiline={true}
                 editable={false}
+                maxHeight={62}
                 onPressIn={() => {
                   setElaborateComment(!elaborateComment);
                 }}
-                numberOfLines={3}
-                ellipsizeMode="tail"
+                // numberOfLines={3}
+                // ellipsizeMode="tail"
               />
-            )}
+            )} */}
           </>
         )}
       </ReviewPressable>
@@ -516,9 +551,9 @@ const ReviewTextTextInputAndroid = styled.TextInput`
 
   font-size: 14px;
 
-  overflow: hidden;
+  /* overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
   font-family: 'Pretendard-Regular';
 `;
 
