@@ -43,14 +43,13 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     if (flatListRef.current && idx !== -1) {
-      // console.log(idx, 'idx');
       flatListRef.current.scrollToIndex({
         animated: true,
         index: idx,
         viewPosition: 0,
       });
     }
-  }, []);
+  }, [flatListRef, idx]);
 
   return (
     <Container>
@@ -59,9 +58,7 @@ const Pages = ({route}) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           ref={flatListRef}
-          initialScrollIndex={idx}
           onScrollToIndexFailed={info => {
-            // console.log(info, '000000');
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
               flatListRef.current?.scrollToIndex({
@@ -75,7 +72,6 @@ const Pages = ({route}) => {
           scrollEnabled={true}
           renderItem={({item, index}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
-            // console.log(item.itemName, index, idx, 'item_index');
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,
@@ -91,11 +87,15 @@ const Pages = ({route}) => {
               forMakers: item.forMakers,
               commentList: item.commentList,
             };
-
+            console.log(
+              reviewList?.findIndex(el => el.reviewId === pointId),
+              'test',
+            );
             return (
               <View>
                 <Card
                   id={item2.id}
+                  focusId={pointId}
                   editItem={item2}
                   createDate={item2.createDate}
                   updateDate={item2.updateDate}
@@ -125,7 +125,7 @@ export default Pages;
 const Container = styled.View`
   width: 100%;
   height: 100%;
-  padding: 24px 25px;
+  // padding: 24px 25px;
   padding-top: 0px;
   background-color: #ffffff;
 `;

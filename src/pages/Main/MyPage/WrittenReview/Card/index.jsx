@@ -25,6 +25,7 @@ import ImageModal from './ImageModal/ImageModal';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import {changeSeperator} from '../../../../../utils/dateFormatter';
 import {SkinnyArrowDown} from '../../../../../components/Icon';
+import {css} from 'styled-components/native';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -39,7 +40,7 @@ const Component = ({
   option,
   rating,
   reviewText,
-
+  focusId,
   forMakers,
   imageLocation,
   createDate,
@@ -197,7 +198,7 @@ const Component = ({
   }, [numLines]);
 
   return (
-    <Container>
+    <Container focusId={focusId} id={id}>
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
@@ -416,8 +417,17 @@ export default Component;
 
 const Container = styled.View`
   width: 100%;
-  margin: 12px 0;
-  margin-bottom: 40px;
+  //margin: 12px 0;
+  //margin-bottom: 40px;
+  padding: 24px;
+  ${({focusId, id}) => {
+    // console.log(focusId, id, 'focusId === id');
+    if (focusId === id) {
+      return css`
+        background-color: ${({theme}) => theme.colors.grey[8]};
+      `;
+    }
+  }}
 `;
 
 const TopWrap = styled.View`

@@ -71,7 +71,7 @@ const Pages = () => {
           <PointTextWrap>
             <PointText>
               {withCommas(data?.pages[0]?.items?.userPoint)}
-              <WonText>원</WonText>
+              <WonText>P</WonText>
             </PointText>
           </PointTextWrap>
         </PointWrap>
