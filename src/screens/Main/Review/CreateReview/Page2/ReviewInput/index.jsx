@@ -79,6 +79,7 @@ const Input = styled.TextInput`
   border: 1px solid ${props => props.theme.colors.grey[7]};
   padding: 17px 20px;
   height: 168px;
+  font-family: 'Pretendard-Regular';
 `;
 
 const ViewWrap = styled.View`

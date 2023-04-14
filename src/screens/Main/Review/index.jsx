@@ -25,6 +25,7 @@ const Tab = createMaterialTopTabNavigator();
 const Screen = ({route}) => {
   const point = route?.params?.from;
   const pointId = route?.params?.id;
+
   const navigation = useNavigation();
   const theme = useTheme();
   const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
