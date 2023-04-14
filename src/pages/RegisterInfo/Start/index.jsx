@@ -56,7 +56,7 @@ const Pages = () => {
 
   return (
     <Container
-      paddingHorizontal={24}
+      // paddingHorizontal={24}
       styles={{
         position: 'relative',
       }}>
