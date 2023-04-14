@@ -5,7 +5,7 @@ import {useState} from 'react';
 import {useCallback} from 'react';
 import {useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {ActivityIndicator} from 'react-native';
+import {ActivityIndicator, Alert} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from '~components/Toast';
@@ -15,7 +15,10 @@ import useUserMe from '../../../../../../biz/useUserMe';
 import {formattedDate} from '../../../../../../utils/dateFormatter';
 import ListBox from '../../ListBox';
 import {PAGE_NAME as MarketingAgreePageName} from '../MarketingAgree';
-import {useGetAlramSetting} from '../../../../../../hook/useAlram';
+import {
+  useGetAlramSetting,
+  useSetAlramSetting,
+} from '../../../../../../hook/useAlram';
 export const PAGE_NAME = 'P__MY_PAGE__NOTIFICATION_SETTING';
 const Pages = () => {
   const form = useForm();
@@ -26,7 +29,8 @@ const Pages = () => {
     setAgree,
     readableAtom: {alarm, isAlarmSettingLoading, agree},
   } = useUserMe();
-  const {data: alramData} = useGetAlramSetting();
+  const {data: alramData, isSuccess} = useGetAlramSetting();
+  const {mutateAsync: setAlram} = useSetAlramSetting();
   const navigation = useNavigation();
   const [toggleData, setToggleData] = useState([]);
 
@@ -36,92 +40,70 @@ const Pages = () => {
   const toast2 = Toast();
   const toast3 = Toast();
 
-  const alarmAgree = useCallback(async () => {
-    const marketingAlarm = watch('marketingAlarm');
-    const orderAlarm = watch('orderAlarm');
-    await alarmSetting({
-      isMarketingAlarmAgree: marketingAlarm,
-      isOrderAlarmAgree: orderAlarm,
-      isMarketingInfoAgree: false,
-    });
-    setAgree(marketingAlarm || orderAlarm);
-    if (marketingAlarm && orderAlarm) {
-      toast.toastEvent();
-    } else if (!marketingAlarm && !orderAlarm) {
-      toast.toastEvent();
-    } else {
-      toast2.toastEvent();
+  const alarmAgree = useCallback(async v => {
+    try {
+      await setAlram({
+        code: v.code,
+        isActive: !v.isActive,
+      });
+    } catch (error) {
+      Alert.alert('알람설정', error.toString().replace('error: ', ''));
     }
+
     // await getAlarm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const alarmAgree3 = useCallback(async () => {
-    const marketingAlarm = watch('marketingAlarm');
-    const orderAlarm = watch('orderAlarm');
-    await alarmSetting({
-      isMarketingAlarmAgree: marketingAlarm,
-      isOrderAlarmAgree: orderAlarm,
-      isMarketingInfoAgree: false,
-    });
-    setAgree(marketingAlarm || orderAlarm);
-    if (marketingAlarm && orderAlarm) {
-      toast.toastEvent();
-    } else if (!marketingAlarm && !orderAlarm) {
-      toast.toastEvent();
-    } else {
-      toast3.toastEvent();
-    }
-    // await getAlarm();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const getAlarm = useCallback(async () => {
-    const result = await alarmLookup();
-    setToggleData([
-      {
-        isToggle: true,
-        toggleName: 'marketingAlarm',
-        toggleEvent: name => alarmAgree(name),
-      },
-      {
-        isToggle: true,
-        toggleName: 'orderAlarm',
-        toggleEvent: name => alarmAgree(name),
-      },
-      {
-        isToggle: true,
-        toggleName: 'marketingAgree',
-        toggleEvent: name => alarmAgree(name),
-      },
-    ]);
-    console.log(result.data);
-    setAlarm({
-      marketingAgreedDateTime: result.data.marketingAgreedDateTime,
-      isMarketingInfoAgree: result.data.marketingAgree,
-      isMarketingAlarmAgree: result.data.marketingAlarm,
-      isOrderAlarmAgree: result.data.orderAlarm,
-    });
-    setAgree(result.data.marketingAlarm || result.data.orderAlarm);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const isLoading = isAlarmSettingLoading;
+
   useEffect(() => {
-    const getData = async () => {
-      await getAlarm();
-      const checked = await getStorage('isMarketing');
-      if (checked === 'true' || checked === 'false') {
-        toast.toastEvent();
-        await setStorage('isMarketing', '');
-      }
-    };
-    getData();
-  }, []);
-  useEffect(() => {
-    console.log(alramData?.data);
+    setToggleData(
+      alramData?.data.map(v => {
+        return {
+          isToggle: true,
+          toggleName: v.code.toString(),
+          toggleEvent: name => alarmAgree(v),
+        };
+      }),
+    );
+    // setToggleData([
+
+    //   {
+    //     isToggle: true,
+    //     toggleName: 'orderAlarm',
+    //     toggleEvent: name => alarmAgree(name),
+    //   },
+    //   {
+    //     isToggle: true,
+    //     toggleName: 'marketingAgree',
+    //     toggleEvent: name => alarmAgree(name),
+    //   },
+    // ]);
   }, [alramData]);
+
+  if (!isSuccess) {
+    return (
+      <LoadingBox>
+        <ActivityIndicator size={'large'} color={themeApp.colors.yellow[500]} />
+      </LoadingBox>
+    );
+  }
+
   return (
     <Wrapper paddingTop={24}>
       <FormProvider {...form}>
-        <ListBox
+        {toggleData &&
+          alramData?.data.map((s, i) => {
+            console.log(toggleData[i]);
+            return (
+              <ListBox
+                key={i}
+                title={s.condition}
+                toggle={toggleData[i]}
+                toggleAgree={s.isActive}
+                isArrow={false}
+              />
+            );
+          })}
+        {/* <ListBox
           title="혜택 및 소식 알림"
           toggle={toggleData[0]}
           toggleAgree={alarm.isMarketingAlarmAgree}
@@ -141,7 +123,7 @@ const Pages = () => {
               alarm: alarm,
             });
           }}
-        />
+        /> */}
       </FormProvider>
       <toast.ToastWrap
         message={`${formattedDate(new Date(), '년월일')}\n${
@@ -167,14 +149,6 @@ const Pages = () => {
         }`}
         isBottom={true}
       />
-      {isLoading && (
-        <LoadingBox>
-          <ActivityIndicator
-            size={'large'}
-            color={themeApp.colors.yellow[500]}
-          />
-        </LoadingBox>
-      )}
     </Wrapper>
   );
 };
