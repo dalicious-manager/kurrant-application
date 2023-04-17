@@ -64,7 +64,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>10</string>
 	<key>CodePushDeploymentKey</key>
 	<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>
 	<key>CodePushPublicKey</key>
@@ -145,8 +145,14 @@ LwIDAQAB
 			<dict/>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is accessed for the first time</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The microphone is accessed for the first time</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Your message to user when the photo library is accessed for the first time</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-SemiBold.otf</string>
