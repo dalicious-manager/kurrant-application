@@ -2,7 +2,7 @@ import mSleep from '../../helpers/mSleep';
 import {fetchJson} from '../../utils/fetch';
 
 export async function FoodDetail(foodId, userRole) {
-  console.log(userRole, 'test');
+  // console.log(userRole, 'test');
   if (userRole === 'ROLE_GUEST') {
     await mSleep(100);
     return {

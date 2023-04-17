@@ -285,6 +285,7 @@ const Pages = ({route}) => {
   const arrs = arr.reduce((acc, cur) => {
     return acc.concat(cur);
   });
+
   // body 값 최종
   const lastArr = arrs.cartDailyFoodDtoList.filter(
     el => el.cartDailyFoods.length !== 0,
