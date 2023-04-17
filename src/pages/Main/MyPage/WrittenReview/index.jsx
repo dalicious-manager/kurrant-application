@@ -87,10 +87,7 @@ const Pages = ({route}) => {
               forMakers: item.forMakers,
               commentList: item.commentList,
             };
-            console.log(
-              reviewList?.findIndex(el => el.reviewId === pointId),
-              'test',
-            );
+
             return (
               <View>
                 <Card

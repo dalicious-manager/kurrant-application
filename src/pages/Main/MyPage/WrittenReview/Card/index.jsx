@@ -193,11 +193,6 @@ const Component = ({
   };
   const [numLines, setNumLines] = useState(1);
 
-  useEffect(() => {
-    console.log('라인 숫자 세기');
-    console.log(numLines);
-  }, [numLines]);
-
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>

@@ -223,7 +223,7 @@ const Pages = () => {
   }, [isUserInfo]);
   useFocusEffect(
     useCallback(() => {
-      console.log('test');
+      // console.log('test');
       async function loadUser() {
         try {
           const userData = await userInfo();
@@ -250,7 +250,7 @@ const Pages = () => {
       }
       const isTester = async () => {
         const user = await loadUser();
-        console.log(user, 'test');
+        // console.log(user, 'test');
         if (!(userRole === 'ROLE_GUEST')) {
           const status = async () => {
             const userStatus = await getStorage('spotStatus');

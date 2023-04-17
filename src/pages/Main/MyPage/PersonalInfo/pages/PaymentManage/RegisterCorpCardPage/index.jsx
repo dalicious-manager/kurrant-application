@@ -2,12 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import cardValidator from 'card-validator';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  NativeModules,
-} from 'react-native';
+import {Platform, ScrollView, NativeModules, Dimensions} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 
 import Button from '~components/Button';
@@ -22,9 +17,16 @@ import {
   checkCorporateRegiNumber,
   isValidCardNumber,
 } from '../../../../../../../utils/cardFormatter';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+const screenHeight = Dimensions.get('window').height;
+
 export const PAGE_NAME = 'P__MY_PAGE__PAYMENT_MANAGE__REGISTER_CORP_CARD';
 
 const Pages = ({route}) => {
+  const insets = useSafeAreaInsets();
+  const safeAreaHeight = insets.top + insets.bottom;
+
   const params = route.params;
   const themeApp = useTheme();
   const form = useForm({
@@ -114,11 +116,19 @@ const Pages = ({route}) => {
   }, []);
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      keyboardVerticalOffset={Platform.OS === 'ios' && statusBarHeight + 44}
-      behavior={Platform.OS === 'ios' && 'padding'}>
-      <Wrapper paddingTop={24} paddingHorizontal={24}>
+    <KeyboardAwareScrollView
+      style={{flex: 1, backgroundColor: 'white'}}
+      extraScrollHeight={140}
+      enableOnAndroid={true}>
+      <Wrapper
+        paddingTop={24}
+        paddingHorizontal={24}
+        styles={{
+          height:
+            Platform.OS === 'ios'
+              ? screenHeight - safeAreaHeight - 100
+              : screenHeight - safeAreaHeight - 120,
+        }}>
         <FormProvider {...form}>
           <ScrollView>
             <CardRegisteredBox>
@@ -240,7 +250,7 @@ const Pages = ({route}) => {
           )}
         </FormProvider>
       </Wrapper>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 };
 
