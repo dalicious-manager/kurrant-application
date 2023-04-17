@@ -149,7 +149,7 @@ const Pages = () => {
       if (applicationList) {
         applicationList();
       }
-      // getData();
+      getData();
     }
   }, []);
   if (isMyInfoLoading && !myInfo) {
