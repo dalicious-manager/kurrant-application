@@ -29,7 +29,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
   const navigation = useNavigation();
   const {refundItem} = useOrderMeal();
   const queryClient = useQueryClient();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const {
     setMealPurchase,
     readAbleAtom: {mealPurchase},
@@ -59,34 +59,38 @@ const Component = ({purchaseId, date, itemIndex}) => {
       });
       setMealPurchase(refund);
     } catch (error) {
-      alert(error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString().replace('error:', ''));
     }
   };
   const changeItem = async (id, serviceDate) => {
-    const req = {
-      orderId: purchase.id,
-      id: id,
-    };
-    await refundItem(req);
-    const refund = mealPurchase.map(o => {
-      return {
-        ...o,
-        orderItems: [
-          ...o.orderItems.map(v => {
-            if (v.id === id) {
-              return {...v, orderStatus: 7};
-            } else {
-              return v;
-            }
-          }),
-        ],
+    try {
+      const req = {
+        orderId: purchase.id,
+        id: id,
       };
-    });
-    setMealPurchase(refund);
+      await refundItem(req);
+      const refund = mealPurchase.map(o => {
+        return {
+          ...o,
+          orderItems: [
+            ...o.orderItems.map(v => {
+              if (v.id === id) {
+                return {...v, orderStatus: 7};
+              } else {
+                return v;
+              }
+            }),
+          ],
+        };
+      });
+      setMealPurchase(refund);
 
-    navigation.navigate(BuyMealPageName, {
-      date: serviceDate ? serviceDate : formattedDate(new Date()),
-    });
+      navigation.navigate(BuyMealPageName, {
+        date: serviceDate ? serviceDate : formattedDate(new Date()),
+      });
+    } catch (error) {
+      Alert.alert('취소불가', error.toString().replace('error:', ''));
+    }
   };
   return (
     <DateOrderItemListContainer isFirst={itemIndex === 0}>

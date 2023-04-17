@@ -58,34 +58,38 @@ const Component = ({purchaseId, date, itemIndex}) => {
       });
       setAllPurchase(refund);
     } catch (error) {
-      alert(error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString().replace('error:', ''));
     }
   };
   const changeItem = async (id, serviceDate) => {
-    const req = {
-      orderId: purchase.id,
-      id: id,
-    };
-    await refundItem(req);
-    const refund = allPurchase.map(o => {
-      return {
-        ...o,
-        orderItems: [
-          ...o.orderItems.map(v => {
-            if (v.id === id) {
-              return {...v, orderStatus: 7};
-            } else {
-              return v;
-            }
-          }),
-        ],
+    try {
+      const req = {
+        orderId: purchase.id,
+        id: id,
       };
-    });
-    setAllPurchase(refund);
+      await refundItem(req);
+      const refund = allPurchase.map(o => {
+        return {
+          ...o,
+          orderItems: [
+            ...o.orderItems.map(v => {
+              if (v.id === id) {
+                return {...v, orderStatus: 7};
+              } else {
+                return v;
+              }
+            }),
+          ],
+        };
+      });
+      setAllPurchase(refund);
 
-    navigation.navigate(BuyMealPageName, {
-      date: serviceDate ? serviceDate : formattedDate(new Date()),
-    });
+      navigation.navigate(BuyMealPageName, {
+        date: serviceDate ? serviceDate : formattedDate(new Date()),
+      });
+    } catch (error) {
+      Alert.alert('취소불가', error.toString().replace('error:', ''));
+    }
   };
   return (
     <DateOrderItemListContainer isFirst={itemIndex === 0}>
