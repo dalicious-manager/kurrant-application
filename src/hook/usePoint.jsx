@@ -10,7 +10,6 @@ export function useGetPointList(condition) {
         if (!lastPage.isLast) {
           return lastPage.currentPage + 1;
         }
-
         return undefined;
       },
     },

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Alert, Dimensions, Image, Text} from 'react-native';
+import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
@@ -24,6 +24,8 @@ import {
 import ImageModal from './ImageModal/ImageModal';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import {changeSeperator} from '../../../../../utils/dateFormatter';
+import {SkinnyArrowDown} from '../../../../../components/Icon';
+import {css} from 'styled-components/native';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -38,7 +40,7 @@ const Component = ({
   option,
   rating,
   reviewText,
-
+  focusId,
   forMakers,
   imageLocation,
   createDate,
@@ -114,7 +116,8 @@ const Component = ({
                   {
                     text: '확인',
                     onPress: async () => {
-                      getWrittenReview();
+                      await getWrittenReview();
+                      await getReviewWait();
                       navigation.navigate(WrittenReviewPageName, {
                         screen: ReviewScreenName,
                         params: {
@@ -188,9 +191,15 @@ const Component = ({
       ],
     );
   };
+  const [numLines, setNumLines] = useState(1);
+
+  useEffect(() => {
+    console.log('라인 숫자 세기');
+    console.log(numLines);
+  }, [numLines]);
 
   return (
-    <Container>
+    <Container focusId={focusId} id={id}>
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
@@ -286,20 +295,128 @@ const Component = ({
         firstClickedImageIndex={firstClickedImageIndex}
       />
 
-      <ReviewPressable
-        onPress={() => {
-          setElaborateComment(!elaborateComment);
-        }}>
-        {elaborateComment ? (
-          <ReviewText>{reviewText}</ReviewText>
+      <ReviewPressable>
+        {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
+          <IconDiv
+            onPress={() => {
+              setElaborateComment(!elaborateComment);
+            }}>
+            <SkinnyArrowDown width={'12px'} height={'8px'} />
+          </IconDiv>
+        )}
+
+        {Platform.OS === 'ios' ? (
+          <>
+            {numLines >= 3 && elaborateComment ? (
+              // <ReviewTextTextInput value={reviewText} editable={false} />
+              <ReviewTextTextInputIos
+                // value={reviewText.concat(' ', '...')}
+                onContentSizeChange={event =>
+                  setNumLines(
+                    Math.max(
+                      Math.ceil(event.nativeEvent.contentSize.height / 18),
+                      1,
+                    ),
+                  )
+                }
+                value={reviewText}
+                multiline={true}
+                selectTextOnFocus={false}
+                onPressIn={() => {
+                  setElaborateComment(!elaborateComment);
+                }}
+                suppressHighlighting={true}
+                editable={false}
+              />
+            ) : (
+              <ReviewTextTextInputIos
+                onContentSizeChange={event =>
+                  setNumLines(
+                    Math.max(
+                      Math.ceil(event.nativeEvent.contentSize.height / 18),
+                      1,
+                    ),
+                  )
+                }
+                maxHeight={62}
+                value={reviewText}
+                multiline={true}
+                editable={false}
+                selectTextOnFocus={false}
+                onPressIn={() => {
+                  setElaborateComment(!elaborateComment);
+                }}
+                numberOfLines={3}
+                ellipsizeMode="tail"
+              />
+            )}
+          </>
         ) : (
-          <ReviewText numberOfLines={3} ellipsizeMode="tail">
-            {reviewText}
-          </ReviewText>
+          <>
+            <ReviewTextTextInputAndroid
+              onContentSizeChange={event =>
+                setNumLines(
+                  Math.max(
+                    Math.ceil(event.nativeEvent.contentSize.height / 18),
+                    1,
+                  ),
+                )
+              }
+              value={reviewText}
+              multiline={true}
+              onPressIn={() => {
+                setElaborateComment(!elaborateComment);
+              }}
+              editable={false}
+            />
+
+            {/* {numLines >= 3 && elaborateComment ? (
+              // <ReviewTextTextInput value={reviewText} editable={false} />
+              <ReviewTextTextInputAndroid
+                onContentSizeChange={event =>
+                  setNumLines(
+                    Math.max(
+                      Math.ceil(event.nativeEvent.contentSize.height / 18),
+                      1,
+                    ),
+                  )
+                }
+                value={reviewText}
+                multiline={true}
+                onPressIn={() => {
+                  setElaborateComment(!elaborateComment);
+                }}
+                editable={false}
+              />
+            ) : (
+              <ReviewTextTextInputAndroid
+                onContentSizeChange={event =>
+                  setNumLines(
+                    Math.max(
+                      Math.ceil(event.nativeEvent.contentSize.height / 18),
+                      1,
+                    ),
+                  )
+                }
+                value={reviewText}
+                multiline={true}
+                editable={false}
+                maxHeight={62}
+                onPressIn={() => {
+                  setElaborateComment(!elaborateComment);
+                }}
+                // numberOfLines={3}
+                // ellipsizeMode="tail"
+              />
+            )} */}
+          </>
         )}
       </ReviewPressable>
-
+      {/* <ReviewText>{reviewText}</ReviewText> */}
       {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}
+      {/* <ReviewText numberOfLines={3} ellipsizeMode="tail">
+            {reviewText}
+          </ReviewText> */}
 
       {commentList &&
         commentList.length > 0 &&
@@ -335,8 +452,17 @@ export default Component;
 
 const Container = styled.View`
   width: 100%;
-  margin: 12px 0;
-  margin-bottom: 40px;
+  //margin: 12px 0;
+  //margin-bottom: 40px;
+  padding: 24px;
+  ${({focusId, id}) => {
+    // console.log(focusId, id, 'focusId === id');
+    if (focusId === id) {
+      return css`
+        background-color: ${({theme}) => theme.colors.grey[8]};
+      `;
+    }
+  }}
 `;
 
 const TopWrap = styled.View`
@@ -417,6 +543,25 @@ const DefaultImage = styled.View`
 const ReviewPressable = styled.Pressable`
   width: 300px;
   margin: auto;
+  position: relative;
+`;
+
+const ReviewTextTextInputAndroid = styled.TextInput`
+  color: ${props => props.theme.colors.grey[2]};
+
+  font-size: 14px;
+
+  /* overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; */
+  font-family: 'Pretendard-Regular';
+`;
+
+const ReviewTextTextInputIos = styled.TextInput`
+  color: ${props => props.theme.colors.grey[2]};
+
+  font-size: 14px;
+  font-family: 'Pretendard-Regular';
 `;
 
 const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
@@ -441,4 +586,11 @@ const MiniGreyBlock = styled.View`
 const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-left: 4px;
+`;
+
+const IconDiv = styled.Pressable`
+  position: absolute;
+
+  bottom: 5px;
+  right: -20px;
 `;

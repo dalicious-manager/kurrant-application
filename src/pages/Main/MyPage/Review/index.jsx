@@ -55,7 +55,7 @@ const Pages = () => {
                 <MiniWrap>
                   <Typography1 variant="h400">포토후기</Typography1>
 
-                  <PointText>100P</PointText>
+                  <PointText>70P</PointText>
                 </MiniWrap>
                 <MiniWrap>
                   <Typography1 variant="h400">텍스트 후기</Typography1>

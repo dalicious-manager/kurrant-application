@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   View,
+  Alert,
 } from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 import Button from '../../../../../../components/Button';
@@ -39,14 +40,18 @@ export default function PasswordCheck({route}) {
   };
   const onSubmit = async () => {
     if (params?.password === state) {
-      const email = await payCheckEmail();
-      console.log(email);
-      if (email?.data === 2)
-        navigation.navigate(PayCheckEmailPageName, {
-          password: state,
-          cardData: params?.cardData,
-        });
-      if (email?.data === 3) setModalVisible(true);
+      try {
+        const email = await payCheckEmail();
+        console.log(email);
+        if (email?.data === 2)
+          navigation.navigate(PayCheckEmailPageName, {
+            password: state,
+            cardData: params?.cardData,
+          });
+        if (email?.data === 3) setModalVisible(true);
+      } catch (e) {
+        Alert.alert('알림', e.toString().replace('error: ', ''));
+      }
     }
   };
   const closeModal = () => {

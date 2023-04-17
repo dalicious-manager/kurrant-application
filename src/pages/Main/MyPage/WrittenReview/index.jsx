@@ -24,9 +24,7 @@ const Pages = ({route}) => {
   const pointId = route?.params?.id;
   const flatListRef = useRef(null);
 
-  const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
-
-  const [, setTotalWrittenReviewList] = useAtom(totalWrittenReview);
+  const {getWrittenReview, reviewList} = useWrittenReview();
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const idx = reviewList?.findIndex(el => el.reviewId === pointId);
@@ -35,13 +33,23 @@ const Pages = ({route}) => {
     getWrittenReview();
   }, []);
 
-  useEffect(() => {
-    setTotalWrittenReviewList(writtenReviewCount);
-  }, [writtenReviewCount]);
+  // useEffect(() => {
+  //   setTotalWrittenReviewList(writtenReviewCount);
+  // }, [writtenReviewCount]);
+
+  // useEffect(() => {
+  //   console.log(reviewList);
+  // }, [reviewList]);
 
   useEffect(() => {
-    console.log(reviewList);
-  }, [reviewList]);
+    if (flatListRef.current && idx !== -1) {
+      flatListRef.current.scrollToIndex({
+        animated: true,
+        index: idx,
+        viewPosition: 0,
+      });
+    }
+  }, [flatListRef, idx]);
 
   return (
     <Container>
@@ -50,21 +58,20 @@ const Pages = ({route}) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           ref={flatListRef}
-          initialScrollIndex={idx}
           onScrollToIndexFailed={info => {
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
               flatListRef.current?.scrollToIndex({
                 index: info.index,
                 animated: true,
+                viewPosition: 0,
               });
             });
           }}
           data={reviewList}
           scrollEnabled={true}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
-
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,
@@ -80,11 +87,15 @@ const Pages = ({route}) => {
               forMakers: item.forMakers,
               commentList: item.commentList,
             };
-
+            console.log(
+              reviewList?.findIndex(el => el.reviewId === pointId),
+              'test',
+            );
             return (
               <View>
                 <Card
                   id={item2.id}
+                  focusId={pointId}
                   editItem={item2}
                   createDate={item2.createDate}
                   updateDate={item2.updateDate}
@@ -114,7 +125,7 @@ export default Pages;
 const Container = styled.View`
   width: 100%;
   height: 100%;
-  padding: 24px 25px;
+  // padding: 24px 25px;
   padding-top: 0px;
   background-color: #ffffff;
 `;

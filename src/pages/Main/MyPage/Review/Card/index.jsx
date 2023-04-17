@@ -50,9 +50,9 @@ const Component = ({
   const {reviewWaitList, reviewWaitCount, getReviewWait, redeemablePoints} =
     useReviewWait();
 
-  useEffect(() => {
-    getReviewWait();
-  }, []);
+  // useEffect(() => {
+  //   getReviewWait();
+  // }, []);
 
   const handleReviewFormWriteButton = () => {
     // 시간이 지났을 지도 모르니 get한번더 해와서 확인 해보고 확인이 되면 보낸다

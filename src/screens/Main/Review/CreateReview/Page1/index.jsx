@@ -15,6 +15,8 @@ export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_1';
 const Screens = ({route}) => {
   const navigation = useNavigation();
 
+  const test = route?.params?.test;
+
   const orderItemId = route.params.orderItemId;
   const imageLocation = route.params.imageLocation;
   const foodName = route.params.foodName;
@@ -46,6 +48,7 @@ const Screens = ({route}) => {
             navigation.navigate(CreateReviewPage2ScreenName, {
               id: orderItemId,
               status: 'create',
+              test: test,
             });
             setDisable(false);
           }}

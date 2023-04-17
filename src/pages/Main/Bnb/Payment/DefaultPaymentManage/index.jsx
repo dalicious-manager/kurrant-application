@@ -12,7 +12,7 @@ import RegisteredBox from './RegisteredBox';
 import Check from '~components/Check';
 import Form from '~components/Form';
 import {useForm} from 'react-hook-form';
-import {Dimensions, ScrollView} from 'react-native';
+import {Alert, Dimensions, ScrollView} from 'react-native';
 import {useAtom} from 'jotai';
 import {registCardAtom} from '../../../../../atoms/store';
 import Toast from '../../../../../components/Toast';
@@ -45,11 +45,19 @@ const Pages = ({route}) => {
     });
   };
   const onSelectComplateEvent = async () => {
-    if (agreeCheck.watch(agreeCheck).agreeCheck) {
-      await onSelectCard(selectNowCard[0]?.id);
-    }
-    setSelectDefaultCard(selectNowCard);
-    navigation.goBack();
+    console.log(selectDefaultCard);
+    try {
+      if (agreeCheck.watch(agreeCheck).agreeCheck) {
+        if (selectNowCard[0]?.id) {
+          await onSelectCard(selectNowCard[0]?.id);
+        } else {
+          Alert.alert('카드선택', '카드를 선택해주세요');
+          return;
+        }
+      }
+      setSelectDefaultCard(selectNowCard);
+      navigation.goBack();
+    } catch (error) {}
   };
   const onSelectCard = async id => {
     const req = {
@@ -67,12 +75,18 @@ const Pages = ({route}) => {
           isRegist: false,
         });
       }
+      console.log(selectDefaultCard, '선택된 카드');
       const getCardListData = async () => {
         await getCardList();
       };
       getCardListData();
     }, []),
   );
+  useEffect(() => {
+    if (selectDefaultCard) {
+      setNowCard(selectDefaultCard);
+    }
+  }, [selectDefaultCard]);
   return (
     <Wrapper paddingTop={24}>
       <InfoBox>

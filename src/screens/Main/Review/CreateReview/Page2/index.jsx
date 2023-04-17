@@ -24,14 +24,29 @@ import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
 import {PAGE_NAME as ReviewPageName} from '../../../../../pages/Main/MyPage/Review';
 
 // 수정후 여기로 오게 하기
+// import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
 
-import {Alert, Dimensions, FlatList, Text, View} from 'react-native';
+import {
+  Alert,
+  BackHandler,
+  Dimensions,
+  FlatList,
+  Platform,
+  Text,
+  View,
+} from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import {useQueryClient} from 'react-query';
 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
+// import MoreMainPage, {
+//   PAGE_NAME as MoreMainPageName,
+// } from '../../../pages/Main/Bnb/More/Main';
+import {PAGE_NAME as MoreMainPageName} from '../../../../../pages/Main/Bnb/More/Main';
+import {el} from 'date-fns/locale';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -54,6 +69,17 @@ const Screen = ({route}) => {
 
   const [charLength, setCharLength] = useState(0);
 
+  /// 안드로이드 뒤로가기 누르면 뒤로가야됨
+
+  useEffect(() => {
+    if (Platform.OS !== 'ios') {
+      BackHandler.addEventListener('hardwareBackPress', () => {
+        navigation.navigate(MoreMainPageName);
+        return true;
+      });
+    }
+  }, []);
+
   useEffect(() => {
     // 사진 채우기 기능 추가
 
@@ -66,6 +92,9 @@ const Screen = ({route}) => {
 
   const id = route?.params?.id;
   const status = route?.params?.status;
+
+  const test = route?.params?.test;
+
   const editItem = route?.params?.editItem;
 
   // console.log('진짜 징하다');
@@ -178,6 +207,17 @@ const Screen = ({route}) => {
         Authorization: `Bearer ${token}`,
       };
 
+      console.log('크리에이트 리뷰');
+
+      console.log([
+        ...photosArray,
+        {
+          name: 'reviewDto',
+          data: JSON.stringify(sendCreateData),
+          type: 'application/json',
+        },
+      ]);
+
       return RNFetchBlob.fetch('POST', url, headers, [
         ...photosArray,
         {
@@ -253,6 +293,8 @@ const Screen = ({route}) => {
     });
 
     if (status === 'create') {
+      console.log('크리에이트 ');
+      console.log(photoDataArray);
       createReview(photoDataArray)
         .then(response => response.json())
         .then(data => {
@@ -263,12 +305,33 @@ const Screen = ({route}) => {
               {
                 text: '확인',
                 onPress: async () => {
-                  getWrittenReview();
-                  getReviewWait();
+                  await getWrittenReview();
+                  console.log('받음1');
+                  await getReviewWait();
+                  console.log('받음2');
+                  // navigation.navigate(ReviewScreenName, {
+                  //   from: 'home',
+                  // });
 
-                  navigation.navigate(ReviewScreenName, {
-                    from: 'home',
-                  });
+                  if (test) {
+                    console.log('테스트여');
+                    console.log(test);
+                    // navigation.navigate(WrittenReviewPageName);
+                    navigation.navigate(ReviewScreenName);
+                    navigation.navigate(WrittenReviewPageName, {
+                      screen: ReviewScreenName,
+                      params: {
+                        tabIndex: 1,
+                      },
+                    });
+                  } else {
+                    navigation.navigate(WrittenReviewPageName, {
+                      screen: ReviewScreenName,
+                      params: {
+                        tabIndex: 1,
+                      },
+                    });
+                  }
                 },
                 style: 'cancel',
               },
@@ -289,6 +352,7 @@ const Screen = ({route}) => {
         });
     } else if (status === 'edit') {
       console.log('edit 이여');
+      console.log(photosArray);
 
       editReview(id, photosArray)
         .then(response => response.json())

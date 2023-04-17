@@ -73,19 +73,19 @@ const Pages = () => {
 
   const [redeemablePoints] = useAtom(redeemablePointsAtom);
 
-  useEffect(() => {
-    console.log('획득 가능한 포인트 확인');
-    console.log(redeemablePoints);
-  }, [redeemablePoints]);
+  // useEffect(() => {
+  //   console.log('획득 가능한 포인트 확인');
+  //   console.log(redeemablePoints);
+  // }, [redeemablePoints]);
 
-  useEffect(() => {
-    console.log('토탈');
-    console.log(total);
-  }, [total]);
+  // useEffect(() => {
+  //   console.log('토탈');
+  //   console.log(total);
+  // }, [total]);
 
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
-  const {isUserInfo} = useUserInfo();
+  const {isUserInfo, userInfo} = useUserInfo();
   const getData = async () => {
     VersionCheck.getLatestVersion().then(latestVersion => {
       console.log(latestVersion, currentVersion);
@@ -131,12 +131,25 @@ const Pages = () => {
       }
     }, []),
   );
+
+  useFocusEffect(
+    useCallback(() => {
+      // Do something when the screen is focused
+      console.log('포커싱');
+      userInfo();
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, []),
+  );
+
   useEffect(() => {
     if (userRole !== 'ROLE_GUEST') {
       if (applicationList) {
         applicationList();
       }
-      // getData();
+      getData();
     }
   }, []);
   if (isMyInfoLoading && !myInfo) {

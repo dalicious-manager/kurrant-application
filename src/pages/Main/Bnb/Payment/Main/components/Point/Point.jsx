@@ -20,6 +20,7 @@ const Point = ({
   clearPoint,
   inputRef,
   onFocusInput,
+  onBlurInput,
   totalPrice,
   userPoint,
   medtronicTotalPrice,
@@ -33,7 +34,6 @@ const Point = ({
       name="point"
       defaultValue={'0'}
       render={({field: {onChange, value}}) => {
-        // console.log(value, 'aaaaaa');
         return (
           <PointWrap>
             <Text>-{`\u00A0`}</Text>
@@ -43,6 +43,7 @@ const Point = ({
                 keyboardType="number-pad"
                 ref={inputRef}
                 onFocus={onFocusInput}
+                // onBlur={onBlurInput}
                 value={
                   medtronicSupportArr.includes(62471004)
                     ? userPoint > medtronicTotalPrice &&

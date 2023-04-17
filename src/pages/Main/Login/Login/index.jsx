@@ -196,11 +196,13 @@ const Pages = ({route}) => {
             const res = await autoLogin();
 
             if (res?.statusCode === 200) {
-              // if (fcmToken) {
-              //   saveFcmToken({
-              //     token: fcmToken,
-              //   });
-              // }
+              //const token = await messaging().getToken();
+
+              //if (token) {
+              // saveFcmToken({
+              // token: token,
+              //});
+              //}
               navigation.reset({
                 index: 0,
                 routes: [
@@ -234,8 +236,6 @@ const Pages = ({route}) => {
           // ios의 경우 필수가 아니라고도 하고 필수라고도 하고.. 그냥 넣어버렸다.
           messaging().registerDeviceForRemoteMessages();
         }
-        const token = await messaging().getToken();
-        if (token) setFcmToken(token);
       }
     }
     requestUserPermission();
