@@ -71,14 +71,14 @@ const Screen = ({route}) => {
 
   /// 안드로이드 뒤로가기 누르면 뒤로가야됨
 
-  useEffect(() => {
-    if (Platform.OS !== 'ios') {
-      BackHandler.addEventListener('hardwareBackPress', () => {
-        navigation.navigate(MoreMainPageName);
-        return true;
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (Platform.OS !== 'ios') {
+  //     BackHandler.addEventListener('hardwareBackPress', () => {
+  //       navigation.navigate(MoreMainPageName);
+  //       return true;
+  //     });
+  //   }
+  // }, []);
 
   useEffect(() => {
     // 사진 채우기 기능 추가
@@ -470,6 +470,11 @@ const Screen = ({route}) => {
                   : undefined
               }
             />
+            <Warnings>
+              작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
+              서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
+              제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
+            </Warnings>
             {/* '최대 몇자인가' 보여주기 */}
 
             <ShowOnlyToOwnerWrap>
@@ -496,16 +501,10 @@ const Screen = ({route}) => {
                     : '모두에게 보이는 리뷰'}{' '}
                 </Title4>
               ) : (
-                <Title4 isEditItem={!!editItem}>사장님에게만 보이기 </Title4>
+                <Title4 isEditItem={!!editItem}>사장님에게만 보이기</Title4>
               )}
             </ShowOnlyToOwnerWrap>
           </ReviewWrap>
-
-          <Warnings>
-            작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
-            서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
-            제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
-          </Warnings>
 
           <Filler />
         </KeyboardViewContainer>

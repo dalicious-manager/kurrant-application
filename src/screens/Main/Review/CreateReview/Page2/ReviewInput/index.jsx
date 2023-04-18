@@ -82,20 +82,18 @@ const Input = styled.TextInput`
   font-family: 'Pretendard-Regular';
 `;
 
-const ViewWrap = styled.View`
-  margin-bottom: 19px;
-`;
+const ViewWrap = styled.View``;
 
 const ViewView = styled.View`
   flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0;
+  padding-top: 6px;
 `;
 
 const ShowCurrentLettersLengthWrap = styled.View`
   flex-direction: row-reverse;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 `;
 const LengthText = styled(Typography).attrs({text: ' CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
