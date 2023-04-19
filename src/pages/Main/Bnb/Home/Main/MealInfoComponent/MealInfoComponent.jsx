@@ -35,15 +35,15 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
       <MealInfoWrapper>
         <Shadow
           style={
-            (meal.orderStatus === 10 || meal.orderStatus === 5) && {
+            (meal.orderStatus === 10 || meal.orderStatus === 11) && {
               borderRadius: 14,
               marginBottom: 12,
             }
           }
           startColor={
-            (meal.orderStatus === 10 || meal.orderStatus === 5) && '#5A1EFF20'
+            (meal.orderStatus === 10 || meal.orderStatus === 11) && '#5A1EFF20'
           }
-          distance={(meal.orderStatus === 10 || meal.orderStatus === 5) && 10}>
+          distance={(meal.orderStatus === 10 || meal.orderStatus === 11) && 10}>
           <MealInfoWrap
             onPress={() =>
               navigation.navigate(MealMainPageName, {
@@ -75,7 +75,7 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
                 </View>
                 <MealCount>
                   <GreyTxt status={meal.orderStatus}>
-                    {(meal.orderStatus === 10 || meal.orderStatus === 5) &&
+                    {(meal.orderStatus === 10 || meal.orderStatus === 11) &&
                       formattedMealFoodStatus(meal.orderStatus)}
                   </GreyTxt>
 
@@ -85,10 +85,10 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
             </MealInfo>
           </MealInfoWrap>
         </Shadow>
-        {(meal.orderStatus === 10 || meal.orderStatus === 5) && (
+        {(meal.orderStatus === 10 || meal.orderStatus === 11) && (
           <OrderStatusWrap>
             <CommentText>
-              {meal.orderStatus === 5
+              {meal.orderStatus === 11
                 ? '식사 맛있게 하셨나요?'
                 : meal.orderStatus === 10 &&
                   '배송완료! 메뉴 확인후 수령하셨나요?'}
@@ -106,7 +106,7 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
                 }
               }}>
               <ConfirmText>
-                {meal.orderStatus === 5
+                {meal.orderStatus === 11
                   ? '맛 평가하기'
                   : meal.orderStatus === 10 && '네, 확인했어요'}
               </ConfirmText>

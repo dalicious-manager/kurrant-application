@@ -80,6 +80,7 @@ const Pages = () => {
                   <View>
                     {item.items &&
                       item.items.map((value2, index2) => {
+                        console.log(value2);
                         return (
                           <Card
                             key={index2}
@@ -87,6 +88,8 @@ const Pages = () => {
                             orderItemId={value2.orderItemId}
                             serviceDate={item.serviceDate}
                             foodName={value2.foodName}
+                            foodDescription={value2.foodDescription}
+                            foodCount={value2.foodCount}
                             option={value2.option}
                             imageLocation={value2.imageLocation}
                             diningType={value2.diningType}

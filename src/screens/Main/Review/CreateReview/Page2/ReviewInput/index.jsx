@@ -3,13 +3,14 @@ import {Controller, useFormContext} from 'react-hook-form';
 import {Text, TextInput, View} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../../../components/Typography';
+import {useTheme} from 'styled-components/native';
 
 const ReviewInput = ({editContentInput, charLength}) => {
   const {
     control,
     formState: {errors},
   } = useFormContext();
-
+  const themeApp = useTheme();
   const textInputProps = {
     // placeholder,
     autoComplete: 'off',
@@ -40,6 +41,7 @@ const ReviewInput = ({editContentInput, charLength}) => {
               style={{
                 textAlignVertical: 'top',
               }}
+              placeholderTextColor={themeApp.colors.grey[5]}
               {...textInputProps}
               defaultValue={editContent ? editContent : undefined}
               value={value}
@@ -51,15 +53,6 @@ const ReviewInput = ({editContentInput, charLength}) => {
             />
 
             <ViewView>
-              <ShowCurrentLettersLengthWrap>
-                <LengthText>
-                  (
-                  <LengthTextNum charLength={charLength > 500}>
-                    {charLength}
-                  </LengthTextNum>
-                  /500)
-                </LengthText>
-              </ShowCurrentLettersLengthWrap>
               {error && (
                 <Text style={{color: 'red', alignSelf: 'stretch'}}>
                   {error.message}
@@ -79,6 +72,7 @@ const Input = styled.TextInput`
   border: 1px solid ${props => props.theme.colors.grey[7]};
   padding: 17px 20px;
   height: 168px;
+  border-radius: 14px;
   font-family: 'Pretendard-Regular';
 `;
 
@@ -89,23 +83,4 @@ const ViewView = styled.View`
   justify-content: space-between;
   align-items: center;
   padding-top: 6px;
-`;
-
-const ShowCurrentLettersLengthWrap = styled.View`
-  flex-direction: row-reverse;
-  margin-bottom: 12px;
-`;
-const LengthText = styled(Typography).attrs({text: ' CaptionR'})`
-  color: ${props => props.theme.colors.grey[4]};
-  /* margin-bottom: 32px; */
-`;
-
-const LengthTextNum = styled(Typography).attrs({text: ' CaptionR'})`
-  color: ${props => {
-    if (props.charLength) {
-      return props.theme.colors.red[500];
-    } else {
-      return props.theme.colors.grey[4];
-    }
-  }};
 `;

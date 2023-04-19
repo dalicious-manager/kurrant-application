@@ -2,7 +2,7 @@ import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 
-import styled, {useTheme} from 'styled-components';
+import styled, {useTheme} from 'styled-components/native';
 
 import Button from '../../../../../components/Button';
 import {CheckIcon, XCircleIcon} from '../../../../../components/Icon';
@@ -64,21 +64,12 @@ const Screen = ({route}) => {
   const [photosArray, setPhotosArray] = useState([]);
 
   // FlatList 에 넣을 배열 만들기
-
+  const themeApp = useTheme();
   const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
 
   const [charLength, setCharLength] = useState(0);
 
   /// 안드로이드 뒤로가기 누르면 뒤로가야됨
-
-  // useEffect(() => {
-  //   if (Platform.OS !== 'ios') {
-  //     BackHandler.addEventListener('hardwareBackPress', () => {
-  //       navigation.navigate(MoreMainPageName);
-  //       return true;
-  //     });
-  //   }
-  // }, []);
 
   useEffect(() => {
     // 사진 채우기 기능 추가
@@ -98,7 +89,7 @@ const Screen = ({route}) => {
   const editItem = route?.params?.editItem;
 
   // console.log('진짜 징하다');
-  // console.log(editItem);
+  console.log(route?.params);
 
   const theme = useTheme();
 
@@ -123,6 +114,7 @@ const Screen = ({route}) => {
         : [];
 
       setPhotosArray(editItemModify);
+      setStarRating(editItem.rating);
     }
   }, [editItem]);
 
@@ -470,40 +462,50 @@ const Screen = ({route}) => {
                   : undefined
               }
             />
-            <Warnings>
+            <TextBoxBottom>
+              <ShowOnlyToOwnerWrap>
+                {!editItem && (
+                  <>
+                    <CheckBox
+                      checked={input.isExclusive}
+                      onPress={() => {
+                        setInput({...input, isExclusive: !input.isExclusive});
+                      }}>
+                      <CheckIcon
+                        style={{width: 15, height: 10}}
+                        color={'#ffffff'}
+                      />
+                    </CheckBox>
+                  </>
+                )}
+
+                {editItem ? (
+                  <Title4 isEditItem={!!editItem}>
+                    {' '}
+                    {editItem.forMakers
+                      ? '사장님에게만 보이는 리뷰'
+                      : '모두에게 보이는 리뷰'}{' '}
+                  </Title4>
+                ) : (
+                  <Title4 isEditItem={!!editItem}>사장님에게만 보이기</Title4>
+                )}
+              </ShowOnlyToOwnerWrap>
+              <ShowCurrentLettersLengthWrap>
+                <LengthText>
+                  (
+                  <LengthTextNum charLength={charLength > 500}>
+                    {charLength}
+                  </LengthTextNum>
+                  /500)
+                </LengthText>
+              </ShowCurrentLettersLengthWrap>
+            </TextBoxBottom>
+            <Warnings textColor={themeApp.colors.grey[4]}>
               작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
               서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
               제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
             </Warnings>
             {/* '최대 몇자인가' 보여주기 */}
-
-            <ShowOnlyToOwnerWrap>
-              {!editItem && (
-                <>
-                  <CheckBox
-                    checked={input.isExclusive}
-                    onPress={() => {
-                      setInput({...input, isExclusive: !input.isExclusive});
-                    }}>
-                    <CheckIcon
-                      style={{width: 15, height: 10}}
-                      color={'#ffffff'}
-                    />
-                  </CheckBox>
-                </>
-              )}
-
-              {editItem ? (
-                <Title4 isEditItem={!!editItem}>
-                  {' '}
-                  {editItem.forMakers
-                    ? '사장님에게만 보이는 리뷰'
-                    : '모두에게 보이는 리뷰'}{' '}
-                </Title4>
-              ) : (
-                <Title4 isEditItem={!!editItem}>사장님에게만 보이기</Title4>
-              )}
-            </ShowOnlyToOwnerWrap>
           </ReviewWrap>
 
           <Filler />
@@ -574,7 +576,11 @@ const PhotosView = styled.View`
 
   justify-content: center;
 `;
-
+const TextBoxBottom = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 const PhotoImageWrap = styled.View`
   /* position: relative; */
   /* overflow: hidden; */
@@ -665,8 +671,7 @@ const Title4 = styled(Typography).attrs({text: 'Body06R'})`
     }
   }};
 `;
-const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
-  color: ${props => props.theme.colors.grey[4]};
+const Warnings = styled(Typography).attrs({text: 'CaptionR'})`
   margin-bottom: 32px;
 `;
 
@@ -688,12 +693,12 @@ const ShowCurrentLettersLengthWrap = styled.View`
   flex-direction: row-reverse;
   margin-bottom: 10px;
 `;
-const LengthText = styled(Typography).attrs({text: ' CaptionR'})`
+const LengthText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
   /* margin-bottom: 32px; */
 `;
 
-const LengthTextNum = styled(Typography).attrs({text: ' CaptionR'})`
+const LengthTextNum = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => {
     if (props.charLength) {
       return props.theme.colors.red[500];

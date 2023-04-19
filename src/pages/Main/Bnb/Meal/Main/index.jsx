@@ -211,7 +211,9 @@ const Pages = ({route}) => {
                               })
                             }>
                             <MakersName>[{sm.makers}]</MakersName>
-                            <MealName>{sm.name}</MealName>
+                            <MealName numberOfLines={1} ellipsizeMode="tail">
+                              {sm.name}
+                            </MealName>
                             <DeliveryAddress>
                               {sm.groupName}・{sm.spotName}
                             </DeliveryAddress>
@@ -277,7 +279,9 @@ const Pages = ({route}) => {
                                 })
                               }>
                               <MakersName>[{el.makers}]</MakersName>
-                              <MealName>{el.name}</MealName>
+                              <MealName numberOfLines={1} ellipsizeMode="tail">
+                                {el.name}
+                              </MealName>
                               <DeliveryAddress>
                                 {el.groupName}・{el.spotName}
                               </DeliveryAddress>
