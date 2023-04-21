@@ -33,6 +33,10 @@ export {default as NotificationIcon} from './_components/NotificationIcon';
 export {default as NomalCardIcon} from './_components/NomalCardIcon';
 export {default as KakaoPayIcon} from './_components/KakaoPayIcon';
 export {default as NaverPayIcon} from './_components/NaverPayIcon';
+export {default as DisabledPoint} from './_components/DisabledPoint';
+export {default as EnabledPoint} from './_components/EnabledPoint';
+export {default as DisabledPointBar} from './_components/DisabledPointBar';
+export {default as EnabledPointBar} from './_components/EnabledPointBar';
 export {default as ThumbsUpWithThreeStarsIcon} from './_components/ThumbsUpWithThreeStarsIcon';
 
 export {default as CheckIcon} from './_components/CheckIcon';

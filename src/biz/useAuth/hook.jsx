@@ -301,6 +301,7 @@ const useAuth = () => {
         type,
         option,
       );
+      console.log(res?.data)
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());

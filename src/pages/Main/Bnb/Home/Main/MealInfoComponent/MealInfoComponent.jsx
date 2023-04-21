@@ -20,7 +20,6 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
   };
-
   const goToReviewPage = (id, image, name) => {
     navigation.navigate(reviewPage, {
       orderItemId: id,
@@ -75,7 +74,7 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
                 </View>
                 <MealCount>
                   <GreyTxt status={meal.orderStatus}>
-                    {(meal.orderStatus === 10 || meal.orderStatus === 11) &&
+                    {(meal.orderStatus === 10 || meal.orderStatus === 6|| meal.orderStatus === 9) &&
                       formattedMealFoodStatus(meal.orderStatus)}
                   </GreyTxt>
 

@@ -10,7 +10,7 @@ import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/sto
 import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
 import {convertDateFormat1} from '../../../../utils/dateFormatter';
 import {useNavigation} from '@react-navigation/native';
-
+import Toast from '~components/Toast';
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const sampleAdminReview = {
   pngLink: DefaultProfile,
@@ -28,7 +28,7 @@ const Pages = ({route}) => {
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const idx = reviewList?.findIndex(el => el.reviewId === pointId);
-
+  const toast = Toast();
   useEffect(() => {
     getWrittenReview();
   }, []);
@@ -105,6 +105,7 @@ const Pages = ({route}) => {
                   imageLocation={item2.imageLocation}
                   forMakers={item2.forMakers}
                   commentList={item2.commentList}
+                  toast={toast}
                 />
               </View>
             );
@@ -113,6 +114,7 @@ const Pages = ({route}) => {
       ) : (
         <NoOrder isArrayEmpty={true} message={`아직 작성한 리뷰가 없어요.`} />
       )}
+      <toast.ToastWrap message={'리뷰가 삭제되었습니다.'} icon={'checked'} />
     </Container>
   );
 };

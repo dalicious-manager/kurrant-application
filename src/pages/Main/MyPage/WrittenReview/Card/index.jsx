@@ -6,6 +6,7 @@ import Typography from '../../../../../components/Typography';
 import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
 import StarRating from '../../../../../components/StarRating/StarRating';
 
+
 import AdminOrMakersReview from './AdminOrMakersReview';
 import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
@@ -46,6 +47,7 @@ const Component = ({
   createDate,
   updateDate,
   commentList,
+  toast
 }) => {
   const navigation = useNavigation();
 
@@ -55,7 +57,7 @@ const Component = ({
 
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
-
+  
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
 
@@ -112,42 +114,44 @@ const Component = ({
                   },
                 ]);
               } else {
-                Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-                  {
-                    text: '확인',
-                    onPress: async () => {
-                      await getWrittenReview();
-                      await getReviewWait();
-                      navigation.navigate(WrittenReviewPageName, {
-                        screen: ReviewScreenName,
-                        params: {
-                          tabIndex: 1,
-                        },
-                      });
+                toast.toastEvent()
+                await getWrittenReview();
+                // Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
+                //   {
+                //     text: '확인',
+                //     onPress: async () => {
+                //       await getWrittenReview();
+                //       // await getReviewWait();
+                //       navigation.navigate(WrittenReviewPageName, {
+                //         screen: ReviewScreenName,
+                //         params: {
+                //           tabIndex: 1,
+                //         },
+                //       });
 
-                      // navigation.reset({
-                      //   routes: [
-                      //     {
-                      //       name: ReviewScreenName,
+                //       // navigation.reset({
+                //       //   routes: [
+                //       //     {
+                //       //       name: ReviewScreenName,
 
-                      //       state: {
-                      //         index: 1,
-                      //         routes: [
-                      //           {
-                      //             name: ReviewPageName,
-                      //           },
-                      //           {
-                      //             name: WrittenReviewPageName,
-                      //           },
-                      //         ],
-                      //       },
-                      //     },
-                      //   ],
-                      // });
-                    },
-                    style: 'cancel',
-                  },
-                ]);
+                //       //       state: {
+                //       //         index: 1,
+                //       //         routes: [
+                //       //           {
+                //       //             name: ReviewPageName,
+                //       //           },
+                //       //           {
+                //       //             name: WrittenReviewPageName,
+                //       //           },
+                //       //         ],
+                //       //       },
+                //       //     },
+                //       //   ],
+                //       // });
+                //     },
+                //     style: 'cancel',
+                //   },
+                // ]);
               }
             } catch (err) {
               console.log('리뷰 삭제 에러뜸');
@@ -195,6 +199,7 @@ const Component = ({
 
   return (
     <Container focusId={focusId} id={id}>
+       
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
@@ -249,7 +254,6 @@ const Component = ({
       {forMakers && <OnlyForMakers />}
 
       {imageLocation && imageLocation.length > 0 && (
-        <>
           <ImagesWrapper>
             {imageLocationToSix.map((v, i) => {
               if (v) {
@@ -280,7 +284,6 @@ const Component = ({
               // }
             })}
           </ImagesWrapper>
-        </>
       )}
 
       <ImageModal
@@ -482,11 +485,11 @@ const EditWrap = styled.View`
   align-items: center;
 `;
 
-const EditText = styled(Typography).attrs({text: 'Body05R'})`
+const EditText = styled(Typography).attrs({text: 'Button10R'})`
   color: ${props => props.theme.colors.blue[500]};
   margin-right: 6px;
 `;
-const DeleteText = styled(Typography).attrs({text: 'Body05R'})`
+const DeleteText = styled(Typography).attrs({text: 'Button10R'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
 `;
@@ -495,7 +498,6 @@ const RowWrap = styled.View`
   flex-direction: row;
 
   align-items: center;
-  margin-bottom: 11px;
 `;
 const StarsWrap = styled.View`
   flex-direction: row;
@@ -507,7 +509,8 @@ const PostDateText = styled(Typography).attrs({text: 'SmallLabel'})`
 `;
 const ImagesWrapper = styled.Pressable`
   flex-direction: row;
-  margin-bottom: 9px;
+  padding-top: 11px;
+  padding-bottom: 4px;
 `;
 
 const ImagePressable = styled.Pressable`
@@ -542,10 +545,11 @@ const ReviewPressable = styled.Pressable`
 `;
 
 const ReviewTextTextInputAndroid = styled.TextInput`
-  color: ${props => props.theme.colors.grey[2]};
-
+  color: ${props => props.theme.colors.grey[2]};  
   font-size: 14px;
-
+  padding-top: 0px;
+  font-weight: 400;
+  padding-top: 4px;
   /* overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis; */
@@ -554,7 +558,8 @@ const ReviewTextTextInputAndroid = styled.TextInput`
 
 const ReviewTextTextInputIos = styled.TextInput`
   color: ${props => props.theme.colors.grey[2]};
-
+  padding-top: 4px;
+  font-weight: 400;
   font-size: 14px;
   font-family: 'Pretendard-Regular';
 `;

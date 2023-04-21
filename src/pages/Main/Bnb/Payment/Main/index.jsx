@@ -404,6 +404,7 @@ const Pages = ({route}) => {
           {
             onPress: () => {
               setValue('point', '0');
+              viewRef?.current?.scrollToEnd({animated: true})
             },
             text: '확인',
           },

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Typography from '../../../../../../components/Typography';
 import {useTheme} from 'styled-components/native';
 
-const ReviewInput = ({editContentInput, charLength}) => {
+const ReviewInput = ({editContentInput, charLength, onFocus= ()=>{},onBlur= ()=>{}}) => {
   const {
     control,
     formState: {errors},
@@ -17,7 +17,7 @@ const ReviewInput = ({editContentInput, charLength}) => {
     editable: true,
     autoCapitalize: 'none',
   };
-
+  
   const [editContent, setEditContent] = useState(undefined);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const ReviewInput = ({editContentInput, charLength}) => {
       setEditContent(editContentInput);
     }
   }, [editContentInput]);
-
+  
   return (
     <>
       <Controller
@@ -35,7 +35,7 @@ const ReviewInput = ({editContentInput, charLength}) => {
           minLength: {value: 10, message: '최소 10자 이상 입력해주세요'},
           maxLength: {value: 500, message: '최대 500자 까지 입력해주세요'},
         }}
-        render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
+        render={({field: {value, onChange}, fieldState: {error}}) => (
           <ViewWrap>
             <Input
               style={{
@@ -47,17 +47,18 @@ const ReviewInput = ({editContentInput, charLength}) => {
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
+              onFocus={onFocus}
               multiline
               numberOfLines={20}
               placeholder={'최소 10자 이상 입력해주세요'}
             />
 
             <ViewView>
-              {error && (
-                <Text style={{color: 'red', alignSelf: 'stretch'}}>
+              {/* {error && (
+                <Typography textColor={themeApp.colors.red[500]} style={{alignSelf: 'stretch'}}>
                   {error.message}
-                </Text>
-              )}
+                </Typography>
+              )} */}
             </ViewView>
           </ViewWrap>
         )}
@@ -73,6 +74,8 @@ const Input = styled.TextInput`
   padding: 17px 20px;
   height: 168px;
   border-radius: 14px;
+  font-weight: 400;
+  font-size: 16px;
   font-family: 'Pretendard-Regular';
 `;
 

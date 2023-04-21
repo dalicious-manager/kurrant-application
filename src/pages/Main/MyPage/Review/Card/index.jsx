@@ -118,12 +118,12 @@ const Component = ({
             <MenuNameText numberOfLines={1} ellipsizeMode="tail">
               {foodName}
             </MenuNameText>
-            <MenuDetailText numberOfLines={1} ellipsizeMode="tail">
+            {/* <MenuDetailText numberOfLines={1} ellipsizeMode="tail">
               {foodDescription}
             </MenuDetailText>
             <MenuDetailText numberOfLines={1} ellipsizeMode="tail">
               {foodCount && `${foodCount}개`}
-            </MenuDetailText>
+            </MenuDetailText> */}
             {option && <OptionText>|{option} </OptionText>}
           </SmallRowWrap>
           <SmallColumnWrap>

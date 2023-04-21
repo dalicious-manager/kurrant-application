@@ -164,9 +164,7 @@ const Pages = () => {
     setIsOneAnnouncementModalVisible,
   } = useGetOneAnnouncements();
 
-  useEffect(() => {
-    getOneAnnouncement(2);
-  }, []);
+ 
 
   // useEffect(() => {
   //   removeItemFromStorage('announcementsClickedOneDate');
@@ -201,6 +199,7 @@ const Pages = () => {
       }
     };
     handleShowModal();
+    getOneAnnouncement(2);
   }, []);
 
   const closeBalloon = async () => {
@@ -415,7 +414,7 @@ const Pages = () => {
       listener.remove();
     };
   }, []);
-  if (!isUserInfo || isOrderMealLoading || isDailyFoodLoading) {
+  if (!isUserInfo) {
     return <SkeletonUI />;
   }
 
@@ -489,7 +488,8 @@ const Pages = () => {
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
-          ) : (
+          )
+           : (
             todayMealList?.data?.map((m, idx) => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
@@ -498,7 +498,7 @@ const Pages = () => {
                       <MealInfoComponent
                         m={m}
                         meal={meal}
-                        key={meal.dailyFoodId}
+                        key={`${meal.id} ${meal.dailyFoodId}`}
                       />
                     );
                   })}

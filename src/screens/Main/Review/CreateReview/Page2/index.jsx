@@ -5,7 +5,7 @@ import {FormProvider, useForm} from 'react-hook-form';
 import styled, {useTheme} from 'styled-components/native';
 
 import Button from '../../../../../components/Button';
-import {CheckIcon, XCircleIcon} from '../../../../../components/Icon';
+import {CheckIcon, DisabledPoint, DisabledPointBar, EnabledPoint, EnabledPointBar, XCircleIcon} from '../../../../../components/Icon';
 import RateStars from '../../../../../components/RateStars';
 
 import Typography from '../../../../../components/Typography';
@@ -21,6 +21,7 @@ import {getStorage} from '../../../../../utils/asyncStorage';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 
 import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
+import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
 import {PAGE_NAME as ReviewPageName} from '../../../../../pages/Main/MyPage/Review';
 
 // 수정후 여기로 오게 하기
@@ -47,6 +48,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 // } from '../../../pages/Main/Bnb/More/Main';
 import {PAGE_NAME as MoreMainPageName} from '../../../../../pages/Main/Bnb/More/Main';
 import {el} from 'date-fns/locale';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -59,14 +61,15 @@ const apiHostUrl =
 const Screen = ({route}) => {
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [clickDisable, setClickDisable] = useState(false);
+  const [isPhoto, setIsPhoto] = useState(true);
+  const [isText, setIsText] = useState(true);
   const queryClient = useQueryClient();
   // 모든 사진
   const [photosArray, setPhotosArray] = useState([]);
-
+  const [inputFocus,setInputFocus] = useState(false);
   // FlatList 에 넣을 배열 만들기
   const themeApp = useTheme();
   const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
-
   const [charLength, setCharLength] = useState(0);
 
   /// 안드로이드 뒤로가기 누르면 뒤로가야됨
@@ -75,6 +78,9 @@ const Screen = ({route}) => {
     // 사진 채우기 기능 추가
 
     setPhotosArrayForFlatList(['addPic', ...photosArray]);
+    if(photosArray){
+      setIsPhoto(photosArray.length > 0)
+    }
   }, [photosArray]);
 
   const {getWrittenReview} = useWrittenReview();
@@ -143,9 +149,11 @@ const Screen = ({route}) => {
   useEffect(() => {
     setInput({...input, review: form.watch('review')});
   }, [form.watch('review')]);
+  useEffect(() => {
+    setIsText(form.formState.errors?.review ? false : true)
+  }, [form.formState.errors?.review]);
 
   // 데이터 있으면 input에 바로등록하기
-
   useEffect(() => {
     if (editItem && editItem.reviewText) {
       setInput({...input, review: editItem.reviewText});
@@ -166,7 +174,7 @@ const Screen = ({route}) => {
     const returnArray = thisPhotoArray.filter(value => value.id !== photoId);
     setPhotosArray(returnArray);
   };
-
+  const keyboardStatus = useKeyboardEvent();
   useEffect(() => {
     // 처음아닐때  되게하기
     // if (!isMount) return;
@@ -178,7 +186,9 @@ const Screen = ({route}) => {
       setClickDisable(true);
     }
   }, [input]);
+  useEffect(()=>{
 
+  },[form])
   // 여기가 완료 클릭
 
   const onSignInPressed = data => {
@@ -298,24 +308,34 @@ const Screen = ({route}) => {
                 text: '확인',
                 onPress: async () => {
                   await getWrittenReview();
-                  console.log('받음1');
                   await getReviewWait();
-                  console.log('받음2');
                   // navigation.navigate(ReviewScreenName, {
                   //   from: 'home',
                   // });
 
                   if (test) {
-                    console.log('테스트여');
-                    console.log(test);
                     // navigation.navigate(WrittenReviewPageName);
-                    navigation.navigate(ReviewScreenName);
-                    navigation.navigate(WrittenReviewPageName, {
-                      screen: ReviewScreenName,
-                      params: {
-                        tabIndex: 1,
-                      },
+                    navigation.reset({
+                      index: 1,
+                      routes: [
+                        {
+                          name: MainScreenName,
+                        },
+                        {
+                          name: ReviewScreenName,    
+                          params:{
+                            from:'point'
+                          }                     
+                        },
+                      ],
                     });
+                    // navigation.navigate(WrittenReviewPageName, {
+                    //   screen: ReviewScreenName,
+                    //   params: {
+                    //     tabIndex: 1,
+                        
+                    //   },
+                    // });
                   } else {
                     navigation.navigate(WrittenReviewPageName, {
                       screen: ReviewScreenName,
@@ -455,6 +475,12 @@ const Screen = ({route}) => {
             </Title3>
 
             <ReviewInput
+              onFocus={()=>{
+                setInputFocus(true)
+              }}
+              onBlur={()=>{
+                setInputFocus(false)
+              }}
               charLength={charLength}
               editContentInput={
                 editItem && editItem.reviewText
@@ -491,12 +517,12 @@ const Screen = ({route}) => {
                 )}
               </ShowOnlyToOwnerWrap>
               <ShowCurrentLettersLengthWrap>
-                <LengthText>
-                  (
-                  <LengthTextNum charLength={charLength > 500}>
+                <LengthText colorError={form.formState.errors.review ? true:false}>
+                  
+                  <LengthTextNum charLength={charLength > 500 || charLength < 10} >
                     {charLength}
                   </LengthTextNum>
-                  /500)
+                  /500
                 </LengthText>
               </ShowCurrentLettersLengthWrap>
             </TextBoxBottom>
@@ -507,16 +533,78 @@ const Screen = ({route}) => {
             </Warnings>
             {/* '최대 몇자인가' 보여주기 */}
           </ReviewWrap>
-
-          <Filler />
-        </KeyboardViewContainer>
-        <ButtonFinal
+          {!inputFocus && !keyboardStatus.isKeyboardActivate && <Filler />}
+          {inputFocus && keyboardStatus.isKeyboardActivate &&<ReviewPointInfoContainer>
+            <ReviewPointInfo>
+                    <ReviewPointInfoTop>
+                      <Typography textColor={themeApp.colors.blue[500]} text="Button10R">텍스트</Typography>
+                      <View>
+                        <PointText text="SmallLabel" textColor={themeApp.colors.blue[500]}>50P 적립</PointText>
+                        <DisabledPoint />
+                      </View>
+                    </ReviewPointInfoTop>
+                    <ReviewPointInfoBottom>
+                        <DisabledPointBar />
+                    </ReviewPointInfoBottom>
+                  </ReviewPointInfo>
+                  <ReviewPointInfo>
+                  <ReviewPointInfoTop>
+                      <Typography textColor={themeApp.colors.blue[500]} text="Button10R">포토</Typography>
+                      <View>
+                        <PointText text="SmallLabel" textColor={themeApp.colors.blue[500]}>70P 적립</PointText>
+                        <DisabledPoint />
+                      </View>
+                    </ReviewPointInfoTop>
+                    <ReviewPointInfoBottom>
+                        <DisabledPointBar />
+                    </ReviewPointInfoBottom>
+                  </ReviewPointInfo>
+            </ReviewPointInfoContainer>}
+            {inputFocus && keyboardStatus.isKeyboardActivate &&<ButtonFinal
           size="full"
           label="완료"
           text={'Button09SB'}
           disabled={clickDisable}
           onPressEvent={form.handleSubmit(onSignInPressed)}
-        />
+          />}
+         {inputFocus && keyboardStatus.isKeyboardActivate && <Filler2 />}
+        </KeyboardViewContainer>
+        {!inputFocus && !keyboardStatus.isKeyboardActivate && <ButtonContainer>
+            <ReviewPointInfoContainer>
+                  <ReviewPointInfo>
+                    <ReviewPointInfoTop>
+                      <Typography textColor={themeApp.colors.blue[500]} text="Button10R">텍스트</Typography>
+                      <View>
+                        <PointText text="SmallLabel" textColor={(input.review.length > 0 && isText) ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>50P 적립</PointText>
+                        {(input.review.length > 0 && isText) ? <EnabledPoint/> : <DisabledPoint />}
+                      </View>
+                    </ReviewPointInfoTop>
+                    <ReviewPointInfoBottom>
+                    {(input.review.length > 0 && isText) ? <EnabledPointBar/> : <DisabledPointBar />}
+                    </ReviewPointInfoBottom>
+                  </ReviewPointInfo>
+                  <ReviewPointInfo>
+                  <ReviewPointInfoTop>
+                      <Typography textColor={themeApp.colors.blue[500]} text="Button10R">포토</Typography>
+                      <View>
+                        <PointText text="SmallLabel" textColor={isPhoto ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>70P 적립</PointText>
+                        {isPhoto ? <EnabledPoint/> : <DisabledPoint />}
+                      </View>
+                    </ReviewPointInfoTop>
+                    <ReviewPointInfoBottom>
+                    {isPhoto ? <EnabledPointBar/> : <DisabledPointBar />}
+                    </ReviewPointInfoBottom>
+                  </ReviewPointInfo>
+            </ReviewPointInfoContainer>
+          <ButtonFinal
+          size="full"
+          label="완료"
+          text={'Button09SB'}
+          disabled={clickDisable}
+          onPressEvent={form.handleSubmit(onSignInPressed)}
+          />
+          <Filler2/>
+          </ButtonContainer>}
       </FormProvider>
     </Container2>
   );
@@ -540,7 +628,11 @@ const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
 
 const Filler = styled.View`
   width: 100%;
-  height: 40px;
+  height: 200px;
+`;
+const Filler2 = styled.View`
+  width: 100%;
+  height: 35px;
 `;
 
 const Container = styled.ScrollView`
@@ -585,7 +677,12 @@ const PhotoImageWrap = styled.View`
   /* position: relative; */
   /* overflow: hidden; */
 `;
-
+const PointText = styled(Typography)`
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  z-index: 1;
+`
 const DeleteButton = styled.Pressable`
   position: absolute;
   top: -10px;
@@ -676,25 +773,51 @@ const Warnings = styled(Typography).attrs({text: 'CaptionR'})`
 `;
 
 const ButtonFinal = styled(Button)`
-  position: relative;
-  bottom: 20px;
-  margin: auto;
-  width: ${() => {
-    const yes = Dimensions.get('screen').width - 2 * 24;
-
-    return `${yes}px`;
-  }};
-
+  width: 100%;
+  margin-bottom:20px;
   /* position: absolute;
   bottom: 20px; */
 `;
+const ButtonContainer = styled.View`
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: white;
+  position: absolute;
+  bottom: 0px;
+`
+const ReviewPointInfo = styled.View`
+  flex: 1;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+`
+const ReviewPointInfoTop = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  height: 24px;  
+  align-items: center;
+`
+const ReviewPointInfoBottom = styled.View`
+  width: 100%;
+  margin-top: 2px;
+`
+const ReviewPointInfoContainer = styled.View`
+  width: 100%;
+  height:66px;
+  padding-left: 30px;
+  justify-content: space-between;
+  padding-right: 30px;
+  flex-direction: row;
+`
 
 const ShowCurrentLettersLengthWrap = styled.View`
   flex-direction: row-reverse;
   margin-bottom: 10px;
 `;
-const LengthText = styled(Typography).attrs({text: 'CaptionR'})`
-  color: ${props => props.theme.colors.grey[4]};
+const LengthText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${(props) => props.colorError ? props.theme.colors.red[500]: props.theme.colors.grey[4]};
   /* margin-bottom: 32px; */
 `;
 

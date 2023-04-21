@@ -21,7 +21,6 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
   position: relative;
-  left: -24px;
 
   height: 56px;
   background-color: ${props => props.theme.colors.blue[100]};
