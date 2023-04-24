@@ -79,6 +79,9 @@ const Pages = () => {
   // }, [selectedFoodIdPage10]);
 
   useEffect(() => {
+    console.log('랄랄ㄹ라하하하ㅏ하');
+    console.log(selectedFoodIdPage10);
+
     if (selectedFoodIdPage10.length >= 3) {
       setClickAvaliable(true);
     } else {
@@ -93,6 +96,7 @@ const Pages = () => {
   // }, [finalRegister]);
 
   const handlePress = async () => {
+    // const handlePress = () => {
     // page7일떄, page8일떄
     // selecteedIdList비우기, final에 데이터 집어넣기, 다음 컴포넌트로 넘어가기
 
@@ -105,111 +109,66 @@ const Pages = () => {
 
     console.log('최종 제출 확인하기');
 
-    // console.log({
-    //   ...finalRegister,
-    //   selectedFoodId: [
-    //     ...selectedFoodIdPage7,
-    //     ...selectedFoodIdPage8,
-    //     ...selectedFoodIdPage9,
-    //     ...selectedFoodIdPage10,
-    //   ].join(', '),
-    //   unselectedFoodId: [
-    //     ...unselectedFoodIdPage7,
-    //     ...unselectedFoodIdPage8,
-    //     ...unselectedFoodIdPage9,
-    //     ...unselectedList,
-    //   ].join(', '),
-    // });
-
-    // setFinalRegister({
-    //   ...finalRegister,
-    //   selectedFoodId: [
-    //     ...selectedFoodIdPage7,
-    //     ...selectedFoodIdPage8,
-    //     ...selectedFoodIdPage9,
-    //     ...selectedFoodIdPage10,
-    //   ].join(', '),
-    //   unselectedFoodId: [
-    //     ...unselectedFoodIdPage7,
-    //     ...unselectedFoodIdPage8,
-    //     ...unselectedFoodIdPage9,
-    //     ...unselectedList,
-    //   ].join(', '),
-    // });
-
-    ///////////////
-
-    ///////////////
-
-    // setFinalRegister({
-    //   ...finalRegister,
-
-    //   userSelectTextDataList: [
-    //     ...finalRegister.userSelectTextDataList,
-    //     {
-    //       selectedFoodId: selectedFoodIdPage10,
-    //       unselectedFoodId: unselectedList,
-    //     },
-    //   ],
-    // });
-
-    // const response = await updateRegisterInfo(
-    //   {
-    //     ...finalRegister,
-
-    //     userSelectTextDataList: [
-    //       ...finalRegister.userSelectTextDataList,
-    //       {
-    //         selectedFoodId: selectedFoodIdPage10.join(','),
-    //         unselectedFoodId: unselectedList.join(','),
-    //       },
-    //     ],
-    //   },
-    //   {},
-    // );
     const response = await updateRegisterInfo(
       {
-        drinkCount: 1,
-        breakfastCount: 0,
-        midnightSnackCount: 1,
-        exerciseCount: 1,
-        favoriteCountryFood: '한국,일본,스페인',
-        allergyInfo: '우유,밀,새우',
-        allergyInfoEtc: 'Sdsdg',
-        isBegan: true,
-        beganLevel: 2,
-        isProtein: true,
-        proteinFrequency: 2,
-        userDefaultInfo: {
-          birthYear: '2022',
-          birthMonth: '04',
-          birthDay: '24',
-          gender: 1,
-          country: '대한민국',
-          jobType: '경영·사무·금융·보험직',
-          detailJobType: '경영',
-        },
+        ...finalRegister,
+
         userSelectTestDataList: [
+          ...finalRegister.userSelectTestDataList,
           {
-            selectedFoodId: '1,2,3',
-            unselectedFoodId: '',
-          },
-          {
-            selectedFoodId: '1,2,3',
-            unselectedFoodId: '',
-          },
-          {
-            selectedFoodId: '1,2,3',
-            unselectedFoodId: '',
-          },
-          {
-            selectedFoodId: '1,2,3',
-            unselectedFoodId: '',
+            selectedFoodId: selectedFoodIdPage10.join(','),
+            unselectedFoodId: unselectedList.join(','),
           },
         ],
       },
       {},
     );
+
+    // 아래와 같이 보내면 성공된다
+
+    // const response = await updateRegisterInfo(
+    //   {
+    //     drinkCount: 1,
+    //     breakfastCount: 0,
+    //     midnightSnackCount: 1,
+    //     exerciseCount: 1,
+    //     favoriteCountryFood: '한국,일본,스페인',
+    //     allergyInfo: '우유,밀,새우',
+    //     allergyInfoEtc: 'Sdsdg',
+    //     isBegan: true,
+    //     beganLevel: 2,
+    //     isProtein: true,
+    //     proteinFrequency: 2,
+    //     userDefaultInfo: {
+    //       birthYear: '2022',
+    //       birthMonth: '04',
+    //       birthDay: '24',
+    //       gender: 1,
+    //       country: '대한민국',
+    //       jobType: '경영·사무·금융·보험직',
+    //       detailJobType: '경영',
+    //     },
+    //     userSelectTestDataList: [
+    //       {
+    //         selectedFoodId: '1,2,3',
+    //         unselectedFoodId: '',
+    //       },
+    //       {
+    //         selectedFoodId: '1,2,3',
+    //         unselectedFoodId: '',
+    //       },
+    //       {
+    //         selectedFoodId: '1,2,3',
+    //         unselectedFoodId: '',
+    //       },
+    //       {
+    //         selectedFoodId: '1,2,3',
+    //         unselectedFoodId: '',
+    //       },
+    //     ],
+    //   },
+    //   {},
+    // );
 
     navigation.navigate(RegisterInfoFinishPageName);
   };

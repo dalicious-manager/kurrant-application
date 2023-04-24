@@ -77,12 +77,16 @@ const Pages = () => {
       foodImageList,
     );
 
-    // setUnselectedFoodIdPage8(unselectedList);
-
-    // setFinalRegister({
+    // console.log({
     //   ...finalRegister,
-    //   selectedFoodId: [...finalRegister.selectedFoodId, ...selectedFoodIdPage9],
-    //   unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
+
+    //   userSelectTestDataList: [
+    //     ...finalRegister.userSelectTestDataList,
+    //     {
+    //       selectedFoodId: selectedFoodIdPage9.join(','),
+    //       unselectedFoodId: unselectedList.join(','),
+    //     },
+    //   ],
     // });
 
     setFinalRegister({

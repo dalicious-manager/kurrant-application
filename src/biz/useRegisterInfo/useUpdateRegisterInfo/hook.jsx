@@ -96,16 +96,11 @@ const useUpdateRegisterInfo = () => {
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
 
   const updateRegisterInfo = async body => {
-    console.log('바디 값 확인 ');
-    console.log(body);
-
     try {
       setIsUpdateLoading(true);
       const fetchRes = await Fetch.updateRegisterInfo({
         ...body,
       });
-      console.log('회원등록 잘 되');
-      console.log(fetchRes);
 
       return fetchRes;
     } catch (err) {
