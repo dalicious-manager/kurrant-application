@@ -11,6 +11,7 @@ import {PAGE_NAME as RegisterInfoPage1PageName} from '../Page1';
 import {PAGE_NAME as RegisterInfoPage2PageName} from '../Page2';
 import {PAGE_NAME as RegisterInfoPage3PageName} from '../Page3';
 import {PAGE_NAME as RegisterInfoPage4PageName} from '../Page4';
+import {PAGE_NAME as RegisterInfoPage5PageName} from '../Page4';
 import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 import {SmallXVectorIcon, XVectorIcon} from '../../../components/Icon';

@@ -87,6 +87,8 @@ const HeadText = styled(Typography).attrs({text: 'CaptionR'})`
 const DataValue = styled(Typography).attrs({text: 'InputText'})`
   color: ${({isValue, theme}) =>
     isValue ? theme.colors.grey[2] : theme.colors.grey[5]};
+
+  margin-right: 7px;
 `;
 
 const BottomModalPressable = styled.Pressable``;

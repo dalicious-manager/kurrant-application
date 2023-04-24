@@ -58,14 +58,14 @@ const useGetOneAnnouncements = () => {
 
           setOneAnnouncement(dataFromDb[0]);
           setIsOneAnnouncementModalVisible(true);
-          console.log('7일이 지났음');
+          console.log('공지사항: 7일이 지났음');
         } else {
           // undefine d넣어주면 됨
 
           setOneAnnouncement(undefined);
           setIsOneAnnouncementModalVisible(false);
 
-          console.log(`7일이 아직 안 지났음 `);
+          console.log(`공지사항: 7일이 아직 안 지났음 `);
           console.log(
             toStringByFormatting(new Date(timeObject[dataFromDb[0].id])),
           );

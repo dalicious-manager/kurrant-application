@@ -24,7 +24,7 @@ export async function getJobList() {
 }
 export async function getDetailJobList(id) {
   const fetchRes = await fetchJson(
-    `/users/me/jobs?category=1?code=${id}`,
+    `/users/me/jobs?category=1&code=${id}`,
 
     'GET',
   );

@@ -37,27 +37,6 @@ const Pages = () => {
 
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
-  const {
-    getCountryFoodList,
-    getAlergyList,
-    getJobList,
-    getDetailJobList,
-    getCountryList,
-    getFoodImageList,
-    countryFoodList,
-    alergyList,
-    jobList,
-    detailJobList,
-    countryList,
-    foodImageList,
-  } = useGetRegisterInfo();
-
-  useEffect(() => {
-    getCountryList();
-    getJobList();
-    // getDetailJobList(id);
-  }, []);
-
   // 바텀 팝업 버튼들
   const [birthdayModal, setBirthdayModal] = useState(false);
   const [isConfirmPress, setIsConfirmPress] = useState(false);
@@ -80,6 +59,41 @@ const Pages = () => {
   const [detailJobType, setDetailJobType] = useState(undefined);
 
   const navigation = useNavigation();
+
+  const {
+    getCountryFoodList,
+    getAlergyList,
+    getJobList,
+    getDetailJobList,
+    getCountryList,
+    getFoodImageList,
+    countryFoodList,
+    alergyList,
+    jobList,
+    detailJobList,
+    countryList,
+    foodImageList,
+  } = useGetRegisterInfo();
+
+  useEffect(() => {
+    getCountryList();
+    getJobList();
+  }, []);
+
+  // jobType이 정해지면 getDetailJobList 받아오기
+
+  useEffect(() => {
+    console.log('jobType:  ' + jobType);
+
+    getDetailJobList(jobType);
+  }, [jobType]);
+
+  // 확인하기
+
+  // useEffect(() => {
+  //   console.log('잡 리스트');
+  //   console.log(detailJobList);
+  // }, [detailJobList]);
 
   // 생년월일
 
@@ -114,25 +128,29 @@ const Pages = () => {
     setSelected(date);
   };
 
+  const handleSelectJobType = (id, text) => {
+    // console.log('id: ' + id);
+    // console.log('text: ' + text);
+
+    setJobType(id);
+  };
+
   const handlePress = () => {
     const birthYear = birthday.split('. ')[0];
     const birthMonth = birthday.split('. ')[1];
     const birthDay = birthday.split('. ')[2];
 
-    // console.log({
-    //   ...finalRegister,
-    //   userDefaultInfo: {
-    //     birthYear,
-    //     birthMonth,
-    //     birthDay,
-    //     gender: gender === '남자' ? 1 : 2,
-    //     country,
-    //     jobType,
-    //     detailJobType,
-    //   },
-    // });
+    console.log('final 확인해보기 ');
 
-    setFinalRegister({
+    console.log(jobList);
+    console.log(jobType);
+
+    const pickJob = jobType => {
+      jobList.filter(v => v.id === jobType);
+      return jobList[0].text;
+    };
+
+    console.log({
       ...finalRegister,
       userDefaultInfo: {
         birthYear,
@@ -140,10 +158,24 @@ const Pages = () => {
         birthDay,
         gender: gender === '남자' ? 1 : 2,
         country,
-        jobType,
+
+        jobType: pickJob(jobType),
         detailJobType,
       },
     });
+
+    // setFinalRegister({
+    //   ...finalRegister,
+    //   userDefaultInfo: {
+    //     birthYear,
+    //     birthMonth,
+    //     birthDay,
+    //     gender: gender === '남자' ? 1 : 2,
+    //     country,
+    //     jobType: jobList[jobType],
+    //     detailJobType,
+    //   },
+    // });
 
     navigation.navigate(RegisterInfoPage7PageName);
   };
@@ -189,9 +221,10 @@ const Pages = () => {
           <Wrap2>
             <SelectInputBox
               placeholder={'직종 분류'}
-              // width={'50%'}
               value={jobType}
+              convertData={jobList}
               setValue={setJobType}
+              // setValue={handleSelectJobType}
               buttonOnClickCallback={() => {
                 setJobTypeModal(true);
               }}
@@ -250,9 +283,10 @@ const Pages = () => {
         modalVisible={jobTypeModal}
         setModalVisible={setJobTypeModal}
         title="직종 분류"
-        data={jobType}
+        data={jobList}
         selected={jobType}
-        setSelected={setJobType}
+        // setSelected={setJobType}
+        setSelected={handleSelectJobType}
         // setValue={onSelectEvent2}
         height={200}
       />

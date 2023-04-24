@@ -172,8 +172,6 @@ const Pages = () => {
     setIsOneAnnouncementModalVisible,
   } = useGetOneAnnouncements();
 
- 
-
   // useEffect(() => {
   //   removeItemFromStorage('announcementsClickedOneDate');
   // }, []);
@@ -193,14 +191,14 @@ const Pages = () => {
 
     if (clickedDate) {
       if (isTimeNumberDifferenceLarger(clickedDate, Date.now(), 1)) {
-        console.log('하루가 지났음 이제 열어줌');
+        console.log('registerInfo 하루가 지났음 ');
         setShouldOpenRegister(true);
       } else {
-        console.log('하루가 아직 안지나서 아직 못 염');
+        console.log('registerInfo 하루가 아직 안지나서 아직 못 염');
         setShouldOpenRegister(false);
       }
     } else {
-      console.log('첫 회원 등록임 그래서 열어줌');
+      console.log('registerInfo 첫 회원 등록임 그래서 열어줌');
       setShouldOpenRegister(true);
     }
   };
@@ -215,9 +213,9 @@ const Pages = () => {
     }
   }, [shouldOpenRegister]);
 
-  // useEffect(() => {
-  //   removeItemFromStorage('registerInfoClicked');
-  // }, []);
+  useEffect(() => {
+    removeItemFromStorage('registerInfoClicked');
+  }, []);
 
   useEffect(() => {
     const handleShowModal = async () => {
@@ -530,8 +528,7 @@ const Pages = () => {
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
-          )
-           : (
+          ) : (
             todayMealList?.data?.map((m, idx) => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>

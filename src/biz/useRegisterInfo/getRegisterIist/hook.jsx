@@ -63,6 +63,7 @@ const useGetRegisterInfo = () => {
   const getDetailJobList = async id => {
     try {
       const res = await Fetch.getDetailJobList(id);
+
       setDetailJobList(makeArrayOfIdAndText(res.data));
     } catch (err) {
       console.log(err);

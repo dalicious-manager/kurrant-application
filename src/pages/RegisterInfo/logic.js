@@ -20,10 +20,6 @@ export const makeArrayOfIdAndText = arr => {
 };
 
 export const makeYo = arr => {
-  console.log('fhfhfh');
-
-  console.log(arr);
-
   const result = Object.entries(arr[0]).map(v => {
     return {
       id: v[0],

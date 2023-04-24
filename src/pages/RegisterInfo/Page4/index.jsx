@@ -78,6 +78,8 @@ const Pages = () => {
   }, [yesOrNo, setClickAvaliable, beganLevel]);
 
   const handleSelectBottomModal = id => {
+    console.log('id: ' + id);
+
     setBeganLevel(id);
   };
 
