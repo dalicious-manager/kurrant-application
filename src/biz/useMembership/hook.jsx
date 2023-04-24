@@ -102,6 +102,7 @@ const useBanner = () => {
       setMembershipInfoLoading(true);
       const res = await Fetch.getMembershipInfo();
       setMembershipInfo(res.data);
+      console.log(res.data);
       return res.data;
     } catch (err) {
       throw err;

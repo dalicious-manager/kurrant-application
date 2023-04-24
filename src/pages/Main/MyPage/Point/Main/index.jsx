@@ -3,6 +3,7 @@ import {View, Text, Pressable, FlatList, Alert} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
 import Button from './components/Button';
+import Toast from '~components/Toast';
 import TextLable from '../../../../../components/TextButton';
 import ArrowRight from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import {useGetPointList, useGetPointList2} from '../../../../../hook/usePoint';
@@ -20,7 +21,6 @@ const Pages = () => {
   const {getWrittenReview, reviewList} = useWrittenReview();
   const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
     useGetPointList(touch[0]);
-
   const dataList = data?.pages;
 
   const noData = dataList?.map(el => el.items.pointHistoryDtos.length);
@@ -28,7 +28,8 @@ const Pages = () => {
   const detailPress = (id, status) => {
     if (status === 0) {
       const review = reviewList?.filter(el => el.reviewId === id);
-      if (review.length === 0) {
+      if (review?.length === 0) {
+        
         Alert.alert('리뷰 삭제', '작성한 리뷰가 삭제되었습니다.', [
           {
             text: '확인',
@@ -71,7 +72,7 @@ const Pages = () => {
           <PointTextWrap>
             <PointText>
               {withCommas(data?.pages[0]?.items?.userPoint)}
-              <WonText>원</WonText>
+              <WonText>P</WonText>
             </PointText>
           </PointTextWrap>
         </PointWrap>
@@ -170,6 +171,7 @@ const Pages = () => {
             );
           }}
         />
+       
       </Wrapper>
     </>
   );

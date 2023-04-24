@@ -23,6 +23,7 @@ import useOrderMeal from '../../../../../../../../biz/useOrderMeal';
 import usePurchaseHistory from '../../../../../../../../biz/usePurchaseHistory';
 import {PAGE_NAME as BuyMealPageName} from '../../../../../../Bnb/BuyMeal/Main';
 import {useQueryClient} from 'react-query';
+import { useConfirmOrderState } from '../../../../../../../../hook/useOrder';
 const {width} = Dimensions.get('screen');
 const Component = ({purchaseId, date, itemIndex}) => {
   const themeApp = useTheme();
@@ -60,6 +61,16 @@ const Component = ({purchaseId, date, itemIndex}) => {
     } catch (error) {
       alert(error.toString().replace('error:', ''));
     }
+  };
+  const {mutateAsync: orderState} = useConfirmOrderState();
+
+  const deliveryConfirmPress = async (id) => {
+    try {
+      await orderState({id: id});
+    } catch (error) {
+      Alert.alert("상태변경",error.toString().replace("error: "))
+    }
+   
   };
   const changeItem = async (id, serviceDate) => {
     const req = {
@@ -213,7 +224,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                             onPressEvent={() =>
                               Alert.alert(
                                 '메뉴 변경',
-                                '현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
+                                '현재 메뉴 취소 후 진행됩니다.\n메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
                                 [
                                   {
                                     text: '아니요',
@@ -238,7 +249,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                       )}
                       {order.orderStatus === 10 && (
                         <ButtonContainer>
-                          <ButtonMeal label={'수령확인'} />
+                          <ButtonMeal label={'수령확인'} onPressEvent={()=>deliveryConfirmPress(order.id)}/>
                         </ButtonContainer>
                       )}
                     </DateOrderItemContent>

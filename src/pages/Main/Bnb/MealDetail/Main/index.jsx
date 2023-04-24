@@ -5,6 +5,7 @@ import {
   StatusBar,
   Dimensions,
   Alert,
+  Text,
   Pressable,
   Platform,
   TouchableWithoutFeedback,
@@ -33,6 +34,7 @@ import useUserInfo from '../../../../../biz/useUserInfo';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import CarouselImage from '../components/CarouselImage';
 import MealDetailReview from './Review/MealDetailReview';
+import MembershipDiscountBox from '../components/MembershipDiscountBox';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -364,6 +366,10 @@ const Pages = ({route}) => {
                     )}
                   </PriceWrap>
                 </View>
+                {isfoodDetailDiscount?.membershipDiscountRate !==
+                  isFoodDetail?.membershipDiscountedRate && (
+                  <MembershipDiscountBox isFoodDetail={isfoodDetailDiscount} />
+                )}
               </Content>
             </TouchableWithoutFeedback>
             <Content>

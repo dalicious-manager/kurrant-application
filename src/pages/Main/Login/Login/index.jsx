@@ -179,7 +179,7 @@ const Pages = ({route}) => {
           }
         });
       };
-      //getData();
+      // getData();
     }, []),
   );
   useEffect(() => {
@@ -196,13 +196,14 @@ const Pages = ({route}) => {
             const res = await autoLogin();
 
             if (res?.statusCode === 200) {
-              // const token = await messaging().getToken();
+               const token = await messaging().getToken();
 
-              // if (token) {
-              //   saveFcmToken({
-              //     token: token,
-              //   });
-              // }
+               if (token) {
+                 saveFcmToken({
+                   token: token,
+                 });
+               }
+
               navigation.reset({
                 index: 0,
                 routes: [

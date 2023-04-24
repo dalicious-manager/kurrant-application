@@ -2,12 +2,13 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 
 import {useAtom} from 'jotai';
 import React from 'react';
-import {Pressable} from 'react-native';
+import {Pressable, View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import useMypageReview from '../../../biz/useMypageReview/hook';
-import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
+import {modalStatusAtom, totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
 import {totalWrittenReview} from '../../../biz/useReview/useWrittenReview/store';
 import BackArrow from '../../../assets/icons/MealDetail/backArrow.svg';
+import Popup from '../../../pages/Main/MyPage/Review/Popup';
 import BackButton from '../../../components/BackButton';
 export const SCREEN_NAME = 'S_MAIN__REVIEW';
 import Review, {
@@ -25,6 +26,7 @@ const Tab = createMaterialTopTabNavigator();
 const Screen = ({route}) => {
   const point = route?.params?.from;
   const pointId = route?.params?.id;
+  const [popupShow, setPopupShow] = useAtom(modalStatusAtom);
   const navigation = useNavigation();
   const theme = useTheme();
   const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
@@ -50,6 +52,8 @@ const Screen = ({route}) => {
     });
   }, []);
   return (
+    <>
+      {popupShow && <Popup setPopupShow={setPopupShow} />}
     <Tab.Navigator
       initialRouteName={point === 'point' && WrittenReviewPageName}
       screenOptions={{
@@ -90,6 +94,7 @@ const Screen = ({route}) => {
         }}
       />
     </Tab.Navigator>
+    </>
   );
 };
 
