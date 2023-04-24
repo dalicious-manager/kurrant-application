@@ -1,5 +1,4 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useAtom} from 'jotai';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {useState} from 'react';
 import {useCallback} from 'react';
@@ -7,14 +6,9 @@ import {useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {ActivityIndicator, Alert} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from '~components/Toast';
 import Wrapper from '~components/Wrapper';
-import {getStorage, setStorage} from '../../../../../../utils/asyncStorage';
-import useUserMe from '../../../../../../biz/useUserMe';
-import {formattedDate} from '../../../../../../utils/dateFormatter';
 import ListBox from '../../ListBox';
-import {PAGE_NAME as MarketingAgreePageName} from '../MarketingAgree';
 import {
   useGetAlramSetting,
   useSetAlramSetting,
@@ -22,23 +16,12 @@ import {
 export const PAGE_NAME = 'P__MY_PAGE__NOTIFICATION_SETTING';
 const Pages = () => {
   const form = useForm();
-  const {
-    alarmLookup,
-    alarmSetting,
-    setAlarm,
-    setAgree,
-    readableAtom: {alarm, isAlarmSettingLoading, agree},
-  } = useUserMe();
+
   const {data: alramData, isSuccess} = useGetAlramSetting();
   const {mutateAsync: setAlram} = useSetAlramSetting();
-  const navigation = useNavigation();
   const [toggleData, setToggleData] = useState([]);
 
-  const {watch} = form;
   const themeApp = useTheme();
-  const toast = Toast();
-  const toast2 = Toast();
-  const toast3 = Toast();
 
   const alarmAgree = useCallback(async v => {
     try {
@@ -60,7 +43,7 @@ const Pages = () => {
         return {
           isToggle: true,
           toggleName: v.code.toString(),
-          toggleEvent: name => alarmAgree(v),
+          toggleEvent: () => alarmAgree(v),
         };
       }),
     );
@@ -124,31 +107,7 @@ const Pages = () => {
             });
           }}
         /> */}
-      </FormProvider>
-      <toast.ToastWrap
-        message={`${formattedDate(new Date(), '년월일')}\n${
-          agree
-            ? '커런트 마케팅 정보 수신에 동의했어요.'
-            : '커런트 마케팅 정보 수신 동의를 철회했어요.'
-        }`}
-        isBottom={true}
-      />
-      <toast2.ToastWrap
-        message={`${formattedDate(new Date(), '년월일')}\n${
-          watch('marketingAlarm')
-            ? '혜택 및 소식 알림 정보 수신에 동의했어요.'
-            : '혜택 및 소식 정보 수신 동의를 철회했어요.'
-        }`}
-        isBottom={true}
-      />
-      <toast3.ToastWrap
-        message={`${formattedDate(new Date(), '년월일')}\n${
-          watch('orderAlarm')
-            ? '주문 알림 정보 수신에 동의했어요.'
-            : '주문 알림 정보 수신 동의를 철회했어요.'
-        }`}
-        isBottom={true}
-      />
+      </FormProvider>    
     </Wrapper>
   );
 };
