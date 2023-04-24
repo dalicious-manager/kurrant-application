@@ -153,7 +153,6 @@ const MiniWrap = styled.View`
   display: flex;
   flex-flow: row;
   align-items: center;
-  background-color: gold;
   margin-left: ${({lmargin})=> lmargin ? `${lmargin}px` : 0};
 `;
 
@@ -164,7 +163,6 @@ const PointText = styled(Typography).attrs({text: 'CaptionR'})`
 
 const PlaneRowView = styled.View`
   display: flex;
-  background-color: red;
   flex-flow: row;
 `;
 

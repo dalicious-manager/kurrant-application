@@ -28,7 +28,7 @@ const Pages = () => {
   const detailPress = (id, status) => {
     if (status === 0) {
       const review = reviewList?.filter(el => el.reviewId === id);
-      if (review.length === 0) {
+      if (review?.length === 0) {
         
         Alert.alert('리뷰 삭제', '작성한 리뷰가 삭제되었습니다.', [
           {

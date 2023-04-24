@@ -5,15 +5,14 @@ import {FormProvider, useForm} from 'react-hook-form';
 import styled, {useTheme} from 'styled-components/native';
 
 import Button from '../../../../../components/Button';
-import {CheckIcon, DisabledPoint, DisabledPointBar, EnabledPoint, EnabledPointBar, XCircleIcon} from '../../../../../components/Icon';
+import {CheckIcon,  EnabledPoint,  XCircleIcon} from '../../../../../components/Icon';
 import RateStars from '../../../../../components/RateStars';
 
 import Typography from '../../../../../components/Typography';
 import UploadPhoto from '../../../../../components/UploadPhoto';
 import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/Fetch';
+import {useNavigation} from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 
 import Config from 'react-native-config';
@@ -22,7 +21,6 @@ import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook
 
 import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
 import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
-import {PAGE_NAME as ReviewPageName} from '../../../../../pages/Main/MyPage/Review';
 
 // 수정후 여기로 오게 하기
 // import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
@@ -31,11 +29,6 @@ import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPa
 
 import {
   Alert,
-  BackHandler,
-  Dimensions,
-  FlatList,
-  Platform,
-  Text,
   View,
 } from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
@@ -46,8 +39,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 // import MoreMainPage, {
 //   PAGE_NAME as MoreMainPageName,
 // } from '../../../pages/Main/Bnb/More/Main';
-import {PAGE_NAME as MoreMainPageName} from '../../../../../pages/Main/Bnb/More/Main';
-import {el} from 'date-fns/locale';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
@@ -162,8 +153,8 @@ const Screen = ({route}) => {
 
   useEffect(() => {
     // 길이 실시간 측정
-    if (input.review) {
-      setCharLength(input.review.length);
+    if (input?.review) {
+      setCharLength(input?.review?.length);
     } else {
       setCharLength(0);
     }
@@ -179,7 +170,7 @@ const Screen = ({route}) => {
     // 처음아닐때  되게하기
     // if (!isMount) return;
 
-    if (input.review?.length >= 10 && input.review?.length <= 500) {
+    if (input?.review?.length >= 10 && input?.review?.length <= 500) {
       setClickDisable(false);
       return;
     } else {
@@ -264,7 +255,7 @@ const Screen = ({route}) => {
 
       const sendEditData = {
         satisfaction: starRating,
-        content: input.review,
+        content: input?.review,
         images: webArray,
         // 무조건
         forMakers: editItem.forMakers ? true : input.isExclusive,
@@ -409,7 +400,32 @@ const Screen = ({route}) => {
   return (
     <Container2>
       <FormProvider {...form}>
+      <ReviewPointInfoContainer>
+          <ReviewPointInfo>
+            <ReviewPointInfoTop>
+              <Typography textColor={themeApp.colors.blue[500]} text="Button10R">텍스트 리뷰</Typography>
+              {(input?.review?.length > 0 && isText) &&<View>
+                <PointText text="SmallLabel" textColor={(input?.review?.length > 0 && isText) ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>50P 적립</PointText>
+                {(input?.review?.length > 0 && isText) && <EnabledPoint/> }
+              </View>}
+            </ReviewPointInfoTop>
+            <ReviewPointInfoBottom active={(input?.review?.length > 0 && isText)}>
+            </ReviewPointInfoBottom>
+          </ReviewPointInfo>
+          <ReviewPointInfo>
+          <ReviewPointInfoTop>
+              <Typography textColor={themeApp.colors.blue[500]} text="Button10R">포토 리뷰</Typography>
+              {isPhoto &&<View>
+                <PointText text="SmallLabel" textColor={isPhoto ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>70P 적립</PointText>
+                {isPhoto && <EnabledPoint/> }
+              </View>}
+            </ReviewPointInfoTop>
+            <ReviewPointInfoBottom active={(isPhoto)}>
+            </ReviewPointInfoBottom>
+          </ReviewPointInfo>
+    </ReviewPointInfoContainer>
         <KeyboardViewContainer extraHeight={120}>
+          
           <SatisfactionTitle>
             <Title1>만족도를 알려주세요</Title1>
             <RateStars
@@ -534,32 +550,7 @@ const Screen = ({route}) => {
             {/* '최대 몇자인가' 보여주기 */}
           </ReviewWrap>
           {!inputFocus && !keyboardStatus.isKeyboardActivate && <Filler />}
-          {inputFocus && keyboardStatus.isKeyboardActivate &&<ReviewPointInfoContainer>
-            <ReviewPointInfo>
-                    <ReviewPointInfoTop>
-                      <Typography textColor={themeApp.colors.blue[500]} text="Button10R">텍스트</Typography>
-                      <View>
-                        <PointText text="SmallLabel" textColor={themeApp.colors.blue[500]}>50P 적립</PointText>
-                        <DisabledPoint />
-                      </View>
-                    </ReviewPointInfoTop>
-                    <ReviewPointInfoBottom>
-                        <DisabledPointBar />
-                    </ReviewPointInfoBottom>
-                  </ReviewPointInfo>
-                  <ReviewPointInfo>
-                  <ReviewPointInfoTop>
-                      <Typography textColor={themeApp.colors.blue[500]} text="Button10R">포토</Typography>
-                      <View>
-                        <PointText text="SmallLabel" textColor={themeApp.colors.blue[500]}>70P 적립</PointText>
-                        <DisabledPoint />
-                      </View>
-                    </ReviewPointInfoTop>
-                    <ReviewPointInfoBottom>
-                        <DisabledPointBar />
-                    </ReviewPointInfoBottom>
-                  </ReviewPointInfo>
-            </ReviewPointInfoContainer>}
+          
             {inputFocus && keyboardStatus.isKeyboardActivate &&<ButtonFinal
           size="full"
           label="완료"
@@ -570,32 +561,7 @@ const Screen = ({route}) => {
          {inputFocus && keyboardStatus.isKeyboardActivate && <Filler2 />}
         </KeyboardViewContainer>
         {!inputFocus && !keyboardStatus.isKeyboardActivate && <ButtonContainer>
-            <ReviewPointInfoContainer>
-                  <ReviewPointInfo>
-                    <ReviewPointInfoTop>
-                      <Typography textColor={themeApp.colors.blue[500]} text="Button10R">텍스트</Typography>
-                      <View>
-                        <PointText text="SmallLabel" textColor={(input.review.length > 0 && isText) ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>50P 적립</PointText>
-                        {(input.review.length > 0 && isText) ? <EnabledPoint/> : <DisabledPoint />}
-                      </View>
-                    </ReviewPointInfoTop>
-                    <ReviewPointInfoBottom>
-                    {(input.review.length > 0 && isText) ? <EnabledPointBar/> : <DisabledPointBar />}
-                    </ReviewPointInfoBottom>
-                  </ReviewPointInfo>
-                  <ReviewPointInfo>
-                  <ReviewPointInfoTop>
-                      <Typography textColor={themeApp.colors.blue[500]} text="Button10R">포토</Typography>
-                      <View>
-                        <PointText text="SmallLabel" textColor={isPhoto ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>70P 적립</PointText>
-                        {isPhoto ? <EnabledPoint/> : <DisabledPoint />}
-                      </View>
-                    </ReviewPointInfoTop>
-                    <ReviewPointInfoBottom>
-                    {isPhoto ? <EnabledPointBar/> : <DisabledPointBar />}
-                    </ReviewPointInfoBottom>
-                  </ReviewPointInfo>
-            </ReviewPointInfoContainer>
+           
           <ButtonFinal
           size="full"
           label="완료"
@@ -788,8 +754,8 @@ const ButtonContainer = styled.View`
 `
 const ReviewPointInfo = styled.View`
   flex: 1;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
   padding-top: 16px;
   padding-bottom: 16px;
 `
@@ -801,14 +767,17 @@ const ReviewPointInfoTop = styled.View`
 `
 const ReviewPointInfoBottom = styled.View`
   width: 100%;
+  background-color: ${({active})=>active ?"#3478F6" :"#EFF2FE"};
+  height: 8px;
+  border-radius: 4px;
   margin-top: 2px;
 `
 const ReviewPointInfoContainer = styled.View`
   width: 100%;
   height:66px;
-  padding-left: 30px;
+  padding-left: 19px;
   justify-content: space-between;
-  padding-right: 30px;
+  padding-right: 19px;
   flex-direction: row;
 `
 
