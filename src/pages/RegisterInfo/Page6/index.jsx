@@ -1,4 +1,4 @@
-import {Text} from 'react-native';
+import {Alert, Text} from 'react-native';
 import styled from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -128,10 +128,7 @@ const Pages = () => {
     setSelected(date);
   };
 
-  const handleSelectJobType = (id, text) => {
-    // console.log('id: ' + id);
-    // console.log('text: ' + text);
-
+  const handleSelectJobType = id => {
     setJobType(id);
   };
 
@@ -140,17 +137,12 @@ const Pages = () => {
     const birthMonth = birthday.split('. ')[1];
     const birthDay = birthday.split('. ')[2];
 
-    console.log('final 확인해보기 ');
-
-    console.log(jobList);
-    console.log(jobType);
-
     const pickJob = jobType => {
       jobList.filter(v => v.id === jobType);
       return jobList[0].text;
     };
 
-    console.log({
+    setFinalRegister({
       ...finalRegister,
       userDefaultInfo: {
         birthYear,
@@ -163,19 +155,6 @@ const Pages = () => {
         detailJobType,
       },
     });
-
-    // setFinalRegister({
-    //   ...finalRegister,
-    //   userDefaultInfo: {
-    //     birthYear,
-    //     birthMonth,
-    //     birthDay,
-    //     gender: gender === '남자' ? 1 : 2,
-    //     country,
-    //     jobType: jobList[jobType],
-    //     detailJobType,
-    //   },
-    // });
 
     navigation.navigate(RegisterInfoPage7PageName);
   };
@@ -224,22 +203,26 @@ const Pages = () => {
               value={jobType}
               convertData={jobList}
               setValue={setJobType}
-              // setValue={handleSelectJobType}
               buttonOnClickCallback={() => {
                 setJobTypeModal(true);
               }}
+              containerCss="margin-right: 5.5px;"
             />
           </Wrap2>
 
           <Wrap2>
             <SelectInputBox
               placeholder={'상세 직종'}
-              // width={'50%'}
               value={detailJobType}
               setValue={setDetailJobType}
               buttonOnClickCallback={() => {
-                setDetailJobTypeModal(true);
+                if (!jobType) {
+                  Alert.alert('직종 분류를 먼저 선택해주세요');
+                } else {
+                  setDetailJobTypeModal(true);
+                }
               }}
+              containerCss="margin-left: 5.5px;"
             />
           </Wrap2>
         </Wrap1>

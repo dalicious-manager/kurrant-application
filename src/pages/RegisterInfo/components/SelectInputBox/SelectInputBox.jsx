@@ -10,6 +10,7 @@ const SelectInputBox = ({
   value,
   width = '100%',
   buttonOnClickCallback,
+  containerCss = '',
 }) => {
   // 값 고르기
 
@@ -27,6 +28,7 @@ const SelectInputBox = ({
 
   return (
     <Container
+      containerCss={containerCss}
       onPress={() => {
         buttonOnClickCallback();
       }}
@@ -64,6 +66,8 @@ const Container = styled.Pressable`
   display: flex;
   flex-direction: column;
   margin-bottom: 24px;
+
+  ${({containerCss}) => containerCss}
 `;
 const Container2 = styled.View`
   display: flex;
