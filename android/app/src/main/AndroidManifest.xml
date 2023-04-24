@@ -31,6 +31,7 @@
         <data android:scheme="kurrant"/>
       </intent-filter>
     </activity>
+    <service android:name="io.invertase.firebase.messaging.RNFirebaseBackgroundMessagingService" />
     <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
         android:exported="true">
         <intent-filter>

@@ -795,7 +795,7 @@ const Pages = ({route}) => {
           onPressEvent2={dayPress}
           daily={daily}
           // selectDate={date}
-          selectDate={isFetchingDone ? date : undefined}
+          selectDate={date}
           margin={'0px 28px'}
           scrollDir
           pagerRef={pager}

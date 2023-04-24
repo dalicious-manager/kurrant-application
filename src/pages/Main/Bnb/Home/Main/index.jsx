@@ -297,9 +297,65 @@ const Pages = () => {
       }
     }, [isCancelSpot, appState]),
   );
+  const checkPermission = () => {
+    messaging()
+      .hasPermission()
+      .then(enabled => {
+        if (enabled) {
+          getToken();
+        } else {
+          requestPermission();
+        }
+      })
+      .catch(error => {
+        console.log('error checking permisions ' + error);
+      });
+  };
 
+  //2
+  const requestPermission = () => {
+    messaging()
+      .requestPermission()
+      .then(() => {
+        getToken();
+      })
+      .catch(error => {
+        console.log('permission rejected ' + error);
+      });
+  };
+
+  //3
+  const getToken = () => {
+    messaging()
+      .getToken()
+      .then(token => {
+        console.log('push token ' + token);
+      })
+      .catch(error => {
+        console.log('error getting push token ' + error);
+      });
+  };
   useEffect(() => {
+    checkPermission();
     // Check whether an initial notification is available
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      if (remoteMessage) {
+        console.log(
+          'Notification caused app to open from quit state:',
+          remoteMessage.data,
+        );
+        console.log(remoteMessage.data.page, 'data');
+        if (remoteMessage.data.page !== 'Home') {
+          if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
+            return navigation.navigate(remoteMessage.data.page, {
+              date: '2023-04-14',
+            });
+          }
+
+          navigation.navigate(remoteMessage.data.page);
+        }
+      }
+    });
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
@@ -308,13 +364,39 @@ const Pages = () => {
             'Notification caused app to open from quit state:',
             remoteMessage.data,
           );
-          if (remoteMessage.data.page !== 'HOME')
+          console.log(remoteMessage.data.page, 'data');
+          if (remoteMessage.data.page !== 'Home') {
+            if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
+              return navigation.navigate(remoteMessage.data.page, {
+                date: '2023-04-14',
+              });
+            }
+            if (remoteMessage.data.page === 'S_MAIN__REVIEW') {
+              return navigation.navigate(remoteMessage.data.page, {
+                from: 'point',
+              });
+            }
+            if (remoteMessage.data.page === 'P_MAIN__MYPAGE__WRITTENREVIEW') {
+              return navigation.navigate('S_MAIN__REVIEW');
+            }
+            if (remoteMessage.data.page === 'P__MY_PAGE__PUBLIC_NOTICE') {
+              return navigation.navigate('S_MAIN__NOTICE', {
+                from: 'public',
+              });
+            }
+            if (remoteMessage.data.page === 'P__MY_PAGE__SPOT_NOTICE') {
+              return navigation.navigate('S_MAIN__NOTICE', {
+                from: 'spot',
+              });
+            }
+
             navigation.navigate(remoteMessage.data.page);
+          }
         }
       });
 
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     });
 
     return unsubscribe;
