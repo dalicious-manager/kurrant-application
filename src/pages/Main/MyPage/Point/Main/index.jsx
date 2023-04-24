@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Pressable, FlatList, Alert} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../../../components/Typography';
 import Button from './components/Button';
+import Toast from '~components/Toast';
 import TextLable from '../../../../../components/TextButton';
 import ArrowRight from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import {useGetPointList, useGetPointList2} from '../../../../../hook/usePoint';
@@ -14,11 +15,12 @@ import {PAGE_NAME as purchaseHistory} from '../../PurchaseHistory/Detail/Main';
 
 export const PAGE_NAME = 'P__MY_PAGE__POINT';
 const Pages = () => {
+  const flatListRef = useRef(null);
   const [touch, setTouch] = useState([0]);
   const navigation = useNavigation();
   const {getWrittenReview, reviewList} = useWrittenReview();
-  const {data, hasNextPage, fetchNextPage, refetch} = useGetPointList(touch[0]);
-
+  const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
+    useGetPointList(touch[0]);
   const dataList = data?.pages;
 
   const noData = dataList?.map(el => el.items.pointHistoryDtos.length);
@@ -26,7 +28,8 @@ const Pages = () => {
   const detailPress = (id, status) => {
     if (status === 0) {
       const review = reviewList?.filter(el => el.reviewId === id);
-      if (review.length === 0) {
+      if (review?.length === 0) {
+        
         Alert.alert('리뷰 삭제', '작성한 리뷰가 삭제되었습니다.', [
           {
             text: '확인',
@@ -52,6 +55,9 @@ const Pages = () => {
   };
   useEffect(() => {
     refetch();
+    if (touch) {
+      flatListRef?.current?.scrollToOffset({animated: true, offset: 0});
+    }
   }, [touch, refetch]);
 
   useEffect(() => {
@@ -66,13 +72,13 @@ const Pages = () => {
           <PointTextWrap>
             <PointText>
               {withCommas(data?.pages[0]?.items?.userPoint)}
-              <WonText>원</WonText>
+              <WonText>P</WonText>
             </PointText>
           </PointTextWrap>
         </PointWrap>
         <BorderBar />
         <ButtonWrap>
-          <Button touch={touch} setTouch={setTouch} />
+          <Button touch={touch} setTouch={setTouch} isDisabled={isFetching} />
         </ButtonWrap>
         {/* 포인트 없을때 VIEW */}
         {noData?.includes(0) && (
@@ -87,6 +93,7 @@ const Pages = () => {
         )}
         <FlatList
           style={!hasNextPage && {marginBottom: 50}}
+          ref={flatListRef}
           onEndReached={onEndReached}
           data={dataList}
           renderItem={({item}) => {
@@ -141,7 +148,10 @@ const Pages = () => {
                             </TitleText>
                           )}
                         </TitleWrap>
-                        <BalanceWrap>
+                        <BalanceWrap
+                          onPress={() => {
+                            detailPress(el.contentId, el.pointStatus);
+                          }}>
                           {el.pointStatus === 3 || el.pointStatus === 5 ? (
                             <PriceText status={el.pointStatus}>
                               -{withCommas(el.point)}원
@@ -161,6 +171,7 @@ const Pages = () => {
             );
           }}
         />
+       
       </Wrapper>
     </>
   );
@@ -253,7 +264,7 @@ const Balance = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[5]};
 `;
 
-const BalanceWrap = styled.View`
+const BalanceWrap = styled.Pressable`
   align-items: flex-end;
   width: 30%;
 `;

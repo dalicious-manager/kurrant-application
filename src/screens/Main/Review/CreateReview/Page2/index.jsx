@@ -2,18 +2,17 @@ import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 
-import styled, {useTheme} from 'styled-components';
+import styled, {useTheme} from 'styled-components/native';
 
 import Button from '../../../../../components/Button';
-import {CheckIcon, XCircleIcon} from '../../../../../components/Icon';
+import {CheckIcon,  EnabledPoint,  XCircleIcon} from '../../../../../components/Icon';
 import RateStars from '../../../../../components/RateStars';
 
 import Typography from '../../../../../components/Typography';
 import UploadPhoto from '../../../../../components/UploadPhoto';
 import ReviewInput from './ReviewInput';
 import {starRatingAtom} from './store';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {createReview} from '../../../../../biz/useReview/useCreateAndEditReview/Fetch';
+import {useNavigation} from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 
 import Config from 'react-native-config';
@@ -21,17 +20,26 @@ import {getStorage} from '../../../../../utils/asyncStorage';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 
 import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
-import {PAGE_NAME as ReviewPageName} from '../../../../../pages/Main/MyPage/Review';
+import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
 
 // 수정후 여기로 오게 하기
+// import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
 
-import {Alert, Dimensions, FlatList, Text, View} from 'react-native';
+import {
+  Alert,
+  View,
+} from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import {useQueryClient} from 'react-query';
 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
+// import MoreMainPage, {
+//   PAGE_NAME as MoreMainPageName,
+// } from '../../../pages/Main/Bnb/More/Main';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -44,20 +52,26 @@ const apiHostUrl =
 const Screen = ({route}) => {
   const [starRating, setStarRating] = useAtom(starRatingAtom);
   const [clickDisable, setClickDisable] = useState(false);
+  const [isPhoto, setIsPhoto] = useState(true);
+  const [isText, setIsText] = useState(true);
   const queryClient = useQueryClient();
   // 모든 사진
   const [photosArray, setPhotosArray] = useState([]);
-
+  const [inputFocus,setInputFocus] = useState(false);
   // FlatList 에 넣을 배열 만들기
-
+  const themeApp = useTheme();
   const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
-
   const [charLength, setCharLength] = useState(0);
+
+  /// 안드로이드 뒤로가기 누르면 뒤로가야됨
 
   useEffect(() => {
     // 사진 채우기 기능 추가
 
     setPhotosArrayForFlatList(['addPic', ...photosArray]);
+    if(photosArray){
+      setIsPhoto(photosArray.length > 0)
+    }
   }, [photosArray]);
 
   const {getWrittenReview} = useWrittenReview();
@@ -66,10 +80,13 @@ const Screen = ({route}) => {
 
   const id = route?.params?.id;
   const status = route?.params?.status;
+
+  const test = route?.params?.test;
+
   const editItem = route?.params?.editItem;
 
   // console.log('진짜 징하다');
-  // console.log(editItem);
+  console.log(route?.params);
 
   const theme = useTheme();
 
@@ -94,6 +111,7 @@ const Screen = ({route}) => {
         : [];
 
       setPhotosArray(editItemModify);
+      setStarRating(editItem.rating);
     }
   }, [editItem]);
 
@@ -122,9 +140,11 @@ const Screen = ({route}) => {
   useEffect(() => {
     setInput({...input, review: form.watch('review')});
   }, [form.watch('review')]);
+  useEffect(() => {
+    setIsText(form.formState.errors?.review ? false : true)
+  }, [form.formState.errors?.review]);
 
   // 데이터 있으면 input에 바로등록하기
-
   useEffect(() => {
     if (editItem && editItem.reviewText) {
       setInput({...input, review: editItem.reviewText});
@@ -133,8 +153,8 @@ const Screen = ({route}) => {
 
   useEffect(() => {
     // 길이 실시간 측정
-    if (input.review) {
-      setCharLength(input.review.length);
+    if (input?.review) {
+      setCharLength(input?.review?.length);
     } else {
       setCharLength(0);
     }
@@ -145,19 +165,21 @@ const Screen = ({route}) => {
     const returnArray = thisPhotoArray.filter(value => value.id !== photoId);
     setPhotosArray(returnArray);
   };
-
+  const keyboardStatus = useKeyboardEvent();
   useEffect(() => {
     // 처음아닐때  되게하기
     // if (!isMount) return;
 
-    if (input.review?.length >= 10 && input.review?.length <= 500) {
+    if (input?.review?.length >= 10 && input?.review?.length <= 500) {
       setClickDisable(false);
       return;
     } else {
       setClickDisable(true);
     }
   }, [input]);
+  useEffect(()=>{
 
+  },[form])
   // 여기가 완료 클릭
 
   const onSignInPressed = data => {
@@ -177,6 +199,17 @@ const Screen = ({route}) => {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       };
+
+      console.log('크리에이트 리뷰');
+
+      console.log([
+        ...photosArray,
+        {
+          name: 'reviewDto',
+          data: JSON.stringify(sendCreateData),
+          type: 'application/json',
+        },
+      ]);
 
       return RNFetchBlob.fetch('POST', url, headers, [
         ...photosArray,
@@ -222,7 +255,7 @@ const Screen = ({route}) => {
 
       const sendEditData = {
         satisfaction: starRating,
-        content: input.review,
+        content: input?.review,
         images: webArray,
         // 무조건
         forMakers: editItem.forMakers ? true : input.isExclusive,
@@ -253,6 +286,8 @@ const Screen = ({route}) => {
     });
 
     if (status === 'create') {
+      console.log('크리에이트 ');
+      console.log(photoDataArray);
       createReview(photoDataArray)
         .then(response => response.json())
         .then(data => {
@@ -263,12 +298,43 @@ const Screen = ({route}) => {
               {
                 text: '확인',
                 onPress: async () => {
-                  getWrittenReview();
-                  getReviewWait();
+                  await getWrittenReview();
+                  await getReviewWait();
+                  // navigation.navigate(ReviewScreenName, {
+                  //   from: 'home',
+                  // });
 
-                  navigation.navigate(ReviewScreenName, {
-                    from: 'home',
-                  });
+                  if (test) {
+                    // navigation.navigate(WrittenReviewPageName);
+                    navigation.reset({
+                      index: 1,
+                      routes: [
+                        {
+                          name: MainScreenName,
+                        },
+                        {
+                          name: ReviewScreenName,    
+                          params:{
+                            from:'point'
+                          }                     
+                        },
+                      ],
+                    });
+                    // navigation.navigate(WrittenReviewPageName, {
+                    //   screen: ReviewScreenName,
+                    //   params: {
+                    //     tabIndex: 1,
+                        
+                    //   },
+                    // });
+                  } else {
+                    navigation.navigate(WrittenReviewPageName, {
+                      screen: ReviewScreenName,
+                      params: {
+                        tabIndex: 1,
+                      },
+                    });
+                  }
                 },
                 style: 'cancel',
               },
@@ -289,6 +355,7 @@ const Screen = ({route}) => {
         });
     } else if (status === 'edit') {
       console.log('edit 이여');
+      console.log(photosArray);
 
       editReview(id, photosArray)
         .then(response => response.json())
@@ -333,7 +400,32 @@ const Screen = ({route}) => {
   return (
     <Container2>
       <FormProvider {...form}>
+      <ReviewPointInfoContainer>
+          <ReviewPointInfo>
+            <ReviewPointInfoTop>
+              <Typography textColor={themeApp.colors.blue[500]} text="Button10R">텍스트 리뷰</Typography>
+              {(input?.review?.length > 0 && isText) &&<View>
+                <PointText text="SmallLabel" textColor={(input?.review?.length > 0 && isText) ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>50P 적립</PointText>
+                {(input?.review?.length > 0 && isText) && <EnabledPoint/> }
+              </View>}
+            </ReviewPointInfoTop>
+            <ReviewPointInfoBottom active={(input?.review?.length > 0 && isText)}>
+            </ReviewPointInfoBottom>
+          </ReviewPointInfo>
+          <ReviewPointInfo>
+          <ReviewPointInfoTop>
+              <Typography textColor={themeApp.colors.blue[500]} text="Button10R">포토 리뷰</Typography>
+              {isPhoto &&<View>
+                <PointText text="SmallLabel" textColor={isPhoto ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>70P 적립</PointText>
+                {isPhoto && <EnabledPoint/> }
+              </View>}
+            </ReviewPointInfoTop>
+            <ReviewPointInfoBottom active={(isPhoto)}>
+            </ReviewPointInfoBottom>
+          </ReviewPointInfo>
+    </ReviewPointInfoContainer>
         <KeyboardViewContainer extraHeight={120}>
+          
           <SatisfactionTitle>
             <Title1>만족도를 알려주세요</Title1>
             <RateStars
@@ -399,6 +491,12 @@ const Screen = ({route}) => {
             </Title3>
 
             <ReviewInput
+              onFocus={()=>{
+                setInputFocus(true)
+              }}
+              onBlur={()=>{
+                setInputFocus(false)
+              }}
               charLength={charLength}
               editContentInput={
                 editItem && editItem.reviewText
@@ -406,52 +504,73 @@ const Screen = ({route}) => {
                   : undefined
               }
             />
+            <TextBoxBottom>
+              <ShowOnlyToOwnerWrap>
+                {!editItem && (
+                  <>
+                    <CheckBox
+                      checked={input.isExclusive}
+                      onPress={() => {
+                        setInput({...input, isExclusive: !input.isExclusive});
+                      }}>
+                      <CheckIcon
+                        style={{width: 15, height: 10}}
+                        color={'#ffffff'}
+                      />
+                    </CheckBox>
+                  </>
+                )}
+
+                {editItem ? (
+                  <Title4 isEditItem={!!editItem}>
+                    {' '}
+                    {editItem.forMakers
+                      ? '사장님에게만 보이는 리뷰'
+                      : '모두에게 보이는 리뷰'}{' '}
+                  </Title4>
+                ) : (
+                  <Title4 isEditItem={!!editItem}>사장님에게만 보이기</Title4>
+                )}
+              </ShowOnlyToOwnerWrap>
+              <ShowCurrentLettersLengthWrap>
+                <LengthText colorError={form.formState.errors.review ? true:false}>
+                  
+                  <LengthTextNum charLength={charLength > 500 || charLength < 10} >
+                    {charLength}
+                  </LengthTextNum>
+                  /500
+                </LengthText>
+              </ShowCurrentLettersLengthWrap>
+            </TextBoxBottom>
+            <Warnings textColor={themeApp.colors.grey[4]}>
+              작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
+              서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
+              제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
+            </Warnings>
             {/* '최대 몇자인가' 보여주기 */}
-
-            <ShowOnlyToOwnerWrap>
-              {!editItem && (
-                <>
-                  <CheckBox
-                    checked={input.isExclusive}
-                    onPress={() => {
-                      setInput({...input, isExclusive: !input.isExclusive});
-                    }}>
-                    <CheckIcon
-                      style={{width: 15, height: 10}}
-                      color={'#ffffff'}
-                    />
-                  </CheckBox>
-                </>
-              )}
-
-              {editItem ? (
-                <Title4 isEditItem={!!editItem}>
-                  {' '}
-                  {editItem.forMakers
-                    ? '사장님에게만 보이는 리뷰'
-                    : '모두에게 보이는 리뷰'}{' '}
-                </Title4>
-              ) : (
-                <Title4 isEditItem={!!editItem}>사장님에게만 보이기 </Title4>
-              )}
-            </ShowOnlyToOwnerWrap>
           </ReviewWrap>
-
-          <Warnings>
-            작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
-            서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
-            제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
-          </Warnings>
-
-          <Filler />
-        </KeyboardViewContainer>
-        <ButtonFinal
+          {!inputFocus && !keyboardStatus.isKeyboardActivate && <Filler />}
+          
+            {inputFocus && keyboardStatus.isKeyboardActivate &&<ButtonFinal
           size="full"
           label="완료"
           text={'Button09SB'}
           disabled={clickDisable}
           onPressEvent={form.handleSubmit(onSignInPressed)}
-        />
+          />}
+         {inputFocus && keyboardStatus.isKeyboardActivate && <Filler2 />}
+        </KeyboardViewContainer>
+        {!inputFocus && !keyboardStatus.isKeyboardActivate && <ButtonContainer>
+           
+          <ButtonFinal
+          size="full"
+          label="완료"
+          text={'Button09SB'}
+          disabled={clickDisable}
+          onPressEvent={form.handleSubmit(onSignInPressed)}
+          />
+          <Filler2/>
+          </ButtonContainer>}
       </FormProvider>
     </Container2>
   );
@@ -475,7 +594,11 @@ const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
 
 const Filler = styled.View`
   width: 100%;
-  height: 40px;
+  height: 200px;
+`;
+const Filler2 = styled.View`
+  width: 100%;
+  height: 35px;
 `;
 
 const Container = styled.ScrollView`
@@ -511,12 +634,21 @@ const PhotosView = styled.View`
 
   justify-content: center;
 `;
-
+const TextBoxBottom = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 const PhotoImageWrap = styled.View`
   /* position: relative; */
   /* overflow: hidden; */
 `;
-
+const PointText = styled(Typography)`
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  z-index: 1;
+`
 const DeleteButton = styled.Pressable`
   position: absolute;
   top: -10px;
@@ -602,35 +734,63 @@ const Title4 = styled(Typography).attrs({text: 'Body06R'})`
     }
   }};
 `;
-const Warnings = styled(Typography).attrs({text: ' CaptionR'})`
-  color: ${props => props.theme.colors.grey[4]};
+const Warnings = styled(Typography).attrs({text: 'CaptionR'})`
   margin-bottom: 32px;
 `;
 
 const ButtonFinal = styled(Button)`
-  position: relative;
-  bottom: 20px;
-  margin: auto;
-  width: ${() => {
-    const yes = Dimensions.get('screen').width - 2 * 24;
-
-    return `${yes}px`;
-  }};
-
+  width: 100%;
+  margin-bottom:20px;
   /* position: absolute;
   bottom: 20px; */
 `;
+const ButtonContainer = styled.View`
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: white;
+  position: absolute;
+  bottom: 0px;
+`
+const ReviewPointInfo = styled.View`
+  flex: 1;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+`
+const ReviewPointInfoTop = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  height: 24px;  
+  align-items: center;
+`
+const ReviewPointInfoBottom = styled.View`
+  width: 100%;
+  background-color: ${({active})=>active ?"#3478F6" :"#EFF2FE"};
+  height: 8px;
+  border-radius: 4px;
+  margin-top: 2px;
+`
+const ReviewPointInfoContainer = styled.View`
+  width: 100%;
+  height:66px;
+  padding-left: 19px;
+  justify-content: space-between;
+  padding-right: 19px;
+  flex-direction: row;
+`
 
 const ShowCurrentLettersLengthWrap = styled.View`
   flex-direction: row-reverse;
   margin-bottom: 10px;
 `;
-const LengthText = styled(Typography).attrs({text: ' CaptionR'})`
-  color: ${props => props.theme.colors.grey[4]};
+const LengthText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${(props) => props.colorError ? props.theme.colors.red[500]: props.theme.colors.grey[4]};
   /* margin-bottom: 32px; */
 `;
 
-const LengthTextNum = styled(Typography).attrs({text: ' CaptionR'})`
+const LengthTextNum = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => {
     if (props.charLength) {
       return props.theme.colors.red[500];

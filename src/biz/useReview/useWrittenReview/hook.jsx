@@ -2,16 +2,20 @@ import {useAtom} from 'jotai';
 import {useState} from 'react';
 
 import * as Fetch from './Fetch';
-import {writtenReviewList} from './store';
+import {totalWrittenReview, writtenReviewList} from './store';
 
 const useWrittenReview = () => {
   const [reviewList, setWrittenReviewList] = useAtom(writtenReviewList);
 
-  const [writtenReviewCount, setWrittenReviewCount] = useState(0);
+  // const [isWrittenReviewLoading, setIsWrittenReviewLoading] = useState(false);
+
+  const [writtenReviewCount, setWrittenReviewCount] =
+    useAtom(totalWrittenReview);
 
   const getWrittenReview = async () => {
     try {
       // const res = await Fetch.writtenReviewMockData();
+
       const res = await Fetch.getReviewOrderMeal();
 
       // 데이터 갈아끼우기

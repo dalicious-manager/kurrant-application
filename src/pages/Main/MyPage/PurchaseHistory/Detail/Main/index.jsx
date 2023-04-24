@@ -34,53 +34,61 @@ const Pages = ({route}) => {
   } = usePurchaseHistory();
   const {refundItem, refundAll} = useOrderMeal();
   const cancelItem = async foodId => {
-    const req = {
-      id: foodId,
-    };
-    await refundItem(req);
-    queryClient.invalidateQueries('pointList');
-    const refund = {
-      ...purchaseDetail,
-      orderItems: [
-        ...purchaseDetail.orderItems.map(v => {
-          if (v.id === foodId) {
-            return {...v, orderStatus: 7};
-          } else {
-            return v;
-          }
-        }),
-      ],
-    };
-    setPurchaseDetail(refund);
+    try {
+      const req = {
+        id: foodId,
+      };
+      await refundItem(req);
+      queryClient.invalidateQueries('pointList');
+      const refund = {
+        ...purchaseDetail,
+        orderItems: [
+          ...purchaseDetail.orderItems.map(v => {
+            if (v.id === foodId) {
+              return {...v, orderStatus: 7};
+            } else {
+              return v;
+            }
+          }),
+        ],
+      };
+      setPurchaseDetail(refund);
+    } catch (error) {
+      Alert.alert('취소불가', error.toString().replace('error:', ''));
+    }
   };
   const cancelAll = async () => {
-    const req = {
-      id: id,
-    };
-    await refundAll(req);
-    const refund = {
-      ...purchaseDetail,
-      orderItems: [
-        ...purchaseDetail.orderItems.map(v => {
-          return {...v, orderStatus: 7};
-        }),
-      ],
-    };
+    try {
+      const req = {
+        id: id,
+      };
+      await refundAll(req);
+      const refund = {
+        ...purchaseDetail,
+        orderItems: [
+          ...purchaseDetail.orderItems.map(v => {
+            return {...v, orderStatus: 7};
+          }),
+        ],
+      };
 
-    // purchaseDetail.map((o)=> {
-    //   return {...o,orderItems:[...o.orderItems.map(v=>{
-    //   if(v.id === id){
-    //     return { ...v , orderStatus:7}
-    //   }else{
-    //     return v
-    //   }
-    // })]}})
-    setPurchaseDetail(refund);
-    const reqs = {
-      purchaseId: id,
-    };
-    getPurchaseDetail(reqs);
-    queryClient.invalidateQueries('pointList');
+      // purchaseDetail.map((o)=> {
+      //   return {...o,orderItems:[...o.orderItems.map(v=>{
+      //   if(v.id === id){
+      //     return { ...v , orderStatus:7}
+      //   }else{
+      //     return v
+      //   }
+      // })]}})
+      setPurchaseDetail(refund);
+      const reqs = {
+        purchaseId: id,
+      };
+      getPurchaseDetail(reqs);
+      queryClient.invalidateQueries('pointList');
+    } catch (error) {
+      Alert.alert('취소불가', error.toString().replace('error:', ''));
+    }
   };
   const possibleOrder =
     purchaseDetail?.orderItems?.filter(v => v.orderStatus === 7)?.length > 0

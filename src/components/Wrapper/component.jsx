@@ -25,7 +25,7 @@ const Component = ({
       style={styles}
       paddingHorizontal={paddingHorizontal}
       paddingTop={paddingTop}>
-     {children}
+      {children}
     </Wrap>
   );
 };

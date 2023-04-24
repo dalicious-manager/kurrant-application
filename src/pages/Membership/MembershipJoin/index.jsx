@@ -138,7 +138,7 @@ const Pages = () => {
             </SubtractBox>
           </SubtractView>
           <SubtractView>
-            <SubtractBox text={'메뉴 추천 기능 오픈'}>
+            <SubtractBox text={'메뉴 추천 기능 오픈'} beta={true}>
               <ThumbsUpWithThreeStarsIcon additionalCss={`margin-right: 5px`} />
             </SubtractBox>
           </SubtractView>

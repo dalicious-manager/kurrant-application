@@ -1991,7 +1991,7 @@ const Screen = () => {
                 alertCallback={() => {
                   Alert.alert(
                     `작성 종료`,
-                    `작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?`,
+                    `작성중인 내용이 삭제됩니다 \n리뷰작성을 종료하시겠어요?`,
                     [
                       {
                         text: '아니요',
@@ -2003,10 +2003,7 @@ const Screen = () => {
                       {
                         text: `작성종료`,
                         onPress: () => {
-                          navigation.navigate(ReviewScreenName);
-                          // navigation.reset({
-                          //   routes: [{name: ReviewScreenName}],
-                          // });
+                          navigation.pop(2);
                           return;
                         },
 
@@ -2038,7 +2035,7 @@ const Screen = () => {
                 alertCallback={() => {
                   Alert.alert(
                     '수정 종료',
-                    '수정중인 내용이 삭제됩니다 \n  수정작성을 종료하시겠어요?',
+                    '수정중인 내용이 삭제됩니다 \n수정작성을 종료하시겠어요?',
                     [
                       {
                         text: '아니요',

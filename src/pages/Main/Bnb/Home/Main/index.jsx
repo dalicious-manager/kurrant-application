@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, StatusBar} from 'react-native';
+import {View, StyleSheet, Alert, StatusBar, AppState} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
@@ -96,12 +96,12 @@ const Pages = () => {
     readableAtom: {membershipHistory},
   } = useMembership();
   const {loadMeal} = useShoppingBasket();
-  const {dailyFood, isServiceDays} = useFoodDaily();
+  const {dailyFood, isServiceDays, isDailyFoodLoading} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
 
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
-  const [eventSpot, setEventSpot] = useState(false);
+  const [appState, setAppState] = useState();
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
@@ -172,9 +172,7 @@ const Pages = () => {
     setIsOneAnnouncementModalVisible,
   } = useGetOneAnnouncements();
 
-  useEffect(() => {
-    getOneAnnouncement(2);
-  }, []);
+ 
 
   // useEffect(() => {
   //   removeItemFromStorage('announcementsClickedOneDate');
@@ -243,6 +241,7 @@ const Pages = () => {
       }
     };
     handleShowModal();
+    getOneAnnouncement(2);
   }, []);
 
   const closeBalloon = async () => {
@@ -265,6 +264,7 @@ const Pages = () => {
   }, [isUserInfo]);
   useFocusEffect(
     useCallback(() => {
+      // console.log('test');
       async function loadUser() {
         try {
           const userData = await userInfo();
@@ -290,8 +290,8 @@ const Pages = () => {
         }
       }
       const isTester = async () => {
-        const user = loadUser();
-
+        const user = await loadUser();
+        // console.log(user, 'test');
         if (!(userRole === 'ROLE_GUEST')) {
           const status = async () => {
             const userStatus = await getStorage('spotStatus');
@@ -302,7 +302,6 @@ const Pages = () => {
               navigation.navigate(GroupSelectPageName);
             }
             if (getUserStatus === 2 && !isCancelSpot) {
-              console.log(isCancelSpot, 'test');
               navigation.navigate(GroupCreateMainPageName);
             }
             // return result;
@@ -338,8 +337,7 @@ const Pages = () => {
       } catch (e) {
         alert(e.toString().replace('error:'));
       }
-      console.log(membershipHistory.length);
-    }, [isCancelSpot]),
+    }, [isCancelSpot, appState]),
   );
 
   useEffect(() => {
@@ -352,7 +350,8 @@ const Pages = () => {
             'Notification caused app to open from quit state:',
             remoteMessage.data,
           );
-          navigation.navigate(remoteMessage.data.page);
+          if (remoteMessage.data.page !== 'HOME')
+            navigation.navigate(remoteMessage.data.page);
         }
       });
 
@@ -388,10 +387,7 @@ const Pages = () => {
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
-  // console.log(isUserInfo, '유저인포');
-  // const date = formattedWeekDate(new Date());
-  // const todayMeal = isOrderMeal?.filter((m) => m.serviceDate === date);
-  //const todayMeal = isOrderMeal?.filter((m) => m.date === date);
+
   useEffect(() => {
     async function dailys() {
       try {
@@ -449,9 +445,17 @@ const Pages = () => {
       console.log(err);
     }
   };
-
+  const handleStatus = e => {
+    setAppState(e);
+    todayRefetch();
+  };
   const mockStatus = 10;
-
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', handleStatus);
+    return () => {
+      listener.remove();
+    };
+  }, []);
   if (!isUserInfo) {
     return <SkeletonUI />;
   }
@@ -526,7 +530,8 @@ const Pages = () => {
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
-          ) : (
+          )
+           : (
             todayMealList?.data?.map((m, idx) => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
@@ -535,7 +540,7 @@ const Pages = () => {
                       <MealInfoComponent
                         m={m}
                         meal={meal}
-                        key={meal.dailyFoodId}
+                        key={`${meal.id} ${meal.dailyFoodId}`}
                       />
                     );
                   })}

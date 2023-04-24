@@ -10,7 +10,7 @@ import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/sto
 import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
 import {convertDateFormat1} from '../../../../utils/dateFormatter';
 import {useNavigation} from '@react-navigation/native';
-
+import Toast from '~components/Toast';
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const sampleAdminReview = {
   pngLink: DefaultProfile,
@@ -24,24 +24,32 @@ const Pages = ({route}) => {
   const pointId = route?.params?.id;
   const flatListRef = useRef(null);
 
-  const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
-
-  const [, setTotalWrittenReviewList] = useAtom(totalWrittenReview);
+  const {getWrittenReview, reviewList} = useWrittenReview();
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const idx = reviewList?.findIndex(el => el.reviewId === pointId);
-
+  const toast = Toast();
   useEffect(() => {
     getWrittenReview();
   }, []);
 
-  useEffect(() => {
-    setTotalWrittenReviewList(writtenReviewCount);
-  }, [writtenReviewCount]);
+  // useEffect(() => {
+  //   setTotalWrittenReviewList(writtenReviewCount);
+  // }, [writtenReviewCount]);
+
+  // useEffect(() => {
+  //   console.log(reviewList);
+  // }, [reviewList]);
 
   useEffect(() => {
-    console.log(reviewList);
-  }, [reviewList]);
+    if (flatListRef.current && idx !== -1) {
+      flatListRef.current.scrollToIndex({
+        animated: true,
+        index: idx,
+        viewPosition: 0,
+      });
+    }
+  }, [flatListRef, idx]);
 
   return (
     <Container>
@@ -50,21 +58,20 @@ const Pages = ({route}) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           ref={flatListRef}
-          initialScrollIndex={idx}
           onScrollToIndexFailed={info => {
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
               flatListRef.current?.scrollToIndex({
                 index: info.index,
                 animated: true,
+                viewPosition: 0,
               });
             });
           }}
           data={reviewList}
           scrollEnabled={true}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
-
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,
@@ -85,6 +92,7 @@ const Pages = ({route}) => {
               <View>
                 <Card
                   id={item2.id}
+                  focusId={pointId}
                   editItem={item2}
                   createDate={item2.createDate}
                   updateDate={item2.updateDate}
@@ -97,6 +105,7 @@ const Pages = ({route}) => {
                   imageLocation={item2.imageLocation}
                   forMakers={item2.forMakers}
                   commentList={item2.commentList}
+                  toast={toast}
                 />
               </View>
             );
@@ -105,6 +114,7 @@ const Pages = ({route}) => {
       ) : (
         <NoOrder isArrayEmpty={true} message={`아직 작성한 리뷰가 없어요.`} />
       )}
+      <toast.ToastWrap message={'리뷰가 삭제되었습니다.'} icon={'checked'} />
     </Container>
   );
 };
@@ -114,7 +124,7 @@ export default Pages;
 const Container = styled.View`
   width: 100%;
   height: 100%;
-  padding: 24px 25px;
+  // padding: 24px 25px;
   padding-top: 0px;
   background-color: #ffffff;
 `;

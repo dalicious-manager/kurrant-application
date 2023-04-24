@@ -42,7 +42,7 @@ const Pages = ({route}) => {
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
   const {isOrderMeal, orderMeal, refundItem, setOrderMeal} = useOrderMeal();
-  const pagerRef = useRef();
+  const pagerRef = useRef(null);
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
@@ -110,7 +110,7 @@ const Pages = ({route}) => {
 
     Alert.alert(
       '메뉴 변경',
-      '현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
+      '현재 메뉴 취소 후 진행됩니다.\n메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
       [
         {
           text: '아니요',
@@ -156,7 +156,8 @@ const Pages = ({route}) => {
         pressDay(formattedWeekDate(new Date()));
         pagerRef.current.setPage(0);
       }
-    }, [isToday]),
+      setTouchDate(data);
+    }, [isToday, data]),
   );
   return (
     <SafeView>
@@ -170,6 +171,7 @@ const Pages = ({route}) => {
             size={'Body05R'}
             onPressEvent2={pressDay}
             selectDate={touchDate}
+            daliy={true}
             meal={meal}
             margin={'0px 28px'}
             sliderValue={isToday && 0}
@@ -209,7 +211,9 @@ const Pages = ({route}) => {
                               })
                             }>
                             <MakersName>[{sm.makers}]</MakersName>
-                            <MealName>{sm.name}</MealName>
+                            <MealName numberOfLines={1} ellipsizeMode="tail">
+                              {sm.name}
+                            </MealName>
                             <DeliveryAddress>
                               {sm.groupName}・{sm.spotName}
                             </DeliveryAddress>
@@ -275,7 +279,9 @@ const Pages = ({route}) => {
                                 })
                               }>
                               <MakersName>[{el.makers}]</MakersName>
-                              <MealName>{el.name}</MealName>
+                              <MealName numberOfLines={1} ellipsizeMode="tail">
+                                {el.name}
+                              </MealName>
                               <DeliveryAddress>
                                 {el.groupName}・{el.spotName}
                               </DeliveryAddress>
