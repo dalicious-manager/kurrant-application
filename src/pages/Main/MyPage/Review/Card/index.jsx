@@ -38,6 +38,8 @@ const Component = ({
   serviceDate,
   makersName,
   foodName,
+  foodDescription,
+  foodCount,
   option,
   imageLocation,
   diningType,
@@ -113,7 +115,15 @@ const Component = ({
               {makersName}
               {']'}
             </RestaurentNameText>
-            <MenuNameText>{foodName}</MenuNameText>
+            <MenuNameText numberOfLines={1} ellipsizeMode="tail">
+              {foodName}
+            </MenuNameText>
+            {/* <MenuDetailText numberOfLines={1} ellipsizeMode="tail">
+              {foodDescription}
+            </MenuDetailText>
+            <MenuDetailText numberOfLines={1} ellipsizeMode="tail">
+              {foodCount && `${foodCount}개`}
+            </MenuDetailText> */}
             {option && <OptionText>|{option} </OptionText>}
           </SmallRowWrap>
           <SmallColumnWrap>
@@ -202,6 +212,11 @@ const RestaurentNameText = styled(Typography).attrs({text: 'Body05R'})`
 
 const MenuNameText = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[2]};
+  margin-left: 1px;
+  margin: 1px 0;
+`;
+const MenuDetailText = styled(Typography).attrs({text: 'Body10R'})`
+  color: ${props => props.theme.colors.grey[5]};
   margin-left: 1px;
   margin: 1px 0;
 `;

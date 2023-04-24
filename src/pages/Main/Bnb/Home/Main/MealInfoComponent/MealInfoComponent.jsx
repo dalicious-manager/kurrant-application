@@ -9,6 +9,8 @@ import FastImage from 'react-native-fast-image';
 import {useConfirmOrderState} from '../../../../../../hook/useOrder';
 import {SCREEN_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
 
+import {Shadow} from 'react-native-shadow-2';
+
 const MealInfoComponent = ({m, meal, mockStatus}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
@@ -18,7 +20,6 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
   };
-
   const goToReviewPage = (id, image, name) => {
     navigation.navigate(reviewPage, {
       orderItemId: id,
@@ -31,49 +32,58 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
   return (
     <>
       <MealInfoWrapper>
-        <MealInfoWrap
-          // shadow 적용
+        <Shadow
           style={
-            (meal.orderStatus === 10 || meal.orderStatus === 11) &&
-            styles.shadow
+            (meal.orderStatus === 10 || meal.orderStatus === 11) && {
+              borderRadius: 14,
+              marginBottom: 12,
+            }
           }
-          onPress={() =>
-            navigation.navigate(MealMainPageName, {
-              isToday: true,
-            })
-          }>
-          <MealInfo>
-            <FastImage
-              source={{
-                uri: `${meal.image}`,
-                priority: FastImage.priority.high,
-              }}
-              style={{
-                width: 64,
-                height: 64,
-                borderTopLeftRadius: 14,
-                borderBottomLeftRadius: 14,
-              }}
-            />
+          startColor={
+            (meal.orderStatus === 10 || meal.orderStatus === 11) && '#5A1EFF20'
+          }
+          distance={(meal.orderStatus === 10 || meal.orderStatus === 11) && 10}>
+          <MealInfoWrap
+            onPress={() =>
+              navigation.navigate(MealMainPageName, {
+                isToday: true,
+              })
+            }>
+            <MealInfo>
+              <FastImage
+                source={{
+                  uri: `${meal.image}`,
+                  priority: FastImage.priority.high,
+                }}
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderTopLeftRadius: 14,
+                  borderBottomLeftRadius: 14,
+                }}
+              />
 
-            <MealText>
-              <View>
-                <DiningType>{`오늘 ${m.diningType}`}</DiningType>
-                <View>
-                  <MealTxt>{meal.name}</MealTxt>
+              <MealText>
+                <View style={{width: '80%', overflow: 'hidden'}}>
+                  <DiningType>{`오늘 ${m.diningType}`}</DiningType>
+                  <View>
+                    <MealTxt numberOfLines={1} ellipsizeMode="tail">
+                      {meal.name}
+                    </MealTxt>
+                  </View>
                 </View>
-              </View>
-              <MealCount>
-                <GreyTxt status={meal.orderStatus}>
-                  {formattedMealFoodStatus(meal.orderStatus)}
-                </GreyTxt>
+                <MealCount>
+                  <GreyTxt status={meal.orderStatus}>
+                    {(meal.orderStatus === 10 || meal.orderStatus === 6|| meal.orderStatus === 9) &&
+                      formattedMealFoodStatus(meal.orderStatus)}
+                  </GreyTxt>
 
-                <GreyTxt>{meal.count}개</GreyTxt>
-              </MealCount>
-            </MealText>
-          </MealInfo>
-        </MealInfoWrap>
-
+                  <GreyTxt>{meal.count}개</GreyTxt>
+                </MealCount>
+              </MealText>
+            </MealInfo>
+          </MealInfoWrap>
+        </Shadow>
         {(meal.orderStatus === 10 || meal.orderStatus === 11) && (
           <OrderStatusWrap>
             <CommentText>
@@ -143,10 +153,9 @@ const MealInfo = styled.View`
 
 const MealInfoWrap = styled.Pressable`
   ${Display};
-  height: 64px;
+  max-height: 64px;
   border-radius: 14px;
   background-color: ${props => props.theme.colors.grey[0]};
-  margin-bottom: 16px;
   padding: 16px;
   justify-content: space-between;
   padding-left: 0px;

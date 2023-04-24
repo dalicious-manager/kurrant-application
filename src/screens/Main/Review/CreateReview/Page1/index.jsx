@@ -44,7 +44,9 @@ const Screens = ({route}) => {
             setStarRating(rating);
             setDisable(true);
             await mSleep(300);
-
+            if (navigation.canGoBack()) {
+              navigation.goBack();
+            }
             navigation.navigate(CreateReviewPage2ScreenName, {
               id: orderItemId,
               status: 'create',

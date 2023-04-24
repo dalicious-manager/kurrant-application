@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableWithoutFeedback, View} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 import XVector from '../../../../../assets/icons/XVector.svg';
 import Typography from '../../../../../components/Typography';
@@ -11,11 +11,13 @@ export const PAGE_NAME = '';
 
 const Pages = ({setPopupShow}) => {
   return (
+    <Wrap onPress={()=>setPopupShow(false)}>
+      <TouchableWithoutFeedback style={{width:'100%', height:'100%'}} >
     <Container>
-      <Typograph>
+      <Typography>
         리뷰 작성/수정은 식사일/배송일로부터
         {'\n'}5일 이내에 가능합니다.
-      </Typograph>
+      </Typography>
 
       <ClosePopup
         onPress={() => {
@@ -24,24 +26,32 @@ const Pages = ({setPopupShow}) => {
         <XVector />
       </ClosePopup>
     </Container>
+    </TouchableWithoutFeedback>
+    </Wrap>
   );
 };
 
 export default Pages;
-
-const Container = styled.View`
+const Wrap = styled.Pressable`
+  background-color: #000000B2;
   position: absolute;
-  top: 8%;
+  z-index: 1;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+`
+const Container = styled.View`
   align-self: center;
   justify-content: center;
   background-color: white;
-
+  margin-top: 158px;
   width: 95%;
   height: 62px;
 
   padding: 0 5%;
   border-radius: 7px;
-  z-index: 1;
+  
 
   box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
 `;

@@ -18,5 +18,5 @@ const NoOrderText = styled(Typography).attrs({text: 'Body05R'})`
     }
   }}
 
-  color: ${props => props.theme.colors.grey[3]};
+  color: ${props => props.theme.colors.grey[5]};
 `;

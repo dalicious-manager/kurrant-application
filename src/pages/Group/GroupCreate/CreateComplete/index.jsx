@@ -18,7 +18,7 @@ const Pages = () => {
       <Title>스팟 신청이 완료됐어요!</Title>
       <CaptionText>
         신청 내역은 <CaptionTextSB>마이페이지 {'>'} 스팟신청내역</CaptionTextSB>
-        에서 {'\n '}확인할 수 있어요.
+        에서 {'\n'}확인할 수 있어요.
       </CaptionText>
       <ButtonContainer>
         <Button

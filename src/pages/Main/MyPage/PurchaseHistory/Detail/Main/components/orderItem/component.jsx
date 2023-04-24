@@ -13,11 +13,22 @@ import withCommas from '../../../../../../../../utils/withCommas';
 import TextButton from '../../../../../../../../components/TextButton';
 import {formattedMealFoodStatus} from '../../../../../../../../utils/statusFormatter';
 import {useQueryClient} from 'react-query';
+import { useConfirmOrderState } from '../../../../../../../../hook/useOrder';
 
 const {width} = Dimensions.get('screen');
 const Component = ({orderItem, onCancel = () => {}}) => {
   const themeApp = useTheme();
   const queryClient = useQueryClient();
+  const {mutateAsync: orderState} = useConfirmOrderState();
+
+  const deliveryConfirmPress = async (id) => {
+    try {
+      await orderState({id: id});
+    } catch (error) {
+      Alert.alert("상태변경",error.toString().replace("error: "))
+    }
+   
+  };
   const {
     serviceDate,
     makers,
@@ -92,7 +103,7 @@ const Component = ({orderItem, onCancel = () => {}}) => {
                 />
               )}
               {orderStatus === 10 && (
-                <TextButton label="수령확인" type="blue" size="label13R" />
+                <TextButton label="수령확인" type="blue" size="label13R" onPressEvent={()=>deliveryConfirmPress(id)}/>
               )}
             </ServiceDateBox>
             <Body06R19 textColor={themeApp.colors.grey[2]}>
