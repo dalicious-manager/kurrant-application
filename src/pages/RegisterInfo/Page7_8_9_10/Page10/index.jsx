@@ -42,31 +42,9 @@ const Pages = () => {
 
   /// 최종 제풀
 
-  // const [selectedFoodIdPage7, setSelectedFoodIdPage7] = useAtom(
-  //   selectedFoodIdPage7Atom,
-  // );
-
-  // const [selectedFoodIdPage8, setSelectedFoodIdPage8] = useAtom(
-  //   selectedFoodIdPage8Atom,
-  // );
-
-  // const [selectedFoodIdPage9, setSelectedFoodIdPage9] = useAtom(
-  //   selectedFoodIdPage9Atom,
-  // );
-
   const [selectedFoodIdPage10, setSelectedFoodIdPage10] = useAtom(
     selectedFoodIdPage10Atom,
   );
-
-  // const [unselectedFoodIdPage7, setUnselectedFoodIdPage7] = useAtom(
-  //   unselectedFoodIdPage7Atom,
-  // );
-  // const [unselectedFoodIdPage8, setUnselectedFoodIdPage8] = useAtom(
-  //   unselectedFoodIdPage8Atom,
-  // );
-  // const [unselectedFoodIdPage9, setUnselectedFoodIdPage9] = useAtom(
-  //   unselectedFoodIdPage9Atom,
-  // );
 
   useEffect(() => {
     getFoodImageList();
@@ -79,9 +57,6 @@ const Pages = () => {
   // }, [selectedFoodIdPage10]);
 
   useEffect(() => {
-    console.log('랄랄ㄹ라하하하ㅏ하');
-    console.log(selectedFoodIdPage10);
-
     if (selectedFoodIdPage10.length >= 3) {
       setClickAvaliable(true);
     } else {

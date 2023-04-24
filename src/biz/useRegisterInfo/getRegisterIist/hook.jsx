@@ -78,13 +78,10 @@ const useGetRegisterInfo = () => {
   // 음식 이미지 조회
 
   const getFoodImageList = async () => {
-    console.log('가져오기가져오기');
     try {
       const res = await Fetch.getFoodImageList();
 
       // foodIds 배열 형식을 바꿔주어야됨
-
-      // const yo = {1: 'hi', 2: 'hi', 3: 'hi'};
 
       const convertObjToArr = obj => {
         return Object.entries(obj).map(v => {
@@ -127,7 +124,6 @@ const useGetRegisterInfo = () => {
     foodImageListPage8,
     foodImageListPage9,
     foodImageListPage10,
-    // foodImageList,
   };
 };
 

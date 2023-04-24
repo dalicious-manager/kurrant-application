@@ -15,6 +15,8 @@ import {PAGE_NAME as RegisterInfoPage5PageName} from '../Page4';
 import {PAGE_NAME as RegisterInfoPage6PageName} from '../Page6';
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 import {PAGE_NAME as RegisterInfoPage10PageName} from '../Page7_8_9_10/Page10';
+import {PAGE_NAME as RegisterInfoFinishPageName} from '../Finish';
+
 import {SmallXVectorIcon, XVectorIcon} from '../../../components/Icon';
 
 // import RegisterInfoBack from '../../../assets/icons/RegisterInfo/RegisterInfoBack.svg';
@@ -45,7 +47,8 @@ const Pages = () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
     // 기존거 지우고 새로운거 올리기
 
-    navigation.navigate(RegisterInfoPage7PageName);
+    // navigation.navigate(RegisterInfoPage7PageName);
+    navigation.navigate(RegisterInfoFinishPageName);
   };
 
   const handleTodayPress = async () => {

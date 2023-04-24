@@ -79,8 +79,6 @@ const Pages = () => {
   }, [finalRegister]);
 
   const handleSelectBottomModal = id => {
-    console.log('id: ' + id);
-
     setBeganLevel(id);
   };
 
