@@ -87,8 +87,11 @@ const Pages = () => {
     setFinalRegister({
       ...finalRegister,
 
-      useSelectTextDataList: [
-        {selectedFoodId: selectedFoodIdPage7, unselectedFoodId: unselectedList},
+      userSelectTestDataList: [
+        {
+          selectedFoodId: selectedFoodIdPage7.join(','),
+          unselectedFoodId: unselectedList.join(','),
+        },
       ],
     });
 

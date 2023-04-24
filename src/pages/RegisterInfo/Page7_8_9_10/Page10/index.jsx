@@ -137,29 +137,79 @@ const Pages = () => {
     //   ].join(', '),
     // });
 
-    setFinalRegister({
-      ...finalRegister,
+    ///////////////
 
-      useSelectTextDataList: [
-        ...finalRegister.useSelectTextDataList,
-        {
-          selectedFoodId: selectedFoodIdPage10,
-          unselectedFoodId: unselectedList,
+    ///////////////
+
+    // setFinalRegister({
+    //   ...finalRegister,
+
+    //   userSelectTextDataList: [
+    //     ...finalRegister.userSelectTextDataList,
+    //     {
+    //       selectedFoodId: selectedFoodIdPage10,
+    //       unselectedFoodId: unselectedList,
+    //     },
+    //   ],
+    // });
+
+    // const response = await updateRegisterInfo(
+    //   {
+    //     ...finalRegister,
+
+    //     userSelectTextDataList: [
+    //       ...finalRegister.userSelectTextDataList,
+    //       {
+    //         selectedFoodId: selectedFoodIdPage10.join(','),
+    //         unselectedFoodId: unselectedList.join(','),
+    //       },
+    //     ],
+    //   },
+    //   {},
+    // );
+    const response = await updateRegisterInfo(
+      {
+        drinkCount: 1,
+        breakfastCount: 0,
+        midnightSnackCount: 1,
+        exerciseCount: 1,
+        favoriteCountryFood: '한국,일본,스페인',
+        allergyInfo: '우유,밀,새우',
+        allergyInfoEtc: 'Sdsdg',
+        isBegan: true,
+        beganLevel: 2,
+        isProtein: true,
+        proteinFrequency: 2,
+        userDefaultInfo: {
+          birthYear: '2022',
+          birthMonth: '04',
+          birthDay: '24',
+          gender: 1,
+          country: '대한민국',
+          jobType: '경영·사무·금융·보험직',
+          detailJobType: '경영',
         },
-      ],
-    });
-
-    const response = await updateRegisterInfo({
-      ...finalRegister,
-
-      useSelectTextDataList: [
-        ...finalRegister.useSelectTextDataList,
-        {
-          selectedFoodId: selectedFoodIdPage10,
-          unselectedFoodId: unselectedList,
-        },
-      ],
-    });
+        userSelectTestDataList: [
+          {
+            selectedFoodId: '1,2,3',
+            unselectedFoodId: '',
+          },
+          {
+            selectedFoodId: '1,2,3',
+            unselectedFoodId: '',
+          },
+          {
+            selectedFoodId: '1,2,3',
+            unselectedFoodId: '',
+          },
+          {
+            selectedFoodId: '1,2,3',
+            unselectedFoodId: '',
+          },
+        ],
+      },
+      {},
+    );
 
     navigation.navigate(RegisterInfoFinishPageName);
   };

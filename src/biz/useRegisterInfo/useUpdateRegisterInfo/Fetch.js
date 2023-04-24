@@ -1,9 +1,9 @@
 import mSleep from '../../../helpers/mSleep';
 import {fetchJson} from '../../../utils/fetch';
 
-export async function updateRegisterInfo(body, option) {
+export async function updateRegisterInfo(body) {
   const fetchRes = await fetchJson(`/users/me/preference`, 'POST', {
-    ...option,
+    // ...option,
     body: JSON.stringify(body),
   });
 
