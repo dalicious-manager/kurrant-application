@@ -83,17 +83,10 @@ const Pages = () => {
   // jobType이 정해지면 getDetailJobList 받아오기
 
   useEffect(() => {
-    console.log('jobType:  ' + jobType);
-
     getDetailJobList(jobType);
   }, [jobType]);
 
   // 확인하기
-
-  // useEffect(() => {
-  //   console.log('잡 리스트');
-  //   console.log(detailJobList);
-  // }, [detailJobList]);
 
   // 생년월일
 

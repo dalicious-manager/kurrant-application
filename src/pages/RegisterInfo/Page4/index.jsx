@@ -71,11 +71,12 @@ const Pages = () => {
         setClickAvaliable(false);
       }
     }
-
-    // if(){
-
-    // }
   }, [yesOrNo, setClickAvaliable, beganLevel]);
+
+  useEffect(() => {
+    console.log('페이지 4 ');
+    console.log(finalRegister);
+  }, [finalRegister]);
 
   const handleSelectBottomModal = id => {
     console.log('id: ' + id);

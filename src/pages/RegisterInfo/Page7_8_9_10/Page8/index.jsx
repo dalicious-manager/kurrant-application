@@ -49,9 +49,9 @@ const Pages = () => {
 
   // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
 
-  useEffect(() => {
-    console.log(selectedFoodIdPage8);
-  }, [selectedFoodIdPage8]);
+  // useEffect(() => {
+  //   console.log(selectedFoodIdPage8);
+  // }, [selectedFoodIdPage8]);
 
   useEffect(() => {
     if (selectedFoodIdPage8.length >= 3) {
@@ -63,13 +63,12 @@ const Pages = () => {
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    console.log(finalRegister);
-  }, [finalRegister]);
+  // useEffect(() => {
+  //   console.log('1페이지 결과');
+  //   console.log(finalRegister);
+  // }, [finalRegister]);
 
   const handlePress = () => {
-    console.log('ㅗㅑ');
-
     // page7일떄, page8일떄
     // selecteedIdList비우기, final에 데이터 집어넣기, 다음 컴포넌트로 넘어가기
 
@@ -78,13 +77,21 @@ const Pages = () => {
       foodImageList,
     );
 
-    setUnselectedFoodIdPage8(unselectedList);
+    // setUnselectedFoodIdPage8(unselectedList);
 
     // setFinalRegister({
     //   ...finalRegister,
     //   selectedFoodId: [...finalRegister.selectedFoodId, ...selectedFoodIdPage8],
     //   unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
     // });
+    setFinalRegister({
+      ...finalRegister,
+
+      useSelectTextDataList: [
+        ...finalRegister.useSelectTextDataList,
+        {selectedFoodId: selectedFoodIdPage8, unselectedFoodId: unselectedList},
+      ],
+    });
 
     navigation.navigate(RegisterInfoPage9PageName);
   };

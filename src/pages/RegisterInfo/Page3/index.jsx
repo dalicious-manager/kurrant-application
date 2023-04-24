@@ -47,21 +47,18 @@ const Pages = () => {
   // }, [page3Input]);
 
   const handlePress = () => {
-    console.log({
-      ...finalRegister,
-      allergyInfo: page3Input.join(','),
-    });
-
     // 기타 내용이 있을경우 없을 경우
 
     if (!value) {
       setFinalRegister({
         ...finalRegister,
+        allergyInfo: page3Input.join(','),
       });
     } else {
       setFinalRegister({
         ...finalRegister,
         allergyInfo: page3Input.join(','),
+        allergyInfoEtc: value,
       });
     }
 

@@ -28,6 +28,7 @@ import {
   unselectedFoodIdPage8Atom,
   unselectedFoodIdPage9Atom,
 } from '../store';
+import useUpdateRegisterInfo from '../../../../biz/useRegisterInfo/useUpdateRegisterInfo/hook';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE10';
 
@@ -37,33 +38,35 @@ const Pages = () => {
 
   const {getFoodImageList, foodImageList} = useGetRegisterInfo();
 
+  const {isUpdateLoading, updateRegisterInfo} = useUpdateRegisterInfo();
+
   /// 최종 제풀
 
-  const [selectedFoodIdPage7, setSelectedFoodIdPage7] = useAtom(
-    selectedFoodIdPage7Atom,
-  );
+  // const [selectedFoodIdPage7, setSelectedFoodIdPage7] = useAtom(
+  //   selectedFoodIdPage7Atom,
+  // );
 
-  const [selectedFoodIdPage8, setSelectedFoodIdPage8] = useAtom(
-    selectedFoodIdPage8Atom,
-  );
+  // const [selectedFoodIdPage8, setSelectedFoodIdPage8] = useAtom(
+  //   selectedFoodIdPage8Atom,
+  // );
 
-  const [selectedFoodIdPage9, setSelectedFoodIdPage9] = useAtom(
-    selectedFoodIdPage9Atom,
-  );
+  // const [selectedFoodIdPage9, setSelectedFoodIdPage9] = useAtom(
+  //   selectedFoodIdPage9Atom,
+  // );
 
   const [selectedFoodIdPage10, setSelectedFoodIdPage10] = useAtom(
     selectedFoodIdPage10Atom,
   );
 
-  const [unselectedFoodIdPage7, setUnselectedFoodIdPage7] = useAtom(
-    unselectedFoodIdPage7Atom,
-  );
-  const [unselectedFoodIdPage8, setUnselectedFoodIdPage8] = useAtom(
-    unselectedFoodIdPage8Atom,
-  );
-  const [unselectedFoodIdPage9, setUnselectedFoodIdPage9] = useAtom(
-    unselectedFoodIdPage9Atom,
-  );
+  // const [unselectedFoodIdPage7, setUnselectedFoodIdPage7] = useAtom(
+  //   unselectedFoodIdPage7Atom,
+  // );
+  // const [unselectedFoodIdPage8, setUnselectedFoodIdPage8] = useAtom(
+  //   unselectedFoodIdPage8Atom,
+  // );
+  // const [unselectedFoodIdPage9, setUnselectedFoodIdPage9] = useAtom(
+  //   unselectedFoodIdPage9Atom,
+  // );
 
   useEffect(() => {
     getFoodImageList();
@@ -71,9 +74,9 @@ const Pages = () => {
 
   // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
 
-  useEffect(() => {
-    console.log(selectedFoodIdPage10);
-  }, [selectedFoodIdPage10]);
+  // useEffect(() => {
+  //   console.log(selectedFoodIdPage10);
+  // }, [selectedFoodIdPage10]);
 
   useEffect(() => {
     if (selectedFoodIdPage10.length >= 3) {
@@ -85,13 +88,11 @@ const Pages = () => {
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    console.log(finalRegister);
-  }, [finalRegister]);
+  // useEffect(() => {
+  //   console.log(finalRegister);
+  // }, [finalRegister]);
 
-  const handlePress = () => {
-    console.log('ㅗㅑ');
-
+  const handlePress = async () => {
     // page7일떄, page8일떄
     // selecteedIdList비우기, final에 데이터 집어넣기, 다음 컴포넌트로 넘어가기
 
@@ -102,20 +103,62 @@ const Pages = () => {
 
     // 최종 제출
 
+    console.log('최종 제출 확인하기');
+
+    // console.log({
+    //   ...finalRegister,
+    //   selectedFoodId: [
+    //     ...selectedFoodIdPage7,
+    //     ...selectedFoodIdPage8,
+    //     ...selectedFoodIdPage9,
+    //     ...selectedFoodIdPage10,
+    //   ].join(', '),
+    //   unselectedFoodId: [
+    //     ...unselectedFoodIdPage7,
+    //     ...unselectedFoodIdPage8,
+    //     ...unselectedFoodIdPage9,
+    //     ...unselectedList,
+    //   ].join(', '),
+    // });
+
+    // setFinalRegister({
+    //   ...finalRegister,
+    //   selectedFoodId: [
+    //     ...selectedFoodIdPage7,
+    //     ...selectedFoodIdPage8,
+    //     ...selectedFoodIdPage9,
+    //     ...selectedFoodIdPage10,
+    //   ].join(', '),
+    //   unselectedFoodId: [
+    //     ...unselectedFoodIdPage7,
+    //     ...unselectedFoodIdPage8,
+    //     ...unselectedFoodIdPage9,
+    //     ...unselectedList,
+    //   ].join(', '),
+    // });
+
     setFinalRegister({
       ...finalRegister,
-      selectedFoodId: [
-        ...selectedFoodIdPage7,
-        ...selectedFoodIdPage8,
-        ...selectedFoodIdPage9,
-        ...selectedFoodIdPage10,
-      ].join(', '),
-      unselectedFoodId: [
-        ...unselectedFoodIdPage7,
-        ...unselectedFoodIdPage8,
-        ...unselectedFoodIdPage9,
-        ...unselectedList,
-      ].join(', '),
+
+      useSelectTextDataList: [
+        ...finalRegister.useSelectTextDataList,
+        {
+          selectedFoodId: selectedFoodIdPage10,
+          unselectedFoodId: unselectedList,
+        },
+      ],
+    });
+
+    const response = await updateRegisterInfo({
+      ...finalRegister,
+
+      useSelectTextDataList: [
+        ...finalRegister.useSelectTextDataList,
+        {
+          selectedFoodId: selectedFoodIdPage10,
+          unselectedFoodId: unselectedList,
+        },
+      ],
     });
 
     navigation.navigate(RegisterInfoFinishPageName);
