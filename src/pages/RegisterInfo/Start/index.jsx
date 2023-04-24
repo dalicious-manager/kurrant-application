@@ -45,7 +45,7 @@ const Pages = () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
     // 기존거 지우고 새로운거 올리기
 
-    navigation.navigate(RegisterInfoPage1PageName);
+    navigation.navigate(RegisterInfoPage7PageName);
   };
 
   const handleTodayPress = async () => {

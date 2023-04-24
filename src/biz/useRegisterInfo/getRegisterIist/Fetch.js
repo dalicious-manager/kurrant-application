@@ -57,7 +57,7 @@ export async function getAlergyList() {
 
 export async function getFoodImageList() {
   const fetchRes = await fetchJson(
-    `/users/me/preference/foods/images?foodId=1,2,3`,
+    `/users/me/preference/foods`,
 
     'GET',
   );

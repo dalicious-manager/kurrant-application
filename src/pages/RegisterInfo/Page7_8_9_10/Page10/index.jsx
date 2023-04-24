@@ -36,7 +36,7 @@ const Pages = () => {
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
-  const {getFoodImageList, foodImageList} = useGetRegisterInfo();
+  const {getFoodImageList, foodImageListPage10} = useGetRegisterInfo();
 
   const {isUpdateLoading, updateRegisterInfo} = useUpdateRegisterInfo();
 
@@ -102,27 +102,36 @@ const Pages = () => {
 
     const unselectedList = getUnselectedFoodIdList(
       selectedFoodIdPage10,
-      foodImageList,
+      foodImageListPage10,
     );
 
     // 최종 제출
 
     console.log('최종 제출 확인하기');
 
-    const response = await updateRegisterInfo(
-      {
-        ...finalRegister,
+    console.log({
+      ...finalRegister,
 
-        userSelectTestDataList: [
-          ...finalRegister.userSelectTestDataList,
-          {
-            selectedFoodId: selectedFoodIdPage10.join(','),
-            unselectedFoodId: unselectedList.join(','),
-          },
-        ],
-      },
-      {},
-    );
+      userSelectTestDataList: [
+        ...finalRegister.userSelectTestDataList,
+        {
+          selectedFoodId: selectedFoodIdPage10.join(','),
+          unselectedFoodId: unselectedList.join(','),
+        },
+      ],
+    });
+
+    await updateRegisterInfo({
+      ...finalRegister,
+
+      userSelectTestDataList: [
+        ...finalRegister.userSelectTestDataList,
+        {
+          selectedFoodId: selectedFoodIdPage10.join(','),
+          unselectedFoodId: unselectedList.join(','),
+        },
+      ],
+    });
 
     // 아래와 같이 보내면 성공된다
 
@@ -188,12 +197,17 @@ const Pages = () => {
           title={`아래 음식 중 마음에 드는 \n음식 3개를 선택해 주세요`}
         />
 
-        <ImageBox
-          selectLimit={3}
-          foodImageList={foodImageList}
-          selectedIdList={selectedFoodIdPage10}
-          setSelectedIdList={setSelectedFoodIdPage10}
-        />
+        {Array.isArray(foodImageListPage10) &&
+        foodImageListPage10.length > 0 ? (
+          <ImageBox
+            selectLimit={3}
+            foodImageList={foodImageListPage10}
+            selectedIdList={selectedFoodIdPage10}
+            setSelectedIdList={setSelectedFoodIdPage10}
+          />
+        ) : (
+          <Text>선택 가능한 음식 사진이 없습니다 관리자에게 문의해주세요</Text>
+        )}
       </ScrollViewContainer>
       <ButtonNext
         size="full"

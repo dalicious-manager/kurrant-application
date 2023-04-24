@@ -105,7 +105,8 @@ const useUpdateRegisterInfo = () => {
       return fetchRes;
     } catch (err) {
       console.log('여기서 에러나옴');
-      //   Alert.alert('')
+      // 일단 에러를 띄운다 여기서 어떻게 에러처리할 것인지 생각해보기
+      Alert.alert('회원정보 입력 실패');
       throw err;
     } finally {
       setIsUpdateLoading(false);

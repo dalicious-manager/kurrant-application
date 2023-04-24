@@ -14,7 +14,12 @@ const useGetRegisterInfo = () => {
   const [jobList, setJobList] = useState([]);
   const [detailJobList, setDetailJobList] = useState([]);
   const [countryList, setCountryList] = useState([]);
-  const [foodImageList, setFoodImageList] = useState([]);
+
+  //
+  const [foodImageListPage7, setFoodImageListPage7] = useState([]);
+  const [foodImageListPage8, setFoodImageListPage8] = useState([]);
+  const [foodImageListPage9, setFoodImageListPage9] = useState([]);
+  const [foodImageListPage10, setFoodImageListPage10] = useState([]);
 
   // 음식나라 조회
 
@@ -73,9 +78,34 @@ const useGetRegisterInfo = () => {
   // 음식 이미지 조회
 
   const getFoodImageList = async () => {
+    console.log('가져오기가져오기');
     try {
       const res = await Fetch.getFoodImageList();
-      setFoodImageList(res.data);
+
+      // foodIds 배열 형식을 바꿔주어야됨
+
+      // const yo = {1: 'hi', 2: 'hi', 3: 'hi'};
+
+      const convertObjToArr = obj => {
+        return Object.entries(obj).map(v => {
+          return {
+            foodId: v[0],
+            imageUrl: v[1],
+          };
+        });
+      };
+
+      res.data.forEach(v => {
+        if (v.page === 1) {
+          setFoodImageListPage7(convertObjToArr(v.foodIds));
+        } else if (v.page === 2) {
+          setFoodImageListPage8(convertObjToArr(v.foodIds));
+        } else if (v.page === 3) {
+          setFoodImageListPage9(convertObjToArr(v.foodIds));
+        } else if (v.page === 4) {
+          setFoodImageListPage10(convertObjToArr(v.foodIds));
+        }
+      });
     } catch (err) {
       console.log(err);
     }
@@ -93,7 +123,11 @@ const useGetRegisterInfo = () => {
     jobList,
     detailJobList,
     countryList,
-    foodImageList,
+    foodImageListPage7,
+    foodImageListPage8,
+    foodImageListPage9,
+    foodImageListPage10,
+    // foodImageList,
   };
 };
 

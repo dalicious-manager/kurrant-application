@@ -34,7 +34,8 @@ const Pages = () => {
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
-  const {getFoodImageList, foodImageList} = useGetRegisterInfo();
+  // const {getFoodImageList, foodImageList} = useGetRegisterInfo();
+  const {getFoodImageList, foodImageListPage7} = useGetRegisterInfo();
 
   const [selectedFoodIdPage7, setSelectedFoodIdPage7] = useAtom(
     selectedFoodIdPage7Atom,
@@ -69,7 +70,7 @@ const Pages = () => {
 
     const unselectedList = getUnselectedFoodIdList(
       selectedFoodIdPage7,
-      foodImageList,
+      foodImageListPage7,
     );
 
     // setUnselectedFoodIdPage7(unselectedList);
@@ -113,12 +114,20 @@ const Pages = () => {
           title={`아래 음식 중 마음에 드는 \n음식 3개를 선택해 주세요`}
         />
 
-        <ImageBox
-          selectLimit={3}
-          foodImageList={foodImageList}
-          selectedIdList={selectedFoodIdPage7}
-          setSelectedIdList={setSelectedFoodIdPage7}
-        />
+        {/* foodImageLIstPage가 undefined일 경우 */}
+
+        {/* 로딩중일때 처리해야됨 */}
+
+        {Array.isArray(foodImageListPage7) && foodImageListPage7.length > 0 ? (
+          <ImageBox
+            selectLimit={3}
+            foodImageList={foodImageListPage7}
+            selectedIdList={selectedFoodIdPage7}
+            setSelectedIdList={setSelectedFoodIdPage7}
+          />
+        ) : (
+          <Text>선택 가능한 음식 사진이 없습니다 관리자에게 문의해주세요</Text>
+        )}
       </ScrollViewContainer>
       <ButtonNext
         size="full"
