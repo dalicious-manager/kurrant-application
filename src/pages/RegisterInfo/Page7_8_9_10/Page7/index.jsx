@@ -7,14 +7,13 @@ import {useEffect, useState} from 'react';
 
 import ProgressBar from '~components/ProgressBar7';
 
-import {PAGE_NAME as RegisterInfoFinishPageName} from '../../Finish';
 import {PAGE_NAME as RegisterInfoPage8PageName} from '../Page8';
 
 import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/hook';
 
 import {finalRegisterAtom} from '../../store';
 import {useAtom} from 'jotai';
-import {getUnselectedFoodIdList} from '../logic';
+import {makeUnselectedFoodIdList} from '../logic';
 
 import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
@@ -22,14 +21,6 @@ import {selectedFoodIdPage7Atom, unselectedFoodIdPage7Atom} from '../store';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import NoPhotosSign from '../components/NoPhotosSign/NoPhotosSign';
-
-// import TitleBox from '../components/TitleBox';
-// import {
-//   selectedFoodIdPage10Atom,
-//   selectedFoodIdPage7Atom,
-//   selectedFoodIdPage8Atom,
-//   selectedFoodIdPage9Atom,
-// } from '../../Page7/store';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE7';
 
@@ -43,9 +34,6 @@ const Pages = () => {
 
   const [selectedFoodIdPage7, setSelectedFoodIdPage7] = useAtom(
     selectedFoodIdPage7Atom,
-  );
-  const [unselectedFoodIdPage7, setUnselectedFoodIdPage7] = useAtom(
-    unselectedFoodIdPage7Atom,
   );
 
   useEffect(() => {
@@ -64,30 +52,11 @@ const Pages = () => {
 
   const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   console.log(finalRegister);
-  // }, [finalRegister]);
-
   const handlePress = () => {
-    // page7일떄, page8일떄
-    // selecteedIdList비우기, final에 데이터 집어넣기, 다음 컴포넌트로 넘어가기
-
-    const unselectedList = getUnselectedFoodIdList(
+    const unselectedList = makeUnselectedFoodIdList(
       selectedFoodIdPage7,
       foodImageListPage7,
     );
-
-    // setUnselectedFoodIdPage7(unselectedList);
-
-    // console.log('야야야야');
-
-    // console.log({
-    //   ...finalRegister,
-
-    //   useSelectTextDataList: [
-    //     {selectedFoodId: selectedFoodIdPage7, unselectedFoodId: unselectedList},
-    //   ],
-    // });
 
     setFinalRegister({
       ...finalRegister,

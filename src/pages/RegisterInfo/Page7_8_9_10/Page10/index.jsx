@@ -14,20 +14,12 @@ import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/
 
 import {finalRegisterAtom} from '../../store';
 import {useAtom} from 'jotai';
-import {getUnselectedFoodIdList} from '../logic';
+import {makeUnselectedFoodIdList} from '../logic';
 
 import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
 
-import {
-  selectedFoodIdPage10Atom,
-  selectedFoodIdPage7Atom,
-  selectedFoodIdPage8Atom,
-  selectedFoodIdPage9Atom,
-  unselectedFoodIdPage7Atom,
-  unselectedFoodIdPage8Atom,
-  unselectedFoodIdPage9Atom,
-} from '../store';
+import {selectedFoodIdPage10Atom} from '../store';
 import useUpdateRegisterInfo from '../../../../biz/useRegisterInfo/useUpdateRegisterInfo/hook';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
@@ -55,10 +47,6 @@ const Pages = () => {
 
   // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
 
-  // useEffect(() => {
-  //   console.log(selectedFoodIdPage10);
-  // }, [selectedFoodIdPage10]);
-
   useEffect(() => {
     if (selectedFoodIdPage10.length >= 3) {
       setClickAvaliable(true);
@@ -69,16 +57,8 @@ const Pages = () => {
 
   const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   console.log(finalRegister);
-  // }, [finalRegister]);
-
   const handlePress = async () => {
-    // const handlePress = () => {
-    // page7일떄, page8일떄
-    // selecteedIdList비우기, final에 데이터 집어넣기, 다음 컴포넌트로 넘어가기
-
-    const unselectedList = getUnselectedFoodIdList(
+    const unselectedList = makeUnselectedFoodIdList(
       selectedFoodIdPage10,
       foodImageListPage10,
     );
@@ -86,18 +66,6 @@ const Pages = () => {
     // 최종 제출
 
     console.log('최종 제출 확인하기');
-
-    console.log({
-      ...finalRegister,
-
-      userSelectTestDataList: [
-        ...finalRegister.userSelectTestDataList,
-        {
-          selectedFoodId: selectedFoodIdPage10.join(','),
-          unselectedFoodId: unselectedList.join(','),
-        },
-      ],
-    });
 
     await updateRegisterInfo({
       ...finalRegister,
@@ -329,15 +297,13 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  /* padding: 35px 20px; */
-  /* padding: 15px 20px; */
+
   align-items: center;
   background-color: #ffffff;
 `;
 
 const ScrollViewContainer = styled.ScrollView`
   width: 100%;
-  /* height: 90%; */
   background-color: #ffffff;
 `;
 

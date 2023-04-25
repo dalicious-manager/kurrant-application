@@ -1,4 +1,4 @@
-export const getUnselectedFoodIdList = (selectedIdList, foodImageList) => {
+export const makeUnselectedFoodIdList = (selectedIdList, foodImageList) => {
   let unselected = [];
 
   foodImageList.forEach(v => {

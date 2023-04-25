@@ -14,21 +14,14 @@ import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/
 
 import {finalRegisterAtom} from '../../store';
 import {useAtom} from 'jotai';
-import {getUnselectedFoodIdList} from '../logic';
+import {makeUnselectedFoodIdList} from '../logic';
 
 import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
 import {selectedFoodIdPage8Atom, unselectedFoodIdPage8Atom} from '../store';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
-// import TitleBox from '../components/TitleBox';
-// import {
-//   selectedFoodIdPage10Atom,
-//   selectedFoodIdPage7Atom,
-//   selectedFoodIdPage8Atom,
-//   selectedFoodIdPage9Atom,
-// } from '../../Page7/store';
+import NoPhotosSign from '../components/NoPhotosSign/NoPhotosSign';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE8';
 
@@ -41,19 +34,12 @@ const Pages = () => {
   const [selectedFoodIdPage8, setSelectedFoodIdPage8] = useAtom(
     selectedFoodIdPage8Atom,
   );
-  const [unselectedFoodIdPage8, setUnselectedFoodIdPage8] = useAtom(
-    unselectedFoodIdPage8Atom,
-  );
 
   useEffect(() => {
     getFoodImageList();
   }, []);
 
   // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
-
-  // useEffect(() => {
-  //   console.log(selectedFoodIdPage8);
-  // }, [selectedFoodIdPage8]);
 
   useEffect(() => {
     if (selectedFoodIdPage8.length >= 3) {
@@ -65,27 +51,15 @@ const Pages = () => {
 
   const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   console.log('1페이지 결과');
-  //   console.log(finalRegister);
-  // }, [finalRegister]);
-
   const handlePress = () => {
     // page7일떄, page8일떄
     // selecteedIdList비우기, final에 데이터 집어넣기, 다음 컴포넌트로 넘어가기
 
-    const unselectedList = getUnselectedFoodIdList(
+    const unselectedList = makeUnselectedFoodIdList(
       selectedFoodIdPage8,
       foodImageListPage8,
     );
 
-    // setUnselectedFoodIdPage8(unselectedList);
-
-    // setFinalRegister({
-    //   ...finalRegister,
-    //   selectedFoodId: [...finalRegister.selectedFoodId, ...selectedFoodIdPage8],
-    //   unselectedFoodId: [...finalRegister.unselectedFoodId, ...unselectedList],
-    // });
     setFinalRegister({
       ...finalRegister,
 
