@@ -104,12 +104,14 @@ const Container = styled.View`
   position: relative;
 `;
 
-const Background = styled.ImageBackground`
-  flex: 1;
+// const Background = styled.ImageBackground`
+const Background = styled.Image`
+  /* flex: 1; */
 
   /* padding: 0 24px; */
 
   width: 100%;
+  height: 100%;
 `;
 
 const Wrap3 = styled.View`

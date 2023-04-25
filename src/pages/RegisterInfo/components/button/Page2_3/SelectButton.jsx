@@ -6,6 +6,7 @@ const SelectButton = ({
   setSelectedIdList,
   selectedIdList,
   selectLimit = undefined,
+  callbackWhenOverSelected = undefined,
 }) => {
   // data에 id, name, 들어있다
 
@@ -17,7 +18,14 @@ const SelectButton = ({
             setSelectedIdList([...selectedIdList].filter(v => v !== data.id));
           } else {
             // 4개 이상일 경우
-            if (selectedIdList.length >= selectLimit) return;
+            if (selectedIdList.length >= selectLimit) {
+              if (callbackWhenOverSelected) {
+                callbackWhenOverSelected();
+                return;
+              } else {
+                return;
+              }
+            }
 
             setSelectedIdList([...selectedIdList, data.id]);
           }

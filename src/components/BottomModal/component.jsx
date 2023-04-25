@@ -32,10 +32,13 @@ const Component = props => {
     description = '',
     buttonTitle1 = '모달버튼',
     buttonTitle2 = '모달버튼',
+    halfButtonTitle,
     buttonType1 = 'yellow',
     buttonType2 = 'grey2',
+    halfButtonType = 'yellow',
     onPressEvent1 = () => {},
     onPressEvent2,
+    onPressEventHalf = () => {},
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
@@ -105,7 +108,19 @@ const Component = props => {
             )}
           </BottomSheetTitleView>
 
-          {!onPressEvent2 ? (
+          {halfButtonTitle ? (
+            <ButtonWrap>
+              <ButtonMargin>
+                <Button
+                  label={halfButtonTitle}
+                  size="modalHalf"
+                  type={halfButtonType}
+                  text={'Button09SB'}
+                  onPressEvent={onPressEventHalf}
+                />
+              </ButtonMargin>
+            </ButtonWrap>
+          ) : !onPressEvent2 ? (
             <ButtonWrap>
               <Button
                 label={buttonTitle1}

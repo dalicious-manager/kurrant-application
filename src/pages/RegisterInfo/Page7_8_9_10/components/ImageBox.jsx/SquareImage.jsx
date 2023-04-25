@@ -10,6 +10,7 @@ const SquareImage = ({
   selectLimit,
   selectedIdList,
   setSelectedIdList,
+  callbackWhenOverSelected = undefined,
 }) => {
   const onCheck = true;
 
@@ -19,7 +20,14 @@ const SquareImage = ({
         setSelectedIdList([...selectedIdList].filter(v => v !== foodId));
       } else {
         // 3개 이상일 경우
-        if (selectedIdList.length >= selectLimit) return;
+        if (selectedIdList.length >= selectLimit) {
+          if (callbackWhenOverSelected) {
+            callbackWhenOverSelected();
+            return;
+          } else {
+            return;
+          }
+        }
 
         setSelectedIdList([...selectedIdList, foodId]);
       }

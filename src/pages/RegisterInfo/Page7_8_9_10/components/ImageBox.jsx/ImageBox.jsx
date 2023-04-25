@@ -7,6 +7,7 @@ const ImageBox = ({
   selectedIdList,
   setSelectedIdList,
   selectLimit = 0,
+  callbackWhenOverSelected = undefined,
 }) => {
   return (
     <Container>
@@ -20,6 +21,7 @@ const ImageBox = ({
             selectLimit={selectLimit}
             selectedIdList={selectedIdList}
             setSelectedIdList={setSelectedIdList}
+            callbackWhenOverSelected={callbackWhenOverSelected}
           />
         );
       })}
