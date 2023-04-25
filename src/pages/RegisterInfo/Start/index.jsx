@@ -48,7 +48,7 @@ const Pages = () => {
     // 기존거 지우고 새로운거 올리기
 
     // navigation.navigate(RegisterInfoPage7PageName);
-    navigation.navigate(RegisterInfoPage3PageName);
+    navigation.navigate(RegisterInfoPage1PageName);
     // navigation.navigate(RegisterInfoFinishPageName);
     // navigation.navigate(RegisterInfoPage2PageName);
   };

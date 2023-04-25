@@ -10,6 +10,8 @@ import {useAtom} from 'jotai';
 import Image from '~components/Image';
 import Typography from '~components/Typography';
 
+import {PAGE_NAME as HomeMainPageName} from '~pages/Main/Bnb/Home/Main';
+
 import {RegisterComplete} from '~assets/images/RegisterInfo/RegisterComplete.png';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_FINISH';
@@ -24,11 +26,8 @@ const Pages = () => {
   }, [finalRegister]);
 
   const handlePress = () => {
-    console.log('마무리');
-    // navigation.navigate(RegisterInfoPage2PageName);
+    navigation.navigate(HomeMainPageName);
   };
-
-  console.log(Dimensions.get('screen').height);
 
   return (
     <Container
