@@ -1,4 +1,4 @@
-import {Text} from 'react-native';
+import {Dimensions, Text, View} from 'react-native';
 import styled from 'styled-components';
 
 import Button from '../../../../components/Button';
@@ -19,6 +19,8 @@ import {getUnselectedFoodIdList} from '../logic';
 import TitleBox from '../components/TitleBox';
 import ImageBox from '../components/ImageBox.jsx/ImageBox';
 import {selectedFoodIdPage8Atom, unselectedFoodIdPage8Atom} from '../store';
+
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 // import TitleBox from '../components/TitleBox';
 // import {
@@ -99,7 +101,21 @@ const Pages = () => {
     navigation.navigate(RegisterInfoPage9PageName);
   };
 
-  //
+  // ui가 없을 경우 3초정도 skieleton을 보여주고 없다고 얘기해야 된다
+
+  const [isDataListNull, setIsDataListNull] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsDataListNull(true);
+    }, 3000);
+  }, []);
+
+  // skeleton ui 네모
+
+  const skeletonUIImageWidth =
+    (Dimensions.get('screen').width - 2 * 24 - 26) / 3;
+  const skeletonBorderRadius = 7;
 
   return (
     <Container
@@ -120,8 +136,122 @@ const Pages = () => {
             selectedIdList={selectedFoodIdPage8}
             setSelectedIdList={setSelectedFoodIdPage8}
           />
+        ) : isDataListNull ? (
+          <NoPhotosSign />
         ) : (
-          <Text>선택 가능한 음식 사진이 없습니다 관리자에게 문의해주세요</Text>
+          <SkeletonWrap>
+            <SkeletonPlaceholder
+              borderRadius={4}
+              flex={1}
+              backgroundColor={'white'}>
+              <SkeletonPlaceholder.Item>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    marginRight={6.5}
+                    // marginLeft={6.5}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    marginRight={6.5}
+                    marginLeft={6.5}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    // marginRight={6.5}
+                    marginLeft={6.5}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    marginRight={6.5}
+                    // marginLeft={6.5}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    marginRight={6.5}
+                    marginLeft={6.5}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    // marginRight={6.5}
+                    marginLeft={6.5}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    marginRight={6.5}
+                    // marginLeft={6.5}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    marginRight={6.5}
+                    marginLeft={6.5}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    // marginRight={6.5}
+                    marginLeft={6.5}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    marginRight={6.5}
+                    // marginLeft={6.5}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    marginRight={6.5}
+                    marginLeft={6.5}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={skeletonUIImageWidth}
+                    height={skeletonUIImageWidth}
+                    borderRadius={skeletonBorderRadius}
+                    marginBottom={13}
+                    // marginRight={6.5}
+                    marginLeft={6.5}
+                  />
+                </View>
+              </SkeletonPlaceholder.Item>
+            </SkeletonPlaceholder>
+          </SkeletonWrap>
         )}
       </ScrollViewContainer>
       <ButtonNext
@@ -156,3 +286,5 @@ const ButtonNext = styled(Button)`
   position: relative;
   bottom: 35px;
 `;
+
+const SkeletonWrap = styled.View``;

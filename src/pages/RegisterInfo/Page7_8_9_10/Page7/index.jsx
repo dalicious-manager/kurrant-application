@@ -21,6 +21,7 @@ import ImageBox from '../components/ImageBox.jsx/ImageBox';
 import {selectedFoodIdPage7Atom, unselectedFoodIdPage7Atom} from '../store';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import NoPhotosSign from '../components/NoPhotosSign/NoPhotosSign';
 
 // import TitleBox from '../components/TitleBox';
 // import {
@@ -239,8 +240,9 @@ const Pages = () => {
               </SkeletonPlaceholder.Item>
             </SkeletonPlaceholder>
           </SkeletonWrap>
-        ) : Array.isArray(foodImageListPage7) &&
-          foodImageListPage7.length > 0 ? (
+        ) : // : Array.isArray(foodImageListPage7) &&
+        //   foodImageListPage7.length > 0 ? (
+        false ? (
           <ImageBox
             selectLimit={3}
             foodImageList={foodImageListPage7}
@@ -248,7 +250,7 @@ const Pages = () => {
             setSelectedIdList={setSelectedFoodIdPage7}
           />
         ) : (
-          <Text>선택 가능한 음식 사진이 없습니다 관리자에게 문의해주세요</Text>
+          <NoPhotosSign />
         )}
       </ScrollViewContainer>
       <ButtonNext

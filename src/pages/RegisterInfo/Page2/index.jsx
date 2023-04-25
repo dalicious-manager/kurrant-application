@@ -210,6 +210,17 @@ const Pages = () => {
                     // marginLeft={4}
                   />
                 </View>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={200}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    // marginLeft={4}
+                  />
+                </View>
               </SkeletonPlaceholder.Item>
             </SkeletonPlaceholder>
           </SkeletonWrap>
