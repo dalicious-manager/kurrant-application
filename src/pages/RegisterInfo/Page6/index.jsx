@@ -1,4 +1,4 @@
-import {Alert, Text} from 'react-native';
+import {Alert, Platform, Text} from 'react-native';
 import styled from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -96,10 +96,15 @@ const Pages = () => {
     setIsMount(true);
   }, []);
 
+  // ios일때 생년월일 값 집어넣으려면 아래와 같이 처리해야됨
   useEffect(() => {
-    if (!birthdayModal && isMount && isConfirmPress) {
-      setBirthday(toStringByFormatting(birthdayDateFormat, '. '));
+    if (Platform.OS === 'ios') {
+      if (!birthdayModal && isMount && isConfirmPress) {
+        setBirthday(toStringByFormatting(birthdayDateFormat, '. '));
+      }
     }
+
+    // ios일때
   }, [birthdayDateFormat, birthdayModal]);
 
   // 다음 버튼 열기
@@ -117,8 +122,20 @@ const Pages = () => {
     setIsConfirmPress(true);
   };
 
-  const handleOnChangeDate = (__, date, _, setSelected) => {
-    setSelected(date);
+  const handleOnChangeDate = (event, date, setModal, setSelected) => {
+    // 안드로이드하고 ios하고 behavior가 다름
+
+    if (Platform.OS === 'android') {
+      setModal(false);
+
+      if (event.type === 'set') {
+        setBirthday(toStringByFormatting(date, '. '));
+      }
+    }
+
+    if (Platform.OS === 'ios') {
+      setSelected(date);
+    }
   };
 
   const handleSelectJobType = id => {
