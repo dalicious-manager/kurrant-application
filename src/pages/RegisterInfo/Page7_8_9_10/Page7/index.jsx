@@ -240,9 +240,8 @@ const Pages = () => {
               </SkeletonPlaceholder.Item>
             </SkeletonPlaceholder>
           </SkeletonWrap>
-        ) : // : Array.isArray(foodImageListPage7) &&
-        //   foodImageListPage7.length > 0 ? (
-        false ? (
+        ) : Array.isArray(foodImageListPage7) &&
+          foodImageListPage7.length > 0 ? (
           <ImageBox
             selectLimit={3}
             foodImageList={foodImageListPage7}
