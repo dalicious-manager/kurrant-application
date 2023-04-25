@@ -101,6 +101,7 @@ import MembershipTerminateComplate, {
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
+import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
 import PayCheckPassword, {
   PAGE_NAME as PayCheckPasswordPageName,
 } from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
@@ -314,7 +315,9 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-    <MainRoot.Navigator>
+    <MainRoot.Navigator 
+      initialRouteName={SplashPageName}
+    >
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -479,6 +482,13 @@ const Screen = () => {
         <MainRoot.Screen
           name={BnbScreenName}
           component={BnbScreen}
+          options={{headerShown: false}}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={SplashPageName}
+          component={SplashPage}
           options={{headerShown: false}}
         />
       </MainRoot.Group>

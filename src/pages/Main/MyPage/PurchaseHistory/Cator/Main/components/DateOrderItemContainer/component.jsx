@@ -222,10 +222,15 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   {
                                     text: '메뉴 취소',
                                     onPress: () => {
-                                      changeItem(order.id, order.serviceDate);
-                                      queryClient.invalidateQueries(
-                                        'todayMeal',
-                                      );
+                                      try {
+                                        changeItem(order.id, order.serviceDate);
+                                        queryClient.invalidateQueries(
+                                          'todayMeal',
+                                        );
+                                      } catch (error) {
+                                        Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
+                                      }
+                                      
                                     },
 
                                     style: 'destructive',

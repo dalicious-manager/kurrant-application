@@ -559,7 +559,7 @@ const Pages = () => {
               queryClient.invalidateQueries('todayMeal');
               setModalVisible3(true);
             } catch (err) {
-              console.log(err);
+              Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
             }
           },
           style: 'destructive',

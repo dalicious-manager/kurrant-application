@@ -197,26 +197,42 @@ const Pages = ({route}) => {
     const {position, offset} = e.nativeEvent;
     if (offset !== 0) {
       if (position === 2) {
-        setDate(
-          formattedWeekDate(
-            new Date(date).setDate(new Date(date).getDate() + 1),
-          ),
+        const currentDate = formattedWeekDate(new Date());
+        const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+        const todayDate = new Date(currentDate).setDate(
+          new Date(currentDate).getDate(),
         );
-        const dateIndex = weekly.map(v => {
-          return v.map(s => {
-            return formattedWeekDate(s);
+
+        const week = weekly.map(w => {
+          const find = w.findIndex(v => {
+            return (
+              formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
+            );
           });
+          return find !== -1;
         });
-        const index = dateIndex.findIndex((v, i) => {
-          return v.includes(
+        if (week.includes(true)) {
+          setDate(
             formattedWeekDate(
               new Date(date).setDate(new Date(date).getDate() + 1),
             ),
           );
-        });
-        setChk(index);
-        pager.current.setPage(index);
-        return setNowPage(0);
+          const dateIndex = weekly.map(v => {
+            return v.map(s => {
+              return formattedWeekDate(s);
+            });
+          });
+          const index = dateIndex.findIndex((v, i) => {
+            return v.includes(
+              formattedWeekDate(
+                new Date(date).setDate(new Date(date).getDate() + 1),
+              ),
+            );
+          });
+          setChk(index);
+          pager.current.setPage(index);
+          return setNowPage(0);
+        }
       }
       if (position === -1) {
         const prevDate = new Date(date).getDate();
@@ -378,33 +394,24 @@ const Pages = ({route}) => {
           : 2;
       if (page !== position) {
         if (position === 2) {
-          setDate(
-            formattedWeekDate(
-              new Date(date).setDate(new Date(date).getDate() + 1),
-            ),
+          const currentDate = formattedWeekDate(new Date());
+          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+          const todayDate = new Date(currentDate).setDate(
+            new Date(currentDate).getDate(),
           );
-          const dateIndex = weekly.map(v => {
-            return v.map(s => {
-              return formattedWeekDate(s);
+
+          const week = weekly.map(w => {
+            const find = w.findIndex(v => {
+              return (
+                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
+              );
             });
+            return find !== -1;
           });
-          const index = dateIndex.findIndex((v, i) => {
-            return v.includes(
-              formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() + 1),
-              ),
-            );
-          });
-          setChk(index);
-          pager.current.setPage(index);
-        }
-        if (position === 0) {
-          const prevDate = new Date(date).getDate();
-          const todayDate = new Date().getDate();
-          if (todayDate < prevDate) {
+          if (week.includes(true)) {
             setDate(
               formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() - 1),
+                new Date(date).setDate(new Date(date).getDate() + 1),
               ),
             );
             const dateIndex = weekly.map(v => {
@@ -415,12 +422,54 @@ const Pages = ({route}) => {
             const index = dateIndex.findIndex((v, i) => {
               return v.includes(
                 formattedWeekDate(
-                  new Date(date).setDate(new Date(date).getDate() - 1),
+                  new Date(date).setDate(new Date(date).getDate() + 1),
                 ),
               );
             });
             setChk(index);
             pager.current.setPage(index);
+          }
+        }
+        if (position === 0) {
+          const currentDate = formattedWeekDate(new Date());
+          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+          const todayDate = new Date(currentDate).setDate(
+            new Date(currentDate).getDate(),
+          );
+
+          const week = weekly.map(w => {
+            const find = w.findIndex(v => {
+              return (
+                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
+              );
+            });
+            return find !== -1;
+          });
+
+          if (week.includes(true)) {
+            const prevDate = new Date(date).getDate();
+            const todayDate = new Date().getDate();
+            if (todayDate < prevDate) {
+              setDate(
+                formattedWeekDate(
+                  new Date(date).setDate(new Date(date).getDate() - 1),
+                ),
+              );
+              const dateIndex = weekly.map(v => {
+                return v.map(s => {
+                  return formattedWeekDate(s);
+                });
+              });
+              const index = dateIndex.findIndex((v, i) => {
+                return v.includes(
+                  formattedWeekDate(
+                    new Date(date).setDate(new Date(date).getDate() - 1),
+                  ),
+                );
+              });
+              setChk(index);
+              pager.current.setPage(index);
+            }
           }
         }
         diningRef.current.setPage(page);

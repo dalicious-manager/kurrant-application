@@ -203,8 +203,13 @@ const Pages = ({route}) => {
                       {
                         text: '메뉴 취소',
                         onPress: async () => {
-                          cancelAll();
+                          try {
+                            cancelAll();
                           queryClient.invalidateQueries('todayMeal');
+                          } catch (error) {
+                            Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
+                          }
+                          
                         },
                         style: 'destructive',
                       },

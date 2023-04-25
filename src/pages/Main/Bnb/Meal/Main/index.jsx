@@ -129,7 +129,7 @@ const Pages = ({route}) => {
                 date: serviceDate ? serviceDate : formattedDate(new Date()),
               });
             } catch (err) {
-              console.log(err);
+              Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
             }
           },
           style: 'destructive',
