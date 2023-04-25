@@ -65,6 +65,7 @@ import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJus
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {useGetTodayMeal} from '../../../../../hook/useOrder';
+import useGetRegisterDoneCheck from '../../../../../biz/useRegisterInfo/getRegisterDoneCheck/hook';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -181,8 +182,18 @@ const Pages = () => {
   //   console.log(oneAnnouncement);
   // }, [oneAnnouncement]);
 
-  // 회원 정보 입력 localStorage확인하기
   // 회원 정보 입력
+
+  // 1.  회원 정보 이미 썻는가 안썻는가 파악하기
+
+  const {isRegisterDone, getRegisterDoneCheck, isRegisterInfoLoading} =
+    useGetRegisterDoneCheck();
+
+  useEffect(() => {
+    getRegisterDoneCheck();
+  }, []);
+
+  // 2. 하루지났는가 안 지났는가
 
   const [shouldOpenRegister, setShouldOpenRegister] = useState(false);
 
@@ -204,8 +215,26 @@ const Pages = () => {
   };
 
   useEffect(() => {
-    isRegisterInfoPassTime();
-  }, []);
+    // 회원정보입력 보여줄지 안보여줄지 판단하기
+
+    // 로딩 처리
+    if (isRegisterInfoLoading) {
+      console.log('회원정보입력 입력 여부 받아오는 중');
+      return;
+    } else if (isRegisterInfoLoading === false) {
+      console.log('회원정보입력 입력 여부받기 완료');
+    } else if (isRegisterInfoLoading === undefined) {
+      console.log('아직 첫 렌더링중임');
+      return;
+    }
+    // 회원정보입력 작성여부 파악
+    if (isRegisterDone) {
+      console.log('회원정보입력 이미 작성하셨습니다');
+    } else {
+      console.log('회원정보입력 아직 작성 안하심');
+      isRegisterInfoPassTime();
+    }
+  }, [isRegisterDone, isRegisterInfoLoading]);
 
   useEffect(() => {
     if (shouldOpenRegister) {
@@ -213,9 +242,9 @@ const Pages = () => {
     }
   }, [shouldOpenRegister]);
 
-  useEffect(() => {
-    removeItemFromStorage('registerInfoClicked');
-  }, []);
+  // useEffect(() => {
+  //   removeItemFromStorage('registerInfoClicked');
+  // }, []);
 
   useEffect(() => {
     const handleShowModal = async () => {
