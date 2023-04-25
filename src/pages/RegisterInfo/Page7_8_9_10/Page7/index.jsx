@@ -246,7 +246,6 @@ const Pages = () => {
         halfButtonTitle="확인"
         halfButtonType="yellow"
         onPressEventHalf={() => setModalVisible(false)}
-        // onPressEvent2={() => {}}
       />
     </Container>
   );

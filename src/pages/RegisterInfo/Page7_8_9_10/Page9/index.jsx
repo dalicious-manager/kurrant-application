@@ -23,6 +23,7 @@ import {selectedFoodIdPage9Atom, unselectedFoodIdPage8Atom} from '../store';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import NoPhotosSign from '../components/NoPhotosSign/NoPhotosSign';
 
+import BottomModal from '~components/BottomModal';
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE9';
 
 const Pages = () => {
@@ -40,6 +41,8 @@ const Pages = () => {
   }, []);
 
   // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (selectedFoodIdPage9.length >= 3) {
@@ -111,6 +114,9 @@ const Pages = () => {
             foodImageList={foodImageListPage9}
             selectedIdList={selectedFoodIdPage9}
             setSelectedIdList={setSelectedFoodIdPage9}
+            callbackWhenOverSelected={() => {
+              setModalVisible(true);
+            }}
           />
         ) : isDataListNull ? (
           <NoPhotosSign />
@@ -239,6 +245,15 @@ const Pages = () => {
         onPressEvent={() => {
           handlePress();
         }}
+      />
+      <BottomModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        title="3개까지만 선택 가능합니다"
+        description={' '}
+        halfButtonTitle="확인"
+        halfButtonType="yellow"
+        onPressEventHalf={() => setModalVisible(false)}
       />
     </Container>
   );
