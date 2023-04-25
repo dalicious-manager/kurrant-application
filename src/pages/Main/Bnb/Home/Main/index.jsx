@@ -219,12 +219,12 @@ const Pages = () => {
 
     // 로딩 처리
     if (isRegisterInfoLoading) {
-      console.log('회원정보입력 입력 여부 받아오는 중');
+      // console.log('회원정보입력 입력 여부 받아오는 중');
       return;
     } else if (isRegisterInfoLoading === false) {
-      console.log('회원정보입력 입력 여부받기 완료');
+      // console.log('회원정보입력 입력 여부받기 완료');
     } else if (isRegisterInfoLoading === undefined) {
-      console.log('아직 첫 렌더링중임');
+      // console.log('아직 첫 렌더링중임');
       return;
     }
     // 회원정보입력 작성여부 파악
