@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -12,10 +12,11 @@ import {useAtom} from 'jotai';
 import Typography from '~components/Typography';
 import ButtonContainer from '../components/button/Page2_3/ButtonContainer';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, Platform, View} from 'react-native';
 import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hook';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import useKeyboardEvent from '../../../hook/useKeyboardEvent';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE3';
 
@@ -25,6 +26,8 @@ const Pages = () => {
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
   const [value, setValue] = useState(undefined);
+
+  const keyboardStatus = useKeyboardEvent();
 
   const navigation = useNavigation();
 
@@ -67,16 +70,8 @@ const Pages = () => {
     setPage2Input([...list]);
   };
 
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
-
   return (
-    <Container
-    // paddingHorizontal={20}
-    >
-      {/* <ScrollViewContainer showsVerticalScrollIndicator={false}> */}
-
+    <Container>
       <KeyboardViewContainer extraHeight={120}>
         <ViewContainer>
           <ProgressBar progress={3} />
@@ -260,8 +255,6 @@ const Pages = () => {
             />
           </InputWrap>
         </ViewContainer>
-
-        {/* </ScrollViewContainer> */}
       </KeyboardViewContainer>
       <ButtonNext
         size="full"
@@ -285,7 +278,7 @@ const Container = styled.View`
 
 const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
   flex: 1;
-  padding: 0px 12px;
+  padding: 0px 24px;
   background-color: #ffffff;
   position: relative;
 `;
@@ -295,6 +288,8 @@ const ViewContainer = styled.View`
   width: 100%;
   /* height: 90%; */
   background-color: #ffffff;
+
+  margin-bottom: 70px;
 `;
 
 const SkeletonWrap = styled.View``;
