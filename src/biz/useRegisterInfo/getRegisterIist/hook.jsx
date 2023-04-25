@@ -22,23 +22,33 @@ const useGetRegisterInfo = () => {
   const [foodImageListPage10, setFoodImageListPage10] = useState([]);
 
   // 음식나라 조회
+  // 로딩
+  const [isGetCountryFoodLoading, setIsGetCountryFoodLoading] = useState(false);
 
   const getCountryFoodList = async () => {
     try {
+      setIsGetCountryFoodLoading(true);
       const res = await Fetch.getCountryFoodList();
       setCountryFoodList(makeArrayOfIdAndName(res.data));
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsGetCountryFoodLoading(false);
     }
   };
 
   // 알러지정보
+  const [isGetAlergyLoading, setIsGetAlergyLoading] = useState(false);
+
   const getAlergyList = async () => {
     try {
+      setIsGetAlergyLoading(true);
       const res = await Fetch.getAlergyList();
       setAlergyList(makeArrayOfIdAndName(res.data));
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsGetAlergyLoading(false);
     }
   };
 
@@ -77,8 +87,12 @@ const useGetRegisterInfo = () => {
 
   // 음식 이미지 조회
 
+  const [isGetFoodImageLoading, setIsGetFoodImageLoading] = useState(false);
+
   const getFoodImageList = async () => {
     try {
+      setIsGetFoodImageLoading(true);
+
       const res = await Fetch.getFoodImageList();
 
       // foodIds 배열 형식을 바꿔주어야됨
@@ -105,6 +119,8 @@ const useGetRegisterInfo = () => {
       });
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsGetFoodImageLoading(false);
     }
   };
 
@@ -124,6 +140,9 @@ const useGetRegisterInfo = () => {
     foodImageListPage8,
     foodImageListPage9,
     foodImageListPage10,
+    isGetCountryFoodLoading,
+    isGetAlergyLoading,
+    isGetFoodImageLoading,
   };
 };
 

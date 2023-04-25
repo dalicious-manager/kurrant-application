@@ -1,4 +1,4 @@
-import {Text} from 'react-native';
+import {Text, View} from 'react-native';
 import styled from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -14,6 +14,8 @@ import Typography from '~components/Typography';
 import ButtonContainer from '../components/button/Page2_3/ButtonContainer';
 import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hook';
 
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE2';
 
 const Pages = () => {
@@ -21,11 +23,8 @@ const Pages = () => {
 
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
-  const {
-    getCountryFoodList,
-
-    countryFoodList,
-  } = useGetRegisterInfo();
+  const {getCountryFoodList, isGetCountryFoodLoading, countryFoodList} =
+    useGetRegisterInfo();
 
   useEffect(() => {
     getCountryFoodList();
@@ -74,11 +73,153 @@ const Pages = () => {
           <SemiTitle>최대 4개까지 선택이 가능해요</SemiTitle>
         </TitleWrap>
 
-        <ButtonContainer
-          dataList={countryFoodList}
-          callback={handleButtonClicked}
-          selectLimit={4}
-        />
+        {isGetCountryFoodLoading ? (
+          <SkeletonWrap>
+            <SkeletonPlaceholder
+              borderRadius={4}
+              flex={1}
+              backgroundColor={'white'}>
+              <SkeletonPlaceholder.Item
+                marginLeft={24}
+                marginRight={24}
+                borderRadius={14}>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={80}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    // marginLeft={4}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={100}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    marginLeft={4}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={110}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    // marginLeft={4}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={70}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    marginLeft={4}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={100}
+                    borderRadius={14}
+                    height={40}
+                    marginTop={6}
+                    marginBottom={6}
+                    // marginRight={4}
+                    marginLeft={4}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={60}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    // marginLeft={4}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={80}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    marginLeft={4}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={80}
+                    borderRadius={14}
+                    height={40}
+                    marginTop={6}
+                    marginBottom={6}
+                    // marginRight={4}
+                    marginLeft={4}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={60}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    // marginLeft={4}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={60}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    marginLeft={4}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={80}
+                    borderRadius={14}
+                    height={40}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    marginLeft={4}
+                  />
+                  <SkeletonPlaceholder.Item
+                    width={100}
+                    borderRadius={14}
+                    height={40}
+                    marginTop={6}
+                    marginBottom={6}
+                    // marginRight={4}
+                    marginLeft={4}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <SkeletonPlaceholder.Item
+                    width={200}
+                    height={40}
+                    borderRadius={14}
+                    marginTop={6}
+                    marginBottom={6}
+                    marginRight={4}
+                    // marginLeft={4}
+                  />
+                </View>
+              </SkeletonPlaceholder.Item>
+            </SkeletonPlaceholder>
+          </SkeletonWrap>
+        ) : (
+          <ButtonContainer
+            dataList={countryFoodList}
+            callback={handleButtonClicked}
+            selectLimit={4}
+          />
+        )}
       </ScrollViewContainer>
 
       <ButtonNext
@@ -111,6 +252,14 @@ const ScrollViewContainer = styled.ScrollView`
 const ButtonNext = styled(Button)`
   position: relative;
   bottom: 35px;
+`;
+
+const SkeletonWrap = styled.View``;
+
+const RowView = styled.View`
+  display: flex;
+  flex-direction: row;
+  border: 1px solid black;
 `;
 
 const TitleWrap = styled.View`
