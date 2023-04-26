@@ -1,5 +1,5 @@
-import {Dimensions, Text, View} from 'react-native';
-import styled from 'styled-components';
+import {Dimensions, Platform, Text, View} from 'react-native';
+import styled, {css} from 'styled-components';
 
 import Button from '../../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -26,6 +26,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import NoPhotosSign from '../components/NoPhotosSign/NoPhotosSign';
 
 import BottomModal from '~components/BottomModal';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE10';
 
@@ -288,15 +289,29 @@ const Pages = () => {
           </SkeletonWrap>
         )}
       </ScrollViewContainer>
-      <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      />
+
+      <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}
+        useAngle={true}
+        angle={180}>
+        <ButtonNext
+          size="full"
+          label="다음"
+          text={'BottomButtonSB'}
+          disabled={!clickAvaliable}
+          onPressEvent={() => {
+            handlePress();
+          }}
+        />
+      </ButtonWrapper>
+
       <BottomModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -323,9 +338,30 @@ const ScrollViewContainer = styled.ScrollView`
   background-color: #ffffff;
 `;
 
-const ButtonNext = styled(Button)`
-  position: relative;
-  bottom: 35px;
+const ButtonWrapper = styled(LinearGradient)`
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  bottom: 0px;
+
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        height: 91px;
+        padding-bottom: 35px;
+      `;
+    } else {
+      return css`
+        height: 80px;
+        padding-bottom: 24px;
+      `;
+    }
+  }}
 `;
+
+const ButtonNext = styled(Button)``;
 
 const SkeletonWrap = styled.View``;

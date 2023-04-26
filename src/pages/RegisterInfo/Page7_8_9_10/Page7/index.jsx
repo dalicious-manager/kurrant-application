@@ -287,6 +287,7 @@ const Container = styled.View`
   /* padding: 15px 20px; */
   align-items: center;
   background-color: #ffffff;
+  position: relative;
 `;
 
 const ScrollViewWrapper = styled.View`
@@ -320,38 +321,27 @@ const Filler = styled.View`
 `;
 
 const ButtonWrapper = styled(LinearGradient)`
-  position: relative;
+  position: absolute;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  ////
 
-  /* padding: 0px 48px;
-  padding-top: 20px; */
-  justify-content: flex-start;
-  /* width: 100%; */
-  height: 100px;
+  bottom: 0px;
 
   ${() => {
     if (Platform.OS === 'ios') {
       return css`
-        bottom: 92px;
+        height: 91px;
+        padding-bottom: 35px;
       `;
     } else {
       return css`
-        bottom: 80px;
-        /* bottom: 1px; */
+        height: 80px;
+        padding-bottom: 24px;
       `;
     }
   }}
 `;
 
-const ButtonNext = styled(Button)`
-  /* position: relative;
-  bottom: 35px; */
-`;
-// const ButtonNext2 = styled(Button)`
-//   position: relative;
-//   bottom: 135px;
-// `;
+const ButtonNext = styled(Button)``;

@@ -48,7 +48,7 @@ const Pages = () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
     // 기존거 지우고 새로운거 올리기
 
-    navigation.navigate(RegisterInfoPage7PageName);
+    navigation.navigate(RegisterInfoPage6PageName);
     // navigation.navigate(RegisterInfoPage1PageName);
     // navigation.navigate(RegisterInfoFinishPageName);
     // navigation.navigate(RegisterInfoPage2PageName);
@@ -67,29 +67,16 @@ const Pages = () => {
 
   return (
     <Container
-      // paddingHorizontal={24}
       styles={{
         position: 'relative',
       }}>
-      {/* <ScrollViewContainer showsVerticalScrollIndicator={false}> */}
       <ScrollViewContainer>
-        {/* <Text> 안녕</Text> */}
         <Background
           platform={Platform.OS}
           source={RegisterInfoBack}
           resizeMode="cover"
         />
       </ScrollViewContainer>
-
-      {/* <ButtonWrapper
-        colors={[
-          'rgba(255, 255, 255, 0)',
-          'rgba(255, 255, 255, 0.3)',
-          'rgba(255, 255, 255, 0.7)',
-          'rgba(255, 255, 255, 0.8048)',
-          'rgba(255, 255, 255, 0.9)',
-          'rgba(255, 255, 255, 0.95)',
-        ]}></ButtonWrapper> */}
 
       <Wrap3 platform={Platform.OS}>
         <NotTodayPressable

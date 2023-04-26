@@ -62,18 +62,13 @@ const Pages = () => {
   const navigation = useNavigation();
 
   const {
-    getCountryFoodList,
-    getAlergyList,
     getJobList,
     getDetailJobList,
     getCountryList,
-    getFoodImageList,
-    countryFoodList,
-    alergyList,
+
     jobList,
     detailJobList,
     countryList,
-    foodImageList,
   } = useGetRegisterInfo();
 
   useEffect(() => {
@@ -82,14 +77,11 @@ const Pages = () => {
   }, []);
 
   // jobType이 정해지면 getDetailJobList 받아오기
-
+  // jobList 가 변하면 기존에 있던 detailJobList는 초기화 되어야한다
   useEffect(() => {
     getDetailJobList(jobType);
+    setDetailJobType(undefined);
   }, [jobType]);
-
-  // 확인하기
-
-  // 생년월일
 
   const [isMount, setIsMount] = useState(false);
 
@@ -97,15 +89,12 @@ const Pages = () => {
     setIsMount(true);
   }, []);
 
-  // ios일때 생년월일 값 집어넣으려면 아래와 같이 처리해야됨
   useEffect(() => {
     if (Platform.OS === 'ios') {
       if (!birthdayModal && isMount && isConfirmPress) {
         setBirthday(toStringByFormatting(birthdayDateFormat, '. '));
       }
     }
-
-    // ios일때
   }, [birthdayDateFormat, birthdayModal]);
 
   // 다음 버튼 열기
@@ -335,7 +324,7 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  /* padding: 35px 24px; */
+
   padding: 0px 24px;
   align-items: center;
   background-color: #ffffff;
@@ -344,7 +333,7 @@ const Container = styled.View`
 const ContentContainer = styled.View`
   flex: 1;
   width: 100%;
-  /* height: 90%; */
+
   background-color: #ffffff;
 `;
 
@@ -378,15 +367,7 @@ const ButtonWrapper = styled(LinearGradient)`
   align-items: center;
 `;
 
-const ButtonNext = styled(Button)`
-  /* position: relative;
-  bottom: 35px; */
-`;
-
-// const ButtonNext = styled(Button)`
-//   position: relative;
-//   bottom: 20px;
-// `;
+const ButtonNext = styled(Button)``;
 
 const Wrap1 = styled.View`
   width: 100%;
