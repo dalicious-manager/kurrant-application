@@ -74,7 +74,10 @@ const Pages = () => {
     <Container>
       {/* <ScrollViewContainer showsVerticalScrollIndicator={false}> */}
 
-      <KeyboardViewContainer extraHeight={120}>
+      <KeyboardViewContainer
+        showsVerticalScrollIndicator={false}
+        // extraHeight={120}
+      >
         <ViewContainer>
           <ProgressBar progress={3} />
 
@@ -273,16 +276,18 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-
+  padding: 0px 12px;
   align-items: center;
   background-color: #ffffff;
+  border: 1px solid black;
 `;
 
 const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
-  flex: 1;
-  padding: 0px 12px;
+  /* flex: 1; */
+  /* padding: 0px 12px; */
   background-color: #ffffff;
   position: relative;
+  border: 1px solid black;
 `;
 
 const ViewContainer = styled.View`
@@ -313,6 +318,7 @@ const TitleWrap = styled.View`
 `;
 const InputWrap = styled.View`
   margin-left: 5px;
+  margin-right: 5px;
 `;
 const InputTitle = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[2]};
