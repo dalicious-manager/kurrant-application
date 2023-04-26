@@ -1,5 +1,5 @@
 import {Text} from 'react-native';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -122,10 +122,7 @@ const Pages = () => {
           'rgba(255, 255, 255, 0.8048)',
           'rgba(255, 255, 255, 0.9)',
           'rgba(255, 255, 255, 0.95)',
-        ]}
-        // useAngle={true}
-        // angle={180}
-      >
+        ]}>
         <ButtonNext
           size="full"
           label="다음"
@@ -144,8 +141,11 @@ export default Pages;
 const Container = styled.View`
   flex: 1;
   padding: 15px 20px;
-  padding-bottom: 35px;
+  padding-bottom: 0px;
+  /* padding-bottom: 35px; */
   align-items: center;
+
+  position: relative;
 
   background-color: #ffffff;
 `;
@@ -163,7 +163,18 @@ const Filler = styled.View`
 
 const ButtonWrapper = styled(LinearGradient)`
   position: relative;
-  bottom: 35px;
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        bottom: 35px;
+      `;
+    } else {
+      return css`
+        bottom: 24px;
+        /* bottom: 1px; */
+      `;
+    }
+  }}
 
   display: flex;
   flex-direction: column;

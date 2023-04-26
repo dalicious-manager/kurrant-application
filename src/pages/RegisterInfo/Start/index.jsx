@@ -1,5 +1,5 @@
 import {Dimensions, ImageBackground, Platform, Text} from 'react-native';
-import styled, {useTheme} from 'styled-components';
+import styled, {css, useTheme} from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -30,6 +30,7 @@ import {PAGE_NAME as HOME} from '../../Main/Bnb/Home';
 
 import Typography from '~components/Typography';
 import {removeItemFromStorage, setStorage} from '../../../utils/asyncStorage';
+import LinearGradient from 'react-native-linear-gradient';
 
 // import BackgroundImage from './BackgroundImage';
 
@@ -47,7 +48,7 @@ const Pages = () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
     // 기존거 지우고 새로운거 올리기
 
-    navigation.navigate(RegisterInfoPage7PageName);
+    navigation.navigate(RegisterInfoPage3PageName);
     // navigation.navigate(RegisterInfoPage1PageName);
     // navigation.navigate(RegisterInfoFinishPageName);
     // navigation.navigate(RegisterInfoPage2PageName);
@@ -70,13 +71,27 @@ const Pages = () => {
       styles={{
         position: 'relative',
       }}>
-      {Platform.OS === 'ios' ? (
-        <Background source={RegisterInfoBack} resizeMode="cover"></Background>
-      ) : (
-        <Background source={RegisterInfoBack} resizeMode="cover"></Background>
-      )}
+      {/* <ScrollViewContainer showsVerticalScrollIndicator={false}> */}
+      <ScrollViewContainer>
+        {/* <Text> 안녕</Text> */}
+        <Background
+          platform={Platform.OS}
+          source={RegisterInfoBack}
+          resizeMode="cover"
+        />
+      </ScrollViewContainer>
 
-      <Wrap3>
+      {/* <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}></ButtonWrapper> */}
+
+      <Wrap3 platform={Platform.OS}>
         <NotTodayPressable
           onPress={() => {
             handleTodayPress();
@@ -101,22 +116,43 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  /* padding: 35px 20px; */
+  /* height: 100%; */
+
   align-items: center;
-  display: flex;
+  /* background-color: #ffffff; */
   background-color: ${({theme}) => theme.colors.grey[8]};
-  /* background-color: ${({theme}) => theme.colors.grey[1]}; */
   position: relative;
+`;
+
+const ScrollViewContainer = styled.ScrollView`
+  width: 100%;
+  /* height: 40%; */
+  height: 750px;
+
+  /* height: 100%; */
+  background-color: ${({theme}) => theme.colors.grey[8]};
+  /* border: 1px solid black; */
 `;
 
 // const Background = styled.ImageBackground`
 const Background = styled.Image`
   /* flex: 1; */
 
-  /* padding: 0 24px; */
-
   width: 100%;
-  height: 100%;
+
+  ${({platform}) => {
+    if (platform === 'ios') {
+      return css`
+        height: 750px;
+        /* height: 100%; */
+      `;
+    } else {
+      return css`
+        height: 710px;
+        /* height: 100%; */
+      `;
+    }
+  }}
 `;
 
 const Wrap3 = styled.View`
@@ -126,12 +162,36 @@ const Wrap3 = styled.View`
   position: absolute;
   bottom: 107px;
   right: 24px;
+
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        bottom: 107px;
+      `;
+    } else {
+      return css`
+        bottom: 96px;
+      `;
+    }
+  }}
 `;
 
 const ButtonNext = styled(Button)`
   width: ${() => `${Dimensions.get('screen').width - 48}px`};
-  position: absolute;
-  bottom: 35px;
+
+  position: relative;
+
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        bottom: 35px;
+      `;
+    } else {
+      return css`
+        bottom: 24px;
+      `;
+    }
+  }}
 `;
 
 const NotTodayPressable = styled.Pressable`

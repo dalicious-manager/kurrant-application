@@ -72,6 +72,8 @@ const Pages = () => {
 
   return (
     <Container>
+      {/* <ScrollViewContainer showsVerticalScrollIndicator={false}> */}
+
       <KeyboardViewContainer extraHeight={120}>
         <ViewContainer>
           <ProgressBar progress={3} />
@@ -278,7 +280,7 @@ const Container = styled.View`
 
 const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
   flex: 1;
-  padding: 0px 24px;
+  padding: 0px 12px;
   background-color: #ffffff;
   position: relative;
 `;

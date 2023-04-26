@@ -1,5 +1,5 @@
 import {Text, View} from 'react-native';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,7 @@ import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hoo
 import BottomModal from '~components/BottomModal';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE2';
 
@@ -251,15 +252,25 @@ const Pages = () => {
         // onPressEvent2={() => {}}
       />
 
-      <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      />
+      <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}>
+        <ButtonNext
+          size="full"
+          label="다음"
+          text={'BottomButtonSB'}
+          disabled={!clickAvaliable}
+          onPressEvent={() => {
+            handlePress();
+          }}
+        />
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -267,7 +278,10 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  padding: 35px 20px;
+  /* padding: 35px 20px; */
+  padding: 15px 20px;
+  padding-bottom: 0px;
+  position: relative;
   align-items: center;
   background-color: #ffffff;
 `;
@@ -278,9 +292,29 @@ const ScrollViewContainer = styled.ScrollView`
   background-color: #ffffff;
 `;
 
-const ButtonNext = styled(Button)`
+const ButtonWrapper = styled(LinearGradient)`
   position: relative;
-  bottom: 35px;
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        bottom: 35px;
+      `;
+    } else {
+      return css`
+        bottom: 24px;
+        /* bottom: 1px; */
+      `;
+    }
+  }}
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ButtonNext = styled(Button)`
+  /* position: relative;
+  bottom: 35px; */
 `;
 
 const SkeletonWrap = styled.View``;
