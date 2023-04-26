@@ -49,7 +49,7 @@ import {BespinMembers, FoundersMembers} from '../../../../../assets';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
-import {PAGE_NAME as RegisterInfoPage1PageName} from '../../../../RegisterInfo/Start';
+import {PAGE_NAME as RegisterInfoStartPageName} from '../../../../RegisterInfo/Start';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -238,8 +238,9 @@ const Pages = () => {
 
   useEffect(() => {
     if (shouldOpenRegister) {
-      navigation.navigate(RegisterInfoPage1PageName);
+      navigation.navigate(RegisterInfoStartPageName);
     }
+    navigation.navigate(RegisterInfoStartPageName);
   }, [shouldOpenRegister]);
 
   // useEffect(() => {

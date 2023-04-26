@@ -23,7 +23,7 @@ const useGetRegisterInfo = () => {
 
   // 음식나라 조회
   // 로딩
-  const [isGetCountryFoodLoading, setIsGetCountryFoodLoading] = useState(false);
+  const [isGetCountryFoodLoading, setIsGetCountryFoodLoading] = useState(true);
 
   const getCountryFoodList = async () => {
     try {

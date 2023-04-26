@@ -13,6 +13,7 @@ import {useAtom} from 'jotai';
 import {finalRegisterAtom} from '../store';
 import Typography from '~components/Typography';
 import ButtonInput from '../components/button/Page1/ButtonInput';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE1';
 
@@ -113,15 +114,28 @@ const Pages = () => {
         <Filler></Filler>
       </ScrollViewContainer>
 
-      <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      />
+      <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}
+        // useAngle={true}
+        // angle={180}
+      >
+        <ButtonNext
+          size="full"
+          label="다음"
+          text={'BottomButtonSB'}
+          disabled={!clickAvaliable}
+          onPressEvent={() => {
+            handlePress();
+          }}
+        />
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -147,9 +161,18 @@ const Filler = styled.View`
   height: 30px;
 `;
 
-const ButtonNext = styled(Button)`
+const ButtonWrapper = styled(LinearGradient)`
   position: relative;
   bottom: 35px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ButtonNext = styled(Button)`
+  /* position: relative;
+  bottom: 35px; */
 `;
 
 const TitleWrap = styled.View`

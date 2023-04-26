@@ -1,19 +1,17 @@
 import {Dimensions, Text} from 'react-native';
 import styled from 'styled-components';
+import Typography from '~components/Typography';
 
 const NoPhotosSign = () => {
   const HeightSettings = Dimensions.get('screen').height - 200;
-
-  console.log('높이 ');
-  console.log(HeightSettings);
 
   return (
     <Container height={HeightSettings}>
       <FlexFiller flex={200} />
 
       <TextWrap flex={60}>
-        <Text style={{marginBottom: 6}}>등록된 음식 사진이 없습니다 </Text>
-        <Text>관리자에게 문의해주세요</Text>
+        <TextText>등록된 음식 사진이 없어요. </TextText>
+        <TextText>관리자에게 문의 부탁드려요.</TextText>
       </TextWrap>
 
       <FlexFiller flex={400} />
@@ -42,4 +40,8 @@ const TextWrap = styled.View`
 
 const FlexFiller = styled.View`
   flex: ${({flex}) => flex};
+`;
+
+const TextText = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${({theme}) => theme.colors.grey[5]};
 `;

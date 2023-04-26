@@ -23,6 +23,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import NoPhotosSign from '../components/NoPhotosSign/NoPhotosSign';
 
 import BottomModal from '~components/BottomModal';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE7';
 
@@ -228,15 +229,25 @@ const Pages = () => {
           <NoPhotosSign />
         )}
       </ScrollViewContainer>
-      <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      />
+      <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}>
+        <ButtonNext
+          size="full"
+          label="다음"
+          text={'BottomButtonSB'}
+          disabled={!clickAvaliable}
+          onPressEvent={() => {
+            handlePress();
+          }}
+        />
+      </ButtonWrapper>
 
       <BottomModal
         modalVisible={modalVisible}
@@ -268,7 +279,16 @@ const ScrollViewContainer = styled.ScrollView`
 
 const SkeletonWrap = styled.View``;
 
-const ButtonNext = styled(Button)`
+const ButtonWrapper = styled(LinearGradient)`
   position: relative;
   bottom: 35px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ButtonNext = styled(Button)`
+  /* position: relative;
+  bottom: 35px; */
 `;

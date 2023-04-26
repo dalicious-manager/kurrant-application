@@ -1,4 +1,4 @@
-import {Dimensions, ImageBackground, Text} from 'react-native';
+import {Dimensions, ImageBackground, Platform, Text} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -47,8 +47,8 @@ const Pages = () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
     // 기존거 지우고 새로운거 올리기
 
-    // navigation.navigate(RegisterInfoPage7PageName);
-    navigation.navigate(RegisterInfoPage1PageName);
+    navigation.navigate(RegisterInfoPage7PageName);
+    // navigation.navigate(RegisterInfoPage1PageName);
     // navigation.navigate(RegisterInfoFinishPageName);
     // navigation.navigate(RegisterInfoPage2PageName);
   };
@@ -70,7 +70,11 @@ const Pages = () => {
       styles={{
         position: 'relative',
       }}>
-      <Background source={RegisterInfoBack} resizeMode="cover"></Background>
+      {Platform.OS === 'ios' ? (
+        <Background source={RegisterInfoBack} resizeMode="cover"></Background>
+      ) : (
+        <Background source={RegisterInfoBack} resizeMode="cover"></Background>
+      )}
 
       <Wrap3>
         <NotTodayPressable
