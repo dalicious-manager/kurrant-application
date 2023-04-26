@@ -1,5 +1,5 @@
 import {Dimensions, Text} from 'react-native';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -15,6 +15,7 @@ import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import YesOrNoButton from '../components/button/Page4_5/YesOrNoButton';
 import SelectInputBox from '../components/SelectInputBox/SelectInputBox';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 
@@ -165,7 +166,27 @@ const Pages = () => {
         )}
         <Filler />
       </ScrollViewContainer>
-      <ButtonNext
+      <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}>
+        <ButtonNext
+          size="full"
+          label="다음"
+          text={'BottomButtonSB'}
+          disabled={!clickAvaliable}
+          onPressEvent={() => {
+            handlePress();
+          }}
+        />
+      </ButtonWrapper>
+
+      {/* <ButtonNext
         size="full"
         label="다음"
         text={'BottomButtonSB'}
@@ -173,7 +194,7 @@ const Pages = () => {
         onPressEvent={() => {
           handlePress();
         }}
-      />
+      /> */}
       {/* <Bottom */}
       <BottomSheet
         modalVisible={bottomModalOpen}
@@ -222,10 +243,35 @@ const VegiInfoImg = styled.Image`
   height: ${() => `${(Dimensions.get('screen').width - 48) * (336 / 327)}px`};
 `;
 
-const ButtonNext = styled(Button)`
+const ButtonWrapper = styled(LinearGradient)`
   position: relative;
-  bottom: 35px;
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        bottom: 35px;
+      `;
+    } else {
+      return css`
+        bottom: 24px;
+        /* bottom: 1px; */
+      `;
+    }
+  }}
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
+
+const ButtonNext = styled(Button)`
+  /* position: relative;
+  bottom: 35px; */
+`;
+
+// const ButtonNext = styled(Button)`
+//   position: relative;
+//   bottom: 35px;
+// `;
 
 const TitleWrap = styled.View`
   width: 100%;

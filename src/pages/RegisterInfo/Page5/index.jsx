@@ -1,5 +1,5 @@
 import {Text} from 'react-native';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -12,6 +12,7 @@ import Typography from '~components/Typography';
 import YesOrNoButton from '../components/button/Page4_5/YesOrNoButton';
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE5';
 
@@ -138,7 +139,28 @@ const Pages = () => {
           </>
         )}
       </ScrollViewContainer>
-      <ButtonNext
+
+      <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}>
+        <ButtonNext
+          size="full"
+          label="다음"
+          text={'BottomButtonSB'}
+          disabled={!clickAvaliable}
+          onPressEvent={() => {
+            handlePress();
+          }}
+        />
+      </ButtonWrapper>
+
+      {/* <ButtonNext
         size="full"
         label="다음"
         text={'BottomButtonSB'}
@@ -146,7 +168,7 @@ const Pages = () => {
         onPressEvent={() => {
           handlePress();
         }}
-      />
+      /> */}
     </Container>
   );
 };
@@ -154,7 +176,8 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  padding: 35px 20px;
+  /* padding: 35px 20px; */
+  padding: 0px 24px;
   align-items: center;
   background-color: #ffffff;
 `;
@@ -184,7 +207,32 @@ const ButtonContainer = styled.View`
   align-items: center;
 `;
 
-const ButtonNext = styled(Button)`
+// const ButtonNext = styled(Button)`
+//   position: relative;
+//   bottom: 35px;
+// `;
+
+const ButtonWrapper = styled(LinearGradient)`
   position: relative;
-  bottom: 35px;
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        bottom: 35px;
+      `;
+    } else {
+      return css`
+        bottom: 24px;
+        /* bottom: 1px; */
+      `;
+    }
+  }}
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ButtonNext = styled(Button)`
+  /* position: relative;
+  bottom: 35px; */
 `;
