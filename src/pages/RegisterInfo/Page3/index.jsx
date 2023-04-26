@@ -17,6 +17,7 @@ import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hoo
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import useKeyboardEvent from '../../../hook/useKeyboardEvent';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE3';
 
@@ -261,14 +262,34 @@ const Pages = () => {
           </InputWrap>
         </ViewContainer>
       </KeyboardViewContainer>
-      <ButtonNext
+
+      <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}>
+        <ButtonNext
+          size="full"
+          label="다음"
+          text={'BottomButtonSB'}
+          onPressEvent={() => {
+            handlePress();
+          }}
+        />
+      </ButtonWrapper>
+
+      {/* <ButtonNext
         size="full"
         label="다음"
         text={'BottomButtonSB'}
         onPressEvent={() => {
           handlePress();
         }}
-      />
+      /> */}
     </Container>
   );
 };
@@ -279,7 +300,7 @@ const Container = styled.View`
   padding: 0px 12px;
   align-items: center;
   background-color: #ffffff;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 `;
 
 const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
@@ -287,7 +308,7 @@ const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
   /* padding: 0px 12px; */
   background-color: #ffffff;
   position: relative;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 `;
 
 const ViewContainer = styled.View`
@@ -301,13 +322,38 @@ const ViewContainer = styled.View`
 
 const SkeletonWrap = styled.View``;
 
-const ButtonNext = styled(Button)`
-  width: ${() => {
-    return `${Dimensions.get('screen').width - 48}px`;
-  }};
+// const ButtonNext = styled(Button)`
+//   width: ${() => {
+//     return `${Dimensions.get('screen').width - 48}px`;
+//   }};
 
+//   position: relative;
+//   bottom: 35px;
+// `;
+
+const ButtonWrapper = styled(LinearGradient)`
   position: relative;
-  bottom: 35px;
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        bottom: 35px;
+      `;
+    } else {
+      return css`
+        bottom: 24px;
+        /* bottom: 1px; */
+      `;
+    }
+  }}
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ButtonNext = styled(Button)`
+  /* position: relative;
+  bottom: 35px; */
 `;
 
 const TitleWrap = styled.View`
