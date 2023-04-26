@@ -56,12 +56,12 @@ import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
-import {useGetTodayMeal} from '../../../../../hook/useOrder';
+import {useGetOrderMeal, useGetTodayMeal} from '../../../../../hook/useOrder';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   const navigation = useNavigation();
-
+  
   const [isVisible, setIsVisible] = useState(true);
   const weekly = useAtomValue(weekAtom);
   const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
@@ -115,6 +115,10 @@ const Pages = () => {
   // });
   const date = formattedWeekDate(new Date());
   const {data: todayMealList, refetch: todayRefetch} = useGetTodayMeal(date);
+  const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(formattedWeekDate(weekly[0][0]),
+  formattedWeekDate(
+    weekly[weekly?.length - 1][weekly[0].length - 1],
+  ));
 
   // 홈 전체 공지사항
 
@@ -222,75 +226,8 @@ const Pages = () => {
     getHistory();
   }, [isUserInfo]);
   useFocusEffect(
-    useCallback(() => {
-      async function loadUser() {
-        try {
-          const userData = await userInfo();
-          if (userData?.email) {
-            if (userData?.spotId) {
-              const daily = await dailyFood(
-                userData?.spotId,
-                formattedWeekDate(new Date()),
-              );
-              if (!(userRole === 'ROLE_GUEST')) {
-                await orderMeal(
-                  formattedWeekDate(weekly[0][0]),
-                  formattedWeekDate(
-                    weekly[weekly?.length - 1][weekly[0].length - 1],
-                  ),
-                );
-              }
-            }
-          }
-          return true;
-        } catch (error) {
-          return false;
-        }
-      }
-      const isTester = async () => {
-        const user = loadUser();
-
-        if (!(userRole === 'ROLE_GUEST')) {
-          const status = async () => {
-            const userStatus = await getStorage('spotStatus');
-            // const result = await todayOrderMeal(start[0], end[0]);
-
-            const getUserStatus = Number(userStatus);
-            if (getUserStatus === 1) {
-              navigation.navigate(GroupSelectPageName);
-            }
-            if (getUserStatus === 2 && !isCancelSpot) {
-              navigation.navigate(GroupCreateMainPageName);
-            }
-            // return result;
-          };
-          try {
-            if (!(userRole === 'ROLE_GUEST')) {
-              if (user) {
-                const data = await status();
-
-                const group = await userGroupSpotCheck();
-                if (group.statusCode === 200) {
-                  await loadMeal();
-                }
-              }
-            }
-          } catch (error) {
-            if (error.toString().replace('Error:', '').trim() === '403') {
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: LoginPageName,
-                  },
-                ],
-              });
-            }
-          }
-        }
-      };
+    useCallback(() => { 
       try {
-        isTester();
         todayRefetch();
       } catch (e) {
         alert(e.toString().replace('error:'));
@@ -591,6 +528,7 @@ const Pages = () => {
               </MealCalendarTitle>
               <Calendar
                 isServiceDays={isServiceDays}
+                meal={orderMealList?.data}
                 onPressEvent={() => navigation.navigate(MealMainPageName)}
               />
             </MealCalendar>

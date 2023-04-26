@@ -7,6 +7,11 @@ export function useGetTodayMeal(date) {
     return orderApis.todayMeal(date, date);
   });
 }
+export function useGetOrderMeal(startDate,enddate) {
+  return useQuery('orderMeal', () => {
+    return orderApis.orderMeal(startDate, enddate);
+  });
+}
 
 export function useConfirmOrderState() {
   const queryClient = useQueryClient();

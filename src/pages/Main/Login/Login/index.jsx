@@ -37,7 +37,6 @@ import Config from 'react-native-config';
 import useUserMe from '../../../../biz/useUserMe';
 import {PAGE_NAME as FAQListPageName} from '../../MyPage/FAQ';
 import VersionCheck from 'react-native-version-check';
-import messaging from '@react-native-firebase/messaging';
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -58,7 +57,6 @@ const Pages = ({route}) => {
   const params = route?.params;
   const navigation = useNavigation();
   const toast = Toast();
-  const [isLoginLoading, setLoginLoading] = useState();
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
   const handlePress = useCallback(async (url, alterUrl) => {
@@ -75,17 +73,10 @@ const Pages = ({route}) => {
   }, []);
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
-  const {
-    setSelectDefaultCard,
-    readableAtom: {selectDefaultCard},
-  } = useUserMe();
+
 
   const {
     login,
-    autoLogin,
-    setFcmToken,
-    saveFcmToken,
-    readableAtom: {fcmToken},
   } = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
@@ -147,102 +138,7 @@ const Pages = ({route}) => {
     googleSigninConfigure();
     facebookConfiguration();
   }, []);
-  useFocusEffect(
-    useCallback(() => {
-      const getData = async () => {
-        await VersionCheck.getLatestVersion().then(latestVersion => {
-          console.log(currentVersion, latestVersion);
-          if (currentVersion !== latestVersion) {
-            Alert.alert(
-              '앱 업데이트',
-              '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
-              [
-                {
-                  text: '확인',
-                  onPress: async () => {
-                    if (Platform.OS === 'android') {
-                      handlePress(
-                        GOOGLE_PLAY_STORE_LINK,
-                        GOOGLE_PLAY_STORE_WEB_LINK,
-                      );
-                    } else {
-                      handlePress(
-                        APPLE_APP_STORE_LINK,
-                        APPLE_APP_STORE_WEB_LINK,
-                      );
-                    }
-                  },
-                  style: 'destructive',
-                },
-              ],
-            );
-          }
-        });
-      };
-      //getData();
-    }, []),
-  );
-  useEffect(() => {
-    const isAutoLogin = async () => {
-      const isLogin = await getStorage('isLogin');
 
-      if (isLogin !== 'false') {
-        const token = await getStorage('token');
-
-        setLoginLoading(false);
-        if (token) {
-          const getToken = JSON.parse(token);
-          if (getToken?.accessToken) {
-            const res = await autoLogin();
-
-            if (res?.statusCode === 200) {
-              // const token = await messaging().getToken();
-
-              // if (token) {
-              //   saveFcmToken({
-              //     token: token,
-              //   });
-              // }
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              });
-            }
-          }
-        }
-      } else {
-        setLoginLoading(false);
-      }
-    };
-
-    setLoginLoading(true);
-    isAutoLogin();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    async function requestUserPermission() {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
-        if (Platform.OS === 'ios') {
-          // ios의 경우 필수가 아니라고도 하고 필수라고도 하고.. 그냥 넣어버렸다.
-          messaging().registerDeviceForRemoteMessages();
-        }
-      }
-    }
-    requestUserPermission();
-  }, []);
-  // if(isLoginLoading){
-  //   return<ActivityIndicator size="large" />
-  // }
   return (
     <SafeView>
       <WrapperBox>

@@ -473,7 +473,7 @@ const Pages = ({route}) => {
           });
         }
       }
-      queryClient.invalidateQueries('todayMeal');
+      queryClient.invalidateQueries(['todayMeal','orderMeal']);
     } catch (err) {
       console.log(err);
     } finally {
