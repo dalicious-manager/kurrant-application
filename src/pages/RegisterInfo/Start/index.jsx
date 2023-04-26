@@ -48,7 +48,7 @@ const Pages = () => {
     // 1. 클릭하면 localstorage에 클릭한 날짜 저장
     // 기존거 지우고 새로운거 올리기
 
-    navigation.navigate(RegisterInfoPage6PageName);
+    navigation.navigate(RegisterInfoPage1PageName);
     // navigation.navigate(RegisterInfoPage1PageName);
     // navigation.navigate(RegisterInfoFinishPageName);
     // navigation.navigate(RegisterInfoPage2PageName);
@@ -103,40 +103,32 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  /* height: 100%; */
 
   align-items: center;
-  /* background-color: #ffffff; */
+
   background-color: ${({theme}) => theme.colors.grey[8]};
   position: relative;
 `;
 
 const ScrollViewContainer = styled.ScrollView`
   width: 100%;
-  /* height: 40%; */
+
   height: 750px;
 
-  /* height: 100%; */
   background-color: ${({theme}) => theme.colors.grey[8]};
-  /* border: 1px solid black; */
 `;
 
-// const Background = styled.ImageBackground`
 const Background = styled.Image`
-  /* flex: 1; */
-
   width: 100%;
 
   ${({platform}) => {
     if (platform === 'ios') {
       return css`
         height: 750px;
-        /* height: 100%; */
       `;
     } else {
       return css`
         height: 710px;
-        /* height: 100%; */
       `;
     }
   }}

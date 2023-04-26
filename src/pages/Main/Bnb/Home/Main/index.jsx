@@ -240,7 +240,6 @@ const Pages = () => {
     if (shouldOpenRegister) {
       navigation.navigate(RegisterInfoStartPageName);
     }
-    navigation.navigate(RegisterInfoStartPageName);
   }, [shouldOpenRegister]);
 
   // useEffect(() => {

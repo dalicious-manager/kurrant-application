@@ -324,7 +324,6 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-
   padding: 0px 24px;
   align-items: center;
   background-color: #ffffff;
