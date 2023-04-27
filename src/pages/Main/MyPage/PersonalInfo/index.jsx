@@ -121,7 +121,7 @@ const Pages = ({route}) => {
                 });
               });
             } catch (error) {
-              console.log(error.toString());
+              Alert.alert("회원탈퇴",error.toString().replace('error: '))
             }
           },
         },

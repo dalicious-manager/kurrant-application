@@ -218,15 +218,17 @@ const Page = () => {
             }
           }
         }else{
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: LoginPageName,
-              },
-            ],
-          });
-        }
+          setTimeout(()=>{
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: LoginPageName,
+                },
+              ],
+            });
+          },1000)
+      }
       } else {
         setLoginLoading(false);
       }

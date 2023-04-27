@@ -3,6 +3,7 @@ import {useAtom} from 'jotai';
 import * as Fetch from './Fetch';
 import { apartApplicationListAtom, apartApplicationResAtom, apartSearchAtom, applicationListAtom, isApartApplicationCheckAtom, isApartApplicationLoadingAtom } from './store';
 import { setStorage } from '../../utils/asyncStorage';
+import { Alert } from 'react-native';
 
 
 
@@ -66,7 +67,13 @@ const useApartApplication = () => {
             
             setApartSearch(res.data)
         } catch(err){
-            console.log(err)
+            Alert.alert('아파트 검색', err.toString().replace('error: ', ''), [
+                {
+                  text: '확인',
+                  onPress: () => {},
+                  style: 'cancel',
+                },
+              ]);
         }
     }
 
@@ -78,7 +85,13 @@ const useApartApplication = () => {
             })
             return res
         } catch(err){
-            console.log(err)
+            Alert.alert('유저 아파트 스팟 등록', err.toString().replace('error: ', ''), [
+                {
+                  text: '확인',
+                  onPress: () => {},
+                  style: 'cancel',
+                },
+              ]);
         }
     }
 
@@ -89,7 +102,13 @@ const useApartApplication = () => {
             })
             return res;
         }catch(err){
-            console.log(err)
+            Alert.alert('호 변경', err.toString().replace('error: ', ''), [
+                {
+                  text: '확인',
+                  onPress: () => {},
+                  style: 'cancel',
+                },
+              ]);
         }
     }
 
