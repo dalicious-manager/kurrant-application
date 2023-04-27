@@ -1,11 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
-import {Text, TextInput, View} from 'react-native';
-import styled from 'styled-components';
+import {Platform, Text, TextInput, View} from 'react-native';
+import styled, {css} from 'styled-components';
 import Typography from '../../../../../../components/Typography';
 import {useTheme} from 'styled-components/native';
 
-const ReviewInput = ({editContentInput, charLength, onFocus= ()=>{},onBlur= ()=>{}}) => {
+const ReviewInput = ({
+  editContentInput,
+  charLength,
+  onFocus = () => {},
+  onBlur = () => {},
+}) => {
   const {
     control,
     formState: {errors},
@@ -17,7 +22,7 @@ const ReviewInput = ({editContentInput, charLength, onFocus= ()=>{},onBlur= ()=>
     editable: true,
     autoCapitalize: 'none',
   };
-  
+
   const [editContent, setEditContent] = useState(undefined);
 
   useEffect(() => {
@@ -25,7 +30,7 @@ const ReviewInput = ({editContentInput, charLength, onFocus= ()=>{},onBlur= ()=>
       setEditContent(editContentInput);
     }
   }, [editContentInput]);
-  
+
   return (
     <>
       <Controller
@@ -41,6 +46,7 @@ const ReviewInput = ({editContentInput, charLength, onFocus= ()=>{},onBlur= ()=>
               style={{
                 textAlignVertical: 'top',
               }}
+              isAndroid={Platform.OS === 'android'}
               placeholderTextColor={themeApp.colors.grey[5]}
               {...textInputProps}
               defaultValue={editContent ? editContent : undefined}
@@ -77,6 +83,15 @@ const Input = styled.TextInput`
   font-weight: 400;
   font-size: 16px;
   font-family: 'Pretendard-Regular';
+
+  ${({isAndroid}) => {
+    if (isAndroid) {
+      return css`
+        /* font-size: 16px;
+        padding: 17px 14px; */
+      `;
+    }
+  }}
 `;
 
 const ViewWrap = styled.View``;
