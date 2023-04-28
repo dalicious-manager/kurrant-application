@@ -34,12 +34,8 @@ const Pages = () => {
 
   useEffect(() => {
     if (isFocused) {
-      console.log('포커스됨 루루루룰');
-
       setIsReviewFocused(true);
     } else {
-      console.log('포커스안됨 ㅜㅜㅜㅜ');
-
       setIsReviewFocused(false);
     }
   }, [isFocused]);
@@ -106,7 +102,7 @@ const Pages = () => {
                   <View style={{paddingLeft: 24, paddingRight: 24}}>
                     {item.items &&
                       item.items.map((value2, index2) => {
-                        console.log(value2);
+                        // console.log(value2);
                         return (
                           <Card
                             key={index2}
