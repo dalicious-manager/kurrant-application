@@ -16,14 +16,14 @@ const Component = ({
   writtenDate: createDate,
   message: content,
 }) => {
-  const [calcFontSize, setCalcFontSize] = useState(278 * 0.051079);
+  const [calcFontSize, setCalcFontSize] = useState(278 * 0.052279);
 
   const getWidth = e => {
     const {width, height, x, y} = e.nativeEvent.layout;
 
-    console.log('댓글 width');
-    console.log(width);
-    console.log(width * 0.052279);
+    // console.log('댓글 width');
+    // console.log(width);
+    // console.log(width * 0.052279);
 
     setCalcFontSize(width * 0.052279);
   };

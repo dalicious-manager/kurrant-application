@@ -57,16 +57,16 @@ const Component = ({
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
 
-  const getToken = useCallback(async () => {
-    const token = await getStorage('token');
+  // const getToken = useCallback(async () => {
+  //   const token = await getStorage('token');
 
-    let tokenBox;
-    if (token) {
-      tokenBox = JSON.parse(token);
-    }
+  //   let tokenBox;
+  //   if (token) {
+  //     tokenBox = JSON.parse(token);
+  //   }
 
-    return tokenBox?.accessToken;
-  }, []);
+  //   return tokenBox?.accessToken;
+  // }, []);
 
   let imageLocationToSix = [];
 
@@ -196,14 +196,14 @@ const Component = ({
   };
   const [numLines, setNumLines] = useState(1);
 
+  const handlePressReviewText = () => {
+    setElaborateComment(!elaborateComment);
+  };
+
   const [calcFontSize, setCalcFontSize] = useState(278 * 0.05115);
 
   const getWidth = e => {
     const {width, height, x, y} = e.nativeEvent.layout;
-
-    console.log('카드 width');
-    console.log(width);
-    console.log(width * 0.052279);
 
     setCalcFontSize(width * 0.052279);
   };
@@ -303,7 +303,7 @@ const Component = ({
         firstClickedImageIndex={firstClickedImageIndex}
       />
 
-      <ReviewPressable onLayout={getWidth}>
+      <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
         {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
           <IconDiv
             onPress={() => {
@@ -313,78 +313,100 @@ const Component = ({
           </IconDiv>
         )}
 
-        <ReviewText calcFontSize={calcFontSize}>{reviewText}</ReviewText>
+        {/* <Text
+          // lineBreakStrategyIOS={'hangul-word'}
+          textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}>
+          {reviewText}
+        </Text> */}
 
-        <>
-          {/* {Platform.OS === 'ios' ? (
-          <>
-            {numLines >= 3 && elaborateComment ? (
-              // <ReviewTextTextInput value={reviewText} editable={false} />
-              <ReviewTextTextInputIos
-                // value={reviewText.concat(' ', '...')}
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                value={reviewText}
-                multiline={true}
-                selectTextOnFocus={false}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                suppressHighlighting={true}
-                editable={false}
-              />
-            ) : (
-              <ReviewTextTextInputIos
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                maxHeight={62}
-                value={reviewText}
-                multiline={true}
-                editable={false}
-                selectTextOnFocus={false}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                numberOfLines={3}
-                ellipsizeMode="tail"
-              />
-            )}
-          </>
+        {!elaborateComment ? (
+          <ReviewText
+            numberOfLines={3}
+            ellipsizeMode="tail"
+            // textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}
+            textBreakStrategy={
+              Platform.OS === 'android' ? 'balanced' : undefined
+            }
+            calcFontSize={calcFontSize}>
+            {reviewText}
+          </ReviewText>
         ) : (
-          <>
-            <ReviewTextTextInputAndroid
-              onContentSizeChange={event =>
-                setNumLines(
-                  Math.max(
-                    Math.ceil(event.nativeEvent.contentSize.height / 18),
-                    1,
-                  ),
-                )
-              }
-              value={reviewText}
-              multiline={true}
-              onPressIn={() => {
-                setElaborateComment(!elaborateComment);
-              }}
-              editable={false}
-            />
+          <ReviewText
+            // textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}
+            textBreakStrategy={
+              Platform.OS === 'android' ? 'balanced' : undefined
+            }
+            calcFontSize={calcFontSize}>
+            {reviewText}
+          </ReviewText>
+        )}
 
-       
-          </>
-        )} */}
-        </>
+        {/* <>
+          {Platform.OS === 'ios' ? (
+            <>
+              {numLines >= 3 && elaborateComment ? (
+                <ReviewTextTextInputIos
+                  onContentSizeChange={event =>
+                    setNumLines(
+                      Math.max(
+                        Math.ceil(event.nativeEvent.contentSize.height / 18),
+                        1,
+                      ),
+                    )
+                  }
+                  value={reviewText}
+                  multiline={true}
+                  selectTextOnFocus={false}
+                  onPressIn={() => {
+                    setElaborateComment(!elaborateComment);
+                  }}
+                  suppressHighlighting={true}
+                  editable={false}
+                />
+              ) : (
+                <ReviewTextTextInputIos
+                  onContentSizeChange={event =>
+                    setNumLines(
+                      Math.max(
+                        Math.ceil(event.nativeEvent.contentSize.height / 18),
+                        1,
+                      ),
+                    )
+                  }
+                  maxHeight={62}
+                  value={reviewText}
+                  multiline={true}
+                  editable={false}
+                  selectTextOnFocus={false}
+                  onPressIn={() => {
+                    setElaborateComment(!elaborateComment);
+                  }}
+                  numberOfLines={3}
+                  ellipsizeMode="tail"
+                />
+              )}
+            </>
+          ) : (
+            <>
+              <ReviewTextTextInputAndroid
+                onContentSizeChange={event =>
+                  setNumLines(
+                    Math.max(
+                      Math.ceil(event.nativeEvent.contentSize.height / 18),
+                      1,
+                    ),
+                  )
+                }
+                value={reviewText}
+                multiline={true}
+                onPressIn={() => {
+                  setElaborateComment(!elaborateComment);
+                }}
+                editable={false}
+              />
+            </>
+          )}
+        </> */}
       </ReviewPressable>
       {/* <ReviewText>{reviewText}</ReviewText> */}
       {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}
@@ -515,7 +537,8 @@ const DefaultImage = styled.View`
 `;
 
 const ReviewPressable = styled.Pressable`
-  width: 278px;
+  /* width: 278px; */
+  width: 90%;
   margin: auto;
   position: relative;
   /* border: 1px solid black; */
