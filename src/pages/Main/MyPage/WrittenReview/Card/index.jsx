@@ -196,17 +196,16 @@ const Component = ({
   };
   const [numLines, setNumLines] = useState(1);
 
-  //////// 컴포넌트 사이즈 측정
-
   const [calcFontSize, setCalcFontSize] = useState(278 * 0.05115);
 
   const getWidth = e => {
     const {width, height, x, y} = e.nativeEvent.layout;
 
-    console.log('width 관리');
-    console.log(width * 0.05115);
+    console.log('카드 width');
+    console.log(width);
+    console.log(width * 0.052279);
 
-    setCalcFontSize(width * 0.05115);
+    setCalcFontSize(width * 0.052279);
   };
 
   return (
@@ -519,7 +518,7 @@ const ReviewPressable = styled.Pressable`
   width: 278px;
   margin: auto;
   position: relative;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   /* padding: 0 11px; */
 `;
 const ReviewText = styled(Typography).attrs({text: 'Body06R'})`

@@ -31,6 +31,19 @@ const ReviewInput = ({
     }
   }, [editContentInput]);
 
+  //////// 컴포넌트 사이즈 측정
+
+  const [calcFontSize, setCalcFontSize] = useState(278 * 0.05115);
+
+  const getWidth = e => {
+    const {width, height, x, y} = e.nativeEvent.layout;
+
+    // 이 0.052879 비율은 여러번의 측정으로 정해진 수치이니 함부러 바꾸지 마시오
+    // react native:  textinput테그에는 0.052879, Text에는  0.052279
+    // react : textarea 0.051179
+    setCalcFontSize((width - 40) * 0.052879);
+  };
+
   return (
     <>
       <Controller
@@ -43,6 +56,8 @@ const ReviewInput = ({
         render={({field: {value, onChange}, fieldState: {error}}) => (
           <ViewWrap>
             <Input
+              onLayout={getWidth}
+              calcFontSize={calcFontSize}
               style={{
                 textAlignVertical: 'top',
               }}
@@ -81,7 +96,14 @@ const Input = styled.TextInput`
   height: 168px;
   border-radius: 14px;
   font-weight: 400;
-  font-size: 16px;
+
+  font-size: ${({calcFontSize}) => {
+    console.log('여기');
+    console.log(calcFontSize);
+
+    return calcFontSize ? `${calcFontSize}px` : '16px';
+  }};
+
   font-family: 'Pretendard-Regular';
 
   ${({isAndroid}) => {

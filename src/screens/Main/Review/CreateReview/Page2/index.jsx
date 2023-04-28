@@ -58,7 +58,7 @@ const Screen = ({route}) => {
   const queryClient = useQueryClient();
   // 모든 사진
   const [photosArray, setPhotosArray] = useState([]);
-  const [inputFocus, setInputFocus] = useState(false);
+  // const [inputFocus, setInputFocus] = useState(false);
   // FlatList 에 넣을 배열 만들기
   const themeApp = useTheme();
   const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
@@ -518,12 +518,12 @@ const Screen = ({route}) => {
             </Title3>
 
             <ReviewInput
-              onFocus={() => {
-                setInputFocus(true);
-              }}
-              onBlur={() => {
-                setInputFocus(false);
-              }}
+              // onFocus={() => {
+              //   setInputFocus(true);
+              // }}
+              // onBlur={() => {
+              //   setInputFocus(false);
+              // }}
               charLength={charLength}
               editContentInput={
                 editItem && editItem.reviewText

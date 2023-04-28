@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {GreyLockerIcon} from '../../../../../../components/Icon';
 import {DefaultHumanIcon} from '../../../../../../components/Icon';
 
@@ -16,6 +16,18 @@ const Component = ({
   writtenDate: createDate,
   message: content,
 }) => {
+  const [calcFontSize, setCalcFontSize] = useState(278 * 0.051079);
+
+  const getWidth = e => {
+    const {width, height, x, y} = e.nativeEvent.layout;
+
+    console.log('댓글 width');
+    console.log(width);
+    console.log(width * 0.052279);
+
+    setCalcFontSize(width * 0.052279);
+  };
+
   return (
     <Container>
       <AdminImageWrap>
@@ -42,7 +54,9 @@ const Component = ({
               <WrittenDate> {createDate} 작성</WrittenDate>
             </TitleWrap>
 
-            <Message>{content}</Message>
+            <MessageContentWrap onLayout={getWidth}>
+              <Message calcFontSize={calcFontSize}>{content}</Message>
+            </MessageContentWrap>
           </>
         )}
       </MessageWrap>
@@ -102,6 +116,7 @@ const MessageWrap = styled.View`
     onlyForReviewers ? 'padding: 16px;' : 'padding: 12px 16px;'}
 
   flex: 1;
+  /* border: 1px solid black; */
 `;
 const TitleWrap = styled.View`
   flex-direction: row;
@@ -118,7 +133,20 @@ const WrittenDate = styled(Typography).attrs({text: 'SmallLabel'})`
   margin-left: 6px;
 `;
 
+const MessageContentWrap = styled.View`
+  /* border: 1px solid black; */
+  width: 278px;
+`;
+
 const Message = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-left: 6px;
+
+  ${({calcFontSize}) => {
+    if (calcFontSize) {
+      return css`
+        font-size: ${({calcFontSize}) => `${calcFontSize}px`};
+      `;
+    }
+  }}
 `;
