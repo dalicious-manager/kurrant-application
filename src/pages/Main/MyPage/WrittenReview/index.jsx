@@ -9,8 +9,9 @@ import {useAtom} from 'jotai';
 import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/store';
 import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
 import {convertDateFormat1} from '../../../../utils/dateFormatter';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Toast from '~components/Toast';
+import {isWrittenReviewFocusedAtom} from '../Review/store';
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const sampleAdminReview = {
   pngLink: DefaultProfile,
@@ -25,6 +26,23 @@ const Pages = ({route}) => {
   const flatListRef = useRef(null);
 
   const {getWrittenReview, reviewList} = useWrittenReview();
+
+  const isFocused = useIsFocused();
+  const [isWrittenReveiwFocused, setIsWrittenReviewFocused] = useAtom(
+    isWrittenReviewFocusedAtom,
+  );
+
+  useEffect(() => {
+    if (isFocused) {
+      // console.log('포커스됨 루루루룰');
+
+      setIsWrittenReviewFocused(true);
+    } else {
+      // console.log('포커스안됨 ㅜㅜㅜㅜ');
+
+      setIsWrittenReviewFocused(false);
+    }
+  }, [isFocused]);
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const idx = reviewList?.findIndex(el => el.reviewId === pointId);
