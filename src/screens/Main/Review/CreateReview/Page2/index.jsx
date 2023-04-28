@@ -5,7 +5,11 @@ import {FormProvider, useForm} from 'react-hook-form';
 import styled, {useTheme} from 'styled-components/native';
 
 import Button from '../../../../../components/Button';
-import {CheckIcon,  EnabledPoint,  XCircleIcon} from '../../../../../components/Icon';
+import {
+  CheckIcon,
+  EnabledPoint,
+  XCircleIcon,
+} from '../../../../../components/Icon';
 import RateStars from '../../../../../components/RateStars';
 
 import Typography from '../../../../../components/Typography';
@@ -27,10 +31,7 @@ import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
 import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
 
-import {
-  Alert,
-  View,
-} from 'react-native';
+import {Alert, View} from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import {useQueryClient} from 'react-query';
 
@@ -57,7 +58,7 @@ const Screen = ({route}) => {
   const queryClient = useQueryClient();
   // 모든 사진
   const [photosArray, setPhotosArray] = useState([]);
-  const [inputFocus,setInputFocus] = useState(false);
+  const [inputFocus, setInputFocus] = useState(false);
   // FlatList 에 넣을 배열 만들기
   const themeApp = useTheme();
   const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
@@ -69,8 +70,8 @@ const Screen = ({route}) => {
     // 사진 채우기 기능 추가
 
     setPhotosArrayForFlatList(['addPic', ...photosArray]);
-    if(photosArray){
-      setIsPhoto(photosArray.length > 0)
+    if (photosArray) {
+      setIsPhoto(photosArray.length > 0);
     }
   }, [photosArray]);
 
@@ -141,7 +142,7 @@ const Screen = ({route}) => {
     setInput({...input, review: form.watch('review')});
   }, [form.watch('review')]);
   useEffect(() => {
-    setIsText(form.formState.errors?.review ? false : true)
+    setIsText(form.formState.errors?.review ? false : true);
   }, [form.formState.errors?.review]);
 
   // 데이터 있으면 input에 바로등록하기
@@ -177,9 +178,7 @@ const Screen = ({route}) => {
       setClickDisable(true);
     }
   }, [input]);
-  useEffect(()=>{
-
-  },[form])
+  useEffect(() => {}, [form]);
   // 여기가 완료 클릭
 
   const onSignInPressed = data => {
@@ -313,10 +312,10 @@ const Screen = ({route}) => {
                           name: MainScreenName,
                         },
                         {
-                          name: ReviewScreenName,    
-                          params:{
-                            from:'point'
-                          }                     
+                          name: ReviewScreenName,
+                          params: {
+                            from: 'point',
+                          },
                         },
                       ],
                     });
@@ -324,7 +323,7 @@ const Screen = ({route}) => {
                     //   screen: ReviewScreenName,
                     //   params: {
                     //     tabIndex: 1,
-                        
+
                     //   },
                     // });
                   } else {
@@ -400,32 +399,60 @@ const Screen = ({route}) => {
   return (
     <Container2>
       <FormProvider {...form}>
-      <ReviewPointInfoContainer>
+        <ReviewPointInfoContainer>
           <ReviewPointInfo>
             <ReviewPointInfoTop>
-              <Typography textColor={themeApp.colors.blue[500]} text="Button10R">텍스트 리뷰</Typography>
-              {(input?.review?.length > 0 && isText) &&<View>
-                <PointText text="SmallLabel" textColor={(input?.review?.length > 0 && isText) ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>50P 적립</PointText>
-                {(input?.review?.length > 0 && isText) && <EnabledPoint/> }
-              </View>}
+              <Typography
+                textColor={themeApp.colors.blue[500]}
+                text="Button10R">
+                텍스트 리뷰
+              </Typography>
+              {input?.review?.length > 0 && isText && (
+                <View>
+                  <PointText
+                    text="SmallLabel"
+                    textColor={
+                      input?.review?.length > 0 && isText
+                        ? themeApp.colors.grey[0]
+                        : themeApp.colors.blue[500]
+                    }>
+                    50P 적립
+                  </PointText>
+                  {input?.review?.length > 0 && isText && <EnabledPoint />}
+                </View>
+              )}
             </ReviewPointInfoTop>
-            <ReviewPointInfoBottom active={(input?.review?.length > 0 && isText)}>
-            </ReviewPointInfoBottom>
+            <ReviewPointInfoBottom
+              active={
+                input?.review?.length > 0 && isText
+              }></ReviewPointInfoBottom>
           </ReviewPointInfo>
           <ReviewPointInfo>
-          <ReviewPointInfoTop>
-              <Typography textColor={themeApp.colors.blue[500]} text="Button10R">포토 리뷰</Typography>
-              {isPhoto &&<View>
-                <PointText text="SmallLabel" textColor={isPhoto ?themeApp.colors.grey[0]:themeApp.colors.blue[500]}>70P 적립</PointText>
-                {isPhoto && <EnabledPoint/> }
-              </View>}
+            <ReviewPointInfoTop>
+              <Typography
+                textColor={themeApp.colors.blue[500]}
+                text="Button10R">
+                포토 리뷰
+              </Typography>
+              {isPhoto && (
+                <View>
+                  <PointText
+                    text="SmallLabel"
+                    textColor={
+                      isPhoto
+                        ? themeApp.colors.grey[0]
+                        : themeApp.colors.blue[500]
+                    }>
+                    70P 적립
+                  </PointText>
+                  {isPhoto && <EnabledPoint />}
+                </View>
+              )}
             </ReviewPointInfoTop>
-            <ReviewPointInfoBottom active={(isPhoto)}>
-            </ReviewPointInfoBottom>
+            <ReviewPointInfoBottom active={isPhoto}></ReviewPointInfoBottom>
           </ReviewPointInfo>
-    </ReviewPointInfoContainer>
+        </ReviewPointInfoContainer>
         <KeyboardViewContainer extraHeight={120}>
-          
           <SatisfactionTitle>
             <Title1>만족도를 알려주세요</Title1>
             <RateStars
@@ -491,11 +518,11 @@ const Screen = ({route}) => {
             </Title3>
 
             <ReviewInput
-              onFocus={()=>{
-                setInputFocus(true)
+              onFocus={() => {
+                setInputFocus(true);
               }}
-              onBlur={()=>{
-                setInputFocus(false)
+              onBlur={() => {
+                setInputFocus(false);
               }}
               charLength={charLength}
               editContentInput={
@@ -533,9 +560,10 @@ const Screen = ({route}) => {
                 )}
               </ShowOnlyToOwnerWrap>
               <ShowCurrentLettersLengthWrap>
-                <LengthText colorError={form.formState.errors.review ? true:false}>
-                  
-                  <LengthTextNum charLength={charLength > 500 || charLength < 10} >
+                <LengthText
+                  colorError={form.formState.errors.review ? true : false}>
+                  <LengthTextNum
+                    charLength={charLength > 500 || charLength < 10}>
                     {charLength}
                   </LengthTextNum>
                   /500
@@ -549,28 +577,21 @@ const Screen = ({route}) => {
             </Warnings>
             {/* '최대 몇자인가' 보여주기 */}
           </ReviewWrap>
-          {!inputFocus && !keyboardStatus.isKeyboardActivate && <Filler />}
-          
-            {inputFocus && keyboardStatus.isKeyboardActivate &&<ButtonFinal
-          size="full"
-          label="완료"
-          text={'Button09SB'}
-          disabled={clickDisable}
-          onPressEvent={form.handleSubmit(onSignInPressed)}
-          />}
-         {inputFocus && keyboardStatus.isKeyboardActivate && <Filler2 />}
+
+          {!keyboardStatus.isKeyboardActivate && <Filler />}
         </KeyboardViewContainer>
-        {!inputFocus && !keyboardStatus.isKeyboardActivate && <ButtonContainer>
-           
-          <ButtonFinal
-          size="full"
-          label="완료"
-          text={'Button09SB'}
-          disabled={clickDisable}
-          onPressEvent={form.handleSubmit(onSignInPressed)}
-          />
-          <Filler2/>
-          </ButtonContainer>}
+
+        {!keyboardStatus.isKeyboardActivate && (
+          <ButtonContainer>
+            <ButtonFinal
+              size="full"
+              label="완료"
+              text={'Button09SB'}
+              disabled={clickDisable}
+              onPressEvent={form.handleSubmit(onSignInPressed)}
+            />
+          </ButtonContainer>
+        )}
       </FormProvider>
     </Container2>
   );
@@ -594,7 +615,7 @@ const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
 
 const Filler = styled.View`
   width: 100%;
-  height: 200px;
+  height: 110px;
 `;
 const Filler2 = styled.View`
   width: 100%;
@@ -648,7 +669,7 @@ const PointText = styled(Typography)`
   top: 2px;
   right: 4px;
   z-index: 1;
-`
+`;
 const DeleteButton = styled.Pressable`
   position: absolute;
   top: -10px;
@@ -740,7 +761,7 @@ const Warnings = styled(Typography).attrs({text: 'CaptionR'})`
 
 const ButtonFinal = styled(Button)`
   width: 100%;
-  margin-bottom:20px;
+  margin-bottom: 20px;
   /* position: absolute;
   bottom: 20px; */
 `;
@@ -751,42 +772,45 @@ const ButtonContainer = styled.View`
   background-color: white;
   position: absolute;
   bottom: 0px;
-`
+`;
 const ReviewPointInfo = styled.View`
   flex: 1;
   margin-left: 5px;
   margin-right: 5px;
   padding-top: 16px;
   padding-bottom: 16px;
-`
+`;
 const ReviewPointInfoTop = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  height: 24px;  
+  height: 24px;
   align-items: center;
-`
+`;
 const ReviewPointInfoBottom = styled.View`
   width: 100%;
-  background-color: ${({active})=>active ?"#3478F6" :"#EFF2FE"};
+  background-color: ${({active}) => (active ? '#3478F6' : '#EFF2FE')};
   height: 8px;
   border-radius: 4px;
   margin-top: 2px;
-`
+`;
 const ReviewPointInfoContainer = styled.View`
   width: 100%;
-  height:66px;
+  height: 66px;
   padding-left: 19px;
   justify-content: space-between;
   padding-right: 19px;
   flex-direction: row;
-`
+`;
 
 const ShowCurrentLettersLengthWrap = styled.View`
   flex-direction: row-reverse;
   margin-bottom: 10px;
 `;
 const LengthText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${(props) => props.colorError ? props.theme.colors.red[500]: props.theme.colors.grey[4]};
+  color: ${props =>
+    props.colorError
+      ? props.theme.colors.red[500]
+      : props.theme.colors.grey[4]};
   /* margin-bottom: 32px; */
 `;
 

@@ -6,7 +6,6 @@ import Typography from '../../../../../components/Typography';
 import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
 import StarRating from '../../../../../components/StarRating/StarRating';
 
-
 import AdminOrMakersReview from './AdminOrMakersReview';
 import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
@@ -47,7 +46,7 @@ const Component = ({
   createDate,
   updateDate,
   commentList,
-  toast
+  toast,
 }) => {
   const navigation = useNavigation();
 
@@ -57,7 +56,7 @@ const Component = ({
 
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
-  
+
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
 
@@ -114,7 +113,7 @@ const Component = ({
                   },
                 ]);
               } else {
-                toast.toastEvent()
+                toast.toastEvent();
                 await getWrittenReview();
                 // Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
                 //   {
@@ -197,9 +196,21 @@ const Component = ({
   };
   const [numLines, setNumLines] = useState(1);
 
+  //////// 컴포넌트 사이즈 측정
+
+  const [calcFontSize, setCalcFontSize] = useState(278 * 0.05115);
+
+  const getWidth = e => {
+    const {width, height, x, y} = e.nativeEvent.layout;
+
+    console.log('width 관리');
+    console.log(width * 0.05115);
+
+    setCalcFontSize(width * 0.05115);
+  };
+
   return (
     <Container focusId={focusId} id={id}>
-       
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
@@ -254,36 +265,36 @@ const Component = ({
       {forMakers && <OnlyForMakers />}
 
       {imageLocation && imageLocation.length > 0 && (
-          <ImagesWrapper>
-            {imageLocationToSix.map((v, i) => {
-              if (v) {
-                // 이미지가 수직 이미지인가 수평이미지인가 확인하기
+        <ImagesWrapper>
+          {imageLocationToSix.map((v, i) => {
+            if (v) {
+              // 이미지가 수직 이미지인가 수평이미지인가 확인하기
 
-                return (
-                  <ImagePressable
-                    key={i}
-                    onPress={() => {
-                      setFirstClickedImageIndex(i);
-                      setImageModalVisible(true);
-                    }}>
-                    <MealImage
-                      source={{
-                        uri: v,
-                      }}
-                    />
-                  </ImagePressable>
-                );
-              }
-              // defaultPicture 기각됨
-              // else {
-              //   return (
-              //     <ImageWrap key={i}>
-              //       <DefaultImage />
-              //     </ImageWrap>
-              //   );
-              // }
-            })}
-          </ImagesWrapper>
+              return (
+                <ImagePressable
+                  key={i}
+                  onPress={() => {
+                    setFirstClickedImageIndex(i);
+                    setImageModalVisible(true);
+                  }}>
+                  <MealImage
+                    source={{
+                      uri: v,
+                    }}
+                  />
+                </ImagePressable>
+              );
+            }
+            // defaultPicture 기각됨
+            // else {
+            //   return (
+            //     <ImageWrap key={i}>
+            //       <DefaultImage />
+            //     </ImageWrap>
+            //   );
+            // }
+          })}
+        </ImagesWrapper>
       )}
 
       <ImageModal
@@ -293,7 +304,7 @@ const Component = ({
         firstClickedImageIndex={firstClickedImageIndex}
       />
 
-      <ReviewPressable>
+      <ReviewPressable onLayout={getWidth}>
         {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
           <IconDiv
             onPress={() => {
@@ -303,7 +314,10 @@ const Component = ({
           </IconDiv>
         )}
 
-        {Platform.OS === 'ios' ? (
+        <ReviewText calcFontSize={calcFontSize}>{reviewText}</ReviewText>
+
+        <>
+          {/* {Platform.OS === 'ios' ? (
           <>
             {numLines >= 3 && elaborateComment ? (
               // <ReviewTextTextInput value={reviewText} editable={false} />
@@ -368,47 +382,10 @@ const Component = ({
               editable={false}
             />
 
-            {/* {numLines >= 3 && elaborateComment ? (
-              // <ReviewTextTextInput value={reviewText} editable={false} />
-              <ReviewTextTextInputAndroid
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                value={reviewText}
-                multiline={true}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                editable={false}
-              />
-            ) : (
-              <ReviewTextTextInputAndroid
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                value={reviewText}
-                multiline={true}
-                editable={false}
-                maxHeight={62}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                // numberOfLines={3}
-                // ellipsizeMode="tail"
-              />
-            )} */}
+       
           </>
-        )}
+        )} */}
+        </>
       </ReviewPressable>
       {/* <ReviewText>{reviewText}</ReviewText> */}
       {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}
@@ -539,13 +516,21 @@ const DefaultImage = styled.View`
 `;
 
 const ReviewPressable = styled.Pressable`
-  width: 300px;
+  width: 278px;
   margin: auto;
   position: relative;
+  border: 1px solid black;
+  /* padding: 0 11px; */
 `;
+const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 6px;
 
+  font-size: ${({calcFontSize}) =>
+    calcFontSize ? `${calcFontSize}px` : '14.2px'};
+`;
 const ReviewTextTextInputAndroid = styled.TextInput`
-  color: ${props => props.theme.colors.grey[2]};  
+  color: ${props => props.theme.colors.grey[2]};
   font-size: 14px;
   padding-top: 0px;
   font-weight: 400;
@@ -564,10 +549,6 @@ const ReviewTextTextInputIos = styled.TextInput`
   font-family: 'Pretendard-Regular';
 `;
 
-const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 6px;
-`;
 const CommentWrap = styled.View`
   width: 100%;
 `;
