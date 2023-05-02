@@ -422,11 +422,6 @@ const Pages = ({route}) => {
             </Content>
             {/* 리뷰자리 */}
             <MealDetailReview />
-
-            <Content>
-              <View>{/* <ReviewPage /> */}</View>
-            </Content>
-            {/* <MoreButton /> */}
           </View>
         </ScrollViewWrap>
 

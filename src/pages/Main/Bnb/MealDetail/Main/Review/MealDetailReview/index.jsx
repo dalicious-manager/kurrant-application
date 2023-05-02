@@ -100,13 +100,12 @@ const Component = () => {
 
       <ReviewListWrap>
         {/* <SampleView /> */}
-
-        {
-          Array.isArray(reviewList) &&
+        <CardsWrap>
+          {Array.isArray(reviewList) &&
             reviewList.length > 0 &&
             reviewList.map(item => {
               return (
-                <View>
+                <View key={item.reviewId}>
                   <Card
                     id={item.reviewId}
                     createDate={item.createDate}
@@ -121,35 +120,19 @@ const Component = () => {
                   />
                 </View>
               );
-            })
+            })}
+        </CardsWrap>
 
-          // <FlatList
-          //   showsVerticalScrollIndicator={false}
-          //   showsHorizontalScrollIndicator={false}
-          //   data={reviewList}
-          //   scrollEnabled={true}
-          //   renderItem={({item, index}) => {
-          //     // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
+        {/* 버튼 누르면 더 볼 수 있다.  */}
 
-          //     return (
-          //       <View>
-          //         <Card
-          //           id={item.reviewId}
-          //           createDate={item.createDate}
-          //           updateDate={item.updateDate}
-          //           writtenDate={convertDateFormat1(item.createDate)}
-          //           option={item.option}
-          //           rating={item.satisfaction}
-          //           reviewText={item.content}
-          //           imageLocation={item.imageLocation}
-          //           forMakers={item.forMakers}
-          //           commentList={item.commentList}
-          //         />
-          //       </View>
-          //     );
-          //   }}
-          // />
-        }
+        <MoreReviewPressable>
+          <MoreReviewText>131개 리뷰 전체보기</MoreReviewText>
+          <RightSkinnyArrow
+            width={'5px'}
+            height={'9px'}
+            color={theme.colors.grey[4]}
+          />
+        </MoreReviewPressable>
       </ReviewListWrap>
     </Container>
   );
@@ -256,10 +239,6 @@ const ReviewCount = styled(Typography).attrs({text: 'Body05SB'})`
   margin-right: 7px;
 `;
 
-const Rating = styled(Typography).attrs({text: 'Body06SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
 const GoToWriteReviewPressable = styled.Pressable`
   flex-direction: row;
   align-items: center;
@@ -269,21 +248,28 @@ const GoToWriteReviewText = styled(Typography).attrs({text: 'Button10R'})`
   color: ${props => props.theme.colors.blue[500]};
 `;
 
-const IconWrap = styled.View`
-  width: 12px;
-  height: 12px;
-
-  /* border: 1px solid black; */
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
-`;
-
 const ReviewListWrap = styled.View`
   width: 100%;
   background-color: #ffffff;
 `;
 
-const SampleView = styled.View`
-  height: 400px;
+const CardsWrap = styled.View`
+  margin-bottom: 40px;
+`;
+
+const MoreReviewPressable = styled.Pressable`
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+
+  padding: 17px 0px;
+
+  border: 1px solid ${({theme}) => theme.colors.grey[7]};
+  border-radius: 7px;
+`;
+
+const MoreReviewText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[3]};
+  margin-right: 10px;
 `;
