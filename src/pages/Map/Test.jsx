@@ -1,34 +1,33 @@
 import {useEffect, useRef, useState} from 'react';
-import {Platform, Pressable, Text, View} from 'react-native';
-import NaverMapView, {
-  Circle,
-  Marker,
-  Path,
-  Polyline,
-  Polygon,
-  AnimateMarker,
-} from 'react-native-nmap';
-import {createAnimatableComponent} from 'react-native-animatable';
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  Text,
+  View,
+  PanResponder,
+} from 'react-native';
+import NaverMapView from 'react-native-nmap';
+import {createAnimatableComponent} from 'react-native-animatable'; // 라이브러리 삭제 해야함
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import styled from 'styled-components';
 import Location from './Location';
 import Typography from '../../components/Typography';
 import FastImage from 'react-native-fast-image';
 
-const AnimatableMarker = createAnimatableComponent(Marker);
+const WIDTH = Dimensions.get('screen').width;
+
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'MAP';
 const Test = () => {
-  const markerRef = useRef(null);
+  const [markerColor, setMarkerColor] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const [center, setCenter] = useState();
   const [initCenter, setInitCenter] = useState({
     latitude: 37.505188,
     longitude: 127.045862,
   });
-  const [zoomLevel, setZoomLevel] = useState(18);
 
-  //console.log(center, 'center');
   const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
     center ? center?.longitude : initCenter.longitude,
     center ? center?.latitude : initCenter.latitude,
@@ -38,71 +37,75 @@ const Test = () => {
   const changAddress = () => {
     setShowAddress(prev => !prev);
   };
+
+  const mapRef = useRef(null);
+
+  // 지도 이동할때 마커 변경
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponderCapture: () => true,
+      onPanResponderMove: () => {
+        setMarkerColor(true);
+      },
+      onPanResponderRelease: () => {
+        setMarkerColor(false);
+      },
+    }),
+  ).current;
+
   const handleCameraChange = event => {
-    const zoom = event.zoom;
-    console.log(event)
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
     setCenter(newCenter);
-    // setZoomLevel(zoom);
-    console.log(newCenter, '좌표', Platform.OS);
-    // if (markerRef.current) {
-    //   //console.log(markerRef.current, 'dkdkdkdk');
-    //   markerRef.current.transitionTo(
-    //     {
-    //       latitude: newCoordinate.latitude,
-    //       longitude: newCoordinate.longitude,
-    //     },
-    //     5000,
-    //   );
-    // }
   };
 
   useEffect(() => {
     roadAddressRefetch();
-    addressRefetch();
   }, [center]);
+  useEffect(() => {
+    addressRefetch();
+  }, [roadAddress]);
 
   return (
-    <Wrap>
+    <Wrap {...panResponder.panHandlers}>
       {/* <View style={{height: 100}}>
         <Location />
       </View> */}
-      <View style={{position:'absolute',alignSelf:'center',justifyContent:'center', zIndex:1,top:208-47}}> 
-        <FastImage
-          source={require('./marker.png')}
-          style={{
-            width: 37,
-            height: 47,
-            borderRadius: 7,
-          }}
-        />
+      <View
+        style={{
+          position: 'absolute',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          zIndex: 1,
+          top: 208 - 47,
+        }}>
+        {markerColor ? (
+          <FastImage
+            source={require('./pick.png')}
+            style={{
+              width: 37,
+              height: 47,
+              borderRadius: 7,
+            }}
+          />
+        ) : (
+          <FastImage
+            source={require('./marker.png')}
+            style={{
+              width: 37,
+              height: 47,
+              borderRadius: 7,
+            }}
+          />
+        )}
       </View>
+      <CircleView markerColor={markerColor} />
       <MapView>
         <NaverMapView
-          center={ {...initCenter,zoom:zoomLevel}}       
+          ref={mapRef}
+          center={{...initCenter, zoom: 19}}
           style={{width: '100%', height: '100%'}}
-          // onTouch={e => console.log('onTouch', JSON.stringify(e.nativeEvent))}
           onCameraChange={handleCameraChange}
-
-          // onMapClick={e => console.log('onMapClick', JSON.stringify(e),"클릭")}
-        >
-          {/* <AnimatableMarker ref={markerRef} coordinate={center} /> */}
-
-          {/* <Marker
-            coordinate={center ? center: initCenter}
-            onClick={() => console.log('onClick! p0')}
-            width={45}
-            height={57}
-            image={require('./marker.png')}
-          />
-
-          <Circle
-            coordinate={center ? center: initCenter}
-            color={'rgba(90,30,255,0.1)'}
-            radius={10}
-            onClick={() => console.log('onClick! circle')}
-          /> */}
-        </NaverMapView>
+        />
       </MapView>
       <AddressView>
         {showAddress ? (
@@ -143,4 +146,16 @@ const AddressView = styled.View`
 `;
 const AddressText = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const CircleView = styled.View`
+  background-color: rgba(90, 30, 255, 0.1);
+
+  width: 83px;
+  height: 83px;
+  border-radius: 50px;
+  position: absolute;
+  z-index: 999;
+  top: 150px;
+  left: ${WIDTH / 2 - 40}px;
 `;
