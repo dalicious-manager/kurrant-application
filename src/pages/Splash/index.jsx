@@ -194,10 +194,11 @@ const Page = () => {
 
         setLoginLoading(false);
         if (token) {
+          
           const getToken = JSON.parse(token);
           if (getToken?.accessToken) {
             const res = await autoLogin();
-
+            
             if (res?.statusCode === 200) {
               await isTester();
               const token = await messaging().getToken();

@@ -23,14 +23,14 @@ const sampleAdminReview = {
 const Pages = ({route}) => {
   const pointId = route?.params?.id;
   const flatListRef = useRef(null);
-
+  const [idx,setIdx] = useState();
   const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
 
   const [, setTotalWrittenReviewList] = useAtom(totalWrittenReview);
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
-  const idx = reviewList?.findIndex(el => el.reviewId === pointId);
-
+  
+  
   useEffect(() => {
     getWrittenReview();
   }, []);
@@ -39,20 +39,26 @@ const Pages = ({route}) => {
     setTotalWrittenReviewList(writtenReviewCount);
   }, [writtenReviewCount]);
 
-  // useEffect(() => {
-  //   console.log(reviewList);
-  // }, [reviewList]);
+  useEffect(() => {
+    if(reviewList){
+      const data = reviewList?.findIndex(el => el.reviewId === pointId);
+      reviewList.map((s)=>{
+        return console.log(s)
+      })
+      setIdx(data);
+    }
+  }, [reviewList]);
 
   useEffect(() => {
     if (flatListRef.current && idx !== -1) {
-      // console.log(idx, 'idx');
+      console.log(idx, 'idx');
       flatListRef.current.scrollToIndex({
         animated: true,
         index: idx,
         viewPosition: 0,
       });
     }
-  }, []);
+  }, [idx,pointId]);
 
   return (
     <Container>

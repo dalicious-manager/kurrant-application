@@ -69,7 +69,7 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
-  // console.log(ret);
+  console.log(ret);
   if (ret.error === 'E4030003') {
     const bodyData = {
       accessToken: token?.accessToken,
