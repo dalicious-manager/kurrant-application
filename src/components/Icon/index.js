@@ -49,3 +49,4 @@ export {default as DefaultHumanIcon} from './_components/DefaultHumanIcon';
 export {default as YellowStar} from './_components/YellowStar';
 export {default as RightSkinnyArrow} from './_components/RightSkinnyArrow';
 export {default as SkinnyArrowDown} from './_components/SkinnyArrowDown';
+export {default as ThumbsUp} from './_components/ThumbsUp';

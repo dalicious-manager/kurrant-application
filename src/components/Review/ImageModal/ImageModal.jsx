@@ -1,16 +1,10 @@
 import {useEffect, useState} from 'react';
-import {
-  Modal,
-  SafeAreaView as View,
-  StyleSheet,
-  Text,
-  Image,
-  StatusBar,
-} from 'react-native';
+import {Modal, SafeAreaView as View, StyleSheet, StatusBar} from 'react-native';
 import styled from 'styled-components';
 
 import CarouselImage from './CarouselImage';
-import {SmallXVectorIcon} from '../../../../../../components/Icon';
+
+import {SmallXVectorIcon} from '~components/Icon';
 import DotPagination from './DotPagination';
 
 // https://www.youtube.com/watch?v=Nw1St1h5Ylc&t=81s 여기서 베낌

@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 import Typography from '~components/Typography';
 import ArrowRightGrey4 from '~assets/icons/Arrow/ArrowRightGrey4.svg';
 import StarRating from '~components/StarRating/StarRating';
 
 import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
-// import ImageModal from '~components/Review/ImageModal';
+import ImageModal from '~components/Review/ImageModal/ImageModal';
 import {useNavigation} from '@react-navigation/native';
 // import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
@@ -26,6 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import {changeSeperator} from '~utils/dateFormatter';
 import {SkinnyArrowDown} from '~components/Icon';
 import {css} from 'styled-components/native';
+import {ThumbsUp} from '../../../../../../../../components/Icon';
 
 // 상세페이지 카드
 
@@ -44,6 +45,8 @@ const Component = ({
   commentList,
 }) => {
   const navigation = useNavigation();
+
+  const theme = useTheme();
 
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
@@ -88,21 +91,7 @@ const Component = ({
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
             남**
           </RestaurentNameText>
-          <ArrowRightGrey4 />
         </TitleWrap>
-
-        <EditWrap>
-          <Pressable
-            onPress={() => {
-              //   navigation.navigate(EditReviewPage2ScreenName, {
-              //     id: id,
-              //     status: 'edit',
-              //     editItem,
-              //   });
-            }}>
-            <EditText>도움이 되요 자리</EditText>
-          </Pressable>
-        </EditWrap>
       </TopWrap>
 
       {option ? (
@@ -114,16 +103,30 @@ const Component = ({
         <></>
       )}
 
-      <RowWrap>
-        <StarsWrap>
-          <StarRating rating={rating} width="66px" margin="1px" />
-        </StarsWrap>
+      <Wrap3>
+        <RowWrap>
+          <StarsWrap>
+            <StarRating rating={rating} width="66px" margin="1px" />
+          </StarsWrap>
 
-        <PostDateText>
-          {changeSeperator(writtenDate, '-', '. ')}{' '}
-          {createDate === updateDate ? '작성' : '수정'}
-        </PostDateText>
-      </RowWrap>
+          <PostDateText>
+            {changeSeperator(writtenDate, '-', '. ')}{' '}
+            {createDate === updateDate ? '작성' : '수정'}
+          </PostDateText>
+        </RowWrap>
+
+        <EditWrap>
+          <LikePressable onPress={() => {}}>
+            <EditText>도움이 되요 </EditText>
+            <ThumbsUp
+              width="14px"
+              height="15px"
+              color={theme.colors.green[500]}
+            />
+            <LikeNumber>{5}</LikeNumber>
+          </LikePressable>
+        </EditWrap>
+      </Wrap3>
 
       {/* {forMakers && <OnlyForMakers />} */}
 
@@ -160,12 +163,12 @@ const Component = ({
         </ImagesWrapper>
       )}
 
-      {/* <ImageModal
+      <ImageModal
         visible={imageModalVisible}
         setVisible={setImageModalVisible}
         imageLocation={imageLocation}
         firstClickedImageIndex={firstClickedImageIndex}
-      /> */}
+      />
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
         {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
@@ -278,12 +281,24 @@ const EditWrap = styled.View`
 `;
 
 const EditText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${props => props.theme.colors.blue[500]};
+  color: ${props => props.theme.colors.green[500]};
   margin-right: 6px;
 `;
+
+const LikeNumber = styled(Typography).attrs({text: 'Button10R'})`
+  color: ${props => props.theme.colors.grey[5]};
+  margin-left: 3px;
+`;
+
 const DeleteText = styled(Typography).attrs({text: 'Button10R'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
+`;
+
+const Wrap3 = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const RowWrap = styled.View`
@@ -299,6 +314,12 @@ const PostDateText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
 `;
+
+const LikePressable = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+`;
+
 const ImagesWrapper = styled.Pressable`
   flex-direction: row;
   padding-top: 11px;
