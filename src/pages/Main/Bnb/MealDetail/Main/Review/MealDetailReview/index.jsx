@@ -1,5 +1,5 @@
 import {Dimensions, FlatList, Text, View} from 'react-native';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 import Typography from '~components/Typography';
 import {RightSkinnyArrow, YellowStar} from '~components/Icon';
 
@@ -13,6 +13,8 @@ import {
 } from '../../../../../../../components/Icon';
 
 const Component = () => {
+  const theme = useTheme();
+
   const reviewList = [
     {
       reviewId: 96,
@@ -46,7 +48,7 @@ const Component = () => {
           <ReviewCount>리뷰(132)</ReviewCount>
         </TitleWrap>
 
-        <Wrap2>
+        <StarRatingWrap>
           <RateStars
             ratingInput={4}
             width={'132px'}
@@ -59,7 +61,7 @@ const Component = () => {
 
           <RatingOutOfText>/</RatingOutOfText>
           <RatingOutOfText>5</RatingOutOfText>
-        </Wrap2>
+        </StarRatingWrap>
 
         {/* <Wrap3>
           <Text>맛 향 편리 따뜻</Text>
@@ -87,7 +89,11 @@ const Component = () => {
         <Wrap5>
           <GoToWriteReviewPressable onPress={() => {}}>
             <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>
-            <RightSkinnyArrow width={'5px'} height={'9px'} />
+            <RightSkinnyArrow
+              width={'5px'}
+              height={'9px'}
+              color={theme.colors.blue[500]}
+            />
           </GoToWriteReviewPressable>
         </Wrap5>
       </Wrap1>
@@ -172,10 +178,11 @@ const Wrap1 = styled.View`
   align-items: center;
 `;
 
-const Wrap2 = styled.View`
+const StarRatingWrap = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: 28px 0px;
 `;
 const RatingPointText = styled(Typography).attrs({text: 'Title02SB'})`
   color: ${props => props.theme.colors.grey[2]};
@@ -232,7 +239,12 @@ const ThinGreyLineVertical = styled.View`
   border-right-color: ${props => props.theme.colors.grey[6]};
 `;
 
-const Wrap5 = styled.View``;
+const Wrap5 = styled.View`
+  width: 100%;
+  flex-direction: row-reverse;
+
+  padding: 16px 0px;
+`;
 
 const Wrap6 = styled.View`
   flex-direction: row;
@@ -254,7 +266,7 @@ const GoToWriteReviewPressable = styled.Pressable`
 `;
 
 const GoToWriteReviewText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${props => props.theme.colors.grey[4]};
+  color: ${props => props.theme.colors.blue[500]};
 `;
 
 const IconWrap = styled.View`

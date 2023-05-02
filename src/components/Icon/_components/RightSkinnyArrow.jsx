@@ -12,13 +12,19 @@ import styled from 'styled-components';
  * @Reference https://oblador.github.io/react-native-vector-icons/
  * @returns
  */
-const Component = ({width, height, size = 20, color, style = 'white'}) => {
+const Component = ({
+  width,
+  height,
+  size = 20,
+  color = '#BDBAC1',
+  style = 'white',
+}) => {
   return (
     <Wrapper width={width} height={height}>
       <Svg width="100%" height="100%" viewBox="0 0 6 9" fill="none">
         <Path
           d="M1 0.5L5 4.5L1 8.5"
-          stroke="#BDBAC1"
+          stroke={color}
           stroke-linecap="round"
           stroke-linejoin="round"
         />
