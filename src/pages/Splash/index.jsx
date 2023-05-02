@@ -140,7 +140,21 @@ const Page = () => {
         }).start();
         
       },300)
-      await isAutoLogin();
+      try {
+        await isAutoLogin();
+      } catch (error) {
+        setTimeout(()=>{
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: LoginPageName,
+              },
+            ],
+          });
+        },1000)
+      }
+      
       
     };
     const isTester = async () => {
@@ -245,8 +259,9 @@ const Page = () => {
       const authStatus = await messaging().requestPermission();
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL || 
+        authStatus === messaging.AuthorizationStatus.NOT_DETERMINED;
+      console.log(enabled)
       if (enabled) {
         console.log('Authorization status:', authStatus);
         if (Platform.OS === 'ios') {

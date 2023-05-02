@@ -67,6 +67,7 @@ const Component = ({ name, size = 'md', agree = true ,toggleEvent=()=>{}}) => {
   };
   useEffect(()=>{
     setToggle(agree);
+    switchOnOff(agree)
   },[agree])
   return (
     <Wrap>
@@ -74,11 +75,11 @@ const Component = ({ name, size = 'md', agree = true ,toggleEvent=()=>{}}) => {
         control={control}
         name={name}
         value={toggle}
-        defaultValue={agree}
+        defaultValue={!agree}
         render={({ field: { onChange, value } }) => {
           const pressEvent = () => {
             onChange(!value)
-            switchOnOff();
+            // switchOnOff();
             toggleEvent(name);
           };
           return (
