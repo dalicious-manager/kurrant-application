@@ -4,6 +4,9 @@ import Typography from '~components/Typography';
 import {RightSkinnyArrow, YellowStar} from '~components/Icon';
 
 import Card from './Card';
+
+import BottomSheet from '~components/BottomSheet';
+
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
 import RateStars from '~components/RateStars';
 import {
@@ -12,6 +15,7 @@ import {
   Settings,
 } from '../../../../../../../components/Icon';
 import {useState} from 'react';
+import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 
 const Component = () => {
   const theme = useTheme();
@@ -46,6 +50,15 @@ const Component = () => {
 
   // best, latest, photo, rating, like
   const [orderFilter, setOrderFilter] = useState('best');
+
+  // 바텀 모달
+  const [bottomModalOpen, setBottomModalOpen] = useState(false);
+
+  const [rateSelected, setRateSelected] = useState([]);
+
+  const handleSelectBottomModal = id => {
+    setRateSelected([...rateSelected, id]);
+  };
 
   // useEffect(() => {
   //   console.log('필더값');
@@ -168,6 +181,18 @@ const Component = () => {
           />
         </MoreReviewPressable>
       </ReviewListWrap>
+
+      <BottomModalMultipleSelect
+        modalVisible={bottomModalOpen}
+        setModalVisible={setBottomModalOpen}
+        title="별점 필터"
+        data={[1, 2, 3, 4, 5]}
+        ComponentAsSelector={<Text>안녕</Text>}
+        multiple={true}
+        selected={rateSelected}
+        setSelected={handleSelectBottomModal}
+        // setValue={onSelectEvent2}
+      />
     </Container>
   );
 };
