@@ -1,10 +1,16 @@
-import {FlatList, Text, View} from 'react-native';
+import {Dimensions, FlatList, Text, View} from 'react-native';
 import styled from 'styled-components';
 import Typography from '~components/Typography';
 import {RightSkinnyArrow, YellowStar} from '~components/Icon';
 
 import Card from './Card';
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
+import RateStars from '~components/RateStars';
+import {
+  ArrowUpAndDown,
+  Picture,
+  Settings,
+} from '../../../../../../../components/Icon';
 
 const Component = () => {
   const reviewList = [
@@ -35,23 +41,56 @@ const Component = () => {
 
   return (
     <Container>
-      <TitleWrap>
-        <Wrap1>
+      <Wrap1>
+        <TitleWrap>
           <ReviewCount>리뷰(132)</ReviewCount>
-          <IconWrap>
-            {/* <YellowStarIcon /> */}
-            {/* <YellowStarIcon /> */}
-            <YellowStar width={'12px'} height={'11px'} />
-          </IconWrap>
+        </TitleWrap>
 
-          <Rating>4.0</Rating>
-        </Wrap1>
+        <Wrap2>
+          <RateStars
+            ratingInput={4}
+            width={'132px'}
+            margin={'3px'}
+            disableButton={true}
+            callback={() => {}}
+          />
 
-        <GoToWriteReviewPressable onPress={() => {}}>
-          <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>
-          <RightSkinnyArrow width={'5px'} height={'9px'} />
-        </GoToWriteReviewPressable>
-      </TitleWrap>
+          <RatingPointText>4</RatingPointText>
+
+          <RatingOutOfText>/</RatingOutOfText>
+          <RatingOutOfText>5</RatingOutOfText>
+        </Wrap2>
+
+        {/* <Wrap3>
+          <Text>맛 향 편리 따뜻</Text>
+        </Wrap3> */}
+
+        <Wrap4>
+          <Wrap6>
+            <FilterWrap1>
+              <ArrowUpAndDown />
+              <FilterText>베스트 순</FilterText>
+            </FilterWrap1>
+
+            <ThinGreyLineVertical />
+            <FilterWrap1>
+              <Picture />
+              <FilterText>포토리뷰만</FilterText>
+            </FilterWrap1>
+          </Wrap6>
+
+          <FilterWrap1>
+            <Settings />
+            <FilterText>별점필터</FilterText>
+          </FilterWrap1>
+        </Wrap4>
+        <Wrap5>
+          <GoToWriteReviewPressable onPress={() => {}}>
+            <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>
+            <RightSkinnyArrow width={'5px'} height={'9px'} />
+          </GoToWriteReviewPressable>
+        </Wrap5>
+      </Wrap1>
 
       <ReviewListWrap>
         {/* <SampleView /> */}
@@ -124,11 +163,78 @@ const TitleWrap = styled.View`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 `;
 
 const Wrap1 = styled.View`
   display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Wrap2 = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+const RatingPointText = styled(Typography).attrs({text: 'Title02SB'})`
+  color: ${props => props.theme.colors.grey[2]};
+
+  margin-left: 13px;
+  margin-right: 4px;
+`;
+
+const RatingOutOfText = styled(Typography).attrs({text: 'Title02SB'})`
+  color: ${props => props.theme.colors.grey[4]};
+
+  margin-right: 4px;
+`;
+
+const Wrap3 = styled.View``;
+const Wrap4 = styled.View`
+  width: ${() => {
+    return `${Dimensions.get('screen').width}px;`;
+  }};
+
+  padding: 12px 24px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: ${props => props.theme.colors.grey[8]};
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: ${props => props.theme.colors.grey[8]};
+`;
+
+const FilterWrap1 = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const FilterText = styled(Typography).attrs({text: 'Button10SB'})`
+  color: ${props => props.theme.colors.grey[4]};
+  margin-left: 8px;
+`;
+
+const ThinGreyLineVertical = styled.View`
+  height: 19px;
+
+  margin: 0px 4px;
+
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: ${props => props.theme.colors.grey[6]};
+`;
+
+const Wrap5 = styled.View``;
+
+const Wrap6 = styled.View`
   flex-direction: row;
   align-items: center;
 `;
