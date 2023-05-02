@@ -2,57 +2,52 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
-import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
-import StarRating from '../../../../../components/StarRating/StarRating';
+import Typography from '~components/Typography';
+import ArrowRightGrey4 from '~assets/icons/Arrow/ArrowRightGrey4.svg';
+import StarRating from '~components/StarRating/StarRating';
 
-import AdminOrMakersReview from './AdminOrMakersReview';
+import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
+// import ImageModal from '~components/Review/ImageModal';
 import {useNavigation} from '@react-navigation/native';
-import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
+// import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
-import OnlyForMakers from './OnlyForMakers';
-// import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
+// import OnlyForMakers from './OnlyForMakers';
+// // import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-import {getStorage} from '../../../../../utils/asyncStorage';
-import {
-  deleteReview,
-  deleteReview2,
-} from '../../../../../biz/useReview/useWrittenReview/Fetch';
-
-import ImageModal from './ImageModal/ImageModal';
-import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
-import {changeSeperator} from '../../../../../utils/dateFormatter';
-import {SkinnyArrowDown} from '../../../../../components/Icon';
+// import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+// import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
+// import {getStorage} from '../../../../../utils/asyncStorage';
+// import {
+//   deleteReview,
+//   deleteReview2,
+// } from '../../../../../biz/useReview/useWrittenReview/Fetch';
+// import ImageModal from './ImageModal/ImageModal';
+// import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+import {changeSeperator} from '~utils/dateFormatter';
+import {SkinnyArrowDown} from '~components/Icon';
 import {css} from 'styled-components/native';
 
-// '../../../pages/Main/MyPage/Review';
-const onlyForMakers = true;
-// const onlyForMakers = false;
+// 상세페이지 카드
 
 const Component = ({
   id,
-  editItem,
-  makersName,
-  foodName,
+
   writtenDate,
   option,
   rating,
   reviewText,
   focusId,
-  forMakers,
+
   imageLocation,
   createDate,
   updateDate,
   commentList,
-  toast,
 }) => {
   const navigation = useNavigation();
 
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
-  const {getWrittenReview} = useWrittenReview();
+  // const {getWrittenReview} = useWrittenReview();
 
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
@@ -72,117 +67,6 @@ const Component = ({
 
   // 운영자 메이커스 댓글 늦게 작성한 댓글이 위에 있게 sorting해야됨
 
-  const handleDelete = async () => {
-    // const token = await getToken();
-
-    Alert.alert(
-      `리뷰 삭제`,
-      `리뷰를 삭제하면 재작성이 불가해요. \n정말 삭제하시겠어요?`,
-      [
-        {
-          text: '취소',
-          onPress: () => {
-            return;
-          },
-          style: 'cancel',
-        },
-        {
-          text: `삭제`,
-          onPress: async () => {
-            try {
-              const response = await deleteReview2({id: id});
-
-              if (response.statusCode !== 200) {
-                console.log(response);
-                Alert.alert('리뷰 삭제 실패', `${response.message}`, [
-                  {
-                    text: '확인',
-                    onPress: () => {},
-                    style: 'cancel',
-                  },
-                ]);
-              } else {
-                toast.toastEvent();
-                await getWrittenReview();
-                // Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-                //   {
-                //     text: '확인',
-                //     onPress: async () => {
-                //       await getWrittenReview();
-                //       // await getReviewWait();
-                //       navigation.navigate(WrittenReviewPageName, {
-                //         screen: ReviewScreenName,
-                //         params: {
-                //           tabIndex: 1,
-                //         },
-                //       });
-
-                //       // navigation.reset({
-                //       //   routes: [
-                //       //     {
-                //       //       name: ReviewScreenName,
-
-                //       //       state: {
-                //       //         index: 1,
-                //       //         routes: [
-                //       //           {
-                //       //             name: ReviewPageName,
-                //       //           },
-                //       //           {
-                //       //             name: WrittenReviewPageName,
-                //       //           },
-                //       //         ],
-                //       //       },
-                //       //     },
-                //       //   ],
-                //       // });
-                //     },
-                //     style: 'cancel',
-                //   },
-                // ]);
-              }
-            } catch (err) {
-              console.log('리뷰 삭제 에러뜸');
-              console.log(err);
-              Alert.alert('리뷰 삭제 실패', '', [
-                {
-                  text: '확인',
-                  onPress: () => {},
-                  style: 'cancel',
-                },
-              ]);
-            }
-
-            // await deleteReview({id: id}, token, () => {
-            //   navigation.reset({
-            //     routes: [
-            //       {
-            //         name: ReviewScreenName,
-
-            //         state: {
-            //           index: 1,
-            //           routes: [
-            //             {
-            //               name: ReviewPageName,
-            //             },
-            //             {
-            //               name: WrittenReviewPageName,
-            //             },
-            //           ],
-            //         },
-            //       },
-            //     ],
-            //   });
-            // });
-
-            return;
-          },
-
-          style: 'destructive',
-        },
-      ],
-    );
-  };
   const [numLines, setNumLines] = useState(1);
 
   const handlePressReviewText = () => {
@@ -202,10 +86,7 @@ const Component = ({
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
-            {'['}
-            {makersName}
-            {'] '}
-            {foodName}
+            남**
           </RestaurentNameText>
           <ArrowRightGrey4 />
         </TitleWrap>
@@ -213,19 +94,13 @@ const Component = ({
         <EditWrap>
           <Pressable
             onPress={() => {
-              navigation.navigate(EditReviewPage2ScreenName, {
-                id: id,
-                status: 'edit',
-                editItem,
-              });
+              //   navigation.navigate(EditReviewPage2ScreenName, {
+              //     id: id,
+              //     status: 'edit',
+              //     editItem,
+              //   });
             }}>
-            <EditText>수정</EditText>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              handleDelete();
-            }}>
-            <DeleteText>삭제</DeleteText>
+            <EditText>도움이 되요 자리</EditText>
           </Pressable>
         </EditWrap>
       </TopWrap>
@@ -250,7 +125,7 @@ const Component = ({
         </PostDateText>
       </RowWrap>
 
-      {forMakers && <OnlyForMakers />}
+      {/* {forMakers && <OnlyForMakers />} */}
 
       {imageLocation && imageLocation.length > 0 && (
         <ImagesWrapper>
@@ -285,12 +160,12 @@ const Component = ({
         </ImagesWrapper>
       )}
 
-      <ImageModal
+      {/* <ImageModal
         visible={imageModalVisible}
         setVisible={setImageModalVisible}
         imageLocation={imageLocation}
         firstClickedImageIndex={firstClickedImageIndex}
-      />
+      /> */}
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
         {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
@@ -331,6 +206,8 @@ const Component = ({
         )}
       </ReviewPressable>
 
+      {/* 신고하기 버튼 자리 */}
+
       {commentList &&
         commentList.length > 0 &&
         commentList.map((v, i) => {
@@ -367,7 +244,7 @@ const Container = styled.View`
   width: 100%;
   //margin: 12px 0;
   //margin-bottom: 40px;
-  padding: 24px;
+  /* padding: 24px; */
   ${({focusId, id}) => {
     // console.log(focusId, id, 'focusId === id');
     if (focusId === id) {
@@ -375,7 +252,7 @@ const Container = styled.View`
         background-color: ${({theme}) => theme.colors.grey[8]};
       `;
     }
-  }}
+  }}/* border: 1px solid black; */
 `;
 
 const TopWrap = styled.View`
