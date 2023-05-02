@@ -306,6 +306,7 @@ import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
 
+import Map, {PAGE_NAME as MapTest} from '../../pages/Map/Test';
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
@@ -314,8 +315,19 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-    <MainRoot.Navigator>
+    <MainRoot.Navigator initialRouteName={MapTest}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
+        <MainRoot.Screen
+          name={MapTest}
+          component={Map}
+          // options={{
+          //   headerLeft: () => <BackButton mode="modal" />,
+          //   headerShown: false,
+          //   headerShadowVisible: false,
+          //   headerTransparent: true,
+          //   title: '',
+          // }}
+        />
         <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}

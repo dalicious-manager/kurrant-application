@@ -147,8 +147,6 @@ LwIDAQAB
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is accessed for the first time</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The microphone is accessed for the first time</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -218,6 +216,8 @@ LwIDAQAB
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NMFClientId</key>
-    <string>YOUR_CLIENT_ID_HERE</string>
+    <string>frbi51gn4o</string>
+	 <key>NSLocationWhenInUseUsageDescription</key>
+  	<string>YOUR TEXT</string>
 </dict>
 </plist>

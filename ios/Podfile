@@ -32,6 +32,8 @@ target 'kurrant' do
     # Pods for testing
   end
   
+
+  pod 'react-native-geolocation-service', :path => '../node_modules/react-native-geolocation-service'
   
   pod 'NMapsMap','3.15.0'
   post_install do |installer|
