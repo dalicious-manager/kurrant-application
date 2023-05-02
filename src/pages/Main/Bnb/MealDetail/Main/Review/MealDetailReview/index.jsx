@@ -11,6 +11,7 @@ import {
   Picture,
   Settings,
 } from '../../../../../../../components/Icon';
+import {useState} from 'react';
 
 const Component = () => {
   const theme = useTheme();
@@ -41,6 +42,16 @@ const Component = () => {
     },
   ];
 
+  const [showSelectList, setShowSelectList] = useState(false);
+
+  // best, latest, photo, rating, like
+  const [orderFilter, setOrderFilter] = useState('best');
+
+  // useEffect(() => {
+  //   console.log('필더값');
+  //   console.log(orderFilter);
+  // }, [orderFilter]);
+
   return (
     <Container>
       <Wrap1>
@@ -69,22 +80,25 @@ const Component = () => {
 
         <Wrap4>
           <Wrap6>
-            <FilterWrap1>
+            <FilterPressable
+              onPress={() => {
+                setShowSelectList(!showSelectList);
+              }}>
               <ArrowUpAndDown />
               <FilterText>베스트 순</FilterText>
-            </FilterWrap1>
+            </FilterPressable>
 
             <ThinGreyLineVertical />
-            <FilterWrap1>
+            <FilterPressable onPress={() => {}}>
               <Picture />
               <FilterText>포토리뷰만</FilterText>
-            </FilterWrap1>
+            </FilterPressable>
           </Wrap6>
 
-          <FilterWrap1>
+          <FilterPressable onPress={() => {}}>
             <Settings />
             <FilterText>별점필터</FilterText>
-          </FilterWrap1>
+          </FilterPressable>
         </Wrap4>
         <Wrap5>
           <GoToWriteReviewPressable onPress={() => {}}>
@@ -97,6 +111,28 @@ const Component = () => {
           </GoToWriteReviewPressable>
         </Wrap5>
       </Wrap1>
+
+      {showSelectList && (
+        <FilterSelecterWrap>
+          <FilterSelecterPressable
+            onPress={() => {
+              // setOrderFilter('best');
+              setShowSelectList(false);
+            }}>
+            <SelectorText>베스트순</SelectorText>
+          </FilterSelecterPressable>
+          <FilterSelecterPressable
+            isTopBorder={true}
+            onPress={() => {
+              () => {
+                // setOrderFilter('latest');
+                setShowSelectList(false);
+              };
+            }}>
+            <SelectorText>최신순</SelectorText>
+          </FilterSelecterPressable>
+        </FilterSelecterWrap>
+      )}
 
       <ReviewListWrap>
         {/* <SampleView /> */}
@@ -123,8 +159,6 @@ const Component = () => {
             })}
         </CardsWrap>
 
-        {/* 버튼 누르면 더 볼 수 있다.  */}
-
         <MoreReviewPressable>
           <MoreReviewText>131개 리뷰 전체보기</MoreReviewText>
           <RightSkinnyArrow
@@ -144,7 +178,8 @@ const Container = styled.View`
 
   padding: 16px 24px;
   width: 100%;
-
+  position: relative;
+  /* border: 1px solid black; */
   /* background-color: bisque; */
 `;
 
@@ -201,10 +236,56 @@ const Wrap4 = styled.View`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
 `;
 
-const FilterWrap1 = styled.View`
+const FilterPressable = styled.Pressable`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  position: relative;
+`;
+
+const FilterSelecterWrap = styled.View`
+  position: absolute;
+  top: 165px;
+  left: 30px;
+  z-index: 1;
+
+  width: 84px;
+
+  background-color: #ffffff;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 7px;
+`;
+const FilterSelecterPressable = styled.Pressable`
+  flex: 1;
+  width: 100%;
+
+  justify-content: center;
+  padding: 12px;
+
+  ${({isTopBorder, theme}) => {
+    if (isTopBorder) {
+      return `
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: ${theme.colors.grey[8]};
+    `;
+    }
+  }}
+  ${({isBottomBorder, theme}) => {
+    if (isBottomBorder) {
+      return `
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: ${theme.colors.grey[8]};  `;
+    }
+  }}
+`;
+
+const SelectorText = styled(Typography).attrs({text: 'Button10R'})`
+  color: ${({theme, isClicked}) =>
+    isClicked ? theme.colors.grey[2] : theme.colors.grey[5]};
 `;
 
 const FilterText = styled(Typography).attrs({text: 'Button10SB'})`
@@ -232,6 +313,7 @@ const Wrap5 = styled.View`
 const Wrap6 = styled.View`
   flex-direction: row;
   align-items: center;
+  position: relative;
 `;
 
 const ReviewCount = styled(Typography).attrs({text: 'Body05SB'})`
