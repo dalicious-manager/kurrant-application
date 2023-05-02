@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {Pressable, Text, View} from 'react-native';
+import {Platform, Pressable, Text, View} from 'react-native';
 import NaverMapView, {
   Circle,
   Marker,
@@ -13,6 +13,7 @@ import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import styled from 'styled-components';
 import Location from './Location';
 import Typography from '../../components/Typography';
+import FastImage from 'react-native-fast-image';
 
 const AnimatableMarker = createAnimatableComponent(Marker);
 // latitude : 위도 (y) ,longitude :경도 (x)
@@ -20,7 +21,8 @@ export const PAGE_NAME = 'MAP';
 const Test = () => {
   const markerRef = useRef(null);
   const [showAddress, setShowAddress] = useState(false);
-  const [center, setCenter] = useState({
+  const [center, setCenter] = useState();
+  const [initCenter, setInitCenter] = useState({
     latitude: 37.505188,
     longitude: 127.045862,
   });
@@ -28,8 +30,8 @@ const Test = () => {
 
   //console.log(center, 'center');
   const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
-    center.longitude,
-    center.latitude,
+    center ? center?.longitude : initCenter.longitude,
+    center ? center?.latitude : initCenter.latitude,
   );
   const {data: address, refetch: addressRefetch} = useGetAddress(roadAddress);
 
@@ -38,11 +40,11 @@ const Test = () => {
   };
   const handleCameraChange = event => {
     const zoom = event.zoom;
-
+    console.log(event)
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
     setCenter(newCenter);
-    setZoomLevel(zoom);
-    console.log(newCenter, '좌표');
+    // setZoomLevel(zoom);
+    console.log(newCenter, '좌표', Platform.OS);
     // if (markerRef.current) {
     //   //console.log(markerRef.current, 'dkdkdkdk');
     //   markerRef.current.transitionTo(
@@ -62,23 +64,32 @@ const Test = () => {
 
   return (
     <Wrap>
-      <View style={{height: 100}}>
+      {/* <View style={{height: 100}}>
         <Location />
+      </View> */}
+      <View style={{position:'absolute',alignSelf:'center',justifyContent:'center', zIndex:1,top:208-47}}> 
+        <FastImage
+          source={require('./marker.png')}
+          style={{
+            width: 37,
+            height: 47,
+            borderRadius: 7,
+          }}
+        />
       </View>
       <MapView>
         <NaverMapView
-          minZoomLevel={17}
-          center={{...center, zoom: zoomLevel}}
+          center={ {...initCenter,zoom:zoomLevel}}       
           style={{width: '100%', height: '100%'}}
-          //onTouch={e => console.log('onTouch', JSON.stringify(e.nativeEvent))}
+          // onTouch={e => console.log('onTouch', JSON.stringify(e.nativeEvent))}
           onCameraChange={handleCameraChange}
 
-          //onMapClick={e => console.log('onMapClick', JSON.stringify(e))}
+          // onMapClick={e => console.log('onMapClick', JSON.stringify(e),"클릭")}
         >
           {/* <AnimatableMarker ref={markerRef} coordinate={center} /> */}
 
-          <Marker
-            coordinate={center}
+          {/* <Marker
+            coordinate={center ? center: initCenter}
             onClick={() => console.log('onClick! p0')}
             width={45}
             height={57}
@@ -86,11 +97,11 @@ const Test = () => {
           />
 
           <Circle
-            coordinate={center}
+            coordinate={center ? center: initCenter}
             color={'rgba(90,30,255,0.1)'}
             radius={10}
             onClick={() => console.log('onClick! circle')}
-          />
+          /> */}
         </NaverMapView>
       </MapView>
       <AddressView>
