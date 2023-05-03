@@ -100,9 +100,57 @@ const Component = () => {
           <RatingOutOfText>5</RatingOutOfText>
         </StarRatingWrap>
 
-        {/* <Wrap3>
-          <Text>맛 향 편리 따뜻</Text>
-        </Wrap3> */}
+        <Wrap3>
+          {
+            <FlatFlatList
+              data={[
+                '맛',
+                '향',
+                '한우',
+                '국',
+                '한식',
+                '맛',
+                '향',
+                '한우',
+                '국',
+                '한식',
+              ]}
+              scrollEnabled={true}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              horizontal={true}
+              contentContainerStyle={{
+                height: 56,
+                alignItems: 'center',
+              }}
+              renderItem={({item, index}) => {
+                console.log(index);
+                return (
+                  <ButtonPressable
+                    isFirst={index === 0}
+                    isLast={
+                      index ===
+                      [
+                        '맛',
+                        '향',
+                        '한우',
+                        '국',
+                        '한식',
+                        '맛',
+                        '향',
+                        '한우',
+                        '국',
+                        '한식',
+                      ].length -
+                        1
+                    }>
+                    <ButtonText>{item}</ButtonText>
+                  </ButtonPressable>
+                );
+              }}
+            />
+          }
+        </Wrap3>
 
         <Wrap4>
           <Wrap6>
@@ -142,41 +190,8 @@ const Component = () => {
       </Wrap1>
 
       {showSelectList && (
-        // <FilterSelecterWrap>
-        //   <FilterSelecterPressable
-        //     onPress={() => {
-        //       // setOrderFilter('best');
-        //       setShowSelectList(false);
-        //     }}>
-        //     <SelectorText>베스트순</SelectorText>
-        //   </FilterSelecterPressable>
-        //   <FilterSelecterPressable
-        //     isTopBorder={true}
-        //     onPress={() => {
-        //       () => {
-        //         // setOrderFilter('latest');
-        //         setShowSelectList(false);
-        //       };
-        //     }}>
-        //     <SelectorText>최신순</SelectorText>
-        //   </FilterSelecterPressable>
-        //   <FilterSelecterPressable
-        //     isTopBorder={true}
-        //     onPress={() => {
-        //       () => {
-        //         // setOrderFilter('latest');
-        //         setShowSelectList(false);
-        //       };
-        //     }}>
-        //     <SelectorText>리뷰 추천순</SelectorText>
-        //   </FilterSelecterPressable>
-        // </FilterSelecterWrap>
         <WrapWrapView>
-          <ShadowWrap
-            startColor="rgba(0, 0, 0, 0.03)"
-            distance={14}
-            // endColor="rgba(0, 0, 0, 0.1)"
-          >
+          <ShadowWrap startColor="rgba(0, 0, 0, 0.03)" distance={14}>
             <FilterSelecterWrap>
               <FilterSelecterPressable
                 onPress={() => {
@@ -308,11 +323,19 @@ const RatingOutOfText = styled(Typography).attrs({text: 'Title02SB'})`
   margin-right: 4px;
 `;
 
-// const Wrap3 = styled.View`
-//   width: ${() => {
-//     return `${Dimensions.get('screen').width}px;`;
-//   }};
-// `;
+const Wrap3 = styled.View`
+  width: ${() => {
+    return `${Dimensions.get('screen').width}px;`;
+  }};
+`;
+
+const FlatFlatList = styled.FlatList`
+  height: 56px;
+
+  padding: 0 24px;
+  /* padding-right: 40px; */
+`;
+
 const Wrap4 = styled.View`
   width: ${() => {
     return `${Dimensions.get('screen').width}px;`;
@@ -339,6 +362,26 @@ const FilterPressable = styled.Pressable`
   align-items: center;
 
   position: relative;
+`;
+
+const ButtonPressable = styled.Pressable`
+  border: 1px solid ${props => props.theme.colors.grey[6]};
+
+  border-radius: 50px;
+
+  margin: 4px;
+  padding: 4px 12px;
+
+  ${({isFirst}) => isFirst && `margin-left: 0px;`}
+  ${({isLast}) => isLast && `margin-right: 40px;`}
+
+
+  align-items: center;
+  justify-content: center;
+`;
+
+const ButtonText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[3]};
 `;
 
 const WrapWrapView = styled.View`

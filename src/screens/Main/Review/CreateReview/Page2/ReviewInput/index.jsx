@@ -98,9 +98,6 @@ const Input = styled.TextInput`
   font-weight: 400;
 
   font-size: ${({calcFontSize}) => {
-    console.log('여기');
-    console.log(calcFontSize);
-
     return calcFontSize ? `${calcFontSize}px` : '16px';
   }};
 

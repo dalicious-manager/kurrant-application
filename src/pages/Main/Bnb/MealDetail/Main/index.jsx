@@ -59,6 +59,9 @@ const Pages = ({route}) => {
 
   const isFocused = useIsFocused();
 
+  console.log('데일리푸드 아이디');
+  console.log(dailyFoodId);
+
   const closeModal = () => {
     setModalVisible(false);
   };
