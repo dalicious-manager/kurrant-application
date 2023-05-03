@@ -14,8 +14,11 @@ import {
   Picture,
   Settings,
 } from '../../../../../../../components/Icon';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
+import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
+// import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
+import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 
 const Component = () => {
   const theme = useTheme();
@@ -57,8 +60,17 @@ const Component = () => {
   const [rateSelected, setRateSelected] = useState([]);
 
   const handleSelectBottomModal = id => {
-    setRateSelected([...rateSelected, id]);
+    if (rateSelected.includes(id)) {
+      setRateSelected([...rateSelected.filter(v => v !== id)]);
+    } else {
+      setRateSelected([...rateSelected, id]);
+    }
   };
+
+  // useEffect(() => {
+  //   console.log('랄랄라');
+  //   console.log(rateSelected);
+  // }, [rateSelected]);
 
   // useEffect(() => {
   //   console.log('필더값');
@@ -108,7 +120,10 @@ const Component = () => {
             </FilterPressable>
           </Wrap6>
 
-          <FilterPressable onPress={() => {}}>
+          <FilterPressable
+            onPress={() => {
+              setBottomModalOpen(!bottomModalOpen);
+            }}>
             <Settings />
             <FilterText>별점필터</FilterText>
           </FilterPressable>
@@ -186,11 +201,17 @@ const Component = () => {
         modalVisible={bottomModalOpen}
         setModalVisible={setBottomModalOpen}
         title="별점 필터"
-        data={[1, 2, 3, 4, 5]}
-        ComponentAsSelector={<Text>안녕</Text>}
+        data={[
+          {id: 5, text: 5, reviewCount: 1120},
+          {id: 4, text: 4, reviewCount: 112},
+          {id: 3, text: 3, reviewCount: 11},
+          {id: 2, text: 2, reviewCount: 1},
+          {id: 1, text: 1, reviewCount: 0},
+        ]}
         multiple={true}
         selected={rateSelected}
         setSelected={handleSelectBottomModal}
+        SelecterComponent={BottomModalSelecterComponent}
         // setValue={onSelectEvent2}
       />
     </Container>
@@ -379,4 +400,57 @@ const MoreReviewPressable = styled.Pressable`
 const MoreReviewText = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[3]};
   margin-right: 10px;
+`;
+
+const BottomModalSelecterComponent = ({selected, item}) => {
+  return (
+    <>
+      {selected.includes(item.id) ? (
+        <ContentItemBox>
+          <RowView>
+            <RateStars
+              ratingInput={item.text}
+              width={'132px'}
+              margin={'3px'}
+              disableButton={true}
+              callback={() => {}}
+            />
+            <ContentItemText>({item.reviewCount})</ContentItemText>
+          </RowView>
+
+          <CheckedIcon />
+        </ContentItemBox>
+      ) : (
+        <ContentItemBox>
+          <RowView>
+            <RateStars
+              ratingInput={item.text}
+              width={'132px'}
+              margin={'3px'}
+              disableButton={true}
+              callback={() => {}}
+            />
+            <ContentItemText>({item.reviewCount})</ContentItemText>
+          </RowView>
+        </ContentItemBox>
+      )}
+    </>
+  );
+};
+
+const ContentItemBox = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  /* border: 1px solid black; */
+  padding-right: 6px;
+`;
+
+const RowView = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})`
+  margin-left: 10px;
 `;

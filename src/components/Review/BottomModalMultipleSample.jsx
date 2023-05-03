@@ -12,27 +12,22 @@ import {
 import styled from 'styled-components/native';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
-import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
-import Typography from '~components/Typography';
-import RateStars from '~components/RateStars';
-
+import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
+import Typography from '../Typography';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 
-const BottomModalMultipleSelect = props => {
+const BottomModalMultipleSample = props => {
   const {
     modalVisible,
     setModalVisible,
     title = '옵션 선택',
     description = '',
     data = {},
-    multiple = false,
     selected,
     setSelected,
     onPressEvent = () => {},
     userSpotId,
-    SelecterComponent = undefined,
-
     booleanValue,
     onPressEvent2 = () => {},
     setValue = () => {},
@@ -45,8 +40,8 @@ const BottomModalMultipleSelect = props => {
   const onSelect = useCallback(
     (id, text) => {
       //멀티 셀렉터시 이용
-      //   const newSelected = new Map(selected);
-      //   newSelected.set(id, !selected.get(id));
+      const newSelected = new Map(selected);
+      newSelected.set(id, !selected.get(id));
       if (setSelected) setSelected(id);
       if (setValue) setValue(text);
       //   setModalVisible(false);
@@ -57,7 +52,7 @@ const BottomModalMultipleSelect = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['48%', '90%'], []);
+  const snapPoints = useMemo(() => ['35%', '90%'], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
@@ -143,13 +138,9 @@ const BottomModalMultipleSelect = props => {
           }}>
           <BottomSheetTitleView>
             <BottomSheetTitle>{title}</BottomSheetTitle>
-
-            <ConfirmPressable
-              onPress={() => {
-                setModalVisible(false);
-              }}>
-              <ConfirmText>확인</ConfirmText>
-            </ConfirmPressable>
+            {description !== '' && (
+              <BottomSheetDecs>{description}</BottomSheetDecs>
+            )}
           </BottomSheetTitleView>
           <BottomSheetFlatList
             data={data}
@@ -179,13 +170,29 @@ const BottomModalMultipleSelect = props => {
                   onSelect(item.id, item.text);
                   onPressEvent(item.id);
                 }}>
-                <SelecterComponent selected={selected} item={item} />
+                {selected === item.id ? (
+                  <ContentItemBox>
+                    <ContentItemText>{item.text}</ContentItemText>
+                    <CheckedIcon />
+                  </ContentItemBox>
+                ) : (
+                  <ContentItemText>{item.text}</ContentItemText>
+                )}
               </ContentItemContainer>
             )}
             keyExtractor={item => item.id.toString()}
           />
           <ManagePressView></ManagePressView>
         </BottomSheet>
+
+        {booleanValue && (
+          <ManagePressView
+            onPress={() => {
+              onPressEvent2(setModalVisible(false));
+            }}>
+            <ContentItemText>스팟 관리하기</ContentItemText>
+          </ManagePressView>
+        )}
       </Overlay>
     </Modal>
   );
@@ -202,28 +209,69 @@ const Background = styled.View`
   flex: 1;
 `;
 
+const AnimatedView = styled(Animated.View)`
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  padding-top: 20px;
+`;
+
+const DragButton = styled.TouchableOpacity`
+  flex: 1;
+`;
+
+const DragButtonView = styled.View`
+  background-color: white;
+  width: 40px;
+  height: 5px;
+  border-radius: 10px;
+`;
+
 const BottomSheetTitleView = styled.View`
   width: 100%;
   padding: 0px 24px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 4px;
-  margin-bottom: 16px;
 `;
 
-const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})``;
+const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
+  margin-bottom: 6px;
+`;
 
-const ConfirmPressable = styled.Pressable``;
-const ConfirmText = styled(Typography).attrs({text: 'CaptionSB'})`
-  color: ${({theme}) => theme.colors.blue[500]};
+const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
 `;
 
 const ContentItemContainer = styled.Pressable`
   width: ${Dimensions.get('screen').width}px;
   height: 60px;
-  padding: 20px 24px;
-  /* padding-left: 40px; */
+  padding: 19px 24px;
+  padding-left: 40px;
+`;
+
+const ItemContainer = styled.View`
+  width: ${Dimensions.get('screen').width}px;
+  height: 60px;
+  padding: 19px 24px;
+`;
+
+const ContentItemBox = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
+
+const GroupName = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+`;
+
+const Border = styled.View`
+  width: 100%;
+  height: 1px;
+  margin-top: 12px;
+  background-color: ${({theme}) => theme.colors.grey[8]};
 `;
 
 const ManagePressView = styled.Pressable`
@@ -233,4 +281,4 @@ const ManagePressView = styled.Pressable`
   background-color: white;
 `;
 
-export default BottomModalMultipleSelect;
+export default BottomModalMultipleSample;
