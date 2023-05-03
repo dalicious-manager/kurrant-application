@@ -1,4 +1,4 @@
-import {Dimensions, FlatList, Text, View} from 'react-native';
+import {Dimensions, FlatList, Platform, Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 import Typography from '~components/Typography';
 import {RightSkinnyArrow, YellowStar} from '~components/Icon';
@@ -19,6 +19,7 @@ import BottomModalMultipleSelect from '../../../../../../../components/Review/Bo
 import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
 // import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
+import {Shadow} from 'react-native-shadow-2';
 
 const Component = () => {
   const theme = useTheme();
@@ -141,25 +142,72 @@ const Component = () => {
       </Wrap1>
 
       {showSelectList && (
-        <FilterSelecterWrap>
-          <FilterSelecterPressable
-            onPress={() => {
-              // setOrderFilter('best');
-              setShowSelectList(false);
-            }}>
-            <SelectorText>베스트순</SelectorText>
-          </FilterSelecterPressable>
-          <FilterSelecterPressable
-            isTopBorder={true}
-            onPress={() => {
-              () => {
-                // setOrderFilter('latest');
-                setShowSelectList(false);
-              };
-            }}>
-            <SelectorText>최신순</SelectorText>
-          </FilterSelecterPressable>
-        </FilterSelecterWrap>
+        // <FilterSelecterWrap>
+        //   <FilterSelecterPressable
+        //     onPress={() => {
+        //       // setOrderFilter('best');
+        //       setShowSelectList(false);
+        //     }}>
+        //     <SelectorText>베스트순</SelectorText>
+        //   </FilterSelecterPressable>
+        //   <FilterSelecterPressable
+        //     isTopBorder={true}
+        //     onPress={() => {
+        //       () => {
+        //         // setOrderFilter('latest');
+        //         setShowSelectList(false);
+        //       };
+        //     }}>
+        //     <SelectorText>최신순</SelectorText>
+        //   </FilterSelecterPressable>
+        //   <FilterSelecterPressable
+        //     isTopBorder={true}
+        //     onPress={() => {
+        //       () => {
+        //         // setOrderFilter('latest');
+        //         setShowSelectList(false);
+        //       };
+        //     }}>
+        //     <SelectorText>리뷰 추천순</SelectorText>
+        //   </FilterSelecterPressable>
+        // </FilterSelecterWrap>
+        <WrapWrapView>
+          <ShadowWrap
+            startColor="rgba(0, 0, 0, 0.03)"
+            distance={14}
+            // endColor="rgba(0, 0, 0, 0.1)"
+          >
+            <FilterSelecterWrap>
+              <FilterSelecterPressable
+                onPress={() => {
+                  // setOrderFilter('best');
+                  setShowSelectList(false);
+                }}>
+                <SelectorText>베스트순</SelectorText>
+              </FilterSelecterPressable>
+              <FilterSelecterPressable
+                isTopBorder={true}
+                onPress={() => {
+                  () => {
+                    // setOrderFilter('latest');
+                    setShowSelectList(false);
+                  };
+                }}>
+                <SelectorText>최신순</SelectorText>
+              </FilterSelecterPressable>
+              <FilterSelecterPressable
+                isTopBorder={true}
+                onPress={() => {
+                  () => {
+                    // setOrderFilter('latest');
+                    setShowSelectList(false);
+                  };
+                }}>
+                <SelectorText>리뷰 추천순</SelectorText>
+              </FilterSelecterPressable>
+            </FilterSelecterWrap>
+          </ShadowWrap>
+        </WrapWrapView>
       )}
 
       <ReviewListWrap>
@@ -212,7 +260,6 @@ const Component = () => {
         selected={rateSelected}
         setSelected={handleSelectBottomModal}
         SelecterComponent={BottomModalSelecterComponent}
-        // setValue={onSelectEvent2}
       />
     </Container>
   );
@@ -261,7 +308,11 @@ const RatingOutOfText = styled(Typography).attrs({text: 'Title02SB'})`
   margin-right: 4px;
 `;
 
-const Wrap3 = styled.View``;
+// const Wrap3 = styled.View`
+//   width: ${() => {
+//     return `${Dimensions.get('screen').width}px;`;
+//   }};
+// `;
 const Wrap4 = styled.View`
   width: ${() => {
     return `${Dimensions.get('screen').width}px;`;
@@ -290,14 +341,19 @@ const FilterPressable = styled.Pressable`
   position: relative;
 `;
 
-const FilterSelecterWrap = styled.View`
+const WrapWrapView = styled.View`
   position: absolute;
   top: 165px;
   left: 30px;
   z-index: 1;
+`;
 
+const ShadowWrap = styled(Shadow)`
+  border-radius: 7px;
+`;
+
+const FilterSelecterWrap = styled.View`
   width: 84px;
-
   background-color: #ffffff;
   flex-direction: column;
   align-items: center;
