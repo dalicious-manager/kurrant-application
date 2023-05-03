@@ -304,11 +304,13 @@ const useAuth = () => {
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
@@ -336,6 +338,7 @@ const useAuth = () => {
                   const cancel = await cancelTerminateUser();
                   await setStorage('token', JSON.stringify(res.data));
                   await setStorage('isLogin', body.autoLogin.toString());
+                  await setStorage('lastLogin', type.toString());
                   await setStorage(
                     'spotStatus',
                     res?.data?.spotStatus.toString(),
@@ -369,11 +372,13 @@ const useAuth = () => {
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
