@@ -15,8 +15,6 @@ import useReviewWait from '../../../../biz/useReview/useReviewWait';
 import Banner from './Banner';
 import {useAtom} from 'jotai';
 import {modalStatusAtom} from '../../../../biz/useReview/useReviewWait/store';
-import {useIsFocused} from '@react-navigation/native';
-import {isReviewFocusedAtom} from './store';
 
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
@@ -27,18 +25,6 @@ const Pages = () => {
   useEffect(() => {
     getReviewWait();
   }, []);
-
-  const isFocused = useIsFocused();
-
-  const [isReveiwFocused, setIsReviewFocused] = useAtom(isReviewFocusedAtom);
-
-  useEffect(() => {
-    if (isFocused) {
-      setIsReviewFocused(true);
-    } else {
-      setIsReviewFocused(false);
-    }
-  }, [isFocused]);
 
   const [popupShow, setPopupShow] = useAtom(modalStatusAtom);
 
