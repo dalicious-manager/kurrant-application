@@ -32,7 +32,7 @@ import {ThumbsUp} from '../../../../../../../../components/Icon';
 
 const Component = ({
   id,
-
+  item,
   writtenDate,
   option,
   rating,
@@ -83,6 +83,11 @@ const Component = ({
 
     setCalcFontSize(width * 0.052279);
   };
+
+  // console.log('아이템');
+  // console.log(item);
+  // console.log('코멘트 리스트');
+  // console.log(commentList);
 
   return (
     <Container focusId={focusId} id={id}>
@@ -248,6 +253,7 @@ const Container = styled.View`
   //margin: 12px 0;
   //margin-bottom: 40px;
   /* padding: 24px; */
+
   ${({focusId, id}) => {
     // console.log(focusId, id, 'focusId === id');
     if (focusId === id) {
@@ -255,7 +261,9 @@ const Container = styled.View`
         background-color: ${({theme}) => theme.colors.grey[8]};
       `;
     }
-  }}/* border: 1px solid black; */
+  }}
+  /* border: 1px solid black; */
+  margin-bottom: 40px;
 `;
 
 const TopWrap = styled.View`

@@ -20,35 +20,19 @@ import BottomModalMultipleSample from '../../../../../../../components/Review/Bo
 // import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import {Shadow} from 'react-native-shadow-2';
+import useGetMealDetailReview from '../useGetMealDetailReview/useGetMealDetailReview';
 
-const Component = () => {
+const Component = ({dailyFoodId}) => {
   const theme = useTheme();
 
-  const reviewList = [
-    {
-      reviewId: 96,
-      imageLocation: [
-        'https://kurrant-v1-develop.s3.ap-northeast-2.amazonaws.com/reviews/0001682497168367/rn_image_picker_lib_temp_bcb3216b-997f-4bed-8fcc-a135103ef392.jpg',
-      ],
-      content:
-        '스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이..냐 삼각지 로타리에 궂은비 ..내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났..으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날.내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났..으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날',
-      satisfaction: 5,
-      createDate: '2023-04-26T17:19:28.471+09:00',
-      updateDate: '2023-04-28T16:46:48.899+09:00',
-      forMakers: false,
-      makersName: '알렉산더',
-      itemName: '핸드드립',
-      commentList: [
-        {
-          writer: '알렉산더',
-          content:
-            '스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이..냐 삼각지 로타리에 궂은비 ..내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났..으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날.내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났..으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날',
-          createDate: '2023-04-27',
-          updateDate: '2023-04-28',
-        },
-      ],
-    },
-  ];
+  console.log(dailyFoodId);
+
+  const {mealDetailReview, getMealDetailReviewQueryRefetch} =
+    useGetMealDetailReview(dailyFoodId);
+
+  useEffect(() => {
+    getMealDetailReviewQueryRefetch();
+  }, []);
 
   const [showSelectList, setShowSelectList] = useState(false);
 
@@ -227,13 +211,14 @@ const Component = () => {
       <ReviewListWrap>
         {/* <SampleView /> */}
         <CardsWrap>
-          {Array.isArray(reviewList) &&
-            reviewList.length > 0 &&
-            reviewList.map(item => {
+          {Array.isArray(mealDetailReview) &&
+            mealDetailReview.length > 0 &&
+            mealDetailReview.map(item => {
               return (
                 <View key={item.reviewId}>
                   <Card
                     id={item.reviewId}
+                    item={item}
                     createDate={item.createDate}
                     updateDate={item.updateDate}
                     writtenDate={convertDateFormat1(item.createDate)}
@@ -552,3 +537,29 @@ const RowView = styled.View`
 const ContentItemText = styled(Typography).attrs({text: 'Body05R'})`
   margin-left: 10px;
 `;
+
+// const reviewList = [
+//   {
+//     reviewId: 96,
+//     imageLocation: [
+//       'https://kurrant-v1-develop.s3.ap-northeast-2.amazonaws.com/reviews/0001682497168367/rn_image_picker_lib_temp_bcb3216b-997f-4bed-8fcc-a135103ef392.jpg',
+//     ],
+//     content:
+//       '스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이..냐 삼각지 로타리에 궂은비 ..내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났..으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날.내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났..으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날',
+//     satisfaction: 5,
+//     createDate: '2023-04-26T17:19:28.471+09:00',
+//     updateDate: '2023-04-28T16:46:48.899+09:00',
+//     forMakers: false,
+//     makersName: '알렉산더',
+//     itemName: '핸드드립',
+//     commentList: [
+//       {
+//         writer: '알렉산더',
+//         content:
+//           '스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이..냐 삼각지 로타리에 궂은비 ..내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났..으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날.내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났..으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날 스물세글자스물세글자스물세글자스물세글자22한국어랑 글자랑 간격이 다르다 이풍진세상을 만났으니 너의 희망은 무엇이냐 삼각지 로타리에 궂은비 내리던날',
+//         createDate: '2023-04-27',
+//         updateDate: '2023-04-28',
+//       },
+//     ],
+//   },
+// ];

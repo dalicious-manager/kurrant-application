@@ -59,9 +59,6 @@ const Pages = ({route}) => {
 
   const isFocused = useIsFocused();
 
-  console.log('데일리푸드 아이디');
-  console.log(dailyFoodId);
-
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -424,7 +421,7 @@ const Pages = ({route}) => {
               </InfoWrap>
             </Content>
             {/* 리뷰자리 */}
-            <MealDetailReview />
+            <MealDetailReview dailyFoodId={dailyFoodId} />
           </View>
         </ScrollViewWrap>
 
