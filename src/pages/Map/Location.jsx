@@ -1,61 +1,125 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button} from 'react-native';
+import {
+  Linking,
+  NativeModules,
+  Platform,
+  PermissionsAndroid,
+  Alert,
+} from 'react-native';
+import Typography from '../../components/Typography';
 import Geolocation from 'react-native-geolocation-service';
-// import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import styled from 'styled-components';
 
-const Location = () => {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+const Location = ({setInitCenter, setShow, toast}) => {
+  const openAppSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:root');
+    }
+  };
+  const userLocation = () => {
+    if (Platform.OS === 'ios') {
+      requestLocationIosPermission();
+    } else {
+      requestLocationAndroidPermission();
+    }
+  };
+  const requestLocationIosPermission = async () => {
+    try {
+      const granted = await Geolocation.requestAuthorization('whenInUse');
+
+      if (granted === 'granted') {
+        getLocation();
+      } else {
+        Alert.alert('커런트', '위치 사용을 위해 접근 권한을 허용해 주세요', [
+          {
+            text: '취소',
+          },
+          {
+            text: '확인',
+            onPress: () => {
+              openAppSettings();
+            },
+          },
+        ]);
+        console.log('Location permission denied.');
+      }
+    } catch (error) {
+      console.log('Error requesting location permission: ', error);
+    }
+  };
+
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        setInitCenter({latitude: latitude, longitude: longitude});
+      },
+      error => {
+        console.error(error.code, error.message, '에러');
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+
+  const requestLocationAndroidPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: '커런트',
+          message: `'정확한 위치' 접근 권한을 허용해 주세요`,
+          buttonNeutral: '다음에 다시 묻기',
+          buttonNegative: '취소',
+          buttonPositive: '확인',
+        },
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition(position => {
+          const {latitude, longitude} = position.coords;
+
+          setInitCenter({
+            latitude: latitude,
+            longitude: longitude,
+          });
+        });
+      } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+        setShow(true);
+        toast.toastEvent();
+        setTimeout(() => {
+          setShow(false);
+        }, 3000);
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   // useEffect(() => {
-  //   requestLocationPermission();
+  //   if (Platform.OS === 'ios') {
+  //     requestLocationIosPermission();
+  //   }
   // }, []);
 
-  // const requestLocationPermission = async () => {
-  //   let permissionCheck;
-  //   if (Platform.OS === 'ios') {
-  //     permissionCheck = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-  //     if (permissionCheck !== RESULTS.GRANTED) {
-  //       permissionCheck = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-  //     }
-  //   } else if (Platform.OS === 'android') {
-  //     permissionCheck = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-  //     if (permissionCheck !== RESULTS.GRANTED) {
-  //       permissionCheck = await request(
-  //         PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-  //       );
-  //     }
-  //   }
-
-  //   if (permissionCheck === RESULTS.GRANTED) {
-  //     Geolocation.getCurrentPosition(
-  //       position => {
-  //         setLocation(position.coords);
-  //       },
-  //       error => {
-  //         setErrorMsg(error.message);
-  //       },
-  //       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-  //     );
-  //   }
-  // };
+  // useEffect(() => {
+  //   if (Platform.OS === 'android') requestLocationAndroidPermission();
+  // }, []);
 
   return (
-    <View>
-      <Text>Current Location:</Text>
-      {errorMsg ? (
-        <Text>{errorMsg}</Text>
-      ) : (
-        location && (
-          <>
-            <Text>Latitude: {location.latitude}</Text>
-            <Text>Longitude: {location.longitude}</Text>
-          </>
-        )
-      )}
-      <Button title="Refresh" />
-    </View>
+    <Wrap onPress={userLocation}>
+      <LocationText>현재 위치로 설정</LocationText>
+    </Wrap>
   );
 };
-//onPress={() => requestLocationPermission()}
+
 export default Location;
+
+const Wrap = styled.Pressable`
+  width: 100%;
+  height: 56px;
+  padding: 17px 52px;
+`;
+
+const LocationText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+`;

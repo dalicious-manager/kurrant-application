@@ -133,6 +133,8 @@ LwIDAQAB
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NMFClientId</key>
+	<string>frbi51gn4o</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -147,6 +149,9 @@ LwIDAQAB
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is accessed for the first time</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>지도를 사용해서 배달 받을 장소를 
+설정할 수 있어요!</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The microphone is accessed for the first time</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -215,9 +220,5 @@ LwIDAQAB
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NMFClientId</key>
-    <string>frbi51gn4o</string>
-	 <key>NSLocationWhenInUseUsageDescription</key>
-  	<string>YOUR TEXT</string>
 </dict>
 </plist>
