@@ -68,7 +68,7 @@ export default ImageModal;
 
 const styles = StyleSheet.create({
   fill: {flex: 1},
-  grey: {backgroundColor: '#5A1EFF'},
+  // grey: {backgroundColor: '#5A1EFF'},
   black: {backgroundColor: '#1E1E1E'},
   // grey: {backgroundColor: '#ffffff'},
 });
