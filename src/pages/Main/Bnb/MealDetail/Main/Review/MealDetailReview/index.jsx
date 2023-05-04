@@ -124,7 +124,6 @@ const Component = () => {
                 alignItems: 'center',
               }}
               renderItem={({item, index}) => {
-                console.log(index);
                 return (
                   <ButtonPressable
                     isFirst={index === 0}
