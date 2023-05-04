@@ -84,9 +84,6 @@ const Screen = ({route}) => {
   const test = route?.params?.test;
   const editItem = route?.params?.editItem;
 
-  // console.log('진짜 징하다');
-  console.log(route?.params);
-
   const theme = useTheme();
 
   const [isLoading, setIsLoading] = useState(false);
