@@ -9,8 +9,9 @@ import {useAtom} from 'jotai';
 import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/store';
 import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
 import {convertDateFormat1} from '../../../../utils/dateFormatter';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Toast from '~components/Toast';
+
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const sampleAdminReview = {
   pngLink: DefaultProfile,
@@ -25,6 +26,8 @@ const Pages = ({route}) => {
   const flatListRef = useRef(null);
 
   const {getWrittenReview, reviewList} = useWrittenReview();
+
+  const isFocused = useIsFocused();
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const idx = reviewList?.findIndex(el => el.reviewId === pointId);

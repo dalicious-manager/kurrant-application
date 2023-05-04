@@ -455,7 +455,7 @@ const DefaultImage = styled.View`
 
 const ReviewPressable = styled.Pressable`
   /* width: 278px; */
-  width: 90%;
+  width: 86%;
   margin: auto;
   position: relative;
   /* border: 1px solid black; */

@@ -88,7 +88,7 @@ const Pages = () => {
                   <View style={{paddingLeft: 24, paddingRight: 24}}>
                     {item.items &&
                       item.items.map((value2, index2) => {
-                        console.log(value2);
+                        // console.log(value2);
                         return (
                           <Card
                             key={index2}
