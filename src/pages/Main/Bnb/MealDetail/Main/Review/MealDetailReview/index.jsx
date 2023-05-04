@@ -110,6 +110,8 @@ const Component = ({dailyFoodId}) => {
               renderItem={({item, index}) => {
                 return (
                   <ButtonPressable
+                    // isClicked={true}
+                    isClicked={false}
                     isFirst={index === 0}
                     isLast={
                       index ===
@@ -127,7 +129,7 @@ const Component = ({dailyFoodId}) => {
                       ].length -
                         1
                     }>
-                    <ButtonText>{item}</ButtonText>
+                    <ButtonText isClicked={false}>{item}</ButtonText>
                   </ButtonPressable>
                 );
               }}
@@ -350,7 +352,8 @@ const FilterPressable = styled.Pressable`
 `;
 
 const ButtonPressable = styled.Pressable`
-  border: 1px solid ${props => props.theme.colors.grey[6]};
+  ${({isClicked, theme}) =>
+    !isClicked && `border: 1px solid ${theme.colors.grey[6]};`}
 
   border-radius: 50px;
 
@@ -360,13 +363,18 @@ const ButtonPressable = styled.Pressable`
   ${({isFirst}) => isFirst && `margin-left: 0px;`}
   ${({isLast}) => isLast && `margin-right: 40px;`}
 
+  ${({isClicked, theme}) =>
+    isClicked && `background-color: ${theme.colors.grey[2]}`}
+
+
 
   align-items: center;
   justify-content: center;
 `;
 
 const ButtonText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[3]};
+  color: ${({theme, isClicked}) =>
+    isClicked ? '#ffffff' : theme.colors.grey[3]};
 `;
 
 const WrapWrapView = styled.View`
