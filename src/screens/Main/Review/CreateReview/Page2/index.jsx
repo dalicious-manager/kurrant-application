@@ -31,7 +31,7 @@ import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
 import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
 
-import {Alert, View} from 'react-native';
+import {ActivityIndicator, Alert, Text, View} from 'react-native';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import {useQueryClient} from 'react-query';
 
@@ -81,15 +81,15 @@ const Screen = ({route}) => {
 
   const id = route?.params?.id;
   const status = route?.params?.status;
-
   const test = route?.params?.test;
-
   const editItem = route?.params?.editItem;
 
   // console.log('진짜 징하다');
   console.log(route?.params);
 
   const theme = useTheme();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // editItem 있으면 등록하기
 
@@ -190,6 +190,8 @@ const Screen = ({route}) => {
     };
 
     const createReview = async (photosArray = []) => {
+      setIsLoading(true);
+
       const url = `${apiHostUrl}/users/me/reviews`;
 
       const token = await getToken();
@@ -221,6 +223,8 @@ const Screen = ({route}) => {
     };
 
     const editReview = async (editId, photosArray = []) => {
+      setIsLoading(true);
+
       const url = `${apiHostUrl}/users/me/reviews/update?id=${editId}`;
 
       const token = await getToken();
@@ -285,13 +289,11 @@ const Screen = ({route}) => {
     });
 
     if (status === 'create') {
-      console.log('크리에이트 ');
-      console.log(photoDataArray);
       createReview(photoDataArray)
         .then(response => response.json())
         .then(data => {
           console.log('Success:', data);
-
+          setIsLoading(true);
           if (data.statusCode === 200) {
             Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
               {
@@ -351,6 +353,9 @@ const Screen = ({route}) => {
         })
         .catch(error => {
           console.error('Error:', error);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     } else if (status === 'edit') {
       console.log('edit 이여');
@@ -390,208 +395,227 @@ const Screen = ({route}) => {
         })
         .catch(error => {
           console.error('Error:', error);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
 
     console.log('input registered');
   };
 
+  // isLoading중이면 다시 클릭했을때 alert 뜨게 하기
+
   return (
     <Container2>
+      {isLoading && (
+        <LoadingPage>
+          <ActivityIndicator size={'large'} />
+        </LoadingPage>
+      )}
+
       <FormProvider {...form}>
-        <ReviewPointInfoContainer>
-          <ReviewPointInfo>
-            <ReviewPointInfoTop>
-              <Typography
-                textColor={themeApp.colors.blue[500]}
-                text="Button10R">
-                텍스트 리뷰
-              </Typography>
-              {input?.review?.length > 0 && isText && (
-                <View>
-                  <PointText
-                    text="SmallLabel"
-                    textColor={
-                      input?.review?.length > 0 && isText
-                        ? themeApp.colors.grey[0]
-                        : themeApp.colors.blue[500]
-                    }>
-                    50P 적립
-                  </PointText>
-                  {input?.review?.length > 0 && isText && <EnabledPoint />}
-                </View>
-              )}
-            </ReviewPointInfoTop>
-            <ReviewPointInfoBottom
-              active={
-                input?.review?.length > 0 && isText
-              }></ReviewPointInfoBottom>
-          </ReviewPointInfo>
-          <ReviewPointInfo>
-            <ReviewPointInfoTop>
-              <Typography
-                textColor={themeApp.colors.blue[500]}
-                text="Button10R">
-                포토 리뷰
-              </Typography>
-              {isPhoto && (
-                <View>
-                  <PointText
-                    text="SmallLabel"
-                    textColor={
-                      isPhoto
-                        ? themeApp.colors.grey[0]
-                        : themeApp.colors.blue[500]
-                    }>
-                    70P 적립
-                  </PointText>
-                  {isPhoto && <EnabledPoint />}
-                </View>
-              )}
-            </ReviewPointInfoTop>
-            <ReviewPointInfoBottom active={isPhoto}></ReviewPointInfoBottom>
-          </ReviewPointInfo>
-        </ReviewPointInfoContainer>
-        <KeyboardViewContainer extraHeight={120}>
-          <SatisfactionTitle>
-            <Title1>만족도를 알려주세요</Title1>
-            <RateStars
-              width="160px"
-              margin="2px"
-              ratingInput={starRating}
-              callback={rating => {
-                setStarRating(rating);
-              }}
-            />
-          </SatisfactionTitle>
+        <>
+          <ReviewPointInfoContainer>
+            <ReviewPointInfo>
+              <ReviewPointInfoTop>
+                <Typography
+                  textColor={themeApp.colors.blue[500]}
+                  text="Button10R">
+                  텍스트 리뷰
+                </Typography>
+                {input?.review?.length > 0 && isText && (
+                  <View>
+                    <PointText
+                      text="SmallLabel"
+                      textColor={
+                        input?.review?.length > 0 && isText
+                          ? themeApp.colors.grey[0]
+                          : themeApp.colors.blue[500]
+                      }>
+                      50P 적립
+                    </PointText>
+                    {input?.review?.length > 0 && isText && <EnabledPoint />}
+                  </View>
+                )}
+              </ReviewPointInfoTop>
+              <ReviewPointInfoBottom
+                active={
+                  input?.review?.length > 0 && isText
+                }></ReviewPointInfoBottom>
+            </ReviewPointInfo>
+            <ReviewPointInfo>
+              <ReviewPointInfoTop>
+                <Typography
+                  textColor={themeApp.colors.blue[500]}
+                  text="Button10R">
+                  포토 리뷰
+                </Typography>
+                {isPhoto && (
+                  <View>
+                    <PointText
+                      text="SmallLabel"
+                      textColor={
+                        isPhoto
+                          ? themeApp.colors.grey[0]
+                          : themeApp.colors.blue[500]
+                      }>
+                      70P 적립
+                    </PointText>
+                    {isPhoto && <EnabledPoint />}
+                  </View>
+                )}
+              </ReviewPointInfoTop>
+              <ReviewPointInfoBottom active={isPhoto}></ReviewPointInfoBottom>
+            </ReviewPointInfo>
+          </ReviewPointInfoContainer>
+          <KeyboardViewContainer extraHeight={120}>
+            <SatisfactionTitle>
+              <Title1>만족도를 알려주세요</Title1>
+              <RateStars
+                width="160px"
+                margin="2px"
+                ratingInput={starRating}
+                callback={rating => {
+                  setStarRating(rating);
+                }}
+              />
+            </SatisfactionTitle>
 
-          <UploadPhotosWrap>
-            <Title2Wrap>
-              <Title2> 사진 업로드 {photosArray.length}/6 </Title2>
-              <NotMandatory>(선택)</NotMandatory>
-            </Title2Wrap>
+            <UploadPhotosWrap>
+              <Title2Wrap>
+                <Title2> 사진 업로드 {photosArray.length}/6 </Title2>
+                <NotMandatory>(선택)</NotMandatory>
+              </Title2Wrap>
 
-            <FlatFlatList
-              data={photosArrayForFlatList}
-              scrollEnabled={true}
-              horizontal={true}
-              contentContainerStyle={{
-                height: 100,
-                alignItems: 'center',
-              }}
-              renderItem={({item}) => {
-                if (typeof item === 'object') {
-                  return (
-                    <>
-                      <PhotoImageWrap>
-                        <DeleteButton
-                          onPress={() => {
-                            handlePhotoRemove(item.id);
-                          }}>
-                          <XCircleIcon />
-                        </DeleteButton>
+              <FlatFlatList
+                data={photosArrayForFlatList}
+                scrollEnabled={true}
+                horizontal={true}
+                contentContainerStyle={{
+                  height: 100,
+                  alignItems: 'center',
+                }}
+                renderItem={({item}) => {
+                  if (typeof item === 'object') {
+                    return (
+                      <>
+                        <PhotoImageWrap>
+                          <DeleteButton
+                            onPress={() => {
+                              handlePhotoRemove(item.id);
+                            }}>
+                            <XCircleIcon />
+                          </DeleteButton>
 
-                        <PhotoImage source={{uri: item.uri}} />
-                      </PhotoImageWrap>
-                    </>
-                  );
-                } else {
-                  return (
-                    <UploadPhoto
-                      width="80px"
-                      height="80px"
-                      input={input}
-                      photosArray={photosArray}
-                      setPhotosArray={setPhotosArray}
-                    />
-                  );
-                }
-              }}
-            />
-          </UploadPhotosWrap>
-
-          <ReviewWrap>
-            <Title3>
-              리뷰를{' '}
-              {route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2' ? '수정' : '작성'}
-              해주세요
-            </Title3>
-
-            <ReviewInput
-              // onFocus={() => {
-              //   setInputFocus(true);
-              // }}
-              // onBlur={() => {
-              //   setInputFocus(false);
-              // }}
-              charLength={charLength}
-              editContentInput={
-                editItem && editItem.reviewText
-                  ? editItem.reviewText
-                  : undefined
-              }
-            />
-            <TextBoxBottom>
-              <ShowOnlyToOwnerWrap>
-                {!editItem && (
-                  <>
-                    <CheckBox
-                      checked={input.isExclusive}
-                      onPress={() => {
-                        setInput({...input, isExclusive: !input.isExclusive});
-                      }}>
-                      <CheckIcon
-                        style={{width: 15, height: 10}}
-                        color={'#ffffff'}
+                          <PhotoImage source={{uri: item.uri}} />
+                        </PhotoImageWrap>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <UploadPhoto
+                        width="80px"
+                        height="80px"
+                        input={input}
+                        photosArray={photosArray}
+                        setPhotosArray={setPhotosArray}
                       />
-                    </CheckBox>
-                  </>
-                )}
+                    );
+                  }
+                }}
+              />
+            </UploadPhotosWrap>
 
-                {editItem ? (
-                  <Title4 isEditItem={!!editItem}>
-                    {' '}
-                    {editItem.forMakers
-                      ? '사장님에게만 보이는 리뷰'
-                      : '모두에게 보이는 리뷰'}{' '}
-                  </Title4>
-                ) : (
-                  <Title4 isEditItem={!!editItem}>사장님에게만 보이기</Title4>
-                )}
-              </ShowOnlyToOwnerWrap>
-              <ShowCurrentLettersLengthWrap>
-                <LengthText
-                  colorError={form.formState.errors.review ? true : false}>
-                  <LengthTextNum
-                    charLength={charLength > 500 || charLength < 10}>
-                    {charLength}
-                  </LengthTextNum>
-                  /500
-                </LengthText>
-              </ShowCurrentLettersLengthWrap>
-            </TextBoxBottom>
-            <Warnings textColor={themeApp.colors.grey[4]}>
-              작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
-              서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
-              제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
-            </Warnings>
-            {/* '최대 몇자인가' 보여주기 */}
-          </ReviewWrap>
+            {isLoading && <Text>로딩중이여...</Text>}
 
-          {!keyboardStatus.isKeyboardActivate && <Filler />}
-        </KeyboardViewContainer>
+            <ReviewWrap>
+              <Title3>
+                리뷰를{' '}
+                {route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2' ? '수정' : '작성'}
+                해주세요
+              </Title3>
 
-        {!keyboardStatus.isKeyboardActivate && (
-          <ButtonContainer>
-            <ButtonFinal
-              size="full"
-              label="완료"
-              text={'Button09SB'}
-              disabled={clickDisable}
-              onPressEvent={form.handleSubmit(onSignInPressed)}
-            />
-          </ButtonContainer>
-        )}
+              <ReviewInput
+                // onFocus={() => {
+                //   setInputFocus(true);
+                // }}
+                // onBlur={() => {
+                //   setInputFocus(false);
+                // }}
+                charLength={charLength}
+                editContentInput={
+                  editItem && editItem.reviewText
+                    ? editItem.reviewText
+                    : undefined
+                }
+              />
+              <TextBoxBottom>
+                <ShowOnlyToOwnerWrap>
+                  {!editItem && (
+                    <>
+                      <CheckBox
+                        checked={input.isExclusive}
+                        onPress={() => {
+                          setInput({
+                            ...input,
+                            isExclusive: !input.isExclusive,
+                          });
+                        }}>
+                        <CheckIcon
+                          style={{width: 15, height: 10}}
+                          color={'#ffffff'}
+                        />
+                      </CheckBox>
+                    </>
+                  )}
+
+                  {editItem ? (
+                    <Title4 isEditItem={!!editItem}>
+                      {' '}
+                      {editItem.forMakers
+                        ? '사장님에게만 보이는 리뷰'
+                        : '모두에게 보이는 리뷰'}{' '}
+                    </Title4>
+                  ) : (
+                    <Title4 isEditItem={!!editItem}>사장님에게만 보이기</Title4>
+                  )}
+                </ShowOnlyToOwnerWrap>
+                <ShowCurrentLettersLengthWrap>
+                  <LengthText
+                    colorError={form.formState.errors.review ? true : false}>
+                    <LengthTextNum
+                      charLength={charLength > 500 || charLength < 10}>
+                      {charLength}
+                    </LengthTextNum>
+                    /500
+                  </LengthText>
+                </ShowCurrentLettersLengthWrap>
+              </TextBoxBottom>
+              <Warnings textColor={themeApp.colors.grey[4]}>
+                작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
+                서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설,
+                비방글은 제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수
+                있습니다.
+              </Warnings>
+              {/* '최대 몇자인가' 보여주기 */}
+            </ReviewWrap>
+
+            {!keyboardStatus.isKeyboardActivate && <Filler />}
+          </KeyboardViewContainer>
+
+          {!keyboardStatus.isKeyboardActivate && (
+            <ButtonContainer>
+              <ButtonFinal
+                size="full"
+                label="완료"
+                text={'Button09SB'}
+                disabled={clickDisable}
+                onPressEvent={form.handleSubmit(onSignInPressed)}
+              />
+            </ButtonContainer>
+          )}
+        </>
       </FormProvider>
     </Container2>
   );
@@ -824,121 +848,16 @@ const LengthTextNum = styled(Typography).attrs({text: 'CaptionR'})`
   }};
 `;
 
-// <Container2>
-// <FormProvider {...form}>
-//   <Container
-//     showsVerticalScrollIndicator={false}
-//     showsHorizontalScrollIndicator={false}
-//     nestedScrollEnabled={true}>
-//     <SatisfactionTitle>
-//       <Title1>만족도를 알려주세요</Title1>
-//       <RateStars
-//         width="160px"
-//         margin="2px"
-//         ratingInput={starRating}
-//         callback={rating => {
-//           setStarRating(rating);
-//         }}
-//       />
-//     </SatisfactionTitle>
-
-//     <UploadPhotosWrap>
-//       <Title2Wrap>
-//         <Title2> 사진 업로드 {photosArray.length}/6 </Title2>
-//         <NotMandatory>(선택)</NotMandatory>
-//       </Title2Wrap>
-
-//       <FlatFlatList
-//         data={photosArrayForFlatList}
-//         scrollEnabled={true}
-//         horizontal={true}
-//         contentContainerStyle={{
-//           height: 100,
-//           alignItems: 'center',
-//         }}
-//         renderItem={({item}) => {
-//           if (typeof item === 'object') {
-//             return (
-//               <>
-//                 <PhotoImageWrap>
-//                   <DeleteButton
-//                     onPress={() => {
-//                       handlePhotoRemove(item.id);
-//                     }}>
-//                     <XCircleIcon />
-//                   </DeleteButton>
-
-//                   <PhotoImage source={{uri: item.uri}} />
-//                 </PhotoImageWrap>
-//               </>
-//             );
-//           } else {
-//             return (
-//               <UploadPhoto
-//                 width="80px"
-//                 height="80px"
-//                 input={input}
-//                 photosArray={photosArray}
-//                 setPhotosArray={setPhotosArray}
-//               />
-//             );
-//           }
-//         }}
-//       />
-//     </UploadPhotosWrap>
-
-//     <ReviewWrap>
-//       <Title3>
-//         리뷰를{' '}
-//         {route.name === 'S_MAIN__EDIT_REVIEW_PAGE_2' ? '수정' : '작성'}
-//         해주세요
-//       </Title3>
-
-//       <ReviewInput
-//         charLength={charLength}
-//         editContentInput={
-//           editItem && editItem.reviewText
-//             ? editItem.reviewText
-//             : undefined
-//         }
-//       />
-//       {/* '최대 몇자인가' 보여주기 */}
-
-//       <ShowOnlyToOwnerWrap>
-//         {!editItem && (
-//           <>
-//             <CheckBox
-//               checked={input.isExclusive}
-//               onPress={() => {
-//                 setInput({...input, isExclusive: !input.isExclusive});
-//               }}>
-//               <CheckIcon
-//                 style={{width: 15, height: 10}}
-//                 color={'#ffffff'}
-//               />
-//             </CheckBox>
-//           </>
-//         )}
-
-//         {editItem ? (
-//           <Title4 isEditItem={!!editItem}>
-//             {' '}
-//             {editItem.forMakers
-//               ? '사장님에게만 보이는 리뷰'
-//               : '모두에게 보이는 리뷰'}{' '}
-//           </Title4>
-//         ) : (
-//           <Title4 isEditItem={!!editItem}>사장님에게만 보이기 </Title4>
-//         )}
-//       </ShowOnlyToOwnerWrap>
-//     </ReviewWrap>
-
-//     <Warnings>
-//       작성된 리뷰는 다른 고객분들께 큰 도움이 됩니다. 하지만 상품 및
-//       서비스와 무관한 리뷰와 사진이 포함되거나 허위 리뷰, 욕설, 비방글은
-//       제3자의 권리를 침해하는 게시물은 통보없이 삭제될 수 있습니다.
-//     </Warnings>
-//   </Container>
-
-// </FormProvider>
-// </Container2>
+const LoadingPage = styled.View`
+  background-color: white;
+  opacity: 0.5;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  width: 100%;
+  flex: 1;
+  padding-bottom: 150px;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+`;
