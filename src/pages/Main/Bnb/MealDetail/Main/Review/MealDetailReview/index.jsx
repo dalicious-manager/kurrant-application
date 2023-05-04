@@ -370,7 +370,7 @@ const ButtonText = styled(Typography).attrs({text: 'Body06R'})`
 
 const WrapWrapView = styled.View`
   position: absolute;
-  top: 165px;
+  top: 215px;
   left: 30px;
   z-index: 1;
 `;
