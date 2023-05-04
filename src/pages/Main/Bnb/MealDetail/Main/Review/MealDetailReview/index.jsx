@@ -228,6 +228,7 @@ const Component = ({dailyFoodId}) => {
                     imageLocation={item.imageLocation}
                     forMakers={item.forMakers}
                     commentList={item.commentList}
+                    like={item.like}
                   />
                 </View>
               );

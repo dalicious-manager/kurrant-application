@@ -38,7 +38,7 @@ const Component = ({
   rating,
   reviewText,
   focusId,
-
+  like,
   imageLocation,
   createDate,
   updateDate,
@@ -122,11 +122,11 @@ const Component = ({
 
         <EditWrap>
           <LikePressable onPress={() => {}}>
-            <EditText>도움이 되요 </EditText>
+            <EditText isLike={like}>도움이 되요 </EditText>
             <ThumbsUp
               width="14px"
               height="15px"
-              color={theme.colors.green[500]}
+              color={like ? theme.colors.green[500] : theme.colors.grey[5]}
             />
             <LikeNumber>{5}</LikeNumber>
           </LikePressable>
@@ -289,12 +289,14 @@ const EditWrap = styled.View`
 `;
 
 const EditText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${props => props.theme.colors.green[500]};
+  color: ${({theme, isLike}) =>
+    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
   margin-right: 6px;
 `;
 
 const LikeNumber = styled(Typography).attrs({text: 'Button10R'})`
   color: ${props => props.theme.colors.grey[5]};
+
   margin-left: 3px;
 `;
 
