@@ -71,9 +71,7 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
 
   const handleScroll = index => {
     // 이미지가 한개뿐이면 스크롤을 막는다
-    if (img.length < 2) return;
 
-    console.log('멜렁멜렁~~ 스크롤 되지롱~~1');
     carouselRef.current.scrollTo({
       index: index,
       animated: true,
@@ -106,8 +104,6 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
 
           // 이미지가 한개일때는 카루셀 막기
 
-          if (img.length < 2) return;
-          console.log('멜렁멜렁~~ 스크롤 되지롱~~2');
           setIndex(index);
         }}
         defaultIndex={firstClickedImageIndex}
