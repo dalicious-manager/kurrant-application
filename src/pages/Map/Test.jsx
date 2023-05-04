@@ -67,6 +67,7 @@ const Test = () => {
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
     setCenter(newCenter);
+    setMarkerColor(false);
   };
 
   useEffect(() => {
@@ -86,14 +87,12 @@ const Test = () => {
         />
       </View>
 
-      <MapView {...panResponder.panHandlers}>
+      <MapView>
         <NaverMapView
-          ref={mapRef}
+          onTouch={()=>{setMarkerColor(true)}}
           center={{...initCenter, zoom: 18}}
           style={{width: '100%', height: '100%'}}
           onCameraChange={handleCameraChange}
-          scaleBar={false}
-          zoomControl={false}
         />
         <View
           style={{
@@ -103,7 +102,15 @@ const Test = () => {
             zIndex: 1,
             top: 208 - 47,
           }}>
-          {markerColor ? (
+            <FastImage
+              source={markerColor ? require('./pick.png') :require('./marker.png')}
+              style={{
+                width: 37,
+                height: 47,
+                borderRadius: 7,
+              }}
+            />
+          {/* {markerColor ? (
             <FastImage
               source={require('./pick.png')}
               style={{
@@ -121,7 +128,7 @@ const Test = () => {
                 borderRadius: 7,
               }}
             />
-          )}
+          )} */}
         </View>
         <CircleView markerColor={markerColor} />
       </MapView>
