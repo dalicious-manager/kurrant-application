@@ -21,7 +21,8 @@ import {
   deleteReview2,
 } from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
-import ImageModal from './ImageModal/ImageModal';
+// import ImageModal from './ImageModal/ImageModal';
+import ImageModal from '~components/Review/ImageModal/ImageModal';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import {changeSeperator} from '../../../../../utils/dateFormatter';
 import {SkinnyArrowDown} from '../../../../../components/Icon';
@@ -104,42 +105,6 @@ const Component = ({
               } else {
                 toast.toastEvent();
                 await getWrittenReview();
-                // Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-                //   {
-                //     text: '확인',
-                //     onPress: async () => {
-                //       await getWrittenReview();
-                //       // await getReviewWait();
-                //       navigation.navigate(WrittenReviewPageName, {
-                //         screen: ReviewScreenName,
-                //         params: {
-                //           tabIndex: 1,
-                //         },
-                //       });
-
-                //       // navigation.reset({
-                //       //   routes: [
-                //       //     {
-                //       //       name: ReviewScreenName,
-
-                //       //       state: {
-                //       //         index: 1,
-                //       //         routes: [
-                //       //           {
-                //       //             name: ReviewPageName,
-                //       //           },
-                //       //           {
-                //       //             name: WrittenReviewPageName,
-                //       //           },
-                //       //         ],
-                //       //       },
-                //       //     },
-                //       //   ],
-                //       // });
-                //     },
-                //     style: 'cancel',
-                //   },
-                // ]);
               }
             } catch (err) {
               console.log('리뷰 삭제 에러뜸');
@@ -152,28 +117,6 @@ const Component = ({
                 },
               ]);
             }
-
-            // await deleteReview({id: id}, token, () => {
-            //   navigation.reset({
-            //     routes: [
-            //       {
-            //         name: ReviewScreenName,
-
-            //         state: {
-            //           index: 1,
-            //           routes: [
-            //             {
-            //               name: ReviewPageName,
-            //             },
-            //             {
-            //               name: WrittenReviewPageName,
-            //             },
-            //           ],
-            //         },
-            //       },
-            //     ],
-            //   });
-            // });
 
             return;
           },

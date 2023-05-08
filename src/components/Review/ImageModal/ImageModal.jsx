@@ -1,9 +1,15 @@
 import {useEffect, useState} from 'react';
-import {Modal, SafeAreaView as View, StyleSheet, StatusBar} from 'react-native';
+import {
+  Modal,
+  SafeAreaView as View,
+  StyleSheet,
+  Text,
+  Image,
+  StatusBar,
+} from 'react-native';
 import styled from 'styled-components';
 
 import CarouselImage from './CarouselImage';
-
 import {SmallXVectorIcon} from '~components/Icon';
 import DotPagination from './DotPagination';
 
@@ -62,7 +68,7 @@ export default ImageModal;
 
 const styles = StyleSheet.create({
   fill: {flex: 1},
-  grey: {backgroundColor: '#5A1EFF'},
+  // grey: {backgroundColor: '#5A1EFF'},
   black: {backgroundColor: '#1E1E1E'},
   // grey: {backgroundColor: '#ffffff'},
 });
