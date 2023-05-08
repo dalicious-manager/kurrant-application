@@ -6,7 +6,8 @@ import Typography from '../../../../../components/Typography';
 import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
 import StarRating from '../../../../../components/StarRating/StarRating';
 
-import AdminOrMakersReview from './AdminOrMakersReview';
+import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
+
 import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
