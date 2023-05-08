@@ -47,6 +47,20 @@ const Component = () => {
       }),
     ]).start();
   }, [fadeToast]);
+  const toastEventNotOut = useCallback(() => {
+    Animated.sequence([
+      Animated.timing(fadeToast, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeToast, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeToast]);
 
   const ToastWrap = useCallback(
     ({message = 'test', icon = 'nomal', isBottom = false, isHeader = true}) => {
@@ -76,7 +90,7 @@ const Component = () => {
     [fadeToast],
   );
 
-  return {toastEvent, ToastWrap};
+  return {toastEvent, ToastWrap,toastEventNotOut};
 };
 
 export default Component;

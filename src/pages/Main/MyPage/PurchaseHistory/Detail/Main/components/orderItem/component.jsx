@@ -83,7 +83,7 @@ const Component = ({orderItem, onCancel = () => {}}) => {
                           onPress: () => {
                             try {
                               onCancel(id);
-                            queryClient.invalidateQueries('todayMeal');
+                            queryClient.invalidateQueries('orderMeal');
                             } catch (error) {
                               Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
                             }

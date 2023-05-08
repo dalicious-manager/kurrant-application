@@ -37,6 +37,7 @@ import Config from 'react-native-config';
 import useUserMe from '../../../../biz/useUserMe';
 import {PAGE_NAME as FAQListPageName} from '../../MyPage/FAQ';
 import VersionCheck from 'react-native-version-check';
+import { formattedLogin } from '../../../../utils/statusFormatter';
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -57,7 +58,8 @@ const Pages = ({route}) => {
   const params = route?.params;
   const navigation = useNavigation();
   const toast = Toast();
- 
+  const toast2 = Toast();
+  const [lastLogin,setLastLogin] = useState();
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
 
@@ -85,7 +87,16 @@ const Pages = ({route}) => {
     Settings.setAppID(Config.FACEBOOK_APP_ID);
     Settings.initializeSDK();
   };
-
+  useEffect(()=>{
+    const getLogin = async()=>{
+      const last = await getStorage('lastLogin');
+      if(last)
+        setLastLogin(last)
+    }
+    if(!lastLogin)
+      getLogin();
+    else toast2.toastEventNotOut()
+  },[lastLogin])
   useEffect(() => {
     let timeout;
     let exitApp = false;
@@ -196,6 +207,7 @@ const Pages = ({route}) => {
           </Pressable>
         </LoginContainer>
         <toast.ToastWrap message={'뒤로버튼 한번 더 누르시면 종료됩니다.'} />
+        <toast2.ToastWrap message={`마지막 로그인 ${formattedLogin(lastLogin)}`} isBottom={true} onPress={()=>console.log("test")}/>
       </WrapperBox>
     </SafeView>
   );

@@ -42,6 +42,8 @@ import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMo
 import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
+import { useGetDailyfood } from '../../../../../hook/useDailyfood';
+import { useGetOrderMeal } from '../../../../../hook/useOrder';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -69,6 +71,8 @@ const Pages = ({route}) => {
   const [show, setShow] = useState(false);
   const [scrollDir, setScrollDir] = useState(true);
   const [hideModal, setHideModal] = useState(true);
+
+  
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -80,9 +84,14 @@ const Pages = ({route}) => {
     isLunchFood,
     isDinnerFood,
     dailyFood,
+    setMorning,
+    setLunch,
+    setDinner,
+    setDiningTypes,
     isDailyFoodLoading,
     isFetchingDone,
   } = useFoodDaily();
+  
   const {
     addMeal,
     isLoadMeal,
@@ -93,7 +102,7 @@ const Pages = ({route}) => {
     setQuantity,
   } = useShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-
+  
   const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
   const handlePress = anim => {
@@ -123,6 +132,7 @@ const Pages = ({route}) => {
       }
     }
   }, [params]);
+  
   // 첫 렌더링때만 dailyFood 불러오게 하기
 
   // isMount처리가 없을 떄: 오늘 날짜, 선택된 날짜꺼 까지 둘다 받아버림
@@ -188,7 +198,7 @@ const Pages = ({route}) => {
   const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
   // const spotId = 1;
   const [chk, setChk] = useState(0);
-
+  const {data:dailyfoodData, refetch:dailyfoodRefetch} =useGetDailyfood(spotId,date);
   const onPageScroll2 = e => {
     const {position} = e.nativeEvent;
     setChk(position);
@@ -363,33 +373,33 @@ const Pages = ({route}) => {
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
     if (
-      isDiningTypes[0] &&
+      isDiningTypes?.length > 0 && isDiningTypes[0] &&
       ((isMorningFood.length === 0 && position === 0) ||
         (isLunchFood.length === 0 && position === 1) ||
         (isDinnerFood.length === 0 && position === 2))
     ) {
       const page =
         position === 0
-          ? isDiningTypes.includes(1)
+          ? isDiningTypes?.includes(1)
             ? 0
-            : isDiningTypes.includes(2)
+            : isDiningTypes?.includes(2)
             ? 1
-            : isDiningTypes.includes(3)
+            : isDiningTypes?.includes(3)
             ? 2
             : 0
           : position === 1
-          ? isDiningTypes.includes(2)
+          ? isDiningTypes?.includes(2)
             ? 1
-            : isDiningTypes.includes(3)
+            : isDiningTypes?.includes(3)
             ? 2
-            : isDiningTypes.includes(1)
+            : isDiningTypes?.includes(1)
             ? 0
             : 1
-          : position === 2 && isDiningTypes.includes(3)
+          : position === 2 && isDiningTypes?.includes(3)
           ? 2
-          : isDiningTypes.includes(2)
+          : isDiningTypes?.includes(2)
           ? 1
-          : isDiningTypes.includes(1)
+          : isDiningTypes?.includes(1)
           ? 0
           : 2;
       if (page !== position) {
@@ -503,13 +513,17 @@ const Pages = ({route}) => {
     // console.log(modalVisible,
     //     modalVisible2,
     //     modalVisible3,)
+    
     if (diningType === 1) {
+      console.log(diningType)
       return setModalVisible(true);
     }
     if (diningType === 2) {
+      console.log(diningType)
       return setModalVisible2(true);
     }
     if (diningType === 3) {
+      console.log(diningType)
       return setModalVisible3(true);
     }
   };
@@ -554,10 +568,17 @@ const Pages = ({route}) => {
     // console.log(generateOrderCode(1,42),"test432")
 
     if (isMount) {
-      loadDailyFood();
+      // loadDailyFood();
+      
+      dailyfoodRefetch();
     }
   }, [date, isMount]);
-
+  useEffect(()=>{
+    setMorning(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 1));
+    setLunch(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 2));
+    setDinner(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 3));
+    setDiningTypes(dailyfoodData?.data.diningTypes);
+  },[dailyfoodData?.data])
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
     const duplication = isLoadMeal
@@ -703,10 +724,10 @@ const Pages = ({route}) => {
         onScrollEndDrag={onScrollEnd}
         showsVerticalScrollIndicator={false}
         scrollEnabled={
-          !(diningFood.length === 0 && spotId !== null) || !spotId === null
+          !(diningFood?.length === 0 && spotId !== null) || !spotId === null
         }>
-        <FoodContainer isFood={diningFood.length === 0 && spotId !== null}>
-          {diningFood.length === 0 && spotId !== null && (
+        <FoodContainer isFood={diningFood?.length === 0 && spotId !== null}>
+          {diningFood?.length === 0 && spotId !== null && (
             <NoServieceView
               status={hideModal}
               isMembership={userInfo?.isMembership}>
@@ -724,7 +745,7 @@ const Pages = ({route}) => {
             </NoSpotView>
           )}
 
-          {diningFood.map(m => {
+          {diningFood?.map(m => {
             const realToTalDiscountRate =
               100 -
               (100 - m.membershipDiscountRate) *
@@ -850,7 +871,7 @@ const Pages = ({route}) => {
           pagerRef={pager}
           onPageScroll2={onPageScroll2}
           sliderValue={sliderValue}
-          isServiceDays={isServiceDays}
+          isServiceDays={dailyfoodData?.data.serviceDays}
         />
       </CalendarWrap>
 
@@ -877,7 +898,7 @@ const Pages = ({route}) => {
               <Progress>
                 {DININGTYPE.map((btn, i) => {
                   const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
-                  const typeBoolean = isDiningTypes.includes(type);
+                  const typeBoolean = isDiningTypes?.includes(type);
 
                   return (
                     <DiningPress
@@ -1212,6 +1233,9 @@ export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
 `;
 
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
+  white-space :nowrap;
+  word-break : nowrap;
+  text-overflow : ellipsis;
   color: ${({theme, soldOut}) =>
     soldOut === 2 || soldOut === 6
       ? theme.colors.grey[6]

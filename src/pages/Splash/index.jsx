@@ -244,8 +244,16 @@ const Page = () => {
             });
           },1000)
       }
-      } else {
+      } else {        
         setLoginLoading(false);
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: LoginPageName,
+            },
+          ],
+        });
       }
     };
 

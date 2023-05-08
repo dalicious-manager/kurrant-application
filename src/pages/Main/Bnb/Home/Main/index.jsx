@@ -56,7 +56,7 @@ import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
-import {useGetOrderMeal, useGetTodayMeal} from '../../../../../hook/useOrder';
+import {useGetOrderMeal} from '../../../../../hook/useOrder';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -76,32 +76,22 @@ const Pages = () => {
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-  const {
-    isOrderMeal,
-    todayMeal,
-    orderMeal,
-    todayOrderMeal,
-    isOrderMealLoading,
-  } = useOrderMeal();
+ 
   const {
     getMembershipHistory,
     readableAtom: {membershipHistory},
   } = useMembership();
-  const {loadMeal} = useShoppingBasket();
+  
   const {dailyFood, isServiceDays} = useFoodDaily();
   const [modalVisible, setModalVisible] = useState(false);
 
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
-  const [eventSpot, setEventSpot] = useState(false);
-  const [eventSpotLoading, setEventSpotLoading] = useState(false);
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
-  const mealCheck = isOrderMeal?.map(el => {
-    return el.serviceDate;
-  });
+  
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
   // const start = weekly.map(s => {
@@ -114,11 +104,13 @@ const Pages = () => {
   //   return endData;
   // });
   const date = formattedWeekDate(new Date());
-  const {data: todayMealList, refetch: todayRefetch} = useGetTodayMeal(date);
   const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(formattedWeekDate(weekly[0][0]),
   formattedWeekDate(
-    weekly[weekly?.length - 1][weekly[0].length - 1],
+    weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
   ));
+  const mealCheck = orderMealList?.data?.map(el => {
+    return el.serviceDate;
+  });
 
   // 홈 전체 공지사항
 
@@ -219,22 +211,23 @@ const Pages = () => {
   };
   useEffect(() => {
     const getHistory = async () => {
-      setEventSpotLoading(true);
       await getMembershipHistory();
-      setEventSpotLoading(false);
     };
     getHistory();
   }, [isUserInfo]);
   useFocusEffect(
     useCallback(() => { 
       try {
-        todayRefetch();
+        orderMealRefetch();
       } catch (e) {
         alert(e.toString().replace('error:'));
       }
-      console.log(membershipHistory.length);
     }, [isCancelSpot]),
   );
+  useEffect(()=>{
+
+    console.log(membershipHistory,"tets");
+  },[membershipHistory])
   const checkPermission = () => {
     messaging()
       .hasPermission()
@@ -325,7 +318,7 @@ const Pages = () => {
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
-                date: '2023-04-14',
+                date: date,
               });
             }
             if (remoteMessage.data.page === 'S_MAIN__REVIEW') {  
@@ -386,17 +379,17 @@ const Pages = () => {
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
 
-  useEffect(() => {
-    async function dailys() {
-      try {
-        if (userSpotId)
-          await dailyFood(userSpotId, formattedWeekDate(new Date()));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    dailys();
-  }, [userSpotId]);
+  // useEffect(() => {
+  //   async function dailys() {
+  //     try {
+  //       if (userSpotId)
+  //         await dailyFood(userSpotId, formattedWeekDate(new Date()));
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  //   dailys();
+  // }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
@@ -516,12 +509,13 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {todayMealList?.data?.length === 0 ? (
+          {orderMealList?.data?.filter((order)=>order.serviceDate === date).length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
-            todayMealList?.data?.map((m, idx) => {
+            orderMealList?.data?.map((m, idx) => {
+              if(m.serviceDate === date)
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
                   {m.orderItemDtoList.map((meal, i) => {
@@ -752,70 +746,10 @@ const MainWrap = styled.View`
   margin: 0px 24px;
 `;
 
-const MealInfoWrapper = styled.View`
-  margin-bottom: 16px;
-`;
-
-const MealInfoWrap = styled.Pressable`
-  ${Display};
-  height: 64px;
-  border-radius: 14px;
-  background-color: ${props => props.theme.colors.grey[0]};
-  margin-bottom: 16px;
-  padding: 16px;
-  justify-content: space-between;
-  padding-left: 0px;
-`;
-
-const OrderStatusWrap = styled.View`
-  align-items: center;
-`;
-const CommentText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-  margin-bottom: 4px;
-`;
-const ConfirmPressable = styled.Pressable`
-  background-color: ${({theme}) => theme.colors.purple[500]};
-  border-radius: 999px;
-  height: 28px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 12px;
-`;
-const ConfirmText = styled(Typography).attrs({text: 'Button09SB'})`
-  color: white;
-`;
-
 const NoMealInfo = styled.View`
   ${BoxWrap};
   ${Display};
   justify-content: center;
-`;
-
-const MealInfo = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const MealImage = styled.Image`
-  width: 64px;
-  height: 64px;
-  border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
-`;
-
-const MealText = styled.View`
-  margin-left: 16px;
-  flex-direction: row;
-  flex: 1;
-  justify-content: space-between;
-`;
-
-const MealCount = styled.View`
-  align-self: flex-end;
-  justify-content: flex-end;
-  align-items: flex-end;
 `;
 
 const MealCalendar = styled.View`
@@ -827,15 +761,6 @@ const MealCalendar = styled.View`
   min-height: 130px;
   padding-bottom: 10px;
   //padding:15px 16px;
-`;
-
-const MealCheckButton = styled.Pressable`
-  justify-self: flex-start;
-  height: 28px;
-  background-color: ${props => props.theme.colors.purple[500]};
-  padding: 3.5px 12px;
-  border-radius: 20px;
-  margin-bottom: 16px;
 `;
 
 const MealCalendarTitle = styled.View`

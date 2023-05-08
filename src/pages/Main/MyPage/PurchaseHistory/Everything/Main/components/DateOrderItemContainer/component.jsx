@@ -200,7 +200,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                       try {
                                         cancelItem(order.id);
                                         queryClient.invalidateQueries(
-                                          'todayMeal',
+                                          'orderMeal',
                                         );
                                       } catch (error) {
                                         Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
@@ -230,7 +230,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                       try {
                                         changeItem(order.id, order.serviceDate);
                                         queryClient.invalidateQueries(
-                                          'todayMeal',
+                                          'orderMeal',
                                         );
                                       } catch (error) {
                                         Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));

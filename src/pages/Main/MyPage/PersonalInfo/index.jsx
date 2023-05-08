@@ -308,20 +308,23 @@ const Pages = ({route}) => {
               onPressEvent={async () => {
                 try {
                   const token = await getStorage('token');
+                  const lastLogin = await getStorage('lastLogin');
+                  console.log(lastLogin)
                   const getToken = JSON.parse(token);
                   await logout({
                     accessToken: getToken?.accessToken,
                     refreshToken: getToken?.refreshToken,
                   });
-                  await AsyncStorage.clear().then(() => {
-                    navigation.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: LoginPageName,
-                        },
-                      ],
-                    });
+                  await AsyncStorage.removeItem('token')
+                  await AsyncStorage.removeItem('isLogin')
+                  await AsyncStorage.removeItem('spotStatus')
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
                   });
                 } catch (error) {
                   if (error.toString().replace('Error:', '').trim() === '403') {

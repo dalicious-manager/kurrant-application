@@ -21,6 +21,7 @@ const useOrderMeal = () => {
   const [orderLoading, setOrderLoading] = useAtom(isOrderLoadingAtom);
   const navigation = useNavigation();
   const queryClient = useQueryClient();
+  
   const orderMeal = async (startdate, enddate) => {
     try {
       const res = await Fetch.OrderMeal(startdate, enddate);
@@ -52,6 +53,7 @@ const useOrderMeal = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -79,7 +81,7 @@ const useOrderMeal = () => {
         },
         option,
       );
-
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -109,7 +111,7 @@ const useOrderMeal = () => {
         },
         option,
       );
-      queryClient.invalidateQueries(['todayMeal','orderMeal']);
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -137,7 +139,7 @@ const useOrderMeal = () => {
         },
         option,
       );
-      queryClient.invalidateQueries(['todayMeal','orderMeal']);
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {

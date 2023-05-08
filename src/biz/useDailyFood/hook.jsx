@@ -83,6 +83,10 @@ const useFoodDaily = () => {
     }
   };
   return {
+    setMorning,
+    setLunch,
+    setDinner,
+    setDiningTypes,
     dailyFood,
     isDiningTypes,
     isMorningFood,

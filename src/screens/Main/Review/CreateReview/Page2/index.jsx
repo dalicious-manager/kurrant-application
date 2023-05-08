@@ -309,7 +309,7 @@ const Screen = ({route}) => {
               },
             ]);
           }
-          queryClient.invalidateQueries('todayMeal');
+          queryClient.invalidateQueries('orderMeal');
         })
         .catch(error => {
           console.error('Error:', error);

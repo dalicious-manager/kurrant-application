@@ -205,7 +205,7 @@ const Pages = ({route}) => {
                         onPress: async () => {
                           try {
                             cancelAll();
-                          queryClient.invalidateQueries('todayMeal');
+                          queryClient.invalidateQueries('orderMeal');
                           } catch (error) {
                             Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
                           }

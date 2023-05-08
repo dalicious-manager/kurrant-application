@@ -177,11 +177,13 @@ const useAuth = () => {
         console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', "일반 로그인");
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', "일반 로그인");
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(

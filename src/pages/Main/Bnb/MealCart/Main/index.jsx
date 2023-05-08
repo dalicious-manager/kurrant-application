@@ -556,7 +556,7 @@ const Pages = () => {
           onPress: async () => {
             try {
               await deleteButton(id);
-              queryClient.invalidateQueries('todayMeal');
+              queryClient.invalidateQueries('orderMeal');
               setModalVisible3(true);
             } catch (err) {
               Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));

@@ -26,6 +26,7 @@ import {formattedDate, formattedWeekDate} from '../../utils/dateFormatter';
 import Button from '../CalendarButton';
 import Typography from '../Typography';
 import {getCircleColor, getTodayColor, getFontStyle} from './style';
+import { useGetOrderMeal } from '../../hook/useOrder';
 
 /**
  *
@@ -56,7 +57,8 @@ const Component = ({
   const pager = pagerRef ? pagerRef : useRef();
   const today = new Date();
   const weekly = useAtomValue(weekAtom);
-  const {isOrderMeal, orderMeal} = useOrderMeal();
+  // const {isOrderMeal, orderMeal} = useOrderMeal();
+  const {data: isOrderMeal, refetch: orderMealRefetch} = useGetOrderMeal(formattedWeekDate(weekly[0][0]),formattedWeekDate(weekly[weekly.length-1][weekly[weekly.length-1].length-1]));
   const [currentPress, setCurrentPress] = useState(selectDate);
   const [chk, setChk] = useState(0);
 
@@ -117,7 +119,7 @@ const Component = ({
                   const propsDay = formattedWeekDate(day);
                   const lastDay =
                     formattedDate(day, '/') < formattedDate(today, '/');
-                  const order = isOrderMeal?.filter(
+                  const order = isOrderMeal?.data?.filter(
                     x => x.serviceDate === propsDay,
                   );
                   const set = new Set(order?.map(x => x.diningType));

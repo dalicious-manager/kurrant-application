@@ -473,9 +473,9 @@ const Pages = ({route}) => {
           });
         }
       }
-      queryClient.invalidateQueries(['todayMeal','orderMeal']);
+      queryClient.invalidateQueries('orderMeal');
     } catch (err) {
-      console.log(err);
+      Alert.alert("결제",err.toString().replace('error: ',''));
     } finally {
       setIsPay(false);
     }

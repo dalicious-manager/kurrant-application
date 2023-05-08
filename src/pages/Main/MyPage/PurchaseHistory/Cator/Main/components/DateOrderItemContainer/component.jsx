@@ -199,7 +199,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                     onPress: () => {
                                       cancelItem(order.id);
                                       queryClient.invalidateQueries(
-                                        'todayMeal',
+                                        'orderMeal',
                                       );
                                     },
                                     style: 'destructive',
@@ -225,7 +225,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                       try {
                                         changeItem(order.id, order.serviceDate);
                                         queryClient.invalidateQueries(
-                                          'todayMeal',
+                                          'orderMeal',
                                         );
                                       } catch (error) {
                                         Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
