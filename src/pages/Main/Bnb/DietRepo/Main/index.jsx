@@ -48,7 +48,7 @@ const Pages = () => {
     }
   };
 
-  // 이거 서버에서 받아와야됨
+  // 이거 서버에서 받아와야됨 useFoodDaily()에서 isServiceDays값 확인 할 수 잇음
   const isServiceDays = {
     dinnerServiceDays: null,
     lunchServiceDays: ['월', '화', '수', '목', '금'],

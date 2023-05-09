@@ -22,6 +22,8 @@ import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
+
+import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
 import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
 import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
@@ -287,6 +289,7 @@ const Pages = () => {
                 routeName={GroupApplicationCheckPageName}
               />
             )}
+            <ListBox title="식사 리포트" routeName={DietRepoMainPageName} />
           </ListContainer>
           <ListContainer title="알림">
             <ListBox title="공지사항" routeName={NoticeScreenName} />
