@@ -12,13 +12,16 @@ import Button from '../../components/Button';
 import FindIcon from '../../assets/icons/Map/find.svg';
 import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as MapSearchResult} from './SearchResult';
+import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 import Info from './components/Info';
+import {useAtom} from 'jotai';
+import {userLocationAtom} from '../../utils/store';
 
 const WIDTH = Dimensions.get('screen').width;
 
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'MAP';
-const Test = () => {
+const MySpotMap = () => {
   const toast = Toast();
   const navigation = useNavigation();
   const [tab, setTab] = useState(false);
@@ -26,10 +29,7 @@ const Test = () => {
   const [move, setMove] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const [center, setCenter] = useState();
-  const [initCenter, setInitCenter] = useState({
-    latitude: 37.49703,
-    longitude: 127.028191,
-  });
+  const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
 
   const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
     center ? center?.longitude : initCenter.longitude,
@@ -75,6 +75,7 @@ const Test = () => {
       </View>
 
       <MapView>
+        {/* 탭 */}
         <InfoView tab={tab}>
           <Info
             onPressEvent={() => {
@@ -130,6 +131,14 @@ const Test = () => {
       </AddressView>
       <ButtonWrap>
         <Button
+          onPressEvent={() =>
+            navigation.navigate(MySpotDetailPage, {
+              address: address,
+              roadAddress: roadAddress,
+              showAddress: showAddress,
+              center: center,
+            })
+          }
           label="이 위치로 주소 설정"
           disabled={move}
           type={move ? 'map' : 'yellow'}
@@ -146,7 +155,7 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default MySpotMap;
 
 const MapView = styled.View`
   height: 416px;

@@ -55,12 +55,13 @@ const Location = ({setInitCenter, setShow, toast}) => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
+        // console.log(latitude, longitude, 'sffssf');
         setInitCenter({latitude: latitude, longitude: longitude});
       },
       error => {
         console.error(error.code, error.message, '에러');
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      {enableHighAccuracy: true, timeout: 1500, maximumAge: 1000},
     );
   };
 

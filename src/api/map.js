@@ -36,7 +36,21 @@ export const mapApis = {
 
     const result = await res.json();
 
-    if (result.addresses.length > 0) return result.addresses[0].jibunAddress;
-    else if (result.addresses.length === 0) return roadAddress;
+    if (result.addresses.length > 0) {
+      const addressParts = result.addresses[0].jibunAddress.split(' ');
+      const jibunAddress = addressParts.slice(0, 4).join(' ');
+      // console.log(addressParts);
+      return jibunAddress;
+    } else if (result.addresses.length === 0) return roadAddress;
+  },
+  searchAddress: async roadAddress => {
+    const res = await fetch(
+      `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${roadAddress}&X-NCP-APIGW-API-KEY-ID=${id}&X-NCP-APIGW-API-KEY=${key}`,
+    );
+
+    const result = await res.json();
+    return result;
+    // if (result.addresses.length > 0) return result.addresses[0].jibunAddress;
+    // else if (result.addresses.length === 0) return roadAddress;
   },
 };

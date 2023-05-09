@@ -12,14 +12,22 @@ import Typography from '../../components/Typography';
 import {useState} from 'react';
 import AddressList from './components/AddressList';
 import NoResult from './components/NoResult';
+import {useAtom} from 'jotai';
+import {userLocationAtom} from '../../utils/store';
+import {useNavigation} from '@react-navigation/native';
+import {mapApis} from '../../api/map';
 
 export const PAGE_NAME = 'MAP_SEARCH_RESULT';
 const SearchResult = () => {
+  const navigation = useNavigation();
+  const [initCenter, setInitCenter] = useAtom(userLocationAtom);
   const [focus, setFocus] = useState(false);
   const [text, setText] = useState('');
 
-  const searchPress = () => {
+  const searchPress = async () => {
+    const res = await mapApis.searchAddress(text);
     setFocus(false);
+    console.log(res, 'res');
   };
   return (
     <Wrap>
@@ -32,8 +40,12 @@ const SearchResult = () => {
           setText={setText}
         />
       </View>
-      <Contents>
-        <Location />
+      <Contents
+        onTouchEnd={e => {
+          e.stopPropagation();
+          navigation.goBack();
+        }}>
+        <Location setInitCenter={setInitCenter} />
       </Contents>
 
       <TouchableWithoutFeedback
@@ -43,7 +55,7 @@ const SearchResult = () => {
           console.log('ㄴㄴ');
         }}>
         {/* 디폴드화면 */}
-        <ContentWrap>
+        {/* <ContentWrap>
           <ExampleText>이렇게 검색해보세요</ExampleText>
           <View style={{marginTop: 8}}>
             <Title>・ 도로명 + 건물번호</Title>
@@ -53,9 +65,9 @@ const SearchResult = () => {
             <Title>・ 건물명,아파트명</Title>
             <TitleExample> 예 {')'} 커런트 아파트 111동</TitleExample>
           </View>
-        </ContentWrap>
+        </ContentWrap> */}
         {/* 검색 결과 있음 */}
-        {/* <AddressList setFocus={setFocus} /> */}
+        <AddressList setFocus={setFocus} />
         {/* 검색 결과 없음 */}
         {/* <NoResult /> */}
       </TouchableWithoutFeedback>
