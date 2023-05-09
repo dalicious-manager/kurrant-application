@@ -83,6 +83,7 @@ const Pages = ({route}) => {
     isDailyFoodLoading,
     isFetchingDone,
   } = useFoodDaily();
+
   const {
     addMeal,
     isLoadMeal,
@@ -125,7 +126,6 @@ const Pages = ({route}) => {
   }, [params]);
   // 첫 렌더링때만 dailyFood 불러오게 하기
 
-  // isMount처리가 없을 떄: 오늘 날짜, 선택된 날짜꺼 까지 둘다 받아버림
   // isMount처리가 있을 떄: 선택된 날짜꺼만 받는다 그래서 더 효율적이다
   const [isMount, setIsMount] = useState(false);
 

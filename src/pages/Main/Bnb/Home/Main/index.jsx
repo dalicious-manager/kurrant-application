@@ -703,7 +703,7 @@ const Pages = () => {
               onPress={() => {
                 navigation.navigate(DietRepoMainPageName);
               }}>
-              <Text>안녕</Text>
+              <Text>식단 리포트로 GOGOGO</Text>
             </Pressable>
           </MainWrap>
         </Wrap>

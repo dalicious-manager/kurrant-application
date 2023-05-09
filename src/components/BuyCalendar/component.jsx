@@ -74,7 +74,6 @@ const Component = ({
     setChk(position);
   };
 
-  ///// 여기부터 재신 코드
   const [isMount, setIsMount] = useState(false);
 
   useEffect(() => {
@@ -91,8 +90,6 @@ const Component = ({
       setCurrentPress(selectDate);
     }, 50);
   }, [selectDate, weekly, isMount, setIsMount]);
-
-  /////// 끝
 
   return (
     <React.Fragment>
@@ -123,6 +120,7 @@ const Component = ({
                     x => x.serviceDate === propsDay,
                   );
                   const set = new Set(order?.map(x => x.diningType));
+
                   const orderCount = [...set].length;
 
                   // 서비스일

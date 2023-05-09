@@ -2072,7 +2072,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <CloseIcon />,
+            headerLeft: () => <BackButton />,
           }}
         />
       </MainRoot.Group>
