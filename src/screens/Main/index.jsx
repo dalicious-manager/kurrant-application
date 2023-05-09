@@ -287,7 +287,7 @@ import Credit, {
 import {PointMainPage, PointMainPageName} from '../../pages/Main/MyPage/Point';
 import CloseButton from '../../components/CloseButton';
 
-// 리뷰 및 재신 개인
+// 리뷰
 import CreateReviewPage1, {
   SCREEN_NAME as CreateReviewPage1ScreenName,
 } from './Review/CreateReview/Page1';
@@ -304,6 +304,12 @@ import ReportReview, {
 
 import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
+// 식단 리포트
+
+import DietRepoMain, {
+  PAGE_NAME as DietRepoMainPageName,
+} from '../../pages/Main/Bnb/DietRepo/Main';
+
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
 
 const MainRoot = createNativeStackNavigator();
@@ -2046,6 +2052,27 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             headerLeft: () => <ReviewCloseIcon />,
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 식단 리포트 */}
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={DietRepoMainPageName}
+          component={DietRepoMain}
+          options={{
+            headerShown: true,
+            title: '식단 리포트',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <CloseIcon />,
           }}
         />
       </MainRoot.Group>

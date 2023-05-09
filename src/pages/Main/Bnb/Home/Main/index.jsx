@@ -2,7 +2,15 @@ import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, StatusBar, AppState} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  StatusBar,
+  AppState,
+  Text,
+  Pressable,
+} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
@@ -42,6 +50,8 @@ import {BespinMembers, FoundersMembers} from '../../../../../assets';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
+import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
+
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import FastImage from 'react-native-fast-image';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -163,8 +173,6 @@ const Pages = () => {
     isOneAnnouncementModalVisible,
     setIsOneAnnouncementModalVisible,
   } = useGetOneAnnouncements();
-
- 
 
   // useEffect(() => {
   //   removeItemFromStorage('announcementsClickedOneDate');
@@ -570,8 +578,7 @@ const Pages = () => {
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
-          )
-           : (
+          ) : (
             todayMealList?.data?.map((m, idx) => {
               return (
                 <React.Fragment key={`${m.id} ${idx}`}>
@@ -691,6 +698,13 @@ const Pages = () => {
               <CountText>건</CountText>
             </CountWrap>
           </MarketWrap> */}
+
+            <Pressable
+              onPress={() => {
+                navigation.navigate(DietRepoMainPageName);
+              }}>
+              <Text>안녕</Text>
+            </Pressable>
           </MainWrap>
         </Wrap>
       </ScrollViewWrap>
