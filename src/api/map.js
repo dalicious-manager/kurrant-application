@@ -26,7 +26,7 @@ export const mapApis = {
       (data.results[0].land.number2 !== ''
         ? '-' + data.results[0].land?.number2
         : ' ');
-    // console.log(roadAddress, '주소');
+
     return roadAddress;
   },
   getAddress: async roadAddress => {
@@ -35,7 +35,7 @@ export const mapApis = {
     );
 
     const result = await res.json();
-    // console.log(roadAddress, '지번변경');
+
     if (result.addresses.length > 0) return result.addresses[0].jibunAddress;
     else if (result.addresses.length === 0) return roadAddress;
   },

@@ -5,10 +5,13 @@ import {
   Platform,
   PermissionsAndroid,
   Alert,
+  View,
 } from 'react-native';
 import Typography from '../../components/Typography';
 import Geolocation from 'react-native-geolocation-service';
 import styled from 'styled-components';
+import Icon from '../../assets/icons/Map/location.svg';
+import Arrow from '../../assets/icons/Map/rightArrow.svg';
 
 const Location = ({setInitCenter, setShow, toast}) => {
   const openAppSettings = () => {
@@ -107,7 +110,11 @@ const Location = ({setInitCenter, setShow, toast}) => {
 
   return (
     <Wrap onPress={userLocation}>
-      <LocationText>현재 위치로 설정</LocationText>
+      <LocationWrap>
+        <LocationIcon />
+        <LocationText>현재 위치로 설정</LocationText>
+      </LocationWrap>
+      <Arrow />
     </Wrap>
   );
 };
@@ -117,9 +124,22 @@ export default Location;
 const Wrap = styled.Pressable`
   width: 100%;
   height: 56px;
-  padding: 17px 52px;
+  padding: 17px 24px 17px 33px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
 `;
 
 const LocationText = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const LocationIcon = styled(Icon)`
+  margin-right: 5px;
+`;
+
+const LocationWrap = styled.View`
+  flex-direction: row;
+  align-items: center;
 `;

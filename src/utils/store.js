@@ -1,4 +1,5 @@
 import {atomWithReset} from 'jotai/utils';
 export const currentPageAtom = atomWithReset();
 
-export const userLocationAtom = atomWithReset();
+// 지도
+export const locationInfoAtom = atomWithReset();

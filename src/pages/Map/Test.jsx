@@ -1,32 +1,29 @@
-import {useEffect, useRef, useState} from 'react';
-import {
-  Dimensions,
-  Platform,
-  Pressable,
-  Text,
-  View,
-  PanResponder,
-  Animated,
-} from 'react-native';
-import NaverMapView, {Marker} from 'react-native-nmap';
+import {useEffect, useState} from 'react';
+import {Dimensions, Pressable, View} from 'react-native';
+import NaverMapView from 'react-native-nmap';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import styled from 'styled-components';
 import Location from './Location';
 import Typography from '../../components/Typography';
 import FastImage from 'react-native-fast-image';
 import Toast from '../../components/Toast';
+import ArrowIcon from '../../assets/icons/Map/changeArrow.svg';
+import Button from '../../components/Button';
+import FindIcon from '../../assets/icons/Map/find.svg';
+import {useNavigation} from '@react-navigation/native';
+import {PAGE_NAME as MapSearchResult} from './SearchResult';
+import Info from './components/Info';
 
 const WIDTH = Dimensions.get('screen').width;
 
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'MAP';
 const Test = () => {
-  const mapRef = useRef(null);
-
   const toast = Toast();
-
+  const navigation = useNavigation();
+  const [tab, setTab] = useState(false);
   const [show, setShow] = useState(false);
-  const [markerColor, setMarkerColor] = useState(false);
+  const [move, setMove] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const [center, setCenter] = useState();
   const [initCenter, setInitCenter] = useState({
@@ -44,30 +41,10 @@ const Test = () => {
     setShowAddress(prev => !prev);
   };
 
-  // 지도 이동할때 마커 변경 안드 안됨 다시 보ㅓㅏ야해
-  const panResponder = useRef(
-    PanResponder.create({
-      // 화면 터치 감지
-      onMoveShouldSetPanResponderCapture: () => true,
-
-      // 화면을 터치하고 이동할 때
-      onPanResponderMove: () => {
-        if (Platform.OS === 'android') {
-          console.log('aa');
-        }
-        setMarkerColor(true);
-      },
-      // 화면을 터치하고 손 뗄 때
-      onPanResponderRelease: () => {
-        setMarkerColor(false);
-      },
-    }),
-  ).current;
-
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
     setCenter(newCenter);
-    setMarkerColor(false);
+    setMove(false);
   };
 
   useEffect(() => {
@@ -79,6 +56,16 @@ const Test = () => {
 
   return (
     <Wrap>
+      <Pressable
+        style={{position: 'relative', marginTop: 8}}
+        onPress={() => {
+          navigation.navigate(MapSearchResult);
+        }}>
+        <Icon />
+        <Search>
+          <PlaceHolderText>지번, 도로명, 건물명으로 검색</PlaceHolderText>
+        </Search>
+      </Pressable>
       <View>
         <Location
           setInitCenter={setInitCenter}
@@ -88,12 +75,22 @@ const Test = () => {
       </View>
 
       <MapView>
+        <InfoView tab={tab}>
+          <Info
+            onPressEvent={() => {
+              setTab(true);
+            }}
+          />
+        </InfoView>
         <NaverMapView
-          onTouch={()=>{setMarkerColor(true)}}
+          onTouch={() => {
+            setMove(true);
+          }}
+          scaleBar={false}
+          zoomControl={false}
           center={{...initCenter, zoom: 18}}
           style={{width: '100%', height: '100%'}}
-          onCameraChange={handleCameraChange}
-        />
+          onCameraChange={handleCameraChange}></NaverMapView>
         <View
           style={{
             position: 'absolute',
@@ -102,35 +99,18 @@ const Test = () => {
             zIndex: 1,
             top: 208 - 47,
           }}>
-            <FastImage
-              source={markerColor ? require('./pick.png') :require('./marker.png')}
-              style={{
-                width: 37,
-                height: 47,
-                borderRadius: 7,
-              }}
-            />
-          {/* {markerColor ? (
-            <FastImage
-              source={require('./pick.png')}
-              style={{
-                width: 37,
-                height: 47,
-                borderRadius: 7,
-              }}
-            />
-          ) : (
-            <FastImage
-              source={require('./marker.png')}
-              style={{
-                width: 37,
-                height: 47,
-                borderRadius: 7,
-              }}
-            />
-          )} */}
+          <FastImage
+            source={
+              move ? require('./icons/pick.png') : require('./icons/marker.png')
+            }
+            style={{
+              width: 37,
+              height: 47,
+              borderRadius: 7,
+            }}
+          />
         </View>
-        <CircleView markerColor={markerColor} />
+        <CircleView markerColor={move} />
       </MapView>
 
       <AddressView>
@@ -139,14 +119,23 @@ const Test = () => {
         ) : (
           <AddressText>{roadAddress}</AddressText>
         )}
+        <ChangeAddressWrap onPress={changAddress} move={move}>
+          <Arrow move={move} />
+          {showAddress ? (
+            <ChangeAddressText move={move}>도로명으로 보기</ChangeAddressText>
+          ) : (
+            <ChangeAddressText move={move}>지번으로 보기</ChangeAddressText>
+          )}
+        </ChangeAddressWrap>
       </AddressView>
-      <Pressable onPress={changAddress}>
-        {showAddress ? (
-          <Text>도로명 주소로 보기</Text>
-        ) : (
-          <Text>지번주소로 보기</Text>
-        )}
-      </Pressable>
+      <ButtonWrap>
+        <Button
+          label="이 위치로 주소 설정"
+          disabled={move}
+          type={move ? 'map' : 'yellow'}
+        />
+      </ButtonWrap>
+
       {show && (
         <toast.ToastWrap
           message={`설정>권한 에서 '정확한 위치' 접근 권한을 허용해 주세요`}
@@ -164,14 +153,9 @@ const MapView = styled.View`
   position: relative;
 `;
 
-const Wrap = styled.View`
+const Wrap = styled.SafeAreaView`
   flex: 1;
   background-color: ${({theme}) => theme.colors.grey[0]};
-`;
-
-const MarkerView = styled.View`
-  background-color: gold;
-  position: absolute;
 `;
 
 const AddressView = styled.View`
@@ -192,4 +176,57 @@ const CircleView = styled.View`
   //z-index: 999;
   top: 196px;
   left: ${WIDTH / 2 - 8}px;
+`;
+
+const ChangeAddressWrap = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+  background-color: ${({theme, move}) =>
+    move ? theme.colors.grey[7] : theme.colors.grey[8]};
+
+  padding: 3px 8px;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-top: 8px;
+`;
+
+const ChangeAddressText = styled(Typography).attrs({text: 'Button10R'})`
+  color: ${({theme, move}) =>
+    move ? theme.colors.grey[0] : theme.colors.grey[2]};
+`;
+
+const Arrow = styled(ArrowIcon)`
+  margin-right: 8px;
+  color: ${({move, theme}) =>
+    move ? theme.colors.grey[0] : theme.colors.grey[2]};
+`;
+
+const ButtonWrap = styled.View`
+  position: absolute;
+  bottom: 35px;
+  padding: 0px 20px;
+`;
+
+const Search = styled.View`
+  margin: 0px 24px;
+  background-color: ${({theme}) => theme.colors.grey[8]};
+  padding: 11px 14px 11px 28px;
+  border-radius: 8px;
+  height: 44px;
+`;
+
+const PlaceHolderText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+`;
+const Icon = styled(FindIcon)`
+  position: absolute;
+  bottom: 14px;
+  left: 32px;
+  z-index: 1;
+  margin-right: 4px;
+`;
+
+const InfoView = styled.Pressable`
+  position: absolute;
+  z-index: ${({tab}) => (tab ? 0 : 999)};
 `;

@@ -306,7 +306,12 @@ import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
 
+// map
 import Map, {PAGE_NAME as MapTest} from '../../pages/Map/Test';
+import SearchResult, {
+  PAGE_NAME as MapSearchResult,
+} from '../../pages/Map/SearchResult';
+
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
@@ -317,17 +322,6 @@ const Screen = () => {
   return (
     <MainRoot.Navigator initialRouteName={MapTest}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <MainRoot.Screen
-          name={MapTest}
-          component={Map}
-          // options={{
-          //   headerLeft: () => <BackButton mode="modal" />,
-          //   headerShown: false,
-          //   headerShadowVisible: false,
-          //   headerTransparent: true,
-          //   title: '',
-          // }}
-        />
         <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
@@ -2058,6 +2052,42 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             headerLeft: () => <ReviewCloseIcon />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={MapTest}
+          component={Map}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '주소 설정',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={MapSearchResult}
+          component={SearchResult}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '주소 검색',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
           }}
         />
       </MainRoot.Group>
