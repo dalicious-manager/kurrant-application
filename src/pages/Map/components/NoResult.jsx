@@ -8,9 +8,9 @@ const NoResult = () => {
     <Wrapper>
       <Wrap>
         <Icons />
-        <InnerText>검색결과가 없어요</InnerText>
-        <InnerText>지번, 도로명, 건물명으로</InnerText>
-        <InnerText>다시 검색해주세요</InnerText>
+        <InnerText>
+          검색결과가 없어요{`\n`}지번, 도로명, 건물명으로{`\n`}다시 검색해주세요
+        </InnerText>
       </Wrap>
     </Wrapper>
   );
@@ -29,6 +29,7 @@ const Icons = styled(Icon)`
 
 const InnerText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme}) => theme.colors.grey[5]};
+  text-align: center;
 `;
 
 const Wrap = styled.View`

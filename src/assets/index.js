@@ -37,3 +37,8 @@ export const NewMembers = require('../assets/images/newMembers.png');
 export const AIbackground = require('../assets/images/background.png');
 
 export const DefaultProfile = require('../assets/images/DefaultProfile.png');
+
+export const MySpot = require('../assets/images/spot/mySpot.png');
+export const ShareSpot = require('../assets/images/spot/shareSpot.png');
+export const PrivateSpot = require('../assets/images/spot/privateSpot.png');
+export const CloseButton = require('../assets/images/spot/close.png');

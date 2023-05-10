@@ -1,8 +1,25 @@
 import {Text, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../components/Typography';
+import {useNavigation} from '@react-navigation/native';
+import {PAGE_NAME as DetailAddressPage} from '../../Spots/mySpot/DetailAddress';
+import {mapApis} from '../../../api/map';
 
-const AddressList = ({setFocus}) => {
+const AddressList = ({setFocus, data}) => {
+  const navigation = useNavigation();
+
+  const onPress = async (name, address, x, y) => {
+    const res = await mapApis.getRoadAddress(x, y);
+
+    navigation.navigate(DetailAddressPage, {
+      address: name,
+      roadAddress: address,
+      center: {latitude: Number(y), longitude: Number(x)},
+      zipcode: res.zipcode,
+      showAddress: true,
+    });
+    // console.log(name, address, x, y);
+  };
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -10,26 +27,26 @@ const AddressList = ({setFocus}) => {
         setFocus(false);
       }}>
       <Wrap>
-        <Contents>
-          <Name>스파크플러스 시청점</Name>
-          <Address>서울 중구 남대문로9길 40 스파크플러스 시청점</Address>
-        </Contents>
-        <Contents>
-          <Name>스파크플러스 시청점</Name>
-          <Address>서울 중구 남대문로9길 40 스파크플러스 시청점</Address>
-        </Contents>
-        <Contents>
-          <Name>스파크플러스 시청점</Name>
-          <Address>서울 중구 남대문로9길 40 스파크플러스 시청점</Address>
-        </Contents>
-        <Contents>
-          <Name>스파크플러스 시청점</Name>
-          <Address>서울 중구 남대문로9길 40 스파크플러스 시청점</Address>
-        </Contents>
-        <Contents>
-          <Name>스파크플러스 시청점</Name>
-          <Address>서울 중구 남대문로9길 40 스파크플러스 시청점</Address>
-        </Contents>
+        {data?.map((el, idx) => {
+          // const nameChart = el.title.split('<b>')[1].split('</b>');
+          // const name = nameChart[0] + nameChart[1];
+          const last = data[data.length - 1];
+          const lastArr = el === last;
+
+          return (
+            <Contents
+              key={idx}
+              lastArr={lastArr}
+              onPress={() =>
+                onPress(el.place_name, el.road_address_name, el.x, el.y)
+              }>
+              <Name>{el.place_name}</Name>
+              <Address>
+                {el.road_address_name} {el.place_name}
+              </Address>
+            </Contents>
+          );
+        })}
       </Wrap>
     </TouchableWithoutFeedback>
   );
@@ -42,11 +59,12 @@ const Wrap = styled.ScrollView`
   flex: 1;
 `;
 
-const Contents = styled.View`
+const Contents = styled.Pressable`
   padding: 16px 0px 16px 24px;
   border-bottom: solid;
   border-bottom-width: 1px;
   border-color: ${({theme}) => theme.colors.grey[8]};
+  margin-bottom: ${({lastArr}) => (lastArr ? '66px' : '0px')};
 `;
 
 const Name = styled(Typography).attrs({text: 'Body06R'})`

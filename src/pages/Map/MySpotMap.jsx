@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Dimensions, Pressable, View} from 'react-native';
 import NaverMapView from 'react-native-nmap';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
@@ -10,7 +10,7 @@ import Toast from '../../components/Toast';
 import ArrowIcon from '../../assets/icons/Map/changeArrow.svg';
 import Button from '../../components/Button';
 import FindIcon from '../../assets/icons/Map/find.svg';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as MapSearchResult} from './SearchResult';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 import Info from './components/Info';
@@ -21,7 +21,9 @@ const WIDTH = Dimensions.get('screen').width;
 
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'MAP';
-const MySpotMap = () => {
+const MySpotMap = ({route}) => {
+  const paramLocation = route?.params?.center;
+
   const toast = Toast();
   const navigation = useNavigation();
   const [tab, setTab] = useState(false);
@@ -35,7 +37,9 @@ const MySpotMap = () => {
     center ? center?.longitude : initCenter.longitude,
     center ? center?.latitude : initCenter.latitude,
   );
-  const {data: address, refetch: addressRefetch} = useGetAddress(roadAddress);
+  const {data: address, refetch: addressRefetch} = useGetAddress(
+    roadAddress?.roadAddress,
+  );
 
   const changAddress = () => {
     setShowAddress(prev => !prev);
@@ -53,6 +57,14 @@ const MySpotMap = () => {
   useEffect(() => {
     addressRefetch();
   }, [roadAddress]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (paramLocation !== undefined) {
+        setInitCenter(paramLocation);
+      }
+    }, [paramLocation]),
+  );
 
   return (
     <Wrap>
@@ -118,7 +130,7 @@ const MySpotMap = () => {
         {showAddress ? (
           <AddressText>{address}</AddressText>
         ) : (
-          <AddressText>{roadAddress}</AddressText>
+          <AddressText>{roadAddress?.roadAddress}</AddressText>
         )}
         <ChangeAddressWrap onPress={changAddress} move={move}>
           <Arrow move={move} />
@@ -134,7 +146,7 @@ const MySpotMap = () => {
           onPressEvent={() =>
             navigation.navigate(MySpotDetailPage, {
               address: address,
-              roadAddress: roadAddress,
+              roadAddress: roadAddress?.roadAddress,
               showAddress: showAddress,
               center: center,
             })

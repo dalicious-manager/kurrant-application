@@ -6,6 +6,7 @@ import SpotTextInput from '../../../components/SpotTextInput';
 import Icon from '../../../assets/icons/Map/map.svg';
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
+import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
 
 export const PAGE_NAME = 'MY_SPOT_DETAIL';
 const DetailAddress = ({route}) => {
@@ -14,6 +15,7 @@ const DetailAddress = ({route}) => {
   const address = route?.params?.address; // 지번 주소
   const roadAddress = route?.params?.roadAddress; // 도로명 주소
   const showAddress = route?.params?.showAddress; // true면 지번주소로 넘어온거
+  const zipcode = route?.params?.zipcode;
 
   const form = useForm({
     mode: 'all',
@@ -61,7 +63,12 @@ const DetailAddress = ({route}) => {
           />
         </FormProvider>
       </InputWrap>
-      <CheckMapWrap onPress={() => navigation.goBack()}>
+      <CheckMapWrap
+        onPress={() =>
+          navigation.navigate(MySpotMapPage, {
+            center: center,
+          })
+        }>
         <Icon />
         <CheckMapText>지도에서 위치 확인</CheckMapText>
       </CheckMapWrap>

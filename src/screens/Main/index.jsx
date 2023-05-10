@@ -307,6 +307,7 @@ import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/Writte
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
 
 // map
+import SpotType, {PAGE_NAME as SpotTypePage} from '../../pages/Spots/SpotType';
 import Map, {PAGE_NAME as MapTest} from '../../pages/Map/MySpotMap';
 import SearchResult, {
   PAGE_NAME as MapSearchResult,
@@ -323,7 +324,7 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-    <MainRoot.Navigator initialRouteName={MapTest}>
+    <MainRoot.Navigator initialRouteName={SpotTypePage}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -2099,6 +2100,23 @@ const Screen = () => {
           options={{
             headerLeft: () => <BackButton margin={[10, 0]} />,
             headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '상세 주소 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={SpotTypePage}
+          component={SpotType}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
             headerShadowVisible: false,
             //headerTransparent: true,
             title: '상세 주소 입력',
