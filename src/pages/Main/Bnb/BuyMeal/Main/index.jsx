@@ -78,18 +78,15 @@ const Pages = ({route}) => {
   } = useAuth();
 
   const {
-    isServiceDays,
     isDiningTypes,
     isMorningFood,
     isLunchFood,
     isDinnerFood,
-    dailyFood,
     setMorning,
     setLunch,
     setDinner,
     setDiningTypes,
     isDailyFoodLoading,
-    isFetchingDone,
   } = useFoodDaily();
   
   const {
@@ -101,7 +98,7 @@ const Pages = ({route}) => {
     updateMeal,
     setQuantity,
   } = useShoppingBasket();
-  const {balloonEvent, BalloonWrap} = Balloon();
+  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
   
   const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
@@ -126,7 +123,9 @@ const Pages = ({route}) => {
   useEffect(() => {
     if (params) {
       if (params.date) {
+        setIsMount(true)
         setDate(params.date);
+        dailyfoodRefetch();
       } else {
         setDate(formattedWeekDate(new Date()));
       }
@@ -198,7 +197,7 @@ const Pages = ({route}) => {
   const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
   // const spotId = 1;
   const [chk, setChk] = useState(0);
-  const {data:dailyfoodData, refetch:dailyfoodRefetch} =useGetDailyfood(spotId,date);
+  const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(spotId,params?.date ? params.date:date);
   const onPageScroll2 = e => {
     const {position} = e.nativeEvent;
     setChk(position);
@@ -499,6 +498,12 @@ const Pages = ({route}) => {
 
   const dayPress = async selectedDate => {
     try {
+      if(params?.date){
+        navigation.setParams({
+          date:null
+        })
+      }
+      
       setDate(selectedDate);
       // dailyFood(spotId,selectedDate);
     } catch (err) {
@@ -515,15 +520,12 @@ const Pages = ({route}) => {
     //     modalVisible3,)
     
     if (diningType === 1) {
-      console.log(diningType)
       return setModalVisible(true);
     }
     if (diningType === 2) {
-      console.log(diningType)
       return setModalVisible2(true);
     }
     if (diningType === 3) {
-      console.log(diningType)
       return setModalVisible3(true);
     }
   };
@@ -540,29 +542,29 @@ const Pages = ({route}) => {
   //     },[])
   // )
   useEffect(() => {
-    async function loadDailyFood() {
-      try {
-        const data = await dailyFood(spotId, date);
-        if (data[0]) {
-          diningRef.current.setPage(Number(data[0]) - 1);
-          setSliderValue(Number(data[0]) - 1);
-        }
-        if (isFocused) {
-          await updateMeal(req);
-        }
-      } catch (error) {
-        if (error.toString().replace('Error.:', '').trim() === '403') {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: LoginPageName,
-              },
-            ],
-          });
-        }
-      }
-    }
+    // async function loadDailyFood() {
+    //   try {
+    //     const data = await dailyFood(spotId, date);
+    //     if (data[0]) {
+    //       diningRef.current.setPage(Number(data[0]) - 1);
+    //       setSliderValue(Number(data[0]) - 1);
+    //     }
+    //     if (isFocused) {
+    //       await updateMeal(req);
+    //     }
+    //   } catch (error) {
+    //     if (error.toString().replace('Error.:', '').trim() === '403') {
+    //       navigation.reset({
+    //         index: 0,
+    //         routes: [
+    //           {
+    //             name: LoginPageName,
+    //           },
+    //         ],
+    //       });
+    //     }
+    //   }
+    // }
     // if(isDiningTypes.length ===0) loadDailyFood();
 
     // console.log(generateOrderCode(1,42),"test432")
@@ -941,12 +943,10 @@ const Pages = ({route}) => {
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
           </View>
         )}
-        {isDailyFoodLoading ? (
-          <LoadingPage>
+        {(dailyLoading|| dailyFetching) ? <LoadingPage>
             <ActivityIndicator size={'large'} />
-          </LoadingPage>
-        ) : (
-          <Pager
+          </LoadingPage> :
+          (<Pager
             ref={diningRef}
             overdrag={true}
             initialPage={nowPage}
@@ -960,8 +960,8 @@ const Pages = ({route}) => {
             {BuyMeal(isMorningFood)}
             {BuyMeal(isLunchFood)}
             {BuyMeal(isDinnerFood)}
-          </Pager>
-        )}
+          </Pager>)
+          }
       </PagerViewWrap>
 
       {show && (

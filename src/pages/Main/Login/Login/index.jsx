@@ -20,6 +20,7 @@ import {Settings} from 'react-native-fbsdk-next';
 import {LogoBackground} from '../../../../assets';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
+import Balloon from '../../../../components/Balloon';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
 import {appleAuthAndroid} from '@invertase/react-native-apple-authentication';
@@ -59,11 +60,20 @@ const Pages = ({route}) => {
   const navigation = useNavigation();
   const toast = Toast();
   const toast2 = Toast();
+  const toast3 = Toast();
+  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
   const [lastLogin,setLastLogin] = useState();
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
 
-
+  const osLocation =()=>{
+    if(Platform.OS === 'ios'){
+      return {bottom : '105px', left:'80px'};
+    }
+    if(Platform.OS === 'android'){
+      return {bottom : '40px', left:'65px'};
+    }
+  }
   const {
     login,
   } = useAuth();
@@ -95,7 +105,7 @@ const Pages = ({route}) => {
     }
     if(!lastLogin)
       getLogin();
-    else toast2.toastEventNotOut()
+    else balloonEventNotOut()
   },[lastLogin])
   useEffect(() => {
     let timeout;
@@ -157,8 +167,7 @@ const Pages = ({route}) => {
             <LogoImageSvg />
           </LogoBox>
           <BackgroundImageBox source={LogoBackground} resizeMode="cover" />
-          <LoginMain />
-
+          <LoginMain isLast={lastLogin}/>
           <EtcSNSContainer>
             <HorizonLine text={`그외 SNS로 로그인`} />
 
@@ -167,26 +176,31 @@ const Pages = ({route}) => {
               <ButtonRoundSns
                 type_sns="kakao"
                 size={32}
+                isLast={lastLogin === 'KAKAO'}
                 onPressEvent={kakaoLogin}
               />
               <ButtonRoundSns
                 type_sns="naver"
                 size={32}
+                isLast={lastLogin === 'NAVER'}
                 onPressEvent={naverLogin}
               />
               <ButtonRoundSns
                 type_sns="google"
                 size={32}
+                isLast={lastLogin === 'GOOGLE'}
                 onPressEvent={googleLogin}
               />
               <ButtonRoundSns
                 type_sns="facebook"
                 size={32}
+                isLast={lastLogin === 'FACEBOOK'}
                 onPressEvent={facebookLogin}
               />
               <ButtonRoundSns
                 type_sns="apple"
                 size={32}
+                isLast={lastLogin === 'APPLE'}
                 onPressEvent={appleLogin}
               />
             </EtcSNSBox>
@@ -208,6 +222,9 @@ const Pages = ({route}) => {
         </LoginContainer>
         <toast.ToastWrap message={'뒤로버튼 한번 더 누르시면 종료됩니다.'} />
         <toast2.ToastWrap message={`마지막 로그인 ${formattedLogin(lastLogin)}`} isBottom={true} onPress={()=>console.log("test")}/>
+        <toast3.ToastWrap message={`마지막 로그인 ${formattedLogin(lastLogin)}`}  isBottom={true} absoluteStyle={"bottom: 85px;"} isCenter={false} onPress={()=>console.log("test")}/>
+        {/* <BalloonWrap message={`최근 로그인한 방법이에요`}  size={'B'}
+          location={osLocation()} onPress={()=>console.log("test")}/> */}
       </WrapperBox>
     </SafeView>
   );

@@ -96,7 +96,7 @@ const useShoppingBasket = () => {
     };
 
     const updateMeal = async (body) => {
-        console.log(isLoadMeal.map(v=>v.cartDailyFoodDtoList.map(s=>console.log(s))));
+        // console.log(isLoadMeal.map(v=>v.cartDailyFoodDtoList.map(s=>console.log(s))));
         try {
             const res = await Fetch.updateMealCart({
                 ...body

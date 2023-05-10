@@ -94,7 +94,6 @@ const Page = () => {
     async function loadUser() {
       try {
         const userData = await userInfo();
-        console.log(userData,"userData")
         if (userData?.email) {
           if (userData?.spotId) {
              await dailyFood(

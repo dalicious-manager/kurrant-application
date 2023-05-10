@@ -42,17 +42,13 @@ const Pages = ({route}) => {
   useEffect(() => {
     if(reviewList){
       const data = reviewList?.findIndex(el => el.reviewId === pointId);
-      reviewList.map((s)=>{
-        return console.log(s)
-      })
       setIdx(data);
     }
   }, [reviewList]);
 
   useEffect(() => {
     if (flatListRef.current && idx !== -1) {
-      console.log(idx, 'idx');
-      flatListRef.current.scrollToIndex({
+      flatListRef?.current?.scrollToIndex({
         animated: true,
         index: idx,
         viewPosition: 0,

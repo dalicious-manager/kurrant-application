@@ -49,7 +49,29 @@ const Component = () => {
     ]
     ).start()
   }, [fadeBalloon]);
-
+  const balloonEventNotOut = useCallback(() => {
+    Animated.sequence([
+      Animated.timing(fadeBalloon, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeBalloon, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeBalloon]);
+  const balloonEventOut = useCallback(() => {
+    Animated.sequence([
+      Animated.timing(fadeBalloon, {
+        toValue: 0,
+        duration: 550,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeBalloon]);
   const BalloonWrap = useCallback(
     ({ message = '메세지 입니다.',
       vertical = 'up',
@@ -76,13 +98,13 @@ const Component = () => {
   }, [fadeBalloon])
 
 
-  return { balloonEvent, BalloonWrap };
+  return { balloonEvent, BalloonWrap,balloonEventNotOut,balloonEventOut };
 };
 
 export default Component;
 
 const Wrapper = styled(Animated.View)`
-  position: absolute;
+  position: relative;  
   align-items: center;  
   ${({location})=>{
     let retSpot = location?.top ? `top :${location.top}; `: '';
@@ -94,8 +116,7 @@ const Wrapper = styled(Animated.View)`
   }}
 `;
 const Container = styled.View`
-  flex:1;
-  position: relative;
+  position: absolute;
   flex-direction: row;
   align-items: center;
   padding: ${({size})=> size === 'B' ? '6px 12px' : '3.5px 12px'};

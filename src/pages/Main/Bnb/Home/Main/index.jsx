@@ -224,10 +224,6 @@ const Pages = () => {
       }
     }, [isCancelSpot]),
   );
-  useEffect(()=>{
-
-    console.log(membershipHistory,"tets");
-  },[membershipHistory])
   const checkPermission = () => {
     messaging()
       .hasPermission()
@@ -279,7 +275,7 @@ const Pages = () => {
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
-                date: '2023-04-14',
+                date: date,
               });
             }
             if (remoteMessage.data.page === 'S_MAIN__REVIEW') {  
