@@ -548,6 +548,7 @@ const ImagesWrapper = styled.Pressable`
   flex-direction: row;
   padding-top: 11px;
   padding-bottom: 4px;
+  /* border: 1px solid black; */
 `;
 
 const ImagePressable = styled.Pressable`
@@ -581,6 +582,7 @@ const ReviewPressable = styled.Pressable`
   margin: auto;
   position: relative;
   /* border: 1px solid black; */
+  margin-top: 4px;
   /* padding: 0 11px; */
 `;
 const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
