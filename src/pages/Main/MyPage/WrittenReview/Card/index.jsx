@@ -216,7 +216,6 @@ const Component = ({
 
   const isOverThreeLines = text => {
     const numberOfLineChange = (text.match(/\n/g) || []).length;
-
     if (numberOfLineChange === 0) {
       // 0개일떄
       if (text.length / 24 > 3) {
@@ -241,11 +240,8 @@ const Component = ({
     } else {
       return false;
     }
-
     // 1개일떄
-
     // 2개일때
-
     // 3개일떄
   };
 
