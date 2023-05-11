@@ -6,6 +6,7 @@ import ModalComponent from './components/ModalComponent';
 import {useNavigation} from '@react-navigation/native';
 
 import {PAGE_NAME as MySpotMap} from '../Map/MySpotMap';
+import {PAGE_NAME as PrivateInfo} from '../Spots/privateSpot/PrivateInfo';
 
 export const PAGE_NAME = 'SPOT_TYPE';
 const SpotType = () => {
@@ -40,7 +41,7 @@ const SpotType = () => {
         <ModalComponent title={2} />
       </BoxWrap>
       <BoxWrap>
-        <Box>
+        <Box onPress={() => navigation.navigate(PrivateInfo)}>
           <Image source={PrivateSpot} style={{width: 97, height: 76}} />
           <TextWrap>
             <Title>프라이빗 스팟</Title>

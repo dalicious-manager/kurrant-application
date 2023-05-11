@@ -7,6 +7,7 @@ import Icon from '../../../assets/icons/Map/map.svg';
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
+import {PAGE_NAME as NotDeliveryPage} from '../../Spots/mySpot/NotDelivery';
 
 export const PAGE_NAME = 'MY_SPOT_DETAIL';
 const DetailAddress = ({route}) => {
@@ -37,6 +38,7 @@ const DetailAddress = ({route}) => {
       nickName: nickNameAddress,
     };
     console.log(data);
+    navigation.navigate(NotDeliveryPage);
   };
 
   return (

@@ -36,6 +36,7 @@ const Component = props => {
     buttonType2 = 'grey2',
     onPressEvent1 = () => {},
     onPressEvent2,
+    transparent = true,
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
@@ -79,7 +80,10 @@ const Component = props => {
     });
   };
   return (
-    <Modal visible={modalVisible} animationType={'fade'} transparent>
+    <Modal
+      visible={modalVisible}
+      animationType={'fade'}
+      transparent={transparent}>
       <Overlay>
         <TouchableWithoutFeedback onPress={closeModal}>
           <Background />

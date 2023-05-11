@@ -3,7 +3,7 @@ import {Dimensions, Pressable, View} from 'react-native';
 import NaverMapView from 'react-native-nmap';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import styled from 'styled-components';
-import Location from './Location';
+import Location from './LocationCircle';
 import Typography from '../../components/Typography';
 import FastImage from 'react-native-fast-image';
 import Toast from '../../components/Toast';
@@ -69,7 +69,7 @@ const MySpotMap = ({route}) => {
   return (
     <Wrap>
       <Pressable
-        style={{position: 'relative', marginTop: 8}}
+        style={{position: 'relative', marginTop: 8, marginBottom: 12}}
         onPress={() => {
           navigation.navigate(MapSearchResult);
         }}>
@@ -78,15 +78,15 @@ const MySpotMap = ({route}) => {
           <PlaceHolderText>지번, 도로명, 건물명으로 검색</PlaceHolderText>
         </Search>
       </Pressable>
-      <View>
-        <Location
-          setInitCenter={setInitCenter}
-          setShow={setShow}
-          toast={toast}
-        />
-      </View>
 
       <MapView>
+        <LocationButtonWrap>
+          <Location
+            setInitCenter={setInitCenter}
+            setShow={setShow}
+            toast={toast}
+          />
+        </LocationButtonWrap>
         {/* 탭 */}
         <InfoView tab={tab}>
           <Info
@@ -110,7 +110,7 @@ const MySpotMap = ({route}) => {
             alignSelf: 'center',
             justifyContent: 'center',
             zIndex: 1,
-            top: 208 - 47,
+            top: 231 - 47,
           }}>
           <FastImage
             source={
@@ -170,7 +170,7 @@ const MySpotMap = ({route}) => {
 export default MySpotMap;
 
 const MapView = styled.View`
-  height: 416px;
+  height: 462px;
   position: relative;
 `;
 
@@ -194,8 +194,8 @@ const CircleView = styled.View`
   height: 20px;
   border-radius: 50px;
   position: absolute;
-  //z-index: 999;
-  top: 196px;
+  /* z-index: 999; */
+  top: 220px;
   left: ${WIDTH / 2 - 8}px;
 `;
 
@@ -250,4 +250,11 @@ const Icon = styled(FindIcon)`
 const InfoView = styled.Pressable`
   position: absolute;
   z-index: ${({tab}) => (tab ? 0 : 999)};
+`;
+
+const LocationButtonWrap = styled.View`
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99;
 `;

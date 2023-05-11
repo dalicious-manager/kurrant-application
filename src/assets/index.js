@@ -42,3 +42,4 @@ export const MySpot = require('../assets/images/spot/mySpot.png');
 export const ShareSpot = require('../assets/images/spot/shareSpot.png');
 export const PrivateSpot = require('../assets/images/spot/privateSpot.png');
 export const CloseButton = require('../assets/images/spot/close.png');
+export const NotDeliveryIcon = require('../assets/images/spot/notDelivery.png');

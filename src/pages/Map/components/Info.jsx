@@ -20,7 +20,7 @@ export default Info;
 
 const MapInfo = styled.Pressable`
   background-color: rgba(0, 0, 0, 0.7);
-  height: 416px;
+  height: 462px;
   width: ${WIDTH}px;
 `;
 
@@ -33,7 +33,7 @@ const Wrap = styled.View`
 const Contents = styled.View`
   background-color: #eff2fe;
   border-radius: 14px;
-  margin: 132px 50px 0px 52px;
+  margin: 149px 51px 0px 51px;
   height: 79px;
   padding: 18px 16px;
 `;

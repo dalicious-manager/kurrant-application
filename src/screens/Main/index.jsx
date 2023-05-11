@@ -315,6 +315,15 @@ import SearchResult, {
 import MySpotDetail, {
   PAGE_NAME as MySpotDetailPage,
 } from '../../pages/Spots/mySpot/DetailAddress';
+import NotDelivery, {
+  PAGE_NAME as NotDeliveryPage,
+} from '../../pages/Spots/mySpot/NotDelivery';
+import Complete, {
+  PAGE_NAME as CompletePage,
+} from '../../pages/Spots/components/Complete';
+import PrivateInfo, {
+  PAGE_NAME as PrivateInfoPage,
+} from '../../pages/Spots/privateSpot/PrivateInfo';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -324,7 +333,7 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-    <MainRoot.Navigator initialRouteName={SpotTypePage}>
+    <MainRoot.Navigator initialRouteName={MapTest}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -2126,6 +2135,50 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
+          }}
+        />
+        <MainRoot.Screen
+          name={NotDeliveryPage}
+          component={NotDelivery}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={CompletePage}
+          component={Complete}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={PrivateInfoPage}
+          component={PrivateInfo}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '',
           }}
         />
       </MainRoot.Group>

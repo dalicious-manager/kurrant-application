@@ -151,7 +151,7 @@ const disabledButtonColor = {
 export const getLabelColor = (disabled, type) => {
   if (disabled === true) {
     return css`
-      color: ${({theme}) => theme.colors.grey[5]};
+      color: ${({theme}) => theme.colors.grey[0]};
     `;
   } else if (type !== 'grey2' && type !== 'grey3' && type !== 'white') {
     return css`
