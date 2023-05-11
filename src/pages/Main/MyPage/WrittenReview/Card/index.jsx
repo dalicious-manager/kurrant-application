@@ -208,16 +208,46 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
-  useEffect(() => {
-    if (Platform.OS === 'ios' && numLines >= 3 && !elaborateComment) {
-      console.log('되고이씅 true');
+  // '\n'개수 파악하기
+
+  // /n이 하나일떄 24*24
+  // /n이 두개일떄 24
+  // /n 이 세개일떄 0
+
+  const isOverThreeLines = text => {
+    const numberOfLineChange = (text.match(/\n/g) || []).length;
+
+    if (numberOfLineChange === 0) {
+      // 0개일떄
+      if (text.length / 24 > 3) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (numberOfLineChange == 1) {
+      if (text.length / 24 > 2) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (numberOfLineChange == 2) {
+      if (text.length / 24 > 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (numberOfLineChange >= 3) {
+      return true;
     } else {
-      console.log('되고이씅 false');
-      console.log(!elaborateComment);
-      console.log(numLines > 3);
-      console.log(numLines);
+      return false;
     }
-  }, [numLines, elaborateComment]);
+
+    // 1개일떄
+
+    // 2개일때
+
+    // 3개일떄
+  };
 
   return (
     <Container focusId={focusId} id={id}>
@@ -316,7 +346,7 @@ const Component = ({
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
         {Platform.OS === 'ios' &&
-          reviewText.length > 3 &&
+          isOverThreeLines(reviewText) &&
           !elaborateComment && (
             <IconDiv
               onPress={() => {
