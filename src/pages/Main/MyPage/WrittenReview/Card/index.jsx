@@ -208,6 +208,17 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
+  useEffect(() => {
+    if (Platform.OS === 'ios' && numLines >= 3 && !elaborateComment) {
+      console.log('되고이씅 true');
+    } else {
+      console.log('되고이씅 false');
+      console.log(!elaborateComment);
+      console.log(numLines > 3);
+      console.log(numLines);
+    }
+  }, [numLines, elaborateComment]);
+
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
@@ -304,14 +315,16 @@ const Component = ({
       />
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
-        {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
-          <IconDiv
-            onPress={() => {
-              setElaborateComment(!elaborateComment);
-            }}>
-            <SkinnyArrowDown width={'12px'} height={'8px'} />
-          </IconDiv>
-        )}
+        {Platform.OS === 'ios' &&
+          reviewText.length > 3 &&
+          !elaborateComment && (
+            <IconDiv
+              onPress={() => {
+                setElaborateComment(!elaborateComment);
+              }}>
+              <SkinnyArrowDown width={'12px'} height={'8px'} />
+            </IconDiv>
+          )}
 
         {/* <Text
           // lineBreakStrategyIOS={'hangul-word'}
