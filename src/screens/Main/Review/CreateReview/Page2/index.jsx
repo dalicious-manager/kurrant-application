@@ -175,7 +175,7 @@ const Screen = ({route}) => {
       setClickDisable(true);
     }
   }, [input]);
-  useEffect(() => {}, [form]);
+
   // 여기가 완료 클릭
 
   const onSignInPressed = data => {
