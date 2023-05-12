@@ -186,8 +186,4 @@ const Container = styled.View`
   height: ${({height}) => height}px;
 
   margin: auto;
-  /* margin-top: 20px; */
-  /* margin-bottom: 20px; */
-
-  border: 1px solid black;
 `;

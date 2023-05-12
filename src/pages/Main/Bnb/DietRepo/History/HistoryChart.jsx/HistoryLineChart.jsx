@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 
 import Typography from '~components/Typography';
 import LineChart from '../../Chart/LineChart';
@@ -11,6 +11,8 @@ const HistoryLineChart = ({
   title,
 }) => {
   // height가 없을 경우 height는 자동적으로 width의 258/327을 곱하기
+
+  const theme = useTheme();
 
   const viewRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(null);
@@ -76,23 +78,24 @@ const HistoryLineChart = ({
 
             // x축 값 설정
 
-            xAxisLabelColor: '#343337',
-            xAxisLabelFontSize: 10,
+            xAxisLabelColor: theme.colors.grey[2],
+            xAxisLabelFontSize: 13,
+            xAxisTextGapFromXAxis: 8,
             // y축 값 설정
 
-            yAxisLabelColor: '#BDBAC1',
+            yAxisLabelColor: theme.colors.grey[5],
             yAxisLabelFontSize: 10,
 
             // 보조선 설정
-            backgroundStrokeColor: '#F5F5F5',
+            backgroundStrokeColor: theme.colors.grey[8],
             backgroundStrokeWidth: 2,
 
             // 점 설정
-            dotColor: '#343337',
+            dotColor: '#FFAEAE',
             dotRadius: 4,
 
             // 그래프 선 설정
-            chartLineColor: '#343337',
+            chartLineColor: '#FFAEAE',
             chartLineWidth: 1,
           }}
         />
@@ -110,7 +113,7 @@ const Container = styled.View`
       return `height: ${height};`;
     }
   }};
-  border: 1px solid blue;
+  /* border: 1px solid blue; */
 `;
 
 const Title = styled(Typography).attrs({text: 'Title04SB'})`

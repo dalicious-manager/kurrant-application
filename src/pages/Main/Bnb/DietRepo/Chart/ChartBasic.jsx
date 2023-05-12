@@ -193,7 +193,7 @@ const ChartBasic = ({
       <G key={`${i}XAxisValue`}>
         <SvgText
           x={x}
-          y={zeroY + xAxisTextFontSize + 4}
+          y={zeroY + xAxisTextFontSize + chartConfig.xAxisTextGapFromXAxis}
           textAnchor="middle"
           fill={xAxisTextColor}
           fontSize={xAxisTextFontSize}>
