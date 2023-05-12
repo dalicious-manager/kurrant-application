@@ -91,13 +91,20 @@ const ChartBasic = ({
 
   // y축 tick 구하기
 
-  const yTicks = dataBasic.map(
-    (v, i) => four + (i * (height - four - two)) / rate,
+  const yTicks = yAxisLableArr.map(
+    // (v, i) => four + (i * (height - four - two)) / rate,
+    (v, i) => four + ((rate - i) * (height - four - two)) / rate,
   );
 
   // BackgroundStroke 구하기
 
-  const backgroundStrokeArr = [zeroY, ...yTicks];
+  // const backgroundStrokeArr = [zeroY, ...yTicks];
+  const backgroundStrokeArr = [...yTicks];
+
+  useEffect(() => {
+    console.log('백그라운드 ~');
+    console.log(backgroundStrokeArr);
+  }, [backgroundStrokeArr]);
 
   // const yTicks = dataBasic.map((v, i) => {
   //   if (!showUnit) {
@@ -279,9 +286,9 @@ const ChartBasic = ({
 
   return (
     <G key={'chartBasic'}>
-      {/* {yTicks.map((v, i) => (
+      {yTicks.map((v, i) => (
         <YTick key={i} y={v} i={i} />
-      ))} */}
+      ))}
 
       {yAxisLableArr.map(v => (
         <YAxisLabel key={v.i} y={v.y} value={v.value} i={v.i} />

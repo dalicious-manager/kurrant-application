@@ -18,10 +18,6 @@ const LineChartConfigSample = {
   four: 30,
   five: 15,
   six: 10,
-  //   one: 0,
-  //   two: 0,
-
-  stackedBarWidth: 10,
 
   // x축 , y축 설정
   axisStrokeColor: '#000000',
@@ -53,19 +49,18 @@ const LineChartConfigSample = {
   chartLineWidth: 1,
 };
 
-const LineChart = ({
-  dataBasic = [
-    {x: '10일', y: 20},
-    {x: '20일', y: 120},
-    {x: '30일', y: 320},
-    {x: '40일', y: 220},
-    {x: '50일', y: 210},
-  ],
+/////** 사용시 주의사항***///// */
+// 1. width, height에는 string값으로 넣어주세요(px, % 사용가능), chartWidth, chartHeight는 number로 넣어주세요
+// chartWidth는 숫자적 계산과정이 들어가서 그렇습니다
 
-  width = 300,
-  height = 200,
+// 2. 이 그래프는 값이 세자리수 이상일때 최고 정상적으로 작동합니다 (한 자리수 두 자리수는 y축 숫자표시값이 깔끔하지 않은 수가 나올 수 있음)
+
+const LineChart = ({
+  dataBasic = [],
+
+  chartWidth = 300,
+  chartHeight = 200,
   graphConfig = LineChartConfigSample,
-  title,
 }) => {
   //// 1. 필요한 데이터
 
@@ -74,12 +69,12 @@ const LineChart = ({
   // (0,0)점
 
   const zeroX = one;
-  const zeroY = height - two;
+  const zeroY = chartHeight - two;
 
   // (x,0)
 
-  const xAxisX = width - three;
-  const xAxisY = height - two;
+  const xAxisX = chartWidth - three;
+  const xAxisY = chartHeight - two;
 
   // (0,y)
 
@@ -98,7 +93,7 @@ const LineChart = ({
 
   const xTickWidth =
     dataBasic.length > 1
-      ? (width - one - three - 2 * five) / (dataBasic.length - 1)
+      ? (chartWidth - one - three - 2 * five) / (dataBasic.length - 1)
       : null;
 
   const xTicks = dataBasic.map((v, i) => one + five + i * xTickWidth);
@@ -109,7 +104,7 @@ const LineChart = ({
   const dotsCoordinateArr = dataBasic.map((v, i) => {
     return {
       x: one + five + i * xTickWidth,
-      y: zeroY - ((height - two - four) * v.y) / M,
+      y: zeroY - ((chartHeight - two - four) * v.y) / M,
     };
   });
 
@@ -158,51 +153,38 @@ const LineChart = ({
   };
 
   return (
-    <Container>
-      <ChartWrap width={width} height={height}>
-        <Title>영양소 정보</Title>
-        <Svg height="100%" width="100%">
-          <ChartBasic
-            dataBasic={dataBasic}
-            width={width}
-            height={height}
-            graphConfig={graphConfig}
-          />
+    <Container width={chartWidth} height={chartHeight}>
+      <Svg height="100%" width="100%">
+        <ChartBasic
+          dataBasic={dataBasic}
+          width={chartWidth}
+          height={chartHeight}
+          graphConfig={graphConfig}
+        />
 
-          {/* 점 */}
-          {dotsCoordinateArr.map((v, i) => {
-            return <Dot key={i} x={v.x} y={v.y} />;
-          })}
+        {/* 점 */}
+        {dotsCoordinateArr.map((v, i) => {
+          return <Dot key={i} x={v.x} y={v.y} />;
+        })}
 
-          {/* 선 */}
+        {/* 선 */}
 
-          {chartCoordinateArr.map((v, i) => {
-            return (
-              <ChartLine
-                key={i}
-                x1={v.x1}
-                y1={v.y1}
-                x2={v.x2}
-                y2={v.y2}
-                i={i}
-              />
-            );
-          })}
-        </Svg>
-      </ChartWrap>
+        {chartCoordinateArr.map((v, i) => {
+          return (
+            <ChartLine key={i} x1={v.x1} y1={v.y1} x2={v.x2} y2={v.y2} i={i} />
+          );
+        })}
+      </Svg>
     </Container>
   );
 };
 
 export default LineChart;
 
-const Container = styled.View``;
-
-const ChartWrap = styled.View`
+const Container = styled.View`
   width: ${({width}) => width}px;
   height: ${({height}) => height}px;
-`;
 
-const Title = styled(Typography).attrs({text: 'Title04SB'})`
-  color: ${({theme}) => theme.colors.grey[2]};
+  margin: auto;
+  /* border: 1px solid black; */
 `;
