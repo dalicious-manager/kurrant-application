@@ -60,11 +60,11 @@ const LineChart = ({
 
   chartWidth = 300,
   chartHeight = 200,
-  graphConfig = LineChartConfigSample,
+  chartConfig = LineChartConfigSample,
 }) => {
   //// 1. 필요한 데이터
 
-  const {one, two, three, four, five} = graphConfig;
+  const {one, two, three, four, five} = chartConfig;
 
   // (0,0)점
 
@@ -130,8 +130,8 @@ const LineChart = ({
           key={`${x}, ${y}`}
           cx={x}
           cy={y}
-          fill={graphConfig.dotColor}
-          r={graphConfig.dotRadius}
+          fill={chartConfig.dotColor}
+          r={chartConfig.dotRadius}
         />
       </G>
     );
@@ -145,8 +145,8 @@ const LineChart = ({
           y1={y1}
           x2={x2}
           y2={y2}
-          stroke={graphConfig.chartLineColor}
-          strokeWidth={graphConfig.chartLineWidth}
+          stroke={chartConfig.chartLineColor}
+          strokeWidth={chartConfig.chartLineWidth}
         />
       </G>
     );
@@ -159,7 +159,7 @@ const LineChart = ({
           dataBasic={dataBasic}
           width={chartWidth}
           height={chartHeight}
-          graphConfig={graphConfig}
+          chartConfig={chartConfig}
         />
 
         {/* 점 */}
@@ -186,5 +186,8 @@ const Container = styled.View`
   height: ${({height}) => height}px;
 
   margin: auto;
-  /* border: 1px solid black; */
+  /* margin-top: 20px; */
+  /* margin-bottom: 20px; */
+
+  border: 1px solid black;
 `;

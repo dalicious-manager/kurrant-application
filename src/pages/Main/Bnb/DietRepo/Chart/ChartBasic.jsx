@@ -10,9 +10,9 @@ const ChartBasic = ({
 
   width = 300,
   height = 200,
-  graphConfig,
+  chartConfig,
 }) => {
-  const {one, two, three, four, five, six, unit, showUnit} = graphConfig;
+  const {one, two, three, four, five, six, unit, showUnit} = chartConfig;
 
   //// 1. 길이 계산
 
@@ -122,8 +122,8 @@ const ChartBasic = ({
           y1={zeroY}
           x2={xAxisX}
           y2={xAxisY}
-          stroke={graphConfig.axisStrokeColor}
-          strokeWidth={graphConfig.axisStrokeWidth}
+          stroke={chartConfig.axisStrokeColor}
+          strokeWidth={chartConfig.axisStrokeWidth}
         />
       </G>
     );
@@ -139,8 +139,8 @@ const ChartBasic = ({
           y1={zeroY}
           x2={yAxisX}
           y2={yAxisY - six}
-          stroke={graphConfig.axisStrokeColor}
-          strokeWidth={graphConfig.axisStrokeWidth}
+          stroke={chartConfig.axisStrokeColor}
+          strokeWidth={chartConfig.axisStrokeWidth}
         />
       </G>
     );
@@ -156,8 +156,8 @@ const ChartBasic = ({
           y1={zeroY}
           x2={x}
           y2={zeroY + 3}
-          stroke={graphConfig.tickStrokeColor}
-          strokeWidth={graphConfig.tickStrokeWidth}
+          stroke={chartConfig.tickStrokeColor}
+          strokeWidth={chartConfig.tickStrokeWidth}
         />
       </G>
     );
@@ -173,8 +173,8 @@ const ChartBasic = ({
           y1={y}
           x2={zeroX - 3}
           y2={y}
-          stroke={graphConfig.tickStrokeColor}
-          strokeWidth={graphConfig.tickStrokeWidth}
+          stroke={chartConfig.tickStrokeColor}
+          strokeWidth={chartConfig.tickStrokeWidth}
         />
       </G>
     );
@@ -186,8 +186,8 @@ const ChartBasic = ({
     x,
     i,
     value,
-    xAxisTextColor = graphConfig.xAxisLabelColor,
-    xAxisTextFontSize = graphConfig.xAxisLabelFontSize,
+    xAxisTextColor = chartConfig.xAxisLabelColor,
+    xAxisTextFontSize = chartConfig.xAxisLabelFontSize,
   }) => {
     return (
       <G key={`${i}XAxisValue`}>
@@ -208,8 +208,8 @@ const ChartBasic = ({
     y,
     i,
     value,
-    yAxisTextColor = graphConfig.yAxisLabelColor,
-    yAxisTextFontSize = graphConfig.yAxisLabelFontSize,
+    yAxisTextColor = chartConfig.yAxisLabelColor,
+    yAxisTextFontSize = chartConfig.yAxisLabelFontSize,
   }) => {
     if (typeof value === 'string') {
       return (
@@ -244,8 +244,8 @@ const ChartBasic = ({
 
   const BackgroundStroke = ({
     y,
-    backgroundStrokeColor = graphConfig.backgroundStrokeColor,
-    backgroundStrokeWidth = graphConfig.backgroundStrokeWidth,
+    backgroundStrokeColor = chartConfig.backgroundStrokeColor,
+    backgroundStrokeWidth = chartConfig.backgroundStrokeWidth,
     i,
   }) => {
     return (
@@ -294,9 +294,3 @@ const ChartBasic = ({
 };
 
 export default ChartBasic;
-
-const Container = styled.View`
-  width: ${({width}) => width}px;
-  height: ${({height}) => height}px;
-  border: 1px solid black;
-`;

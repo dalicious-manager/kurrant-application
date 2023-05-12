@@ -9,7 +9,7 @@ const Pages = () => {
   return (
     <Container>
       <Text>다이어트 레포</Text>
-      <HistoryLineChart title="칼로리" width={'100%'} height={'300px'} />
+      <HistoryLineChart title="칼로리" width={'100%'} />
     </Container>
   );
 };
