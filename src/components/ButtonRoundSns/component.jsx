@@ -95,9 +95,9 @@ const Component = ({ type_sns = 'email', size, onPressEvent = () => { console.lo
     <ButtonWrap type_sns={type_sns} onPress={onPressEvent} size={size}>
       <IconWrap type_sns={type_sns}>{renderButton(type_sns)}</IconWrap>
     </ButtonWrap>
-    <BalloonWrap message={`최근 로그인한 방법이에요`}  size={'B'}
+    {isLast && <BalloonWrap message={`최근 로그인한 방법이에요`}  size={'B'}
       location={osLocation()} vertical={typeArrowVertical()}
-      horizontal={typeArrowHorizontal()} onPress={()=>console.log("test")}/>
+      horizontal={typeArrowHorizontal()} onPress={()=>console.log("test")}/>}
     </>
   );
 };

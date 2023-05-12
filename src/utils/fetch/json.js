@@ -12,6 +12,8 @@ const RESPONSE_SLEEP = 300;
 const apiHostUrl =
   Config.NODE_ENV === 'dev'
     ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.NODE_ENV === 'rel'
+    ? Config.API_RELEASE_URL + '/' + Config.API_VERSION
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 const buildQuery = queryObj => {

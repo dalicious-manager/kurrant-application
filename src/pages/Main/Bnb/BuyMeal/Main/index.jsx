@@ -765,6 +765,7 @@ const Pages = ({route}) => {
               <Contents
                 key={m.id}
                 spicy={m.spicy}
+                vegan={m.vegan}
                 disabled={
                   m.status === 2 ||
                   m.status === 6 ||
@@ -808,6 +809,15 @@ const Pages = ({route}) => {
                         <Label label={`${m.spicy}`} type={'soldOut'} />
                       ) : (
                         <Label label={`${m.spicy}`} />
+                      )}
+                    </LabelWrap>
+                  )}
+                  {m.vegan !== null && (
+                  <LabelWrap>
+                      {m.status === 2 || m.status === 6 ? (
+                        <Label label={`${m.vegan}`} type={'soldOut'} />
+                        ) : (
+                        <Label label={`${m.vegan}`} type={'vegan'}/>                        
                       )}
                     </LabelWrap>
                   )}
@@ -1152,7 +1162,7 @@ const Pager = styled(AnimatedPagerView)`
 `;
 
 const Contents = styled.Pressable`
-  padding: ${({spicy}) => (spicy ? '18px 0px 28px 0px' : '18px 0px 28px 0px')};
+  padding: ${({spicy,vegan}) => ((spicy ||vegan )? '18px 0px 28px 0px' : '18px 0px 28px 0px')};
   margin: 0px 28px;
   flex-direction: row;
   justify-content: space-between;

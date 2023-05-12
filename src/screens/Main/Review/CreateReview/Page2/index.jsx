@@ -51,6 +51,8 @@ export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
 const apiHostUrl =
   Config.NODE_ENV === 'dev'
     ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.NODE_ENV === 'rel'
+    ? Config.API_RELEASE_URL + '/' + Config.API_VERSION
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 const Screen = ({route}) => {
