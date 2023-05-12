@@ -35,7 +35,7 @@ const Screen = ({route}) => {
   const navigation = useNavigation();
   const theme = useTheme();
   const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
-
+  console.log(route,"etestsets");
   const [totalWritten, AmNotUsingTHis] = useAtom(totalWrittenReview);
   useLayoutEffect(() => {
     navigation.setOptions({

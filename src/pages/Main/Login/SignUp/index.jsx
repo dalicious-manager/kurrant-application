@@ -35,7 +35,7 @@ const Pages = () => {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [progress, setProgress] = useState(1);
   const [isPhoneAuth, setPhoneAuth] = useState(false);
-
+  const [isAuthLoading, setAuthLoading] = useState(false);
   const form = useForm({
     mode: 'all',
   });
@@ -82,13 +82,16 @@ const Pages = () => {
       password &&
       passwordChecked &&
       password === passwordChecked &&
-      phoneNumber &&
+      phoneNumber && phoneAuth &&
       !errors.phone);
 
   const callMailAuth = async () => {
     try {
-      await auth.requestEmailAuth({receivers: [email]}, 1);
-      if (progress < 2) setProgress(progressed => progressed + 1);
+      if(!isAuthLoading){
+        setAuthLoading(true)
+        await auth.requestEmailAuth({receivers: [email]}, 1);
+        if (progress < 2) setProgress(progressed => progressed + 1);
+      }
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
@@ -101,14 +104,19 @@ const Pages = () => {
           },
         ],
       );
+    }finally{
+      setAuthLoading(false)
     }
   };
   const callPhoneAuth = async () => {
     if (phoneNumber && !errors.phone) {
       try {
-        await auth.requestPhoneAuth({to: phoneNumber}, 1);
-        if (progress < 4) setProgress(progressed => progressed + 1);
-        setPhoneAuth(true);
+        if(!isAuthLoading){
+          setAuthLoading(true)
+          await auth.requestPhoneAuth({to: phoneNumber}, 1);
+          if (progress < 4) setProgress(progressed => progressed + 1);
+          setPhoneAuth(true);
+        }
       } catch (err) {
         Alert.alert(
           '핸드폰 인증 요청 실패',
@@ -124,6 +132,8 @@ const Pages = () => {
             },
           ],
         );
+      }finally{
+        setAuthLoading(false)
       }
     }
   };
@@ -141,7 +151,7 @@ const Pages = () => {
         useName: data.name,
       });
     } catch (err) {
-      console.log(err);
+      Alert.alert("회원가입",err.toString().replace('error: '))
     }
   };
 
@@ -190,11 +200,13 @@ const Pages = () => {
                       autoCapitalize="none"
                       blurOnSubmit={false}
                       isEditable={progress === 1}
+                      caption={!errors.email && "입력한 이메일 주소로 인증번호가 발송됩니다."}
                       suffix={{
                         isNeedDelete: true,
                         isAuth: true,
                         authText: '인증요청',
                         authPressEvent: callMailAuth,
+                        disabledEvent:!isAuthLoading
                         // timer:900,
                       }}
                       additionalCssOnTextInput={'padding-right: 90px'}
@@ -202,8 +214,8 @@ const Pages = () => {
                         required: '필수 입력 항목 입니다.',
                         pattern: {
                           value:
-                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                          message: '이메일 형식에 맞지 않습니다.',
+                          /^(([a-zA-Z0-9]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: '올바른 이메일 주소를 입력해주세요.',
                         },
                       }}
                       padding=" 4px 0px"
@@ -347,6 +359,7 @@ const Pages = () => {
                             isAuth: true,
                             authText: '인증요청',
                             authPressEvent: callPhoneAuth,
+                            disabledEvent:!isAuthLoading
                             // timer:900,
                           }}
                           rules={{
@@ -373,6 +386,7 @@ const Pages = () => {
                               isAuth: true,
                               authText: '재발송',
                               authPressEvent: callPhoneAuth,
+                              disabledEvent:!isAuthLoading,
                               timer: 180,
                             }}
                             rules={{

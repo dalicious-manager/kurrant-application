@@ -1,7 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 import Plus from '../../../../../assets/icons/Home/plus.svg';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
@@ -15,7 +15,7 @@ import {
   formattedWeekDate,
 } from '../../../../../utils/dateFormatter';
 
-import {MakersName, MealName} from '../../BuyMeal/Main';
+import {MakersName} from '../../BuyMeal/Main';
 import NoMealButton from '~components/Button';
 
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -25,6 +25,9 @@ import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import {useQueryClient} from 'react-query';
+import { weekAtom } from '../../../../../biz/useBanner/store';
+import { useAtom } from 'jotai';
+import { useGetOrderMeal } from '../../../../../hook/useOrder';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
@@ -41,10 +44,16 @@ const Pages = ({route}) => {
   const queryClient = useQueryClient();
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
-  const {isOrderMeal, orderMeal, refundItem, setOrderMeal} = useOrderMeal();
-  const pagerRef = useRef(null);
+
+  const { refundItem, setOrderMeal} = useOrderMeal();
+  const pagerRef = useRef();
+  const [weekly] = useAtom(weekAtom);
+  const {data: isOrderMeal, refetch: orderMealRefetch} = useGetOrderMeal(formattedWeekDate(weekly[0][0]),
+  formattedWeekDate(
+    weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
+  ));
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
-  const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
+  const selectDate = isOrderMeal?.data?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
   const pressDay = day => {
     setTouchDate(day ?? data);
@@ -53,7 +62,7 @@ const Pages = ({route}) => {
   // console.log(isOrderMeal, '밀정보');
   const cancelMealPress = id => {
     // console.log(id, '밀 취소');
-    const list = isOrderMeal.map(el => {
+    const list = isOrderMeal?.data.map(el => {
       return {
         ...el,
         orderItemDtoList: [...el.orderItemDtoList.filter(v => v.id !== id)],
@@ -79,7 +88,7 @@ const Pages = ({route}) => {
               await refundItem({
                 id: id,
               });
-              queryClient.invalidateQueries('todayMeal');
+              queryClient.invalidateQueries('orderMeal');
               setOrderMeal(listArr);
               setShow(true);
               toast.toastEvent();
@@ -97,7 +106,7 @@ const Pages = ({route}) => {
   };
 
   const changeMealPress = (id, serviceDate) => {
-    const list = isOrderMeal.map(el => {
+    const list = isOrderMeal?.data.map(el => {
       return {
         ...el,
         orderItemDtoList: [...el.orderItemDtoList.filter(v => v.id !== id)],
@@ -124,12 +133,12 @@ const Pages = ({route}) => {
                 id: id,
               });
               setOrderMeal(listArr);
-              queryClient.invalidateQueries('todayMeal');
+              queryClient.invalidateQueries('orderMeal');
               navigation.navigate(BuyMealPageName, {
                 date: serviceDate ? serviceDate : formattedDate(new Date()),
               });
             } catch (err) {
-              console.log(err);
+              Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
             }
           },
           style: 'destructive',
@@ -138,18 +147,18 @@ const Pages = ({route}) => {
     );
   };
 
-  useEffect(() => {
-    async function loadUser() {
-      try {
-        const userData = await userInfo();
-        await orderMeal();
-        await dailyFood(userData?.spotId, formattedWeekDate(new Date()));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    loadUser();
-  }, []);
+  // useEffect(() => {
+  //   async function loadUser() {
+  //     try {
+  //       const userData = await userInfo();
+  //       // await orderMeal();
+  //       await dailyFood(userData?.spotId, formattedWeekDate(new Date()));
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  //   loadUser();
+  // }, []);
   useFocusEffect(
     useCallback(() => {
       if (isToday) {
@@ -385,7 +394,14 @@ const DiningTimeWrap = styled.View`
 const DiningTime = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
 `;
-
+const MealName = styled(Typography).attrs({text: 'Body05SB'})`
+  white-space :nowrap;
+  text-overflow : ellipsis;
+  color: ${({theme, soldOut}) =>
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[2]};
+`;
 const Content = styled.Pressable`
   margin-left: 16px;
   width: 50%;

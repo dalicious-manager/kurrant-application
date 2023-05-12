@@ -4,7 +4,6 @@ import analytics from '@react-native-firebase/analytics';
 import React, {useCallback, useEffect} from 'react';
 import {StatusBar, LogBox, Text, TextInput} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import SplashScreen from 'react-native-splash-screen';
 import {ThemeProvider} from 'styled-components';
 import codePush from 'react-native-code-push';
 import Screen from './screens';
@@ -23,7 +22,6 @@ const App = () => {
   const queryClient = new QueryClient();
 
   useEffect(() => {
-    SplashScreen.hide();
     async function requestUserPermission() {
       const authStatus = await messaging().requestPermission();
       const enabled =
