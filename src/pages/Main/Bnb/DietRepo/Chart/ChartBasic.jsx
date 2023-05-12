@@ -98,25 +98,7 @@ const ChartBasic = ({
 
   // BackgroundStroke 구하기
 
-  // const backgroundStrokeArr = [zeroY, ...yTicks];
   const backgroundStrokeArr = [...yTicks];
-
-  useEffect(() => {
-    console.log('백그라운드 ~');
-    console.log(backgroundStrokeArr);
-  }, [backgroundStrokeArr]);
-
-  // const yTicks = dataBasic.map((v, i) => {
-  //   if (!showUnit) {
-  //     return four + (i * (height - four - two)) / rate;
-  //   }
-
-  //   if (i === 0) {
-  //     return graphConfig['unit'];
-  //   } else {
-  //     return four + (i * (height - four - two)) / rate;
-  //   }
-  // });
 
   //// 4. 컴포넌트 그리기
 
@@ -286,9 +268,9 @@ const ChartBasic = ({
 
   return (
     <G key={'chartBasic'}>
-      {yTicks.map((v, i) => (
+      {/* {yTicks.map((v, i) => (
         <YTick key={i} y={v} i={i} />
-      ))}
+      ))} */}
 
       {yAxisLableArr.map(v => (
         <YAxisLabel key={v.i} y={v.y} value={v.value} i={v.i} />
