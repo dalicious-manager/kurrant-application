@@ -84,6 +84,7 @@ const HistoryLineChart = ({
             backgroundStrokeColor: theme.colors.grey[8],
             backgroundStrokeWidth: 2,
 
+            // LineChart 특이설정
             // 점 설정
             dotColor: '#FFAEAE',
             dotRadius: 4,

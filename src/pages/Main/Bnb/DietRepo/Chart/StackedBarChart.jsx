@@ -31,8 +31,8 @@ const StackedBarChart = ({
     ],
   },
 
-  width = 300,
-  height = 200,
+  chartWidth = 300,
+  chartHeight = 200,
   chartConfig = StackedBarChartConfigSample,
 }) => {
   //// 1. 필요한 데이터
@@ -42,12 +42,12 @@ const StackedBarChart = ({
   // (0,0)점
 
   const zeroX = one;
-  const zeroY = height - two;
+  const zeroY = chartHeight - two;
 
   // (x,0)
 
-  const xAxisX = width - three;
-  const xAxisY = height - two;
+  const xAxisX = chartWidth - three;
+  const xAxisY = chartHeight - two;
 
   // (0,y)
 
@@ -68,7 +68,7 @@ const StackedBarChart = ({
 
   const xTickWidth =
     dataBasic.length > 1
-      ? (width - one - three - 2 * five) / (dataBasic.length - 1)
+      ? (chartWidth - one - three - 2 * five) / (dataBasic.length - 1)
       : null;
 
   // x, y값 계산
@@ -80,13 +80,11 @@ const StackedBarChart = ({
 
     const yOrder = dataStackedBar.dataOrder.map(v2 => {
       const yoDo = {
-        y: [yValue, ((height - two - four) * v[v2]) / M],
+        y: [yValue, ((chartHeight - two - four) * v[v2]) / M],
         color: dataStackedBar.colorSetting[v2],
       };
 
-      yValue = yValue - ((height - two - four) * v[v2]) / M;
-
-      console.log(yoDo.y);
+      yValue = yValue - ((chartHeight - two - four) * v[v2]) / M;
 
       return yoDo;
     });
@@ -112,14 +110,13 @@ const StackedBarChart = ({
   };
 
   return (
-    <Container width={width} height={height}>
-      {/* <Text>StackedBarChart</Text> */}
+    <Container width={chartWidth} height={chartHeight}>
       <Svg height="100%" width="100%">
         <ChartBasic
           dataBasic={dataBasic}
-          width={width}
-          height={height}
-          graphConfig={chartConfig}
+          width={chartWidth}
+          height={chartHeight}
+          chartConfig={chartConfig}
         />
         {dataCoordinate &&
           dataCoordinate.map((v1, i1) =>
@@ -145,5 +142,6 @@ export default StackedBarChart;
 const Container = styled.View`
   width: ${({width}) => width}px;
   height: ${({height}) => height}px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  margin: auto;
 `;
