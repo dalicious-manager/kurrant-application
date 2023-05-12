@@ -28,8 +28,8 @@ const shiftDataStackedBarChartToBasicData = dataStackedBar => {
 const StackedBarChart = ({
   dataStackedBar,
 
-  chartWidth = 300,
-  chartHeight = 200,
+  chartWidth,
+  chartHeight,
   chartConfig = StackedBarChartConfigSample,
 }) => {
   //// 1. 필요한 데이터
@@ -139,6 +139,6 @@ export default StackedBarChart;
 const Container = styled.View`
   width: ${({width}) => width}px;
   height: ${({height}) => height}px;
-  /* border: 1px solid black; */
+
   margin: auto;
 `;

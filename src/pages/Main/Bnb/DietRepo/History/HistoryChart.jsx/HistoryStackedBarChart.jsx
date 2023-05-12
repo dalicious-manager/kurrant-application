@@ -80,7 +80,7 @@ const HistoryStackedBarChart = ({
             // 주요 길이 값들
             one: 36,
             two: 30,
-            three: 25,
+            three: 16,
             four: 30,
             five: 15,
             six: 10,
@@ -135,7 +135,6 @@ const Container = styled.View`
       return `height: ${height};`;
     }
   }};
-  /* border: 1px solid blue; */
 `;
 
 const Title = styled(Typography).attrs({text: 'Title04SB'})`
@@ -145,7 +144,9 @@ const Title = styled(Typography).attrs({text: 'Title04SB'})`
 const ParameterWrap = styled.View`
   margin: auto;
 
-  padding: 16px;
+  margin-top: 16px;
+  padding: 0 16px;
+  margin-bottom: 24px;
 
   flex-direction: row;
   align-items: center;

@@ -57,7 +57,7 @@ const HistoryLineChart = ({
             showUnit: true,
             one: 36,
             two: 30,
-            three: 25,
+            three: 16,
             four: 30,
             five: 15,
             six: 10,
