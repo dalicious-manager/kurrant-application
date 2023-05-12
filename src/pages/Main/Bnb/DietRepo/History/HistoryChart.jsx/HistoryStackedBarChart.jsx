@@ -48,20 +48,21 @@ const HistoryStackedBarChart = ({
       {containerHeight > 0 && containerWidth && (
         <StackedBarChart
           dataStackedBar={{
+            dataOrder: ['carbo', 'protein', 'fat'],
             colorSetting: {
-              protein: '#FF7601',
-              fat: '#A8A6A7',
-              vitamin: '#4B70b0',
+              carbo: '#FF7601',
+              protein: '#A8A6A7',
+              fat: '#4B70b0',
             },
-            dataOrder: ['protein', 'fat', 'vitamin'],
+
             data: [
-              {x: '06월', protein: 120, fat: 240, vitamin: 60},
-              {x: '07월', protein: 220, fat: 140, vitamin: 160},
-              {x: '08월', protein: 320, fat: 50, vitamin: 90},
-              {x: '09월', protein: 100, fat: 30, vitamin: 190},
-              {x: '10월', protein: 220, fat: 50, vitamin: 90},
-              {x: '11월', protein: 0, fat: 0, vitamin: 0},
-              {x: '12월', protein: 520, fat: 75, vitamin: 0},
+              {x: '06월', carbo: 120, protein: 240, fat: 60},
+              {x: '07월', carbo: 220, protein: 140, fat: 160},
+              {x: '08월', carbo: 320, protein: 50, fat: 90},
+              {x: '09월', carbo: 100, protein: 30, fat: 190},
+              {x: '10월', carbo: 220, protein: 50, fat: 90},
+              {x: '11월', carbo: 0, protein: 0, fat: 0},
+              {x: '12월', carbo: 520, protein: 75, fat: 0},
             ],
           }}
           chartWidth={containerWidth}

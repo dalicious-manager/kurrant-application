@@ -8,28 +8,25 @@ import {Text} from 'react-native';
 import {StackedBarChartConfigSample} from './StackedBarChartConfigSample';
 
 const shiftDataStackedBarChartToBasicData = dataStackedBar => {
+  const {dataOrder} = dataStackedBar;
+
   return dataStackedBar.data.map(v => {
+    let total = 0;
+
+    dataOrder.forEach(v2 => {
+      total = total + v[v2];
+    });
+
     return {
       x: v.x,
-      y: v.protein + v.fat + v.vitamin,
+
+      y: total,
     };
   });
 };
 
 const StackedBarChart = ({
-  dataStackedBar = {
-    colorSetting: {protein: '#FF7601', fat: '#A8A6A7', vitamin: '#4B70b0'},
-    dataOrder: ['protein', 'fat', 'vitamin'],
-    data: [
-      {x: '06월', protein: 120, fat: 240, vitamin: 60},
-      {x: '07월', protein: 220, fat: 140, vitamin: 160},
-      {x: '08월', protein: 320, fat: 50, vitamin: 90},
-      {x: '09월', protein: 100, fat: 30, vitamin: 190},
-      {x: '10월', protein: 220, fat: 50, vitamin: 90},
-      {x: '11월', protein: 0, fat: 0, vitamin: 0},
-      {x: '12월', protein: 520, fat: 75, vitamin: 0},
-    ],
-  },
+  dataStackedBar,
 
   chartWidth = 300,
   chartHeight = 200,
