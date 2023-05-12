@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
-import {Text} from 'react-native';
+import {Platform, Text} from 'react-native';
 import Animated from 'react-native-reanimated';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 
 import CalendarButton from '~components/CalendarButton';
@@ -10,9 +10,17 @@ import {useAtomValue} from 'jotai';
 import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import useAuth from '../../../../../biz/useAuth/hook';
 
+import LinearGradient from 'react-native-linear-gradient';
+import Button from '~components/Button';
+import {useNavigation} from '@react-navigation/native';
+
+import {PAGE_NAME as DietRepoHistoryPageName} from '~pages/Main/Bnb/DietRepo/History';
+
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
 const Pages = () => {
+  const navigation = useNavigation();
+
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -64,6 +72,10 @@ const Pages = () => {
     console.log(spotId);
   }, [date]);
 
+  const handlePress = () => {
+    navigation.navigate(DietRepoHistoryPageName);
+  };
+
   return (
     <Container>
       <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
@@ -87,6 +99,27 @@ const Pages = () => {
           isServiceDays={isServiceDays}
         />
       </CalendarWrap>
+      <ScrollViewContainer
+        showsVerticalScrollIndicator={false}></ScrollViewContainer>
+      <ButtonWrapper
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.3)',
+          'rgba(255, 255, 255, 0.7)',
+          'rgba(255, 255, 255, 0.8048)',
+          'rgba(255, 255, 255, 0.9)',
+          'rgba(255, 255, 255, 0.95)',
+        ]}>
+        <ButtonNext
+          size="full"
+          label="식사 히스토리"
+          text={'BottomButtonSB'}
+          // disabled={!clickAvaliable}
+          onPressEvent={() => {
+            handlePress();
+          }}
+        />
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -104,3 +137,33 @@ const CalendarWrap = styled.View`
   border-bottom-width: 1px;
   width: 100%;
 `;
+
+const ScrollViewContainer = styled.ScrollView`
+  width: 100%;
+  /* height: 90%; */
+  background-color: #ffffff;
+`;
+
+const ButtonWrapper = styled(LinearGradient)`
+  position: relative;
+  ${() => {
+    if (Platform.OS === 'ios') {
+      return css`
+        bottom: 35px;
+      `;
+    } else {
+      return css`
+        bottom: 24px;
+        /* bottom: 1px; */
+      `;
+    }
+  }}
+
+  padding:0 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ButtonNext = styled(Button)``;

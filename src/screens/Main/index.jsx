@@ -309,6 +309,9 @@ import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/Writte
 import DietRepoMain, {
   PAGE_NAME as DietRepoMainPageName,
 } from '../../pages/Main/Bnb/DietRepo/Main';
+import DietRepoHistory, {
+  PAGE_NAME as DietRepoHistoryPageName,
+} from '../../pages/Main/Bnb/DietRepo/History';
 
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
 
@@ -2065,6 +2068,22 @@ const Screen = () => {
           options={{
             headerShown: true,
             title: '식단 리포트',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={DietRepoHistoryPageName}
+          component={DietRepoHistory}
+          options={{
+            headerShown: true,
+            title: '식사 히스토리',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
