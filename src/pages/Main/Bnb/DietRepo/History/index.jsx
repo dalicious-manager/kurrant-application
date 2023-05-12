@@ -9,9 +9,7 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 const Pages = () => {
   return (
     <Container>
-      <Text>다이어트 레포</Text>
       <HistoryStackedBarChart title="영양소 정보" width={'100%'} />
-
       <HistoryLineChart title="칼로리" width={'100%'} />
     </Container>
   );

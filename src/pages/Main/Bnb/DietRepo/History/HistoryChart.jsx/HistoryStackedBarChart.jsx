@@ -32,11 +32,16 @@ const HistoryStackedBarChart = ({
     });
   };
 
-  useEffect(() => {
-    console.log('containerWidth');
-    console.log(containerWidth);
-    console.log(containerHeight);
-  }, [containerWidth, containerHeight]);
+  // 작은 점 컴포넌트
+
+  const Parameter = ({parameterInfo}) => {
+    return (
+      <Wrap1>
+        <Dot color={parameterInfo[1]} />
+        <ParameterText>{parameterInfo[0]}</ParameterText>
+      </Wrap1>
+    );
+  };
 
   return (
     <Container
@@ -50,9 +55,9 @@ const HistoryStackedBarChart = ({
           dataStackedBar={{
             dataOrder: ['carbo', 'protein', 'fat'],
             colorSetting: {
-              carbo: '#FF7601',
-              protein: '#A8A6A7',
-              fat: '#4B70b0',
+              carbo: '#4F6FDF',
+              protein: '#819DFF',
+              fat: '#C8D4FF',
             },
 
             data: [
@@ -107,6 +112,16 @@ const HistoryStackedBarChart = ({
           }}
         />
       )}
+
+      <ParameterWrap>
+        {[
+          ['탄수화물', ' #4F6FDF     '],
+          ['단백질', '#819DFF'],
+          ['지방', '#C8D4FF'],
+        ].map((v, i) => {
+          return <Parameter key={i} parameterInfo={v} />;
+        })}
+      </ParameterWrap>
     </Container>
   );
 };
@@ -125,4 +140,33 @@ const Container = styled.View`
 
 const Title = styled(Typography).attrs({text: 'Title04SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const ParameterWrap = styled.View`
+  margin: auto;
+
+  padding: 16px;
+
+  flex-direction: row;
+  align-items: center;
+`;
+
+// parameter
+
+const Wrap1 = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin: 0px 6px;
+`;
+
+const Dot = styled.View`
+  background-color: ${({color}) => color};
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  margin-right: 4px;
+`;
+
+const ParameterText = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[3]};
 `;

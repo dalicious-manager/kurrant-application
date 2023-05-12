@@ -108,7 +108,6 @@ const Container = styled.View`
       return `height: ${height};`;
     }
   }};
-  /* border: 1px solid blue; */
 `;
 
 const Title = styled(Typography).attrs({text: 'Title04SB'})`
