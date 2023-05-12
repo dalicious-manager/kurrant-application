@@ -5,43 +5,7 @@ import styled from 'styled-components';
 import {decideTopValueAndDividend} from './ChartLogic';
 import ChartBasic from './ChartBasic';
 import {Text} from 'react-native';
-
-const StackedBarChartConfigSample = {
-  // 단위
-  unit: 'kcal',
-  showUnit: true,
-
-  // 주요 길이 값들
-  one: 35,
-  two: 30,
-  three: 25,
-  four: 30,
-  five: 15,
-  six: 10,
-
-  stackedBarWidth: 10,
-
-  // x축 , y축 설정
-  axisStrokeColor: '#000000',
-  axisStrokeWidth: 2,
-
-  // x축 tick 설정
-  tickStrokeColor: '#000000',
-  tickStrokeWidth: 2,
-
-  // x축 값 설정
-
-  xAxisLabelColor: '#343337',
-  xAxisLabelFontSize: 10,
-  // y축 값 설정
-
-  yAxisLabelColor: '#BDBAC1',
-  yAxisLabelFontSize: 10,
-
-  // 보조선 설정
-  backgroundStrokeColor: '#F5F5F5',
-  backgroundStrokeWidth: 2,
-};
+import {StackedBarChartConfigSample} from './StackedBarChartConfigSample';
 
 const shiftDataStackedBarChartToBasicData = dataStackedBar => {
   return dataStackedBar.data.map(v => {
@@ -69,11 +33,11 @@ const StackedBarChart = ({
 
   width = 300,
   height = 200,
-  graphConfig = StackedBarChartConfigSample,
+  chartConfig = StackedBarChartConfigSample,
 }) => {
   //// 1. 필요한 데이터
 
-  const {one, two, three, four, five} = graphConfig;
+  const {one, two, three, four, five} = chartConfig;
 
   // (0,0)점
 
@@ -130,7 +94,7 @@ const StackedBarChart = ({
     // return yOrder;
 
     return {
-      x: one + five + i * xTickWidth - graphConfig.stackedBarWidth / 2,
+      x: one + five + i * xTickWidth - chartConfig.stackedBarWidth / 2,
       yCoordinate: yOrder,
     };
   });
@@ -155,7 +119,7 @@ const StackedBarChart = ({
           dataBasic={dataBasic}
           width={width}
           height={height}
-          graphConfig={graphConfig}
+          graphConfig={chartConfig}
         />
         {dataCoordinate &&
           dataCoordinate.map((v1, i1) =>
@@ -167,7 +131,7 @@ const StackedBarChart = ({
                 y={v2.y[0]}
                 height={-v2.y[1]}
                 i={`${i1}${i2}`}
-                width={graphConfig.stackedBarWidth}
+                width={chartConfig.stackedBarWidth}
               />
             )),
           )}

@@ -31,12 +31,6 @@ const HistoryLineChart = ({
     });
   };
 
-  useEffect(() => {
-    console.log('containerWidth');
-    console.log(containerWidth);
-    console.log(containerHeight);
-  }, [containerWidth, containerHeight]);
-
   return (
     <Container
       width={width}

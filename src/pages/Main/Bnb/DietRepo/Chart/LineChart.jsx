@@ -7,47 +7,7 @@ import ChartBasic from './ChartBasic';
 import {Text} from 'react-native';
 
 import Typography from '~components/Typography';
-
-const LineChartConfigSample = {
-  // 단위
-  unit: 'kcal',
-  showUnit: true,
-  one: 35,
-  two: 30,
-  three: 25,
-  four: 30,
-  five: 15,
-  six: 10,
-
-  // x축 , y축 설정
-  axisStrokeColor: '#000000',
-  axisStrokeWidth: 2,
-
-  // x축 tick 설정
-  tickStrokeColor: '#000000',
-  tickStrokeWidth: 2,
-
-  // x축 값 설정
-
-  xAxisLabelColor: '#343337',
-  xAxisLabelFontSize: 10,
-  // y축 값 설정
-
-  yAxisLabelColor: '#BDBAC1',
-  yAxisLabelFontSize: 10,
-
-  // 보조선 설정
-  backgroundStrokeColor: '#F5F5F5',
-  backgroundStrokeWidth: 2,
-
-  // 점 설정
-  dotColor: '#343337',
-  dotRadius: 4,
-
-  // 그래프 선 설정
-  chartLineColor: '#343337',
-  chartLineWidth: 1,
-};
+import {LineChartConfigSample} from './LineChartConfigSample';
 
 /////** 사용시 주의사항***///// */
 // 1. width, height에는 string값으로 넣어주세요(px, % 사용가능), chartWidth, chartHeight는 number로 넣어주세요
