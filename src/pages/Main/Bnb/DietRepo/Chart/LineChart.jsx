@@ -6,6 +6,8 @@ import {decideTopValueAndDividend} from './ChartLogic';
 import ChartBasic from './ChartBasic';
 import {Text} from 'react-native';
 
+import Typography from '~components/Typography';
+
 const LineChartConfigSample = {
   // 단위
   unit: 'kcal',
@@ -63,6 +65,7 @@ const LineChart = ({
   width = 300,
   height = 200,
   graphConfig = LineChartConfigSample,
+  title,
 }) => {
   //// 1. 필요한 데이터
 
@@ -155,34 +158,51 @@ const LineChart = ({
   };
 
   return (
-    <Container width={width} height={height}>
-      <Svg height="100%" width="100%">
-        <ChartBasic
-          dataBasic={dataBasic}
-          width={width}
-          height={height}
-          graphConfig={graphConfig}
-        />
+    <Container>
+      <ChartWrap width={width} height={height}>
+        <Title>영양소 정보</Title>
+        <Svg height="100%" width="100%">
+          <ChartBasic
+            dataBasic={dataBasic}
+            width={width}
+            height={height}
+            graphConfig={graphConfig}
+          />
 
-        {/* 점 */}
-        {dotsCoordinateArr.map((v, i) => {
-          return <Dot key={i} x={v.x} y={v.y} />;
-        })}
+          {/* 점 */}
+          {dotsCoordinateArr.map((v, i) => {
+            return <Dot key={i} x={v.x} y={v.y} />;
+          })}
 
-        {/* 선 */}
+          {/* 선 */}
 
-        {chartCoordinateArr.map((v, i) => {
-          return <ChartLine x1={v.x1} y1={v.y1} x2={v.x2} y2={v.y2} i={i} />;
-        })}
-      </Svg>
+          {chartCoordinateArr.map((v, i) => {
+            return (
+              <ChartLine
+                key={i}
+                x1={v.x1}
+                y1={v.y1}
+                x2={v.x2}
+                y2={v.y2}
+                i={i}
+              />
+            );
+          })}
+        </Svg>
+      </ChartWrap>
     </Container>
   );
 };
 
 export default LineChart;
 
-const Container = styled.View`
+const Container = styled.View``;
+
+const ChartWrap = styled.View`
   width: ${({width}) => width}px;
   height: ${({height}) => height}px;
-  border: 1px solid black;
+`;
+
+const Title = styled(Typography).attrs({text: 'Title04SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
 `;
