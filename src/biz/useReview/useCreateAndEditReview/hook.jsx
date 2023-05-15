@@ -3,6 +3,7 @@ import {useState} from 'react';
 
 import * as Fetch from './Fetch';
 import {reviewWaitListAtom} from './store';
+import { Alert } from 'react-native';
 
 const useReviewWait = () => {
   const [reviewWaitList, setReviewWaitList] = useAtom(reviewWaitListAtom);
@@ -18,7 +19,13 @@ const useReviewWait = () => {
       setReviewWaitList(res.data.orderFoodList);
       // setReviewWaitList([]);
     } catch (err) {
-      console.log(err);
+      Alert.alert('작성 리뷰 조회', err.toString().replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
     }
   };
 

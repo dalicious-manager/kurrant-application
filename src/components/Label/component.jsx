@@ -6,7 +6,7 @@ import {getLabelColor, getLabelSizeStyle, getLabelWrapColor} from './style';
 /**
  * @param {object} props
  * @param {'labelM' | 'labelS' } props.size M:28px S:18px
- * @param {'grey2' | 'grey8' | 'red' | 'blue' | 'green' | 'outline'} props.type
+ * @param {'grey2' | 'grey8' | 'red' | 'blue' | 'green' | 'outline' | 'vegan'  | soldOut} props.type
  * @param {function} props.onPressEvent
  * @returns
  */

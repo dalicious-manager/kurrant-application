@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components/native';
 
 import { KaKaoIcon, NaverIcon} from '../Icon';
 import KakaoTalk from '../../assets/icons/KakaoTalk.svg'
 import NaverLogo from '../../assets/icons/NaverLogo.svg'
-
+import Balloon from '~components/Balloon';
 import Typography from '../Typography';
 import { getSnsButtonColor, getSnsButtonBorder } from './style';
 
@@ -14,14 +14,14 @@ import { getSnsButtonColor, getSnsButtonBorder } from './style';
  * @param {function} props.onPressEvent
  * @returns
  */
-const Component = ({ type_sns = 'email', onPressEvent = () => { console.log('sns 버튼을 누르셨습니다.') } }) => {
+const Component = ({ type_sns = 'email', onPressEvent = () => { console.log('sns 버튼을 누르셨습니다.') } ,isLast }) => {
   const snsButtonLabel = {
     kakao: '카카오톡으로 로그인',
     email: '회원가입',
     login: '로그인',
     naver: '네이버로 로그인',
   };
-
+  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
   const renderButton = () => {
     switch (type_sns) {
       case 'naver':
@@ -29,13 +29,23 @@ const Component = ({ type_sns = 'email', onPressEvent = () => { console.log('sns
         return <NaverLogo />;
     }
   };
-
-  return (    <ButtonWrap type_sns={type_sns} onPress={onPressEvent}>
+  useEffect(()=>{
+    if(isLast)
+      balloonEventNotOut()
+  },[isLast])
+        return (    <>
+        {type_sns ==='login' && <BalloonWrap message={`최근 로그인한 방법이에요`}  size={'B'}
+    location={{top:'-38px'}} vertical={'down'}
+    horizontal={'center'} onPress={()=>console.log("test")}/>}
+        <ButtonWrap type_sns={type_sns} onPress={onPressEvent}>
       <SnsButton type_sns={type_sns}>
         <Label text={"BottomButtonSB"} type_sns={type_sns}>{snsButtonLabel[type_sns]}</Label>
       </SnsButton>
       <IconWrap type_sns={type_sns}>{renderButton(type_sns)}</IconWrap>
+      
     </ButtonWrap>
+    
+    </>
   );
 };
 
@@ -49,6 +59,7 @@ const ButtonWrap = styled.Pressable`
   height: 56px;
   margin: 8px 0px;
   ${({ type_sns }) => getSnsButtonBorder(type_sns)};
+  z-index: -1;
 `;
 const SnsButton = styled.View`
   align-items: center;

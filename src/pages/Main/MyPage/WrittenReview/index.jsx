@@ -25,13 +25,14 @@ const Pages = ({route}) => {
   const pointId = route?.params?.id;
   const flatListRef = useRef(null);
 
-  const {getWrittenReview, reviewList} = useWrittenReview();
+  const [idx,setIdx] = useState();
+  const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
 
   const isFocused = useIsFocused();
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
-  const idx = reviewList?.findIndex(el => el.reviewId === pointId);
   const toast = Toast();
+
   useEffect(() => {
     getWrittenReview();
   }, []);
@@ -40,19 +41,24 @@ const Pages = ({route}) => {
   //   setTotalWrittenReviewList(writtenReviewCount);
   // }, [writtenReviewCount]);
 
-  // useEffect(() => {
-  //   console.log(reviewList);
-  // }, [reviewList]);
+  useEffect(() => {
+    if(reviewList){
+      const data = reviewList?.findIndex(el => el.reviewId === pointId);
+      setIdx(data);
+    }
+  }, [reviewList]);
 
   useEffect(() => {
     if (flatListRef.current && idx !== -1) {
-      flatListRef.current.scrollToIndex({
+
+      flatListRef?.current?.scrollToIndex({
         animated: true,
         index: idx,
         viewPosition: 0,
       });
     }
-  }, [flatListRef, idx]);
+  }, [flatListRef, idx,pointId]);
+
 
   return (
     <Container>
@@ -64,11 +70,12 @@ const Pages = ({route}) => {
           onScrollToIndexFailed={info => {
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
-              flatListRef.current?.scrollToIndex({
-                index: info.index,
-                animated: true,
-                viewPosition: 0,
-              });
+              if(flatListRef?.current)
+                flatListRef?.current?.scrollToIndex({
+                  index: info.index,
+                  animated: true,
+                  viewPosition: 0,
+                });
             });
           }}
           data={[...reviewList, {id: 'filler'}]}

@@ -10,4 +10,9 @@ export const orderApis = {
       `/users/me/orders?startDate=${startDate}&endDate=${startDate}`,
       'GET',
     ),
+  orderMeal: async (startDate, endDate) =>
+    await fetchJson(
+      `/users/me/orders?startDate=${startDate}&endDate=${endDate}`,
+      'GET',
+    ),
 };
