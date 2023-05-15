@@ -7,6 +7,7 @@ import {
   isCancelSpotAtom,
   userGroupSpotListAtom,
 } from './store';
+import { Alert } from 'react-native';
 
 const useGroupSpots = () => {
   const [isApplicationList, setApplicationList] = useAtom(applicationListAtom); // 아파트 + 프라이빗 스팟
@@ -23,7 +24,13 @@ const useGroupSpots = () => {
 
       setApplicationList(res.data);
     } catch (err) {
-      console.log(err);
+      Alert.alert('그룹/스팟 신청 목록 조회', err.toString().replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
     }
   };
   // 유저가 속한 그룹 스팟 조회
@@ -34,7 +41,13 @@ const useGroupSpots = () => {
       setUserGroupSpotCheck(res.data);
       return res;
     } catch (err) {
-      console.log(err);
+      Alert.alert('그룹/스팟', err.toString().replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
     }
   };
 
@@ -87,7 +100,13 @@ const useGroupSpots = () => {
 
       return res;
     } catch (err) {
-      console.log(err);
+      Alert.alert('그룹 탈퇴', err.toString().replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
     }
   };
 

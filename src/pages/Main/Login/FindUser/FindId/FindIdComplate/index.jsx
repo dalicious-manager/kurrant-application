@@ -12,6 +12,7 @@ import useAuth from '../../../../../../biz/useAuth';
 import {SocialIcons} from '../../../../../../components/Icon';
 import {PAGE_NAME as EmailLoginPageName} from '../../../EmailLogin';
 import {PAGE_NAME as LoginPageName} from '../../../Login';
+import snsLogin from '../../../../../../utils/snsLogin';
 
 export const PAGE_NAME = 'P_FIND_ID_COMPLATE';
 
@@ -24,6 +25,7 @@ const Pages = ({route}) => {
   });
   const themeApp = useTheme();
   const navigation = useNavigation();
+  const {appleLogin,facebookLogin,googleLogin,kakaoLogin,naverLogin} = snsLogin()
   const {findEmail} = useAuth();
   const getUserId = async () => {
     const userEmail = await findEmail({phone: phone});
@@ -69,7 +71,7 @@ const Pages = ({route}) => {
       <LoginContainer>
         {userId.connectedSns.length > 0 &&
           userId.connectedSns.map((emailInfo, i) => {
-            const onPressEvent = () => {
+            const onPressEvent = async() => {
               if (emailInfo.provider === 'GENERAL') {
                 navigation.reset({
                   index: 1,
@@ -85,6 +87,16 @@ const Pages = ({route}) => {
                     },
                   ],
                 });
+              }else if(emailInfo.provider === 'KAKAO'){
+               await kakaoLogin()
+              }else if(emailInfo.provider === 'APPLE'){
+                await appleLogin()
+              }else if(emailInfo.provider === 'FACEBOOK'){
+                await facebookLogin()
+              }else if(emailInfo.provider === 'GOOGLE'){
+                await googleLogin()
+              }else if(emailInfo.provider === 'NAVER'){
+                await naverLogin()
               }
             };
             return (

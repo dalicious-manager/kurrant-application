@@ -12,7 +12,7 @@ import {PAGE_NAME as SignUpPage} from '../../SignUp';
 export const PAGE_NAME = 'P_LOGIN__MODAL__MAIN_LOGIN';
 
 
-const Pages = () => {
+const Pages = ({isLast}) => {
 
   const navigation = useNavigation();
   const handleLoginPress = () => {
@@ -37,7 +37,7 @@ const Pages = () => {
       <View style={styles.SNSContainer}>
         <balloon.BalloonWrap /> 
         <View style={styles.buttonContainer}>
-          <ButtonSns type_sns="login" onPressEvent={handleLoginPress} />
+          <ButtonSns type_sns="login" onPressEvent={handleLoginPress} isLast={isLast === 'GENERAL'}/>
           <ButtonSns type_sns="email" onPressEvent={handleEmailPress} />
         </View>
       </View>

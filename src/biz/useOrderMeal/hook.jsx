@@ -10,6 +10,7 @@ import {
   isOrderMealLoadingAtom,
   isOrderLoadingAtom,
 } from './store';
+import { useQueryClient } from 'react-query';
 
 const useOrderMeal = () => {
   const [isOrderMeal, setOrderMeal] = useAtom(isOrderMealAtom);
@@ -19,7 +20,8 @@ const useOrderMeal = () => {
   );
   const [orderLoading, setOrderLoading] = useAtom(isOrderLoadingAtom);
   const navigation = useNavigation();
-
+  const queryClient = useQueryClient();
+  
   const orderMeal = async (startdate, enddate) => {
     try {
       const res = await Fetch.OrderMeal(startdate, enddate);
@@ -51,6 +53,7 @@ const useOrderMeal = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -78,7 +81,7 @@ const useOrderMeal = () => {
         },
         option,
       );
-
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -108,6 +111,7 @@ const useOrderMeal = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -135,6 +139,7 @@ const useOrderMeal = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {

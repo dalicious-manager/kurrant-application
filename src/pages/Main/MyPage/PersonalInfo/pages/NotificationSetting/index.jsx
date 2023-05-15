@@ -18,35 +18,22 @@ const Pages = () => {
   const form = useForm();
 
   const {data: alramData, isSuccess} = useGetAlramSetting();
-  const {mutateAsync: setAlram} = useSetAlramSetting();
   const [toggleData, setToggleData] = useState([]);
 
   const themeApp = useTheme();
 
-  const alarmAgree = useCallback(async v => {
-    try {
-      await setAlram({
-        code: v.code,
-        isActive: !v.isActive,
-      });
-    } catch (error) {
-      Alert.alert('알람설정', error.toString().replace('error: ', ''));
-    }
-
-    // await getAlarm();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  
 
   useEffect(() => {
-    setToggleData(
-      alramData?.data.map(v => {
-        return {
-          isToggle: true,
-          toggleName: v.code.toString(),
-          toggleEvent: () => alarmAgree(v),
-        };
-      }),
-    );
+    // setToggleData(
+    //   alramData?.data.map(v => {
+    //     return {
+    //       isToggle: true,
+    //       toggleName: v.code.toString(),
+    //       toggleEvent: () => alarmAgree(v),
+    //     };
+    //   }),
+    // );
     // setToggleData([
 
     //   {
@@ -73,14 +60,13 @@ const Pages = () => {
   return (
     <Wrapper paddingTop={24}>
       <FormProvider {...form}>
-        {toggleData &&
+        {alramData?.data &&
           alramData?.data.map((s, i) => {
-            console.log(toggleData[i]);
             return (
               <ListBox
                 key={i}
                 title={s.condition}
-                toggle={toggleData[i]}
+                toggle={s}
                 toggleAgree={s.isActive}
                 isArrow={false}
               />

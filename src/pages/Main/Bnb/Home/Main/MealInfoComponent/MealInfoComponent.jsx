@@ -8,18 +8,24 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {useConfirmOrderState} from '../../../../../../hook/useOrder';
 import {SCREEN_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
+import CoinAnimation from '../../components/CoinAnimation';
 
 import {Shadow} from 'react-native-shadow-2';
+import Sound from 'react-native-sound';
 
-const MealInfoComponent = ({m, meal, mockStatus}) => {
+const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
+  
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
   const {mutateAsync: orderState} = useConfirmOrderState();
-
+  const [startAni ,setStartAni] = useState(false);
   const deliveryConfirmPress = async () => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
   };
+  
+
+ 
   const goToReviewPage = (id, image, name) => {
     navigation.navigate(reviewPage, {
       orderItemId: id,
@@ -94,14 +100,19 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
             </CommentText>
 
             <ConfirmPressable
-              onPress={() => {
+              disabled={startAni}
+              startAni={startAni}
+              
+              onPress={() => {                
                 if (meal.orderStatus === 10) {
                   // 주문상태변경 - 수령완료 api보내야함
-                  console.log('000');
-                  deliveryConfirmPress();
+                  // console.log('000');
+                  setStartAni(true)
+                  // deliveryConfirmPress();
                 } else {
+                  // console.log('00011');
                   // 리뷰로 가기
-                  goToReviewPage(meal.id, meal.image, meal.name);
+                //  goToReviewPage(meal.id, meal.image, meal.name);
                 }
               }}>
               <ConfirmText>
@@ -109,7 +120,9 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
                   ? '맛 평가하기'
                   : meal.orderStatus === 10 && '네, 확인했어요'}
               </ConfirmText>
+              {startAni && <CoinAnimation isStart={startAni} coinSound={coinSound} setStart={setStartAni}/>}
             </ConfirmPressable>
+            
           </OrderStatusWrap>
         )}
       </MealInfoWrapper>
@@ -121,7 +134,7 @@ export default MealInfoComponent;
 
 const styles = StyleSheet.create({
   shadow: {
-    zIndex: 999,
+    zIndex: 80,
     // ios
     shadowColor: '#5A1EFF',
     shadowOffset: {
@@ -163,13 +176,14 @@ const MealInfoWrap = styled.Pressable`
 
 const OrderStatusWrap = styled.View`
   align-items: center;
+  z-index: 999;
 `;
 const CommentText = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[1]};
   margin-bottom: 4px;
 `;
 const ConfirmPressable = styled.Pressable`
-  background-color: ${({theme}) => theme.colors.purple[500]};
+  background-color: ${({theme, startAni}) => startAni ? theme.colors.grey[5]: theme.colors.purple[500]};
   border-radius: 999px;
   height: 28px;
   align-items: center;

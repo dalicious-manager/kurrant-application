@@ -212,10 +212,15 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   {
                                     text: '메뉴 취소',
                                     onPress: () => {
-                                      cancelItem(order.id);
-                                      queryClient.invalidateQueries(
-                                        'todayMeal',
-                                      );
+                                      try {
+                                        cancelItem(order.id);
+                                        queryClient.invalidateQueries(
+                                          'orderMeal',
+                                        );
+                                      } catch (error) {
+                                        Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
+                                      }
+                                      
                                     },
                                     style: 'destructive',
                                   },
@@ -237,10 +242,15 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   {
                                     text: '메뉴 취소',
                                     onPress: () => {
-                                      changeItem(order.id, order.serviceDate);
-                                      queryClient.invalidateQueries(
-                                        'todayMeal',
-                                      );
+                                      try {
+                                        changeItem(order.id, order.serviceDate);
+                                        queryClient.invalidateQueries(
+                                          'orderMeal',
+                                        );
+                                      } catch (error) {
+                                        Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
+                                      }
+                                      
                                     },
                                     style: 'destructive',
                                   },

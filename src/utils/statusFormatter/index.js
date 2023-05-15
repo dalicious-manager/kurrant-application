@@ -92,6 +92,23 @@ export function formattedCardCode(data) {
       break;
   }
 }
+export function formattedLogin(data) {
+  switch (data) {
+    case "GOOGLE":
+      return '구글 로그인';
+    case "APPLE":
+      return '애플 로그인';
+    case "NAVER":
+      return '네이버 로그인';
+    case "FACEBOOK":
+      return '페이스북 로그인';
+    case "KAKAO":
+      return '카카오 로그인';    
+    default:
+      return data;    
+      break;
+  }
+}
 export const cardListData = [
   {id: 51, text: '삼성카드'},
   // {id: 33, text: '우리카드'},

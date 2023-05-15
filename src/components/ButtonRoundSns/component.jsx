@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components/native';
 
 import { AppleSnsIcon, FacebookSnsIcon,GoogleSnsIcon,NaverSnsIcon,KakaoSnsIcon} from '../Icon';
 import { getSnsButtonColor, getSnsButtonBorder } from './style';
-
+import Balloon from '~components/Balloon';
+import { Platform } from 'react-native';
 /**
  * @param {object} props
  * @param {'login' | 'email' | 'kakao' | 'naver'} props.type_sns
@@ -11,8 +12,66 @@ import { getSnsButtonColor, getSnsButtonBorder } from './style';
  * @param {function} props.onPressEvent
  * @returns
  */
-const Component = ({ type_sns = 'email', size, onPressEvent = () => { console.log('sns 라운드 버튼을 누르셨습니다.') } }) => {
-
+const Component = ({ type_sns = 'email', size, onPressEvent = () => { console.log('sns 라운드 버튼을 누르셨습니다.') } ,isLast=false}) => {
+  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
+  const osLocation =()=>{
+      if(Platform.OS === 'ios'){
+        switch (type_sns) {
+          case 'apple':
+            return  {bottom : '-50px', right:'86px'};
+          case 'google':
+            return {bottom : '-50px', right:'23px'};
+          case 'facebook':
+            return  {bottom : '-50px', right:'86px'};
+          case 'kakao':
+            return {bottom : '-50px', left:'38px'};
+          case 'naver':
+            return {bottom : '-50px', left:'38px'};
+        }
+      }
+      if(Platform.OS === 'android'){
+        switch (type_sns) {
+          case 'apple':
+            return  {bottom : '-50px', right:'86px'};
+          case 'google':
+            return {bottom : '-50px', right:'23px'};
+          case 'facebook':
+            return  {bottom : '-50px', right:'86px'};
+          case 'kakao':
+            return {bottom : '-50px', left:'38px'};
+          case 'naver':
+            return {bottom : '-50px', left:'38px'};
+        }
+      }
+    }
+  const typeArrowVertical = ()=>{
+    switch (type_sns) {
+      case 'apple':
+        return 'up';
+      case 'google':
+        return 'up';
+      case 'facebook':
+        return 'up';
+      case 'kakao':
+        return 'up';
+      case 'naver':
+        return 'up';
+    }
+  }
+  const typeArrowHorizontal = ()=>{
+    switch (type_sns) {
+      case 'apple':
+        return 'right';
+      case 'google':
+        return 'center';
+      case 'facebook':
+        return 'right';
+      case 'kakao':
+        return 'left';
+      case 'naver':
+        return 'left';
+    }
+  }
   const renderButton = () => {
     switch (type_sns) {
       case 'apple':
@@ -27,11 +86,19 @@ const Component = ({ type_sns = 'email', size, onPressEvent = () => { console.lo
         return <NaverSnsIcon/>;
     }
   };
-
+  useEffect(()=>{
+    if(isLast)
+      balloonEventNotOut();
+  },[isLast])
   return (
+    <>
     <ButtonWrap type_sns={type_sns} onPress={onPressEvent} size={size}>
       <IconWrap type_sns={type_sns}>{renderButton(type_sns)}</IconWrap>
     </ButtonWrap>
+    {isLast && <BalloonWrap message={`최근 로그인한 방법이에요`}  size={'B'}
+      location={osLocation()} vertical={typeArrowVertical()}
+      horizontal={typeArrowHorizontal()} onPress={()=>console.log("test")}/>}
+    </>
   );
 };
 
