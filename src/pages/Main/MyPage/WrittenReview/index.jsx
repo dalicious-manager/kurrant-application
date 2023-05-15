@@ -70,11 +70,12 @@ const Pages = ({route}) => {
           onScrollToIndexFailed={info => {
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
-              flatListRef.current?.scrollToIndex({
-                index: info.index,
-                animated: true,
-                viewPosition: 0,
-              });
+              if(flatListRef?.current)
+                flatListRef?.current?.scrollToIndex({
+                  index: info.index,
+                  animated: true,
+                  viewPosition: 0,
+                });
             });
           }}
           data={reviewList}

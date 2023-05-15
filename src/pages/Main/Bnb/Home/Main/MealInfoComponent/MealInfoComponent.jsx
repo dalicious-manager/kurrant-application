@@ -108,11 +108,11 @@ const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
                   // 주문상태변경 - 수령완료 api보내야함
                   // console.log('000');
                   setStartAni(true)
-                  // deliveryConfirmPress();
+                  deliveryConfirmPress();
                 } else {
                   // console.log('00011');
                   // 리뷰로 가기
-                //  goToReviewPage(meal.id, meal.image, meal.name);
+                 goToReviewPage(meal.id, meal.image, meal.name);
                 }
               }}>
               <ConfirmText>
