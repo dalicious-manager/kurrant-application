@@ -279,7 +279,7 @@ const Pages = ({route}) => {
 
     if (offset === 0) {
       if (nowPage === position) {
-        // console.log(nowPage, position, 'tests');
+        console.log(nowPage, position, 'tests');
         if (position === 2) {
           const currentDate = formattedWeekDate(new Date());
           const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);

@@ -168,7 +168,6 @@ const Pages = ({route}) => {
         pagerRef.current.setPage(0);
       }
       setTouchDate(data);
-      console.log(dailyfoodData)
     }, [isToday, data]),
   );
   return (
