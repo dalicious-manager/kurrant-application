@@ -2,7 +2,7 @@ import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, StatusBar, AppState} from 'react-native';
+import {View, StyleSheet, Alert, StatusBar, AppState, Platform} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
@@ -57,6 +57,8 @@ import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJus
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import Sound from 'react-native-sound';
+import { useGetDailyfood } from '../../../../../hook/useDailyfood';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -66,6 +68,12 @@ const Pages = () => {
   const weekly = useAtomValue(weekAtom);
   const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
     useUserInfo();
+
+  const userName = isUserInfo?.name;
+  const userSpot = isUserInfo?.spot;
+  const userGroupName = isUserInfo?.group;
+  const userSpotId = isUserInfo?.spotId;
+  const clientId = isUserInfo?.groupId;
   const {
     saveFcmToken,
     readableAtom: {userRole, fcmToken},
@@ -76,13 +84,24 @@ const Pages = () => {
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
- 
+  
+  const [coinSound, setCoinSound] = useState(null);
+  
+  const loadCoinSound = () => {
+    const sound = new Sound(require('../../../../../assets/sounds/coin.wav'), Platform.OS === 'android' ? Sound.MAIN_BUNDLE : Sound.MAIN_BUNDLE.bundlePath, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+    setCoinSound(sound);
+  };
   const {
     getMembershipHistory,
     readableAtom: {membershipHistory},
   } = useMembership();
   
-  const {dailyFood, isServiceDays} = useFoodDaily();
+  const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(userSpotId,formattedWeekDate(new Date()));
   const [modalVisible, setModalVisible] = useState(false);
 
   const [show, setShow] = useState(false);
@@ -114,7 +133,6 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
-
   // 홈 전체 공지사항
 
   // const {getAnnouncements, announcements, announcementModalVisible} =
@@ -199,6 +217,8 @@ const Pages = () => {
     };
     handleShowModal();
     getOneAnnouncement(2);
+    if(coinSound ===null)
+        loadCoinSound();
   }, []);
 
   const closeBalloon = async () => {
@@ -371,11 +391,7 @@ const Pages = () => {
     }
   };
 
-  const userName = isUserInfo?.name;
-  const userSpot = isUserInfo?.spot;
-  const userGroupName = isUserInfo?.group;
-  const userSpotId = isUserInfo?.spotId;
-  const clientId = isUserInfo?.groupId;
+  
 
   // useEffect(() => {
   //   async function dailys() {
@@ -436,7 +452,6 @@ const Pages = () => {
   };
   const handleStatus = e => {
     setAppState(e);
-    todayRefetch();
   };
   const mockStatus = 10;
   useEffect(() => {
@@ -529,6 +544,7 @@ const Pages = () => {
                       <MealInfoComponent
                         m={m}
                         meal={meal}
+                        coinSound={coinSound}
                         key={`${meal.id} ${meal.dailyFoodId}`}
                       />
                     );
@@ -547,7 +563,7 @@ const Pages = () => {
                 <TitleText>식사일정</TitleText>
               </MealCalendarTitle>
               <Calendar
-                isServiceDays={isServiceDays}
+                isServiceDays={dailyfoodData?.data?.serviceDays}
                 meal={orderMealList?.data}
                 onPressEvent={() => navigation.navigate(MealMainPageName)}
               />

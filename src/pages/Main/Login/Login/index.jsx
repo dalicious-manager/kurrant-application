@@ -182,64 +182,6 @@ const Pages = ({route}) => {
       // getData();
     }, []),
   );
-  useEffect(() => {
-    const isAutoLogin = async () => {
-      const isLogin = await getStorage('isLogin');
-
-      if (isLogin !== 'false') {
-        const token = await getStorage('token');
-
-        setLoginLoading(false);
-        if (token) {
-          const getToken = JSON.parse(token);
-          if (getToken?.accessToken) {
-            const res = await autoLogin();
-
-            if (res?.statusCode === 200) {
-               const token = await messaging().getToken();
-
-               if (token) {
-                 saveFcmToken({
-                   token: token,
-                 });
-               }
-
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              });
-            }
-          }
-        }
-      } else {
-        setLoginLoading(false);
-      }
-    };
-
-    setLoginLoading(true);
-    isAutoLogin();
-  }, []);
-  useEffect(() => {
-    async function requestUserPermission() {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
-        if (Platform.OS === 'ios') {
-          // ios의 경우 필수가 아니라고도 하고 필수라고도 하고.. 그냥 넣어버렸다.
-          messaging().registerDeviceForRemoteMessages();
-        }
-      }
-    }
-    requestUserPermission();
-  }, []);
 
   return (
     <SafeView>

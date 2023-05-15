@@ -192,6 +192,7 @@ const Pages = ({route}) => {
           {touchDate ? (
             <>
               {selectDate?.map((s, index) => {
+                console.log(s)
                 return (
                   <View key={index}>
                     <DiningTimeWrap>
@@ -231,23 +232,21 @@ const Pages = ({route}) => {
                               <CancelText>취소완료</CancelText>
                             )}
                           </Content>
-                          <CancelBtnWrap status={sm.orderStatus}>
-                            <LabelButton
-                              label={'취소'}
-                              onPressEvent={() => cancelMealPress(sm.id)}
-                              disabled={sm.orderStatus === 7 && true}
-                            />
-                          </CancelBtnWrap>
-                          {sm.orderStatus !== 7 && (
-                            <MealChangeWrap>
+                          {sm.orderStatus === 5 && <CancelBtnWrap status={sm.orderStatus}>
                               <LabelButton
-                                label={'메뉴변경'}
-                                onPressEvent={() =>
-                                  changeMealPress(sm.id, s.serviceDate)
-                                }
+                                label={'취소'}
+                                onPressEvent={() => cancelMealPress(sm.id)}
+                                disabled={sm.orderStatus === 7}
                               />
-                            </MealChangeWrap>
-                          )}
+                            </CancelBtnWrap>}
+                            {sm.orderStatus === 5 && ( sm.orderStatus !== 7 && (
+                              <MealChangeWrap>
+                                <LabelButton
+                                  label={'메뉴변경'}
+                                  onPressEvent={() => changeMealPress(sm.id)}
+                                />
+                              </MealChangeWrap>
+                            ))}
                         </MealContentWrap>
                       );
                     })}
@@ -299,21 +298,21 @@ const Pages = ({route}) => {
                                 <CancelText>취소완료</CancelText>
                               )}
                             </Content>
-                            <CancelBtnWrap status={el.orderStatus}>
+                            {el.orderStatus === 5 && <CancelBtnWrap status={el.orderStatus}>
                               <LabelButton
                                 label={'취소'}
                                 onPressEvent={() => cancelMealPress(el.id)}
                                 disabled={el.orderStatus === 7}
                               />
-                            </CancelBtnWrap>
-                            {el.orderStatus !== 7 && (
+                            </CancelBtnWrap>}
+                            {el.orderStatus === 5 && ( el.orderStatus !== 7 && (
                               <MealChangeWrap>
                                 <LabelButton
                                   label={'메뉴변경'}
                                   onPressEvent={() => changeMealPress(el.id)}
                                 />
                               </MealChangeWrap>
-                            )}
+                            ))}
                           </MealContentWrap>
                         );
                       })}

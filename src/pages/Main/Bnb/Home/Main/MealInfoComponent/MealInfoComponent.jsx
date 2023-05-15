@@ -11,8 +11,10 @@ import {SCREEN_NAME as reviewPage} from '../../../../../../screens/Main/Review/C
 import CoinAnimation from '../../components/CoinAnimation';
 
 import {Shadow} from 'react-native-shadow-2';
+import Sound from 'react-native-sound';
 
-const MealInfoComponent = ({m, meal, mockStatus}) => {
+const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
+  
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
   const {mutateAsync: orderState} = useConfirmOrderState();
@@ -21,6 +23,9 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
   };
+  
+
+ 
   const goToReviewPage = (id, image, name) => {
     navigation.navigate(reviewPage, {
       orderItemId: id,
@@ -97,16 +102,17 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
             <ConfirmPressable
               disabled={startAni}
               startAni={startAni}
+              
               onPress={() => {                
                 if (meal.orderStatus === 10) {
                   // 주문상태변경 - 수령완료 api보내야함
                   // console.log('000');
                   setStartAni(true)
-                  deliveryConfirmPress();
+                  // deliveryConfirmPress();
                 } else {
                   // console.log('00011');
                   // 리뷰로 가기
-                 goToReviewPage(meal.id, meal.image, meal.name);
+                //  goToReviewPage(meal.id, meal.image, meal.name);
                 }
               }}>
               <ConfirmText>
@@ -114,7 +120,7 @@ const MealInfoComponent = ({m, meal, mockStatus}) => {
                   ? '맛 평가하기'
                   : meal.orderStatus === 10 && '네, 확인했어요'}
               </ConfirmText>
-              {startAni && <CoinAnimation isStart={startAni}  setStart={setStartAni}/>}
+              {startAni && <CoinAnimation isStart={startAni} coinSound={coinSound} setStart={setStartAni}/>}
             </ConfirmPressable>
             
           </OrderStatusWrap>

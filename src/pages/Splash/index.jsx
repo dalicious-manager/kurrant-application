@@ -45,7 +45,6 @@ const Page = () => {
   const [widthScale, setWidthScale] = useState(0);
   const [slide, setSlide] = useState(174);
   const {userInfo} = useUserInfo();
-
   const {
     userGroupSpotCheck,
   } = useGroupSpots();
@@ -89,7 +88,49 @@ const Page = () => {
     );
     
   },[])
-  
+  const checkPermission = async() => {
+    messaging()
+      .hasPermission()
+      .then(enabled => {
+        if (enabled) {
+          getToken();
+        } else {
+          requestPermission();
+        }
+      })
+      .catch(error => {
+        console.log('error checking permisions ' + error);
+      });
+  };
+
+  //2
+  const requestPermission = () => {
+    messaging()
+      .requestPermission()
+      .then(() => {
+        getToken();
+      })
+      .catch(error => {
+        console.log('permission rejected ' + error);
+      });
+  };
+
+  //3
+  const getToken = () => {
+    messaging()
+      .getToken()
+      .then(token => {
+        console.log('push token ' + token);
+        if (token) {
+          saveFcmToken({
+            token: token,
+          });
+        }
+      })
+      .catch(error => {
+        console.log('error getting push token ' + error);
+      });
+  };
   useEffect(() => {
     async function loadUser() {
       try {
@@ -214,12 +255,8 @@ const Page = () => {
             
             if (res?.statusCode === 200) {
               await isTester();
-              const token = await messaging().getToken();
-              if (token) {
-                saveFcmToken({
-                  token: token,
-                });
-              }
+              await checkPermission();
+             
               navigation.reset({
                 index: 0,
                 routes: [

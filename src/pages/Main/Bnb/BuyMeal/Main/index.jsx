@@ -93,12 +93,8 @@ const Pages = ({route}) => {
     addMeal,
     isLoadMeal,
     isAddMeal,
-    loadMeal,
-    setLoadMeal,
-    updateMeal,
-    setQuantity,
   } = useShoppingBasket();
-  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
+  const {balloonEvent, BalloonWrap} = Balloon();
   
   const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
@@ -812,7 +808,7 @@ const Pages = ({route}) => {
                       )}
                     </LabelWrap>
                   )}
-                  {m.vegan !== null && (
+                  {m.vegan && m.vegan !== null && (
                   <LabelWrap>
                       {m.status === 2 || m.status === 6 ? (
                         <Label label={`${m.vegan}`} type={'soldOut'} />
@@ -953,7 +949,7 @@ const Pages = ({route}) => {
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
           </View>
         )}
-        {(dailyLoading|| dailyFetching) ? <LoadingPage>
+        {(dailyFetching) ? <LoadingPage>
             <ActivityIndicator size={'large'} />
           </LoadingPage> :
           (<Pager
