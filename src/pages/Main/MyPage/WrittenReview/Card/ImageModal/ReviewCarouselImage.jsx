@@ -2,11 +2,16 @@ import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Dimensions, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-// import Carousel from 'react-native-reanimated-carousel';
+import Carousel from 'react-native-reanimated-carousel';
 import styled from 'styled-components';
 
 const phoneWidth = Dimensions.get('window').width;
-const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
+const ReviewCarouselImage = ({
+  img,
+  firstClickedImageIndex,
+  setIndex,
+  index,
+}) => {
   const [imgHandledArray, setImgHandledArray] = useState([]);
 
   // 판별해서 배열에 넣어주고 해야겠다
@@ -84,7 +89,7 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
 
   return (
     <View>
-      {/* <Carousel
+      <Carousel
         // loop={img?.length !== 1}
         loop
         enabled={img.length > 1}
@@ -117,18 +122,16 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
                   }}
                   style={item[1]}
                 />
-
-  
               </MyView>
             </Container>
           );
         }}
-      /> */}
+      />
     </View>
   );
 };
 
-export default CarouselImage;
+export default ReviewCarouselImage;
 
 const ModalImage = styled.Image``;
 

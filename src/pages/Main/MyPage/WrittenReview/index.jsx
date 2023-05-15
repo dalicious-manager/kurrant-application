@@ -25,7 +25,7 @@ const Pages = ({route}) => {
   const pointId = route?.params?.id;
   const flatListRef = useRef(null);
 
-  const [idx,setIdx] = useState();
+  const [idx, setIdx] = useState(-1);
   const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
 
   const isFocused = useIsFocused();
@@ -42,7 +42,7 @@ const Pages = ({route}) => {
   // }, [writtenReviewCount]);
 
   useEffect(() => {
-    if(reviewList){
+    if (reviewList) {
       const data = reviewList?.findIndex(el => el.reviewId === pointId);
       setIdx(data);
     }
@@ -50,15 +50,13 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     if (flatListRef.current && idx !== -1) {
-
       flatListRef?.current?.scrollToIndex({
         animated: true,
         index: idx,
         viewPosition: 0,
       });
     }
-  }, [flatListRef, idx,pointId]);
-
+  }, [flatListRef, idx, pointId]);
 
   return (
     <Container>
@@ -70,7 +68,7 @@ const Pages = ({route}) => {
           onScrollToIndexFailed={info => {
             const wait = new Promise(resolve => setTimeout(resolve, 500));
             wait.then(() => {
-              if(flatListRef?.current)
+              if (flatListRef?.current)
                 flatListRef?.current?.scrollToIndex({
                   index: info.index,
                   animated: true,
