@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Dimensions, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import Carousel from 'react-native-reanimated-carousel';
+// import Carousel from 'react-native-reanimated-carousel';
 import styled from 'styled-components';
 
 const phoneWidth = Dimensions.get('window').width;
@@ -84,7 +84,7 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
 
   return (
     <View>
-      <Carousel
+      {/* <Carousel
         // loop={img?.length !== 1}
         loop
         enabled={img.length > 1}
@@ -118,26 +118,12 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
                   style={item[1]}
                 />
 
-                {/* <MyFastImage
-                  source={{
-                    uri: `${item[0]}`,
-                    priority: FastImage.priority.high,
-                  }}
-                  style={item[1]}>
-                  <FilterImage
-                    colors={[
-                      'rgba(0, 0, 0, 0.45)',
-                      'rgba(7, 7, 8, 0.25)',
-                      'rgba(255, 255, 255, 0)',
-                      'rgba(255, 255, 255, 0) ',
-                    ]}
-                  />
-                </MyFastImage> */}
+  
               </MyView>
             </Container>
           );
         }}
-      />
+      /> */}
     </View>
   );
 };
