@@ -19,15 +19,15 @@ const useGetMealDetailReview = dailyFoodId => {
 
     async ({queryKey}) => {
       const response = await fetchJson(
-        `/dailyfoods/${dailyFoodId}/review`,
+        `/dailyfoods/${dailyFoodId}/review?sort=0`,
         'GET',
       );
       console.log('리뷰 받아왔다 확인해라');
       console.log(response.data.items);
 
       setMealDetailReview(response.data.items);
-      setStarAverage(response.starEverage);
-      setTotalCount(response.total);
+      setStarAverage(response.data.starEverage);
+      setTotalCount(response.data.total);
 
       return response.data;
     },

@@ -67,43 +67,45 @@ const Component = ({dailyFoodId}) => {
   //   console.log(orderFilter);
   // }, [orderFilter]);
 
+  const sampleData1 = [
+    '맛',
+    '향',
+    '한우',
+    '국',
+    '한식',
+    '맛',
+    '향',
+    '한우',
+    '국',
+    '한식',
+  ];
+
   return (
     <Container>
       <Wrap1>
         <TitleWrap>
-          <ReviewCount>리뷰(132)</ReviewCount>
+          <ReviewCount>리뷰({totalCount})</ReviewCount>
         </TitleWrap>
 
         <StarRatingWrap>
           <RateStars
-            ratingInput={4}
+            ratingInput={starAverage}
             width={'132px'}
             margin={'3px'}
             disableButton={true}
             callback={() => {}}
           />
 
-          <RatingPointText>4</RatingPointText>
+          <RatingPointText>{starAverage}</RatingPointText>
 
           <RatingOutOfText>/</RatingOutOfText>
           <RatingOutOfText>5</RatingOutOfText>
         </StarRatingWrap>
 
         <Wrap3>
-          {
+          {Array.isArray(sampleData1) && sampleData1.length > 0 && (
             <FlatFlatList
-              data={[
-                '맛',
-                '향',
-                '한우',
-                '국',
-                '한식',
-                '맛',
-                '향',
-                '한우',
-                '국',
-                '한식',
-              ]}
+              data={sampleData1}
               scrollEnabled={true}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
@@ -118,28 +120,13 @@ const Component = ({dailyFoodId}) => {
                     // isClicked={true}
                     isClicked={false}
                     isFirst={index === 0}
-                    isLast={
-                      index ===
-                      [
-                        '맛',
-                        '향',
-                        '한우',
-                        '국',
-                        '한식',
-                        '맛',
-                        '향',
-                        '한우',
-                        '국',
-                        '한식',
-                      ].length -
-                        1
-                    }>
+                    isLast={index === sampleData1.length - 1}>
                     <ButtonText isClicked={false}>{item}</ButtonText>
                   </ButtonPressable>
                 );
               }}
             />
-          }
+          )}
         </Wrap3>
 
         <Wrap4>
