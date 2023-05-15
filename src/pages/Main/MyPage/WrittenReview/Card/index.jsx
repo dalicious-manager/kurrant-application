@@ -57,17 +57,6 @@ const Component = ({
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
 
-  // const getToken = useCallback(async () => {
-  //   const token = await getStorage('token');
-
-  //   let tokenBox;
-  //   if (token) {
-  //     tokenBox = JSON.parse(token);
-  //   }
-
-  //   return tokenBox?.accessToken;
-  // }, []);
-
   let imageLocationToSix = [];
 
   // imageLocation이 널일 경우 null 을 빈 배열로 고쳐주기
@@ -164,28 +153,6 @@ const Component = ({
               ]);
             }
 
-            // await deleteReview({id: id}, token, () => {
-            //   navigation.reset({
-            //     routes: [
-            //       {
-            //         name: ReviewScreenName,
-
-            //         state: {
-            //           index: 1,
-            //           routes: [
-            //             {
-            //               name: ReviewPageName,
-            //             },
-            //             {
-            //               name: WrittenReviewPageName,
-            //             },
-            //           ],
-            //         },
-            //       },
-            //     ],
-            //   });
-            // });
-
             return;
           },
 
@@ -240,9 +207,6 @@ const Component = ({
     } else {
       return false;
     }
-    // 1개일떄
-    // 2개일때
-    // 3개일떄
   };
 
   return (
@@ -379,73 +343,6 @@ const Component = ({
             {reviewText}
           </ReviewText>
         )}
-
-        {/* <>
-          {Platform.OS === 'ios' ? (
-            <>
-              {numLines >= 3 && elaborateComment ? (
-                <ReviewTextTextInputIos
-                  onContentSizeChange={event =>
-                    setNumLines(
-                      Math.max(
-                        Math.ceil(event.nativeEvent.contentSize.height / 18),
-                        1,
-                      ),
-                    )
-                  }
-                  value={reviewText}
-                  multiline={true}
-                  selectTextOnFocus={false}
-                  onPressIn={() => {
-                    setElaborateComment(!elaborateComment);
-                  }}
-                  suppressHighlighting={true}
-                  editable={false}
-                />
-              ) : (
-                <ReviewTextTextInputIos
-                  onContentSizeChange={event =>
-                    setNumLines(
-                      Math.max(
-                        Math.ceil(event.nativeEvent.contentSize.height / 18),
-                        1,
-                      ),
-                    )
-                  }
-                  maxHeight={62}
-                  value={reviewText}
-                  multiline={true}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  onPressIn={() => {
-                    setElaborateComment(!elaborateComment);
-                  }}
-                  numberOfLines={3}
-                  ellipsizeMode="tail"
-                />
-              )}
-            </>
-          ) : (
-            <>
-              <ReviewTextTextInputAndroid
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                value={reviewText}
-                multiline={true}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                editable={false}
-              />
-            </>
-          )}
-        </> */}
       </ReviewPressable>
       {/* <ReviewText>{reviewText}</ReviewText> */}
       {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}

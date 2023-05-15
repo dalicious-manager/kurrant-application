@@ -71,10 +71,15 @@ const Pages = ({route}) => {
               });
             });
           }}
-          data={reviewList}
+          data={[...reviewList, {id: 'filler'}]}
           scrollEnabled={true}
           renderItem={({item, index}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
+
+            if (item.id === 'filler') {
+              return <Filler></Filler>;
+            }
+
             const item2 = {
               id: item.reviewId,
               createDate: item.createDate,
@@ -130,4 +135,9 @@ const Container = styled.View`
   // padding: 24px 25px;
   padding-top: 0px;
   background-color: #ffffff;
+`;
+
+const Filler = styled.View`
+  width: 100%;
+  height: 40px;
 `;
