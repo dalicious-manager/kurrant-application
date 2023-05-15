@@ -27,8 +27,13 @@ const Component = ({dailyFoodId}) => {
 
   console.log(dailyFoodId);
 
-  const {mealDetailReview, getMealDetailReviewQueryRefetch} =
-    useGetMealDetailReview(dailyFoodId);
+  const {
+    starAverage,
+    totalCount,
+    isError,
+    mealDetailReview,
+    getMealDetailReviewQueryRefetch,
+  } = useGetMealDetailReview(dailyFoodId);
 
   useEffect(() => {
     getMealDetailReviewQueryRefetch();
@@ -237,14 +242,14 @@ const Component = ({dailyFoodId}) => {
             })}
         </CardsWrap>
 
-        <MoreReviewPressable>
+        {/* <MoreReviewPressable>
           <MoreReviewText>131개 리뷰 전체보기</MoreReviewText>
           <RightSkinnyArrow
             width={'5px'}
             height={'9px'}
             color={theme.colors.grey[4]}
           />
-        </MoreReviewPressable>
+        </MoreReviewPressable> */}
       </ReviewListWrap>
 
       <BottomModalMultipleSelect

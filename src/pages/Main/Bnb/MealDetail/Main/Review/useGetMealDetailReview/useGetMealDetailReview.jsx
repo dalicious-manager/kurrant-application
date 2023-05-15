@@ -4,6 +4,10 @@ import {fetchJson} from '../../../../../../../utils/fetch';
 
 const useGetMealDetailReview = dailyFoodId => {
   const [mealDetailReview, setMealDetailReview] = useState([]);
+  const [starAverage, setStarAverage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const [isError, setIsError] = useState(false);
 
   const {
     data,
@@ -22,16 +26,29 @@ const useGetMealDetailReview = dailyFoodId => {
       console.log(response.data.items);
 
       setMealDetailReview(response.data.items);
+      setStarAverage(response.starEverage);
+      setTotalCount(response.total);
+
       return response.data;
     },
     {
+      onError: () => {
+        setIsError(true);
+      },
+
       enabled: false,
       retry: 1,
       retryDelay: 800,
     },
   );
 
-  return {mealDetailReview, getMealDetailReviewQueryRefetch};
+  return {
+    starAverage,
+    totalCount,
+    isError,
+    mealDetailReview,
+    getMealDetailReviewQueryRefetch,
+  };
 };
 
 export default useGetMealDetailReview;
