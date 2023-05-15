@@ -34,6 +34,7 @@ const ReviewCarouselImage = ({
                   // height: 282,
                   height: phoneWidth * (height / width),
                 }),
+                height,
               ]);
             } else if (width < height) {
               resolve([
@@ -117,6 +118,8 @@ const ReviewCarouselImage = ({
             <Container>
               <MyView>
                 <MealImage
+                  heightRate={heightRate}
+                  height={item[1].height}
                   source={{
                     uri: `${item[0]}`,
                   }}
@@ -133,23 +136,16 @@ const ReviewCarouselImage = ({
 
 export default ReviewCarouselImage;
 
-const ModalImage = styled.Image``;
-
 const MealImage = styled.Image`
-  /* width: 100%;
-  height: 100%; */
+  /* margin-top: 20px; */
 
-  /* ${({}) => {}} */
+  margin-top: ${({heightRate, height}) => {
+    const yo = Dimensions.get('screen').height * heightRate;
 
-  /* width: 100%; */
-  /* max-height: 33%; */
+    return `${(yo - height) / 2}px`;
+  }};
 
   border-radius: 2.5px;
-`;
-
-const FilterImage = styled(LinearGradient)`
-  max-width: ${phoneWidth}px;
-  height: 380px;
 `;
 
 const Container = styled.View`
@@ -161,8 +157,4 @@ const Container = styled.View`
 
 const MyView = styled.View`
   width: 100%;
-  /* height: 100%; */
-  margin: auto;
 `;
-
-const MyFastImage = styled(FastImage)``;
