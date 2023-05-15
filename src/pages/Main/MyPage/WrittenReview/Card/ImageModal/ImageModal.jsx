@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 
-import CarouselImage from './CarouselImage';
 import {SmallXVectorIcon} from '../../../../../../components/Icon';
 import DotPagination from './DotPagination';
 
@@ -46,12 +45,12 @@ const ImageModal = ({
               </HidePressable>
             </PressableContainer>
 
-            <CarouselImage
+            {/* <CarouselImage
               img={imageLocation}
               firstClickedImageIndex={firstClickedImageIndex}
               setIndex={setIndex}
               index={index}
-            />
+            /> */}
 
             <DotPagination
               setIndex={setIndex}

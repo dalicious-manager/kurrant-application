@@ -86,11 +86,14 @@ const Component = ({
   useEffect(() => {
     // '첫 렌더시 해당 날짜로 위치하게 하기'
     if (selectDate && isMount) {
-      // pager.current.setPage(calculateSelectDatePosition(selectDate, weekly));
+      setTimeout(()=>{
+        pager.current.setPage(calculateSelectDatePosition(selectDate, weekly));
+      },100)
       setChk(calculateSelectDatePosition(selectDate, weekly))
       setIsMount(false);
     }
     setCurrentPress(selectDate);
+
   }, [selectDate, weekly, isMount, setIsMount]);
 
   /////// 끝
