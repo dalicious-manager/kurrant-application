@@ -28,6 +28,7 @@ import {useQueryClient} from 'react-query';
 import { weekAtom } from '../../../../../biz/useBanner/store';
 import { useAtom } from 'jotai';
 import { useGetOrderMeal } from '../../../../../hook/useOrder';
+import { useGetDailyfood } from '../../../../../hook/useDailyfood';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
@@ -44,7 +45,7 @@ const Pages = ({route}) => {
   const queryClient = useQueryClient();
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
-
+  const userSpotId = isUserInfo?.spotId;
   const { refundItem, setOrderMeal} = useOrderMeal();
   const pagerRef = useRef();
   const [weekly] = useAtom(weekAtom);
@@ -52,6 +53,7 @@ const Pages = ({route}) => {
   formattedWeekDate(
     weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
   ));
+  const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(userSpotId,data ? data:date);
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.data?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
@@ -166,6 +168,7 @@ const Pages = ({route}) => {
         pagerRef.current.setPage(0);
       }
       setTouchDate(data);
+      console.log(dailyfoodData)
     }, [isToday, data]),
   );
   return (
@@ -184,7 +187,7 @@ const Pages = ({route}) => {
             meal={meal}
             margin={'0px 28px'}
             sliderValue={isToday && 0}
-            isServiceDays={isServiceDays}
+            isServiceDays={dailyfoodData?.data?.serviceDays}
           />
         </CalendarWrap>
 

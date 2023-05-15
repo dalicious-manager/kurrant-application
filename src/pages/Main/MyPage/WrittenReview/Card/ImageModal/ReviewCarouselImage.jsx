@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Dimensions, Image} from 'react-native';
-import FastImage from 'react-native-fast-image';
-import LinearGradient from 'react-native-linear-gradient';
+
 import Carousel from 'react-native-reanimated-carousel';
 import styled from 'styled-components';
 
