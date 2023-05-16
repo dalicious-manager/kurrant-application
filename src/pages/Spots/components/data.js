@@ -1,7 +1,10 @@
 import {MySpot, ShareSpot, PrivateSpot} from '../../../assets';
 import Songe from '../../../assets/icons/Map/songe.svg';
 import SongeMembership from '../../../assets/icons/Map/songeMembership.svg';
+import OpenSpot from '../../../assets/icons/Map/openSpot.svg';
 import PlusIcon from '../../../assets/icons/Home/plus.svg';
+import styled from 'styled-components';
+import Typography from '../../../components/Typography';
 
 export function modalImage(data) {
   switch (data) {
@@ -53,6 +56,8 @@ export function alramImage(data) {
       return <Songe />;
     case 2:
       return <SongeMembership />;
+    case 3:
+      return <OpenSpot />;
     case 'private':
       return <Songe />;
   }
@@ -78,15 +83,46 @@ export function alramDscText(data) {
     case 1:
       return `님만을 위한${`\n`}마이스팟 개설에 최선을 다할게요`;
     case 2:
-      return `배송비 절감과 나만을 위한 음식 추천을${`\n`}받을 수 있는 방법이 있는데 알아보시겠어요?`;
+      return (
+        <Desc>
+          <EmphasisDesc>배송비 절감</EmphasisDesc>과 나만을 위한
+          <EmphasisDesc>음식 추천</EmphasisDesc>을{`\n`}받을 수 있는 방법이
+          있는데 알아보시겠어요?
+        </Desc>
+      );
     case 3:
-      return `스팟 등록이 안되면${`\n`}서비스 이용에 제한이 있어요${`\n`}${`\n`}개설 전까지 다른 스팟을${`\n`}사용하시겠어요?`;
+      return (
+        <Desc>
+          스팟 등록이 안되면{`\n`}
+          <EmphasisDesc>서비스 이용에 제한이 있어요</EmphasisDesc>
+          {`\n`}
+          {`\n`}
+          개설 전까지 다른 스팟을{`\n`}
+          사용하시겠어요?
+        </Desc>
+      );
     case 4:
       return `커런트를 이용하기 위한 준비를 마쳤어요.${`\n`}이제 식사를 구매해볼까요?`;
     case 5:
-      return `배송비 절감과 나만을 위한 음식 추천을${`\n`}받을 수 있는 방법이 있는데 알아보시겠어요?`;
+      return (
+        <Desc>
+          <EmphasisDesc>배송비 절감</EmphasisDesc>과 나만을 위한
+          <EmphasisDesc>음식 추천</EmphasisDesc>을{`\n`}받을 수 있는 방법이
+          있는데 알아보시겠어요?
+        </Desc>
+      );
     case 6:
       return `개설되면 배송 스팟 선택할때${`\n`}확인할 수 있어요`;
+    case 7:
+      return (
+        <Desc>
+          개설 상황은 <EmphasisDesc>'마이페이지'</EmphasisDesc>에서 확인
+          가능해요
+          {`\n`}
+          {`\n`}개설 되면 <EmphasisDesc>배송 스팟 선택시</EmphasisDesc>
+          {`\n`}확인할 수 있어요
+        </Desc>
+      );
     case 'private':
       return `둘러보러 홈으로 이동할까요?${`\n`}아니면 다른 스팟을 사용해보시겠어요?`;
   }
@@ -116,3 +152,15 @@ export function subButtonText(data) {
   }
   return '다음에 할게요';
 }
+
+const EmphasisDesc = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${({theme}) => theme.colors.blue[500]};
+  text-align: center;
+  margin-top: 24px;
+`;
+
+const Desc = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+  text-align: center;
+  margin-top: 24px;
+`;

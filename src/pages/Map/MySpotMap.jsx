@@ -16,7 +16,8 @@ import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 import Info from './components/Info';
 import {useAtom} from 'jotai';
 import {userLocationAtom} from '../../utils/store';
-
+import {width, height} from '../../theme';
+console.log(height, 'didi');
 const WIDTH = Dimensions.get('screen').width;
 
 // latitude : 위도 (y) ,longitude :경도 (x)
@@ -32,7 +33,7 @@ const MySpotMap = ({route}) => {
   const [showAddress, setShowAddress] = useState(false);
   const [center, setCenter] = useState();
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
-
+  console.log(move, initCenter);
   const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
     center ? center?.longitude : initCenter.longitude,
     center ? center?.latitude : initCenter.latitude,
@@ -48,15 +49,23 @@ const MySpotMap = ({route}) => {
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
     setCenter(newCenter);
+    // setInitCenter(newCenter);
     setMove(false);
   };
-
+  useEffect(() => {
+    setTimeout(() => {
+      setInitCenter({
+        latitude: 37.49703,
+        longitude: 127.028191,
+      });
+    }, 500);
+  }, []);
   useEffect(() => {
     roadAddressRefetch();
-  }, [center]);
+  }, [center, initCenter]);
   useEffect(() => {
     addressRefetch();
-  }, [roadAddress]);
+  }, [roadAddress, initCenter]);
 
   useFocusEffect(
     useCallback(() => {
@@ -110,7 +119,7 @@ const MySpotMap = ({route}) => {
             alignSelf: 'center',
             justifyContent: 'center',
             zIndex: 1,
-            top: 231 - 47,
+            top: (height * 462) / 2 - 47,
           }}>
           <FastImage
             source={
@@ -170,7 +179,7 @@ const MySpotMap = ({route}) => {
 export default MySpotMap;
 
 const MapView = styled.View`
-  height: 462px;
+  height: ${height * 462}px;
   position: relative;
 `;
 
@@ -181,6 +190,7 @@ const Wrap = styled.SafeAreaView`
 
 const AddressView = styled.View`
   padding: 24px;
+  padding-top: 16px;
 `;
 const AddressText = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
@@ -195,7 +205,7 @@ const CircleView = styled.View`
   border-radius: 50px;
   position: absolute;
   /* z-index: 999; */
-  top: 220px;
+  top: ${(height * 462) / 2 - 11}px;
   left: ${WIDTH / 2 - 8}px;
 `;
 

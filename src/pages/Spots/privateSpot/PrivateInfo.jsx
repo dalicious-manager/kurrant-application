@@ -5,13 +5,19 @@ import Icon from '../../../assets/icons/Map/info.svg';
 import PrivateIcon from '../../../assets/icons/Map/private.svg';
 import Button from '../../../components/Button';
 import {PAGE_NAME as CompletePage} from '../../Spots/components/Complete';
-
+import BottomModal from '../../../components/BottomModal';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import Songe from '../../../assets/icons/Map/songe.svg';
 
 export const PAGE_NAME = 'PRIVATE_INFO_PAGE';
 const PrivateInfo = () => {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
   const alarmButton = () => {
     navigation.navigate(CompletePage, {
       data: 'private',
@@ -44,12 +50,25 @@ const PrivateInfo = () => {
         <Button
           label="담당자가 초대하면 알림 받기"
           text="BottomButtonSB"
-          onPressEvent={alarmButton}
+          onPressEvent={openModal}
         />
-        <Pressable>
-          <ButtonText>괜찮아요</ButtonText>
+        <Pressable onPress={() => navigation.goBack()}>
+          <ButtonText>뒤로가기</ButtonText>
         </Pressable>
       </ButtonWrap>
+      <BottomModal
+        image={<Songe />}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        title={`알림 신청 완료!`}
+        description={`둘러보러 홈으로 이동할까요?${`\n`}아니면 다른 스팟을 사용해보시겠어요?`}
+        buttonTitle1={'둘러보기'}
+        buttonType1="grey7"
+        buttonTitle2={'다른 스팟 타입 신청'}
+        buttonType2="yellow"
+        onPressEvent1={() => {}}
+        onPressEvent2={() => {}}
+      />
     </Wrap>
   );
 };

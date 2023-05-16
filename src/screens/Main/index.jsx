@@ -333,7 +333,7 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-    <MainRoot.Navigator initialRouteName={MapTest}>
+    <MainRoot.Navigator initialRouteName={SpotTypePage}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}

@@ -14,6 +14,7 @@ import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
 import {useAtom} from 'jotai';
 import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
+import {height} from '../../../theme';
 
 export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
@@ -26,31 +27,33 @@ const Complete = ({route}) => {
   };
 
   return (
-    <Wrap>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <CloseButton>
         <Close />
       </CloseButton>
-      <Contents>
-        <Title>{alramTitleText(data)}</Title>
-        {alramImage(data)}
-        <Desc>{alramDscText(data)}</Desc>
-      </Contents>
+      <Wrap showsVerticalScrollIndicator={false}>
+        <Contents>
+          <Title>{alramTitleText(data)}</Title>
+          {alramImage(data)}
+          <Desc>{alramDscText(data)}</Desc>
+        </Contents>
+      </Wrap>
       <ButtonWrap>
         <Button label={alramButtonText(data)} />
         <Pressable onPress={nextUseButton}>
           <ButtonText>{subButtonText(data)}</ButtonText>
         </Pressable>
       </ButtonWrap>
-    </Wrap>
+    </View>
   );
 };
 
 export default Complete;
 
-const Wrap = styled.View`
-  //justify-content: center;
+const Wrap = styled.ScrollView`
   background-color: white;
-  flex: 1;
+  position: relative;
+  margin-bottom: 120px;
 `;
 
 const Title = styled(Typography).attrs({text: 'Title02SB'})`
@@ -66,7 +69,8 @@ const Desc = styled(Typography).attrs({text: 'Body05R'})`
 
 const Contents = styled.View`
   align-items: center;
-  margin-top: 204px;
+  margin-top: ${height * 204}px;
+  padding-bottom: 50px;
 `;
 
 const ButtonText = styled(Typography).attrs({text: 'BottomButtonR'})`
@@ -89,4 +93,6 @@ const CloseButton = styled.Pressable`
   position: absolute;
   left: 24px;
   top: 52px;
+
+  z-index: 1;
 `;

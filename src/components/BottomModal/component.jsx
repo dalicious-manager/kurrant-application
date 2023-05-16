@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
+  View,
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
@@ -36,7 +37,7 @@ const Component = props => {
     buttonType2 = 'grey2',
     onPressEvent1 = () => {},
     onPressEvent2,
-    transparent = true,
+    image,
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
@@ -80,10 +81,7 @@ const Component = props => {
     });
   };
   return (
-    <Modal
-      visible={modalVisible}
-      animationType={'fade'}
-      transparent={transparent}>
+    <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay>
         <TouchableWithoutFeedback onPress={closeModal}>
           <Background />
@@ -99,6 +97,7 @@ const Component = props => {
             <DragButtonView/>
           </DragButton> */}
           <BottomSheetTitleView>
+            {image && <View style={{marginBottom: 24}}>{image}</View>}
             <BottomSheetTitle textColor={themeApp.colors.grey[2]}>
               {title}
             </BottomSheetTitle>

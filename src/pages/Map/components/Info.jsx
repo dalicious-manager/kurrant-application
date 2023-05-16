@@ -2,6 +2,8 @@ import {View, Text, Dimensions} from 'react-native';
 import styled from 'styled-components';
 import Typography from '../../../components/Typography';
 import Icon from '../../../assets/icons/Map/info.svg';
+import {height} from '../../../theme';
+
 const WIDTH = Dimensions.get('screen').width;
 const Info = ({onPressEvent}) => {
   return (
@@ -20,7 +22,7 @@ export default Info;
 
 const MapInfo = styled.Pressable`
   background-color: rgba(0, 0, 0, 0.7);
-  height: 462px;
+  height: ${height * 462}px;
   width: ${WIDTH}px;
 `;
 

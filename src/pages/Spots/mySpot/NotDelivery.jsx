@@ -6,13 +6,16 @@ import Button from '../../../components/Button';
 import Close from '../../../assets/icons/Map/close20.svg';
 import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as CompletePage} from '../components/Complete';
+import {height} from '../../../theme';
 
 export const PAGE_NAME = 'MY_SPOT_NOT_DELIVERY';
 const NotDelivery = () => {
   const navigation = useNavigation();
 
   const NoAlarm = () => {
-    navigation.navigate(CompletePage);
+    navigation.navigate(CompletePage, {
+      data: 1,
+    });
   };
   return (
     <Wrap>
@@ -53,7 +56,7 @@ const Desc = styled(Typography).attrs({text: 'Body05R'})`
 
 const Contents = styled.View`
   align-items: center;
-  margin-top: 204px;
+  margin-top: ${height * 204}px;
 `;
 
 const ButtonText = styled(Typography).attrs({text: 'BottomButtonR'})`

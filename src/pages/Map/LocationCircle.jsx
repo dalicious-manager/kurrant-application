@@ -56,7 +56,7 @@ const Location = ({setInitCenter, setShow, toast}) => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        // console.log(latitude, longitude, 'sffssf');
+        //console.log(latitude, longitude, 'sffssf');
         setInitCenter({latitude: latitude, longitude: longitude});
       },
       error => {

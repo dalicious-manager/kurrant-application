@@ -13,7 +13,7 @@ const SpotType = () => {
   const navigation = useNavigation();
 
   return (
-    <Wrap>
+    <Wrap showsVerticalScrollIndicator={false}>
       <View>
         <HeaderTitle>배송 받을 방법을{`\n`}선택해 주세요</HeaderTitle>
 
@@ -56,7 +56,7 @@ const SpotType = () => {
 
 export default SpotType;
 
-const Wrap = styled.SafeAreaView`
+const Wrap = styled.ScrollView`
   flex: 1;
   margin: 88px 24px 0px 24px;
 `;
