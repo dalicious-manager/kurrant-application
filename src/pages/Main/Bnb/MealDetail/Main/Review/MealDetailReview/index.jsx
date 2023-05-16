@@ -220,6 +220,7 @@ const Component = ({dailyFoodId}) => {
                   setShowSelectList(false);
                 }}>
                 <SelectorText>최신 순</SelectorText>
+                <></>
               </FilterSelecterPressable>
               <FilterSelecterPressable
                 isTopBorder={true}
