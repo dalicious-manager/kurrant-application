@@ -44,6 +44,7 @@ import {weekAtom} from '../../../../../biz/useBanner/store';
 import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 import { useGetDailyfood } from '../../../../../hook/useDailyfood';
 import { useGetOrderMeal } from '../../../../../hook/useOrder';
+import useUserInfo from '../../../../../biz/useUserInfo/hook';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -95,7 +96,7 @@ const Pages = ({route}) => {
     isAddMeal,
   } = useShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-  
+  const {isUserInfo}=useUserInfo();
   const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
   const handlePress = anim => {
@@ -145,7 +146,7 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     let price = null;
-    if (supportPrices) {
+    if (dailyfoodData?.data.supportPrice) {
       switch (sliderValue) {
         case 0:
           price = supportPrices['morningSupportPrice'];
@@ -190,7 +191,7 @@ const Pages = ({route}) => {
 
   // const todayMeal = mealInfo?.filter((m) => m.date === date);
   // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-  const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
+  const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.spotId;
   // const spotId = 1;
   const [chk, setChk] = useState(0);
   const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(spotId,params?.date ? params.date:date);
@@ -644,7 +645,7 @@ const Pages = ({route}) => {
         {
           dailyFoodId: id,
           count: 1,
-          spotId: userInfo?.spotId,
+          spotId: isUserInfo?.spotId,
         },
       ]);
       setShow(true);
@@ -728,14 +729,14 @@ const Pages = ({route}) => {
           {diningFood?.length === 0 && spotId !== null && (
             <NoServieceView
               status={hideModal}
-              isMembership={userInfo?.isMembership}>
+              isMembership={isUserInfo?.isMembership}>
               <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
             </NoServieceView>
           )}
           {spotId === null && (
             <NoSpotView
               status={hideModal}
-              isMembership={userInfo?.isMembership}>
+              isMembership={isUserInfo?.isMembership}>
               <NoServiceText>메뉴는 스팟 선택 또는 </NoServiceText>
               <NoServiceText>
                 스팟 개설 신청 승인후 확인할 수 있어요
@@ -883,7 +884,7 @@ const Pages = ({route}) => {
         />
       </CalendarWrap>
 
-      <PagerViewWrap isMembership={userInfo?.isMembership}>
+      <PagerViewWrap isMembership={isUserInfo?.isMembership}>
         {!isDailyFoodLoading && (
           <ProgressWrap>
             <ProgressInner>
@@ -944,7 +945,7 @@ const Pages = ({route}) => {
             )}
           </ProgressWrap>
         )}
-        {!userInfo?.isMembership && (
+        {!isUserInfo?.isMembership && (
           <View>
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
           </View>

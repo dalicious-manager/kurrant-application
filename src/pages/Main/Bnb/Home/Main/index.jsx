@@ -304,7 +304,6 @@ const Pages = () => {
           'Notification caused app to open from quit state:',
           remoteMessage.data,
         );
-        console.log(remoteMessage.data.page, remoteMessage.data.page === 'S_MAIN__REVIEW',remoteMessage.data.page.toString() === 'S_MAIN__REVIEW','data');
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
@@ -330,7 +329,6 @@ const Pages = () => {
                 from: 'spot',
               });
             }
-
           navigation.navigate(remoteMessage.data.page);
         }
       }

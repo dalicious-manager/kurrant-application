@@ -57,6 +57,7 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 const Pages = ({route}) => {
   const params = route?.params;
+  const currentVersion = VersionCheck.getCurrentVersion();
   const navigation = useNavigation();
   const toast = Toast();
   const toast2 = Toast();
@@ -144,7 +145,18 @@ const Pages = ({route}) => {
     googleSigninConfigure();
     facebookConfiguration();
   }, []);
+  const handlePress = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
 
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
