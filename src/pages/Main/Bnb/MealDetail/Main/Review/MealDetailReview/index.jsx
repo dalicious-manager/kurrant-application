@@ -21,13 +21,35 @@ import BottomModalMultipleSample from '../../../../../../../components/Review/Bo
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import {Shadow} from 'react-native-shadow-2';
 import useGetMealDetailReview from '../useGetMealDetailReview/useGetMealDetailReview';
+import {buildCustomUrl} from './logic';
 
 const Component = ({dailyFoodId}) => {
   const theme = useTheme();
 
   console.log(dailyFoodId);
 
+  // 필터 값들 모으기
+  // 베스트순,최신순,리뷰순 (sort)
+  // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
+
+  const [orderFilter, setOrderFilter] = useState(0);
+
+  // 포토리뷰만(photo)
+  // photo : 둘다 -> 값 없음,  포토리뷰 없음 -> 0, 포토리뷰만 -> 1
+
+  const [isOnlyPhoto, setIsOnlyPhoto] = useState(undefined);
+
+  // 별점 필터(starFilter)
+  // starFilter : 없음, 1,2,3,4,5
+  const [starFilter, setStarFilter] = useState(undefined);
+
+  // 상품 상세 리뷰 키워드
+
   const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+
+  useEffect(() => {
+    setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, starFilter));
+  }, [dailyFoodId, orderFilter, isOnlyPhoto, starFilter]);
 
   const {
     starAverage,
@@ -44,7 +66,6 @@ const Component = ({dailyFoodId}) => {
   const [showSelectList, setShowSelectList] = useState(false);
 
   // best, latest, photo, rating, like
-  const [orderFilter, setOrderFilter] = useState('best');
 
   // 바텀 모달
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
