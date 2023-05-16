@@ -33,12 +33,13 @@ import {ThumbsUp} from '../../../../../../../../components/Icon';
 const Component = ({
   id,
   item,
+  userName,
   writtenDate,
   option,
   rating,
   reviewText,
   focusId,
-  like,
+  likeNum,
   imageLocation,
   createDate,
   updateDate,
@@ -84,17 +85,12 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
-  // console.log('아이템');
-  // console.log(item);
-  // console.log('코멘트 리스트');
-  // console.log(commentList);
-
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
-            남**
+            {userName}
           </RestaurentNameText>
         </TitleWrap>
       </TopWrap>
@@ -122,13 +118,13 @@ const Component = ({
 
         <EditWrap>
           <LikePressable onPress={() => {}}>
-            <EditText isLike={like}>도움이 되요 </EditText>
+            <EditText isLike={likeNum}>도움이 되요 </EditText>
             <ThumbsUp
               width="14px"
               height="15px"
-              color={like ? theme.colors.green[500] : theme.colors.grey[5]}
+              color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
             />
-            <LikeNumber>{5}</LikeNumber>
+            <LikeNumber>{likeNum}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>
@@ -196,18 +192,18 @@ const Component = ({
             numberOfLines={3}
             ellipsizeMode="tail"
             // textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}
-            textBreakStrategy={
-              Platform.OS === 'android' ? 'balanced' : undefined
-            }
+            // textBreakStrategy={
+            //   Platform.OS === 'android' ? 'balanced' : undefined
+            // }
             calcFontSize={calcFontSize}>
             {reviewText}
           </ReviewText>
         ) : (
           <ReviewText
             // textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}
-            textBreakStrategy={
-              Platform.OS === 'android' ? 'balanced' : undefined
-            }
+            // textBreakStrategy={
+            //   Platform.OS === 'android' ? 'balanced' : undefined
+            // }
             calcFontSize={calcFontSize}>
             {reviewText}
           </ReviewText>
@@ -250,9 +246,6 @@ export default Component;
 
 const Container = styled.View`
   width: 100%;
-  //margin: 12px 0;
-  //margin-bottom: 40px;
-  /* padding: 24px; */
 
   ${({focusId, id}) => {
     // console.log(focusId, id, 'focusId === id');
@@ -262,7 +255,7 @@ const Container = styled.View`
       `;
     }
   }}
-  /* border: 1px solid black; */
+
   margin-bottom: 40px;
 `;
 

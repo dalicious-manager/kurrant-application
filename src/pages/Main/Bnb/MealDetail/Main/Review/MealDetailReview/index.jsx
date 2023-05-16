@@ -209,22 +209,23 @@ const Component = ({dailyFoodId}) => {
             mealDetailReview.length > 0 &&
             mealDetailReview.map(item => {
               return (
-                <View key={item.reviewId}>
-                  <Card
-                    id={item.reviewId}
-                    item={item}
-                    createDate={item.createDate}
-                    updateDate={item.updateDate}
-                    writtenDate={convertDateFormat1(item.createDate)}
-                    option={item.option}
-                    rating={item.satisfaction}
-                    reviewText={item.content}
-                    imageLocation={item.imageLocation}
-                    forMakers={item.forMakers}
-                    commentList={item.commentList}
-                    like={item.like}
-                  />
-                </View>
+                <Card
+                  key={item.reviewId}
+                  id={item.reviewId}
+                  userName={item.userName}
+                  item={item}
+                  likeNum={item.like}
+                  isLike={item.isLike}
+                  createDate={item.createDate}
+                  updateDate={item.updateDate}
+                  writtenDate={convertDateFormat1(item.createDate)}
+                  option={item.option}
+                  rating={item.satisfaction}
+                  reviewText={item.content}
+                  imageLocation={item.imageLocation}
+                  forMakers={item.forMakers}
+                  commentList={item.commentList}
+                />
               );
             })}
         </CardsWrap>
@@ -466,7 +467,8 @@ const ReviewListWrap = styled.View`
 `;
 
 const CardsWrap = styled.View`
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
+  /* border: 1px solid black; */
 `;
 
 const MoreReviewPressable = styled.Pressable`
