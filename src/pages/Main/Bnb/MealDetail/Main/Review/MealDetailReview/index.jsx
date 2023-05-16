@@ -41,15 +41,15 @@ const Component = ({dailyFoodId}) => {
 
   // 별점 필터(starFilter)
   // starFilter : 없음, 1,2,3,4,5
-  const [starFilter, setStarFilter] = useState(undefined);
+  const [rateSelected, setRateSelected] = useState([]);
 
   // 상품 상세 리뷰 키워드
 
   const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
 
   useEffect(() => {
-    setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, starFilter));
-  }, [dailyFoodId, orderFilter, isOnlyPhoto, starFilter, setUrl]);
+    setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, rateSelected));
+  }, [dailyFoodId, orderFilter, isOnlyPhoto, rateSelected, setUrl]);
 
   const {
     starAverage,
@@ -69,8 +69,6 @@ const Component = ({dailyFoodId}) => {
 
   // 바텀 모달
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
-
-  const [rateSelected, setRateSelected] = useState([]);
 
   const handleSelectBottomModal = id => {
     if (rateSelected.includes(id)) {

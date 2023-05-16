@@ -2,7 +2,7 @@ export const buildCustomUrl = (
   dailyFoodId,
   orderFilter = 0,
   isOnlyPhoto = undefined,
-  starFilter = undefined,
+  rateSelected = [],
 ) => {
   const basicUrl = [`/dailyfoods/${dailyFoodId}/review?`];
 
@@ -22,9 +22,11 @@ export const buildCustomUrl = (
 
   // 별점필터
 
-  if (starFilter) {
-    basicUrl.push(`&starFilter=${starFilter}`);
-  }
+  //   rateSelected
+
+  //   if (starFilter) {
+  //     basicUrl.push(`&starFilter=${starFilter}`);
+  //   }
 
   console.log('basicUrl');
   console.log(basicUrl);

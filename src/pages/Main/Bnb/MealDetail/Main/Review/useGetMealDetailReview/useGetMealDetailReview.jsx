@@ -26,9 +26,10 @@ const useGetMealDetailReview = url => {
 
       console.log(response.data);
 
-      setMealDetailReview(
-        Array.isArray(response.data.items) ? response.data.items.reverse() : [],
-      );
+      // setMealDetailReview(
+      //   Array.isArray(response.data.items) ? response.data.items.reverse() : [],
+      // );
+      setMealDetailReview(response.data.items);
       setStarAverage(response.data.starEverage);
       setTotalCount(response.data.total);
 
