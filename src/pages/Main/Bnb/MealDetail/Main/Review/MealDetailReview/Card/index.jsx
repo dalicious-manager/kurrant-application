@@ -27,6 +27,7 @@ import {changeSeperator} from '~utils/dateFormatter';
 import {SkinnyArrowDown} from '~components/Icon';
 import {css} from 'styled-components/native';
 import {ThumbsUp} from '../../../../../../../../components/Icon';
+import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
 
 // 상세페이지 카드
 
@@ -172,14 +173,16 @@ const Component = ({
       />
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
-        {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
-          <IconDiv
-            onPress={() => {
-              setElaborateComment(!elaborateComment);
-            }}>
-            <SkinnyArrowDown width={'12px'} height={'8px'} />
-          </IconDiv>
-        )}
+        {Platform.OS === 'ios' &&
+          isOverThreeLines(reviewText) &&
+          !elaborateComment && (
+            <IconDiv
+              onPress={() => {
+                setElaborateComment(!elaborateComment);
+              }}>
+              <SkinnyArrowDown width={'12px'} height={'8px'} />
+            </IconDiv>
+          )}
 
         {/* <Text
           // lineBreakStrategyIOS={'hangul-word'}

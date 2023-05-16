@@ -28,6 +28,7 @@ import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook
 import {changeSeperator} from '../../../../../utils/dateFormatter';
 import {SkinnyArrowDown} from '../../../../../components/Icon';
 import {css} from 'styled-components/native';
+import {isOverThreeLines} from '../../../../../components/Review/WrittenReviewCard/logic';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -127,7 +128,6 @@ const Component = ({
       ],
     );
   };
-  const [numLines, setNumLines] = useState(1);
 
   const handlePressReviewText = () => {
     setElaborateComment(!elaborateComment);
@@ -146,34 +146,6 @@ const Component = ({
   // /n이 하나일떄 24*24
   // /n이 두개일떄 24
   // /n 이 세개일떄 0
-
-  const isOverThreeLines = text => {
-    const numberOfLineChange = (text.match(/\n/g) || []).length;
-    if (numberOfLineChange === 0) {
-      // 0개일떄
-      if (text.length / 24 > 3) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (numberOfLineChange == 1) {
-      if (text.length / 24 > 2) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (numberOfLineChange == 2) {
-      if (text.length / 24 > 1) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (numberOfLineChange >= 3) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   return (
     <Container focusId={focusId} id={id}>
