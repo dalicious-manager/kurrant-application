@@ -18,7 +18,7 @@ class SseService {
           Authorization: `Bearer ${this.token}`,
         },
         withCredentials: true,
-        retry: 3000,
+        // retry: 3000,
       },
     );
   }

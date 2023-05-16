@@ -72,7 +72,15 @@ import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
-  const {eventSourceMsg, setEventSourceMsg} = useSse();
+  const {
+    sseType1,
+    sseType2,
+    sseType3,
+    sseType4,
+    sseType5,
+    eventSourceMsg,
+    setEventSourceMsg,
+  } = useSse();
 
   useEffect(() => {
     //
@@ -701,12 +709,12 @@ const Pages = () => {
         </Wrap>
       </ScrollViewWrap>
 
-      {eventSourceMsg.content && (
+      {sseType5.userId && !sseType5.read && (
         <BalloonPressable
           onPress={() => {
-            confirmBalloonClicked();
+            // confirmBalloonClicked();
           }}>
-          <Balloon label={eventSourceMsg.content} />
+          <Balloon label={sseType5.content} />
         </BalloonPressable>
       )}
 

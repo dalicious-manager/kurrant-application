@@ -5,7 +5,15 @@ import {getStorage, setStorage} from '../../../asyncStorage';
 import {getCheck} from '../restApis/getRestApis';
 import Config from 'react-native-config';
 import SseService from '../../SseService/SseService';
-import {eventSourceMsgAtom, eventSourceMsgBundleAtom} from '../store';
+import {
+  eventSourceMsgAtom,
+  eventSourceMsgBundleAtom,
+  sseType1Atom,
+  sseType2Atom,
+  sseType3Atom,
+  sseType4Atom,
+  sseType5Atom,
+} from '../store';
 import {useAtom} from 'jotai';
 
 const apiHostUrl =
@@ -14,10 +22,41 @@ const apiHostUrl =
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 const useSse = () => {
-  const [eventSourceMsg, setEventSourceMsg] = useAtom(eventSourceMsgAtom);
-  const [eventSourceMsgBundle, setEventSourceMsgBundle] = useAtom(
-    eventSourceMsgBundleAtom,
-  );
+  //
+
+  const [sseType1, setSseType1] = useAtom(sseType1Atom);
+  const [sseType2, setSseType2] = useAtom(sseType2Atom);
+  const [sseType3, setSseType3] = useAtom(sseType3Atom);
+  const [sseType4, setSseType4] = useAtom(sseType4Atom);
+  const [sseType5, setSseType5] = useAtom(sseType5Atom);
+
+  //  const {
+  //     data,
+  //     status,
+  //     isLoading,
+  //     refetch: reviewQueryRefetch,
+  //   } = useQuery(
+  //     ['sse'],
+
+  //     async ({queryKey}) => {
+  //       const response = await instance.get(url);
+
+  //       // 메이커스 목록
+
+  //       setMakersList(response.data.items.makersInfoList);
+  //       // 리뷰 리스트 목록
+  //       setReviewList(response.data.items.reviewList);
+  //       // 미답변 갯수
+  //       setUnansweredCount(response.data.items.unansweredCount);
+  //       setTotalPage(response.data.total);
+  //       return response.data;
+  //     },
+  //     {
+  //       enabled: enable,
+  //       retry: 1,
+  //       retryDelay: 800,
+  //     },
+  //   );
 
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
@@ -39,63 +78,44 @@ const useSse = () => {
 
   useEffect(() => {
     getSseServiceInstance().then(sseServiceInstance => {
-      // console.log(sseServiceInstance);
-      // console.log(typeof sseServiceInstance);
-      // console.log(sseServiceInstance.onMessage);
-
       sseServiceInstance.onOpen();
 
       sseServiceInstance.onMessage(message => {
-        // console.log('연결된듯');
-        // console.log(message);
         if (typeof message === 'string') {
           if (message.includes('EventStream')) {
             console.log(1);
             console.log('EventStream 연결 되었답니다');
-
-            const yes = {...eventSourceMsgBundle};
-
-            yes['first-connect'] = message;
-
-            setEventSourceMsgBundle(yes);
           } else {
-            console.log(2);
-            console.log(JSON.parse(message));
-            setEventSourceMsg(JSON.parse(message));
+            const messageType = JSON.parse(message).type;
 
-            const yes = {...eventSourceMsgBundle};
+            switch (messageType) {
+              case 1:
+                // type: 1 전체공지
+                break;
+              case 2:
+                // type: 2 스팟공지
+                break;
+              case 3:
+                // type: 3 구매후기
+                break;
+              case 4:
+                // type: 4 마감시간
+                break;
+              case 5:
+                // type: 5 다음주 식사 구매하셨나요?
+                console.log('message type 5');
+                console.log({...JSON.parse(message)});
+                setSseType5({...JSON.parse(message)});
 
-            yes['purchaseMeal'] = JSON.parse(message).content;
-
-            setEventSourceMsgBundle(yes);
+                break;
+              default:
+                break;
+            }
           }
         }
       });
     });
-  }, [getSseServiceInstance, setEventSourceMsg]);
-
-  // useEffect(() => {
-  //   console.log('잘 들어옴 이벤트 메세지');
-
-  //   console.log(eventSourceMsg);
-  //   // console.log(typeof eventSourceMsg);
-  //   if (typeof eventSourceMsg === 'string') {
-  //     console.log('일단 스트링이긴 함');
-
-  //     // console.log(JSON.parse(eventSourceMsg));
-
-  //     if (eventSourceMsg.includes('EventStream')) {
-  //       console.log(1);
-  //       // console.log(eventSourceMsg);
-  //     } else {
-  //       console.log(2);
-
-  //       console.log(JSON.parse(eventSourceMsg));
-  //     }
-  //   }
-
-  //   // }
-  // }, [eventSourceMsg]);
+  }, [getSseServiceInstance]);
 
   // 뭔가 에러터지면 끊기
 
@@ -185,7 +205,13 @@ const useSse = () => {
   //   eventSource.close();
   // };
 
-  return {eventSourceMsg, setEventSourceMsg};
+  return {
+    sseType1,
+    sseType2,
+    sseType3,
+    sseType4,
+    sseType5,
+  };
 };
 
 export default useSse;

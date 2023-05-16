@@ -4,7 +4,7 @@ import {Text, View} from 'react-native';
 import styled from 'styled-components';
 // import useWrittenReview from '../biz/useReview/useWrittenReview/hook';
 import Button from '../components/Button';
-import useSse from '../utils/sse/seeContextApi/sseLogics/useSse';
+
 // import Modal from '../components/Modal';
 // import RateStars from '../components/RateStars';
 // import RefTextInput from '../components/RefTextInput';
