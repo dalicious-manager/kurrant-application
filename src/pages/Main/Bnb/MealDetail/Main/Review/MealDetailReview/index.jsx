@@ -48,8 +48,13 @@ const Component = ({dailyFoodId}) => {
   const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
 
   useEffect(() => {
+    console.log('빌드 커스텀 유아렐');
+    console.log(
+      buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, starFilter),
+    );
+
     setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, starFilter));
-  }, [dailyFoodId, orderFilter, isOnlyPhoto, starFilter]);
+  }, [dailyFoodId, orderFilter, isOnlyPhoto, starFilter, setUrl]);
 
   const {
     starAverage,
@@ -61,7 +66,7 @@ const Component = ({dailyFoodId}) => {
 
   useEffect(() => {
     getMealDetailReviewQueryRefetch();
-  }, []);
+  }, [url]);
 
   const [showSelectList, setShowSelectList] = useState(false);
 
@@ -89,6 +94,16 @@ const Component = ({dailyFoodId}) => {
   //   console.log('필더값');
   //   console.log(orderFilter);
   // }, [orderFilter]);
+
+  const showSelectedOrderFilter = orderFilter => {
+    if (orderFilter === 0) {
+      return '베스트 순';
+    } else if (orderFilter === 1) {
+      return '최신순';
+    } else if (orderFilter === 2) {
+      return '리뷰 추천순';
+    }
+  };
 
   const sampleData1 = [
     '맛',
@@ -159,7 +174,7 @@ const Component = ({dailyFoodId}) => {
                 setShowSelectList(!showSelectList);
               }}>
               <ArrowUpAndDown />
-              <FilterText>베스트 순</FilterText>
+              <FilterText>{showSelectedOrderFilter(orderFilter)}</FilterText>
             </FilterPressable>
 
             <ThinGreyLineVertical />
@@ -195,28 +210,27 @@ const Component = ({dailyFoodId}) => {
             <FilterSelecterWrap>
               <FilterSelecterPressable
                 onPress={() => {
-                  // setOrderFilter('best');
+                  setOrderFilter(0);
+
                   setShowSelectList(false);
                 }}>
-                <SelectorText>베스트순</SelectorText>
+                <SelectorText>베스트 순</SelectorText>
               </FilterSelecterPressable>
               <FilterSelecterPressable
                 isTopBorder={true}
                 onPress={() => {
-                  () => {
-                    // setOrderFilter('latest');
-                    setShowSelectList(false);
-                  };
+                  setOrderFilter(1);
+
+                  setShowSelectList(false);
                 }}>
-                <SelectorText>최신순</SelectorText>
+                <SelectorText>최신 순</SelectorText>
               </FilterSelecterPressable>
               <FilterSelecterPressable
                 isTopBorder={true}
                 onPress={() => {
-                  () => {
-                    // setOrderFilter('latest');
-                    setShowSelectList(false);
-                  };
+                  setOrderFilter(2);
+
+                  setShowSelectList(false);
                 }}>
                 <SelectorText>리뷰 추천순</SelectorText>
               </FilterSelecterPressable>

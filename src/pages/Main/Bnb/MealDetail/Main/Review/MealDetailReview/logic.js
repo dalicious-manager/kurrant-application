@@ -8,7 +8,7 @@ export const buildCustomUrl = (
 
   // 베스트순
 
-  if (orderFilter) {
+  if (orderFilter + 1) {
     basicUrl.push(`sort=${orderFilter}`);
   }
 
@@ -23,6 +23,9 @@ export const buildCustomUrl = (
   if (starFilter) {
     basicUrl.push(`&starFilter=${starFilter}`);
   }
+
+  console.log('basicUrl');
+  console.log(basicUrl);
 
   return basicUrl.join('');
 };

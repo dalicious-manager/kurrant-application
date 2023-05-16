@@ -18,11 +18,13 @@ const useGetMealDetailReview = url => {
     ['review', 'GetMealDetailReview'],
 
     async ({queryKey}) => {
-      const response = await fetchJson(url, 'GET');
-      console.log('리뷰 받아왔다 확인해라');
-      console.log(response.data.items);
+      console.log(url);
 
-      setMealDetailReview(response.data.items);
+      const response = await fetchJson(url, 'GET');
+      // console.log('리뷰 받아왔다 확인해라');
+      // console.log(response.data.items);
+
+      setMealDetailReview(response.data.items.reverse());
       setStarAverage(response.data.starEverage);
       setTotalCount(response.data.total);
 
