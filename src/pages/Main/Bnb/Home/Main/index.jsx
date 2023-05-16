@@ -133,6 +133,12 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
+  useEffect(()=>{
+    userInfo();
+  },[])
+  useEffect(()=>{
+    dailyfoodRefetch();
+  },[isUserInfo])
   // 홈 전체 공지사항
 
   // const {getAnnouncements, announcements, announcementModalVisible} =
@@ -279,6 +285,11 @@ const Pages = () => {
       .getToken()
       .then(token => {
         console.log('push token ' + token);
+        if (token) {
+          saveFcmToken({
+            token: token,
+          });
+        }
       })
       .catch(error => {
         console.log('error getting push token ' + error);

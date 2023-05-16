@@ -27,6 +27,7 @@ const {StatusBarManager} = NativeModules;
 
 const Component = ({userId}) => {
   const navigation = useNavigation();
+  const {userInfo} =useUserInfo();
   const labelItems = [
     {label: '아이디'},
     {label: '/'},
@@ -47,7 +48,7 @@ const Component = ({userId}) => {
   const onSubmit = async datas => {
     try {
       await login(datas);
-
+      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [

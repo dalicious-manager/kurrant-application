@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 
-
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import styled from 'styled-components/native';
 import { CompanyLogo ,SplashLogo,Kurrant} from '../../assets';
 import FastImage from 'react-native-fast-image';
@@ -121,16 +121,21 @@ const Page = () => {
       .getToken()
       .then(token => {
         console.log('push token ' + token);
-        if (token) {
-          saveFcmToken({
-            token: token,
-          });
-        }
+        // if (token) {
+        //   saveFcmToken({
+        //     token: token,
+        //   });
+        // }
       })
       .catch(error => {
         console.log('error getting push token ' + error);
       });
   };
+  useEffect(() => {
+   
+      
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     async function loadUser() {
       try {
@@ -181,6 +186,7 @@ const Page = () => {
         
       },300)
       try {
+        await checkPermission();
         await isAutoLogin();
       } catch (error) {
         setTimeout(()=>{
@@ -255,7 +261,7 @@ const Page = () => {
             
             if (res?.statusCode === 200) {
               await isTester();
-              await checkPermission();
+              
              
               navigation.reset({
                 index: 0,
@@ -294,11 +300,7 @@ const Page = () => {
     };
 
     setLoginLoading(true);
-      handlePress();
       
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
     async function requestUserPermission() {
       const authStatus = await messaging().requestPermission();
       const enabled =
@@ -315,6 +317,21 @@ const Page = () => {
       }
     }
     requestUserPermission();
+    const requestNotificationPermission = async () => {
+      if (Platform.OS === 'android') {
+        const status = await check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);        
+        if (status !== RESULTS.GRANTED) {
+          const permissionStatus = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+          if (permissionStatus === RESULTS.BLOCKED) {
+            // 사용자가 알림 권한을 거부한 경우 처리할 코드 작성
+          }
+        }
+      }
+    };
+    
+    // 알림 권한 요청 함수 호출
+    requestNotificationPermission();
+    handlePress();
   }, []);
   return (
     <Container>

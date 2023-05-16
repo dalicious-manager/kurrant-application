@@ -47,7 +47,8 @@ export default () => {
   const navigation = useNavigation();
   const naverLogin = async () => {
     // console.log('로그인')
-    const {successResponse} = await NaverLogin.login(naverData());
+    try {
+      const {successResponse} = await NaverLogin.login(naverData());
     if (successResponse) {
       // console.log(successResponse)
       // Clipboard.setString(successResponse.accessToken)
@@ -70,6 +71,10 @@ export default () => {
         ],
       });
     }
+    } catch (error) {
+      Alert.alert("네이버 로그인 에러", error.toString());
+    }
+    
   };
 
   const googleLogin = async () => {

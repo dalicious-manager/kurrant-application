@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
+    "postinstall": "react-native setup-ios-permissions && pod-install"
   },
   "dependencies": {
     "@actbase/react-daum-postcode": "^1.0.4",
@@ -57,6 +58,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-pager-view": "^6.0.0",
+    "react-native-permissions": "^3.8.0",
     "react-native-reanimated": "^2.10.0",
     "react-native-reanimated-carousel": "^3.3.0",
     "react-native-render-html": "^6.3.4",
@@ -80,6 +82,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "pod-install": "0.1.38",
     "@babel/core": "^7.12.9",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/plugin-transform-destructuring": "^7.20.2",
@@ -97,6 +100,9 @@
     "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "18.1.0"
   },
+  "reactNativePermissionsIOS": [
+    "Notifications"
+  ],
   "resolutions": {
     "react-native-reanimated": "^2.10.0"
   },

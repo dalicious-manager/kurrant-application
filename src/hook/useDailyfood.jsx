@@ -6,5 +6,7 @@ import { dailyfoodApis } from '../api/dailyfood';
 export function useGetDailyfood(spotId,selectedDate, userRole) {
   return useQuery('dailyfood', () => {
     return dailyfoodApis.dailyfood(spotId,selectedDate, userRole)
+  },{
+    enabled:!!spotId
   });
 }
