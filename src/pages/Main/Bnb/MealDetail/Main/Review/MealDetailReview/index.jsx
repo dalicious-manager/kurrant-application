@@ -27,13 +27,15 @@ const Component = ({dailyFoodId}) => {
 
   console.log(dailyFoodId);
 
+  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+
   const {
     starAverage,
     totalCount,
     isError,
     mealDetailReview,
     getMealDetailReviewQueryRefetch,
-  } = useGetMealDetailReview(dailyFoodId);
+  } = useGetMealDetailReview(url);
 
   useEffect(() => {
     getMealDetailReviewQueryRefetch();
