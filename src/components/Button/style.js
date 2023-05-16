@@ -161,10 +161,6 @@ export const getLabelColor = (disabled, type) => {
     return css`
       color: ${({theme}) => theme.colors.grey[3]};
     `;
-  } else if (type === 'map') {
-    return css`
-      color: ${({theme}) => theme.colors.red[100]};
-    `;
   } else {
     return css`
       color: ${({theme}) => theme.colors.grey[0]};

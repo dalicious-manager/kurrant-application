@@ -308,7 +308,10 @@ import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewClos
 
 // map
 import SpotType, {PAGE_NAME as SpotTypePage} from '../../pages/Spots/SpotType';
-import Map, {PAGE_NAME as MapTest} from '../../pages/Map/MySpotMap';
+import MySpotMap, {PAGE_NAME as MySpotMapPage} from '../../pages/Map/MySpotMap';
+import ShareSpotMap, {
+  PAGE_NAME as ShareSpotMapPage,
+} from '../../pages/Map/ShareSpotMap';
 import SearchResult, {
   PAGE_NAME as MapSearchResult,
 } from '../../pages/Map/SearchResult';
@@ -2070,14 +2073,31 @@ const Screen = () => {
       </MainRoot.Group>
       <MainRoot.Group>
         <MainRoot.Screen
-          name={MapTest}
-          component={Map}
+          name={MySpotMapPage}
+          component={MySpotMap}
           options={{
             headerLeft: () => <BackButton margin={[10, 0]} />,
             headerShown: true,
             headerShadowVisible: false,
             //headerTransparent: true,
             title: '주소 설정',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={ShareSpotMapPage}
+          component={ShareSpotMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '공유 스팟 찾기',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',

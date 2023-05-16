@@ -8,7 +8,7 @@ import {PAGE_NAME as CompletePage} from '../../Spots/components/Complete';
 import BottomModal from '../../../components/BottomModal';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import Songe from '../../../assets/icons/Map/songe.svg';
+import SongE from '../../../assets/icons/Map/bottomSongE.svg';
 
 export const PAGE_NAME = 'PRIVATE_INFO_PAGE';
 const PrivateInfo = () => {
@@ -27,22 +27,20 @@ const PrivateInfo = () => {
     <Wrap>
       <View style={{alignItems: 'center'}}>
         <Title>프라이빗 스팟</Title>
-        <TitleDsc>
-          한 회사 사람들 같이{`\n`}특정 집단 내 사람들끼리 사용하는 스팟
-        </TitleDsc>
+        <TitleDsc>특정 단체 내 구성원만 사용하는 스팟</TitleDsc>
         <PrivateIcon />
         <Description>
-          함께 프라이빗하게 쓰고 싶은 사람들끼리{`\n`}사용할 수 있는 곳으로
-          {`\n`}사전에 담당자의 초대가 필요한 스팟이에요.{`\n`}사내 식사 복지도
-          진행할 수 있어요.
+          회사, 동호회 등 원하는 사람들과 함께{`\n`}프라이빗하게 사용할 수 있는
+          곳이에요.{`\n`}일정 인원 수 이상이면 신청 가능하고{`\n`}식사 복지 처럼
+          케어를 진행할 수 있어요.
         </Description>
       </View>
       <Contents>
         <ContentsWrap>
           <Icon />
           <ContentsText>
-            해당 스팟은 사내/단체내 담당자의 초대로{`\n`}등록 가능합니다.{`\n`}
-            초대는 담당자에게 문의 바랍니다.
+            프라이빗 스팟은 사내/단체 내{`\n`}담당자의 초대로 등록 가능합니다.
+            {`\n`}초대는 담당자에게 문의 바랍니다.
           </ContentsText>
         </ContentsWrap>
       </Contents>
@@ -57,7 +55,7 @@ const PrivateInfo = () => {
         </Pressable>
       </ButtonWrap>
       <BottomModal
-        image={<Songe />}
+        image={<SongE />}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title={`알림 신청 완료!`}
