@@ -37,7 +37,7 @@ const Component = ({dailyFoodId}) => {
   // 포토리뷰만(photo)
   // photo : 둘다 -> 값 없음,  포토리뷰 없음 -> 0, 포토리뷰만 -> 1
 
-  const [isOnlyPhoto, setIsOnlyPhoto] = useState(undefined);
+  const [isOnlyPhoto, setIsOnlyPhoto] = useState(false);
 
   // 별점 필터(starFilter)
   // starFilter : 없음, 1,2,3,4,5
@@ -48,11 +48,6 @@ const Component = ({dailyFoodId}) => {
   const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
 
   useEffect(() => {
-    console.log('빌드 커스텀 유아렐');
-    console.log(
-      buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, starFilter),
-    );
-
     setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, starFilter));
   }, [dailyFoodId, orderFilter, isOnlyPhoto, starFilter, setUrl]);
 
@@ -85,15 +80,10 @@ const Component = ({dailyFoodId}) => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log('랄랄라');
-  //   console.log(rateSelected);
-  // }, [rateSelected]);
-
-  // useEffect(() => {
-  //   console.log('필더값');
-  //   console.log(orderFilter);
-  // }, [orderFilter]);
+  useEffect(() => {
+    console.log('랄랄라');
+    console.log(rateSelected);
+  }, [rateSelected]);
 
   const showSelectedOrderFilter = orderFilter => {
     if (orderFilter === 0) {
@@ -178,9 +168,17 @@ const Component = ({dailyFoodId}) => {
             </FilterPressable>
 
             <ThinGreyLineVertical />
-            <FilterPressable onPress={() => {}}>
-              <Picture />
-              <FilterText>포토리뷰만</FilterText>
+            <FilterPressable
+              onPress={() => {
+                setIsOnlyPhoto(!isOnlyPhoto);
+              }}>
+              <Picture
+                isOn={isOnlyPhoto}
+                color={
+                  isOnlyPhoto ? theme.colors.blue[500] : theme.colors.grey[4]
+                }
+              />
+              <FilterText isOn={isOnlyPhoto}>포토리뷰만</FilterText>
             </FilterPressable>
           </Wrap6>
 
@@ -457,7 +455,8 @@ const SelectorText = styled(Typography).attrs({text: 'Button10R'})`
 `;
 
 const FilterText = styled(Typography).attrs({text: 'Button10SB'})`
-  color: ${props => props.theme.colors.grey[4]};
+  color: ${({theme, isOn}) =>
+    isOn ? theme.colors.blue[500] : theme.colors.grey[4]};
   margin-left: 8px;
 `;
 

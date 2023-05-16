@@ -15,7 +15,9 @@ export const buildCustomUrl = (
   // 포토리뷰
 
   if (isOnlyPhoto) {
-    basicUrl.push(`&photo=${isOnlyPhoto}`);
+    // basicUrl.push(`&photo=${isOnlyPhoto}`);
+    basicUrl.push(`&photo=1`);
+  } else {
   }
 
   // 별점필터

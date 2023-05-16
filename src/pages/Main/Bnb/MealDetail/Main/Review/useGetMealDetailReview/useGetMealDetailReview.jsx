@@ -24,7 +24,11 @@ const useGetMealDetailReview = url => {
       // console.log('리뷰 받아왔다 확인해라');
       // console.log(response.data.items);
 
-      setMealDetailReview(response.data.items.reverse());
+      console.log(response.data);
+
+      setMealDetailReview(
+        Array.isArray(response.data.items) ? response.data.items.reverse() : [],
+      );
       setStarAverage(response.data.starEverage);
       setTotalCount(response.data.total);
 
