@@ -50,6 +50,6 @@ flex-direction:row;
 align-items:center;
 height: ${props => props.show ? '100px' : 0 };
 width: 100%;
-background-color: gold;
+/* background-color: gold; */
 position:absolute;
 `;

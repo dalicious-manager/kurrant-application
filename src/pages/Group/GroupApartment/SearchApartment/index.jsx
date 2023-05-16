@@ -1,12 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Keyboard, Pressable} from 'react-native';
+import {Keyboard, Pressable, View} from 'react-native';
 import styled from 'styled-components/native';
 
 import Search from '../../../../assets/icons/Group/search.svg';
 import SearchArrow from '../../../../assets/icons/Group/searchArrow.svg';
 import useApartApplication from '../../../../biz/useApartApplication/hook';
+import Label from '../../../../components/Label';
 import RefTextInput from '../../../../components/RefTextInput';
 import Typography from '../../../../components/Typography';
 import {PAGE_NAME as AddpartmentPageName} from '../SearchApartment/AddApartment';
@@ -16,6 +17,7 @@ const Pages = () => {
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
   const [touch, setTouch] = useState();
+  const [focus, setFocus] = useState(false);
   const {apartSearch, isApartSearch} = useApartApplication();
 
   const form = useForm({
@@ -35,7 +37,10 @@ const Pages = () => {
   };
 
   const filtered = isApartSearch?.filter(itemList => {
-    return itemList.name.includes(searchTerm);
+    return (
+      itemList.name.includes(searchTerm) ||
+      itemList.address.includes(searchTerm)
+    );
   });
 
   useEffect(() => {
@@ -49,46 +54,103 @@ const Pages = () => {
   return (
     <Wrap>
       <FormProvider {...form}>
-        <KeyDismiss onPress={() => Keyboard.dismiss()}>
+        <KeyDismiss
+          onPress={() => {
+            Keyboard.dismiss();
+          }}>
           <Container>
             <SearchIcon />
 
             <RefTextInput
-              label="단체명/장소명"
+              label="단체명/장소명/도로명주소"
               name="apartName"
-              placeholder="단체명/장소명"
+              placeholder="단체명/장소명/도로명주소"
               padding="4px 8px 4px 30px"
               onChange={e => handleChange(e)}
+              onFocus={() => {
+                setFocus(true);
+              }}
             />
           </Container>
 
           <ResultScrollView>
             {searchTerm !== '' &&
               filtered.map(el => {
+                if (el.name.includes(searchTerm)) {
+                  console.log(el);
+                }
                 return (
-                  <ResultView key={el.id}>
-                    <Pressable
-                      onPress={() => {
-                        setTouch(el.id);
-                        navigation.navigate(AddpartmentPageName, {data: el});
-                      }}>
-                      {el.name.includes(searchTerm) ? (
-                        <ApartName>
-                          {el.name.split(searchTerm)[0]}
-                          <SearchText>{searchTerm}</SearchText>
-                          {el.name.split(searchTerm)[1]}
-                        </ApartName>
-                      ) : (
-                        <ApartName>{el.name}</ApartName>
+                  <ResultView
+                    key={el.id}
+                    onPress={() => {
+                      setTouch(el.id);
+                      navigation.navigate(AddpartmentPageName, {data: el});
+                    }}>
+                    <View>
+                      {(el.name.includes(searchTerm) ||
+                        el.address.includes(searchTerm)) && (
+                        <NameWrap>
+                          <ApartName>
+                            {el.name.split(searchTerm)[0]}
+                            {el.name.includes(searchTerm) && (
+                              <SearchText>{searchTerm}</SearchText>
+                            )}
+                            {el.name.split(searchTerm)[1]}
+                          </ApartName>
+                          <View style={{marginLeft: 8}}>
+                            <Label
+                              label={
+                                el.spotType === 0
+                                  ? '프라이빗 스팟'
+                                  : '오픈 스팟'
+                              }
+                              type={el.spotType === 0 ? 'red' : 'green'}
+                            />
+                          </View>
+                        </NameWrap>
                       )}
+                      <ApartAddress>
+                        {el.address.split(searchTerm)[0]}
+                        {el.address.includes(searchTerm) && (
+                          <SearchAddressText>{searchTerm}</SearchAddressText>
+                        )}
+                        {el.address.split(searchTerm)[1]}
+                      </ApartAddress>
+                    </View>
+                    <SearchArrow />
+                  </ResultView>
+                );
+              })}
+            {focus &&
+              searchTerm === '' &&
+              isApartSearch?.map((el, idx) => {
+                console.log(el.spotType);
+                return (
+                  <ResultView
+                    key={el.id}
+                    onPress={() => {
+                      setTouch(el.id);
+                      navigation.navigate(AddpartmentPageName, {data: el});
+                    }}>
+                    <View>
+                      <NameWrap>
+                        <ApartName>{el.name}</ApartName>
+                        <View style={{marginLeft: 8}}>
+                          <Label
+                            label={
+                              el.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
+                            }
+                            type={el.spotType === 0 ? 'red' : 'green'}
+                          />
+                        </View>
+                      </NameWrap>
                       <ApartAddress>{el.address}</ApartAddress>
-                    </Pressable>
+                    </View>
                     <SearchArrow />
                   </ResultView>
                 );
               })}
           </ResultScrollView>
-
         </KeyDismiss>
       </FormProvider>
     </Wrap>
@@ -116,7 +178,7 @@ const SearchIcon = styled(Search)`
   z-index: 99;
 `;
 
-const ResultView = styled.View`
+const ResultView = styled.Pressable`
   margin: 8px 28px 8px 56px;
   flex-direction: row;
   justify-content: space-between;
@@ -135,4 +197,14 @@ const ApartAddress = styled(Typography).attrs({text: 'CaptionR'})`
 
 const SearchText = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.blue[500]};
+`;
+const SearchAddressText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme}) => theme.colors.blue[500]};
+`;
+
+const NameWrap = styled.View`
+  flex-direction: row;
+  text-align: center;
+
+  align-items: center;
 `;

@@ -1,42 +1,29 @@
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-} from 'react';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useState, useRef, useEffect, useLayoutEffect} from 'react';
 import {
   View,
   StatusBar,
   Dimensions,
-  Text,
   Alert,
+  Text,
   Pressable,
+  Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import styled from 'styled-components';
 import analytics from '@react-native-firebase/analytics';
 import LinearGradient from 'react-native-linear-gradient';
-import InfoIcon from '../../../../../assets/icons/MealDetail/info.svg';
 import FastImage from 'react-native-fast-image';
-import StartIcon from '../../../../../assets/icons/star.svg';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import BackButton from '../../../../../components/BackButton';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/ButtonExtendable';
-import MoreButton from '../../../../../components/ButtonMore';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
-import ReviewPage from '../../../../../components/ReviewPage';
 import Typography from '../../../../../components/Typography';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
@@ -45,8 +32,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useAtomValue} from 'jotai';
+import CarouselImage from '../components/CarouselImage';
+import MealDetailReview from './Review/MealDetailReview';
+import MembershipDiscountBox from '../components/MembershipDiscountBox';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -58,6 +46,7 @@ const Pages = ({route}) => {
   const [focus, setFocus] = useState(false);
   const [count, setCount] = useState(1);
   const [scroll, setScroll] = useState(0);
+  const [imgScroll, setImgScroll] = useState(true);
   const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
   const {isFoodDetail, isFoodDetailLoading, foodDetail} = useFoodDetail(); // 상세정보
   const {
@@ -67,8 +56,9 @@ const Pages = ({route}) => {
   const {isUserInfo} = useUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
+
   const isFocused = useIsFocused();
-  console.log(isfoodDetailDiscount, isFoodDetail, '--');
+
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -100,7 +90,12 @@ const Pages = ({route}) => {
   useEffect(() => {
     async function loadFoodDetail() {
       const foodData = await foodDetail(dailyFoodId);
-      await loadMeal();
+      if (foodData) {
+        const meal = await loadMeal();
+        if (meal) {
+          await updateMeal(req);
+        }
+      }
       const data = await analytics().logSelectContent({
         content_type: foodData.makersName,
         item_id: foodData.name,
@@ -114,9 +109,6 @@ const Pages = ({route}) => {
     loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    updateMeal(req);
-  }, [isFocused]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTransparent: true,
@@ -268,6 +260,7 @@ const Pages = ({route}) => {
     isFoodDetail?.makersDiscountedPrice +
     isFoodDetail?.periodDiscountedPrice;
 
+  const snapOffsets = [0, 0];
   useEffect(() => {
     async function detail() {
       await foodDetailDiscount(dailyFoodId);
@@ -282,6 +275,7 @@ const Pages = ({route}) => {
     <>
       <Wrap>
         <ScrollViewWrap
+          scrollEnabled={Platform.OS === 'android' ? imgScroll : true}
           showsVerticalScrollIndicator={false}
           onScroll={e => handleScroll(e)}
           scrollEventThrottle={16}>
@@ -291,96 +285,93 @@ const Pages = ({route}) => {
             ) : (
               <StatusBar barStyle="light-content" />
             )}
-            <FastImage
-              source={{
-                uri: `${isFoodDetail?.image}`,
-                priority: FastImage.priority.high,
-              }}
-              style={{
-                maxWidth: width,
-                height: 380,
-              }}>
-              <FilterImage
-                colors={[
-                  'rgba(0, 0, 0, 0.45)',
-                  'rgba(7, 7, 8, 0.25)',
-                  'rgba(255, 255, 255, 0)',
-                  'rgba(255, 255, 255, 0) ',
-                ]}
-              />
-            </FastImage>
-            <Content>
-              <View>
-                <MakersName>{isFoodDetail?.makersName}</MakersName>
-                <MealTitle>{isFoodDetail?.name}</MealTitle>
-                <Line>
-                  {/* <ReviewWrap>
+            <CarouselImage
+              img={isFoodDetail?.imageList}
+              setImgScroll={setImgScroll}
+            />
+            <TouchableWithoutFeedback onPressIn={() => setImgScroll(true)}>
+              <Content>
+                <View>
+                  <MakersName>{isFoodDetail?.makersName}</MakersName>
+                  <MealTitle>{isFoodDetail?.name}</MealTitle>
+                  <Line>
+                    {/* <ReviewWrap>
                                 <StartIcon/>
                                 <ReviewPoint>4.0</ReviewPoint>
                                 <ReviewCount>(132)</ReviewCount>
                             </ReviewWrap> */}
-                  <InformationWrap
-                    onPress={() => {
-                      navigation.navigate(MealInformationPageName, {
-                        data: isFoodDetail?.origins,
-                      });
-                    }}>
-                    <InformationText>알레르기/원산지</InformationText>
-                  </InformationWrap>
-                </Line>
-                <MealDsc>{isFoodDetail?.description}</MealDsc>
+                    <InformationWrap
+                      onPress={() => {
+                        navigation.navigate(MealInformationPageName, {
+                          data: isFoodDetail?.origins,
+                          data2: isFoodDetail?.allergies,
+                        });
+                      }}>
+                      <InformationText>알레르기/원산지</InformationText>
+                    </InformationWrap>
+                  </Line>
+                  <MealDsc>{isFoodDetail?.description}</MealDsc>
 
-                {isFoodDetail?.spicy !== null && (
-                  <Label label={`${isFoodDetail?.spicy}`} />
+                  {isFoodDetail?.spicy !== null && (
+                    <Label label={`${isFoodDetail?.spicy}`} />
+                  )}
+                  <PriceTitleWrap>
+                    <PriceTitle>최종 판매가</PriceTitle>
+                    <ModalWrap>
+                      <Modal
+                        id={dailyFoodId}
+                        price={isFoodDetail?.price}
+                        membershipDiscountedPrice={
+                          isFoodDetail?.membershipDiscountedPrice
+                        }
+                        membershipDiscountedRate={
+                          isFoodDetail?.membershipDiscountedRate
+                        }
+                        makersDiscountedPrice={
+                          isFoodDetail?.makersDiscountedPrice
+                        }
+                        makersDiscountedRate={
+                          isFoodDetail?.makersDiscountedRate
+                        }
+                        periodDiscountedPrice={
+                          isFoodDetail?.periodDiscountedPrice
+                        }
+                        periodDiscountedRate={
+                          isFoodDetail?.periodDiscountedRate
+                        }
+                        totalDiscountRate={realToTalDiscountRate}
+                        discountPrice={discountPrice}
+                      />
+                    </ModalWrap>
+                  </PriceTitleWrap>
+                  <PriceWrap>
+                    {realToTalDiscountRate !== 0 && (
+                      <Percent>
+                        {Math.round(realToTalDiscountRate * 100) / 100}%
+                      </Percent>
+                    )}
+                    {realToTalDiscountRate !== 0 && (
+                      <SalePrice>
+                        {withCommas(isFoodDetail?.price - discountPrice)}원
+                      </SalePrice>
+                    )}
+
+                    {realToTalDiscountRate === 0 && (
+                      <NoSalePrice>
+                        {withCommas(isFoodDetail?.price)}원
+                      </NoSalePrice>
+                    )}
+                    {realToTalDiscountRate !== 0 && (
+                      <Price>{withCommas(isFoodDetail?.price)}원</Price>
+                    )}
+                  </PriceWrap>
+                </View>
+                {isfoodDetailDiscount?.membershipDiscountRate !==
+                  isFoodDetail?.membershipDiscountedRate && (
+                  <MembershipDiscountBox isFoodDetail={isfoodDetailDiscount} />
                 )}
-                <PriceTitleWrap>
-                  <PriceTitle>최종 판매가</PriceTitle>
-                  <ModalWrap>
-                    <Modal
-                      id={dailyFoodId}
-                      price={isFoodDetail?.price}
-                      membershipDiscountedPrice={
-                        isFoodDetail?.membershipDiscountedPrice
-                      }
-                      membershipDiscountedRate={
-                        isFoodDetail?.membershipDiscountedRate
-                      }
-                      makersDiscountedPrice={
-                        isFoodDetail?.makersDiscountedPrice
-                      }
-                      makersDiscountedRate={isFoodDetail?.makersDiscountedRate}
-                      periodDiscountedPrice={
-                        isFoodDetail?.periodDiscountedPrice
-                      }
-                      periodDiscountedRate={isFoodDetail?.periodDiscountedRate}
-                      totalDiscountRate={realToTalDiscountRate}
-                      discountPrice={discountPrice}
-                    />
-                  </ModalWrap>
-                </PriceTitleWrap>
-                <PriceWrap>
-                  {realToTalDiscountRate !== 0 && (
-                    <Percent>
-                      {Math.round(realToTalDiscountRate * 100) / 100}%
-                    </Percent>
-                  )}
-                  {realToTalDiscountRate !== 0 && (
-                    <SalePrice>
-                      {withCommas(isFoodDetail?.price - discountPrice)}원
-                    </SalePrice>
-                  )}
-
-                  {realToTalDiscountRate === 0 && (
-                    <NoSalePrice>
-                      {withCommas(isFoodDetail?.price)}원
-                    </NoSalePrice>
-                  )}
-                  {realToTalDiscountRate !== 0 && (
-                    <Price>{withCommas(isFoodDetail?.price)}원</Price>
-                  )}
-                </PriceWrap>
-              </View>
-            </Content>
+              </Content>
+            </TouchableWithoutFeedback>
             <Content>
               <InfoWrap>
                 <InfoTitleView>
@@ -413,45 +404,24 @@ const Pages = ({route}) => {
                   </InfoTextWrap>
                 </InfoTextView>
               </InfoWrap>
-
-              {isUserInfo?.spotType === 0 ? (
-                <InfoWrap>
-                  <InfoTitleView>
-                    <InfoTitle>배송 정보</InfoTitle>
-                  </InfoTitleView>
-                  <InfoTextView>
-                    <InfoTextWrap>
-                      <Info>단체 배송</Info>
-                      <InfoText>25,000(50개 마다 부과)</InfoText>
-                    </InfoTextWrap>
-                    <InfoTextWrap>
-                      <Info>개별 배송</Info>
-                      <InfoText>3,500원</InfoText>
-                    </InfoTextWrap>
-                    <InfoTextWrap>
-                      <Info>멤버십 회원</Info>
-                      <InfoText>무료 배송</InfoText>
-                    </InfoTextWrap>
-                  </InfoTextView>
-                </InfoWrap>
-              ) : (
-                <InfoWrap>
-                  <InfoTitleView>
-                    <InfoTitle>배송 정보</InfoTitle>
-                  </InfoTitleView>
-                  <InfoTextView>
-                    <InfoTextWrap>
-                      <Info>개별 배송</Info>
-                      <InfoText>3,500원</InfoText>
-                    </InfoTextWrap>
-                    <InfoTextWrap>
-                      <Info>멤버십 회원</Info>
-                      <InfoText>무료 배송</InfoText>
-                    </InfoTextWrap>
-                  </InfoTextView>
-                </InfoWrap>
-              )}
+              <InfoWrap>
+                <InfoTitleView>
+                  <InfoTitle>배송 정보</InfoTitle>
+                </InfoTitleView>
+                <InfoTextView>
+                  <InfoTextWrap>
+                    <Info>개별 배송</Info>
+                    <InfoText>3,500원</InfoText>
+                  </InfoTextWrap>
+                  <InfoTextWrap>
+                    <Info>멤버십 회원</Info>
+                    <InfoText>무료 배송</InfoText>
+                  </InfoTextWrap>
+                </InfoTextView>
+              </InfoWrap>
             </Content>
+
+            {/* <MealDetailReview /> */}
 
             {/* 리뷰자리 */}
             {/* <Content >

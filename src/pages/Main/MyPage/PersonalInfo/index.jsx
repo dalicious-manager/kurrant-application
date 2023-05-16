@@ -121,7 +121,7 @@ const Pages = ({route}) => {
                 });
               });
             } catch (error) {
-              console.log(error.toString());
+              Alert.alert("회원탈퇴",error.toString().replace('error: '))
             }
           },
         },
@@ -163,8 +163,8 @@ const Pages = ({route}) => {
     );
   };
 
-  const spotId = isUserInfo.spotId;
-  const groupId = isUserInfo.groupId;
+  const spotId = isUserInfo?.spotId;
+  const groupId = isUserInfo?.groupId;
   useFocusEffect(
     useCallback(() => {
       getData();
@@ -198,7 +198,7 @@ const Pages = ({route}) => {
               <Typography text="Title02SB" textColor={themeApp.colors.grey[2]}>
                 {myInfoPerson?.name}님
               </Typography>
-              {myInfoPerson.hasGeneralProvider && (
+              {myInfoPerson?.hasGeneralProvider && (
                 <Typography text="Body06R" textColor={themeApp.colors.grey[2]}>
                   {myInfoPerson?.email}
                 </Typography>
@@ -258,10 +258,10 @@ const Pages = ({route}) => {
             </SNSBox>
           </SNSContainer>
           <Line />
-          {isUserInfo.name === '이름없음' && (
+          {isUserInfo?.name === '이름없음' && (
             <ListBox
               title={'이름 설정'}
-              description={isUserInfo.name === '이름없음' && '설정하기'}
+              description={isUserInfo?.name === '이름없음' && '설정하기'}
               routeName={NameSettingPageName}
             />
           )}
@@ -272,13 +272,13 @@ const Pages = ({route}) => {
           />
           <ListBox
             title={
-              !myInfoPerson.hasGeneralProvider
+              !myInfoPerson?.hasGeneralProvider
                 ? '이메일/비밀번호 설정'
                 : '비밀번호 변경'
             }
-            description={!myInfoPerson.hasGeneralProvider && '설정하기'}
+            description={!myInfoPerson?.hasGeneralProvider && '설정하기'}
             routeName={
-              !myInfoPerson.hasGeneralProvider
+              !myInfoPerson?.hasGeneralProvider
                 ? EmailSettingPageName
                 : PasswordSettingPageName
             }
@@ -308,20 +308,23 @@ const Pages = ({route}) => {
               onPressEvent={async () => {
                 try {
                   const token = await getStorage('token');
+                  const lastLogin = await getStorage('lastLogin');
+                  console.log(lastLogin)
                   const getToken = JSON.parse(token);
                   await logout({
-                    accessToken: getToken.accessToken,
-                    refreshToken: getToken.refreshToken,
+                    accessToken: getToken?.accessToken,
+                    refreshToken: getToken?.refreshToken,
                   });
-                  await AsyncStorage.clear().then(() => {
-                    navigation.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: LoginPageName,
-                        },
-                      ],
-                    });
+                  await AsyncStorage.removeItem('token')
+                  await AsyncStorage.removeItem('isLogin')
+                  await AsyncStorage.removeItem('spotStatus')
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
                   });
                 } catch (error) {
                   if (error.toString().replace('Error:', '').trim() === '403') {

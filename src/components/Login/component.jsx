@@ -118,13 +118,14 @@ const Component = ({userId}) => {
                 // buttonText:'인증요청',
                 // timer:900,
               }}
+              padding="4px 0px"
               placeholder="가입한 이메일 주소"
               rules={{
                 required: '필수 입력 항목 입니다.',
                 pattern: {
                   value:
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  message: '이메일 형식에 맞지 않습니다.',
+                    /^(([a-zA-Z0-9]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  message: '올바른 이메일 주소를 입력해주세요.',
                 },
               }}
               style={styles.input}
@@ -136,10 +137,16 @@ const Component = ({userId}) => {
               isPassword={true}
               autoCapitalize="none"
               placeholder="비밀번호"
+              style={styles.input}
+              padding="4px 0px"
               rules={{
                 required: '필수 입력 항목 입니다.',
+
+                minLength: {
+                  value: 8,
+                  message: '8글자 이상 입력해주세요.',
+                },
               }}
-              style={styles.input}
             />
             <CheckView>
               <Check name={'autoLogin'} type="login">
@@ -208,7 +215,8 @@ const LableContainer = styled.View`
 const ButtonContainer = styled.View`
   position: absolute;
   bottom: 22px;
-  margin-bottom: 24px;
+  /* margin-bottom: 24px; */
+  margin-bottom: 35px;
 `;
 const Label = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[2]};

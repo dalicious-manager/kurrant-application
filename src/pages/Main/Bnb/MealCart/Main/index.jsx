@@ -54,6 +54,7 @@ import BottomMenu from '../../../../../components/BottomSheetMenu';
 import Toast from '../../../../../components/Toast';
 import useUserMe from '../../../../../biz/useUserMe';
 import {surpportPrice} from '../../../../Group/GroupCorporations/CorporationsApplication/ThirdPage/Pages/function';
+import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
@@ -64,6 +65,7 @@ const Pages = () => {
   const boxRef = useRef();
   const [focus, setFocus] = useState(false);
   const [id, setId] = useState(null);
+  const queryClient = useQueryClient();
   const {
     isLoadMeal,
     isQuantity,
@@ -85,7 +87,7 @@ const Pages = () => {
   const [show, setShow] = useState(false);
   const {isUserInfo} = useUserInfo();
   const {getCardList} = useUserMe();
-  const [selected, setSelected] = useState(isUserInfo.spotId);
+  const [selected, setSelected] = useState(isUserInfo?.spotId);
   const [name, setName] = useState();
   const [date, setDate] = useState();
   const [type, setType] = useState();
@@ -99,32 +101,38 @@ const Pages = () => {
 
   useFocusEffect(
     useCallback(() => {
-      getCardList();
-    }, []),
-  );
-  useEffect(() => {
-    updateMeal(req);
-  }, [isFocused]);
-  useEffect(() => {
-    async function loadCart() {
-      try {
-        const res = await loadMeal();
-      } catch (error) {
-        if (error.toString().replace('Error:', '').trim() === '403') {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: LoginPageName,
-              },
-            ],
-          });
+      async function loadCart() {
+        try {
+          const res = await loadMeal();
+          if (res) {
+          }
+        } catch (error) {
+          if (error.toString().replace('Error:', '').trim() === '403') {
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: LoginPageName,
+                },
+              ],
+            });
+          }
         }
       }
-    }
-
-    loadCart();
-  }, []);
+      const getData = async () => {
+        const card = await getCardList();
+        if (card.statusCode === 200) {
+          const update = await updateMeal(req);
+          if (update.statusCode === 200) {
+            await loadCart();
+          }
+        }
+      };
+      getData();
+    }, []),
+  );
+  useEffect(() => {}, [isFocused]);
+  useEffect(() => {}, []);
 
   const quantityArr = isLoadMeal?.map(el =>
     el.cartDailyFoodDtoList.map(v =>
@@ -205,7 +213,7 @@ const Pages = () => {
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
       el.cartDailyFoodDtoList?.map(v =>
-        v.cartDailyFoods.filter(c => c.status !== 2),
+        v.cartDailyFoods.filter(c => c.status !== 6),
       ),
     )
     .flat();
@@ -223,10 +231,11 @@ const Pages = () => {
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
       el.cartDailyFoodDtoList?.map(v =>
-        v.cartDailyFoods.filter(c => c.status === 2),
+        v.cartDailyFoods.filter(c => c.status === 6),
       ),
     )
     .flat();
+
   const deadlineArr = deadlineArrs.reduce((acc, val) => [...acc, ...val], []);
   const deadline = deadlineArr
     .map(p => p.count)
@@ -245,7 +254,7 @@ const Pages = () => {
             ...v,
             cartDailyFoods: [
               ...v.cartDailyFoods.filter(food => {
-                return food.status !== 2;
+                return food.status !== 6;
               }),
             ],
           };
@@ -321,8 +330,7 @@ const Pages = () => {
     Math.round(discountPrice / 20) * 10;
 
   // 총 할인금액
-  const totalDiscountPrice =
-    membershipDiscountPrice + makersDiscountPrice + periodDiscountPrice;
+  const totalDiscountPrice = totalMealPrice - discountPrice;
   const totals = lastArr?.map(v => {
     const totalDateMealPrice = v.cartDailyFoods
       ?.map(p => p.count * p.price)
@@ -410,7 +418,7 @@ const Pages = () => {
     totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
 
   // 품절
-  const soldout = arr.filter(el => el.status === 0);
+  const soldout = arr.filter(el => el.status === 2);
 
   // 클라 타입
   const clientType = clientStatus.filter(p => p.spotId === selected);
@@ -536,7 +544,7 @@ const Pages = () => {
     // console.log(date,id,type)
     Alert.alert(
       '메뉴 변경',
-      `현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?(수량:${count})`,
+      `현재 메뉴 취소 후 진행됩니다.\n메뉴를 취소하시겠어요?(수량:${count})\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요`,
 
       [
         {
@@ -548,9 +556,10 @@ const Pages = () => {
           onPress: async () => {
             try {
               await deleteButton(id);
+              queryClient.invalidateQueries('orderMeal');
               setModalVisible3(true);
             } catch (err) {
-              console.log(err);
+              Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
             }
           },
           style: 'destructive',
@@ -611,13 +620,15 @@ const Pages = () => {
       console.log(err);
     }
   };
-
+  const selectSpotName = mealCartSpot.filter(el => el.id === selected);
   return (
     <SafeView>
       <SpotView>
         <SpotPress onPress={PressSpotButton}>
           <SpotName>
-            {spotName[0]?.text ?? isUserInfo.group + '\u00a0' + isUserInfo.spot}
+            {spotName[0]?.text === undefined
+              ? '스팟 없음'
+              : selectSpotName[0].text}
           </SpotName>
           <ArrowIcon />
         </SpotPress>
@@ -706,7 +717,7 @@ const Pages = () => {
                                   borderRadius: 7,
                                   marginRight: 12,
                                 }}>
-                                {food.status === 2 && <BlurView />}
+                                {food.status === 6 && <BlurView />}
                               </FastImage>
                               <MealNameView>
                                 <MealName
@@ -728,7 +739,7 @@ const Pages = () => {
                                     </SalePrice>
                                   )}
                                 </SalePriceWrap>
-                                {food.status === 0 && (
+                                {food.status === 2 && (
                                   <SoldOutView>
                                     <SoldOutIcon status={food.status} />
                                     <SoldOutText status={food.status}>
@@ -736,7 +747,7 @@ const Pages = () => {
                                     </SoldOutText>
                                   </SoldOutView>
                                 )}
-                                {food.status === 2 && (
+                                {food.status === 6 && (
                                   <SoldOutView>
                                     <SoldOutIcon status={food.status} />
                                     <SoldOutText status={food.status}>
@@ -755,7 +766,7 @@ const Pages = () => {
                                   )}
                               </MealNameView>
                             </ContentWrap>
-                            {food.status === 0 && (
+                            {food.status === 2 && (
                               <MenuChangeView
                                 onPress={() => {
                                   changeMealPress(food.count, food.id);
@@ -780,7 +791,7 @@ const Pages = () => {
                               setShow={setShow}
                             />
                             <CountWrap>
-                              {food.status !== 2 && (
+                              {food.status !== 6 && (
                                 <Count
                                   onPressEvent={() => {
                                     bodyRef.current.focus();
@@ -856,9 +867,16 @@ const Pages = () => {
                 </TotalPrice>
               </PaymentView>
               <Border />
-              {/* <UserPointView>
-                        <UserPointText>보유포인트 <UserHavePoint>{isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P</UserHavePoint>(결제시 적용가능)</UserPointText>
-                    </UserPointView> */}
+
+              <UserPointView>
+                <UserPointText>
+                  보유포인트{' '}
+                  <UserHavePoint>
+                    {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
+                  </UserHavePoint>
+                  (결제시 적용가능)
+                </UserPointText>
+              </UserPointView>
             </PaymentWrap>
           </View>
         )}
@@ -931,7 +949,7 @@ const Pages = () => {
         setModalVisible={setModalVisible}
         title={'지원금이란?'}
         description={
-          '고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
+          '고객님의 회사에서 지원하는 지원금입니다. \n결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
         }
         buttonTitle1={'확인했어요'}
         buttonType1={'grey7'}
@@ -1013,15 +1031,15 @@ export const ContentWrap = styled.View`
 
 export const Price = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[4]};
+    status === 6 ? theme.colors.grey[6] : theme.colors.grey[4]};
 `;
 
 export const SalePrice = styled(Typography).attrs({text: 'Body06R'})`
   text-decoration: line-through;
   text-decoration-color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[5]};
+    status === 6 ? theme.colors.grey[6] : theme.colors.grey[5]};
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[5]};
+    status === 6 ? theme.colors.grey[6] : theme.colors.grey[5]};
   margin-left: 4px;
 `;
 
@@ -1054,6 +1072,7 @@ const PaymentWrap = styled.View`
 export const PaymentView = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  white-space: nowrap;
   margin: 0px 24px;
   padding-bottom: 16px;
 `;
@@ -1079,11 +1098,13 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
 
 export const PaymentText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[4]};
+  white-space: nowrap;
   //padding-bottom:16px;
 `;
 
 export const PointText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.green[500]};
+  white-space: nowrap;
 `;
 
 export const TotalPriceTitle = styled(Typography).attrs({text: 'Title03SB'})`
@@ -1096,6 +1117,7 @@ export const TotalPrice = styled(Typography).attrs({text: 'Title03SB'})`
 const NoMealText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-bottom: 16px;
+  white-space: nowrap;
 `;
 
 const InnerView = styled.View`
@@ -1132,7 +1154,7 @@ export const PointInputWrap = styled.View`
   border-radius: 7px;
   border: 1px solid ${({theme}) => theme.colors.grey[7]};
   background-color: ${({theme}) => theme.colors.grey[0]};
-  padding: 0px 28px 0px 12px;
+  padding: 0px 38px 0px 12px;
   flex-direction: row;
   text-align: center;
   align-items: center;
@@ -1150,6 +1172,7 @@ export const XIcon = styled(X)`
 
 export const PointUnitText = styled(Typography).attrs({text: 'Title04R'})`
   color: ${({theme}) => theme.colors.grey[2]};
+  white-space: nowrap;
   margin-left: 8px;
 `;
 
@@ -1231,13 +1254,13 @@ const MenuChangeView = styled.Pressable`
 
 const SoldOutIcon = styled(SoldOut)`
   color: ${({theme, status}) =>
-    status === 0 ? theme.colors.red[500] : theme.colors.grey[4]};
+    status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
   margin-right: 4px;
 `;
 
 const SoldOutText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme, status}) =>
-    status === 0 ? theme.colors.red[500] : theme.colors.grey[4]};
+    status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
 `;
 
 const SoldOutView = styled.View`

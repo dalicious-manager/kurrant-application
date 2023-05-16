@@ -4,7 +4,13 @@ import {useAtom} from 'jotai';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
 import {formattedWeekDate} from '../../utils/dateFormatter';
 import * as Fetch from './Fetch';
-import {isOrderMealAtom, todayMealAtom, isOrderMealLoadingAtom} from './store';
+import {
+  isOrderMealAtom,
+  todayMealAtom,
+  isOrderMealLoadingAtom,
+  isOrderLoadingAtom,
+} from './store';
+import { useQueryClient } from 'react-query';
 
 const useOrderMeal = () => {
   const [isOrderMeal, setOrderMeal] = useAtom(isOrderMealAtom);
@@ -12,12 +18,43 @@ const useOrderMeal = () => {
   const [isOrderMealLoading, setOrderMealLoading] = useAtom(
     isOrderMealLoadingAtom,
   );
+  const [orderLoading, setOrderLoading] = useAtom(isOrderLoadingAtom);
   const navigation = useNavigation();
-
+  const queryClient = useQueryClient();
+  
   const orderMeal = async (startdate, enddate) => {
     try {
       const res = await Fetch.OrderMeal(startdate, enddate);
       setOrderMeal(res.data);
+      // console.log(res.data, '123231');
+      return res;
+    } catch (err) {
+      if (err.toString().replace('Error:', '').trim() === '403') {
+        AsyncStorage.clear();
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: LoginPageName,
+              params: {
+                token: 'end',
+              },
+            },
+          ],
+        });
+      }
+    }
+  };
+  const orderNice = async (body, option = {}) => {
+    try {
+      const res = await Fetch.orderNice(
+        {
+          ...body,
+        },
+        option,
+      );
+      queryClient.invalidateQueries('orderMeal');
+      return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
@@ -37,12 +74,14 @@ const useOrderMeal = () => {
   };
   const order = async (body, option = {}) => {
     try {
+      setOrderLoading(true);
       const res = await Fetch.order(
         {
           ...body,
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -59,6 +98,8 @@ const useOrderMeal = () => {
           ],
         });
       }
+    } finally {
+      setOrderLoading(false);
     }
   };
 
@@ -70,6 +111,7 @@ const useOrderMeal = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -97,6 +139,7 @@ const useOrderMeal = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
@@ -124,7 +167,14 @@ const useOrderMeal = () => {
       const res = await Fetch.OrderMeal(startdate, enddate);
 
       const todayMeal = res.data?.filter(m => m.serviceDate === date);
+
+      // console.log(`startdate: ${startdate}, enddate: ${enddate}`);
+
+      // console.log(res.data);
+      // console.log(todayMeal);
+
       setTodayMeal(todayMeal);
+      return res;
     } catch (err) {
       if (err.toString().replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
@@ -152,8 +202,10 @@ const useOrderMeal = () => {
     refundAll,
     setOrderMeal,
     order,
+    orderNice,
     isOrderMeal,
     todayMeal,
+    orderLoading,
     isOrderMealLoading,
   };
 };

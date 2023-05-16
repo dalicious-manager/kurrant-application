@@ -17,17 +17,21 @@ export function formattedMealFoodStatus(data) {
     case 6:
       return '배송대기';
     case 7:
-      return '주문취소';
+      return '취소';
     case 8:
-      return '배송중';
+      return '취소대기';
     case 9:
-      return '배송완료';
+      return '배송중';
     case 10:
-      return '수령완료';
+      return '배송완료';
     case 11:
-      return '환불';
+      return '수령완료';
     case 12:
-      return '환불';
+      return '수동 환불';
+    case 13:
+      return '자동 환불';
+    case 14:
+      return '리뷰 작성 완료';
     default:
       break;
   }
@@ -88,12 +92,29 @@ export function formattedCardCode(data) {
       break;
   }
 }
+export function formattedLogin(data) {
+  switch (data) {
+    case "GOOGLE":
+      return '구글 로그인';
+    case "APPLE":
+      return '애플 로그인';
+    case "NAVER":
+      return '네이버 로그인';
+    case "FACEBOOK":
+      return '페이스북 로그인';
+    case "KAKAO":
+      return '카카오 로그인';    
+    default:
+      return data;    
+      break;
+  }
+}
 export const cardListData = [
   {id: 51, text: '삼성카드'},
   // {id: 33, text: '우리카드'},
   {id: 41, text: '신한카드'},
   {id: 61, text: '현대카드'},
-  {id: 11, text: 'KB국민카드 (현재 심사 중으로 이용할 수 없어요)'},
+  {id: 11, text: 'KB국민카드 (곧 사용 가능해요)'},
   {id: 71, text: '롯데카드'},
   {id: 91, text: 'NH농협카드'},
   {id: 31, text: '비씨카드'},

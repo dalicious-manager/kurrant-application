@@ -1,12 +1,13 @@
 import mSleep from '../../helpers/mSleep';
-import { fetchJson } from "../../utils/fetch";
+import {fetchJson} from '../../utils/fetch';
 
 export async function getNotice(type, option) {
-  const fetchRes = await fetchJson(`/boards/notices?type=${type}`, 'GET');
+  // const fetchRes = await fetchJson(`/boards/notices?type=${type}`, 'GET');
+  const fetchRes = await fetchJson(`/boards/notices?status=${type}`, 'GET');
 
   //await mSleep(1000);
 
-  return fetchRes
+  return fetchRes;
   // return {
   //   items: [
   //       {
@@ -16,7 +17,7 @@ export async function getNotice(type, option) {
   //           point:2000,
   //           address:'주소주소주소'
   //          }
-  //   ]   
+  //   ]
 
   // }
 }
@@ -26,7 +27,7 @@ export async function getAlarm(type, option) {
 
   //await mSleep(1000);
 
-  return fetchRes
+  return fetchRes;
   // return {
   //   items: [
   //       {
@@ -36,7 +37,7 @@ export async function getAlarm(type, option) {
   //           point:2000,
   //           address:'주소주소주소'
   //          }
-  //   ]   
+  //   ]
 
   // }
 }
@@ -46,7 +47,7 @@ export async function deleteAlarm(type, option) {
 
   //await mSleep(1000);
 
-  return fetchRes
+  return fetchRes;
   // return {
   //   items: [
   //       {
@@ -56,7 +57,7 @@ export async function deleteAlarm(type, option) {
   //           point:2000,
   //           address:'주소주소주소'
   //          }
-  //   ]   
+  //   ]
 
   // }
 }

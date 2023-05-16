@@ -1,7 +1,17 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, View, Alert} from 'react-native';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  View,
+  Alert,
+  Text,
+  TextInput,
+  StyleSheet,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
@@ -25,7 +35,7 @@ const Pages = () => {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [progress, setProgress] = useState(1);
   const [isPhoneAuth, setPhoneAuth] = useState(false);
-
+  const [isAuthLoading, setAuthLoading] = useState(false);
   const form = useForm({
     mode: 'all',
   });
@@ -67,13 +77,21 @@ const Pages = () => {
   const isValidation =
     (progress === 2 && emailAuth && !errors.eauth) ||
     (progress === 4 && phoneAuth && !errors.pauth) ||
-    (progress === 5 && userName && !errors.name);
-  // (progress === 3 && (password && passwordChecked) && (password === passwordChecked) && phoneNumber && !errors.phone);
+    (progress === 5 && userName && !errors.name) ||
+    (progress === 3 &&
+      password &&
+      passwordChecked &&
+      password === passwordChecked &&
+      phoneNumber && phoneAuth &&
+      !errors.phone);
 
   const callMailAuth = async () => {
     try {
-      await auth.requestEmailAuth({receivers: [email]}, 1);
-      if (progress < 2) setProgress(progressed => progressed + 1);
+      if(!isAuthLoading){
+        setAuthLoading(true)
+        await auth.requestEmailAuth({receivers: [email]}, 1);
+        if (progress < 2) setProgress(progressed => progressed + 1);
+      }
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
@@ -86,18 +104,26 @@ const Pages = () => {
           },
         ],
       );
+    }finally{
+      setAuthLoading(false)
     }
   };
   const callPhoneAuth = async () => {
     if (phoneNumber && !errors.phone) {
       try {
-        await auth.requestPhoneAuth({to: phoneNumber}, 1);
-        if (progress < 4) setProgress(progressed => progressed + 1);
-        setPhoneAuth(true);
+        if(!isAuthLoading){
+          setAuthLoading(true)
+          await auth.requestPhoneAuth({to: phoneNumber}, 1);
+          if (progress < 4) setProgress(progressed => progressed + 1);
+          setPhoneAuth(true);
+        }
       } catch (err) {
         Alert.alert(
           '핸드폰 인증 요청 실패',
-          err.toString().replace('error: ', ''),
+          err
+            .toString()
+            .replace('error: ', '')
+            .replace('존재하는 유저입니다.', '사용중인 번호에요.'),
           [
             {
               text: '확인',
@@ -106,6 +132,8 @@ const Pages = () => {
             },
           ],
         );
+      }finally{
+        setAuthLoading(false)
       }
     }
   };
@@ -123,7 +151,7 @@ const Pages = () => {
         useName: data.name,
       });
     } catch (err) {
-      console.log(err);
+      Alert.alert("회원가입",err.toString().replace('error: '))
     }
   };
 
@@ -138,6 +166,15 @@ const Pages = () => {
         })
       : null;
   }, []);
+
+  const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    if (keyboardStatus.isKeyboardActivate) {
+      scrollViewRef.current.scrollToEnd({animated: true});
+    }
+  }, [keyboardStatus.isKeyboardActivate]);
+
   return (
     <Wrapper>
       <FormProvider {...form}>
@@ -151,7 +188,10 @@ const Pages = () => {
               <ProgressBar progress={progress} />
               <InfomationText>{Infomation()}</InfomationText>
               <Container>
-                <ScrollView keyboardShouldPersistTaps={'always'}>
+                <ScrollView
+                  ref={scrollViewRef}
+                  keyboardShouldPersistTaps={'always'}>
+                  {/* <ScrollView ref={scrollViewRef}> */}
                   {progress < 5 && (
                     <RefTextInput
                       name="email"
@@ -160,21 +200,25 @@ const Pages = () => {
                       autoCapitalize="none"
                       blurOnSubmit={false}
                       isEditable={progress === 1}
+                      caption={!errors.email && "입력한 이메일 주소로 인증번호가 발송됩니다."}
                       suffix={{
                         isNeedDelete: true,
                         isAuth: true,
                         authText: '인증요청',
                         authPressEvent: callMailAuth,
+                        disabledEvent:!isAuthLoading
                         // timer:900,
                       }}
+                      additionalCssOnTextInput={'padding-right: 90px'}
                       rules={{
                         required: '필수 입력 항목 입니다.',
                         pattern: {
                           value:
-                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                          message: '이메일 형식에 맞지 않습니다.',
+                          /^(([a-zA-Z0-9]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: '올바른 이메일 주소를 입력해주세요.',
                         },
                       }}
+                      padding=" 4px 0px"
                       style={inputStyle}
                     />
                   )}
@@ -192,6 +236,7 @@ const Pages = () => {
                         authText: '재발송',
                         authPressEvent: callMailAuth,
                         timer: 180,
+                        // timer: 4,
                       }}
                       rules={{
                         required: '필수 입력 항목 입니다.',
@@ -206,6 +251,7 @@ const Pages = () => {
                             '이메일로 발송된 6자리 인증번호를 입력해 주세요.',
                         },
                       }}
+                      padding="4px 0"
                       style={inputStyle}
                     />
                   )}
@@ -221,19 +267,20 @@ const Pages = () => {
                           required: '필수 입력 항목 입니다.',
                           minLength: {
                             value: 8,
-                            message: '8글자 이상 입력',
+                            message: '8글자 이상 입력해주세요. ',
                           },
                           maxLength: {
                             value: 31,
-                            message: '32글자 이하 입력',
+                            message: '32글자 이하로 입력해주세요',
                           },
                           pattern: {
                             value:
                               /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,32}$/,
-                            message: '비밀번호 형식에 맞지 않습니다.',
+                            message: '영문자, 숫자, 특수문자로 입력해주세요.',
                           },
                         }}
                         style={inputStyle}
+                        padding="4px 0"
                       />
                       <RefTextInput
                         name="passwordChecked"
@@ -248,7 +295,7 @@ const Pages = () => {
                             '비밀번호가 일치하지 않습니다.',
                           minLength: {
                             value: 8,
-                            message: '8글자 이상 입력',
+                            message: '8글자 이상 입력해주세요. ',
                           },
                           maxLength: {
                             value: 31,
@@ -261,6 +308,7 @@ const Pages = () => {
                           },
                         }}
                         style={inputStyle}
+                        padding="4px 0"
                       />
                       {progress === 3 && !(password === passwordChecked) && (
                         <View>
@@ -268,7 +316,7 @@ const Pages = () => {
                             <CaptionPoint>{'\u2022   '}</CaptionPoint>
                             <CaptionText>
                               {
-                                '비밀번호는 8~32자리의 영문자, 숫자, 특수문자를 조합하여 설정해주세요.'
+                                '비밀번호는 8~32자리의 영문자, 숫자, 특수문자($@!%*#?&)를 조합하여 설정해주세요.'
                               }
                             </CaptionText>
                           </CaptionBox>
@@ -297,7 +345,7 @@ const Pages = () => {
                     password &&
                     passwordChecked &&
                     password === passwordChecked && (
-                      <View>
+                      <>
                         <RefTextInput
                           name="phone"
                           label="휴대폰 번호"
@@ -311,6 +359,7 @@ const Pages = () => {
                             isAuth: true,
                             authText: '인증요청',
                             authPressEvent: callPhoneAuth,
+                            disabledEvent:!isAuthLoading
                             // timer:900,
                           }}
                           rules={{
@@ -322,7 +371,9 @@ const Pages = () => {
                             },
                           }}
                           style={inputStyle}
+                          padding="4px 0"
                         />
+
                         {progress === 4 && isPhoneAuth && (
                           <RefTextInput
                             name="pauth"
@@ -335,6 +386,7 @@ const Pages = () => {
                               isAuth: true,
                               authText: '재발송',
                               authPressEvent: callPhoneAuth,
+                              disabledEvent:!isAuthLoading,
                               timer: 180,
                             }}
                             rules={{
@@ -351,9 +403,13 @@ const Pages = () => {
                               },
                             }}
                             style={inputStyle}
+                            padding="4px 0"
                           />
                         )}
-                      </View>
+
+                        <EmptySpacesView />
+                        {/* <EmptySpacesView /> */}
+                      </>
                     )}
                   {progress === 5 && (
                     <RefTextInput
@@ -374,9 +430,33 @@ const Pages = () => {
                         },
                       }}
                       style={inputStyle}
+                      padding="4px 0"
+                      caption={
+                        <>
+                          <Text>
+                            {` 이름은 배송, 비밀번호 찾기 등에 사용되므로 실명을 기입해주세요.`}
+                          </Text>
+                        </>
+                      }
                     />
                   )}
                 </ScrollView>
+                {progress === 5 && (
+                  <TermsOfUseView
+                    isKeyboardActivate={keyboardStatus.isKeyboardActivate}>
+                    <TermsOfUseTypo>
+                      본인은{' '}
+                      <TermsOfUseUnderlinedTypo>
+                        달리셔스 이용약관,
+                      </TermsOfUseUnderlinedTypo>
+                      <TermsOfUseUnderlinedTypo>
+                        개인정보 수집 및 이용 내용
+                      </TermsOfUseUnderlinedTypo>
+                      을 확인 하였으며 동의합니다.
+                    </TermsOfUseTypo>
+                  </TermsOfUseView>
+                )}
+
                 {!keyboardStatus.isKeyboardActivate && (
                   <ButtonContainer>
                     <Button
@@ -396,7 +476,10 @@ const Pages = () => {
                           } catch (err) {
                             Alert.alert(
                               '인증확인 실패',
-                              err.toString().replace('error: ', ''),
+                              err
+                                .toString()
+                                .replace('error: ', '')
+                                .replace('않습니다.', '않아요.'),
                               [
                                 {
                                   text: '확인',
@@ -414,6 +497,7 @@ const Pages = () => {
                   </ButtonContainer>
                 )}
               </Container>
+
               <KeyboardButton
                 isKeyboardActivate={keyboardStatus.isKeyboardActivate}
                 label={progress >= 5 ? '가입완료' : '다음'}
@@ -493,4 +577,32 @@ const ButtonContainer = styled.View`
   position: absolute;
   bottom: 22px;
   margin-bottom: 24px;
+`;
+
+const TermsOfUseView = styled.View`
+  width: 100%;
+  color: ${({theme}) => theme.colors.grey[4]};
+  ${({isKeyboardActivate}) => {
+    if (isKeyboardActivate) {
+      return `margin-bottom: 10px;`;
+    } else {
+      return `height: 150px;
+      margin-bottom: 20px;
+      `;
+    }
+  }}
+`;
+
+const TermsOfUseTypo = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+`;
+
+const TermsOfUseUnderlinedTypo = styled(Typography).attrs({text: 'CaptionR'})`
+  text-decoration: underline;
+  text-decoration-color: ${({theme}) => theme.colors.grey[5]};
+  color: ${({theme}) => theme.colors.grey[5]};
+`;
+
+const EmptySpacesView = styled.View`
+  height: 100px;
 `;

@@ -23,6 +23,7 @@ const Pages = () => {
   const isFocused = useIsFocused();
   const {
     getNotice,
+    getSpotNotice,
     readableAtom: {spotNotice, isGetNoticeLoading},
   } = useBoard();
   useFocusEffect(
@@ -47,14 +48,13 @@ const Pages = () => {
   );
   useEffect(() => {
     const getUseNotice = async () => {
-      await getNotice(1);
+      await getSpotNotice();
     };
     getUseNotice();
   }, []);
   return (
     <Wrapper>
       {spotNotice?.map(v => {
-        console.log(v);
         return (
           <ListBox
             key={v.id}

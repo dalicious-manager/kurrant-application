@@ -88,7 +88,7 @@ const Pages = ()=>{
             await setStorage('isChange','휴대폰 번호가 변경됐어요');
             navigation.goBack(null);
         }catch(err){
-            console.log(err)
+          Alert.alert("휴대폰번호 변경",err.toString().replace('error: '))
         }
     };
 

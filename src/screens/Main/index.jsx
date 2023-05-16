@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {Alert, View} from 'react-native';
@@ -101,6 +101,31 @@ import MembershipTerminateComplate, {
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
+import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
+import PayCheckPassword, {
+  PAGE_NAME as PayCheckPasswordPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
+import PayEmailSetting, {
+  PAGE_NAME as PayEmailSettingPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayEmailSetting';
+import PayCheckPasswordPay, {
+  PAGE_NAME as PayCheckPasswordPayPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordPay';
+import PayCheckPasswordCheck, {
+  PAGE_NAME as PayCheckPasswordCheckPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordCheck';
+import RePayCheckEmail, {
+  PAGE_NAME as RePayCheckEmailPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordEmail';
+import RePayCheckPassword, {
+  PAGE_NAME as RePayCheckPasswordPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPassword';
+import RePayCheckPasswordCheck, {
+  PAGE_NAME as RePayCheckPasswordCheckPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordCheck';
+import PayCheckEmail, {
+  PAGE_NAME as PayCheckEmailPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordEmail';
 import RegisterCard, {
   SCREEN_NAME as RegisterCardScreenName,
 } from './RegisterCard';
@@ -260,6 +285,7 @@ import CompanyInfo, {
 import Credit, {
   PAGE_NAME as CreditPageName,
 } from '../../pages/Main/MyPage/Credit';
+import {PointMainPage, PointMainPageName} from '../../pages/Main/MyPage/Point';
 import CloseButton from '../../components/CloseButton';
 
 import test, {PAGE_NAME as testPageName} from '../../jaesin/test';
@@ -269,14 +295,33 @@ import test, {PAGE_NAME as testPageName} from '../../jaesin/test';
 // Pages > Investment
 // Pages > Statement
 
+import CreateReviewPage1, {
+  SCREEN_NAME as CreateReviewPage1ScreenName,
+} from './Review/CreateReview/Page1';
+import CreateReviewPage2, {
+  SCREEN_NAME as CreateReviewPage2ScreenName,
+  SCREEN_NAME2 as EditReviewPage2ScreenName,
+} from './Review/CreateReview/Page2';
+
+import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+
+import ReportReview, {
+  PAGE_NAME as ReportReviewPageName,
+} from './Review/ReportReview';
+
+import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
+import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
+import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
+
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
   const [isLoginLoading] = useAtom(isLoginLoadingAtom);
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
+  const route = useRoute();
   return (
-    <MainRoot.Navigator>
+    <MainRoot.Navigator initialRouteName={SplashPageName}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -302,7 +347,8 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
-            headerLeft: () => <BackButton margin={[10, 0]} />,
+            // headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerLeft: () => <CloseIcon margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -443,6 +489,13 @@ const Screen = () => {
           options={{headerShown: false}}
         />
       </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={SplashPageName}
+          component={SplashPage}
+          options={{headerShown: false}}
+        />
+      </MainRoot.Group>
       {/* 카드 등록 */}
       <MainRoot.Group>
         <MainRoot.Screen
@@ -451,6 +504,151 @@ const Screen = () => {
           options={{
             headerShown: true,
             title: '카드 등록',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayCheckPasswordPageName}
+          component={PayCheckPassword}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayEmailSettingPageName}
+          component={PayEmailSetting}
+          options={{
+            headerShown: true,
+            title: '이메일/비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayCheckPasswordCheckPageName}
+          component={PayCheckPasswordCheck}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayCheckEmailPageName}
+          component={PayCheckEmail}
+          options={{
+            headerShown: true,
+            title: '이메일 인증',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={RePayCheckPasswordPageName}
+          component={RePayCheckPassword}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={RePayCheckPasswordCheckPageName}
+          component={RePayCheckPasswordCheck}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={RePayCheckEmailPageName}
+          component={RePayCheckEmail}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 재설정',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={PayCheckPasswordPayPageName}
+          component={PayCheckPasswordPay}
+          options={{
+            headerShown: true,
+            title: '결제 비밀번호 입력',
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitleStyle: {
@@ -758,6 +956,23 @@ const Screen = () => {
             headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
+        <MainRoot.Screen
+          name={ReviewScreenName}
+          component={Review}
+          options={{
+            headerShown: true,
+            title: '리뷰 관리',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+
         <MainRoot.Screen
           name={TermPageName}
           component={Term}
@@ -1154,7 +1369,7 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
-            headerLeft: () => <CloseIcon />,
+            headerLeft: () => <CloseIcon isSpot={true} />,
           }}
         />
         {/* 아파트 스팟 신청 */}
@@ -1353,7 +1568,7 @@ const Screen = () => {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: '오픈 스팟 찾기',
+            title: '스팟 찾기',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
@@ -1692,36 +1907,53 @@ const Screen = () => {
         />
       </MainRoot.Group>
 
-      {/* Sse 테스트 */}
+      {/* 리뷰작성 및 수정 */}
 
       <MainRoot.Group>
-        {/* <MainRoot.Screen
-          
-          name={}
-          component={}
+        <MainRoot.Screen
+          name={CreateReviewPage1ScreenName}
+          component={CreateReviewPage1}
           options={{
             headerShown: true,
-            headerShadowVisible: false,
-            title: '',
+            title: '리뷰 작성',
+
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
               fontSize: 14,
               lineHeight: 22,
             },
+            headerShadowVisible: false,
+            headerLeft: () => <ReviewCloseIcon />,
+          }}
+        />
+
+        <MainRoot.Screen
+          name={PointMainPageName}
+          component={PointMainPage}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '포인트',
+
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
 
             headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
-          
-          
-          /> */}
+        />
 
         <MainRoot.Screen
-          name={testPageName}
-          component={test}
+          name={CreateReviewPage2ScreenName}
+          component={CreateReviewPage2}
           options={{
             headerShown: true,
-            title: '조재신 엄무파학용',
+            title: '리뷰 작성',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
@@ -1729,7 +1961,105 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
+            headerLeft: () => (
+              <ReviewCloseIcon
+                alertCallback={() => {
+                  Alert.alert(
+                    `작성 종료`,
+                    `작성중인 내용이 삭제됩니다 \n리뷰작성을 종료하시겠어요?`,
+                    [
+                      {
+                        text: '아니요',
+                        onPress: () => {
+                          return;
+                        },
+                        style: 'cancel',
+                      },
+                      {
+                        text: `작성종료`,
+                        onPress: () => {
+                          navigation.pop(2);
+                          return;
+                        },
+
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            ),
+          }}
+        />
+
+        <MainRoot.Screen
+          name={EditReviewPage2ScreenName}
+          component={CreateReviewPage2}
+          options={{
+            headerShown: true,
+            title: '리뷰 수정',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <ReviewCloseIcon
+                alertCallback={() => {
+                  Alert.alert(
+                    '수정 종료',
+                    '수정중인 내용이 삭제됩니다 \n수정작성을 종료하시겠어요?',
+                    [
+                      {
+                        text: '아니요',
+                        onPress: () => {
+                          return;
+                        },
+                        style: 'cancel',
+                      },
+                      {
+                        text: '수정종료',
+                        onPress: () => {
+                          navigation.navigate(WrittenReviewPageName, {
+                            screen: ReviewScreenName,
+                            params: {
+                              tabIndex: 1,
+                            },
+                          });
+
+                          return;
+                        },
+
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            ),
+          }}
+        />
+      </MainRoot.Group>
+
+      {/* 리뷰 신고  */}
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={ReportReviewPageName}
+          component={ReportReview}
+          options={{
+            headerShown: true,
+            title: '신고하기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <ReviewCloseIcon />,
           }}
         />
       </MainRoot.Group>

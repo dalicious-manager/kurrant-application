@@ -22,10 +22,13 @@ import {PurchaseDetailPageName} from '../../../../Detail';
 import useOrderMeal from '../../../../../../../../biz/useOrderMeal';
 import usePurchaseHistory from '../../../../../../../../biz/usePurchaseHistory';
 import {PAGE_NAME as BuyMealPageName} from '../../../../../../Bnb/BuyMeal/Main';
+import {useQueryClient} from 'react-query';
+import { useConfirmOrderState } from '../../../../../../../../hook/useOrder';
 const {width} = Dimensions.get('screen');
 const Component = ({purchaseId, date, itemIndex}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
   const {refundItem} = useOrderMeal();
   const [open, setOpen] = useState(false);
   const {
@@ -58,6 +61,16 @@ const Component = ({purchaseId, date, itemIndex}) => {
     } catch (error) {
       alert(error.toString().replace('error:', ''));
     }
+  };
+  const {mutateAsync: orderState} = useConfirmOrderState();
+
+  const deliveryConfirmPress = async (id) => {
+    try {
+      await orderState({id: id});
+    } catch (error) {
+      Alert.alert("상태변경",error.toString().replace("error: "))
+    }
+   
   };
   const changeItem = async (id, serviceDate) => {
     const req = {
@@ -122,9 +135,9 @@ const Component = ({purchaseId, date, itemIndex}) => {
                 switch (order.orderStatus) {
                   case 7:
                     return themeApp.colors.red[500];
-                  case 11:
-                    return themeApp.colors.red[500];
                   case 12:
+                    return themeApp.colors.red[500];
+                  case 13:
                     return themeApp.colors.red[500];
                   default:
                     return themeApp.colors.grey[2];
@@ -194,7 +207,12 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   },
                                   {
                                     text: '메뉴 취소',
-                                    onPress: () => cancelItem(order.id),
+                                    onPress: () => {
+                                      cancelItem(order.id);
+                                      queryClient.invalidateQueries(
+                                        'orderMeal',
+                                      );
+                                    },
                                     style: 'destructive',
                                   },
                                 ],
@@ -206,7 +224,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                             onPressEvent={() =>
                               Alert.alert(
                                 '메뉴 변경',
-                                '현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?',
+                                '현재 메뉴 취소 후 진행됩니다.\n메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
                                 [
                                   {
                                     text: '아니요',
@@ -214,8 +232,17 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                   },
                                   {
                                     text: '메뉴 취소',
-                                    onPress: () =>
-                                      changeItem(order.id, order.serviceDate),
+                                    onPress: () => {
+                                      try {
+                                        changeItem(order.id, order.serviceDate);
+                                        queryClient.invalidateQueries(
+                                          'orderMeal',
+                                        );
+                                      } catch (error) {
+                                        Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
+                                      }
+                                      
+                                    },
 
                                     style: 'destructive',
                                   },
@@ -225,9 +252,9 @@ const Component = ({purchaseId, date, itemIndex}) => {
                           />
                         </ButtonContainer>
                       )}
-                      {order.orderStatus === 9 && (
+                      {order.orderStatus === 10 && (
                         <ButtonContainer>
-                          <ButtonMeal label={'수령확인'} />
+                          <ButtonMeal label={'수령확인'} onPressEvent={()=>deliveryConfirmPress(order.id)}/>
                         </ButtonContainer>
                       )}
                     </DateOrderItemContent>

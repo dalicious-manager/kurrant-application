@@ -1,4 +1,4 @@
-import { atomWithReset } from 'jotai/utils';
+import {atomWithReset} from 'jotai/utils';
 
 // 스팟 신청 목록 조회
 export const applicationListAtom = atomWithReset([]);
@@ -8,3 +8,4 @@ export const userGroupSpotListAtom = atomWithReset([]);
 
 // 그룹별 스팟 상세 조회
 export const groupSpotDetailAtom = atomWithReset({});
+export const isCancelSpotAtom = atomWithReset(false);

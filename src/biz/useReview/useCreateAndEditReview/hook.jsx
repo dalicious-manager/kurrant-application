@@ -1,0 +1,39 @@
+import {useAtom} from 'jotai';
+import {useState} from 'react';
+
+import * as Fetch from './Fetch';
+import {reviewWaitListAtom} from './store';
+import { Alert } from 'react-native';
+
+const useReviewWait = () => {
+  const [reviewWaitList, setReviewWaitList] = useAtom(reviewWaitListAtom);
+
+  const [reviewWaitCount, setReviewWaitCount] = useState(0);
+
+  const getReviewWait = async () => {
+    try {
+      const res = await Fetch.getReviewOrderMeal();
+      // const res = await Fetch.orderMealMockData();
+
+      setReviewWaitCount(res.data.count);
+      setReviewWaitList(res.data.orderFoodList);
+      // setReviewWaitList([]);
+    } catch (err) {
+      Alert.alert('작성 리뷰 조회', err.toString().replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
+    }
+  };
+
+  // useEffect(() => {
+  //   getReviewWait();
+  // }, []);
+
+  return {getReviewWait, reviewWaitList, reviewWaitCount};
+};
+
+export default useReviewWait;

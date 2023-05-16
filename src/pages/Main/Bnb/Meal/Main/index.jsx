@@ -1,13 +1,12 @@
-import {useNavigation} from '@react-navigation/native';
-
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 import Plus from '../../../../../assets/icons/Home/plus.svg';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import LabelButton from '../../../../../components/ButtonMeal';
-import Calendar from '../../../../../components/Calendar';
+import BuyCalendar from '../../../../../components/BuyCalendar';
 import Typography from '../../../../../components/Typography';
 import Toast from '../../../../../components/Toast';
 import {
@@ -16,27 +15,47 @@ import {
   formattedWeekDate,
 } from '../../../../../utils/dateFormatter';
 
-import {MakersName, MealName} from '../../BuyMeal/Main';
+import {MakersName} from '../../BuyMeal/Main';
 import NoMealButton from '~components/Button';
 
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import FastImage from 'react-native-fast-image';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
+import useFoodDaily from '../../../../../biz/useDailyFood/hook';
+import useUserInfo from '../../../../../biz/useUserInfo';
+import {useQueryClient} from 'react-query';
+import { weekAtom } from '../../../../../biz/useBanner/store';
+import { useAtom } from 'jotai';
+import { useGetOrderMeal } from '../../../../../hook/useOrder';
+import { useGetDailyfood } from '../../../../../hook/useDailyfood';
 export const PAGE_NAME = 'P_MAIN__BNB__MEAL';
 
 const Pages = ({route}) => {
   const date = formattedWeekDate(new Date());
   const data = route?.params?.data === undefined ? date : route.params.data;
+  const isToday =
+    route?.params?.isToday === undefined ? false : route.params.isToday;
   const navigation = useNavigation();
   const meal = true;
-  console.log(data);
+  // console.log(data);
+  const {dailyFood, isServiceDays} = useFoodDaily();
+  const {isUserInfo, userInfo} = useUserInfo();
+
+  const queryClient = useQueryClient();
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
-  const {isOrderMeal, refundItem, setOrderMeal} = useOrderMeal();
-
+  const userSpotId = isUserInfo?.spotId;
+  const { refundItem, setOrderMeal} = useOrderMeal();
+  const pagerRef = useRef();
+  const [weekly] = useAtom(weekAtom);
+  const {data: isOrderMeal, refetch: orderMealRefetch} = useGetOrderMeal(formattedWeekDate(weekly[0][0]),
+  formattedWeekDate(
+    weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
+  ));
+  const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(userSpotId,data ? data:date);
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
-  const selectDate = isOrderMeal?.filter(m => m.serviceDate === touchDate);
+  const selectDate = isOrderMeal?.data?.filter(m => m.serviceDate === touchDate);
   const toast = Toast();
   const pressDay = day => {
     setTouchDate(day ?? data);
@@ -44,8 +63,8 @@ const Pages = ({route}) => {
 
   // console.log(isOrderMeal, '밀정보');
   const cancelMealPress = id => {
-    console.log(id, '밀 취소');
-    const list = isOrderMeal.map(el => {
+    // console.log(id, '밀 취소');
+    const list = isOrderMeal?.data.map(el => {
       return {
         ...el,
         orderItemDtoList: [...el.orderItemDtoList.filter(v => v.id !== id)],
@@ -56,35 +75,40 @@ const Pages = ({route}) => {
       return el.orderItemDtoList.length !== 0;
     });
 
-    Alert.alert('메뉴 취소', '메뉴를 취소하시겠어요?', [
-      {
-        text: '아니요',
-        onPress: () => {},
-      },
-      {
-        text: '메뉴 취소',
-        onPress: async () => {
-          try {
-            await refundItem({
-              id: id,
-            });
-            setOrderMeal(listArr);
-            setShow(true);
-            toast.toastEvent();
-            setTimeout(() => {
-              setShow(false);
-            }, 2000);
-          } catch (err) {
-            console.log(err);
-          }
+    Alert.alert(
+      '메뉴 취소',
+      '메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
+      [
+        {
+          text: '아니요',
+          onPress: () => {},
         },
-        style: 'destructive',
-      },
-    ]);
+        {
+          text: '메뉴 취소',
+          onPress: async () => {
+            try {
+              await refundItem({
+                id: id,
+              });
+              queryClient.invalidateQueries('orderMeal');
+              setOrderMeal(listArr);
+              setShow(true);
+              toast.toastEvent();
+              setTimeout(() => {
+                setShow(false);
+              }, 2000);
+            } catch (err) {
+              console.log(err);
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+    );
   };
 
   const changeMealPress = (id, serviceDate) => {
-    const list = isOrderMeal.map(el => {
+    const list = isOrderMeal?.data.map(el => {
       return {
         ...el,
         orderItemDtoList: [...el.orderItemDtoList.filter(v => v.id !== id)],
@@ -97,7 +121,7 @@ const Pages = ({route}) => {
 
     Alert.alert(
       '메뉴 변경',
-      '현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?',
+      '현재 메뉴 취소 후 진행됩니다.\n메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
       [
         {
           text: '아니요',
@@ -111,12 +135,12 @@ const Pages = ({route}) => {
                 id: id,
               });
               setOrderMeal(listArr);
-
+              queryClient.invalidateQueries('orderMeal');
               navigation.navigate(BuyMealPageName, {
                 date: serviceDate ? serviceDate : formattedDate(new Date()),
               });
             } catch (err) {
-              console.log(err);
+              Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
             }
           },
           style: 'destructive',
@@ -125,26 +149,53 @@ const Pages = ({route}) => {
     );
   };
 
+  // useEffect(() => {
+  //   async function loadUser() {
+  //     try {
+  //       const userData = await userInfo();
+  //       // await orderMeal();
+  //       await dailyFood(userData?.spotId, formattedWeekDate(new Date()));
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  //   loadUser();
+  // }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (isToday) {
+        pressDay(formattedWeekDate(new Date()));
+        pagerRef.current.setPage(0);
+      }
+      setTouchDate(data);
+      console.log(dailyfoodData)
+    }, [isToday, data]),
+  );
   return (
     <SafeView>
       <ScrollView>
         <CalendarWrap>
-          <Calendar
+          <BuyCalendar
             BooleanValue
+            pagerRef={pagerRef}
             type={'grey2'}
             color={'white'}
             size={'Body05R'}
             onPressEvent2={pressDay}
             selectDate={touchDate}
+            daliy={true}
             meal={meal}
             margin={'0px 28px'}
+            sliderValue={isToday && 0}
+            isServiceDays={dailyfoodData?.data?.serviceDays}
           />
         </CalendarWrap>
 
         <MealWrap>
           {touchDate ? (
             <>
-              {selectDate.map((s, index) => {
+              {selectDate?.map((s, index) => {
+                console.log(s)
                 return (
                   <View key={index}>
                     <DiningTimeWrap>
@@ -173,7 +224,9 @@ const Pages = ({route}) => {
                               })
                             }>
                             <MakersName>[{sm.makers}]</MakersName>
-                            <MealName>{sm.name}</MealName>
+                            <MealName numberOfLines={1} ellipsizeMode="tail">
+                              {sm.name}
+                            </MealName>
                             <DeliveryAddress>
                               {sm.groupName}・{sm.spotName}
                             </DeliveryAddress>
@@ -182,23 +235,21 @@ const Pages = ({route}) => {
                               <CancelText>취소완료</CancelText>
                             )}
                           </Content>
-                          <CancelBtnWrap status={sm.orderStatus}>
-                            <LabelButton
-                              label={'취소'}
-                              onPressEvent={() => cancelMealPress(sm.id)}
-                              disabled={sm.orderStatus === 7 && true}
-                            />
-                          </CancelBtnWrap>
-                          {sm.orderStatus !== 7 && (
-                            <MealChangeWrap>
+                          {sm.orderStatus === 5 && <CancelBtnWrap status={sm.orderStatus}>
                               <LabelButton
-                                label={'메뉴변경'}
-                                onPressEvent={() =>
-                                  changeMealPress(sm.id, s.serviceDate)
-                                }
+                                label={'취소'}
+                                onPressEvent={() => cancelMealPress(sm.id)}
+                                disabled={sm.orderStatus === 7}
                               />
-                            </MealChangeWrap>
-                          )}
+                            </CancelBtnWrap>}
+                            {sm.orderStatus === 5 && ( sm.orderStatus !== 7 && (
+                              <MealChangeWrap>
+                                <LabelButton
+                                  label={'메뉴변경'}
+                                  onPressEvent={() => changeMealPress(sm.id)}
+                                />
+                              </MealChangeWrap>
+                            ))}
                         </MealContentWrap>
                       );
                     })}
@@ -239,7 +290,9 @@ const Pages = ({route}) => {
                                 })
                               }>
                               <MakersName>[{el.makers}]</MakersName>
-                              <MealName>{el.name}</MealName>
+                              <MealName numberOfLines={1} ellipsizeMode="tail">
+                                {el.name}
+                              </MealName>
                               <DeliveryAddress>
                                 {el.groupName}・{el.spotName}
                               </DeliveryAddress>
@@ -248,21 +301,21 @@ const Pages = ({route}) => {
                                 <CancelText>취소완료</CancelText>
                               )}
                             </Content>
-                            <CancelBtnWrap status={el.orderStatus}>
+                            {el.orderStatus === 5 && <CancelBtnWrap status={el.orderStatus}>
                               <LabelButton
                                 label={'취소'}
                                 onPressEvent={() => cancelMealPress(el.id)}
                                 disabled={el.orderStatus === 7}
                               />
-                            </CancelBtnWrap>
-                            {el.orderStatus !== 7 && (
+                            </CancelBtnWrap>}
+                            {el.orderStatus === 5 && ( el.orderStatus !== 7 && (
                               <MealChangeWrap>
                                 <LabelButton
                                   label={'메뉴변경'}
                                   onPressEvent={() => changeMealPress(el.id)}
                                 />
                               </MealChangeWrap>
-                            )}
+                            ))}
                           </MealContentWrap>
                         );
                       })}
@@ -343,7 +396,14 @@ const DiningTimeWrap = styled.View`
 const DiningTime = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
 `;
-
+const MealName = styled(Typography).attrs({text: 'Body05SB'})`
+  white-space :nowrap;
+  text-overflow : ellipsis;
+  color: ${({theme, soldOut}) =>
+    soldOut === 2 || soldOut === 6
+      ? theme.colors.grey[6]
+      : theme.colors.grey[2]};
+`;
 const Content = styled.Pressable`
   margin-left: 16px;
   width: 50%;

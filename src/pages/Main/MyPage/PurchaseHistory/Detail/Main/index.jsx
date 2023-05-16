@@ -18,11 +18,13 @@ import Wrapper from '../../../../../../components/Wrapper';
 import {formattedDateAndDay} from '../../../../../../utils/dateFormatter';
 import withCommas from '../../../../../../utils/withCommas';
 import OrderItem from './components/orderItem';
+import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'P_MAIN__PURCHASE_DETAIL';
 
 const Pages = ({route}) => {
   const {id} = route.params;
+  const queryClient = useQueryClient();
   const navigation = useNavigation();
   const themeApp = useTheme();
   const {
@@ -32,51 +34,61 @@ const Pages = ({route}) => {
   } = usePurchaseHistory();
   const {refundItem, refundAll} = useOrderMeal();
   const cancelItem = async foodId => {
-    const req = {
-      id: foodId,
-    };
-    await refundItem(req);
-    const refund = {
-      ...purchaseDetail,
-      orderItems: [
-        ...purchaseDetail.orderItems.map(v => {
-          if (v.id === foodId) {
-            return {...v, orderStatus: 7};
-          } else {
-            return v;
-          }
-        }),
-      ],
-    };
-    setPurchaseDetail(refund);
+    try {
+      const req = {
+        id: foodId,
+      };
+      await refundItem(req);
+      queryClient.invalidateQueries('pointList');
+      const refund = {
+        ...purchaseDetail,
+        orderItems: [
+          ...purchaseDetail.orderItems.map(v => {
+            if (v.id === foodId) {
+              return {...v, orderStatus: 7};
+            } else {
+              return v;
+            }
+          }),
+        ],
+      };
+      setPurchaseDetail(refund);
+    } catch (error) {
+      Alert.alert('취소불가', error.toString().replace('error:', ''));
+    }
   };
   const cancelAll = async () => {
-    const req = {
-      id: id,
-    };
-    await refundAll(req);
-    const refund = {
-      ...purchaseDetail,
-      orderItems: [
-        ...purchaseDetail.orderItems.map(v => {
-          return {...v, orderStatus: 7};
-        }),
-      ],
-    };
+    try {
+      const req = {
+        id: id,
+      };
+      await refundAll(req);
+      const refund = {
+        ...purchaseDetail,
+        orderItems: [
+          ...purchaseDetail.orderItems.map(v => {
+            return {...v, orderStatus: 7};
+          }),
+        ],
+      };
 
-    // purchaseDetail.map((o)=> {
-    //   return {...o,orderItems:[...o.orderItems.map(v=>{
-    //   if(v.id === id){
-    //     return { ...v , orderStatus:7}
-    //   }else{
-    //     return v
-    //   }
-    // })]}})
-    setPurchaseDetail(refund);
-    const reqs = {
-      purchaseId: id,
-    };
-    getPurchaseDetail(reqs);
+      // purchaseDetail.map((o)=> {
+      //   return {...o,orderItems:[...o.orderItems.map(v=>{
+      //   if(v.id === id){
+      //     return { ...v , orderStatus:7}
+      //   }else{
+      //     return v
+      //   }
+      // })]}})
+      setPurchaseDetail(refund);
+      const reqs = {
+        purchaseId: id,
+      };
+      getPurchaseDetail(reqs);
+      queryClient.invalidateQueries('pointList');
+    } catch (error) {
+      Alert.alert('취소불가', error.toString().replace('error:', ''));
+    }
   };
   const possibleOrder =
     purchaseDetail?.orderItems?.filter(v => v.orderStatus === 7)?.length > 0
@@ -121,6 +133,8 @@ const Pages = ({route}) => {
       </SafeView>
     );
   }
+
+  // console.log(purchaseDetail, 'd0d0d0');
   return (
     <SafeView>
       <ScrollView>
@@ -152,20 +166,20 @@ const Pages = ({route}) => {
             </PurchaseInfoList>
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
-                스팟
+                상세 스팟
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
                 {purchaseDetail?.groupName} / {purchaseDetail?.spotName}
               </Typography>
             </PurchaseInfoList>
-            <PurchaseInfoList>
+            {/* <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
                 세부 주소
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
                 {purchaseDetail?.ho || '-'}
               </Typography>
-            </PurchaseInfoList>
+            </PurchaseInfoList> */}
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
                 배송지
@@ -197,7 +211,13 @@ const Pages = ({route}) => {
                       {
                         text: '메뉴 취소',
                         onPress: async () => {
-                          cancelAll();
+                          try {
+                            cancelAll();
+                          queryClient.invalidateQueries('orderMeal');
+                          } catch (error) {
+                            Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
+                          }
+                          
                         },
                         style: 'destructive',
                       },
@@ -303,7 +323,10 @@ const Pages = ({route}) => {
                 포인트 사용금액
               </Typography>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                - {withCommas(purchaseDetail?.point)} P
+                {purchaseDetail?.point === 0
+                  ? 0
+                  : '-' + withCommas(purchaseDetail?.point)}{' '}
+                P
               </Typography>
             </PaymentsList>
             <TotalPriceBox>
@@ -374,7 +397,7 @@ const Pages = ({route}) => {
                   {withCommas(purchaseDetail?.refundDto?.refundDeliveryFee)} 원
                 </Typography>
               </PaymentsList>
-              <SaleContainer>
+              {/* <SaleContainer>
                 <DateBarBox>
                   <DateBar />
                 </DateBarBox>
@@ -388,9 +411,7 @@ const Pages = ({route}) => {
                     <Typography
                       text="CaptionR"
                       textColor={themeApp.colors.grey[5]}>
-                      {withCommas(
-                        purchaseDetail?.refundDto?.refundSupportPrice,
-                      )}{' '}
+                      {withCommas(purchaseDetail?.refundDto?.refundDeliveryFee)}{' '}
                       원
                     </Typography>
                   </SaleItem>
@@ -410,16 +431,16 @@ const Pages = ({route}) => {
                     </Typography>
                   </SaleItem>
                 </SaleBox>
-              </SaleContainer>
+              </SaleContainer> */}
               <PaymentsList>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
                   환불 차감
                 </Typography>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                  {withCommas(purchaseDetail?.refundDto?.refundDeduction)} P
+                  {withCommas(purchaseDetail?.refundDto?.refundDeduction)} 원
                 </Typography>
               </PaymentsList>
-              <SaleContainer>
+              {/* <SaleContainer>
                 <DateBarBox>
                   <DateBar />
                 </DateBarBox>
@@ -438,7 +459,7 @@ const Pages = ({route}) => {
                     </Typography>
                   </SaleItem>
                 </SaleBox>
-              </SaleContainer>
+              </SaleContainer> */}
               <TotalPriceBox>
                 <Typography
                   text="Title03SB"
@@ -503,9 +524,13 @@ const Pages = ({route}) => {
                     (영수증)
                   </ReceiptText>
                 </ReceiptTouch>
-              ) : (
+              ) : purchaseDetail?.cardNumber ? (
                 <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
                   ({purchaseDetail?.cardNumber})
+                </Typography>
+              ) : (
+                <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
+                  -
                 </Typography>
               )}
             </ReceiptBox>
