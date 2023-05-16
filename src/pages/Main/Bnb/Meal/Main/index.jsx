@@ -53,6 +53,7 @@ const Pages = ({route}) => {
   formattedWeekDate(
     weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
   ));
+  
   const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(userSpotId,data ? data:date);
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.data?.filter(m => m.serviceDate === touchDate);
@@ -161,6 +162,12 @@ const Pages = ({route}) => {
   //   }
   //   loadUser();
   // }, []);
+  useEffect(()=>{
+    userInfo();
+  },[])
+  useEffect(()=>{
+    dailyfoodRefetch();
+  },[isUserInfo])
   useFocusEffect(
     useCallback(() => {
       if (isToday) {
@@ -203,6 +210,7 @@ const Pages = ({route}) => {
                       </DiningTime>
                     </DiningTimeWrap>
                     {s.orderItemDtoList?.map((sm, idx) => {
+                      console.log(sm,"sm")
                       return (
                         <MealContentWrap key={idx}>
                           <FastImage
@@ -234,14 +242,14 @@ const Pages = ({route}) => {
                               <CancelText>취소완료</CancelText>
                             )}
                           </Content>
-                          {sm.orderStatus === 5 && <CancelBtnWrap status={sm.orderStatus}>
+                          {((sm.dailyFoodStatus ===1 || sm.dailyFoodStatus ===2) &&sm.orderStatus === 5) && <CancelBtnWrap status={sm.orderStatus}>
                               <LabelButton
                                 label={'취소'}
                                 onPressEvent={() => cancelMealPress(sm.id)}
                                 disabled={sm.orderStatus === 7}
                               />
                             </CancelBtnWrap>}
-                            {sm.orderStatus === 5 && ( sm.orderStatus !== 7 && (
+                            {((sm.dailyFoodStatus ===1 || sm.dailyFoodStatus ===2) && sm.orderStatus === 5) && ( sm.orderStatus !== 7 && (
                               <MealChangeWrap>
                                 <LabelButton
                                   label={'메뉴변경'}
@@ -300,14 +308,14 @@ const Pages = ({route}) => {
                                 <CancelText>취소완료</CancelText>
                               )}
                             </Content>
-                            {el.orderStatus === 5 && <CancelBtnWrap status={el.orderStatus}>
+                            {((el.dailyFoodStatus ===1 || el.dailyFoodStatus ===2) && el.orderStatus === 6) && <CancelBtnWrap status={el.orderStatus}>
                               <LabelButton
                                 label={'취소'}
                                 onPressEvent={() => cancelMealPress(el.id)}
                                 disabled={el.orderStatus === 7}
                               />
                             </CancelBtnWrap>}
-                            {el.orderStatus === 5 && ( el.orderStatus !== 7 && (
+                            {((el.dailyFoodStatus ===1 || el.dailyFoodStatus ===2) && el.orderStatus === 5) && ( el.orderStatus !== 7 && (
                               <MealChangeWrap>
                                 <LabelButton
                                   label={'메뉴변경'}

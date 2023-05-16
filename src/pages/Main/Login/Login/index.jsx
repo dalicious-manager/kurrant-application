@@ -61,8 +61,10 @@ const Pages = ({route}) => {
   const toast = Toast();
   const toast2 = Toast();
   const toast3 = Toast();
-  const {balloonEvent, BalloonWrap, balloonEventNotOut} = Balloon();
-  const [lastLogin, setLastLogin] = useState();
+
+  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
+  const [lastLogin,setLastLogin] = useState();
+
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
 
