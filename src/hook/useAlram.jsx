@@ -7,5 +7,10 @@ export function useGetAlramSetting() {
   });
 }
 export function useSetAlramSetting() {
-  return useMutation(data => alramApis.setAlram(data));
+  const queryClient = useQueryClient();
+  return useMutation(data => alramApis.setAlram(data),{
+    onSuccess:()=>{
+      queryClient.invalidateQueries('alramSetting')
+    }
+  });
 }

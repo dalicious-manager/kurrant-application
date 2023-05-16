@@ -66,7 +66,9 @@ import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
-import {useGetTodayMeal} from '../../../../../hook/useOrder';
+import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import Sound from 'react-native-sound';
+import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -76,6 +78,12 @@ const Pages = () => {
   const weekly = useAtomValue(weekAtom);
   const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
     useUserInfo();
+
+  const userName = isUserInfo?.name;
+  const userSpot = isUserInfo?.spot;
+  const userGroupName = isUserInfo?.group;
+  const userSpotId = isUserInfo?.spotId;
+  const clientId = isUserInfo?.groupId;
   const {
     saveFcmToken,
     readableAtom: {userRole, fcmToken},
@@ -86,32 +94,47 @@ const Pages = () => {
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-  const {
-    isOrderMeal,
-    todayMeal,
-    orderMeal,
-    todayOrderMeal,
-    isOrderMealLoading,
-  } = useOrderMeal();
+
+  const [coinSound, setCoinSound] = useState(null);
+
+  const loadCoinSound = () => {
+    const sound = new Sound(
+      require('../../../../../assets/sounds/coin.wav'),
+      Platform.OS === 'android'
+        ? Sound.MAIN_BUNDLE
+        : Sound.MAIN_BUNDLE.bundlePath,
+      error => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+      },
+    );
+    setCoinSound(sound);
+  };
   const {
     getMembershipHistory,
     readableAtom: {membershipHistory},
   } = useMembership();
-  const {loadMeal} = useShoppingBasket();
-  const {dailyFood, isServiceDays, isDailyFoodLoading} = useFoodDaily();
+
+  const {
+    data: dailyfoodData,
+    refetch: dailyfoodRefetch,
+    isLoading: dailyLoading,
+    isFetching: dailyFetching,
+  } = useGetDailyfood(userSpotId, formattedWeekDate(new Date()));
   const [modalVisible, setModalVisible] = useState(false);
 
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const [appState, setAppState] = useState();
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
+
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
-  const mealCheck = isOrderMeal?.map(el => {
-    return el.serviceDate;
-  });
+
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
   // const start = weekly.map(s => {
@@ -124,8 +147,15 @@ const Pages = () => {
   //   return endData;
   // });
   const date = formattedWeekDate(new Date());
-  const {data: todayMealList, refetch: todayRefetch} = useGetTodayMeal(date);
-
+  const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(
+      weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
+    ),
+  );
+  const mealCheck = orderMealList?.data?.map(el => {
+    return el.serviceDate;
+  });
   // 홈 전체 공지사항
 
   // const {getAnnouncements, announcements, announcementModalVisible} =
@@ -208,6 +238,7 @@ const Pages = () => {
     };
     handleShowModal();
     getOneAnnouncement(2);
+    if (coinSound === null) loadCoinSound();
   }, []);
 
   const closeBalloon = async () => {
@@ -222,84 +253,14 @@ const Pages = () => {
   };
   useEffect(() => {
     const getHistory = async () => {
-      setEventSpotLoading(true);
       await getMembershipHistory();
-      setEventSpotLoading(false);
     };
     getHistory();
   }, [isUserInfo]);
   useFocusEffect(
     useCallback(() => {
-      // console.log('test');
-      async function loadUser() {
-        try {
-          const userData = await userInfo();
-          if (userData?.email) {
-            if (userData?.spotId) {
-              const daily = await dailyFood(
-                userData?.spotId,
-                formattedWeekDate(new Date()),
-              );
-              if (!(userRole === 'ROLE_GUEST')) {
-                await orderMeal(
-                  formattedWeekDate(weekly[0][0]),
-                  formattedWeekDate(
-                    weekly[weekly?.length - 1][weekly[0].length - 1],
-                  ),
-                );
-              }
-            }
-          }
-          return true;
-        } catch (error) {
-          return false;
-        }
-      }
-      const isTester = async () => {
-        const user = await loadUser();
-        // console.log(user, 'test');
-        if (!(userRole === 'ROLE_GUEST')) {
-          const status = async () => {
-            const userStatus = await getStorage('spotStatus');
-            // const result = await todayOrderMeal(start[0], end[0]);
-
-            const getUserStatus = Number(userStatus);
-            if (getUserStatus === 1) {
-              navigation.navigate(GroupSelectPageName);
-            }
-            if (getUserStatus === 2 && !isCancelSpot) {
-              navigation.navigate(GroupCreateMainPageName);
-            }
-            // return result;
-          };
-          try {
-            if (!(userRole === 'ROLE_GUEST')) {
-              if (user) {
-                const data = await status();
-
-                const group = await userGroupSpotCheck();
-                if (group.statusCode === 200) {
-                  await loadMeal();
-                }
-              }
-            }
-          } catch (error) {
-            if (error.toString().replace('Error:', '').trim() === '403') {
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: LoginPageName,
-                  },
-                ],
-              });
-            }
-          }
-        }
-      };
       try {
-        isTester();
-        todayRefetch();
+        orderMealRefetch();
       } catch (e) {
         alert(e.toString().replace('error:'));
       }
@@ -352,11 +313,35 @@ const Pages = () => {
           'Notification caused app to open from quit state:',
           remoteMessage.data,
         );
-        console.log(remoteMessage.data.page, 'data');
+        console.log(
+          remoteMessage.data.page,
+          remoteMessage.data.page === 'S_MAIN__REVIEW',
+          remoteMessage.data.page.toString() === 'S_MAIN__REVIEW',
+          'data',
+        );
         if (remoteMessage.data.page !== 'Home') {
           if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
             return navigation.navigate(remoteMessage.data.page, {
-              date: '2023-04-14',
+              date: date,
+            });
+          }
+          if (remoteMessage.data.page === 'S_MAIN__REVIEW') {
+            navigation.navigate(remoteMessage.data.page, {
+              from: 'point',
+              id: remoteMessage.data.reviewId,
+            });
+          }
+          if (remoteMessage.data.page === 'P_MAIN__MYPAGE__WRITTENREVIEW') {
+            return navigation.navigate('S_MAIN__REVIEW');
+          }
+          if (remoteMessage.data.page === 'P__MY_PAGE__PUBLIC_NOTICE') {
+            return navigation.navigate('S_MAIN__NOTICE', {
+              from: 'public',
+            });
+          }
+          if (remoteMessage.data.page === 'P__MY_PAGE__SPOT_NOTICE') {
+            return navigation.navigate('S_MAIN__NOTICE', {
+              from: 'spot',
             });
           }
 
@@ -372,16 +357,22 @@ const Pages = () => {
             'Notification caused app to open from quit state:',
             remoteMessage.data,
           );
-          console.log(remoteMessage.data.page, 'data');
+          console.log(
+            remoteMessage.data.page,
+            remoteMessage.data.page === 'S_MAIN__REVIEW',
+            remoteMessage.data.page.toString() === 'S_MAIN__REVIEW',
+            'data',
+          );
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
-                date: '2023-04-14',
+                date: date,
               });
             }
             if (remoteMessage.data.page === 'S_MAIN__REVIEW') {
-              return navigation.navigate(remoteMessage.data.page, {
+              navigation.navigate(remoteMessage.data.page, {
                 from: 'point',
+                id: remoteMessage.data.reviewId,
               });
             }
             if (remoteMessage.data.page === 'P_MAIN__MYPAGE__WRITTENREVIEW') {
@@ -430,23 +421,17 @@ const Pages = () => {
     }
   };
 
-  const userName = isUserInfo?.name;
-  const userSpot = isUserInfo?.spot;
-  const userGroupName = isUserInfo?.group;
-  const userSpotId = isUserInfo?.spotId;
-  const clientId = isUserInfo?.groupId;
-
-  useEffect(() => {
-    async function dailys() {
-      try {
-        if (userSpotId)
-          await dailyFood(userSpotId, formattedWeekDate(new Date()));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    dailys();
-  }, [userSpotId]);
+  // useEffect(() => {
+  //   async function dailys() {
+  //     try {
+  //       if (userSpotId)
+  //         await dailyFood(userSpotId, formattedWeekDate(new Date()));
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  //   dailys();
+  // }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
@@ -495,7 +480,6 @@ const Pages = () => {
   };
   const handleStatus = e => {
     setAppState(e);
-    todayRefetch();
   };
   const mockStatus = 10;
   useEffect(() => {
@@ -574,25 +558,28 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {todayMealList?.data?.length === 0 ? (
+          {orderMealList?.data?.filter(order => order.serviceDate === date)
+            .length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
-            todayMealList?.data?.map((m, idx) => {
-              return (
-                <React.Fragment key={`${m.id} ${idx}`}>
-                  {m.orderItemDtoList.map((meal, i) => {
-                    return (
-                      <MealInfoComponent
-                        m={m}
-                        meal={meal}
-                        key={`${meal.id} ${meal.dailyFoodId}`}
-                      />
-                    );
-                  })}
-                </React.Fragment>
-              );
+            orderMealList?.data?.map((m, idx) => {
+              if (m.serviceDate === date)
+                return (
+                  <React.Fragment key={`${m.id} ${idx}`}>
+                    {m.orderItemDtoList.map((meal, i) => {
+                      return (
+                        <MealInfoComponent
+                          m={m}
+                          meal={meal}
+                          coinSound={coinSound}
+                          key={`${meal.id} ${meal.dailyFoodId}`}
+                        />
+                      );
+                    })}
+                  </React.Fragment>
+                );
             })
           )}
         </MainWrap>
@@ -605,7 +592,8 @@ const Pages = () => {
                 <TitleText>식사일정</TitleText>
               </MealCalendarTitle>
               <Calendar
-                isServiceDays={isServiceDays}
+                isServiceDays={dailyfoodData?.data?.serviceDays}
+                meal={orderMealList?.data}
                 onPressEvent={() => navigation.navigate(MealMainPageName)}
               />
             </MealCalendar>
@@ -816,70 +804,10 @@ const MainWrap = styled.View`
   margin: 0px 24px;
 `;
 
-const MealInfoWrapper = styled.View`
-  margin-bottom: 16px;
-`;
-
-const MealInfoWrap = styled.Pressable`
-  ${Display};
-  height: 64px;
-  border-radius: 14px;
-  background-color: ${props => props.theme.colors.grey[0]};
-  margin-bottom: 16px;
-  padding: 16px;
-  justify-content: space-between;
-  padding-left: 0px;
-`;
-
-const OrderStatusWrap = styled.View`
-  align-items: center;
-`;
-const CommentText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-  margin-bottom: 4px;
-`;
-const ConfirmPressable = styled.Pressable`
-  background-color: ${({theme}) => theme.colors.purple[500]};
-  border-radius: 999px;
-  height: 28px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 12px;
-`;
-const ConfirmText = styled(Typography).attrs({text: 'Button09SB'})`
-  color: white;
-`;
-
 const NoMealInfo = styled.View`
   ${BoxWrap};
   ${Display};
   justify-content: center;
-`;
-
-const MealInfo = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const MealImage = styled.Image`
-  width: 64px;
-  height: 64px;
-  border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
-`;
-
-const MealText = styled.View`
-  margin-left: 16px;
-  flex-direction: row;
-  flex: 1;
-  justify-content: space-between;
-`;
-
-const MealCount = styled.View`
-  align-self: flex-end;
-  justify-content: flex-end;
-  align-items: flex-end;
 `;
 
 const MealCalendar = styled.View`
@@ -891,15 +819,6 @@ const MealCalendar = styled.View`
   min-height: 130px;
   padding-bottom: 10px;
   //padding:15px 16px;
-`;
-
-const MealCheckButton = styled.Pressable`
-  justify-self: flex-start;
-  height: 28px;
-  background-color: ${props => props.theme.colors.purple[500]};
-  padding: 3.5px 12px;
-  border-radius: 20px;
-  margin-bottom: 16px;
 `;
 
 const MealCalendarTitle = styled.View`

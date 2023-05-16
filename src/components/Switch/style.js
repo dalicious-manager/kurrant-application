@@ -47,23 +47,23 @@ export const getToggleTop = (size, agree) => {
   if (size === 'md') {
     return css`
       top: 2px;
-      left: 22px;
+      left: 11px;
     `;
   } else {
     return css`
       top: 3px;
-      left: 14px;
+      left: 7px;
     `;
   }} else {
   if (size === 'md') {
     return css`
       top: 2px;
-      left: 2px;
+      left: 11px;
     `;
   } else {
     return css`
       top: 3px;
-      left: 3px;
+      left: 1px;
     `;
   }
 

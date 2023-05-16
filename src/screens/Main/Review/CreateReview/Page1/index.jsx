@@ -33,7 +33,9 @@ const Screens = ({route}) => {
             uri: imageLocation,
           }}
         />
-        <MenuName>{foodName}</MenuName>
+        <WidthView>
+          <MenuName>{foodName}</MenuName>
+        </WidthView>
 
         <RateStars
           ratingInput={0}
@@ -92,4 +94,11 @@ const MenuImage = styled.Image`
 const MenuName = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-bottom: 27px;
+  text-align: center;
+`;
+
+const WidthView = styled.View`
+  width: 300px;
+  flex-direction: column;
+  align-items: center;
 `;

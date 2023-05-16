@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Platform, Keyboard, NativeModules, Alert} from 'react-native';
@@ -98,6 +98,8 @@ const Pages = () => {
     try {
       await auth.confirmPhoneAuth(phoneAuth, 2);
       // await auth.findEmail({ phone: phoneNumber });
+      const resetAction = StackActions.popToTop();
+      navigation.dispatch(resetAction);
       navigation.navigate(FindIdComplatePageName, {
         phone: phoneNumber,
       });

@@ -23,6 +23,7 @@ import {v4 as uuid} from 'uuid';
 import {PAGE_NAME as AppleLoginPageName} from '../../pages/Main/Login/AppleSignup';
 import jwtDecode from 'jwt-decode';
 import Config from 'react-native-config';
+import useUserInfo from '../../biz/useUserInfo/hook';
 
 const nonce = uuid();
 
@@ -41,6 +42,7 @@ const naverData = () => {
   return data;
 };
 export default () => {
+  const {userInfo} = useUserInfo();
   const {snsLogin, snsAppleLogin} = useAuth();
   const navigation = useNavigation();
   const naverLogin = async () => {
@@ -58,6 +60,7 @@ export default () => {
         },
         'NAVER',
       );
+      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [
@@ -92,6 +95,7 @@ export default () => {
         },
         'GOOGLE',
       );
+      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [
@@ -125,6 +129,7 @@ export default () => {
           },
           'APPLE',
         );
+        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -170,6 +175,7 @@ export default () => {
           },
           'APPLE',
         );
+        const userData = await userInfo();
         // console.log(userCredential.additionalUserInfo.isNewUser);
         if (!userCredential.additionalUserInfo.isNewUser) {
           navigation.reset({
@@ -241,6 +247,7 @@ export default () => {
       },
       'KAKAO',
     );
+    const userData = await userInfo();
     navigation.reset({
       index: 0,
       routes: [
@@ -269,6 +276,7 @@ export default () => {
           },
           'FACEBOOK',
         );
+        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -287,6 +295,7 @@ export default () => {
           },
           'FACEBOOK',
         );
+        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [

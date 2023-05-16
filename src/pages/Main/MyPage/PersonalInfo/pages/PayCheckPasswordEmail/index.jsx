@@ -66,17 +66,10 @@ export default function PasswordCheck({route}) {
   const navigation = useNavigation();
   const keyboardStatuss = useKeyboardEvent();
   // input value
-  const [state, setState] = useState('');
   const themeApp = useTheme();
   // input onChange
-  const handleInputChange = e => {
-    setState(e.nativeEvent.text);
-  };
   const onSubmit = async () => {
-    console.log(params?.cardData);
     const ds = params?.cardData;
-    console.log(ds);
-
     try {
       await auth.confirmEmailAuth(watch('eauth'), 7);
       const data = await cardRegistedNice(
@@ -156,6 +149,7 @@ export default function PasswordCheck({route}) {
               isAuth: true,
               authText: '인증요청',
               authPressEvent: callMailAuth,
+              disabledEvent:!auth.readableAtom.isEmailLoading
               // timer:900,
             }}
             additionalCssOnTextInput={'padding-right: 90px'}
@@ -163,8 +157,8 @@ export default function PasswordCheck({route}) {
               required: '필수 입력 항목 입니다.',
               pattern: {
                 value:
-                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                message: '이메일 형식에 맞지 않습니다.',
+                /^(([^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: '올바른 이메일 주소를 입력해주세요.',
               },
             }}
             padding=" 4px 0px"
