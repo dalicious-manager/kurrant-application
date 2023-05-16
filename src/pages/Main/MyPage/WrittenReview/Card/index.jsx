@@ -141,6 +141,40 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
+  // '\n'개수 파악하기
+
+  // /n이 하나일떄 24*24
+  // /n이 두개일떄 24
+  // /n 이 세개일떄 0
+
+  const isOverThreeLines = text => {
+    const numberOfLineChange = (text.match(/\n/g) || []).length;
+    if (numberOfLineChange === 0) {
+      // 0개일떄
+      if (text.length / 24 > 3) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (numberOfLineChange == 1) {
+      if (text.length / 24 > 2) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (numberOfLineChange == 2) {
+      if (text.length / 24 > 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (numberOfLineChange >= 3) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
@@ -237,14 +271,16 @@ const Component = ({
       />
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
-        {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
-          <IconDiv
-            onPress={() => {
-              setElaborateComment(!elaborateComment);
-            }}>
-            <SkinnyArrowDown width={'12px'} height={'8px'} />
-          </IconDiv>
-        )}
+        {Platform.OS === 'ios' &&
+          isOverThreeLines(reviewText) &&
+          !elaborateComment && (
+            <IconDiv
+              onPress={() => {
+                setElaborateComment(!elaborateComment);
+              }}>
+              <SkinnyArrowDown width={'12px'} height={'8px'} />
+            </IconDiv>
+          )}
 
         {/* <Text
           // lineBreakStrategyIOS={'hangul-word'}
@@ -370,6 +406,7 @@ const ImagesWrapper = styled.Pressable`
   flex-direction: row;
   padding-top: 11px;
   padding-bottom: 4px;
+  /* border: 1px solid black; */
 `;
 
 const ImagePressable = styled.Pressable`
@@ -403,6 +440,7 @@ const ReviewPressable = styled.Pressable`
   margin: auto;
   position: relative;
   /* border: 1px solid black; */
+  margin-top: 4px;
   /* padding: 0 11px; */
 `;
 const ReviewText = styled(Typography).attrs({text: 'Body06R'})`

@@ -42,7 +42,6 @@ export default function PasswordCheck({route}) {
     if (params?.password === state) {
       try {
         const email = await payCheckEmail();
-        console.log(email);
         if (email?.data === 2)
           navigation.navigate(PayCheckEmailPageName, {
             password: state,

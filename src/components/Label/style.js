@@ -27,6 +27,9 @@ const labelWrapColor = {
     green: css`
         background-color: ${({ theme }) => theme.colors.green[100]};
     `,
+    vegan: css`
+        background-color: ${({ theme }) => theme.colors.green[500]};
+    `,
     blue: css`
         background-color: ${({ theme }) => theme.colors.blue[100]};
     `,
@@ -74,6 +77,9 @@ const labelColor = {
     `,
     soldOut: css`
         color: ${({ theme }) => theme.colors.grey[0]};
- `
+    `,
+    vegan: css`
+        color: ${({ theme }) => theme.colors.grey[0]};
+    `
 
 }

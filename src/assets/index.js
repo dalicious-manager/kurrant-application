@@ -37,3 +37,6 @@ export const NewMembers = require('../assets/images/newMembers.png');
 export const AIbackground = require('../assets/images/background.png');
 
 export const DefaultProfile = require('../assets/images/DefaultProfile.png');
+export const CompanyLogo = require('../assets/images/Splash/companyLogo.png');
+export const Kurrant = require('../assets/images/Splash/kurrant.png');
+export const SplashLogo = require('../assets/images/Splash/logo.png');

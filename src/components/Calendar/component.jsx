@@ -56,10 +56,8 @@ const Component = ({
   const pager = pagerRef ? pagerRef : useRef();
   const today = new Date();
   const weekly = useAtomValue(weekAtom);
-  const {isOrderMeal, orderMeal} = useOrderMeal();
   const [currentPress, setCurrentPress] = useState(selectDate);
   const [chk, setChk] = useState(0);
-
   const morningServiceDays = isServiceDays?.morningServiceDays;
   const lunchServiceDays = isServiceDays?.lunchServiceDays;
   const dinnerServiceDays = isServiceDays?.dinnerServiceDays;
@@ -117,7 +115,7 @@ const Component = ({
                   const propsDay = formattedWeekDate(day);
                   const lastDay =
                     formattedDate(day, '/') < formattedDate(today, '/');
-                  const order = isOrderMeal?.filter(
+                  const order = meal?.filter(
                     x => x.serviceDate === propsDay,
                   );
                   const set = new Set(order?.map(x => x.diningType));

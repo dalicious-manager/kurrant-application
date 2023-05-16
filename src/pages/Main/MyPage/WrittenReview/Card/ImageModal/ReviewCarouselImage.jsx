@@ -1,12 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Dimensions, Image} from 'react-native';
-import FastImage from 'react-native-fast-image';
-import LinearGradient from 'react-native-linear-gradient';
+
 import Carousel from 'react-native-reanimated-carousel';
 import styled from 'styled-components';
 
 const phoneWidth = Dimensions.get('window').width;
-const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
+const ReviewCarouselImage = ({
+  img,
+  firstClickedImageIndex,
+  setIndex,
+  index,
+}) => {
   const [imgHandledArray, setImgHandledArray] = useState([]);
 
   // 판별해서 배열에 넣어주고 해야겠다
@@ -29,6 +33,7 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
                   // height: 282,
                   height: phoneWidth * (height / width),
                 }),
+                height,
               ]);
             } else if (width < height) {
               resolve([
@@ -112,27 +117,13 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
             <Container>
               <MyView>
                 <MealImage
+                  heightRate={heightRate}
+                  height={item[1].height}
                   source={{
                     uri: `${item[0]}`,
                   }}
                   style={item[1]}
                 />
-
-                {/* <MyFastImage
-                  source={{
-                    uri: `${item[0]}`,
-                    priority: FastImage.priority.high,
-                  }}
-                  style={item[1]}>
-                  <FilterImage
-                    colors={[
-                      'rgba(0, 0, 0, 0.45)',
-                      'rgba(7, 7, 8, 0.25)',
-                      'rgba(255, 255, 255, 0)',
-                      'rgba(255, 255, 255, 0) ',
-                    ]}
-                  />
-                </MyFastImage> */}
               </MyView>
             </Container>
           );
@@ -142,25 +133,18 @@ const CarouselImage = ({img, firstClickedImageIndex, setIndex, index}) => {
   );
 };
 
-export default CarouselImage;
-
-const ModalImage = styled.Image``;
+export default ReviewCarouselImage;
 
 const MealImage = styled.Image`
-  /* width: 100%;
-  height: 100%; */
+  /* margin-top: 20px; */
 
-  /* ${({}) => {}} */
+  margin-top: ${({heightRate, height}) => {
+    const yo = Dimensions.get('screen').height * heightRate;
 
-  /* width: 100%; */
-  /* max-height: 33%; */
+    return `${(yo - height) / 2}px`;
+  }};
 
   border-radius: 2.5px;
-`;
-
-const FilterImage = styled(LinearGradient)`
-  max-width: ${phoneWidth}px;
-  height: 380px;
 `;
 
 const Container = styled.View`
@@ -172,8 +156,4 @@ const Container = styled.View`
 
 const MyView = styled.View`
   width: 100%;
-  /* height: 100%; */
-  margin: auto;
 `;
-
-const MyFastImage = styled(FastImage)``;
