@@ -72,24 +72,8 @@ import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
-  const {
-    sseType1,
-    sseType2,
-    sseType3,
-    sseType4,
-    sseType5,
-    eventSourceMsg,
-    setEventSourceMsg,
-  } = useSse();
-
-  useEffect(() => {
-    //
-    console.log('홈에서 나오는 메세지입니다');
-    if (eventSourceMsg) {
-      console.log(eventSourceMsg);
-      console.log(eventSourceMsg.content);
-    }
-  }, [eventSourceMsg]);
+  const {sseType1, sseType2, sseType3, sseType4, sseType5, getSseType5Refetch} =
+    useSse();
 
   const navigation = useNavigation();
 
@@ -712,6 +696,8 @@ const Pages = () => {
       {sseType5.userId && !sseType5.read && (
         <BalloonPressable
           onPress={() => {
+            console.log('랄랄라');
+            getSseType5Refetch();
             // confirmBalloonClicked();
           }}>
           <Balloon label={sseType5.content} />
