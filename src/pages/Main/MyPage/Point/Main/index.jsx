@@ -29,7 +29,6 @@ const Pages = () => {
     if (status === 0) {
       const review = reviewList?.filter(el => el.reviewId === id);
       if (review?.length === 0) {
-        
         Alert.alert('리뷰 삭제', '작성한 리뷰가 삭제되었습니다.', [
           {
             text: '확인',
@@ -154,14 +153,14 @@ const Pages = () => {
                           }}>
                           {el.pointStatus === 3 || el.pointStatus === 5 ? (
                             <PriceText status={el.pointStatus}>
-                              -{withCommas(el.point)}원
+                              -{withCommas(el.point)}P
                             </PriceText>
                           ) : (
                             <PriceText status={el.pointStatus}>
-                              +{withCommas(el.point)}원
+                              +{withCommas(el.point)}P
                             </PriceText>
                           )}
-                          <Balance>잔액 {withCommas(el.leftPoint)}원</Balance>
+                          <Balance>잔액 {withCommas(el.leftPoint)}P</Balance>
                         </BalanceWrap>
                       </InnerContents>
                     </Contents>
@@ -171,7 +170,6 @@ const Pages = () => {
             );
           }}
         />
-       
       </Wrapper>
     </>
   );
