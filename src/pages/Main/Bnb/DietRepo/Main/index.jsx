@@ -1,8 +1,10 @@
 import {useEffect, useRef, useState} from 'react';
-import {FlatList, Platform, Text} from 'react-native';
+import {FlatList, Platform, Text, Pressable} from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled, {css} from 'styled-components';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+
+import Typography from '~components/Typography';
 
 import CalendarButton from '~components/CalendarButton';
 import BuyCalendar from '~components/BuyCalendar';
@@ -17,6 +19,8 @@ import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as DietRepoHistoryPageName} from '~pages/Main/Bnb/DietRepo/History';
 import {View} from 'react-native';
 import FlatListBanner from './Components/FlatListBanner';
+import DietRepoCard from './Components/DietRepoCard';
+import {ArrowRightBlue} from '../../../../../components/Icon';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -78,6 +82,75 @@ const Pages = () => {
     navigation.navigate(DietRepoHistoryPageName);
   };
 
+  const FlatListSampleData = [
+    {
+      menuTime: '아침',
+
+      menuList: [
+        {
+          dailyFoodId: '',
+          foodId: '',
+          image: '',
+          makersName: '브라운 돈까스',
+          menuName: '정식 돈까스',
+          calTotal: 2200,
+          carbo: 40,
+
+          protein: 40,
+          fat: 40,
+        },
+        {
+          dailyFoodId: '',
+          foodId: '',
+          image: '',
+          makersName: '브라운 돈까스2',
+          menuName: '정식 돈까스',
+          calTotal: 2200,
+          carbo: 40,
+
+          protein: 40,
+          fat: 40,
+        },
+      ],
+    },
+
+    {
+      menuTime: '점심',
+
+      menuList: [],
+    },
+
+    {
+      menuTime: '저녁',
+
+      menuList: [
+        {
+          dailyFoodId: '',
+          foodId: '',
+          image: '',
+          makersName: '김치1',
+          menuName: '김치무침',
+          calTotal: 2000,
+          carbo: 40,
+
+          protein: 40,
+          fat: 40,
+        },
+        {
+          dailyFoodId: '',
+          foodId: '',
+          image: '',
+          makersName: '김치 치즈크림',
+          menuName: '김치 초고바',
+          calTotal: 2200,
+          carbo: 60,
+          protein: 30,
+          fat: 40,
+        },
+      ],
+    },
+  ];
+
   return (
     <Container>
       <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
@@ -117,13 +190,26 @@ const Pages = () => {
           </View>
         }
         contentContainerStyle={{paddingBottom: 190}}
-        data={[1, 2, 3, 4, 5]}
+        data={FlatListSampleData}
         scrollEnabled={true}
         renderItem={({item}) => {
           return (
-            <View style={{paddingLeft: 24, paddingRight: 24}}>
-              <Text>{item}</Text>
-            </View>
+            <FlatListView style={{paddingLeft: 24, paddingRight: 24}}>
+              <FlatListView2>
+                <MealTimeText>{item.menuTime}</MealTimeText>
+
+                <AddMealPressable onPress={() => {}}>
+                  <AddMealText>식사 추가</AddMealText>
+                  <ArrowRightBlue />
+                </AddMealPressable>
+              </FlatListView2>
+
+              <View>
+                {item.menuList.map((v, i) => {
+                  return <DietRepoCard key={i} type="main" item={v} />;
+                })}
+              </View>
+            </FlatListView>
           );
         }}
       />
@@ -165,15 +251,27 @@ const CalendarWrap = styled.View`
   width: 100%;
 `;
 
-const ScrollViewContainer = styled.ScrollView`
-  width: 100%;
-  /* height: 90%; */
-  background-color: #ffffff;
+const FlatListView = styled.View``;
+const FlatListView2 = styled.View`
+  flex-direction: row;
+
+  align-items: center;
+  justify-content: space-between;
 `;
 
-const FlatListHeader = styled.View`
-  background-color: #eff2fe;
-  border-radius: 7px;
+const MealTimeText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+`;
+
+const AddMealText = styled(Typography).attrs({text: 'Button10R'})`
+  color: ${({theme}) => theme.colors.blue[500]};
+  margin-right: 4px;
+`;
+
+const AddMealPressable = styled.Pressable`
+  flex-direction: row;
+
+  align-items: center;
 `;
 
 const ButtonWrapper = styled(LinearGradient)`
