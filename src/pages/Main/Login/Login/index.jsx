@@ -188,7 +188,7 @@ const Pages = ({route}) => {
           }
         });
       };
-      // getData();
+      getData();
     }, []),
   );
 
