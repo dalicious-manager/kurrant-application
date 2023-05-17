@@ -302,7 +302,7 @@ const Pages = ({route}) => {
           <ListBox title="알림 설정" onPressEvent={async()=>{
             await checkNotifications().then(async({status,settings})=>{
               if(status !== RESULTS.GRANTED){
-                if(status === RESULTS.BLOCKED){
+                if(status === RESULTS.BLOCKED || status === RESULTS.DENIED){
                   Alert.alert("알림 권한 설정", "알림을 설정 하기 위해서는 권한 설정이 필요합니다.",[
                     {
                       text: '확인',

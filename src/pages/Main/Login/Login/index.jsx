@@ -161,7 +161,6 @@ const Pages = ({route}) => {
     useCallback(() => {
       const getData = async () => {
         await VersionCheck.getLatestVersion().then(latestVersion => {
-          console.log(currentVersion, latestVersion);
           if (currentVersion !== latestVersion) {
             Alert.alert(
               '앱 업데이트',
@@ -189,7 +188,7 @@ const Pages = ({route}) => {
           }
         });
       };
-      getData();
+      // getData();
     }, []),
   );
 
@@ -267,20 +266,7 @@ const Pages = ({route}) => {
           </Pressable>
         </LoginContainer>
         <toast.ToastWrap message={'뒤로버튼 한번 더 누르시면 종료됩니다.'} />
-        <toast2.ToastWrap
-          message={`마지막 로그인 ${formattedLogin(lastLogin)}`}
-          isBottom={true}
-          onPress={() => console.log('test')}
-        />
-        <toast3.ToastWrap
-          message={`마지막 로그인 ${formattedLogin(lastLogin)}`}
-          isBottom={true}
-          absoluteStyle={'bottom: 85px;'}
-          isCenter={false}
-          onPress={() => console.log('test')}
-        />
-        {/* <BalloonWrap message={`최근 로그인한 방법이에요`}  size={'B'}
-          location={osLocation()} onPress={()=>console.log("test")}/> */}
+       
       </WrapperBox>
     </SafeView>
   );

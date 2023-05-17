@@ -104,7 +104,7 @@ const Component = () => {
 export default Component;
 
 const Wrapper = styled(Animated.View)`
-  position: absolute;  
+  position: relative;  
   align-items: center;  
   ${({location})=>{
     let retSpot = location?.top ? `top :${location.top}; `: '';
@@ -119,6 +119,7 @@ const Container = styled.View`
   position: absolute;
   flex-direction: row;
   align-items: center;
+  z-index: -1;
   padding: ${({size})=> size === 'B' ? '6px 12px' : '3.5px 12px'};
   justify-content: center;
   border-radius: ${({size})=> size === 'B' ? '10px' : '7px'};

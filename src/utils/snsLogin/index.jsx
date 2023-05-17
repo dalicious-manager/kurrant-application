@@ -24,6 +24,7 @@ import {PAGE_NAME as AppleLoginPageName} from '../../pages/Main/Login/AppleSignu
 import jwtDecode from 'jwt-decode';
 import Config from 'react-native-config';
 import useUserInfo from '../../biz/useUserInfo/hook';
+import { el } from 'date-fns/locale';
 
 const nonce = uuid();
 
@@ -48,7 +49,8 @@ export default () => {
   const naverLogin = async () => {
     // console.log('로그인')
     try {
-      const {successResponse} = await NaverLogin.login(naverData());
+      const {successResponse, failureResponse} = await NaverLogin.login(naverData());
+      
     if (successResponse) {
       // console.log(successResponse)
       // Clipboard.setString(successResponse.accessToken)
@@ -70,6 +72,8 @@ export default () => {
           },
         ],
       });
+    }else{
+      console.log(failureResponse)
     }
     } catch (error) {
       Alert.alert("네이버 로그인 에러", error.toString());
