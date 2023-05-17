@@ -1,4 +1,4 @@
-import {Pressable} from 'react-native';
+import {Pressable, Text} from 'react-native';
 import styled from 'styled-components';
 import Typography from '~components/Typography';
 
@@ -29,21 +29,35 @@ const DietRepoCard = ({type, item}) => {
               브라운 돈까스
               {']'}
             </RestaurentNameText>
-            <MenuNameText numberOfLines={1} ellipsizeMode="tail">
-              정식 돈까스 정식돈까스
-            </MenuNameText>
-            {/* <MenuDetailText numberOfLines={1} ellipsizeMode="tail">
-              {foodDescription}
-            </MenuDetailText>
-            <MenuDetailText numberOfLines={1} ellipsizeMode="tail">
-              {foodCount && `${foodCount}개`}
-            </MenuDetailText> */}
+            <MenuNameWrap>
+              <MenuNameText numberOfLines={1} ellipsizeMode="tail">
+                정식 돈까스 정식 돈까스 정식 돈까스
+              </MenuNameText>
+              <TotalCalText> · 2200kcal</TotalCalText>
+            </MenuNameWrap>
           </SmallRowWrap>
-          <SmallColumnWrap>
-            <ReviewFormWriteButton onPress={() => {}}>
-              <TextText>제거</TextText>
-            </ReviewFormWriteButton>
-          </SmallColumnWrap>
+          <Wrap4>
+            <Wrap5>
+              <Wrap6>
+                <Text6>탄수화물</Text6>
+                <Text6>40g</Text6>
+              </Wrap6>
+              <Wrap6>
+                <Text6>단백질</Text6>
+                <Text6>40g</Text6>
+              </Wrap6>
+              <Wrap6>
+                <Text6>지방</Text6>
+                <Text6>40g</Text6>
+              </Wrap6>
+            </Wrap5>
+
+            <ButtonWrap>
+              <ReviewFormWriteButton onPress={() => {}}>
+                <TextText>제거</TextText>
+              </ReviewFormWriteButton>
+            </ButtonWrap>
+          </Wrap4>
         </MetadataWrap>
       </CardContentBox>
 
@@ -83,21 +97,16 @@ const MetadataWrap = styled.View`
 
   padding: 0 16px;
   display: flex;
-  justify-content: space-between;
-  /* border: 1px solid black; */
+  /* justify-content: space-between; */
 `;
 
-const SmallRowWrap = styled.View`
-  margin-bottom: 15px;
-`;
+const SmallRowWrap = styled.View``;
 
-const SmallColumnWrap = styled.View`
-  display: flex;
-  flex-flow: row;
-  align-items: center;
+const Wrap4 = styled.View`
+  flex-direction: row;
   justify-content: space-between;
 
-  height: 32px;
+  flex: 1;
 `;
 
 const RestaurentNameText = styled(Typography).attrs({text: 'SmallLabel'})`
@@ -108,8 +117,36 @@ const RestaurentNameText = styled(Typography).attrs({text: 'SmallLabel'})`
 
 const MenuNameText = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[2]};
-  margin-left: 1px;
   margin: 1px 0;
+  margin-left: 1px;
+
+  max-width: 142px;
+`;
+
+const MenuNameWrap = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Wrap5 = styled.View`
+  /* border: 1px solid black; */
+`;
+const Wrap6 = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+const Text6 = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${props => props.theme.colors.grey[5]};
+`;
+
+const TotalCalText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${props => props.theme.colors.grey[2]};
+`;
+
+const ButtonWrap = styled.View`
+  height: 100%;
+  flex-direction: column-reverse;
 `;
 
 const ReviewFormWriteButton = styled.Pressable`
