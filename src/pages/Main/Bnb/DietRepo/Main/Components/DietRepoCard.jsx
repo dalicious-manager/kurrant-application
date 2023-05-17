@@ -31,33 +31,41 @@ const DietRepoCard = ({type, item}) => {
             </RestaurentNameText>
             <MenuNameWrap>
               <MenuNameText numberOfLines={1} ellipsizeMode="tail">
-                정식 돈까스 정식 돈까스 정식 돈까스
+                정식 돈까스
               </MenuNameText>
               <TotalCalText> · 2200kcal</TotalCalText>
             </MenuNameWrap>
           </SmallRowWrap>
-          <Wrap4>
-            <Wrap5>
-              <Wrap6>
-                <Text6>탄수화물</Text6>
-                <Text6>40g</Text6>
-              </Wrap6>
-              <Wrap6>
-                <Text6>단백질</Text6>
-                <Text6>40g</Text6>
-              </Wrap6>
-              <Wrap6>
-                <Text6>지방</Text6>
-                <Text6>40g</Text6>
-              </Wrap6>
-            </Wrap5>
+
+          <MainWrap4>
+            {type === 'main' ? (
+              <MainWrap5>
+                <MainWrap6>
+                  <MainText6>탄수화물</MainText6>
+                  <MainText6>40g</MainText6>
+                </MainWrap6>
+                <MainWrap6>
+                  <MainText6>단백질</MainText6>
+                  <MainText6>40g</MainText6>
+                </MainWrap6>
+                <MainWrap6>
+                  <MainText6>지방</MainText6>
+                  <MainText6>40g</MainText6>
+                </MainWrap6>
+              </MainWrap5>
+            ) : (
+              <AddMealWrap5>
+                <AddMealText6>달리셔스 · 달리셔스</AddMealText6>
+                <MainText6>1개</MainText6>
+              </AddMealWrap5>
+            )}
 
             <ButtonWrap>
               <ReviewFormWriteButton onPress={() => {}}>
-                <TextText>제거</TextText>
+                <TextText> {type === 'main' ? '제거' : '식사 추가'}</TextText>
               </ReviewFormWriteButton>
             </ButtonWrap>
-          </Wrap4>
+          </MainWrap4>
         </MetadataWrap>
       </CardContentBox>
 
@@ -102,13 +110,6 @@ const MetadataWrap = styled.View`
 
 const SmallRowWrap = styled.View``;
 
-const Wrap4 = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-
-  flex: 1;
-`;
-
 const RestaurentNameText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 1px;
@@ -128,15 +129,24 @@ const MenuNameWrap = styled.View`
   align-items: center;
 `;
 
-const Wrap5 = styled.View`
-  /* border: 1px solid black; */
+const MainWrap4 = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 1;
 `;
-const Wrap6 = styled.View`
+
+const MainWrap5 = styled.View``;
+const MainWrap6 = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
-const Text6 = styled(Typography).attrs({text: 'CaptionR'})`
+const MainText6 = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${props => props.theme.colors.grey[5]};
+`;
+
+const AddMealWrap5 = styled.View``;
+const AddMealText6 = styled(Typography).attrs({text: 'Button10R'})`
   color: ${props => props.theme.colors.grey[5]};
 `;
 

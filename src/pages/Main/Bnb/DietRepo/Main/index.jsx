@@ -206,7 +206,7 @@ const Pages = () => {
 
               <View>
                 {item.menuList.map((v, i) => {
-                  return <DietRepoCard key={i} type="main" item={v} />;
+                  return <DietRepoCard key={i} type="" item={v} />;
                 })}
               </View>
             </FlatListView>
