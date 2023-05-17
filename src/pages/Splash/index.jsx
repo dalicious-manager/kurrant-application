@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 
-import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import { check, openSettings, PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
 import styled from 'styled-components/native';
 import { CompanyLogo ,SplashLogo,Kurrant} from '../../assets';
 import FastImage from 'react-native-fast-image';
@@ -302,11 +302,11 @@ const Page = () => {
     setLoginLoading(true);
       
     async function requestUserPermission() {
+      await messaging().deleteToken()
       const authStatus = await messaging().requestPermission();
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL || 
-        authStatus === messaging.AuthorizationStatus.NOT_DETERMINED;
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL ;
       console.log(enabled)
       if (enabled) {
         console.log('Authorization status:', authStatus);
@@ -318,15 +318,26 @@ const Page = () => {
     }
     requestUserPermission();
     const requestNotificationPermission = async () => {
-      if (Platform.OS === 'android') {
-        const status = await check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);        
-        if (status !== RESULTS.GRANTED) {
-          const permissionStatus = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
-          if (permissionStatus === RESULTS.BLOCKED) {
-            // 사용자가 알림 권한을 거부한 경우 처리할 코드 작성
-          }
+      await requestNotifications(['alert','badge', 'sound','providesAppSettings']).then(({status, settings}) => {
+        if (status === RESULTS.BLOCKED) {
+          console.log(settings,"notificationCenter")
+          // openSettings().catch(() => console.warn('cannot open settings'));
         }
-      }
+      });
+      // if (Platform.OS === 'android') {
+      //   const status = await check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);        
+      //   if (status !== RESULTS.GRANTED) {
+      //     const permissionStatus = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+      //     console.log(permissionStatus,"status")
+      //     if (permissionStatus === RESULTS.BLOCKED) {
+      //       // 사용자가 알림 권한을 거부한 경우 처리할 코드 작성
+      //     }
+      //   }
+      // }
+      // if(Platform.OS === 'ios'){
+        
+      // }
+     
     };
     
     // 알림 권한 요청 함수 호출

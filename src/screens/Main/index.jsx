@@ -306,6 +306,7 @@ import ReportReview, {
 import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
+import { RESULTS, checkNotifications, openSettings, requestNotifications } from 'react-native-permissions';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -789,8 +790,37 @@ const Screen = () => {
                 </DeleteTxt>
                 <DeleteTxt>
                   <NotifySettingIcon
-                    onPressEvent={() =>
-                      navigation.navigate(NotificationSettingPageName)
+                    onPressEvent={async() =>{
+                      await checkNotifications().then(async({status,settings})=>{
+                        if(status !== RESULTS.GRANTED){
+                          if(status === RESULTS.BLOCKED ){
+                            Alert.alert("알림 권한 설정", "알림을 설정 하기 위해서는 권한 설정이 필요합니다.",[
+                              {
+                                text: '확인',
+                                onPress: () => {
+                                  openSettings().catch(()=>console.warn("알림설정 화면 이동 오류"))
+                                },
+                                style: 'cancel',
+                              },
+                              {
+                                text: '취소',
+                                onPress: () => {},
+                                style: 'cancel',
+                              },
+                            ])
+                          }else{
+                            await requestNotifications(['alert','badge', 'sound','providesAppSettings']).then(({status, settings}) => {
+                              if (status === RESULTS.BLOCKED) {
+                                console.log(settings,"notificationCenter")
+                                // openSettings().catch(() => console.warn('cannot open settings'));
+                              }
+                            });
+                          }
+                        }else{
+                          navigation.navigate(NotificationSettingPageName);
+                        }
+                      })
+                    }
                     }
                   />
                 </DeleteTxt>

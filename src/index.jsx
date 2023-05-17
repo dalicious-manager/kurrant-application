@@ -40,6 +40,7 @@ const App = () => {
         <SafeAreaProvider>
           <StatusBar />
           {Config.NODE_ENV === 'dev' && <IsDevelop>개발서버 입니다.</IsDevelop>}
+          {Config.NODE_ENV === 'rel' && <IsDevelop>QA 서버입니다.</IsDevelop>}
           <NavigationContainer
             ref={navigationRef}
             onReady={() => {

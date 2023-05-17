@@ -435,18 +435,18 @@ PODS:
     - React-Core
   - react-native-document-picker (8.2.0):
     - React-Core
-  - react-native-fbsdk-next (11.2.0):
+  - react-native-fbsdk-next (11.2.1):
     - React-Core
-    - react-native-fbsdk-next/Core (= 11.2.0)
-    - react-native-fbsdk-next/Login (= 11.2.0)
-    - react-native-fbsdk-next/Share (= 11.2.0)
-  - react-native-fbsdk-next/Core (11.2.0):
+    - react-native-fbsdk-next/Core (= 11.2.1)
+    - react-native-fbsdk-next/Login (= 11.2.1)
+    - react-native-fbsdk-next/Share (= 11.2.1)
+  - react-native-fbsdk-next/Core (11.2.1):
     - FBSDKCoreKit (~> 15.0.0)
     - React-Core
-  - react-native-fbsdk-next/Login (11.2.0):
+  - react-native-fbsdk-next/Login (11.2.1):
     - FBSDKLoginKit (~> 15.0.0)
     - React-Core
-  - react-native-fbsdk-next/Share (11.2.0):
+  - react-native-fbsdk-next/Share (11.2.1):
     - FBSDKGamingServicesKit (~> 15.0.0)
     - FBSDKShareKit (~> 15.0.0)
     - React-Core
@@ -552,9 +552,7 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-
   - RNFBAnalytics (17.5.0):
-
     - Firebase/Analytics (= 10.3.0)
     - React-Core
     - RNFBApp
@@ -948,14 +946,12 @@ SPEC CHECKSUMS:
   React-logger: 7bd569e3857d74ed412ce0a5c51f421ff7d4ca7f
   react-native-config: 86038147314e2e6d10ea9972022aa171e6b1d4d8
   react-native-document-picker: 495c444c0c773c6e83a5d91165890ecb1c0a399a
-  react-native-fbsdk-next: b2dd3a5cebb2507c09e3ec880e1b94a491dbaece
+  react-native-fbsdk-next: 5291a5d67aab4e649d072c50988033ff0d05b915
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-image-picker: ec9b713e248760bfa0f879f0715391de4651a7cb
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
-
   react-native-safe-area-context: 1d596539b05a78f2b346e954e7c577f6f9be7544
-
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
@@ -978,9 +974,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDateTimePicker: 65e1d202799460b286ff5e741d8baf54695e8abd
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-
   RNFBAnalytics: f54a45286c1da25a01269abffc7341f0756aa7c6
-
   RNFBApp: 1ee535dcb7773ca612d3a2e53a1f78f8f2fb6abf
   RNFBAuth: 58ab8f774f9ff45707f2bfbf4fd74e8f7b4220b9
   RNFBMessaging: 04ecf12bae7543cd8df145f1b26d89d867594be7
@@ -999,4 +993,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f4499c4f21142ecbae2567b330a80be12b97afdc
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
