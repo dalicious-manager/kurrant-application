@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {Platform, Text} from 'react-native';
+import {FlatList, Platform, Text} from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled, {css} from 'styled-components';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
@@ -15,6 +15,8 @@ import Button from '~components/Button';
 import {useNavigation} from '@react-navigation/native';
 
 import {PAGE_NAME as DietRepoHistoryPageName} from '~pages/Main/Bnb/DietRepo/History';
+import {View} from 'react-native';
+import FlatListBanner from './Components/FlatListBanner';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -99,8 +101,33 @@ const Pages = () => {
           isServiceDays={isServiceDays}
         />
       </CalendarWrap>
-      <ScrollViewContainer
-        showsVerticalScrollIndicator={false}></ScrollViewContainer>
+      {/* <ScrollViewContainer
+        showsVerticalScrollIndicator={false}></ScrollViewContainer> */}
+      <FlatList
+        ListHeaderComponent={
+          <View style={{paddingLeft: 24, paddingRight: 24}}>
+            <FlatListBanner
+              todayTotalCal={2200}
+              nutritionList={[
+                {lable: '탄수화물', amount: 400},
+                {lable: '단백질', amount: 100},
+                {lable: '지방', amount: 130},
+              ]}
+            />
+          </View>
+        }
+        contentContainerStyle={{paddingBottom: 190}}
+        data={[1, 2, 3, 4, 5]}
+        scrollEnabled={true}
+        renderItem={({item}) => {
+          return (
+            <View style={{paddingLeft: 24, paddingRight: 24}}>
+              <Text>{item}</Text>
+            </View>
+          );
+        }}
+      />
+
       <ButtonWrapper
         colors={[
           'rgba(255, 255, 255, 0)',
@@ -142,6 +169,11 @@ const ScrollViewContainer = styled.ScrollView`
   width: 100%;
   /* height: 90%; */
   background-color: #ffffff;
+`;
+
+const FlatListHeader = styled.View`
+  background-color: #eff2fe;
+  border-radius: 7px;
 `;
 
 const ButtonWrapper = styled(LinearGradient)`
