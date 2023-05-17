@@ -21,6 +21,7 @@ import {View} from 'react-native';
 import FlatListBanner from './Components/FlatListBanner';
 import DietRepoCard from './Components/DietRepoCard';
 import {ArrowRightBlue} from '../../../../../components/Icon';
+import {Line} from 'react-native-svg';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -193,6 +194,9 @@ const Pages = () => {
         data={FlatListSampleData}
         scrollEnabled={true}
         renderItem={({item}) => {
+          console.log(item.menuTime);
+          console.log(item.menuList.length);
+
           return (
             <FlatListView style={{paddingLeft: 24, paddingRight: 24}}>
               <FlatListView2>
@@ -204,11 +208,17 @@ const Pages = () => {
                 </AddMealPressable>
               </FlatListView2>
 
-              <View>
-                {item.menuList.map((v, i) => {
-                  return <DietRepoCard key={i} type="" item={v} />;
-                })}
-              </View>
+              {Array.isArray(item.menuList) && item.menuList.length > 0 ? (
+                <View>
+                  {item.menuList.map((v, i) => {
+                    return <DietRepoCard key={i} type="" item={v} />;
+                  })}
+                </View>
+              ) : (
+                <>
+                  <GreyThinLine />
+                </>
+              )}
             </FlatListView>
           );
         }}
@@ -251,7 +261,9 @@ const CalendarWrap = styled.View`
   width: 100%;
 `;
 
-const FlatListView = styled.View``;
+const FlatListView = styled.View`
+  margin-top: 25px;
+`;
 const FlatListView2 = styled.View`
   flex-direction: row;
 
@@ -272,6 +284,13 @@ const AddMealPressable = styled.Pressable`
   flex-direction: row;
 
   align-items: center;
+`;
+
+const GreyThinLine = styled.View`
+  width: 100%;
+  border-bottom-color: ${props => props.theme.colors.grey[8]};
+  border-bottom-width: 1px;
+  margin-top: 25px;
 `;
 
 const ButtonWrapper = styled(LinearGradient)`
