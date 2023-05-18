@@ -144,24 +144,7 @@ const Pages = ({route}) => {
   const [supportPrice, setSupportPrice] = useState(0);
   const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
 
-  useEffect(() => {
-    let price = null;
-    if (dailyfoodData?.data.supportPrice) {
-      switch (sliderValue) {
-        case 0:
-          price = supportPrices['morningSupportPrice'];
-          break;
-        case 1:
-          price = supportPrices['lunchSupportPrice'];
-          break;
-        case 2:
-          price = supportPrices['dinnerSupportPrice'];
-          break;
-      }
-
-      setSupportPrice(price);
-    }
-  }, [sliderValue, supportPrices]);
+  
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
@@ -570,8 +553,28 @@ const Pages = ({route}) => {
       // loadDailyFood();
       
       dailyfoodRefetch();
+      
     }
   }, [date, isMount]);
+  useEffect(() => {
+    let price = null;
+    if (dailyfoodData?.data.supportPrice) {
+      console.log(dailyfoodData?.data.supportPrice)
+      switch (sliderValue) {
+        case 0:
+          price = dailyfoodData?.data.supportPrice['morningSupportPrice'];
+          break;
+        case 1:
+          price = dailyfoodData?.data.supportPrice['lunchSupportPrice'];
+          break;
+        case 2:
+          price = dailyfoodData?.data.supportPrice['dinnerSupportPrice'];
+          break;
+      }
+
+      setSupportPrice(price);
+    }
+  }, [sliderValue, dailyfoodData?.data,date]);
   useEffect(()=>{
     setMorning(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 1));
     setLunch(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 2));
