@@ -313,6 +313,12 @@ import DietRepoMain, {
 import DietRepoHistory, {
   PAGE_NAME as DietRepoHistoryPageName,
 } from '../../pages/Main/Bnb/DietRepo/History';
+import DietRepoAddDiet, {
+  PAGE_NAME as DietRepoAddDietPageName,
+} from '../../pages/Main/Bnb/DietRepo/AddDiet';
+import DietRepoAddMyDiet, {
+  PAGE_NAME as DietRepoAddMyDietPageName,
+} from '../../pages/Main/Bnb/DietRepo/AddMyDiet';
 
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
 
@@ -324,9 +330,7 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-    <MainRoot.Navigator 
-      initialRouteName={SplashPageName}
-    >
+    <MainRoot.Navigator initialRouteName={SplashPageName}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -2094,6 +2098,38 @@ const Screen = () => {
           options={{
             headerShown: true,
             title: '식사 히스토리',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={DietRepoAddDietPageName}
+          component={DietRepoAddDiet}
+          options={{
+            headerShown: true,
+            title: '식사 추가',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={DietRepoAddMyDietPageName}
+          component={DietRepoAddMyDiet}
+          options={{
+            headerShown: true,
+            title: '내 음식 추가',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',

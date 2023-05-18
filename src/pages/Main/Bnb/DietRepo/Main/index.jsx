@@ -17,6 +17,7 @@ import Button from '~components/Button';
 import {useNavigation} from '@react-navigation/native';
 
 import {PAGE_NAME as DietRepoHistoryPageName} from '~pages/Main/Bnb/DietRepo/History';
+import {PAGE_NAME as DietRepoAddDietPageName} from '~pages/Main/Bnb/DietRepo/AddDiet';
 import {View} from 'react-native';
 import FlatListBanner from './Components/FlatListBanner';
 import DietRepoCard from './Components/DietRepoCard';
@@ -199,7 +200,10 @@ const Pages = () => {
               <FlatListView2>
                 <MealTimeText>{item.menuTime}</MealTimeText>
 
-                <AddMealPressable onPress={() => {}}>
+                <AddMealPressable
+                  onPress={() => {
+                    navigation.navigate(DietRepoAddDietPageName);
+                  }}>
                   <AddMealText>식사 추가</AddMealText>
                   <ArrowRightBlue />
                 </AddMealPressable>
