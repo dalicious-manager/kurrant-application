@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import FastImage from 'react-native-fast-image';
 import ButtonMeal from '~components/ButtonMeal';
+import ButtonMealCancel from '~components/ButtonMealCancel';
 import Typography from '~components/Typography';
 import ArrowRight from '~assets/icons/Group/checkArrow.svg';
 import ArrowDown from '~assets/icons/Group/arrowDown.svg';
@@ -196,7 +197,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                           </Typography>
                         </PriceBox>
                       </TextBox>
-                      {order.orderStatus === 5 && (
+                      {(order.dailyFoodStatus ===1 || order.dailyFoodStatus ===2) && order.orderStatus === 5 && (
                         <ButtonContainer>
                           <ButtonMeal
                             label={'취소'}
@@ -263,6 +264,11 @@ const Component = ({purchaseId, date, itemIndex}) => {
                       {order.orderStatus === 10 && (
                         <ButtonContainer>
                           <ButtonMeal label={'수령확인'} onPressEvent={()=>deliveryConfirmPress(order.id)}/>
+                        </ButtonContainer>
+                      )}
+                      {order.dailyFoodStatus === 6 && (
+                        <ButtonContainer>
+                          <ButtonMealCancel label={'취소불가'} />
                         </ButtonContainer>
                       )}
                     </DateOrderItemContent>

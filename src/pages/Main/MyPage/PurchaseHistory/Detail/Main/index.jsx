@@ -200,7 +200,7 @@ const Pages = ({route}) => {
                     '주문 취소',
                     `${purchaseDetail?.orderItems?.length}개의 주문 중 ${
                       purchaseDetail?.orderItems?.filter(
-                        v => v.orderStatus === 5,
+                        v => (v.orderStatus === 5 && (v.dailyFoodStatus ===1 || v.dailyFoodStatus===2)),
                       )?.length || 0
                     }개를 취소 하시겠어요?\n${possibleOrder}`,
                     [

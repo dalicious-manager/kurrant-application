@@ -39,6 +39,7 @@ const Component = ({orderItem, onCancel = () => {}}) => {
     id,
     price,
     orderStatus,
+    dailyFoodStatus
   } = orderItem;
   const navigation = useNavigation();
   const statusColor = () => {
@@ -75,7 +76,7 @@ const Component = ({orderItem, onCancel = () => {}}) => {
                 식사일 : {formattedDateAndDay(serviceDate)}{' '}
                 {formattedDateType(diningType)}
               </ServiceDate>
-              {orderStatus === 5 && (
+              {(dailyFoodStatus ===1 || dailyFoodStatus ===2) && orderStatus === 5 && (
                 <TextButton
                   label="주문취소"
                   type="blue"
@@ -109,6 +110,9 @@ const Component = ({orderItem, onCancel = () => {}}) => {
               )}
               {orderStatus === 10 && (
                 <TextButton label="수령확인" type="blue" size="label13R" onPressEvent={()=>deliveryConfirmPress(id)}/>
+              )}
+              {(dailyFoodStatus === 6 &&  (orderStatus === 6 || orderStatus === 9)) &&(
+                <TextButton label="취소불가" type="red" size="label13R"/>
               )}
             </ServiceDateBox>
             <Body06R19 textColor={themeApp.colors.grey[2]}>

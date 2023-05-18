@@ -60,8 +60,6 @@ const Pages = ({route}) => {
   const currentVersion = VersionCheck.getCurrentVersion();
   const navigation = useNavigation();
   const toast = Toast();
-  const toast2 = Toast();
-  const toast3 = Toast();
 
   const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
   const [lastLogin,setLastLogin] = useState();
@@ -161,7 +159,10 @@ const Pages = ({route}) => {
     useCallback(() => {
       const getData = async () => {
         await VersionCheck.getLatestVersion().then(latestVersion => {
-          if (currentVersion !== latestVersion) {
+          const regex = /[^0-9]/g;
+          const result = currentVersion.replace(regex, "");
+          const result2 = latestVersion.replace(regex, "");
+          if (Number(result) < Number(result2)) {
             Alert.alert(
               '앱 업데이트',
               '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',

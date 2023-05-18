@@ -2,7 +2,7 @@ import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, StatusBar, AppState, Platform} from 'react-native';
+import {View, StyleSheet, Alert, StatusBar, AppState, Platform, Linking} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
@@ -59,6 +59,16 @@ import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import Sound from 'react-native-sound';
 import { useGetDailyfood } from '../../../../../hook/useDailyfood';
+import VersionCheck from 'react-native-version-check';
+
+const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
+// 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
+const GOOGLE_PLAY_STORE_WEB_LINK =
+  'https://play.google.com/store/apps/details?id=com.dalicious.kurrant';
+// 애플 앱 스토어 링크
+const APPLE_APP_STORE_LINK = 'itms-apps://itunes.apple.com/us/app/id1663407738';
+// 애플 앱 스토어가 설치되어 있지 않을 때 웹 링크
+const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -69,6 +79,7 @@ const Pages = () => {
   const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
     useUserInfo();
 
+  const currentVersion = VersionCheck.getCurrentVersion();
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
   const userGroupName = isUserInfo?.group;
@@ -140,7 +151,18 @@ const Pages = () => {
     dailyfoodRefetch();
   },[isUserInfo])
   // 홈 전체 공지사항
+  const handlePress = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
 
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
   // const {getAnnouncements, announcements, announcementModalVisible} =
   //   useGetAnnouncements();
 
@@ -469,6 +491,44 @@ const Pages = () => {
       listener.remove();
     };
   }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        await userGroupSpotCheck();
+        await VersionCheck.getLatestVersion().then(latestVersion => {
+          const regex = /[^0-9]/g;
+          const result = currentVersion.replace(regex, "");
+          const result2 = latestVersion.replace(regex, "");
+          if (Number(result) < Number(result2)) {
+            Alert.alert(
+              '앱 업데이트',
+              '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
+              [
+                {
+                  text: '확인',
+                  onPress: async () => {
+                    if (Platform.OS === 'android') {
+                      handlePress(
+                        GOOGLE_PLAY_STORE_LINK,
+                        GOOGLE_PLAY_STORE_WEB_LINK,
+                      );
+                    } else {
+                      handlePress(
+                        APPLE_APP_STORE_LINK,
+                        APPLE_APP_STORE_WEB_LINK,
+                      );
+                    }
+                  },
+                  style: 'destructive',
+                },
+              ],
+            );
+          }
+        });
+      };
+      getData();
+    }, []),
+  );
   if (!isUserInfo) {
     return <SkeletonUI />;
   }

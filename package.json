@@ -8,8 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
-    "postinstall": "react-native setup-ios-permissions && pod-install"
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
   },
   "dependencies": {
     "@actbase/react-daum-postcode": "^1.0.4",
@@ -52,7 +51,7 @@
     "react-native-event-source": "^1.1.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-fbsdk-next": "^11.1.0",
-    "react-native-gesture-handler": "^2.9.0",
+    "react-native-gesture-handler": "^2.10.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-image-picker": "^5.0.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -82,7 +81,6 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "pod-install": "0.1.38",
     "@babel/core": "^7.12.9",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/plugin-transform-destructuring": "^7.20.2",

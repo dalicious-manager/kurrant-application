@@ -210,9 +210,16 @@ const Pages = ({route}) => {
                       </DiningTime>
                     </DiningTimeWrap>
                     {s.orderItemDtoList?.map((sm, idx) => {
+
                       console.log(sm,"sm")
                       return (
                         <MealContentWrap key={idx}>
+                           {sm.dailyFoodStatus ===6 && <BlurView/>}
+                           {sm.dailyFoodStatus ===6  && (
+                            <SoldOut soldOut={sm.dailyFoodStatus}>
+                              마감됐어요
+                            </SoldOut>
+                          )}
                           <FastImage
                             source={{
                               uri: `${sm.image}`,
@@ -224,6 +231,7 @@ const Pages = ({route}) => {
                               borderRadius: 7,
                             }}
                           />
+                          
                           <Content
                             onPress={() =>
                               navigation.navigate(MealDetailPageName, {
@@ -279,6 +287,7 @@ const Pages = ({route}) => {
                       {m.orderItemDtoList?.map((el, idx) => {
                         return (
                           <MealContentWrap key={idx}>
+                            {el.dailyFoodStatus ===6 && <BlurView/>}
                             <FastImage
                               source={{
                                 uri: `${el.image}`,
@@ -308,7 +317,7 @@ const Pages = ({route}) => {
                                 <CancelText>취소완료</CancelText>
                               )}
                             </Content>
-                            {((el.dailyFoodStatus ===1 || el.dailyFoodStatus ===2) && el.orderStatus === 6) && <CancelBtnWrap status={el.orderStatus}>
+                            {((el.dailyFoodStatus ===1 || el.dailyFoodStatus ===2) && el.orderStatus === 5) && <CancelBtnWrap status={el.orderStatus}>
                               <LabelButton
                                 label={'취소'}
                                 onPressEvent={() => cancelMealPress(el.id)}
@@ -370,12 +379,27 @@ const Pages = ({route}) => {
 };
 
 export default Pages;
-
+const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
+  position: absolute;
+  left: ${({rank}) => (rank === 1 ? '17px' : '15px')};
+  top: ${({rank}) => (rank === 1 ? '60%' : '55%')};
+  color: ${props => props.theme.colors.grey[4]};
+  z-index: 1000;
+`;
 const SafeView = styled.SafeAreaView`
   background-color: ${props => props.theme.colors.grey[0]};
   flex: 1;
 `;
-
+const BlurView = styled.View`
+  position: absolute;
+  width: 107px;
+  height: 107px;
+  border-radius: 7px;
+  left: 0px;
+  top: 24px;
+  background-color: #ffffffcc;
+  z-index: 999;
+`;
 const CalendarWrap = styled.View`
   height: 120px;
   border-bottom-color: ${props => props.theme.colors.grey[8]};

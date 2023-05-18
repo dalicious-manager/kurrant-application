@@ -104,7 +104,7 @@ const Component = () => {
 export default Component;
 
 const Wrapper = styled(Animated.View)`
-  position: absolute;  
+  position: relative;  
   align-items: center;  
   ${({location})=>{
     let retSpot = location?.top ? `top :${location.top}; `: '';
