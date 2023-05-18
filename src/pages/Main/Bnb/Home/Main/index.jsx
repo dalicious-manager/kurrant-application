@@ -214,6 +214,10 @@ const Pages = () => {
   //   console.log(oneAnnouncement);
   // }, [oneAnnouncement]);
 
+  useEffect(() => {
+    navigation.navigate(DietRepoMainPageName);
+  }, []);
+
   // 로컬스토리지 확인하기
 
   useEffect(() => {

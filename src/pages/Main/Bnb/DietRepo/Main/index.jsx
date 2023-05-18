@@ -22,7 +22,7 @@ import {View} from 'react-native';
 import FlatListBanner from './Components/FlatListBanner';
 import DietRepoCard from './Components/DietRepoCard';
 import {ArrowRightBlue} from '../../../../../components/Icon';
-import {Line} from 'react-native-svg';
+import DietRepoCalendar from '../DietRepoCalendar/DietRepoCalendar';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -43,16 +43,16 @@ const Pages = () => {
   // {{host}}/v1/dailyfoods?spotId=93&selectedDate=2023-05-08
 
   const pager = useRef();
-  const fadeAnim = useRef(new Animated.Value(32)).current;
-  const [chk, setChk] = useState(0);
+  // const fadeAnim = useRef(new Animated.Value(32)).current;
+  // const [chk, setChk] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
 
   const [date, setDate] = useState(formattedWeekDate(new Date()));
 
-  const onPageScroll2 = e => {
-    const {position} = e.nativeEvent;
-    setChk(position);
-  };
+  // const onPageScroll2 = e => {
+  //   const {position} = e.nativeEvent;
+  //   setChk(position);
+  // };
 
   const dayPress = async selectedDate => {
     try {
@@ -155,11 +155,11 @@ const Pages = () => {
 
   return (
     <Container>
-      <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
+      {/* <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
         <CalendarButton pager={pager} daily chk={chk} />
-      </Animated.View>
+      </Animated.View> */}
       <CalendarWrap>
-        <BuyCalendar
+        {/* <BuyCalendar
           BooleanValue={false}
           type={'grey2'}
           color={'white'}
@@ -171,7 +171,23 @@ const Pages = () => {
           margin={'0px 28px'}
           scrollDir
           pagerRef={pager}
-          onPageScroll2={onPageScroll2}
+          // onPageScroll2={onPageScroll2}
+          sliderValue={sliderValue}
+          isServiceDays={isServiceDays}
+        /> */}
+        <DietRepoCalendar
+          BooleanValue={false}
+          type={'grey2'}
+          color={'white'}
+          size={'Body05R'}
+          onPressEvent2={dayPress}
+          daily={daily}
+          // selectDate={date}
+          selectDate={date}
+          margin={'0px 28px'}
+          scrollDir
+          pagerRef={pager}
+          // onPageScroll2={onPageScroll2}
           sliderValue={sliderValue}
           isServiceDays={isServiceDays}
         />
