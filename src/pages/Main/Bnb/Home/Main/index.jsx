@@ -69,6 +69,7 @@ import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import Sound from 'react-native-sound';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {BowlIcon} from '../../../../../components/Icon';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -687,12 +688,17 @@ const Pages = () => {
             </CountWrap>
           </MarketWrap> */}
 
-            <Pressable
+            <DietRepoPressable
               onPress={() => {
                 navigation.navigate(DietRepoMainPageName);
               }}>
-              <Text>식단 리포트로 GOGOGO</Text>
-            </Pressable>
+              <Wrap1>
+                <BowlIcon />
+                <DietRepoText>식단 리포트</DietRepoText>
+              </Wrap1>
+
+              <CalText>오늘 1293 kcal</CalText>
+            </DietRepoPressable>
           </MainWrap>
         </Wrap>
       </ScrollViewWrap>
@@ -1015,4 +1021,26 @@ const CsIconPress = styled.Pressable`
   height: 40px;
   justify-content: center;
   align-items: center;
+`;
+
+const DietRepoPressable = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+  border-radius: 14px;
+  background-color: white;
+  padding: 21px 16px;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const Wrap1 = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+const DietRepoText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 13px;
+`;
+const CalText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[2]};
 `;

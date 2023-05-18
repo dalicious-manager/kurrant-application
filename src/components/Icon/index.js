@@ -52,3 +52,4 @@ export {default as SkinnyArrowDown} from './_components/SkinnyArrowDown';
 export {default as ArrowRightBlue} from './_components/ArrowRightBlue';
 export {default as GreyArrowLeftInACircle} from './_components/GreyArrowLeftInACircle';
 export {default as GreyArrowRightInACircle} from './_components/GreyArrowRightInACircle';
+export {default as BowlIcon} from './_components/BowlIcon';
