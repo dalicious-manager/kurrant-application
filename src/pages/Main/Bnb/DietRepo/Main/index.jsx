@@ -194,9 +194,6 @@ const Pages = () => {
         data={FlatListSampleData}
         scrollEnabled={true}
         renderItem={({item}) => {
-          console.log(item.menuTime);
-          console.log(item.menuList.length);
-
           return (
             <FlatListView style={{paddingLeft: 24, paddingRight: 24}}>
               <FlatListView2>
@@ -211,7 +208,7 @@ const Pages = () => {
               {Array.isArray(item.menuList) && item.menuList.length > 0 ? (
                 <View>
                   {item.menuList.map((v, i) => {
-                    return <DietRepoCard key={i} type="" item={v} />;
+                    return <DietRepoCard key={i} type="main" item={v} />;
                   })}
                 </View>
               ) : (
