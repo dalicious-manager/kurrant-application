@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import styled, {css} from 'styled-components';
 import Button from '~components/Button';
 import DietRepoCard from '../Main/Components/DietRepoCard';
+import Typography from '~components/Typography';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddDiet';
 
@@ -19,10 +20,7 @@ const Pages = ({route}) => {
 
   return (
     <Container>
-      <Text>식사 추가</Text>
-      <Pressable onPress={() => {}}>
-        <Text>내 음식 추가로 가세~~</Text>
-      </Pressable>
+      <TitleText>5월 8일 (월) 아침에 주문한 식사 목록</TitleText>
 
       <FlatList
         ListHeaderComponent={
@@ -69,6 +67,12 @@ const Container = styled.View`
   background-color: #ffffff;
 
   padding: 0px 24px;
+  padding-top: 40px;
+`;
+
+const TitleText = styled(Typography).attrs({text: 'Title04SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  margin-bottom: 24px;
 `;
 
 const ButtonWrapper = styled(LinearGradient)`

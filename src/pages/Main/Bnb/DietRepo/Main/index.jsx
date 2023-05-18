@@ -263,13 +263,14 @@ const CalendarWrap = styled.View`
 `;
 
 const FlatListView = styled.View`
-  margin-top: 25px;
+  /* margin-top: 25px; */
 `;
 const FlatListView2 = styled.View`
   flex-direction: row;
 
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 17px;
 `;
 
 const MealTimeText = styled(Typography).attrs({text: 'CaptionR'})`
@@ -291,7 +292,7 @@ const GreyThinLine = styled.View`
   width: 100%;
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   border-bottom-width: 1px;
-  margin-top: 25px;
+  margin-bottom: 25px;
 `;
 
 const ButtonWrapper = styled(LinearGradient)`

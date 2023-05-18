@@ -69,7 +69,8 @@ const DietRepoCard = ({type, item}) => {
         </MetadataWrap>
       </CardContentBox>
 
-      <Line />
+      {/* <Line style={{marginBottom: 24}} /> */}
+      <GreyThinLine />
     </Container>
   );
 };
@@ -78,12 +79,14 @@ export default DietRepoCard;
 const Container = styled.View`
   width: 100%;
 
+  /* 
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: ${({theme}) => theme.colors.grey[8]};
+  border-bottom-color: ${({theme}) => theme.colors.grey[8]}; */
 
-  padding-top: 24px;
-  padding-bottom: 24px;
+  /* padding-top: 24px; */
+  /* padding-bottom: 24px; */
+  /* border: 1px solid black; */
 `;
 
 const CardContentBox = styled.View`
@@ -173,4 +176,12 @@ const ReviewFormWriteButton = styled.Pressable`
 
 const TextText = styled(Typography).attrs({text: 'Button10SB'})`
   color: ${props => props.theme.colors.grey[3]};
+`;
+
+const GreyThinLine = styled.View`
+  width: 100%;
+  border-bottom-color: ${props => props.theme.colors.grey[8]};
+  border-bottom-width: 1px;
+  margin-top: 24px;
+  margin-bottom: 24px;
 `;
