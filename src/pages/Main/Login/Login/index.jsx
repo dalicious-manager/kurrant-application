@@ -38,7 +38,7 @@ import Config from 'react-native-config';
 import useUserMe from '../../../../biz/useUserMe';
 import {PAGE_NAME as FAQListPageName} from '../../MyPage/FAQ';
 import VersionCheck from 'react-native-version-check';
-import { formattedLogin } from '../../../../utils/statusFormatter';
+import {formattedLogin} from '../../../../utils/statusFormatter';
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -61,22 +61,20 @@ const Pages = ({route}) => {
   const toast = Toast();
   const toast2 = Toast();
   const toast3 = Toast();
-  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
-  const [lastLogin,setLastLogin] = useState();
+  const {balloonEvent, BalloonWrap, balloonEventNotOut} = Balloon();
+  const [lastLogin, setLastLogin] = useState();
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
 
-  const osLocation =()=>{
-    if(Platform.OS === 'ios'){
-      return {bottom : '105px', left:'80px'};
+  const osLocation = () => {
+    if (Platform.OS === 'ios') {
+      return {bottom: '105px', left: '80px'};
     }
-    if(Platform.OS === 'android'){
-      return {bottom : '40px', left:'65px'};
+    if (Platform.OS === 'android') {
+      return {bottom: '40px', left: '65px'};
     }
-  }
-  const {
-    login,
-  } = useAuth();
+  };
+  const {login} = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
@@ -97,16 +95,14 @@ const Pages = ({route}) => {
     Settings.setAppID(Config.FACEBOOK_APP_ID);
     Settings.initializeSDK();
   };
-  useEffect(()=>{
-    const getLogin = async()=>{
+  useEffect(() => {
+    const getLogin = async () => {
       const last = await getStorage('lastLogin');
-      if(last)
-        setLastLogin(last)
-    }
-    if(!lastLogin)
-      getLogin();
-    else balloonEventNotOut()
-  },[lastLogin])
+      if (last) setLastLogin(last);
+    };
+    if (!lastLogin) getLogin();
+    else balloonEventNotOut();
+  }, [lastLogin]);
   useEffect(() => {
     let timeout;
     let exitApp = false;
@@ -146,7 +142,7 @@ const Pages = ({route}) => {
     googleSigninConfigure();
     facebookConfiguration();
   }, []);
-  
+
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
@@ -203,7 +199,7 @@ const Pages = ({route}) => {
             <LogoImageSvg />
           </LogoBox>
           <BackgroundImageBox source={LogoBackground} resizeMode="cover" />
-          <LoginMain isLast={lastLogin}/>
+          <LoginMain isLast={lastLogin} />
           <EtcSNSContainer>
             <HorizonLine text={`그외 SNS로 로그인`} />
 
@@ -257,8 +253,18 @@ const Pages = ({route}) => {
           </Pressable>
         </LoginContainer>
         <toast.ToastWrap message={'뒤로버튼 한번 더 누르시면 종료됩니다.'} />
-        <toast2.ToastWrap message={`마지막 로그인 ${formattedLogin(lastLogin)}`} isBottom={true} onPress={()=>console.log("test")}/>
-        <toast3.ToastWrap message={`마지막 로그인 ${formattedLogin(lastLogin)}`}  isBottom={true} absoluteStyle={"bottom: 85px;"} isCenter={false} onPress={()=>console.log("test")}/>
+        <toast2.ToastWrap
+          message={`마지막 로그인 ${formattedLogin(lastLogin)}`}
+          isBottom={true}
+          onPress={() => console.log('test')}
+        />
+        <toast3.ToastWrap
+          message={`마지막 로그인 ${formattedLogin(lastLogin)}`}
+          isBottom={true}
+          absoluteStyle={'bottom: 85px;'}
+          isCenter={false}
+          onPress={() => console.log('test')}
+        />
         {/* <BalloonWrap message={`최근 로그인한 방법이에요`}  size={'B'}
           location={osLocation()} onPress={()=>console.log("test")}/> */}
       </WrapperBox>
