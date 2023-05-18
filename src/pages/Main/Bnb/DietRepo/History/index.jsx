@@ -1,9 +1,15 @@
-import {Dimensions, Text} from 'react-native';
+import {Dimensions, Pressable, Text} from 'react-native';
 import styled from 'styled-components';
-import LineChart from '../Chart/LineChart';
+
 import HistoryLineChart from './HistoryChart/HistoryLineChart';
 import HistoryStackedBarChart from './HistoryChart/HistoryStackedBarChart';
 import HistoryTables from './HistoryTables/HistoryTables';
+
+import Typography from '~components/Typography';
+import {
+  GreyArrowLeftInACircle,
+  GreyArrowRightInACircle,
+} from '../../../../../components/Icon';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 
@@ -50,6 +56,18 @@ const Pages = () => {
       contentContainerStyle={{
         alignItems: 'center',
       }}>
+      <DateSelectorWrap>
+        <Pressable onPress={() => {}}>
+          <GreyArrowLeftInACircle />
+        </Pressable>
+        <DateSelectorText>
+          {'05.08'} ~ {'05.14'}
+        </DateSelectorText>
+        <Pressable onPress={() => {}}>
+          <GreyArrowRightInACircle />
+        </Pressable>
+      </DateSelectorWrap>
+
       <HistoryStackedBarChart title="영양소 정보" width={'100%'} />
 
       <HistoryLineChart title="칼로리" width={'100%'} />
@@ -78,4 +96,15 @@ const GreyBlock = styled.View`
 const Filler = styled.View`
   width: 100%;
   height: 48px;
+`;
+
+const DateSelectorWrap = styled.View`
+  flex-direction: row;
+
+  align-items: center;
+`;
+
+const DateSelectorText = styled(Typography).attrs({text: 'Title03SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  margin: 24px 16px;
 `;

@@ -58,7 +58,7 @@ const Container = styled.View`
 const TableSingle = styled.View`
   padding: 24px 0px;
   width: 100%;
-  height: 80px;
+  /* height: 80px; */
 
   flex-direction: row;
 
