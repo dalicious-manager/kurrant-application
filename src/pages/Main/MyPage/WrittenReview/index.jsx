@@ -5,9 +5,7 @@ import {DefaultProfile} from '../../../../assets';
 import Card from './Card';
 import NoOrder from '../NoOrder';
 import useWrittenReview from '../../../../biz/useReview/useWrittenReview/hook';
-import {useAtom} from 'jotai';
-import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/store';
-import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
+
 import {convertDateFormat1} from '../../../../utils/dateFormatter';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Toast from '~components/Toast';

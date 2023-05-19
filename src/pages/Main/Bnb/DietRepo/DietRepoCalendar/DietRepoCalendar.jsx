@@ -25,6 +25,7 @@ import Typography from '~components/Typography';
 import {getFontStyle} from '~components/BuyCalendar/style';
 import {useGetOrderMeal} from '~hook/useOrder';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
+import {makeDietRepoCalendarDateArr} from './logic';
 
 /**
  *
@@ -100,8 +101,8 @@ const DietRepoCalendar = ({
     // }
     if (isMount) {
       setTimeout(() => {
-        pager.current.setPage(2);
-        setChk(2);
+        pager.current.setPage(1);
+        setChk(1);
         setIsMount(false);
       }, 100);
     }
@@ -127,33 +128,34 @@ const DietRepoCalendar = ({
         }}
         margins={margin}>
         {[
-          [
-            stringDateToJavascriptDate('2023-04-30', '-'),
-            stringDateToJavascriptDate('2023-05-01', '-'),
-            stringDateToJavascriptDate('2023-05-02', '-'),
-            stringDateToJavascriptDate('2023-05-03', '-'),
-            stringDateToJavascriptDate('2023-05-04', '-'),
-            stringDateToJavascriptDate('2023-05-05', '-'),
-            stringDateToJavascriptDate('2023-05-06', '-'),
-          ],
-          [
-            stringDateToJavascriptDate('2023-05-07', '-'),
-            stringDateToJavascriptDate('2023-05-08', '-'),
-            stringDateToJavascriptDate('2023-05-09', '-'),
-            stringDateToJavascriptDate('2023-05-10', '-'),
-            stringDateToJavascriptDate('2023-05-11', '-'),
-            stringDateToJavascriptDate('2023-05-12', '-'),
-            stringDateToJavascriptDate('2023-05-13', '-'),
-          ],
-          [
-            stringDateToJavascriptDate('2023-05-14', '-'),
-            stringDateToJavascriptDate('2023-05-15', '-'),
-            stringDateToJavascriptDate('2023-05-16', '-'),
-            stringDateToJavascriptDate('2023-05-17', '-'),
-            stringDateToJavascriptDate('2023-05-18', '-'),
-            stringDateToJavascriptDate('2023-05-19', '-'),
-            stringDateToJavascriptDate('2023-05-20', '-'),
-          ],
+          // [
+          //   stringDateToJavascriptDate('2023-04-30', '-'),
+          //   stringDateToJavascriptDate('2023-05-01', '-'),
+          //   stringDateToJavascriptDate('2023-05-02', '-'),
+          //   stringDateToJavascriptDate('2023-05-03', '-'),
+          //   stringDateToJavascriptDate('2023-05-04', '-'),
+          //   stringDateToJavascriptDate('2023-05-05', '-'),
+          //   stringDateToJavascriptDate('2023-05-06', '-'),
+          // ],
+          // [
+          //   stringDateToJavascriptDate('2023-05-07', '-'),
+          //   stringDateToJavascriptDate('2023-05-08', '-'),
+          //   stringDateToJavascriptDate('2023-05-09', '-'),
+          //   stringDateToJavascriptDate('2023-05-10', '-'),
+          //   stringDateToJavascriptDate('2023-05-11', '-'),
+          //   stringDateToJavascriptDate('2023-05-12', '-'),
+          //   stringDateToJavascriptDate('2023-05-13', '-'),
+          // ],
+          // [
+          //   stringDateToJavascriptDate('2023-05-14', '-'),
+          //   stringDateToJavascriptDate('2023-05-15', '-'),
+          //   stringDateToJavascriptDate('2023-05-16', '-'),
+          //   stringDateToJavascriptDate('2023-05-17', '-'),
+          //   stringDateToJavascriptDate('2023-05-18', '-'),
+          //   stringDateToJavascriptDate('2023-05-19', '-'),
+          //   stringDateToJavascriptDate('2023-05-20', '-'),
+          // ],
+          ...makeDietRepoCalendarDateArr(new Date()),
         ].map((week, i) => {
           return (
             <View key={i}>

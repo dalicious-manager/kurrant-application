@@ -1,3 +1,5 @@
+import {toStringByFormatting} from '../../../../../utils/dateFormatter';
+
 const calcWeekArr = date => {
   let yo = [];
   const day = date.getDay();
@@ -9,13 +11,13 @@ const calcWeekArr = date => {
       date.getDate() - day + i,
     );
 
-    yo.push(toStringByFormatting(nextDate));
+    // yo.push(toStringByFormatting(nextDate));
+    yo.push(nextDate);
   }
   return yo;
 };
 
 export const makeDietRepoCalendarDateArr = date => {
-  let yo = [];
   const day = date.getDay();
 
   const firstArrayDate = new Date(
