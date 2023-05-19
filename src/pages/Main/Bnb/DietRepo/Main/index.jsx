@@ -49,6 +49,11 @@ const Pages = () => {
 
   const [date, setDate] = useState(formattedWeekDate(new Date()));
 
+  useEffect(() => {
+    console.log('현재 클릭된 날짜');
+    console.log(date);
+  }, [date]);
+
   // const onPageScroll2 = e => {
   //   const {position} = e.nativeEvent;
   //   setChk(position);
