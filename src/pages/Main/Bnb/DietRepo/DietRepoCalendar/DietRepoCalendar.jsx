@@ -24,7 +24,11 @@ import Button from '~components/CalendarButton';
 import Typography from '~components/Typography';
 import {getFontStyle} from '~components/BuyCalendar/style';
 import {useGetOrderMeal} from '~hook/useOrder';
-import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
+import {
+  calcDate,
+  stringDateToJavascriptDate,
+  toStringByFormatting,
+} from '../../../../../utils/dateFormatter';
 import {makeDietRepoCalendarDateArr} from './logic';
 
 /**
@@ -73,17 +77,25 @@ const DietRepoCalendar = ({
   const lunchServiceDays = isServiceDays?.lunchServiceDays;
   const dinnerServiceDays = isServiceDays?.dinnerServiceDays;
 
+  const [calendarDate, setCalendarDate] = useState(new Date());
+
+  useEffect(() => {
+    console.log('calendarDate ');
+    console.log(calendarDate);
+  }, [calendarDate]);
+
+  // useEffect(() => {
+  //   console.log('chk fffå');
+  //   console.log(chk);
+  // }, [chk]);
+
+  // 스크롤 되면 데이터 새로 만들게하기
+
   const selectedPress = day => {
     setCurrentPress(day);
   };
 
   const [isMount, setIsMount] = useState(false);
-
-  const onPageScroll = e => {
-    const {position} = e.nativeEvent;
-
-    setChk(position);
-  };
 
   useEffect(() => {
     setIsMount(true);
@@ -103,10 +115,9 @@ const DietRepoCalendar = ({
     setCurrentPress(selectDate);
   }, [selectDate, weekly, isMount, setIsMount]);
 
-  //   useEffect(() => {
-  //     console.log('chk');
-  //     console.log(chk);
-  //   }, [chk]);
+  useEffect(() => {
+    console.log('chk ' + chk);
+  }, [chk]);
 
   return (
     <React.Fragment>
@@ -114,10 +125,38 @@ const DietRepoCalendar = ({
 
       <PagerViewWrap
         ref={pager}
-        initialPage={0}
+        initialPage={1}
         pageMargin={22}
-        onPageScroll={e => {
-          onPageScroll(e);
+        onPageScroll={e => {}}
+        onPageSelected={e => {
+          const {position} = e.nativeEvent;
+          console.log('스크롤 중임 ' + position);
+          //   return;
+          // }
+
+          if (chk > position) {
+            // 뒤로 가기
+            console.log('뒤로가기');
+            console.log(chk);
+            console.log(position);
+            console.log(toStringByFormatting(calendarDate));
+            console.log('------');
+            setCalendarDate(calcDate(-7, calendarDate));
+          } else if (chk < position) {
+            console.log('앞으로가기');
+            console.log(chk);
+            console.log(position);
+            console.log(toStringByFormatting(calendarDate));
+            console.log('------');
+            setCalendarDate(calcDate(7, calendarDate));
+          } else {
+            console.log('chk === position');
+            console.log(chk);
+            console.log(position);
+            console.log(toStringByFormatting(calendarDate));
+          }
+          pager.current.setPageWithoutAnimation(1);
+          setChk(1);
         }}
         margins={margin}>
         {[
@@ -148,7 +187,7 @@ const DietRepoCalendar = ({
           //   stringDateToJavascriptDate('2023-05-19', '-'),
           //   stringDateToJavascriptDate('2023-05-20', '-'),
           // ],
-          ...makeDietRepoCalendarDateArr(new Date()),
+          ...makeDietRepoCalendarDateArr(calendarDate),
         ].map((week, i) => {
           return (
             <View key={i}>

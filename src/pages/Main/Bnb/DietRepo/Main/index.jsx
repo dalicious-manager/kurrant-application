@@ -49,10 +49,10 @@ const Pages = () => {
 
   const [date, setDate] = useState(formattedWeekDate(new Date()));
 
-  useEffect(() => {
-    console.log('현재 클릭된 날짜');
-    console.log(date);
-  }, [date]);
+  // useEffect(() => {
+  //   console.log('현재 클릭된 날짜');
+  //   console.log(date);
+  // }, [date]);
 
   // const onPageScroll2 = e => {
   //   const {position} = e.nativeEvent;
@@ -78,12 +78,12 @@ const Pages = () => {
 
   const daily = true;
 
-  useEffect(() => {
-    console.log('date 값');
-    console.log(date);
-    console.log('spotId 값');
-    console.log(spotId);
-  }, [date]);
+  // useEffect(() => {
+  //   console.log('date 값');
+  //   console.log(date);
+  //   console.log('spotId 값');
+  //   console.log(spotId);
+  // }, [date]);
 
   const handlePress = () => {
     navigation.navigate(DietRepoHistoryPageName);
