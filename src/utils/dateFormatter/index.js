@@ -301,3 +301,20 @@ export const changeSeperator = (dateInput, inputSeperator, outputSeperator) => {
 
   return process3;
 };
+
+// 몇 일후의 날짜 계산하기
+
+// 하루 후 -> calcDate(1,date)
+// 이틀 후 -> calcDate(2,date)
+
+export const calcDate = (daysPassed = 0, date = new Date()) => {
+  const today = date;
+
+  const nextDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + daysPassed,
+  );
+
+  return nextDate;
+};

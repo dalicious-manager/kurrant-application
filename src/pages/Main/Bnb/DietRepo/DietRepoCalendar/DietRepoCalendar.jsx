@@ -91,14 +91,7 @@ const DietRepoCalendar = ({
 
   useEffect(() => {
     // '첫 렌더시 해당 날짜로 위치하게 하기'
-    // if (selectDate && isMount) {
-    //   setTimeout(() => {
-    //     pager.current.setPage(2);
-    //   }, 100);
 
-    //   setChk(2);
-    //   setIsMount(false);
-    // }
     if (isMount) {
       setTimeout(() => {
         pager.current.setPage(1);
