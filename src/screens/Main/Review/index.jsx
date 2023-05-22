@@ -35,7 +35,7 @@ const Screen = ({route}) => {
   const navigation = useNavigation();
   const theme = useTheme();
   const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
-  console.log(route,"etestsets");
+  console.log(route, 'etestsets');
   const [totalWritten, AmNotUsingTHis] = useAtom(totalWrittenReview);
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -94,7 +94,7 @@ const Screen = ({route}) => {
           options={({navigation}) => ({
             tabBarLabel: ({focused}) => (
               <Titles focused={focused}>
-                작성한 리뷰({totalWritten > 10 ? `9+` : totalWritten})
+                작성한 리뷰({totalWritten >= 10 ? `9+` : totalWritten})
               </Titles>
             ),
             tabBarLabelStyle: {
