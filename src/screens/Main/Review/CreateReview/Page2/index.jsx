@@ -526,7 +526,7 @@ const Screen = ({route}) => {
               />
             </UploadPhotosWrap>
 
-            {isLoading && <Text>로딩중이여...</Text>}
+            {/* {isLoading && <Text>로딩중이여...</Text>} */}
 
             <ReviewWrap>
               <Title3>
