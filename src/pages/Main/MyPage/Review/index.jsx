@@ -113,7 +113,10 @@ const Pages = () => {
             />
           </FlatListWrap>
         ) : (
-          <NoOrder isArrayEmpty={true} message={`아직 작성한 리뷰가 없어요.`} />
+          <NoOrder
+            isArrayEmpty={true}
+            message={`주문 후 리뷰를 작성해 보세요.`}
+          />
         )}
       </View>
     </Container>
