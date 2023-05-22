@@ -24,66 +24,65 @@ const Component = ({ name, size = 'md', agree = true ,toggleEvent=()=>{}}) => {
   const translation = useRef(new Animated.Value(0)).current;
 
   const { control} = useFormContext();
-  const [toggle, setToggle] = useState(agree);
+  const [toggles, setToggles] = useState(agree);
 
   
-  const switchOnOff = () => {
-    agree
-      ? !toggle
+  const switchOnOff = (agr) => {
+    !toggles
+      ? agr
         ? (Animated.spring(translation, {
           toValue: 0,
           useNativeDriver: true,
-        }).start(),
-          setToggle(!toggle))
+        }).start())
         : size === 'sm'
           ? (Animated.spring(translation, {
-            toValue: -11,
+            toValue: -6,
             useNativeDriver: true,
-          }).start(),
-            setToggle(!toggle))
+          }).start())
           : (Animated.spring(translation, {
-            toValue: -20,
+            toValue: -9,
             useNativeDriver: true,
-          }).start(),
-            setToggle(!toggle))
-      : toggle
+          }).start())
+      : !agr
         ? (Animated.spring(translation, {
           toValue: 0,
           useNativeDriver: true,
-        }).start(),
-          setToggle(!toggle))
+        }).start())
         : size === 'sm'
           ? (Animated.spring(translation, {
-            toValue: 11,
+            toValue: 6,
             useNativeDriver: true,
-          }).start(),
-            setToggle(!toggle))
+          }).start())
           : (Animated.spring(translation, {
-            toValue: 20,
+            toValue: 10,
             useNativeDriver: true,
-          }).start(),
-            setToggle(!toggle));
+          }).start());
 
   };
   useEffect(()=>{
-    setToggle(agree);
+    // setToggle(agree);
+    switchOnOff(agree)
+  },[toggles])
+  useEffect(()=>{
+    setToggles(agree);
+    // switchOnOff(agree)
   },[agree])
   return (
     <Wrap>
       <Controller
         control={control}
         name={name}
-        value={toggle}
+        value={agree}
         defaultValue={agree}
         render={({ field: { onChange, value } }) => {
           const pressEvent = () => {
             onChange(!value)
-            switchOnOff();
+            // switchOnOff();
             toggleEvent(name);
           };
           return (
             <ToggleWrap
-              toggle={toggle}
+              toggle={agree}
               size={size}
               onPress={pressEvent}>
               <Toggle

@@ -53,23 +53,19 @@ const Pages = ({route}) => {
     if (cardList.length > 0) {
       setModalVisible(true);
     } else {
-      Alert.alert(
-        '결제카드',
-        '등록된 카드가 없어요 \n 카드를 등록하시겠어요?',
-        [
-          {
-            text: '취소',
-            onPress: async () => {},
-            style: 'destructive',
+      Alert.alert('결제카드', '등록된 카드가 없어요 \n카드를 등록하시겠어요?', [
+        {
+          text: '취소',
+          onPress: async () => {},
+          style: 'destructive',
+        },
+        {
+          text: '확인',
+          onPress: () => {
+            onPageRegistedCard();
           },
-          {
-            text: '확인',
-            onPress: () => {
-              onPageRegistedCard();
-            },
-          },
-        ],
-      );
+        },
+      ]);
     }
   };
   const onSelectOpenModal2 = () => {
@@ -79,7 +75,7 @@ const Pages = ({route}) => {
     } else {
       Alert.alert(
         '멤버십카드',
-        '등록된 카드가 없어요 \n 카드를 등록하시겠어요?',
+        '등록된 카드가 없어요 \n카드를 등록하시겠어요?',
         [
           {
             text: '취소',

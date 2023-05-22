@@ -131,6 +131,6 @@ const BlueWrap = styled.Pressable`
 const LinkBody05R = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme}) => theme.colors.blue[500]};
 `;
-const TypoCaptionR = styled(Typography).attrs({text: ' CaptionR'})`
+const TypoCaptionR = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[4]};
 `;

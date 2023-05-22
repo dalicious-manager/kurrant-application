@@ -101,6 +101,7 @@ import MembershipTerminateComplate, {
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
+import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
 import PayCheckPassword, {
   PAGE_NAME as PayCheckPasswordPageName,
 } from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
@@ -305,6 +306,7 @@ import ReportReview, {
 import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
+import { RESULTS, checkNotifications, openSettings, requestNotifications } from 'react-native-permissions';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -314,7 +316,9 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-    <MainRoot.Navigator>
+    <MainRoot.Navigator 
+      initialRouteName={SplashPageName}
+    >
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -479,6 +483,13 @@ const Screen = () => {
         <MainRoot.Screen
           name={BnbScreenName}
           component={BnbScreen}
+          options={{headerShown: false}}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={SplashPageName}
+          component={SplashPage}
           options={{headerShown: false}}
         />
       </MainRoot.Group>
@@ -779,8 +790,37 @@ const Screen = () => {
                 </DeleteTxt>
                 <DeleteTxt>
                   <NotifySettingIcon
-                    onPressEvent={() =>
-                      navigation.navigate(NotificationSettingPageName)
+                    onPressEvent={async() =>{
+                      await checkNotifications().then(async({status,settings})=>{
+                        if(status !== RESULTS.GRANTED){
+                          if(status === RESULTS.BLOCKED || status === RESULTS.DENIED){
+                            Alert.alert("알림 권한 설정", "알림을 설정 하기 위해서는 권한 설정이 필요합니다.",[
+                              {
+                                text: '확인',
+                                onPress: () => {
+                                  openSettings().catch(()=>console.warn("알림설정 화면 이동 오류"))
+                                },
+                                style: 'cancel',
+                              },
+                              {
+                                text: '취소',
+                                onPress: () => {},
+                                style: 'cancel',
+                              },
+                            ])
+                          }else{
+                            await requestNotifications(['alert','badge', 'sound','providesAppSettings']).then(({status, settings}) => {
+                              if (status === RESULTS.BLOCKED) {
+                                console.log(settings,"notificationCenter")
+                                // openSettings().catch(() => console.warn('cannot open settings'));
+                              }
+                            });
+                          }
+                        }else{
+                          navigation.navigate(NotificationSettingPageName);
+                        }
+                      })
+                    }
                     }
                   />
                 </DeleteTxt>
@@ -1952,7 +1992,7 @@ const Screen = () => {
                 alertCallback={() => {
                   Alert.alert(
                     `작성 종료`,
-                    `작성중인 내용이 삭제됩니다 \n  리뷰작성을 종료하시겠어요?`,
+                    `작성중인 내용이 삭제됩니다 \n리뷰작성을 종료하시겠어요?`,
                     [
                       {
                         text: '아니요',
@@ -1964,10 +2004,7 @@ const Screen = () => {
                       {
                         text: `작성종료`,
                         onPress: () => {
-                          navigation.navigate(ReviewScreenName);
-                          // navigation.reset({
-                          //   routes: [{name: ReviewScreenName}],
-                          // });
+                          navigation.pop(2);
                           return;
                         },
 
@@ -1999,7 +2036,7 @@ const Screen = () => {
                 alertCallback={() => {
                   Alert.alert(
                     '수정 종료',
-                    '수정중인 내용이 삭제됩니다 \n  수정작성을 종료하시겠어요?',
+                    '수정중인 내용이 삭제됩니다 \n수정작성을 종료하시겠어요?',
                     [
                       {
                         text: '아니요',

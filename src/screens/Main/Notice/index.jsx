@@ -14,12 +14,16 @@ export const SCREEN_NAME = 'S_MAIN__NOTICE';
 
 const Tab = createMaterialTopTabNavigator();
 
-const Screen = () => {
+const Screen = ({route}) => {
+  const from = route?.params?.from;
   const theme = useTheme();
   const navigation = useNavigation();
 
   return (
     <Tab.Navigator
+      initialRouteName={
+        from === 'public' ? PublicNoticePageName : SpotNoticePageName
+      }
       screenOptions={{
         tabBarIndicatorStyle: {
           backgroundColor: theme.colors.grey[1],

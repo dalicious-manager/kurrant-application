@@ -39,6 +39,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import useAuth from '../../../../biz/useAuth';
 import useGroupSpots from '../../../../biz/useGroupSpots/hook';
+import { RESULTS, checkNotifications, openSettings, requestNotifications } from 'react-native-permissions';
 
 export const PAGE_NAME = 'P__MY_PAGE__PERSONAL_INFO';
 
@@ -121,7 +122,7 @@ const Pages = ({route}) => {
                 });
               });
             } catch (error) {
-              console.log(error.toString());
+              Alert.alert("회원탈퇴",error.toString().replace('error: '))
             }
           },
         },
@@ -298,7 +299,39 @@ const Pages = ({route}) => {
             }}
           />
 
-          <ListBox title="알림 설정" routeName={NotificationSettingPageName} />
+          <ListBox title="알림 설정" onPressEvent={async()=>{
+            await checkNotifications().then(async({status,settings})=>{
+              if(status !== RESULTS.GRANTED){
+                if(status === RESULTS.BLOCKED || status === RESULTS.DENIED){
+                  Alert.alert("알림 권한 설정", "알림을 설정 하기 위해서는 권한 설정이 필요합니다.",[
+                    {
+                      text: '확인',
+                      onPress: () => {
+                        openSettings().catch(()=>console.warn("알림설정 화면 이동 오류"))
+                      },
+                      style: 'cancel',
+                    },
+                    {
+                      text: '취소',
+                      onPress: () => {},
+                      style: 'cancel',
+                    },
+                  ])
+                }else{
+                  await requestNotifications(['alert','badge', 'sound','providesAppSettings']).then(({status, settings}) => {
+                    if (status === RESULTS.BLOCKED) {
+                      console.log(settings,"notificationCenter")
+                      // openSettings().catch(() => console.warn('cannot open settings'));
+                    }
+                  });
+                }
+              }else{
+                navigation.navigate(NotificationSettingPageName);
+              }
+            })
+            
+           
+          }}  />
           <Line />
           <TextButtonBox>
             <TextButton
@@ -308,20 +341,23 @@ const Pages = ({route}) => {
               onPressEvent={async () => {
                 try {
                   const token = await getStorage('token');
+                  const lastLogin = await getStorage('lastLogin');
+                  console.log(lastLogin)
                   const getToken = JSON.parse(token);
                   await logout({
                     accessToken: getToken?.accessToken,
                     refreshToken: getToken?.refreshToken,
                   });
-                  await AsyncStorage.clear().then(() => {
-                    navigation.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: LoginPageName,
-                        },
-                      ],
-                    });
+                  await AsyncStorage.removeItem('token')
+                  await AsyncStorage.removeItem('isLogin')
+                  await AsyncStorage.removeItem('spotStatus')
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: LoginPageName,
+                      },
+                    ],
                   });
                 } catch (error) {
                   if (error.toString().replace('Error:', '').trim() === '403') {

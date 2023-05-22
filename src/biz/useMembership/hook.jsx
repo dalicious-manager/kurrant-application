@@ -76,7 +76,6 @@ const useBanner = () => {
     try {
       setMembershipHistoryLoading(true);
       const fetchRes = await Fetch.getMembershipHistory(option);
-      // console.log(fetchRes.data);
       setMembershipHistory(fetchRes.data);
       return fetchRes;
     } catch (err) {
@@ -102,6 +101,7 @@ const useBanner = () => {
       setMembershipInfoLoading(true);
       const res = await Fetch.getMembershipInfo();
       setMembershipInfo(res.data);
+      console.log(res.data);
       return res.data;
     } catch (err) {
       throw err;

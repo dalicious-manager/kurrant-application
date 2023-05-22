@@ -5,34 +5,19 @@ import {
   KeyboardAvoidingView,
   NativeModules,
   Platform,
-  Keyboard,
-  Text,
-  TextInput,
-  View,
   Pressable,
 } from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 import {registCardAtom} from '../../../../../../atoms/store';
 import useUserMe from '../../../../../../biz/useUserMe';
-import {payCheckPassword} from '../../../../../../biz/useUserMe/Fetch';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
 import Typography from '../../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
 
-import {PAGE_NAME as PayCheckPasswordCheckPageName} from '../PayCheckPasswordCheck';
 import {PAGE_NAME as RePayCheckPasswordEmailPageName} from '../RePayCheckPasswordEmail';
 import {PurchaseDetailPageName} from '../../../PurchaseHistory/Detail';
-import {PAGE_NAME as EveryCardPageName} from '../PaymentManage/EveryCard';
-import {PAGE_NAME as SelectedDefaultCardName} from '../PaymentManage/SelectedDefaultCard';
-import {PAGE_NAME as DefaultPaymentManage} from '../../../../Bnb/Payment/DefaultPaymentManage';
-import {PAGE_NAME as MemebershipPaymentManage} from '../../../../../Membership/MembershipJoin/MemebershipPaymentManage';
 import useOrderMeal from '../../../../../../biz/useOrderMeal';
-import {FormProvider, useForm} from 'react-hook-form';
-import {getStorage, setStorage} from '../../../../../../utils/asyncStorage';
-import Form from '../../../../../../components/Form';
-import Check from '../../../../../../components/Check';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 export const PAGE_NAME = 'P__MY_PAGE__PAYMENT_MANAGE__PAY_CHECK_PAY';
 
 const {StatusBarManager} = NativeModules;
@@ -42,8 +27,7 @@ export default function Password({route}) {
   const [isCard, setIsCard] = useAtom(registCardAtom);
   // 함수들은 Class 를 외부에서 생성하여 import를 하여 사용하였다.
   const [statusBarHeight, setStatusBarHeight] = useState(0);
-  const agreeCheck = useForm();
-  const {order, orderNice, orderLoading} = useOrderMeal();
+  const {orderNice} = useOrderMeal();
   const navigation = useNavigation();
   const [clickLoading, setClickLoading] = useState(false);
 
@@ -235,16 +219,6 @@ const ButtonContainer = styled.View`
 const RePassword = styled(Typography)`
   text-decoration: underline;
 `;
-const SubContainer = styled.View`
-  flex: 1;
-  flex-direction: row;
-  width: 100%;
-`;
-const RightBlock = styled.View`
-  max-height: 50px;
-  padding-right: 24px;
-  padding-left: 24px;
-`;
 const RightBlocks = styled.View`
   max-height: 50px;
   width: 100%;
@@ -254,5 +228,3 @@ const RightBlocks = styled.View`
   padding-left: 24px;
   margin-bottom: 24px;
 `;
-
-const Label = styled(Typography)``;

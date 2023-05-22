@@ -27,6 +27,7 @@ const {StatusBarManager} = NativeModules;
 
 const Component = ({userId}) => {
   const navigation = useNavigation();
+  const {userInfo} =useUserInfo();
   const labelItems = [
     {label: '아이디'},
     {label: '/'},
@@ -47,7 +48,7 @@ const Component = ({userId}) => {
   const onSubmit = async datas => {
     try {
       await login(datas);
-
+      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [
@@ -124,8 +125,8 @@ const Component = ({userId}) => {
                 required: '필수 입력 항목 입니다.',
                 pattern: {
                   value:
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  message: '이메일 형식에 맞지 않습니다.',
+                    /^(([a-zA-Z0-9]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  message: '올바른 이메일 주소를 입력해주세요.',
                 },
               }}
               style={styles.input}

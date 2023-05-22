@@ -42,6 +42,10 @@ import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMo
 import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
+import { useGetDailyfood } from '../../../../../hook/useDailyfood';
+import { useGetOrderMeal } from '../../../../../hook/useOrder';
+import useUserInfo from '../../../../../biz/useUserInfo/hook';
+import { useAddShoppingBasket, useGetShoppingBasket } from '../../../../../hook/useShoppingBasket';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -69,31 +73,33 @@ const Pages = ({route}) => {
   const [show, setShow] = useState(false);
   const [scrollDir, setScrollDir] = useState(true);
   const [hideModal, setHideModal] = useState(true);
+
+  
   const {
     readableAtom: {userRole},
   } = useAuth();
 
   const {
-    isServiceDays,
     isDiningTypes,
     isMorningFood,
     isLunchFood,
     isDinnerFood,
-    dailyFood,
+    setMorning,
+    setLunch,
+    setDinner,
+    setDiningTypes,
     isDailyFoodLoading,
-    isFetchingDone,
   } = useFoodDaily();
-  const {
-    addMeal,
-    isLoadMeal,
-    isAddMeal,
-    loadMeal,
-    setLoadMeal,
-    updateMeal,
-    setQuantity,
-  } = useShoppingBasket();
+  
+  // const {
+  //   // addMeal,
+  //   // isLoadMeal,
+  //   // isAddMeal,
+  // } = useShoppingBasket();
+  const {data :isLoadMeal} = useGetShoppingBasket();
+  const {mutateAsync: addMeal,isLoading:isAddMeal} = useAddShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-
+  const {isUserInfo}=useUserInfo();
   const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
   const handlePress = anim => {
@@ -117,12 +123,15 @@ const Pages = ({route}) => {
   useEffect(() => {
     if (params) {
       if (params.date) {
+        setIsMount(true)
         setDate(params.date);
+        dailyfoodRefetch();
       } else {
         setDate(formattedWeekDate(new Date()));
       }
     }
   }, [params]);
+  
   // 첫 렌더링때만 dailyFood 불러오게 하기
 
   // isMount처리가 없을 떄: 오늘 날짜, 선택된 날짜꺼 까지 둘다 받아버림
@@ -138,24 +147,7 @@ const Pages = ({route}) => {
   const [supportPrice, setSupportPrice] = useState(0);
   const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
 
-  useEffect(() => {
-    let price = null;
-    if (supportPrices) {
-      switch (sliderValue) {
-        case 0:
-          price = supportPrices['morningSupportPrice'];
-          break;
-        case 1:
-          price = supportPrices['lunchSupportPrice'];
-          break;
-        case 2:
-          price = supportPrices['dinnerSupportPrice'];
-          break;
-      }
-
-      setSupportPrice(price);
-    }
-  }, [sliderValue, supportPrices]);
+  
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
@@ -185,10 +177,10 @@ const Pages = ({route}) => {
 
   // const todayMeal = mealInfo?.filter((m) => m.date === date);
   // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
-  const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
+  const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.spotId;
   // const spotId = 1;
   const [chk, setChk] = useState(0);
-
+  const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(spotId,params?.date ? params.date:date);
   const onPageScroll2 = e => {
     const {position} = e.nativeEvent;
     setChk(position);
@@ -197,26 +189,42 @@ const Pages = ({route}) => {
     const {position, offset} = e.nativeEvent;
     if (offset !== 0) {
       if (position === 2) {
-        setDate(
-          formattedWeekDate(
-            new Date(date).setDate(new Date(date).getDate() + 1),
-          ),
+        const currentDate = formattedWeekDate(new Date());
+        const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+        const todayDate = new Date(currentDate).setDate(
+          new Date(currentDate).getDate(),
         );
-        const dateIndex = weekly.map(v => {
-          return v.map(s => {
-            return formattedWeekDate(s);
+
+        const week = weekly.map(w => {
+          const find = w.findIndex(v => {
+            return (
+              formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
+            );
           });
+          return find !== -1;
         });
-        const index = dateIndex.findIndex((v, i) => {
-          return v.includes(
+        if (week.includes(true)) {
+          setDate(
             formattedWeekDate(
               new Date(date).setDate(new Date(date).getDate() + 1),
             ),
           );
-        });
-        setChk(index);
-        pager.current.setPage(index);
-        return setNowPage(0);
+          const dateIndex = weekly.map(v => {
+            return v.map(s => {
+              return formattedWeekDate(s);
+            });
+          });
+          const index = dateIndex.findIndex((v, i) => {
+            return v.includes(
+              formattedWeekDate(
+                new Date(date).setDate(new Date(date).getDate() + 1),
+              ),
+            );
+          });
+          setChk(index);
+          pager.current.setPage(index);
+          return setNowPage(0);
+        }
       }
       if (position === -1) {
         const prevDate = new Date(date).getDate();
@@ -258,7 +266,7 @@ const Pages = ({route}) => {
 
     if (offset === 0) {
       if (nowPage === position) {
-        // console.log(nowPage, position, 'tests');
+        console.log(nowPage, position, 'tests');
         if (position === 2) {
           const currentDate = formattedWeekDate(new Date());
           const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
@@ -347,64 +355,55 @@ const Pages = ({route}) => {
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
     if (
-      isDiningTypes[0] &&
+      isDiningTypes?.length > 0 && isDiningTypes[0] &&
       ((isMorningFood.length === 0 && position === 0) ||
         (isLunchFood.length === 0 && position === 1) ||
         (isDinnerFood.length === 0 && position === 2))
     ) {
       const page =
         position === 0
-          ? isDiningTypes.includes(1)
+          ? isDiningTypes?.includes(1)
             ? 0
-            : isDiningTypes.includes(2)
+            : isDiningTypes?.includes(2)
             ? 1
-            : isDiningTypes.includes(3)
+            : isDiningTypes?.includes(3)
             ? 2
             : 0
           : position === 1
-          ? isDiningTypes.includes(2)
+          ? isDiningTypes?.includes(2)
             ? 1
-            : isDiningTypes.includes(3)
+            : isDiningTypes?.includes(3)
             ? 2
-            : isDiningTypes.includes(1)
+            : isDiningTypes?.includes(1)
             ? 0
             : 1
-          : position === 2 && isDiningTypes.includes(3)
+          : position === 2 && isDiningTypes?.includes(3)
           ? 2
-          : isDiningTypes.includes(2)
+          : isDiningTypes?.includes(2)
           ? 1
-          : isDiningTypes.includes(1)
+          : isDiningTypes?.includes(1)
           ? 0
           : 2;
       if (page !== position) {
         if (position === 2) {
-          setDate(
-            formattedWeekDate(
-              new Date(date).setDate(new Date(date).getDate() + 1),
-            ),
+          const currentDate = formattedWeekDate(new Date());
+          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+          const todayDate = new Date(currentDate).setDate(
+            new Date(currentDate).getDate(),
           );
-          const dateIndex = weekly.map(v => {
-            return v.map(s => {
-              return formattedWeekDate(s);
+
+          const week = weekly.map(w => {
+            const find = w.findIndex(v => {
+              return (
+                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
+              );
             });
+            return find !== -1;
           });
-          const index = dateIndex.findIndex((v, i) => {
-            return v.includes(
-              formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() + 1),
-              ),
-            );
-          });
-          setChk(index);
-          pager.current.setPage(index);
-        }
-        if (position === 0) {
-          const prevDate = new Date(date).getDate();
-          const todayDate = new Date().getDate();
-          if (todayDate < prevDate) {
+          if (week.includes(true)) {
             setDate(
               formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() - 1),
+                new Date(date).setDate(new Date(date).getDate() + 1),
               ),
             );
             const dateIndex = weekly.map(v => {
@@ -415,12 +414,54 @@ const Pages = ({route}) => {
             const index = dateIndex.findIndex((v, i) => {
               return v.includes(
                 formattedWeekDate(
-                  new Date(date).setDate(new Date(date).getDate() - 1),
+                  new Date(date).setDate(new Date(date).getDate() + 1),
                 ),
               );
             });
             setChk(index);
             pager.current.setPage(index);
+          }
+        }
+        if (position === 0) {
+          const currentDate = formattedWeekDate(new Date());
+          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+          const todayDate = new Date(currentDate).setDate(
+            new Date(currentDate).getDate(),
+          );
+
+          const week = weekly.map(w => {
+            const find = w.findIndex(v => {
+              return (
+                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
+              );
+            });
+            return find !== -1;
+          });
+
+          if (week.includes(true)) {
+            const prevDate = new Date(date).getDate();
+            const todayDate = new Date().getDate();
+            if (todayDate < prevDate) {
+              setDate(
+                formattedWeekDate(
+                  new Date(date).setDate(new Date(date).getDate() - 1),
+                ),
+              );
+              const dateIndex = weekly.map(v => {
+                return v.map(s => {
+                  return formattedWeekDate(s);
+                });
+              });
+              const index = dateIndex.findIndex((v, i) => {
+                return v.includes(
+                  formattedWeekDate(
+                    new Date(date).setDate(new Date(date).getDate() - 1),
+                  ),
+                );
+              });
+              setChk(index);
+              pager.current.setPage(index);
+            }
           }
         }
         diningRef.current.setPage(page);
@@ -440,6 +481,12 @@ const Pages = ({route}) => {
 
   const dayPress = async selectedDate => {
     try {
+      if(params?.date){
+        navigation.setParams({
+          date:null
+        })
+      }
+      
       setDate(selectedDate);
       // dailyFood(spotId,selectedDate);
     } catch (err) {
@@ -454,6 +501,7 @@ const Pages = ({route}) => {
     // console.log(modalVisible,
     //     modalVisible2,
     //     modalVisible3,)
+    
     if (diningType === 1) {
       return setModalVisible(true);
     }
@@ -477,41 +525,68 @@ const Pages = ({route}) => {
   //     },[])
   // )
   useEffect(() => {
-    async function loadDailyFood() {
-      try {
-        const data = await dailyFood(spotId, date);
-        if (data[0]) {
-          diningRef.current.setPage(Number(data[0]) - 1);
-          setSliderValue(Number(data[0]) - 1);
-        }
-        if (isFocused) {
-          await updateMeal(req);
-        }
-      } catch (error) {
-        if (error.toString().replace('Error.:', '').trim() === '403') {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: LoginPageName,
-              },
-            ],
-          });
-        }
-      }
-    }
+    // async function loadDailyFood() {
+    //   try {
+    //     const data = await dailyFood(spotId, date);
+    //     if (data[0]) {
+    //       diningRef.current.setPage(Number(data[0]) - 1);
+    //       setSliderValue(Number(data[0]) - 1);
+    //     }
+    //     if (isFocused) {
+    //       await updateMeal(req);
+    //     }
+    //   } catch (error) {
+    //     if (error.toString().replace('Error.:', '').trim() === '403') {
+    //       navigation.reset({
+    //         index: 0,
+    //         routes: [
+    //           {
+    //             name: LoginPageName,
+    //           },
+    //         ],
+    //       });
+    //     }
+    //   }
+    // }
     // if(isDiningTypes.length ===0) loadDailyFood();
 
     // console.log(generateOrderCode(1,42),"test432")
 
     if (isMount) {
-      loadDailyFood();
+      // loadDailyFood();
+      
+      dailyfoodRefetch();
+      
     }
   }, [date, isMount]);
+  useEffect(() => {
+    let price = null;
+    if (dailyfoodData?.data.supportPrice) {
+      console.log(dailyfoodData?.data.supportPrice)
+      switch (sliderValue) {
+        case 0:
+          price = dailyfoodData?.data.supportPrice['morningSupportPrice'];
+          break;
+        case 1:
+          price = dailyfoodData?.data.supportPrice['lunchSupportPrice'];
+          break;
+        case 2:
+          price = dailyfoodData?.data.supportPrice['dinnerSupportPrice'];
+          break;
+      }
 
+      setSupportPrice(price);
+    }
+  }, [sliderValue, dailyfoodData?.data,date]);
+  useEffect(()=>{
+    setMorning(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 1));
+    setLunch(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 2));
+    setDinner(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 3));
+    setDiningTypes(dailyfoodData?.data.diningTypes);
+  },[dailyfoodData?.data])
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
-    const duplication = isLoadMeal
+    const duplication = isLoadMeal?.data?.spotCarts
       ?.map(v =>
         v.cartDailyFoodDtoList.map(el =>
           el.cartDailyFoods.some(c => c.dailyFoodId === id),
@@ -528,8 +603,7 @@ const Pages = ({route}) => {
       await addToCart(id, m);
     }
   };
-
-  const quantityArr = isLoadMeal?.map(el =>
+  const quantityArr = isLoadMeal?.data?.spotCarts?.map(el =>
     el.cartDailyFoodDtoList.map(v =>
       v.cartDailyFoods.map(c => {
         return {
@@ -540,8 +614,8 @@ const Pages = ({route}) => {
       }),
     ),
   );
-  const quantity = quantityArr.reduce((acc, val) => [...acc, ...val], []);
-  const modifyQty = quantity.reduce((acc, cur) => [...acc, ...cur], []);
+  const quantity = quantityArr?.reduce((acc, val) => [...acc, ...val], []);
+  const modifyQty = quantity?.reduce((acc, cur) => [...acc, ...cur], []);
   const req = {updateCartList: modifyQty};
   const addToCart = async (id, m) => {
     if (userRole === 'ROLE_GUEST') {
@@ -576,7 +650,7 @@ const Pages = ({route}) => {
         {
           dailyFoodId: id,
           count: 1,
-          spotId: userInfo?.spotId,
+          spotId: isUserInfo?.spotId,
         },
       ]);
       setShow(true);
@@ -654,20 +728,20 @@ const Pages = ({route}) => {
         onScrollEndDrag={onScrollEnd}
         showsVerticalScrollIndicator={false}
         scrollEnabled={
-          !(diningFood.length === 0 && spotId !== null) || !spotId === null
+          !(diningFood?.length === 0 && spotId !== null) || !spotId === null
         }>
-        <FoodContainer isFood={diningFood.length === 0 && spotId !== null}>
-          {diningFood.length === 0 && spotId !== null && (
+        <FoodContainer isFood={diningFood?.length === 0 && spotId !== null}>
+          {diningFood?.length === 0 && spotId !== null && (
             <NoServieceView
               status={hideModal}
-              isMembership={userInfo?.isMembership}>
+              isMembership={isUserInfo?.isMembership}>
               <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
             </NoServieceView>
           )}
           {spotId === null && (
             <NoSpotView
               status={hideModal}
-              isMembership={userInfo?.isMembership}>
+              isMembership={isUserInfo?.isMembership}>
               <NoServiceText>메뉴는 스팟 선택 또는 </NoServiceText>
               <NoServiceText>
                 스팟 개설 신청 승인후 확인할 수 있어요
@@ -675,7 +749,7 @@ const Pages = ({route}) => {
             </NoSpotView>
           )}
 
-          {diningFood.map(m => {
+          {diningFood?.map(m => {
             const realToTalDiscountRate =
               100 -
               (100 - m.membershipDiscountRate) *
@@ -693,6 +767,7 @@ const Pages = ({route}) => {
               <Contents
                 key={m.id}
                 spicy={m.spicy}
+                vegan={m.vegan}
                 disabled={
                   m.status === 2 ||
                   m.status === 6 ||
@@ -736,6 +811,15 @@ const Pages = ({route}) => {
                         <Label label={`${m.spicy}`} type={'soldOut'} />
                       ) : (
                         <Label label={`${m.spicy}`} />
+                      )}
+                    </LabelWrap>
+                  )}
+                  {m.vegan && m.vegan !== null && (
+                  <LabelWrap>
+                      {m.status === 2 || m.status === 6 ? (
+                        <Label label={`${m.vegan}`} type={'soldOut'} />
+                        ) : (
+                        <Label label={`${m.vegan}`} type={'vegan'}/>                        
                       )}
                     </LabelWrap>
                   )}
@@ -795,17 +879,17 @@ const Pages = ({route}) => {
           onPressEvent2={dayPress}
           daily={daily}
           // selectDate={date}
-          selectDate={isFetchingDone ? date : undefined}
+          selectDate={date}
           margin={'0px 28px'}
           scrollDir
           pagerRef={pager}
           onPageScroll2={onPageScroll2}
           sliderValue={sliderValue}
-          isServiceDays={isServiceDays}
+          isServiceDays={dailyfoodData?.data.serviceDays}
         />
       </CalendarWrap>
 
-      <PagerViewWrap isMembership={userInfo?.isMembership}>
+      <PagerViewWrap isMembership={isUserInfo?.isMembership}>
         {!isDailyFoodLoading && (
           <ProgressWrap>
             <ProgressInner>
@@ -828,7 +912,7 @@ const Pages = ({route}) => {
               <Progress>
                 {DININGTYPE.map((btn, i) => {
                   const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
-                  const typeBoolean = isDiningTypes.includes(type);
+                  const typeBoolean = isDiningTypes?.includes(type);
 
                   return (
                     <DiningPress
@@ -866,17 +950,15 @@ const Pages = ({route}) => {
             )}
           </ProgressWrap>
         )}
-        {!userInfo?.isMembership && (
+        {!isUserInfo?.isMembership && (
           <View>
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
           </View>
         )}
-        {isDailyFoodLoading ? (
-          <LoadingPage>
+        {(dailyFetching) ? <LoadingPage>
             <ActivityIndicator size={'large'} />
-          </LoadingPage>
-        ) : (
-          <Pager
+          </LoadingPage> :
+          (<Pager
             ref={diningRef}
             overdrag={true}
             initialPage={nowPage}
@@ -890,8 +972,8 @@ const Pages = ({route}) => {
             {BuyMeal(isMorningFood)}
             {BuyMeal(isLunchFood)}
             {BuyMeal(isDinnerFood)}
-          </Pager>
-        )}
+          </Pager>)
+          }
       </PagerViewWrap>
 
       {show && (
@@ -956,7 +1038,7 @@ const Pages = ({route}) => {
         setModalVisible={setModalVisible4}
         title={'지원금이란?'}
         description={
-          '고객님의 스팟에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
+          '고객님의 스팟에서 지원하는 지원금입니다. \n결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
         }
         buttonTitle1={'확인했어요'}
         buttonType1="grey7"
@@ -1082,7 +1164,7 @@ const Pager = styled(AnimatedPagerView)`
 `;
 
 const Contents = styled.Pressable`
-  padding: ${({spicy}) => (spicy ? '18px 0px 28px 0px' : '18px 0px 28px 0px')};
+  padding: ${({spicy,vegan}) => ((spicy ||vegan )? '18px 0px 28px 0px' : '18px 0px 28px 0px')};
   margin: 0px 28px;
   flex-direction: row;
   justify-content: space-between;
@@ -1163,6 +1245,9 @@ export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
 `;
 
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
+  white-space :nowrap;
+  word-break : nowrap;
+  text-overflow : ellipsis;
   color: ${({theme, soldOut}) =>
     soldOut === 2 || soldOut === 6
       ? theme.colors.grey[6]

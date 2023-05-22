@@ -20,6 +20,7 @@ import {Settings} from 'react-native-fbsdk-next';
 import {LogoBackground} from '../../../../assets';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
+import Balloon from '../../../../components/Balloon';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
 import {appleAuthAndroid} from '@invertase/react-native-apple-authentication';
@@ -37,7 +38,7 @@ import Config from 'react-native-config';
 import useUserMe from '../../../../biz/useUserMe';
 import {PAGE_NAME as FAQListPageName} from '../../MyPage/FAQ';
 import VersionCheck from 'react-native-version-check';
-import messaging from '@react-native-firebase/messaging';
+import {formattedLogin} from '../../../../utils/statusFormatter';
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -56,37 +57,25 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 const Pages = ({route}) => {
   const params = route?.params;
+  const currentVersion = VersionCheck.getCurrentVersion();
   const navigation = useNavigation();
   const toast = Toast();
-  const [isLoginLoading, setLoginLoading] = useState();
-  const [versionChecked, setVersionChecked] = useState(false);
-  const currentVersion = VersionCheck.getCurrentVersion();
-  const handlePress = useCallback(async (url, alterUrl) => {
-    // 만약 어플이 설치되어 있으면 true, 없으면 false
-    const supported = await Linking.canOpenURL(url);
 
-    if (supported) {
-      // 설치되어 있으면
-      await Linking.openURL(url);
-    } else {
-      // 앱이 없으면
-      await Linking.openURL(alterUrl);
-    }
-  }, []);
+  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
+  const [lastLogin,setLastLogin] = useState();
+
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
-  const {
-    setSelectDefaultCard,
-    readableAtom: {selectDefaultCard},
-  } = useUserMe();
 
-  const {
-    login,
-    autoLogin,
-    setFcmToken,
-    saveFcmToken,
-    readableAtom: {fcmToken},
-  } = useAuth();
+  const osLocation = () => {
+    if (Platform.OS === 'ios') {
+      return {bottom: '105px', left: '80px'};
+    }
+    if (Platform.OS === 'android') {
+      return {bottom: '40px', left: '65px'};
+    }
+  };
+  const {login} = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
@@ -107,7 +96,14 @@ const Pages = ({route}) => {
     Settings.setAppID(Config.FACEBOOK_APP_ID);
     Settings.initializeSDK();
   };
-
+  useEffect(() => {
+    const getLogin = async () => {
+      const last = await getStorage('lastLogin');
+      if (last) setLastLogin(last);
+    };
+    if (!lastLogin) getLogin();
+    else balloonEventNotOut();
+  }, [lastLogin]);
   useEffect(() => {
     let timeout;
     let exitApp = false;
@@ -147,12 +143,26 @@ const Pages = ({route}) => {
     googleSigninConfigure();
     facebookConfiguration();
   }, []);
+  const handlePress = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
         await VersionCheck.getLatestVersion().then(latestVersion => {
-          console.log(currentVersion, latestVersion);
-          if (currentVersion !== latestVersion) {
+          const regex = /[^0-9]/g;
+          const result = currentVersion.replace(regex, "");
+          const result2 = latestVersion.replace(regex, "");
+          if (Number(result) < Number(result2)) {
             Alert.alert(
               '앱 업데이트',
               '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
@@ -182,67 +192,7 @@ const Pages = ({route}) => {
       getData();
     }, []),
   );
-  useEffect(() => {
-    const isAutoLogin = async () => {
-      const isLogin = await getStorage('isLogin');
 
-      if (isLogin !== 'false') {
-        const token = await getStorage('token');
-
-        setLoginLoading(false);
-        if (token) {
-          const getToken = JSON.parse(token);
-          if (getToken?.accessToken) {
-            const res = await autoLogin();
-
-            if (res?.statusCode === 200) {
-              //const token = await messaging().getToken();
-
-              //if (token) {
-              // saveFcmToken({
-              // token: token,
-              //});
-              //}
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              });
-            }
-          }
-        }
-      } else {
-        setLoginLoading(false);
-      }
-    };
-
-    setLoginLoading(true);
-    isAutoLogin();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    async function requestUserPermission() {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
-        if (Platform.OS === 'ios') {
-          // ios의 경우 필수가 아니라고도 하고 필수라고도 하고.. 그냥 넣어버렸다.
-          messaging().registerDeviceForRemoteMessages();
-        }
-      }
-    }
-    requestUserPermission();
-  }, []);
-  // if(isLoginLoading){
-  //   return<ActivityIndicator size="large" />
-  // }
   return (
     <SafeView>
       <WrapperBox>
@@ -263,8 +213,7 @@ const Pages = ({route}) => {
             <LogoImageSvg />
           </LogoBox>
           <BackgroundImageBox source={LogoBackground} resizeMode="cover" />
-          <LoginMain />
-
+          <LoginMain isLast={lastLogin} />
           <EtcSNSContainer>
             <HorizonLine text={`그외 SNS로 로그인`} />
 
@@ -273,26 +222,31 @@ const Pages = ({route}) => {
               <ButtonRoundSns
                 type_sns="kakao"
                 size={32}
+                isLast={lastLogin === 'KAKAO'}
                 onPressEvent={kakaoLogin}
               />
               <ButtonRoundSns
                 type_sns="naver"
                 size={32}
+                isLast={lastLogin === 'NAVER'}
                 onPressEvent={naverLogin}
               />
               <ButtonRoundSns
                 type_sns="google"
                 size={32}
+                isLast={lastLogin === 'GOOGLE'}
                 onPressEvent={googleLogin}
               />
               <ButtonRoundSns
                 type_sns="facebook"
                 size={32}
+                isLast={lastLogin === 'FACEBOOK'}
                 onPressEvent={facebookLogin}
               />
               <ButtonRoundSns
                 type_sns="apple"
                 size={32}
+                isLast={lastLogin === 'APPLE'}
                 onPressEvent={appleLogin}
               />
             </EtcSNSBox>
@@ -313,6 +267,7 @@ const Pages = ({route}) => {
           </Pressable>
         </LoginContainer>
         <toast.ToastWrap message={'뒤로버튼 한번 더 누르시면 종료됩니다.'} />
+       
       </WrapperBox>
     </SafeView>
   );

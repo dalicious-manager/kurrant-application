@@ -2,7 +2,7 @@
 import cardValidator from 'card-validator';
 import React, {useState, useEffect, forwardRef} from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
-import {Image, TouchableOpacity} from 'react-native';
+import {Alert, Image, TouchableOpacity} from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 
 import {
@@ -66,6 +66,7 @@ const Component = forwardRef(
         authPressEvent: () => {
           console.log('인증 요청');
         },
+        disabledEvent:true
       },
 
       additionalCssOnTextInput = '',
@@ -92,6 +93,7 @@ const Component = forwardRef(
       isRunning: false,
       firstRunning: false,
     });
+    const [isDisabled, setIsDisabled] = useState();
     const data = watch(name);
     const [isShowing, setShowing] = useState(false);
     const [focus, setFocused] = useState(false);
@@ -327,13 +329,25 @@ const Component = forwardRef(
                 )}
                 {isEditable && suffix.isAuth && (
                   <AuthenticationButton
-                    onPress={() => {
-                      if (suffix.authText === '재발송') {
-                        setTimer(prev => ({...prev, remainTime: 180}));
-                        resetField(name);
-                        return suffix.authPressEvent(true);
+                    disabled={isDisabled}
+                    onPress={async() => {
+                      setIsDisabled(true)
+                      try {
+                        if (suffix.authText === '재발송') {
+                          setTimer(prev => ({...prev, remainTime: 180}));
+                          resetField(name);
+                          return  suffix.authPressEvent(true);
+                        }
+                        await suffix.authPressEvent(false);
+                      } catch (error) {
+                        Alert.alert("인증번호",error.toString().replace('error: ',''))
+                      }finally{
+                        setTimeout(()=>{
+                          setIsDisabled(false)
+                        },2000)
                       }
-                      suffix.authPressEvent(false);
+                     
+                     
                     }}>
                     <Typography
                       text={'Button10SB'}
@@ -423,7 +437,7 @@ const ControlContainer = styled.View`
   }}
 `;
 
-const AuthenticationButton = styled.TouchableOpacity`
+const AuthenticationButton = styled.Pressable`
   min-width: 77px;
   text-align: center;
   justify-content: center;

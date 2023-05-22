@@ -19,10 +19,12 @@ const Component = ({
   align,
   option,
   textColor,
+  lineBreakStrategyIOS,
   ...rest
 }) => {
   return (
     <Typography
+      lineBreakStrategyIOS={lineBreakStrategyIOS}
       weight={weight}
       align={align}
       variant={variant}

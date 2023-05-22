@@ -33,7 +33,9 @@ const Screens = ({route}) => {
             uri: imageLocation,
           }}
         />
-        <MenuName>{foodName}</MenuName>
+        <WidthView>
+          <MenuName>{foodName}</MenuName>
+        </WidthView>
 
         <RateStars
           ratingInput={0}
@@ -44,7 +46,9 @@ const Screens = ({route}) => {
             setStarRating(rating);
             setDisable(true);
             await mSleep(300);
-
+            if (navigation.canGoBack()) {
+              navigation.goBack();
+            }
             navigation.navigate(CreateReviewPage2ScreenName, {
               id: orderItemId,
               status: 'create',
@@ -90,4 +94,11 @@ const MenuImage = styled.Image`
 const MenuName = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-bottom: 27px;
+  text-align: center;
+`;
+
+const WidthView = styled.View`
+  width: 300px;
+  flex-direction: column;
+  align-items: center;
 `;

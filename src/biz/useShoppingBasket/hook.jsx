@@ -3,6 +3,7 @@ import react from 'react';
 
 import * as Fetch from './Fetch';
 import { isLoadMealCartAtom, isQuantityAtom, mealCartSpotAtom, userPointAtom,loadSoldOutMealAtom, soldOutChangeAtom, clientStatusAtom ,isLoadMealLoadingAtom,isAddMealCartAtom} from './store';
+import { useQueryClient } from 'react-query';
 
 const useShoppingBasket = () => {
     const  [isLoadMealLoading, setLoadMealLoading] = useAtom(isLoadMealLoadingAtom)
@@ -14,7 +15,7 @@ const useShoppingBasket = () => {
     const [soldOutMeal,setSoldOutMeal] = useAtom(loadSoldOutMealAtom);
     const [soldOutChange,setSoldOutChange] = useAtom(soldOutChangeAtom);
     const [clientStatus,setClientStatus] = useAtom(clientStatusAtom);
-
+    const queryClient = useQueryClient();
     const loadMeal = async () => {
         try {
             setLoadMealLoading(true);
@@ -75,7 +76,7 @@ const useShoppingBasket = () => {
     const allDeleteMeal = async (spotId) => {
         try {
             const res = await Fetch.allDeleteMealCart(spotId);
-            setQuantity(0)
+            queryClient.invalidateQueries('shopping-basket');
             return res;
 
         }catch(err){
@@ -87,7 +88,7 @@ const useShoppingBasket = () => {
         
         try {
             const res = await Fetch.deleteMealCart(foodId);
-            setQuantity(v => v - 1)
+            queryClient.invalidateQueries('shopping-basket');
             return res;
             
         }catch(err){
@@ -96,12 +97,13 @@ const useShoppingBasket = () => {
     };
 
     const updateMeal = async (body) => {
-        console.log(isLoadMeal.map(v=>v.cartDailyFoodDtoList.map(s=>console.log(s))));
+        // console.log(isLoadMeal.map(v=>v.cartDailyFoodDtoList.map(s=>console.log(s))));
         try {
             const res = await Fetch.updateMealCart({
                 ...body
             });
             // console.log(res.message ,body.updateCartList.map((v)=>v.count))
+            queryClient.invalidateQueries('shopping-basket');
             return res;
 
         }catch(err){

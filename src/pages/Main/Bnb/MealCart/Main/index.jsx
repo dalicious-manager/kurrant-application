@@ -55,6 +55,7 @@ import Toast from '../../../../../components/Toast';
 import useUserMe from '../../../../../biz/useUserMe';
 import {surpportPrice} from '../../../../Group/GroupCorporations/CorporationsApplication/ThirdPage/Pages/function';
 import {useQueryClient} from 'react-query';
+import { useGetShoppingBasket } from '../../../../../hook/useShoppingBasket';
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
@@ -67,7 +68,7 @@ const Pages = () => {
   const [id, setId] = useState(null);
   const queryClient = useQueryClient();
   const {
-    isLoadMeal,
+    // isLoadMeal,
     isQuantity,
     loadMeal,
     deleteMeal,
@@ -80,7 +81,7 @@ const Pages = () => {
     soldOutMeal,
     clientStatus,
   } = useShoppingBasket();
-
+  const {data :isLoadMeal} = useGetShoppingBasket();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
@@ -134,7 +135,7 @@ const Pages = () => {
   useEffect(() => {}, [isFocused]);
   useEffect(() => {}, []);
 
-  const quantityArr = isLoadMeal?.map(el =>
+  const quantityArr = isLoadMeal?.data?.spotCarts?.map(el =>
     el.cartDailyFoodDtoList.map(v =>
       v.cartDailyFoods.map(c => {
         return {
@@ -154,7 +155,7 @@ const Pages = () => {
   };
 
   const addHandle = productId => {
-    const addQty = isLoadMeal?.map(el => {
+    const addQty = isLoadMeal?.data?.spotCarts?.map(el => {
       return {
         ...el,
         cartDailyFoodDtoList: [
@@ -179,7 +180,7 @@ const Pages = () => {
   };
 
   const substractHandle = productId => {
-    const substracQty = isLoadMeal?.map(el => {
+    const substracQty = isLoadMeal?.data?.spotCarts?.map(el => {
       return {
         ...el,
         cartDailyFoodDtoList: [
@@ -209,7 +210,7 @@ const Pages = () => {
   // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
 
   // 주문 마감 제외 배열
-  const arrs = isLoadMeal
+  const arrs = isLoadMeal?.data?.spotCarts
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
       el.cartDailyFoodDtoList?.map(v =>
@@ -220,14 +221,14 @@ const Pages = () => {
   const arr = arrs.reduce((acc, val) => [...acc, ...val], []);
 
   // 장바구니 배열(마감,품절 포함)
-  const cartArrs = isLoadMeal
+  const cartArrs = isLoadMeal?.data?.spotCarts
     ?.filter(p => p.spotId === selected)
     ?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods))
     .flat();
   const cartArr = cartArrs.reduce((acc, val) => [...acc, ...val], []);
 
   // 주문 마감 수량
-  const deadlineArrs = isLoadMeal
+  const deadlineArrs = isLoadMeal?.data?.spotCarts
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
       el.cartDailyFoodDtoList?.map(v =>
@@ -244,7 +245,7 @@ const Pages = () => {
     }, 0);
 
   // 주문 마감 제외 시킨 배열
-  const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
+  const spotFilter = isLoadMeal?.data?.spotCarts?.filter(el => el.spotId === selected);
 
   const newArr = spotFilter.map(el => {
     return {
@@ -440,7 +441,7 @@ const Pages = () => {
   };
 
   const changeText = (number, pi) => {
-    const changeQty = isLoadMeal?.map(el => {
+    const changeQty = isLoadMeal?.data?.spotCarts?.map(el => {
       return {
         ...el,
         cartDailyFoodDtoList: [
@@ -470,7 +471,7 @@ const Pages = () => {
   };
 
   const deleteButton = async foodId => {
-    const arr = isLoadMeal?.map(el => {
+    const arr = isLoadMeal?.data?.spotCarts?.map(el => {
       return {
         ...el,
         cartDailyFoodDtoList: [
@@ -519,7 +520,7 @@ const Pages = () => {
   };
 
   const allDelete = spotId => {
-    const data = isLoadMeal?.filter(el => el.spotId !== selected);
+    const data = isLoadMeal?.data?.spotCarts?.filter(el => el.spotId !== selected);
     Alert.alert('전체 삭제', '메뉴를 모두 삭제하시겠어요?', [
       {
         text: '아니요',
@@ -544,7 +545,7 @@ const Pages = () => {
     // console.log(date,id,type)
     Alert.alert(
       '메뉴 변경',
-      `현재 메뉴 취소 후 진행됩니다.\n 메뉴를 취소하시겠어요?(수량:${count})\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요`,
+      `현재 메뉴 취소 후 진행됩니다.\n메뉴를 취소하시겠어요?(수량:${count})\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요`,
 
       [
         {
@@ -556,10 +557,10 @@ const Pages = () => {
           onPress: async () => {
             try {
               await deleteButton(id);
-              queryClient.invalidateQueries('todayMeal');
+              queryClient.invalidateQueries('orderMeal');
               setModalVisible3(true);
             } catch (err) {
-              console.log(err);
+              Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
             }
           },
           style: 'destructive',
@@ -591,7 +592,7 @@ const Pages = () => {
   };
 
   const isDeadline = () => {
-    const data = isLoadMeal?.filter(el => el.spotId !== selected);
+    const data = isLoadMeal?.data?.spotCarts?.filter(el => el.spotId !== selected);
     if (totalCount === 0) {
       Alert.alert(
         '주문할 수 있는 상품이 없어요',
@@ -656,7 +657,7 @@ const Pages = () => {
         </EmptyView>
       )}
       <ScrollViewWrap ref={scrollRef}>
-        {isLoadMeal?.map((el, idx) => {
+        {isLoadMeal?.data?.spotCarts?.map((el, idx) => {
           return (
             <React.Fragment key={idx}>
               {selected === el.spotId &&
@@ -949,7 +950,7 @@ const Pages = () => {
         setModalVisible={setModalVisible}
         title={'지원금이란?'}
         description={
-          '고객님의 회사에서 지원하는 지원금입니다. \n 결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
+          '고객님의 회사에서 지원하는 지원금입니다. \n결제시 사용 가능한 최대 금액으로 자동 적용됩니다.'
         }
         buttonTitle1={'확인했어요'}
         buttonType1={'grey7'}

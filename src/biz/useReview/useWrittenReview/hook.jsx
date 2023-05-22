@@ -17,7 +17,7 @@ const useWrittenReview = () => {
       // const res = await Fetch.writtenReviewMockData();
 
       const res = await Fetch.getReviewOrderMeal();
-      console.log('유저가 작성한 리뷰 잘 되고 있음');
+
       // 데이터 갈아끼우기
 
       setWrittenReviewCount(res.data.count);

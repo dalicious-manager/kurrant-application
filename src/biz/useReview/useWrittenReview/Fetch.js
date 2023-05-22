@@ -6,14 +6,15 @@ import mSleep from '../../../helpers/mSleep';
 import {fetchJson} from '../../../utils/fetch';
 
 const apiHostUrl =
-  Config.NODE_ENV === 'dev'
-    ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
-    : Config.API_HOST_URL + '/' + Config.API_VERSION;
+Config.NODE_ENV === 'dev'
+? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+: Config.NODE_ENV === 'rel'
+? Config.API_RELEASE_URL + '/' + Config.API_VERSION
+: Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 export async function getReviewOrderMeal() {
   const fetchRes = await fetchJson(
     `/users/me/reviews`,
-
     'GET',
   );
 

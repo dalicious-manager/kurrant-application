@@ -6,8 +6,9 @@ import useBoard from "../../biz/useBoard";
 import { NotificationIcon } from "../../components/Icon";
 import Typography from "../../components/Typography";
 import Wrapper from "../../components/Wrapper";
+import { useNavigation } from "@react-navigation/native";
 
-
+import { PAGE_NAME as MainPageName } from "../Main/Bnb/Home/Main";
 export const PAGE_NAME = "P__NOTIFICATION_CENTER"
 
 const alramData =[
@@ -51,14 +52,13 @@ const alramData =[
 const Pages= ()=>{
     const themeApp = useTheme();
     const {getAlarm,readableAtom:{alarm}} = useBoard();
-  
+    const navigation = useNavigation();
     useEffect(()=>{
       const getUseAlarm=async()=>{
         await getAlarm();
       }
       getUseAlarm();
     },[])
-    console.log(alarm);
     return(
         <Wrapper>
           {!alarm?.length > 0 ? <NonNotice>
@@ -93,7 +93,7 @@ const Pages= ()=>{
 
 export default Pages;
 
-const NotificationBox = styled.View`
+const NotificationBox = styled.Pressable`
     padding: 24px;
     border-bottom-width: 1px;
     border-bottom-color: ${({theme})=>theme.colors.grey[8]};

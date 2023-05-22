@@ -23,6 +23,8 @@ import {v4 as uuid} from 'uuid';
 import {PAGE_NAME as AppleLoginPageName} from '../../pages/Main/Login/AppleSignup';
 import jwtDecode from 'jwt-decode';
 import Config from 'react-native-config';
+import useUserInfo from '../../biz/useUserInfo/hook';
+import { el } from 'date-fns/locale';
 
 const nonce = uuid();
 
@@ -41,11 +43,14 @@ const naverData = () => {
   return data;
 };
 export default () => {
+  const {userInfo} = useUserInfo();
   const {snsLogin, snsAppleLogin} = useAuth();
   const navigation = useNavigation();
   const naverLogin = async () => {
     // console.log('로그인')
-    const {successResponse} = await NaverLogin.login(naverData());
+    try {
+      const {successResponse, failureResponse} = await NaverLogin.login(naverData());
+      
     if (successResponse) {
       // console.log(successResponse)
       // Clipboard.setString(successResponse.accessToken)
@@ -58,6 +63,7 @@ export default () => {
         },
         'NAVER',
       );
+      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [
@@ -66,7 +72,13 @@ export default () => {
           },
         ],
       });
+    }else{
+      console.log(failureResponse)
     }
+    } catch (error) {
+      Alert.alert("네이버 로그인 에러", error.toString());
+    }
+    
   };
 
   const googleLogin = async () => {
@@ -92,6 +104,7 @@ export default () => {
         },
         'GOOGLE',
       );
+      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [
@@ -125,6 +138,7 @@ export default () => {
           },
           'APPLE',
         );
+        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -170,6 +184,7 @@ export default () => {
           },
           'APPLE',
         );
+        const userData = await userInfo();
         // console.log(userCredential.additionalUserInfo.isNewUser);
         if (!userCredential.additionalUserInfo.isNewUser) {
           navigation.reset({
@@ -241,6 +256,7 @@ export default () => {
       },
       'KAKAO',
     );
+    const userData = await userInfo();
     navigation.reset({
       index: 0,
       routes: [
@@ -269,6 +285,7 @@ export default () => {
           },
           'FACEBOOK',
         );
+        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -287,6 +304,7 @@ export default () => {
           },
           'FACEBOOK',
         );
+        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
