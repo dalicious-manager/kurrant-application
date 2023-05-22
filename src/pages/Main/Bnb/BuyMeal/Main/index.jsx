@@ -45,6 +45,7 @@ import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 import { useGetDailyfood } from '../../../../../hook/useDailyfood';
 import { useGetOrderMeal } from '../../../../../hook/useOrder';
 import useUserInfo from '../../../../../biz/useUserInfo/hook';
+import { useAddShoppingBasket, useGetShoppingBasket } from '../../../../../hook/useShoppingBasket';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -90,11 +91,13 @@ const Pages = ({route}) => {
     isDailyFoodLoading,
   } = useFoodDaily();
   
-  const {
-    addMeal,
-    isLoadMeal,
-    isAddMeal,
-  } = useShoppingBasket();
+  // const {
+  //   // addMeal,
+  //   // isLoadMeal,
+  //   // isAddMeal,
+  // } = useShoppingBasket();
+  const {data :isLoadMeal} = useGetShoppingBasket();
+  const {mutateAsync: addMeal,isLoading:isAddMeal} = useAddShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
   const {isUserInfo}=useUserInfo();
   const userInfo = useAtomValue(isUserInfoAtom);
@@ -583,7 +586,7 @@ const Pages = ({route}) => {
   },[dailyfoodData?.data])
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
-    const duplication = isLoadMeal
+    const duplication = isLoadMeal?.data?.spotCarts
       ?.map(v =>
         v.cartDailyFoodDtoList.map(el =>
           el.cartDailyFoods.some(c => c.dailyFoodId === id),
@@ -600,8 +603,7 @@ const Pages = ({route}) => {
       await addToCart(id, m);
     }
   };
-
-  const quantityArr = isLoadMeal?.map(el =>
+  const quantityArr = isLoadMeal?.data?.spotCarts?.map(el =>
     el.cartDailyFoodDtoList.map(v =>
       v.cartDailyFoods.map(c => {
         return {
@@ -612,8 +614,8 @@ const Pages = ({route}) => {
       }),
     ),
   );
-  const quantity = quantityArr.reduce((acc, val) => [...acc, ...val], []);
-  const modifyQty = quantity.reduce((acc, cur) => [...acc, ...cur], []);
+  const quantity = quantityArr?.reduce((acc, val) => [...acc, ...val], []);
+  const modifyQty = quantity?.reduce((acc, cur) => [...acc, ...cur], []);
   const req = {updateCartList: modifyQty};
   const addToCart = async (id, m) => {
     if (userRole === 'ROLE_GUEST') {
