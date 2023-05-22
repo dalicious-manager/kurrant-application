@@ -18,36 +18,8 @@ const Pages = () => {
   const form = useForm();
 
   const {data: alramData, isSuccess} = useGetAlramSetting();
-  const [toggleData, setToggleData] = useState([]);
 
   const themeApp = useTheme();
-
-  
-
-  useEffect(() => {
-    // setToggleData(
-    //   alramData?.data.map(v => {
-    //     return {
-    //       isToggle: true,
-    //       toggleName: v.code.toString(),
-    //       toggleEvent: () => alarmAgree(v),
-    //     };
-    //   }),
-    // );
-    // setToggleData([
-
-    //   {
-    //     isToggle: true,
-    //     toggleName: 'orderAlarm',
-    //     toggleEvent: name => alarmAgree(name),
-    //   },
-    //   {
-    //     isToggle: true,
-    //     toggleName: 'marketingAgree',
-    //     toggleEvent: name => alarmAgree(name),
-    //   },
-    // ]);
-  }, [alramData]);
 
   if (!isSuccess) {
     return (
@@ -60,8 +32,8 @@ const Pages = () => {
   return (
     <Wrapper paddingTop={24}>
       <FormProvider {...form}>
-        {alramData?.data &&
-          alramData?.data.map((s, i) => {
+        {alramData?.data && alramData?.data.length >0 &&
+          alramData?.data?.map((s, i) => {
             return (
               <ListBox
                 key={i}

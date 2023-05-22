@@ -110,6 +110,12 @@ const Pages = () => {
                       ? '사용'
                       : el.pointStatus === 4
                       ? '운영자 적립'
+                      : el.pointStatus === 5
+                      ? '운영자 차감'
+                      : el.pointStatus === 6
+                      ? '파운더스 적립'
+                      : el.pointStatus === 7
+                      ? '파운더스 적립'
                       : '운영자 차감';
                   return (
                     <Contents key={idx}>
@@ -141,7 +147,16 @@ const Pages = () => {
                             <TitleText>
                               운영자에 의해 포인트가 차감되었어요
                             </TitleText>
-                          ) : (
+                          ) : el.pointStatus === 6 ? (
+                            <TitleText>
+                              파운더스 포인트가 적립되었어요
+                            </TitleText>
+                          ) :el.pointStatus === 7 ? (
+                            <TitleText>
+                              적립되지 않은 파운더스 포인트가 적립되었어요
+                            </TitleText>
+                          ) :
+                          (
                             <TitleText numberOfLines={2} ellipsizeMode="tail">
                               [{el.makersName}] {el.name}
                             </TitleText>

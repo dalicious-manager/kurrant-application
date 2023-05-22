@@ -88,6 +88,8 @@
 		2837ECA71A33470D84964E57 /* SpoqaHanSansNeo-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpoqaHanSansNeo-Thin.otf"; path = "../src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.otf"; sourceTree = "<group>"; };
 		2932966F926A43E3B5928532 /* SpoqaHanSansNeo-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpoqaHanSansNeo-Light.otf"; path = "../src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Light.otf"; sourceTree = "<group>"; };
 		2A7A75042A0E0348009F0DB7 /* coin.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = coin.wav; sourceTree = "<group>"; };
+		2ABB8D9B2A1B4A2200E8AD46 /* Permission_Notifications.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permission_Notifications.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ABB8D9D2A1B4C3A00E8AD46 /* RNPermissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RNPermissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		371F1B140CA0B7511D57B8D5 /* Pods-kurrant-kurrantTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant-kurrantTests.debug.xcconfig"; path = "Target Support Files/Pods-kurrant-kurrantTests/Pods-kurrant-kurrantTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-kurrant.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant.debug.xcconfig"; path = "Target Support Files/Pods-kurrant/Pods-kurrant.debug.xcconfig"; sourceTree = "<group>"; };
 		45B4C38C57954B53A4EE52CC /* SpoqaHanSansNeo-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpoqaHanSansNeo-Bold.otf"; path = "../src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.otf"; sourceTree = "<group>"; };
@@ -232,6 +234,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2ABB8D9D2A1B4C3A00E8AD46 /* RNPermissions.framework */,
+				2ABB8D9B2A1B4A2200E8AD46 /* Permission_Notifications.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				D6DCF50CF739E20A8CA31AEC /* Pods_kurrant.framework */,
 				9A8A6630B82C928CBA40CA41 /* Pods_kurrant_kurrantTests.framework */,
@@ -787,6 +791,7 @@
 				INFOPLIST_FILE = kurrant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "커런트";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -820,6 +825,7 @@
 				INFOPLIST_FILE = kurrant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "커런트";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1059,6 +1065,7 @@
 				INFOPLIST_FILE = kurrant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "커런트";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
