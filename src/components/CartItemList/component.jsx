@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const Component = () => {
-    return 
-}
+  return;
+};
 
 export default Component;

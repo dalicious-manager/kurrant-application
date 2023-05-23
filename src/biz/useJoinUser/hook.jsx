@@ -1,12 +1,11 @@
-import { useAtom } from 'jotai';
+import {useAtom} from 'jotai';
 
 import * as Fetch from './Fetch';
-import {  isLoadingAtom } from './store';
+import {isLoadingAtom} from './store';
 
 const useJoinUser = () => {
-
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
-    const joinUser = async (body, option = {}) => {
+  const joinUser = async (body, option = {}) => {
     try {
       setIsLoading(true);
 
@@ -14,12 +13,12 @@ const useJoinUser = () => {
         {
           ...body,
         },
-        option
+        option,
       );
 
       return res;
     } catch (err) {
-      return err
+      return err;
     } finally {
       setIsLoading(false);
     }

@@ -1,9 +1,10 @@
 import {useAtom} from 'jotai';
 import {useEffect, useState} from 'react';
-import {getStorage} from '../../utils/asyncStorage';
-import {isTimeDifferenceLarger} from '../../utils/dateFormatter';
+
 import * as Fetch from './Fetch';
 import {AnnouncementsAtom} from './store';
+import {getStorage} from '../../utils/asyncStorage';
+import {isTimeDifferenceLarger} from '../../utils/dateFormatter';
 
 const useGetAnnouncements = () => {
   const [announcements, setAnnouncements] = useAtom(AnnouncementsAtom);

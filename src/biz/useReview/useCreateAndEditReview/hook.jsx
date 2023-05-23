@@ -1,9 +1,9 @@
 import {useAtom} from 'jotai';
 import {useState} from 'react';
+import {Alert} from 'react-native';
 
 import * as Fetch from './Fetch';
 import {reviewWaitListAtom} from './store';
-import { Alert } from 'react-native';
 
 const useReviewWait = () => {
   const [reviewWaitList, setReviewWaitList] = useAtom(reviewWaitListAtom);

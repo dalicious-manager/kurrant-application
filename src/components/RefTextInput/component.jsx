@@ -5,6 +5,7 @@ import {Controller, useFormContext} from 'react-hook-form';
 import {Alert, Image, TouchableOpacity} from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 
+import {textStyles} from './styles';
 import {
   VISA,
   AMEX,
@@ -26,7 +27,6 @@ import {
 import {formattedTimer} from '../../utils/dateFormatter';
 import {AntDesignIcon} from '../Icon';
 import Typography from '../Typography';
-import {textStyles} from './styles';
 
 /**
  *
@@ -66,7 +66,7 @@ const Component = forwardRef(
         authPressEvent: () => {
           console.log('인증 요청');
         },
-        disabledEvent:true
+        disabledEvent: true,
       },
 
       additionalCssOnTextInput = '',
@@ -330,24 +330,25 @@ const Component = forwardRef(
                 {isEditable && suffix.isAuth && (
                   <AuthenticationButton
                     disabled={isDisabled}
-                    onPress={async() => {
-                      setIsDisabled(true)
+                    onPress={async () => {
+                      setIsDisabled(true);
                       try {
                         if (suffix.authText === '재발송') {
                           setTimer(prev => ({...prev, remainTime: 180}));
                           resetField(name);
-                          return  suffix.authPressEvent(true);
+                          return suffix.authPressEvent(true);
                         }
                         await suffix.authPressEvent(false);
                       } catch (error) {
-                        Alert.alert("인증번호",error.toString().replace('error: ',''))
-                      }finally{
-                        setTimeout(()=>{
-                          setIsDisabled(false)
-                        },2000)
+                        Alert.alert(
+                          '인증번호',
+                          error.toString().replace('error: ', ''),
+                        );
+                      } finally {
+                        setTimeout(() => {
+                          setIsDisabled(false);
+                        }, 2000);
                       }
-                     
-                     
                     }}>
                     <Typography
                       text={'Button10SB'}

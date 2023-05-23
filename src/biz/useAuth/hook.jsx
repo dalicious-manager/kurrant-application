@@ -1,4 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
+import jwtDecode from 'jwt-decode';
+import {Alert} from 'react-native';
 
 import * as Fetch from './Fetch';
 import {
@@ -13,13 +17,9 @@ import {
   userRoleAtom,
   fcmTokenAtom,
 } from './store';
+import {PAGE_NAME as LoginPageName} from '../../pages/Main/Login/Login';
 import {setStorage} from '../../utils/asyncStorage';
 import {isUserSpotStatusAtom} from '../useUserInfo/store';
-import jwtDecode from 'jwt-decode';
-import {Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {PAGE_NAME as LoginPageName} from '../../pages/Main/Login/Login';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const useAuth = () => {
   const [isEmailAuthLoading, setEmailAuthLoading] = useAtom(
@@ -177,13 +177,13 @@ const useAuth = () => {
         // console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
-        await setStorage('lastLogin', "GENERAL");
+        await setStorage('lastLogin', 'GENERAL');
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
-        await setStorage('lastLogin', "GENERAL");
+        await setStorage('lastLogin', 'GENERAL');
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
@@ -269,7 +269,6 @@ const useAuth = () => {
                 try {
                   const cancel = await cancelTerminateUser();
                   await setStorage('token', JSON.stringify(res.data));
-                  await setStorage('isLogin', body.autoLogin.toString());
                   await setStorage(
                     'spotStatus',
                     res?.data?.spotStatus.toString(),
@@ -303,7 +302,7 @@ const useAuth = () => {
         type,
         option,
       );
-      console.log(res?.data)
+      console.log(res?.data);
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
@@ -493,7 +492,6 @@ const useAuth = () => {
       isChangePasswordLoading,
       isEmailLoading,
       isLoginLoading,
-      fcmToken,
     },
   };
 };

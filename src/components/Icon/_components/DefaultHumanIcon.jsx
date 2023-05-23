@@ -1,7 +1,6 @@
 import React from 'react';
 
 import DefaultHumanIcon from '../../../assets/icons/DefaultHuman.svg';
-
 import IconWrapper from '../component';
 /**
  *

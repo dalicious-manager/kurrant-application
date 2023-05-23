@@ -3,6 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import {Alert} from 'react-native';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
+
 import * as Fetch from './Fetch';
 import {
   isAlarmSettingLoadingAtom,

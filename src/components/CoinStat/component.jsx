@@ -1,8 +1,8 @@
 import React from 'react';
 import WebView from 'react-native-webview';
-import styled, { css } from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 
-import { AntDesignIcon } from '../Icon';
+import {AntDesignIcon} from '../Icon';
 import Typography from '../Typography';
 
 /** 예시 */
@@ -17,7 +17,6 @@ import Typography from '../Typography';
 //   coinChart: 'https://images.unsplash.com/photo-1664164236867-12d1f986ac41?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2127&q=80',
 // }
 
-
 /**
  *
  * @param { object } props
@@ -30,8 +29,7 @@ import Typography from '../Typography';
  * @param { string } props.renderItem.coinChart '코인 차트'
  * @returns
  */
-const Component = ({ renderItem }) => {
-
+const Component = ({renderItem}) => {
   const isPositive = renderItem?.coinPercentage >= 0;
 
   return (
@@ -63,11 +61,7 @@ const Component = ({ renderItem }) => {
             <CoinStateWrap>
               <IconWrap isPositive={isPositive}>
                 {isPositive ? (
-                  <AntDesignIcon
-                    name={'caretup'}
-                    size={10}
-                    color={'#d10000'}
-                  />
+                  <AntDesignIcon name={'caretup'} size={10} color={'#d10000'} />
                 ) : (
                   <AntDesignIcon
                     name={'caretdown'}
@@ -145,20 +139,23 @@ const CoinGraph = styled.View`
 `;
 const IconWrap = styled.View`
   margin-right: 2px;
-  ${({ isPositive }) => isPositive && css`margin-top: 3px;`};
-  
+  ${({isPositive}) =>
+    isPositive &&
+    css`
+      margin-top: 3px;
+    `};
 `;
 const DeviatonWrap = styled.View``;
 
-const CoinPriceLg = styled(Typography).attrs({ variant: 'h700', weight: 'B' })``;
-const CoinPriceSm = styled(Typography).attrs({ variant: 'h500' })``;
-const CoinState = styled(Typography).attrs({ variant: 'h500', weight: 'R' })`
-  ${({ isPositive }) =>
+const CoinPriceLg = styled(Typography).attrs({variant: 'h700', weight: 'B'})``;
+const CoinPriceSm = styled(Typography).attrs({variant: 'h500'})``;
+const CoinState = styled(Typography).attrs({variant: 'h500', weight: 'R'})`
+  ${({isPositive}) =>
     isPositive
       ? css`
-          color: ${({ theme }) => theme.colors.red[500]};
+          color: ${({theme}) => theme.colors.red[500]};
         `
       : css`
-          color: ${({ theme }) => theme.colors.blue[500]};
+          color: ${({theme}) => theme.colors.blue[500]};
         `}
 `;

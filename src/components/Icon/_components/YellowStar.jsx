@@ -1,8 +1,8 @@
 import React from 'react';
 import {Path, Svg} from 'react-native-svg';
+import styled from 'styled-components';
 
 import IconWrapper from '../component';
-import styled from 'styled-components';
 /**
  *
  * @param {object} props

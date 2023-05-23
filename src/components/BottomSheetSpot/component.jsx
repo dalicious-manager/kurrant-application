@@ -1,3 +1,4 @@
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
@@ -11,11 +12,10 @@ import {
   PanResponder,
 } from 'react-native';
 import styled from 'styled-components/native';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
-import Typography from '../Typography';
 import Label from '../Label';
+import Typography from '../Typography';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -205,7 +205,7 @@ const BottomSheetSpot = props => {
             )}
             keyExtractor={item => item.clientId.toString()}
           />
-          <ManagePressView></ManagePressView>
+          <ManagePressView />
         </BottomSheet>
 
         {booleanValue && (

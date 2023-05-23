@@ -27,7 +27,7 @@ const {StatusBarManager} = NativeModules;
 
 const Component = ({userId}) => {
   const navigation = useNavigation();
-  const {userInfo} =useUserInfo();
+  const {userInfo} = useUserInfo();
   const labelItems = [
     {label: '아이디'},
     {label: '/'},

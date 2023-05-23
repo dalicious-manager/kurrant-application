@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Deliveryfree from '~assets/icons/deliveryfree.svg';
 
 import IconWrapper from '../component';

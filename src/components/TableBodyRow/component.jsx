@@ -1,12 +1,12 @@
 import React from 'react';
-import { View } from 'react-native';
-import styled, { css } from 'styled-components/native';
+import {View} from 'react-native';
+import styled, {css} from 'styled-components/native';
 
 import Typography from '../Typography';
 
 /** 예시 */
 // <TableBodyRow renderItem={renderItem} />
-// 
+//
 // const renderItem = {
 //   coinName_En: 'Atom',
 //   coinName_Kr: '코스모스아톰',
@@ -31,7 +31,7 @@ import Typography from '../Typography';
  * @returns
  */
 
-const Component = ({ renderItem }) => {
+const Component = ({renderItem}) => {
   const isPositive = renderItem?.dodPercent >= 0;
 
   return (
@@ -63,7 +63,9 @@ const Component = ({ renderItem }) => {
             <Amout>{renderItem?.transactionAmount}</Amout>
           </AtomWrap>
           <View>
-            <SubText align={'right'} >{renderItem?.transactionAmount_Kr} KRW</SubText>
+            <SubText align={'right'}>
+              {renderItem?.transactionAmount_Kr} KRW
+            </SubText>
           </View>
         </AmountWrap>
       </Wrapper>
@@ -84,29 +86,33 @@ const CoinNameWrap = styled.View`
   flex: 2;
 `;
 
-const CoinNameEn = styled(Typography).attrs({ variant: 'h600', weight: 'B' })`
-  color: ${({ theme }) => theme.colors.neutral[900]};
+const CoinNameEn = styled(Typography).attrs({variant: 'h600', weight: 'B'})`
+  color: ${({theme}) => theme.colors.neutral[900]};
 `;
 
-const SubText = styled(Typography).attrs({ variant: 'h400', weight: 'R' })`
+const SubText = styled(Typography).attrs({variant: 'h400', weight: 'R'})`
   font-weight: 400;
   font-size: 10px;
   line-height: 16px;
-  color: ${({ theme }) => theme.colors.neutral[400]};
+  color: ${({theme}) => theme.colors.neutral[400]};
 `;
 
 const CurrentPriceWrap = styled.View`
   flex: 2;
 `;
 
-const CurrentPrice = styled(Typography).attrs({ variant: 'h500', weight: 'B', align: 'right' })`
-  ${({ isPositive }) =>
+const CurrentPrice = styled(Typography).attrs({
+  variant: 'h500',
+  weight: 'B',
+  align: 'right',
+})`
+  ${({isPositive}) =>
     isPositive
       ? css`
-          color: ${({ theme }) => theme.colors.red[500]};
+          color: ${({theme}) => theme.colors.red[500]};
         `
       : css`
-          color: ${({ theme }) => theme.colors.blue[500]};
+          color: ${({theme}) => theme.colors.blue[500]};
         `}
 `;
 
@@ -115,22 +121,30 @@ const DoDWrap = styled.View`
   flex: 1.35;
 `;
 
-const DoD = styled(Typography).attrs({ variant: 'h500', weight: 'R', align: 'right' })`
-  ${({ isPositive }) =>
+const DoD = styled(Typography).attrs({
+  variant: 'h500',
+  weight: 'R',
+  align: 'right',
+})`
+  ${({isPositive}) =>
     isPositive
       ? css`
-          color: ${({ theme }) => theme.colors.red[500]};
+          color: ${({theme}) => theme.colors.red[500]};
         `
       : css`
-          color: ${({ theme }) => theme.colors.blue[500]};
+          color: ${({theme}) => theme.colors.blue[500]};
         `}
 `;
 const AmountWrap = styled.View`
   flex: 1.35;
 `;
 
-const Amout = styled(Typography).attrs({ variant: 'h500', weight: 'R', align: 'right' })`
-  color: ${({ theme }) => theme.colors.neutral[900]};
+const Amout = styled(Typography).attrs({
+  variant: 'h500',
+  weight: 'R',
+  align: 'right',
+})`
+  color: ${({theme}) => theme.colors.neutral[900]};
 `;
 const AtomWrap = styled.View`
   margin-bottom: 2px;

@@ -570,7 +570,7 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.10.1):
     - React-Core
-  - RNGoogleSignin (9.0.2):
+  - RNGoogleSignin (9.1.0):
     - GoogleSignIn (~> 6.2)
     - React-Core
   - RNNaverLogin (3.0.0-rc.2):
@@ -979,7 +979,7 @@ SPEC CHECKSUMS:
   RNFBAuth: 58ab8f774f9ff45707f2bfbf4fd74e8f7b4220b9
   RNFBMessaging: 04ecf12bae7543cd8df145f1b26d89d867594be7
   RNGestureHandler: 42ec7c28dd02d540ed6c9159c57a98ff016492dc
-  RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
+  RNGoogleSignin: c15bdaa7e8a9e190b6169d9c96a4e8380a740f22
   RNNaverLogin: 01ca478665ea024e4ddaa02be38396845fcac0b6
   RNPermissions: b0e38eca4ce809f39a1655c7dfb8fe957b844cfc
   RNReanimated: bec7736122a268883bdede07f1bf9cf4b40158db

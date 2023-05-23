@@ -1,6 +1,6 @@
 import React, {useCallback, useRef} from 'react';
 import {Animated, Platform} from 'react-native';
-import styled, { css } from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 
 import CheckIcon from '../../assets/icons/Toast/CheckIcon.svg';
 import ErrorIcon from '../../assets/icons/Toast/ErrorIcon.svg';
@@ -65,7 +65,14 @@ const Component = () => {
   }, [fadeToast]);
 
   const ToastWrap = useCallback(
-    ({message = 'test', icon = 'nomal', isBottom = false, isHeader = true, absoluteStyle='' ,isCenter=true}) => {
+    ({
+      message = 'test',
+      icon = 'nomal',
+      isBottom = false,
+      isHeader = true,
+      absoluteStyle = '',
+      isCenter = true,
+    }) => {
       const renderIcon = () => {
         switch (icon) {
           case 'checked':
@@ -94,7 +101,7 @@ const Component = () => {
     [fadeToast],
   );
 
-  return {toastEvent, ToastWrap,toastEventNotOut};
+  return {toastEvent, ToastWrap, toastEventNotOut};
 };
 
 export default Component;
@@ -113,17 +120,17 @@ const Wrapper = styled(Animated.View)`
       ? 'top: 30px'
       : 'top: 95px'}
   /* width: 100%; */
-  ${({absoluteStyle})=>{   
-    if(absoluteStyle)
+  ${({absoluteStyle}) => {
+    if (absoluteStyle)
       return css`
         ${absoluteStyle}
-      `
-       }}
-  ${({isCenter})=>{
-    if(isCenter)
+      `;
+  }}
+  ${({isCenter}) => {
+    if (isCenter)
       return css`
-        align-self:center;
-      `
+        align-self: center;
+      `;
   }}
   
   border-radius: 100px;

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import AppleSnsIcons from '~assets/icons/AppleSnsIcon.svg';
 
 import IconWrapper from '../component';

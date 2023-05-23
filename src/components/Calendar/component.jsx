@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {useNavigation} from '@react-navigation/native';
 import {
   addDays,
@@ -14,6 +15,7 @@ import {Pressable, View, Text} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components/native';
 
+import {getCircleColor, getTodayColor, getFontStyle} from './style';
 import {weekAtom} from '../../biz/useBanner/store';
 import useFoodDaily from '../../biz/useDailyFood/hook';
 import {calculateSelectDatePosition} from '../../biz/useDailyFood/logic';
@@ -25,7 +27,6 @@ import {PAGE_NAME as MealMainPageName} from '../../pages/Main/Bnb/Meal/Main';
 import {formattedDate, formattedWeekDate} from '../../utils/dateFormatter';
 import Button from '../CalendarButton';
 import Typography from '../Typography';
-import {getCircleColor, getTodayColor, getFontStyle} from './style';
 
 /**
  *
@@ -115,9 +116,7 @@ const Component = ({
                   const propsDay = formattedWeekDate(day);
                   const lastDay =
                     formattedDate(day, '/') < formattedDate(today, '/');
-                  const order = meal?.filter(
-                    x => x.serviceDate === propsDay,
-                  );
+                  const order = meal?.filter(x => x.serviceDate === propsDay);
                   const set = new Set(order?.map(x => x.diningType));
                   const orderCount = [...set].length;
 

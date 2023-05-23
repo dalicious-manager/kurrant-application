@@ -1,5 +1,4 @@
 import React from 'react';
-
 import NomalCardIcon from '~assets/icons/NomalCard.svg';
 
 import IconWrapper from '../component';

@@ -1,3 +1,3 @@
-import { atomWithReset } from 'jotai/utils';
+import {atomWithReset} from 'jotai/utils';
 
 export const isLoadingAtom = atomWithReset(false);

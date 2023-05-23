@@ -1,9 +1,9 @@
 import {useAtom} from 'jotai';
+import {Alert} from 'react-native';
 
-import {setStorage} from '../../utils/asyncStorage';
 import * as Fetch from './Fetch';
 import {corpApplicationListAtom, isCorpApplicationLoadingAtom} from './store';
-import { Alert } from 'react-native';
+import {setStorage} from '../../utils/asyncStorage';
 
 const useCorporationApplication = () => {
   const [isCorpCheck, setCorpCheck] = useAtom(corpApplicationListAtom);
