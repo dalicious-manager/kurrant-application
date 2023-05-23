@@ -1,7 +1,6 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import React from 'react';
 import styled, {useTheme} from 'styled-components/native';
-
 import RegisterCorpCard, {
   PAGE_NAME as RegisterCorpCardPageName,
 } from '~pages/Main/MyPage/PersonalInfo/pages/PaymentManage/RegisterCorpCardPage';

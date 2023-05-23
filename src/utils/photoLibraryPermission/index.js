@@ -50,7 +50,6 @@ class AppPermission {
         case RESULTS.GRANTED:
           console.log('The permission is granted');
           return true;
-          break;
         case RESULTS.BLOCKED:
           console.log('The permission is denied and not requestable anymore');
           break;

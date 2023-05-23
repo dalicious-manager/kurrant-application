@@ -94,19 +94,18 @@ export function formattedCardCode(data) {
 }
 export function formattedLogin(data) {
   switch (data) {
-    case "GOOGLE":
+    case 'GOOGLE':
       return '구글 로그인';
-    case "APPLE":
+    case 'APPLE':
       return '애플 로그인';
-    case "NAVER":
+    case 'NAVER':
       return '네이버 로그인';
-    case "FACEBOOK":
+    case 'FACEBOOK':
       return '페이스북 로그인';
-    case "KAKAO":
-      return '카카오 로그인';    
+    case 'KAKAO':
+      return '카카오 로그인';
     default:
-      return data;    
-      break;
+      return data;
   }
 }
 export const cardListData = [

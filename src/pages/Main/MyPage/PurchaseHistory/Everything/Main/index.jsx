@@ -1,7 +1,11 @@
+import DatePicker from '@react-native-community/datetimepicker';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
+import {FormProvider, useForm, Controller} from 'react-hook-form';
 import {
   Dimensions,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -11,19 +15,16 @@ import {
 } from 'react-native';
 // import DatePicker from 'react-native-modern-datepicker';
 import styled, {css, useTheme} from 'styled-components/native';
+
+import DateOrderItemContainer from './components/DateOrderItemContainer';
+import ModalCalendar from './ModalCalendar';
+import usePurchaseHistory from '../../../../../../biz/usePurchaseHistory';
+import {purchaseAtom} from '../../../../../../biz/usePurchaseHistory/store';
+import {CalendarIcon} from '../../../../../../components/Icon';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
-import {FormProvider, useForm, Controller} from 'react-hook-form';
-import usePurchaseHistory from '../../../../../../biz/usePurchaseHistory';
-import DateOrderItemContainer from './components/DateOrderItemContainer';
-import {purchaseAtom} from '../../../../../../biz/usePurchaseHistory/store';
-import {useAtom} from 'jotai';
-import Skeleton from '../../Skeleton';
 import {formattedWeekDate} from '../../../../../../utils/dateFormatter';
-import {CalendarIcon} from '../../../../../../components/Icon';
-import DatePicker from '@react-native-community/datetimepicker';
-
-import ModalCalendar from './ModalCalendar';
+import Skeleton from '../../Skeleton';
 
 export const PAGE_NAME = 'P_MAIN__EVERYTHING__HISTORY';
 
@@ -267,7 +268,8 @@ const Pages = () => {
           setModal: setShowDateModal,
 
           setSelected: setStartDate,
-        }}></ModalCalendar>
+        }}
+      />
       <ModalCalendar
         modalVisible={showDateModal2}
         setModalVisible={setShowDateModal2}
@@ -281,7 +283,8 @@ const Pages = () => {
           setModal: setShowDateModal2,
 
           setSelected: setEndDate,
-        }}></ModalCalendar>
+        }}
+      />
     </Container>
   );
 };

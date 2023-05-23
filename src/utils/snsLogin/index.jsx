@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 import {
   appleAuth,
   appleAuthAndroid,
@@ -8,6 +9,8 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {login} from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import {useNavigation} from '@react-navigation/native';
+import {el} from 'date-fns/locale';
+import jwtDecode from 'jwt-decode';
 import {Alert, Platform} from 'react-native';
 import {
   AccessToken,
@@ -17,14 +20,15 @@ import {
 
 import useAuth from '../../biz/useAuth';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
+
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
 
 import {PAGE_NAME as AppleLoginPageName} from '../../pages/Main/Login/AppleSignup';
-import jwtDecode from 'jwt-decode';
+
 import Config from 'react-native-config';
+
 import useUserInfo from '../../biz/useUserInfo/hook';
-import { el } from 'date-fns/locale';
 
 const nonce = uuid();
 
@@ -49,36 +53,37 @@ export default () => {
   const naverLogin = async () => {
     // console.log('로그인')
     try {
-      const {successResponse, failureResponse} = await NaverLogin.login(naverData());
-      
-    if (successResponse) {
-      // console.log(successResponse)
-      // Clipboard.setString(successResponse.accessToken)
-      // const data = await NaverLogin.getProfile(successResponse.accessToken);
-      // console.log(data);
-      await snsLogin(
-        {
-          snsAccessToken: successResponse.accessToken,
-          autoLogin: true,
-        },
-        'NAVER',
+      const {successResponse, failureResponse} = await NaverLogin.login(
+        naverData(),
       );
-      const userData = await userInfo();
-      navigation.reset({
-        index: 0,
-        routes: [
+
+      if (successResponse) {
+        // console.log(successResponse)
+        // Clipboard.setString(successResponse.accessToken)
+        // const data = await NaverLogin.getProfile(successResponse.accessToken);
+        // console.log(data);
+        await snsLogin(
           {
-            name: SCREEN_NAME,
+            snsAccessToken: successResponse.accessToken,
+            autoLogin: true,
           },
-        ],
-      });
-    }else{
-      console.log(failureResponse)
-    }
+          'NAVER',
+        );
+        const userData = await userInfo();
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SCREEN_NAME,
+            },
+          ],
+        });
+      } else {
+        console.log(failureResponse);
+      }
     } catch (error) {
-      Alert.alert("네이버 로그인 에러", error.toString());
+      Alert.alert('네이버 로그인 에러', error.toString());
     }
-    
   };
 
   const googleLogin = async () => {

@@ -8,11 +8,12 @@ import {ActivityIndicator, Alert} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import Toast from '~components/Toast';
 import Wrapper from '~components/Wrapper';
-import ListBox from '../../ListBox';
+
 import {
   useGetAlramSetting,
   useSetAlramSetting,
 } from '../../../../../../hook/useAlram';
+import ListBox from '../../ListBox';
 export const PAGE_NAME = 'P__MY_PAGE__NOTIFICATION_SETTING';
 const Pages = () => {
   const form = useForm();
@@ -32,7 +33,8 @@ const Pages = () => {
   return (
     <Wrapper paddingTop={24}>
       <FormProvider {...form}>
-        {alramData?.data && alramData?.data.length >0 &&
+        {alramData?.data &&
+          alramData?.data.length > 0 &&
           alramData?.data?.map((s, i) => {
             return (
               <ListBox
@@ -65,7 +67,7 @@ const Pages = () => {
             });
           }}
         /> */}
-      </FormProvider>    
+      </FormProvider>
     </Wrapper>
   );
 };

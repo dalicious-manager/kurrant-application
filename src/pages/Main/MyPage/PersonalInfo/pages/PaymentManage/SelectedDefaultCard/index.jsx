@@ -1,18 +1,19 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
+import {Alert} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-import useUserMe from '~biz/useUserMe';
 import Arrow from '~assets/icons/Group/arrowDown.svg';
+import useUserMe from '~biz/useUserMe';
 import BottomSheet from '~components/BottomSheet';
 import Button from '~components/Button';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
+
 import Skeleton from './Skeleton';
-import Toast from '../../../../../../../components/Toast';
-import {useAtom} from 'jotai';
 import {registCardAtom} from '../../../../../../../atoms/store';
-import {Alert} from 'react-native';
+import Toast from '../../../../../../../components/Toast';
 
 export const PAGE_NAME = 'P__MY_PAGE__SELECTED_DEFAULT_CARD';
 

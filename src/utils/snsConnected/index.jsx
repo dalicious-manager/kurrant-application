@@ -1,21 +1,21 @@
-import Clipboard from '@react-native-clipboard/clipboard';
 import {
   appleAuth,
   appleAuthAndroid,
 } from '@invertase/react-native-apple-authentication';
+import Clipboard from '@react-native-clipboard/clipboard';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {login, getProfile} from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
 import {Alert, Platform} from 'react-native';
-
-import useUserMe from '../../biz/useUserMe';
 import {
   AccessToken,
   AuthenticationToken,
   LoginManager,
 } from 'react-native-fbsdk-next';
 import {v4 as uuid} from 'uuid';
+
+import useUserMe from '../../biz/useUserMe';
 const nonce = uuid();
 
 const naverData = () => {

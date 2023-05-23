@@ -1,9 +1,15 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {ActivityIndicator, Alert, ScrollView} from 'react-native';
+import {
+  RESULTS,
+  checkNotifications,
+  openSettings,
+  requestNotifications,
+} from 'react-native-permissions';
 import styled, {useTheme} from 'styled-components/native';
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import useUserMe from '~biz/useUserMe';
 import {isSNSConnectAtom} from '~biz/useUserMe/store';
@@ -12,9 +18,6 @@ import Image from '~components/Image';
 import TextButton from '~components/TextButton';
 import Toast from '~components/Toast';
 import Typography from '~components/Typography';
-
-import {AvatarNon} from '~assets';
-
 import Wrapper from '~components/Wrapper';
 import {getStorage} from '~utils/asyncStorage';
 import snsConnected from '~utils/snsConnected';
@@ -24,22 +27,19 @@ import {PAGE_NAME as ConnectedSNSPageName} from './pages/ConnectedSNS';
 import {PAGE_NAME as EmailSettingPageName} from './pages/EmailSetting';
 import {PAGE_NAME as NotificationSettingPageName} from './pages/NotificationSetting';
 import {PAGE_NAME as PasswordSettingPageName} from './pages/PasswordSetting';
-import {SCREEN_NAME as PaymentsManageScreenName} from '../../../../screens/Main/PaymentsManage';
 import {PAGE_NAME as PhoneNumberSettingPageName} from './pages/PhoneNumberSetting';
-import {PAGE_NAME as NameSettingPageName} from '../../Login/AppleSignup';
-
-import {isUserInfoAtom} from '../../../../biz/useUserInfo/store';
-import BottomModal from '../../../../components/BottomModal';
-import {setStorage} from '../../../../utils/asyncStorage';
-import {PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/DetailPage';
-import {PAGE_NAME as CreateGroupPageName} from '../../../Group/GroupCreate';
-
-import {PAGE_NAME as LoginPageName} from '../../../Main/Login/Login';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import useAuth from '../../../../biz/useAuth';
 import useGroupSpots from '../../../../biz/useGroupSpots/hook';
-import { RESULTS, checkNotifications, openSettings, requestNotifications } from 'react-native-permissions';
+import {isUserInfoAtom} from '../../../../biz/useUserInfo/store';
+import BottomModal from '../../../../components/BottomModal';
+import {SCREEN_NAME as PaymentsManageScreenName} from '../../../../screens/Main/PaymentsManage';
+import {setStorage} from '../../../../utils/asyncStorage';
+import {PAGE_NAME as CreateGroupPageName} from '../../../Group/GroupCreate';
+import {PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/DetailPage';
+import {PAGE_NAME as LoginPageName} from '../../../Main/Login/Login';
+import {PAGE_NAME as NameSettingPageName} from '../../Login/AppleSignup';
+
+import {AvatarNon} from '~assets';
 
 export const PAGE_NAME = 'P__MY_PAGE__PERSONAL_INFO';
 
@@ -122,7 +122,7 @@ const Pages = ({route}) => {
                 });
               });
             } catch (error) {
-              Alert.alert("회원탈퇴",error.toString().replace('error: '))
+              Alert.alert('회원탈퇴', error.toString().replace('error: '));
             }
           },
         },
@@ -299,39 +299,51 @@ const Pages = ({route}) => {
             }}
           />
 
-          <ListBox title="알림 설정" onPressEvent={async()=>{
-            await checkNotifications().then(async({status,settings})=>{
-              if(status !== RESULTS.GRANTED){
-                if(status === RESULTS.BLOCKED || status === RESULTS.DENIED){
-                  Alert.alert("알림 권한 설정", "알림을 설정 하기 위해서는 권한 설정이 필요합니다.",[
-                    {
-                      text: '확인',
-                      onPress: () => {
-                        openSettings().catch(()=>console.warn("알림설정 화면 이동 오류"))
-                      },
-                      style: 'cancel',
-                    },
-                    {
-                      text: '취소',
-                      onPress: () => {},
-                      style: 'cancel',
-                    },
-                  ])
-                }else{
-                  await requestNotifications(['alert','badge', 'sound','providesAppSettings']).then(({status, settings}) => {
-                    if (status === RESULTS.BLOCKED) {
-                      console.log(settings,"notificationCenter")
-                      // openSettings().catch(() => console.warn('cannot open settings'));
-                    }
-                  });
+          <ListBox
+            title="알림 설정"
+            onPressEvent={async () => {
+              await checkNotifications().then(async ({status, settings}) => {
+                if (status !== RESULTS.GRANTED) {
+                  if (status === RESULTS.BLOCKED || status === RESULTS.DENIED) {
+                    Alert.alert(
+                      '알림 권한 설정',
+                      '알림을 설정 하기 위해서는 권한 설정이 필요합니다.',
+                      [
+                        {
+                          text: '확인',
+                          onPress: () => {
+                            openSettings().catch(() =>
+                              console.warn('알림설정 화면 이동 오류'),
+                            );
+                          },
+                          style: 'cancel',
+                        },
+                        {
+                          text: '취소',
+                          onPress: () => {},
+                          style: 'cancel',
+                        },
+                      ],
+                    );
+                  } else {
+                    await requestNotifications([
+                      'alert',
+                      'badge',
+                      'sound',
+                      'providesAppSettings',
+                    ]).then(({status, settings}) => {
+                      if (status === RESULTS.BLOCKED) {
+                        console.log(settings, 'notificationCenter');
+                        // openSettings().catch(() => console.warn('cannot open settings'));
+                      }
+                    });
+                  }
+                } else {
+                  navigation.navigate(NotificationSettingPageName);
                 }
-              }else{
-                navigation.navigate(NotificationSettingPageName);
-              }
-            })
-            
-           
-          }}  />
+              });
+            }}
+          />
           <Line />
           <TextButtonBox>
             <TextButton
@@ -342,15 +354,15 @@ const Pages = ({route}) => {
                 try {
                   const token = await getStorage('token');
                   const lastLogin = await getStorage('lastLogin');
-                  console.log(lastLogin)
+                  console.log(lastLogin);
                   const getToken = JSON.parse(token);
                   await logout({
                     accessToken: getToken?.accessToken,
                     refreshToken: getToken?.refreshToken,
                   });
-                  await AsyncStorage.removeItem('token')
-                  await AsyncStorage.removeItem('isLogin')
-                  await AsyncStorage.removeItem('spotStatus')
+                  await AsyncStorage.removeItem('token');
+                  await AsyncStorage.removeItem('isLogin');
+                  await AsyncStorage.removeItem('spotStatus');
                   navigation.reset({
                     index: 0,
                     routes: [

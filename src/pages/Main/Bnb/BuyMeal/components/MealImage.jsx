@@ -1,10 +1,11 @@
 import {ImageBackground, View} from 'react-native';
-import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
-import AIicon from '../../../../../assets/icons/BuyMeal/ai.svg';
-import {AIbackground} from '../../../../../assets';
-import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import FastImage from 'react-native-fast-image';
+import styled from 'styled-components';
+
+import {AIbackground} from '../../../../../assets';
+import AIicon from '../../../../../assets/icons/BuyMeal/ai.svg';
+import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
+import Typography from '../../../../../components/Typography';
 const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
   return (
     <>

@@ -2,9 +2,10 @@ import {useNavigation, StackActions} from '@react-navigation/native';
 import React from 'react';
 import {ScrollView} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
+
+import {PAGE_NAME as MembershipTerminateComplatePageName} from './MembershipTerminateComplate';
 import useMembership from '../../../biz/useMembership';
 import useUserInfo from '../../../biz/useUserInfo';
-
 import Button from '../../../components/Button';
 import {
   CommentsIcon,
@@ -18,7 +19,6 @@ import Wrapper from '../../../components/Wrapper';
 import {formattedSameDate} from '../../../utils/dateFormatter';
 import withCommas from '../../../utils/withCommas';
 import SubtractBox from '../MembershipJoin/SubtractBox';
-import {PAGE_NAME as MembershipTerminateComplatePageName} from './MembershipTerminateComplate';
 
 export const PAGE_NAME = 'P__MEMBERSHIP__TERMINATE';
 

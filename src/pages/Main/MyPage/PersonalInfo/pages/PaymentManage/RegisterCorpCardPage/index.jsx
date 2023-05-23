@@ -3,22 +3,21 @@ import cardValidator from 'card-validator';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Platform, ScrollView, NativeModules, Dimensions} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import styled, {useTheme} from 'styled-components/native';
-
 import Button from '~components/Button';
 import RefTextInput from '~components/RefTextInput';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import useKeyboardEvent from '~hook/useKeyboardEvent';
 
-import {PAGE_NAME as PayCheckPasswordPageName} from '../../PayCheckPassword';
 import useUserMe from '../../../../../../../biz/useUserMe';
 import {
   checkCorporateRegiNumber,
   isValidCardNumber,
 } from '../../../../../../../utils/cardFormatter';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {PAGE_NAME as PayCheckPasswordPageName} from '../../PayCheckPassword';
 const screenHeight = Dimensions.get('window').height;
 
 export const PAGE_NAME = 'P__MY_PAGE__PAYMENT_MANAGE__REGISTER_CORP_CARD';

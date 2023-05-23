@@ -1,9 +1,22 @@
+/* eslint-disable no-dupe-keys */
+/* eslint-disable import/order */
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useAtom} from 'jotai';
 import React from 'react';
+import {useEffect} from 'react';
 import {Alert, View} from 'react-native';
+import {
+  RESULTS,
+  checkNotifications,
+  openSettings,
+  requestNotifications,
+} from 'react-native-permissions';
 import styled from 'styled-components';
 
+import AppleSignup, {
+  PAGE_NAME as AppleSignupPageName,
+} from '~pages/Main/Login/AppleSignup';
 import EmailLoginModal, {
   PAGE_NAME as EmailLoginModalModalPageName,
 } from '~pages/Main/Login/EmailLogin';
@@ -26,9 +39,6 @@ import LoginMainModal, {
   PAGE_NAME as LoginMainModalPageName,
 } from '~pages/Main/Login/Login';
 import SignUp, {PAGE_NAME as SignUpPageName} from '~pages/Main/Login/SignUp';
-import AppleSignup, {
-  PAGE_NAME as AppleSignupPageName,
-} from '~pages/Main/Login/AppleSignup';
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
 } from '~pages/Main/Login/SignUp/SignUpComplate';
@@ -36,10 +46,6 @@ import FAQ, {PAGE_NAME as FAQPageName} from '~pages/Main/MyPage/FAQ';
 import FAQListPage, {
   PAGE_NAME as FAQListPageName,
 } from '~pages/Main/MyPage/FAQ/FAQListPage';
-import {
-  FAQListDetailPage,
-  FAQListDetailPageName,
-} from '../../pages/Main/MyPage/FAQ/FAQListDetailPage';
 import PersonalInfo, {
   PAGE_NAME as PersonalInfoPageName,
 } from '~pages/Main/MyPage/PersonalInfo';
@@ -76,9 +82,6 @@ import MembershipInfo, {
 import MembershipUsagedetails, {
   PAGE_NAME as MembershipUsagedetailsPageName,
 } from '~pages/Membership/MembershipInfo/MembershipUsageDetails';
-import MemebershipPaymentManage, {
-  PAGE_NAME as MemebershipPaymentManagePageName,
-} from '~pages/Membership/MembershipJoin/MemebershipPaymentManage';
 import MembershipIntro, {
   PAGE_NAME as MembershipIntroPageName,
 } from '~pages/Membership/MembershipIntro';
@@ -91,6 +94,9 @@ import MembershipJoinComplate, {
 import MembershipJoinPayments, {
   PAGE_NAME as MembershipJoinPaymentsPageName,
 } from '~pages/Membership/MembershipJoin/MembershipJoinPayments';
+import MemebershipPaymentManage, {
+  PAGE_NAME as MemebershipPaymentManagePageName,
+} from '~pages/Membership/MembershipJoin/MemebershipPaymentManage';
 import MembershipTerminate, {
   PAGE_NAME as MembershipTerminatePageName,
 } from '~pages/Membership/MembershipTerminate';
@@ -98,49 +104,41 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
-import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
-import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
-import PayCheckPassword, {
-  PAGE_NAME as PayCheckPasswordPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
-import PayEmailSetting, {
-  PAGE_NAME as PayEmailSettingPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayEmailSetting';
-import PayCheckPasswordPay, {
-  PAGE_NAME as PayCheckPasswordPayPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordPay';
-import PayCheckPasswordCheck, {
-  PAGE_NAME as PayCheckPasswordCheckPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordCheck';
-import RePayCheckEmail, {
-  PAGE_NAME as RePayCheckEmailPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordEmail';
-import RePayCheckPassword, {
-  PAGE_NAME as RePayCheckPasswordPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPassword';
-import RePayCheckPasswordCheck, {
-  PAGE_NAME as RePayCheckPasswordCheckPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordCheck';
-import PayCheckEmail, {
-  PAGE_NAME as PayCheckEmailPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordEmail';
-import RegisterCard, {
-  SCREEN_NAME as RegisterCardScreenName,
-} from './RegisterCard';
+import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 import PaymentsManage, {
   SCREEN_NAME as PaymentsManageScreenName,
 } from './PaymentsManage';
 import PurchaseHistory, {
   SCREEN_NAME as PurchaseHistoryScreenName,
 } from './PurchaseHistory';
-
+import RegisterCard, {
+  SCREEN_NAME as RegisterCardScreenName,
+} from './RegisterCard';
+import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+import CreateReviewPage1, {
+  SCREEN_NAME as CreateReviewPage1ScreenName,
+} from './Review/CreateReview/Page1';
+import CreateReviewPage2, {
+  SCREEN_NAME as CreateReviewPage2ScreenName,
+  SCREEN_NAME2 as EditReviewPage2ScreenName,
+} from './Review/CreateReview/Page2';
+import ReportReview, {
+  PAGE_NAME as ReportReviewPageName,
+} from './Review/ReportReview';
+import {isLoginLoadingAtom} from '../../biz/useAuth/store';
+import useBoard from '../../biz/useBoard';
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
 import ShoppingCart from '../../components/BasketButton';
 import CloseIcon from '../../components/CloseButton';
-
+import CloseButton from '../../components/CloseButton';
+import {
+  DeleteIcon,
+  NotifySettingIcon,
+  SettingIcon,
+} from '../../components/Icon';
 import GroupCreateApartmnet, {
   PAGE_NAME as GroupCreateApartmentPageName,
 } from '../../pages/Group/GroupApartment';
@@ -240,9 +238,6 @@ import GroupManageDetail, {
 import BuyMeal, {
   PAGE_NAME as BuyMealPageName,
 } from '../../pages/Main/Bnb/BuyMeal/Main';
-import NotificationCenter, {
-  PAGE_NAME as NotificationCenterName,
-} from '../../pages/NotificationCenter';
 import MealCart, {
   PAGE_NAME as MealCartPageName,
 } from '../../pages/Main/Bnb/MealCart/Main';
@@ -252,61 +247,68 @@ import MealDetail, {
 import MealDetailInformation, {
   PAGE_NAME as MealInformationPageName,
 } from '../../pages/Main/Bnb/MealDetail/Page';
+import DefaultPaymentManage, {
+  PAGE_NAME as DefaultPaymentManagePageName,
+} from '../../pages/Main/Bnb/Payment/DefaultPaymentManage';
 import Payment, {
   PAGE_NAME as PaymentPageName,
 } from '../../pages/Main/Bnb/Payment/Main';
 import MealPayment, {
   PAGE_NAME as MealPaymentPageName,
 } from '../../pages/Main/Bnb/Payment/MealPayment';
-import DefaultPaymentManage, {
-  PAGE_NAME as DefaultPaymentManagePageName,
-} from '../../pages/Main/Bnb/Payment/DefaultPaymentManage';
-import {
-  PurchaseDetailPage,
-  PurchaseDetailPageName,
-} from '../../pages/Main/MyPage/PurchaseHistory/Detail';
-import {SCREEN_NAME} from '../Main/Bnb';
-import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
-import NoticeDetail, {
-  PAGE_NAME as NoticeDetailPageName,
-} from '../../pages/Main/MyPage/Notice/NoticeDetail';
-import {
-  DeleteIcon,
-  NotifySettingIcon,
-  SettingIcon,
-} from '../../components/Icon';
-import {useAtom} from 'jotai';
-import useBoard from '../../biz/useBoard';
-import {useEffect} from 'react';
-import {getStorage} from '../../utils/asyncStorage';
 import CompanyInfo, {
   PAGE_NAME as CompanyInfoPageName,
 } from '../../pages/Main/MyPage/CompanyInfo';
 import Credit, {
   PAGE_NAME as CreditPageName,
 } from '../../pages/Main/MyPage/Credit';
-import {PointMainPage, PointMainPageName} from '../../pages/Main/MyPage/Point';
-import CloseButton from '../../components/CloseButton';
 
 // 리뷰 및 재신 개인
-import CreateReviewPage1, {
-  SCREEN_NAME as CreateReviewPage1ScreenName,
-} from './Review/CreateReview/Page1';
-import CreateReviewPage2, {
-  SCREEN_NAME as CreateReviewPage2ScreenName,
-  SCREEN_NAME2 as EditReviewPage2ScreenName,
-} from './Review/CreateReview/Page2';
-
-import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
-
-import ReportReview, {
-  PAGE_NAME as ReportReviewPageName,
-} from './Review/ReportReview';
-
+import {
+  FAQListDetailPage,
+  FAQListDetailPageName,
+} from '../../pages/Main/MyPage/FAQ/FAQListDetailPage';
+import NoticeDetail, {
+  PAGE_NAME as NoticeDetailPageName,
+} from '../../pages/Main/MyPage/Notice/NoticeDetail';
+import PayCheckPassword, {
+  PAGE_NAME as PayCheckPasswordPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
+import PayCheckPasswordCheck, {
+  PAGE_NAME as PayCheckPasswordCheckPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordCheck';
+import PayCheckEmail, {
+  PAGE_NAME as PayCheckEmailPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordEmail';
+import PayCheckPasswordPay, {
+  PAGE_NAME as PayCheckPasswordPayPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordPay';
+import PayEmailSetting, {
+  PAGE_NAME as PayEmailSettingPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayEmailSetting';
+import RePayCheckPassword, {
+  PAGE_NAME as RePayCheckPasswordPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPassword';
+import RePayCheckPasswordCheck, {
+  PAGE_NAME as RePayCheckPasswordCheckPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordCheck';
+import RePayCheckEmail, {
+  PAGE_NAME as RePayCheckEmailPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordEmail';
+import {PointMainPage, PointMainPageName} from '../../pages/Main/MyPage/Point';
+import {
+  PurchaseDetailPage,
+  PurchaseDetailPageName,
+} from '../../pages/Main/MyPage/PurchaseHistory/Detail';
 import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
-import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
-import { RESULTS, checkNotifications, openSettings, requestNotifications } from 'react-native-permissions';
+import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
+import NotificationCenter, {
+  PAGE_NAME as NotificationCenterName,
+} from '../../pages/NotificationCenter';
+import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
+import {getStorage} from '../../utils/asyncStorage';
+import {SCREEN_NAME} from '../Main/Bnb';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -316,9 +318,7 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-    <MainRoot.Navigator 
-      initialRouteName={SplashPageName}
-    >
+    <MainRoot.Navigator initialRouteName={SplashPageName}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -790,38 +790,53 @@ const Screen = () => {
                 </DeleteTxt>
                 <DeleteTxt>
                   <NotifySettingIcon
-                    onPressEvent={async() =>{
-                      await checkNotifications().then(async({status,settings})=>{
-                        if(status !== RESULTS.GRANTED){
-                          if(status === RESULTS.BLOCKED || status === RESULTS.DENIED){
-                            Alert.alert("알림 권한 설정", "알림을 설정 하기 위해서는 권한 설정이 필요합니다.",[
-                              {
-                                text: '확인',
-                                onPress: () => {
-                                  openSettings().catch(()=>console.warn("알림설정 화면 이동 오류"))
-                                },
-                                style: 'cancel',
-                              },
-                              {
-                                text: '취소',
-                                onPress: () => {},
-                                style: 'cancel',
-                              },
-                            ])
-                          }else{
-                            await requestNotifications(['alert','badge', 'sound','providesAppSettings']).then(({status, settings}) => {
-                              if (status === RESULTS.BLOCKED) {
-                                console.log(settings,"notificationCenter")
-                                // openSettings().catch(() => console.warn('cannot open settings'));
-                              }
-                            });
+                    onPressEvent={async () => {
+                      await checkNotifications().then(
+                        async ({status, settings}) => {
+                          if (status !== RESULTS.GRANTED) {
+                            if (
+                              status === RESULTS.BLOCKED ||
+                              status === RESULTS.DENIED
+                            ) {
+                              Alert.alert(
+                                '알림 권한 설정',
+                                '알림을 설정 하기 위해서는 권한 설정이 필요합니다.',
+                                [
+                                  {
+                                    text: '확인',
+                                    onPress: () => {
+                                      openSettings().catch(() =>
+                                        console.warn('알림설정 화면 이동 오류'),
+                                      );
+                                    },
+                                    style: 'cancel',
+                                  },
+                                  {
+                                    text: '취소',
+                                    onPress: () => {},
+                                    style: 'cancel',
+                                  },
+                                ],
+                              );
+                            } else {
+                              await requestNotifications([
+                                'alert',
+                                'badge',
+                                'sound',
+                                'providesAppSettings',
+                              ]).then(({status, settings}) => {
+                                if (status === RESULTS.BLOCKED) {
+                                  console.log(settings, 'notificationCenter');
+                                  // openSettings().catch(() => console.warn('cannot open settings'));
+                                }
+                              });
+                            }
+                          } else {
+                            navigation.navigate(NotificationSettingPageName);
                           }
-                        }else{
-                          navigation.navigate(NotificationSettingPageName);
-                        }
-                      })
-                    }
-                    }
+                        },
+                      );
+                    }}
                   />
                 </DeleteTxt>
               </>

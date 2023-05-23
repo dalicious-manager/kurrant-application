@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react';
-
-import Typography from '../../../../components/Typography';
-
 import styled from 'styled-components/native';
+import Typography from '~components/Typography';
 
 export const PAGE_NAME = 'P__MY_PAGE__COMPANYINFO';
 

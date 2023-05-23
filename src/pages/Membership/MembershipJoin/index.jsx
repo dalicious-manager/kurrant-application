@@ -3,8 +3,11 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import useGroupSpots from '../../../biz/useGroupSpots';
 
+import MembershipButton from './MembershipButton';
+import {PAGE_NAME as MembershipJoinPaymentsPageName} from './MembershipJoinPayments';
+import SubtractBox from './SubtractBox';
+import useGroupSpots from '../../../biz/useGroupSpots';
 import useMembership from '../../../biz/useMembership';
 import useUserInfo from '../../../biz/useUserInfo';
 import useUserMe from '../../../biz/useUserMe';
@@ -19,9 +22,6 @@ import {
 } from '../../../components/Icon';
 import Typography from '../../../components/Typography';
 import Wrapper from '../../../components/Wrapper';
-import MembershipButton from './MembershipButton';
-import {PAGE_NAME as MembershipJoinPaymentsPageName} from './MembershipJoinPayments';
-import SubtractBox from './SubtractBox';
 
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN';
 const Pages = () => {

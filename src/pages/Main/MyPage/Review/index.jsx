@@ -1,20 +1,17 @@
+import {useAtom} from 'jotai';
 import React, {useEffect, useState} from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components/native';
-import Typography from '../../../../components/Typography';
-
-// import QuestionCircleMonoIcon from '../assets/icons/QuestionCircleMono.svg';
-import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
-import Card from './Card';
-import NoOrder from '../NoOrder';
-
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-
-import useReviewWait from '../../../../biz/useReview/useReviewWait';
+import Typography from '~components/Typography';
 
 import Banner from './Banner';
-import {useAtom} from 'jotai';
+import Card from './Card';
+import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
+import useReviewWait from '../../../../biz/useReview/useReviewWait';
 import {modalStatusAtom} from '../../../../biz/useReview/useReviewWait/store';
+import NoOrder from '../NoOrder';
+
+// import QuestionCircleMonoIcon from '../assets/icons/QuestionCircleMono.svg';
 
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 

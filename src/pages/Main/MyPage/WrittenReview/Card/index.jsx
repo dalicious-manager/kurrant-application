@@ -1,31 +1,31 @@
+/* eslint-disable import/order */
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
-import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
-import StarRating from '../../../../../components/StarRating/StarRating';
+import {css} from 'styled-components/native';
 
-import AdminOrMakersReview from './AdminOrMakersReview';
-import {useNavigation} from '@react-navigation/native';
-import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
-
-import OnlyForMakers from './OnlyForMakers';
-// import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
-
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-import {getStorage} from '../../../../../utils/asyncStorage';
+import ArrowRightGrey4 from '~assets/icons/Arrow/ArrowRightGrey4.svg';
 import {
   deleteReview,
   deleteReview2,
-} from '../../../../../biz/useReview/useWrittenReview/Fetch';
+} from '~biz/useReview/useWrittenReview/Fetch';
+import useWrittenReview from '~biz/useReview/useWrittenReview/hook';
+import {SkinnyArrowDown} from '~components/Icon';
+import StarRating from '~components/StarRating/StarRating';
+import Typography from '~components/Typography';
+import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
+import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
+import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '~screens/Main/Review/CreateReview/Page2';
+// import {deleteReview} from '~biz/useReview/useWrittenReview/Fetch';
 
+import {getStorage} from '~utils/asyncStorage';
+import {changeSeperator} from '~utils/dateFormatter';
+
+import AdminOrMakersReview from './AdminOrMakersReview';
 import ImageModal from './ImageModal/ImageModal';
-import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
-import {changeSeperator} from '../../../../../utils/dateFormatter';
-import {SkinnyArrowDown} from '../../../../../components/Icon';
-import {css} from 'styled-components/native';
+import OnlyForMakers from './OnlyForMakers';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;

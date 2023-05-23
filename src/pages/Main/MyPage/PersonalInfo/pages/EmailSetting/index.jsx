@@ -5,6 +5,7 @@ import {Platform, Keyboard, NativeModules, View, Alert} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
+import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
 import useAuth from '../../../../../../biz/useAuth';
 import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
@@ -13,7 +14,6 @@ import RefTextInput from '../../../../../../components/RefTextInput';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
-import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
 const {StatusBarManager} = NativeModules;
 
 export const PAGE_NAME = 'P__MY_PAGE__EMAIL_SETTING';
@@ -137,7 +137,7 @@ const Pages = () => {
                         required: '필수 입력 항목 입니다.',
                         pattern: {
                           value:
-                          /^(([^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                            /^(([^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                           message: '올바른 아이디를 입력해주세요.',
                         },
                       }}

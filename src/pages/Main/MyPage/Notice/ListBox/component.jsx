@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import Typography from '~components/Typography';
 

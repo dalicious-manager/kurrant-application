@@ -8,16 +8,16 @@ import {
   Pressable,
 } from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
+
 import {registCardAtom} from '../../../../../../atoms/store';
+import useOrderMeal from '../../../../../../biz/useOrderMeal';
 import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
 import Typography from '../../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
-
-import {PAGE_NAME as RePayCheckPasswordEmailPageName} from '../RePayCheckPasswordEmail';
 import {PurchaseDetailPageName} from '../../../PurchaseHistory/Detail';
-import useOrderMeal from '../../../../../../biz/useOrderMeal';
+import {PAGE_NAME as RePayCheckPasswordEmailPageName} from '../RePayCheckPasswordEmail';
 export const PAGE_NAME = 'P__MY_PAGE__PAYMENT_MANAGE__PAY_CHECK_PAY';
 
 const {StatusBarManager} = NativeModules;
@@ -111,12 +111,12 @@ export default function Password({route}) {
             inputRef.current.blur();
             inputRef.current.focus();
           }}>
-          <PasswordText active={state?.length > 0}></PasswordText>
-          <PasswordText active={state?.length > 1}></PasswordText>
-          <PasswordText active={state?.length > 2}></PasswordText>
-          <PasswordText active={state?.length > 3}></PasswordText>
-          <PasswordText active={state?.length > 4}></PasswordText>
-          <PasswordText active={state?.length > 5}></PasswordText>
+          <PasswordText active={state?.length > 0} />
+          <PasswordText active={state?.length > 1} />
+          <PasswordText active={state?.length > 2} />
+          <PasswordText active={state?.length > 3} />
+          <PasswordText active={state?.length > 4} />
+          <PasswordText active={state?.length > 5} />
         </PasswordBox>
         <PasswordInput
           value={state}

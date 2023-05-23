@@ -1,8 +1,7 @@
 import React from 'react';
-
 import styled from 'styled-components';
-import {GreyLockerIcon} from '../../../../../../components/Icon';
 
+import {GreyLockerIcon} from '../../../../../../components/Icon';
 import Typography from '../../../../../../components/Typography';
 
 const Component = () => {

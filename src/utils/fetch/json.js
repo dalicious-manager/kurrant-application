@@ -5,7 +5,6 @@ import {Alert} from 'react-native';
 import Config from 'react-native-config';
 
 import mSleep from '../../helpers/mSleep';
-
 import {getStorage, setStorage} from '../asyncStorage';
 const RESPONSE_SLEEP = 300;
 

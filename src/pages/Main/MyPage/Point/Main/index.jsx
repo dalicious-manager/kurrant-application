@@ -1,16 +1,17 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Pressable, FlatList, Alert} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
-import Button from './components/Button';
 import Toast from '~components/Toast';
-import TextLable from '../../../../../components/TextButton';
+
+import Button from './components/Button';
 import ArrowRight from '../../../../../assets/icons/Arrow/arrowRight.svg';
-import {useGetPointList, useGetPointList2} from '../../../../../hook/usePoint';
-import withCommas from '../../../../../utils/withCommas';
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {useNavigation} from '@react-navigation/native';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+import TextLable from '../../../../../components/TextButton';
+import Typography from '../../../../../components/Typography';
+import {useGetPointList, useGetPointList2} from '../../../../../hook/usePoint';
+import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as purchaseHistory} from '../../PurchaseHistory/Detail/Main';
 
 export const PAGE_NAME = 'P__MY_PAGE__POINT';
@@ -151,12 +152,11 @@ const Pages = () => {
                             <TitleText>
                               파운더스 포인트가 적립되었어요
                             </TitleText>
-                          ) :el.pointStatus === 7 ? (
+                          ) : el.pointStatus === 7 ? (
                             <TitleText>
                               적립되지 않은 파운더스 포인트가 적립되었어요
                             </TitleText>
-                          ) :
-                          (
+                          ) : (
                             <TitleText numberOfLines={2} ellipsizeMode="tail">
                               [{el.makersName}] {el.name}
                             </TitleText>

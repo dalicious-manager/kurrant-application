@@ -1,9 +1,9 @@
+/* eslint-disable import/order */
 import {Slider} from '@miblanchard/react-native-slider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useRef, useState, useEffect, useCallback} from 'react';
-import Animateds, {useEvent, useHandler} from 'react-native-reanimated';
-
 import {
   ScrollView,
   View,
@@ -14,38 +14,42 @@ import {
   Alert,
   Animated,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import PagerView from 'react-native-pager-view';
+import Animateds, {useEvent, useHandler} from 'react-native-reanimated';
 import styled, {css} from 'styled-components/native';
+
+import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
+import useAuth from '../../../../../biz/useAuth';
+import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
+import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
+import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
+import useUserInfo from '../../../../../biz/useUserInfo/hook';
 import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/Balloon';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
-import CalendarButton from '../../../../../components/CalendarButton';
 import BuyCalendar from '../../../../../components/BuyCalendar';
+import CalendarButton from '../../../../../components/CalendarButton';
 import Label from '../../../../../components/Label';
 import Typography from '../../../../../components/Typography';
+import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {
+  useAddShoppingBasket,
+  useGetShoppingBasket,
+} from '../../../../../hook/useShoppingBasket';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
-import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import useAuth from '../../../../../biz/useAuth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 // import TossPayment from 'react-native-toss-payments';
-import LinearGradient from 'react-native-linear-gradient';
+
 import MealImage from '../components/MealImage';
 import Modal from '../components/Modal';
-
-import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
-import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
-import {weekAtom} from '../../../../../biz/useBanner/store';
-import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
-import { useGetDailyfood } from '../../../../../hook/useDailyfood';
-import { useGetOrderMeal } from '../../../../../hook/useOrder';
-import useUserInfo from '../../../../../biz/useUserInfo/hook';
-import { useAddShoppingBasket, useGetShoppingBasket } from '../../../../../hook/useShoppingBasket';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -74,7 +78,6 @@ const Pages = ({route}) => {
   const [scrollDir, setScrollDir] = useState(true);
   const [hideModal, setHideModal] = useState(true);
 
-  
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -90,16 +93,16 @@ const Pages = ({route}) => {
     setDiningTypes,
     isDailyFoodLoading,
   } = useFoodDaily();
-  
+
   // const {
   //   // addMeal,
   //   // isLoadMeal,
   //   // isAddMeal,
   // } = useShoppingBasket();
-  const {data :isLoadMeal} = useGetShoppingBasket();
-  const {mutateAsync: addMeal,isLoading:isAddMeal} = useAddShoppingBasket();
+  const {data: isLoadMeal} = useGetShoppingBasket();
+  const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-  const {isUserInfo}=useUserInfo();
+  const {isUserInfo} = useUserInfo();
   const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
   const handlePress = anim => {
@@ -123,7 +126,7 @@ const Pages = ({route}) => {
   useEffect(() => {
     if (params) {
       if (params.date) {
-        setIsMount(true)
+        setIsMount(true);
         setDate(params.date);
         dailyfoodRefetch();
       } else {
@@ -131,7 +134,7 @@ const Pages = ({route}) => {
       }
     }
   }, [params]);
-  
+
   // 첫 렌더링때만 dailyFood 불러오게 하기
 
   // isMount처리가 없을 떄: 오늘 날짜, 선택된 날짜꺼 까지 둘다 받아버림
@@ -147,11 +150,10 @@ const Pages = ({route}) => {
   const [supportPrice, setSupportPrice] = useState(0);
   const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
 
-  
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
-    if (!!parseInt(supportPrice)) {
+    if (parseInt(supportPrice)) {
       // 숫자이면
 
       if (parseInt(supportPrice) > 0) {
@@ -180,7 +182,12 @@ const Pages = ({route}) => {
   const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.spotId;
   // const spotId = 1;
   const [chk, setChk] = useState(0);
-  const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(spotId,params?.date ? params.date:date);
+  const {
+    data: dailyfoodData,
+    refetch: dailyfoodRefetch,
+    isLoading: dailyLoading,
+    isFetching: dailyFetching,
+  } = useGetDailyfood(spotId, params?.date ? params.date : date);
   const onPageScroll2 = e => {
     const {position} = e.nativeEvent;
     setChk(position);
@@ -355,7 +362,8 @@ const Pages = ({route}) => {
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
     if (
-      isDiningTypes?.length > 0 && isDiningTypes[0] &&
+      isDiningTypes?.length > 0 &&
+      isDiningTypes[0] &&
       ((isMorningFood.length === 0 && position === 0) ||
         (isLunchFood.length === 0 && position === 1) ||
         (isDinnerFood.length === 0 && position === 2))
@@ -481,12 +489,12 @@ const Pages = ({route}) => {
 
   const dayPress = async selectedDate => {
     try {
-      if(params?.date){
+      if (params?.date) {
         navigation.setParams({
-          date:null
-        })
+          date: null,
+        });
       }
-      
+
       setDate(selectedDate);
       // dailyFood(spotId,selectedDate);
     } catch (err) {
@@ -501,7 +509,7 @@ const Pages = ({route}) => {
     // console.log(modalVisible,
     //     modalVisible2,
     //     modalVisible3,)
-    
+
     if (diningType === 1) {
       return setModalVisible(true);
     }
@@ -554,36 +562,39 @@ const Pages = ({route}) => {
 
     if (isMount) {
       // loadDailyFood();
-      
+
       dailyfoodRefetch();
-      
     }
   }, [date, isMount]);
   useEffect(() => {
     let price = null;
     if (dailyfoodData?.data.supportPrice) {
-      console.log(dailyfoodData?.data.supportPrice)
+      console.log(dailyfoodData?.data.supportPrice);
       switch (sliderValue) {
         case 0:
-          price = dailyfoodData?.data.supportPrice['morningSupportPrice'];
+          price = dailyfoodData?.data.supportPrice.morningSupportPrice;
           break;
         case 1:
-          price = dailyfoodData?.data.supportPrice['lunchSupportPrice'];
+          price = dailyfoodData?.data.supportPrice.lunchSupportPrice;
           break;
         case 2:
-          price = dailyfoodData?.data.supportPrice['dinnerSupportPrice'];
+          price = dailyfoodData?.data.supportPrice.dinnerSupportPrice;
           break;
       }
 
       setSupportPrice(price);
     }
-  }, [sliderValue, dailyfoodData?.data,date]);
-  useEffect(()=>{
-    setMorning(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 1));
-    setLunch(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 2));
-    setDinner(dailyfoodData?.data.dailyFoodDtos.filter((x)=>x.diningType === 3));
+  }, [sliderValue, dailyfoodData?.data, date]);
+  useEffect(() => {
+    setMorning(
+      dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 1),
+    );
+    setLunch(dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 2));
+    setDinner(
+      dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 3),
+    );
     setDiningTypes(dailyfoodData?.data.diningTypes);
-  },[dailyfoodData?.data])
+  }, [dailyfoodData?.data]);
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
     const duplication = isLoadMeal?.data?.spotCarts
@@ -815,11 +826,11 @@ const Pages = ({route}) => {
                     </LabelWrap>
                   )}
                   {m.vegan && m.vegan !== null && (
-                  <LabelWrap>
+                    <LabelWrap>
                       {m.status === 2 || m.status === 6 ? (
                         <Label label={`${m.vegan}`} type={'soldOut'} />
-                        ) : (
-                        <Label label={`${m.vegan}`} type={'vegan'}/>                        
+                      ) : (
+                        <Label label={`${m.vegan}`} type={'vegan'} />
                       )}
                     </LabelWrap>
                   )}
@@ -859,7 +870,7 @@ const Pages = ({route}) => {
             onPressEvent1={closeModal}
             onPressEvent2={() => addToCart(selectFood.id)}
           />
-          <View style={{height: 120}}></View>
+          <View style={{height: 120}} />
         </FoodContainer>
       </ScrollView>
     );
@@ -955,10 +966,12 @@ const Pages = ({route}) => {
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
           </View>
         )}
-        {(dailyFetching) ? <LoadingPage>
+        {dailyFetching ? (
+          <LoadingPage>
             <ActivityIndicator size={'large'} />
-          </LoadingPage> :
-          (<Pager
+          </LoadingPage>
+        ) : (
+          <Pager
             ref={diningRef}
             overdrag={true}
             initialPage={nowPage}
@@ -972,8 +985,8 @@ const Pages = ({route}) => {
             {BuyMeal(isMorningFood)}
             {BuyMeal(isLunchFood)}
             {BuyMeal(isDinnerFood)}
-          </Pager>)
-          }
+          </Pager>
+        )}
       </PagerViewWrap>
 
       {show && (
@@ -1164,7 +1177,8 @@ const Pager = styled(AnimatedPagerView)`
 `;
 
 const Contents = styled.Pressable`
-  padding: ${({spicy,vegan}) => ((spicy ||vegan )? '18px 0px 28px 0px' : '18px 0px 28px 0px')};
+  padding: ${({spicy, vegan}) =>
+    spicy || vegan ? '18px 0px 28px 0px' : '18px 0px 28px 0px'};
   margin: 0px 28px;
   flex-direction: row;
   justify-content: space-between;
@@ -1245,9 +1259,9 @@ export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
 `;
 
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
-  white-space :nowrap;
-  word-break : nowrap;
-  text-overflow : ellipsis;
+  white-space: nowrap;
+  word-break: nowrap;
+  text-overflow: ellipsis;
   color: ${({theme, soldOut}) =>
     soldOut === 2 || soldOut === 6
       ? theme.colors.grey[6]
