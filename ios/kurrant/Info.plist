@@ -135,6 +135,8 @@ LwIDAQAB
 	<true/>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>알림 받기 위해서 권한 허용이 필요 합니다.</string>
+	<key>NMFClientId</key>
+	<string>frbi51gn4o</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -150,7 +152,8 @@ LwIDAQAB
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is accessed for the first time</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>지도를 사용해서 배달 받을 장소를 
+설정할 수 있어요!</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The microphone is accessed for the first time</string>
 	<key>NSPhotoLibraryUsageDescription</key>

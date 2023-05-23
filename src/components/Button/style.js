@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import {css} from 'styled-components';
 
 export const getButtonSizeStyles = sizeType => {
   return btnSizeStyle[sizeType];
@@ -42,7 +42,7 @@ const btnSizeStyle = {
     height: 50px;
   `,
   button38: css`
-    width:100%;
+    width: 100%;
     height: 38px;
   `,
   button32: css`
@@ -52,7 +52,7 @@ const btnSizeStyle = {
   login: css`
     width: 100%;
     height: 56px;
-  `
+  `,
 };
 
 export const getButtonLabelStyles = sizeType => {
@@ -84,7 +84,7 @@ const labelSizeStyle = {
     padding: 13px 0;
     font-size: 17px;
     line-height: 22px;
-  `
+  `,
 };
 
 export const getButtonColor = type => {
@@ -92,34 +92,36 @@ export const getButtonColor = type => {
 };
 
 const buttonColor = {
-
   grey2: css`
-    background-color: ${({ theme }) => theme.colors.grey[2]}; 
+    background-color: ${({theme}) => theme.colors.grey[2]};
   `,
   grey3: css`
-    background-color: ${({ theme }) => theme.colors.grey[3]}; 
+    background-color: ${({theme}) => theme.colors.grey[3]};
   `,
   grey7: css`
-    background-color: ${({ theme }) => theme.colors.grey[7]};
-    box-sizing:border-box;
+    background-color: ${({theme}) => theme.colors.grey[7]};
+    box-sizing: border-box;
   `,
   white: css`
-    background-color: ${({ theme }) => theme.colors.grey[0]}; 
-    border: ${({ theme }) => `1px solid ${theme.colors.grey[5]}`};
-    box-sizing:border-box;
+    background-color: ${({theme}) => theme.colors.grey[0]};
+    border: ${({theme}) => `1px solid ${theme.colors.grey[5]}`};
+    box-sizing: border-box;
+  `,
+  white2: css`
+    background-color: ${({theme}) => theme.colors.grey[0]};
+    border: ${({theme}) => `1px solid ${theme.colors.grey[5]}`};
+    box-sizing: border-box;
   `,
   yellow: css`
-    background-color: ${({ theme }) => theme.colors.yellow[500]};
+    background-color: ${({theme}) => theme.colors.yellow[500]};
   `,
   login: css`
-    background-color: ${({ theme }) => theme.colors.yellow[500]};
+    background-color: ${({theme}) => theme.colors.yellow[500]};
   `,
   purple: css`
-    background-color: ${({ theme }) => theme.colors.purple[500]};
-  `
-
+    background-color: ${({theme}) => theme.colors.purple[500]};
+  `,
 };
-
 
 export const getDisabledColor = type => {
   return disabledButtonColor[type];
@@ -127,44 +129,51 @@ export const getDisabledColor = type => {
 
 const disabledButtonColor = {
   grey2: css`
-    background-color: ${({ theme }) => theme.colors.grey[8]}; 
+    background-color: ${({theme}) => theme.colors.grey[8]};
   `,
   grey3: css`
-    background-color: ${({ theme }) => theme.colors.grey[8]}; 
+    background-color: ${({theme}) => theme.colors.grey[8]};
   `,
   grey7: css`
-    background-color: ${({ theme }) => theme.colors.grey[8]};
+    background-color: ${({theme}) => theme.colors.grey[8]};
   `,
   white: css`
-    background-color: ${({ theme }) => theme.colors.grey[0]}; 
-    border: ${({ theme }) => `1px solid ${theme.colors.grey[7]}`};
-    box-sizing:border-box;
+    background-color: ${({theme}) => theme.colors.grey[0]};
+    border: ${({theme}) => `1px solid ${theme.colors.grey[7]}`};
+    box-sizing: border-box;
+  `,
+  white2: css`
+    background-color: ${({theme}) => theme.colors.grey[0]};
+    border: ${({theme}) => `1px solid ${theme.colors.grey[7]}`};
+    box-sizing: border-box;
   `,
   yellow: css`
-    background-color: ${({ theme }) => theme.colors.yellow[100]};
+    background-color: ${({theme}) => theme.colors.yellow[100]};
   `,
   login: css`
-    background-color: ${({ theme }) => theme.colors.yellow[100]}; 
-  `
+    background-color: ${({theme}) => theme.colors.yellow[100]};
+  `,
+  map: css`
+    background-color: ${({theme}) => theme.colors.grey[7]};
+  `,
 };
 
 export const getLabelColor = (disabled, type) => {
   if (disabled === true) {
     return css`
-      color: ${({ theme }) => theme.colors.grey[5]}; 
-    `
+      color: ${({theme}) => theme.colors.grey[0]};
+    `;
   } else if (type !== 'grey2' && type !== 'grey3' && type !== 'white') {
     return css`
-      color: ${({ theme }) => theme.colors.grey[1]}; 
-    `
+      color: ${({theme}) => theme.colors.grey[1]};
+    `;
   } else if (type === 'white') {
     return css`
-      color: ${({ theme }) => theme.colors.grey[3]};
-    `
+      color: ${({theme}) => theme.colors.grey[3]};
+    `;
   } else {
     return css`
-      color: ${({ theme }) => theme.colors.grey[0]}; 
-    `
+      color: ${({theme}) => theme.colors.grey[0]};
+    `;
   }
-}
-
+};
