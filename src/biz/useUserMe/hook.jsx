@@ -90,11 +90,11 @@ const useUserMe = () => {
       setMyInfo(res.data);
     } catch (err) {
       console.log(
-        err.toString().replace('Error:', '').replace('error:', ''),
+        err.toString()?.replace('Error:', '')?.replace('error:', ''),
         '123456',
       );
       if (
-        err.toString().replace('Error:', '').trim().replace('error:', '') ===
+        err.toString()?.replace('Error:', '').trim()?.replace('error:', '') ===
         '403'
       ) {
         AsyncStorage.clear();

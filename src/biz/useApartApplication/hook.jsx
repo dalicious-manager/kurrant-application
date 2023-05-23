@@ -73,7 +73,7 @@ const useApartApplication = () => {
 
       setApartSearch(res.data);
     } catch (err) {
-      Alert.alert('아파트 검색', err.toString().replace('error: ', ''), [
+      Alert.alert('아파트 검색', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},
@@ -93,7 +93,7 @@ const useApartApplication = () => {
     } catch (err) {
       Alert.alert(
         '유저 아파트 스팟 등록',
-        err.toString().replace('error: ', ''),
+        err.toString()?.replace('error: ', ''),
         [
           {
             text: '확인',
@@ -112,7 +112,7 @@ const useApartApplication = () => {
       });
       return res;
     } catch (err) {
-      Alert.alert('호 변경', err.toString().replace('error: ', ''), [
+      Alert.alert('호 변경', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},

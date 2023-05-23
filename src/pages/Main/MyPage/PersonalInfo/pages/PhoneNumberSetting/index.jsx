@@ -1,8 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, View, Alert} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  View,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import styled from 'styled-components/native';
 
 import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
@@ -80,7 +86,7 @@ const Pages = () => {
       await setStorage('isChange', '휴대폰 번호가 변경됐어요');
       navigation.goBack(null);
     } catch (err) {
-      Alert.alert('휴대폰번호 변경', err.toString().replace('error: '));
+      Alert.alert('휴대폰번호 변경', err.toString()?.replace('error: '));
     }
   };
 

@@ -50,7 +50,7 @@ const Pages = ({route}) => {
     const paycheck = await payCheckPassword();
     const exp = data.cardExpDate.split('/');
     const reqNice = {
-      cardNumber: data.cardNumber.replace(/\W/gi, ''),
+      cardNumber: data.cardNumber?.replace(/\W/gi, ''),
       expirationYear: exp[1],
       expirationMonth: exp[0],
       cardPassword: data.cardPass,
@@ -63,7 +63,7 @@ const Pages = ({route}) => {
     });
     //
     // const req = {
-    //   cardNumber: data.cardNumber.replace(/\W/gi, ''),
+    //   cardNumber: data.cardNumber?.replace(/\W/gi, ''),
     //   expirationYear: exp[1],
     //   expirationMonth: exp[0],
     //   cardPassword: data.cardPass,
@@ -79,7 +79,7 @@ const Pages = ({route}) => {
     //   // navigation.navigate(PaymentManagePage)
     //   navigation.goBack();
     // } catch (error) {
-    //   alert(error.toString().replace('error:', ''));
+    //   alert(error.toString()?.replace('error:', ''));
     // }
   };
   const isValidate =
@@ -154,7 +154,7 @@ const Pages = ({route}) => {
                     validate: {
                       isValid: value => {
                         return (
-                          isValidCardNumber(value.replace(/\W/gi, '')) ||
+                          isValidCardNumber(value?.replace(/\W/gi, '')) ||
                           '유효한 카드번호를 입력해주세요'
                         );
                       },
@@ -193,7 +193,7 @@ const Pages = ({route}) => {
                     required: '필수 입력 항목 입니다.',
                     validate: {
                       isValid: value => {
-                        // const {card:{type}}= cardValidator.number(card.replace(/\W/gi, ''))
+                        // const {card:{type}}= cardValidator.number(card?.replace(/\W/gi, ''))
                         return (
                           cardValidator.cvv(value).isValid ||
                           cardValidator.cvv(value, 4).isValid ||

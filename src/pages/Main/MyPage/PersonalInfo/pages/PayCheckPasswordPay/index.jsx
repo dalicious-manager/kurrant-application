@@ -66,7 +66,7 @@ export default function Password({route}) {
         }
       }
     } catch (error) {
-      alert(error.toString().replace('error:', ''));
+      alert(error.toString()?.replace('error:', ''));
     } finally {
       setClickLoading(false);
     }

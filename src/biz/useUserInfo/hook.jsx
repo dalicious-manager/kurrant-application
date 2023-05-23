@@ -24,8 +24,7 @@ const useUserInfo = () => {
       setUserInfo(res.data);
       return res.data;
     } catch (err) {
-      console.log(err.toString().replace('Error:', ''), '123456');
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,

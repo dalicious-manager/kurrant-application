@@ -53,7 +53,7 @@ export default function PasswordCheck({route}) {
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
-        err.toString().replace('error: ', ''),
+        err.toString()?.replace('error: ', ''),
         [
           {
             text: '확인',
@@ -110,7 +110,7 @@ export default function PasswordCheck({route}) {
         });
       }
     } catch (error) {
-      Alert.alert('카드등록 실패', error.toString().replace('error:', ''));
+      Alert.alert('카드등록 실패', error.toString()?.replace('error:', ''));
     }
   };
   useEffect(() => {

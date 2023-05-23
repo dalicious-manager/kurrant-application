@@ -26,7 +26,7 @@ const useGroupSpots = () => {
     } catch (err) {
       Alert.alert(
         '그룹/스팟 신청 목록 조회',
-        err.toString().replace('error: ', ''),
+        err.toString()?.replace('error: ', ''),
         [
           {
             text: '확인',
@@ -45,7 +45,7 @@ const useGroupSpots = () => {
       setUserGroupSpotCheck(res.data);
       return res;
     } catch (err) {
-      Alert.alert('그룹/스팟', err.toString().replace('error: ', ''), [
+      Alert.alert('그룹/스팟', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},
@@ -104,7 +104,7 @@ const useGroupSpots = () => {
 
       return res;
     } catch (err) {
-      Alert.alert('그룹 탈퇴', err.toString().replace('error: ', ''), [
+      Alert.alert('그룹 탈퇴', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},

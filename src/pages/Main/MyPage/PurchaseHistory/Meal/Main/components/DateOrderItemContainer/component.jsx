@@ -44,7 +44,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
     try {
       await orderState({id: id});
     } catch (error) {
-      Alert.alert('상태변경', error.toString().replace('error: '));
+      Alert.alert('상태변경', error.toString()?.replace('error: '));
     }
   };
   const purchase = mealPurchase.filter(v => v.id === purchaseId)[0];
@@ -71,7 +71,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
       });
       setMealPurchase(refund);
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   const changeItem = async (id, serviceDate) => {
@@ -101,7 +101,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
         date: serviceDate ? serviceDate : formattedDate(new Date()),
       });
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   return (
@@ -226,7 +226,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                             '메뉴취소 불가',
                                             error
                                               .toString()
-                                              .replace('error: ', ''),
+                                              ?.replace('error: ', ''),
                                           );
                                         }
                                       },
@@ -263,7 +263,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                             '메뉴취소 불가',
                                             error
                                               .toString()
-                                              .replace('error: ', ''),
+                                              ?.replace('error: ', ''),
                                           );
                                         }
                                       },

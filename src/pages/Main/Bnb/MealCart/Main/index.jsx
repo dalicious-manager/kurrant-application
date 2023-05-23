@@ -20,42 +20,42 @@ import {
   ScrollView,
   Text,
   View,
+  TextInput,
 } from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import FastImage from 'react-native-fast-image';
+import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
-import FastImage from 'react-native-fast-image';
-import SoldOut from '../../../../../assets/icons/MealCart/soldOut.svg';
 import Arrow from '../../../../../assets/icons/MealCart/arrow.svg';
 import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
-import X from '../../../../../assets/icons/MealCart/x.svg';
+import SoldOut from '../../../../../assets/icons/MealCart/soldOut.svg';
 import WarningIcon from '../../../../../assets/icons/MealCart/warning.svg';
+import X from '../../../../../assets/icons/MealCart/x.svg';
 import Minus from '../../../../../assets/icons/MealDetail/minus.svg';
 import PlusIcon from '../../../../../assets/icons/MealDetail/plus.svg';
 import {loadMealCart} from '../../../../../biz/useShoppingBasket/Fetch';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import {isQuantityAtom} from '../../../../../biz/useShoppingBasket/store';
 import useUserInfo from '../../../../../biz/useUserInfo';
+import useUserMe from '../../../../../biz/useUserMe';
 import BottomModal from '../../../../../components/BottomModal';
+import BottomSheet from '../../../../../components/BottomSheet';
+import BottomMenu from '../../../../../components/BottomSheetMenu';
 import Button from '../../../../../components/Button';
 import NoMealButton from '../../../../../components/Button';
 import Count from '../../../../../components/Count';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
+import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {formattedMonthDay} from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
+import {surpportPrice} from '../../../../Group/GroupCorporations/CorporationsApplication/ThirdPage/Pages/function';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
-import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
-import BottomSheet from '../../../../../components/BottomSheet';
-import BottomMenu from '../../../../../components/BottomSheetMenu';
-import Toast from '../../../../../components/Toast';
-import useUserMe from '../../../../../biz/useUserMe';
-import {surpportPrice} from '../../../../Group/GroupCorporations/CorporationsApplication/ThirdPage/Pages/function';
-import {useQueryClient} from 'react-query';
-import { useGetShoppingBasket } from '../../../../../hook/useShoppingBasket';
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
@@ -81,7 +81,7 @@ const Pages = () => {
     soldOutMeal,
     clientStatus,
   } = useShoppingBasket();
-  const {data :isLoadMeal} = useGetShoppingBasket();
+  const {data: isLoadMeal} = useGetShoppingBasket();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
@@ -108,7 +108,7 @@ const Pages = () => {
           if (res) {
           }
         } catch (error) {
-          if (error.toString().replace('Error:', '').trim() === '403') {
+          if (error.toString()?.replace('Error:', '').trim() === '403') {
             navigation.reset({
               index: 0,
               routes: [
@@ -245,7 +245,9 @@ const Pages = () => {
     }, 0);
 
   // 주문 마감 제외 시킨 배열
-  const spotFilter = isLoadMeal?.data?.spotCarts?.filter(el => el.spotId === selected);
+  const spotFilter = isLoadMeal?.data?.spotCarts?.filter(
+    el => el.spotId === selected,
+  );
 
   const newArr = spotFilter.map(el => {
     return {
@@ -520,7 +522,9 @@ const Pages = () => {
   };
 
   const allDelete = spotId => {
-    const data = isLoadMeal?.data?.spotCarts?.filter(el => el.spotId !== selected);
+    const data = isLoadMeal?.data?.spotCarts?.filter(
+      el => el.spotId !== selected,
+    );
     Alert.alert('전체 삭제', '메뉴를 모두 삭제하시겠어요?', [
       {
         text: '아니요',
@@ -560,7 +564,10 @@ const Pages = () => {
               queryClient.invalidateQueries('orderMeal');
               setModalVisible3(true);
             } catch (err) {
-              Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
+              Alert.alert(
+                '메뉴취소 불가',
+                err.toString()?.replace('error: ', ''),
+              );
             }
           },
           style: 'destructive',
@@ -592,7 +599,9 @@ const Pages = () => {
   };
 
   const isDeadline = () => {
-    const data = isLoadMeal?.data?.spotCarts?.filter(el => el.spotId !== selected);
+    const data = isLoadMeal?.data?.spotCarts?.filter(
+      el => el.spotId !== selected,
+    );
     if (totalCount === 0) {
       Alert.alert(
         '주문할 수 있는 상품이 없어요',

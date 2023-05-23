@@ -161,7 +161,7 @@ export default () => {
       Alert.alert(
         'SNS 연결 실패',
         '계정 연결을 실패했어요.',
-        // error.toString().replace('error: ',''),
+        // error.toString()?.replace('error: ',''),
         [
           {
             text: '확인',

@@ -1,8 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, View, Alert} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  View,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import styled from 'styled-components/native';
 
 import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
@@ -66,7 +72,7 @@ const Pages = () => {
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
-        err.toString().replace('error: ', ''),
+        err.toString()?.replace('error: ', ''),
         [
           {
             text: '확인',
@@ -281,7 +287,7 @@ const Pages = () => {
                           } catch (err) {
                             Alert.alert(
                               '인증확인 실패',
-                              err.toString().replace('error: ', ''),
+                              err.toString()?.replace('error: ', ''),
                               [
                                 {
                                   text: '확인',
@@ -311,7 +317,7 @@ const Pages = () => {
                     } catch (err) {
                       Alert.alert(
                         '인증확인 실패',
-                        err.toString().replace('error: ', ''),
+                        err.toString()?.replace('error: ', ''),
                         [
                           {
                             text: '확인',

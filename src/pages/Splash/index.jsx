@@ -130,9 +130,7 @@ const Page = () => {
         console.log('error getting push token ' + error);
       });
   };
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
   useEffect(() => {
     async function loadUser() {
       try {
@@ -222,7 +220,7 @@ const Page = () => {
             }
           }
         } catch (error) {
-          if (error.toString().replace('Error:', '').trim() === '403') {
+          if (error.toString()?.replace('Error:', '').trim() === '403') {
             navigation.reset({
               index: 0,
               routes: [

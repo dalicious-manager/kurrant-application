@@ -78,7 +78,7 @@ const Pages = ({route}) => {
     try {
       await userMePersonal();
     } catch (error) {
-      if (error.toString().replace('Error:', '').trim() === '403') {
+      if (error.toString()?.replace('Error:', '').trim() === '403') {
         navigation.reset({
           index: 0,
           routes: [
@@ -122,7 +122,7 @@ const Pages = ({route}) => {
                 });
               });
             } catch (error) {
-              Alert.alert('회원탈퇴', error.toString().replace('error: '));
+              Alert.alert('회원탈퇴', error.toString()?.replace('error: '));
             }
           },
         },
@@ -372,7 +372,9 @@ const Pages = ({route}) => {
                     ],
                   });
                 } catch (error) {
-                  if (error.toString().replace('Error:', '').trim() === '403') {
+                  if (
+                    error.toString()?.replace('Error:', '').trim() === '403'
+                  ) {
                     navigation.reset({
                       index: 0,
                       routes: [

@@ -30,7 +30,7 @@ const useOrderMeal = () => {
       // console.log(res.data, '123231');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -57,7 +57,7 @@ const useOrderMeal = () => {
       queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -85,7 +85,7 @@ const useOrderMeal = () => {
       queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -115,7 +115,7 @@ const useOrderMeal = () => {
       queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -143,7 +143,7 @@ const useOrderMeal = () => {
       queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -177,7 +177,7 @@ const useOrderMeal = () => {
       setTodayMeal(todayMeal);
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,

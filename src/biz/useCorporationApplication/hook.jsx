@@ -33,7 +33,7 @@ const useCorporationApplication = () => {
 
       setCorpCheck(res.data);
     } catch (err) {
-      Alert.alert('신청 내역 조회', err.toString().replace('error: ', ''), [
+      Alert.alert('신청 내역 조회', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},

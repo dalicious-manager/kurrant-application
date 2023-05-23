@@ -218,7 +218,7 @@ const Pages = ({route}) => {
       balloonEvent();
       // await loadMeal();
     } catch (err) {
-      alert(err.toString().replace('error:', '').trim());
+      alert(err.toString()?.replace('error:', '').trim());
       console.log(err);
       //  throw err
     }

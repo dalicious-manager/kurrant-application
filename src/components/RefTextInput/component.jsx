@@ -342,7 +342,7 @@ const Component = forwardRef(
                       } catch (error) {
                         Alert.alert(
                           '인증번호',
-                          error.toString().replace('error: ', ''),
+                          error.toString()?.replace('error: ', ''),
                         );
                       } finally {
                         setTimeout(() => {

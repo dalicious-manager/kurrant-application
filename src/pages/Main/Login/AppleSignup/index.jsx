@@ -1,15 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {Platform, Keyboard, NativeModules, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-
 import Button from '~components/Button';
 import KeyboardButton from '~components/KeyboardButton';
 import RefTextInput from '~components/RefTextInput';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
+
 import useAuth from '../../../../biz/useAuth';
 import useKeyboardEvent from '../../../../hook/useKeyboardEvent';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';

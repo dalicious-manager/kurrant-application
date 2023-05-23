@@ -217,7 +217,7 @@ const useAuth = () => {
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
-                  alert(e.toString().replace('error:', ''));
+                  alert(e.toString()?.replace('error:', ''));
                 }
               },
             },
@@ -275,7 +275,7 @@ const useAuth = () => {
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
-                  alert(e.toString().replace('error:', ''));
+                  alert(e.toString()?.replace('error:', ''));
                 }
               },
             },
@@ -347,7 +347,7 @@ const useAuth = () => {
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
-                  alert(e.toString().replace('error:', ''));
+                  alert(e.toString()?.replace('error:', ''));
                 }
               },
             },
@@ -414,7 +414,7 @@ const useAuth = () => {
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
-                  alert(e.toString().replace('error:', ''));
+                  alert(e.toString()?.replace('error:', ''));
                 }
               },
             },

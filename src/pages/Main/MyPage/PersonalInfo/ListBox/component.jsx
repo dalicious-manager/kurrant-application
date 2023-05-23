@@ -42,7 +42,7 @@ const Component = ({
         isActive: !v.isActive,
       });
     } catch (error) {
-      Alert.alert('알람설정', error.toString().replace('error: ', ''));
+      Alert.alert('알람설정', error.toString()?.replace('error: ', ''));
     }
 
     // await getAlarm();

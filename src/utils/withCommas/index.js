@@ -14,7 +14,7 @@ export default function withCommas(price) {
 
   return Math.round(price)
     .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    ?.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export function generateOrderCode(orderType, userId, spotId) {
@@ -32,7 +32,7 @@ export function generateOrderCode(orderType, userId, spotId) {
   };
   let code = codeType();
   const now = formattedDate(new Date(), '');
-  code += now.toString().replace('-', '');
+  code += now.toString()?.replace('-', '');
   code += idToFiveString(userId);
   code += create4DigitKey();
   return code;

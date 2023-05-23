@@ -65,7 +65,7 @@ const useFoodDaily = () => {
       setLunch([]);
       setDinner([]);
       setServiceDays([]);
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,

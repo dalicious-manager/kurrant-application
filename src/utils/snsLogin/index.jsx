@@ -242,7 +242,7 @@ export default () => {
       }
     } catch (error) {
       // console.log("err",error.toString());
-      Alert.alert('로그인 에러', error.toString().replace('error: ', ''));
+      Alert.alert('로그인 에러', error.toString()?.replace('error: ', ''));
     }
     // const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
     // // Sign the user in with the credential
