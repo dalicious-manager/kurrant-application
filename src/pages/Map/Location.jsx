@@ -7,11 +7,12 @@ import {
   Alert,
   View,
 } from 'react-native';
-import Typography from '../../components/Typography';
 import Geolocation from 'react-native-geolocation-service';
 import styled from 'styled-components';
+
 import Icon from '../../assets/icons/Map/location.svg';
 import Arrow from '../../assets/icons/Map/rightArrow.svg';
+import Typography from '../../components/Typography';
 
 const Location = ({setInitCenter, setShow, toast}) => {
   const openAppSettings = () => {

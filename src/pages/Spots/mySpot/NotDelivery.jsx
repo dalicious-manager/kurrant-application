@@ -1,12 +1,14 @@
+import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../components/Typography';
+
 import {NotDeliveryIcon} from '../../../assets';
-import Button from '../../../components/Button';
 import Close from '../../../assets/icons/Map/close20.svg';
-import {useNavigation} from '@react-navigation/native';
-import {PAGE_NAME as CompletePage} from '../components/Complete';
+import Button from '../../../components/Button';
+import Typography from '../../../components/Typography';
 import {height} from '../../../theme';
+import {PAGE_NAME as CompletePage} from '../components/Complete';
 
 export const PAGE_NAME = 'MY_SPOT_NOT_DELIVERY';
 const NotDelivery = () => {

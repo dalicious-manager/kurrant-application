@@ -1,9 +1,10 @@
+import React, {useState} from 'react';
 import {View, Text, TextInput} from 'react-native';
-import styled from 'styled-components';
-import FindIcon from '../../assets/icons/Map/find.svg';
-import DeleteIcon from '../../assets/icons/Map/delete.svg';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import {useState} from 'react';
+import styled from 'styled-components';
+
+import DeleteIcon from '../../assets/icons/Map/delete.svg';
+import FindIcon from '../../assets/icons/Map/find.svg';
 
 const Search = ({focus, setFocus, searchPress, text, setText}) => {
   const deleteButton = () => {

@@ -1,14 +1,15 @@
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {Text, View, Pressable} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../components/Typography';
+
+import SongE from '../../../assets/icons/Map/bottomSongE.svg';
 import Icon from '../../../assets/icons/Map/info.svg';
 import PrivateIcon from '../../../assets/icons/Map/private.svg';
-import Button from '../../../components/Button';
-import {PAGE_NAME as CompletePage} from '../../Spots/components/Complete';
 import BottomModal from '../../../components/BottomModal';
-import {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import SongE from '../../../assets/icons/Map/bottomSongE.svg';
+import Button from '../../../components/Button';
+import Typography from '../../../components/Typography';
+import {PAGE_NAME as CompletePage} from '../../Spots/components/Complete';
 
 export const PAGE_NAME = 'PRIVATE_INFO_PAGE';
 const PrivateInfo = () => {

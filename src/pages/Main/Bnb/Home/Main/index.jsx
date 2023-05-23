@@ -4,7 +4,6 @@ import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-
 import {
   View,
   StyleSheet,
@@ -17,7 +16,6 @@ import {
 import FastImage from 'react-native-fast-image';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
-
 import styled, {css} from 'styled-components/native';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
@@ -47,7 +45,6 @@ import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Compo
 import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
-
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
@@ -58,17 +55,6 @@ import {
 } from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
-import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
-import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
-import SkeletonUI from '../../Home/Skeleton';
-import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
-import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
-import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
-import Toast from '../../../../../components/Toast';
-
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
@@ -81,17 +67,6 @@ import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
-import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
-import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useAuth from '../../../../../biz/useAuth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
-
-import useMembership from '../../../../../biz/useMembership';
-import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
-import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -650,7 +625,6 @@ const Pages = () => {
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
-
             orderMealList?.data?.map((m, idx) => {
               if (m.serviceDate === date)
                 return (

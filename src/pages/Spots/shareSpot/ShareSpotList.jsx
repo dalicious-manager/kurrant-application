@@ -1,14 +1,15 @@
+import React, {useState} from 'react';
 import {ScrollView, Text, View} from 'react-native';
+import {Shadow} from 'react-native-shadow-2';
 import styled from 'styled-components';
+
+import CategoryIcon from '../../../assets/icons/Map/category.svg';
+import MapIcon from '../../../assets/icons/Spot/map.svg';
 import MealIcon from '../../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../../assets/icons/Spot/user.svg';
-import MapIcon from '../../../assets/icons/Spot/map.svg';
-import CategoryIcon from '../../../assets/icons/Map/category.svg';
+import BottomSheetFilter from '../../../components/BottomSheetSpotFilter';
 import Typography from '../../../components/Typography';
 import {width, height} from '../../../theme';
-import {Shadow} from 'react-native-shadow-2';
-import BottomSheetFilter from '../../../components/BottomSheetSpotFilter';
-import {useState} from 'react';
 
 export const PAGE_NAME = 'SHARE_SPOT_LIST';
 const ShareSpotList = ({setShowList}) => {
@@ -105,9 +106,9 @@ const ShareSpotList = ({setShowList}) => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="필터"
-        onPressEvent2={() => {
-          groupManagePress();
-        }}
+        // onPressEvent2={() => {
+        //   groupManagePress();
+        // }}
       />
     </Wrap>
   );

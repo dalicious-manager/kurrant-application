@@ -1,22 +1,23 @@
-import {useCallback, useEffect, useState} from 'react';
-import {Dimensions, Pressable, View} from 'react-native';
-import NaverMapView from 'react-native-nmap';
-import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
-import styled from 'styled-components';
-import Location from './LocationCircle';
-import Typography from '../../components/Typography';
-import FastImage from 'react-native-fast-image';
-import Toast from '../../components/Toast';
-import ArrowIcon from '../../assets/icons/Map/changeArrow.svg';
-import Button from '../../components/Button';
-import FindIcon from '../../assets/icons/Map/find.svg';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {PAGE_NAME as MapSearchResult} from './SearchResult';
-import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
-import Info from './components/Info';
 import {useAtom} from 'jotai';
-import {userLocationAtom} from '../../utils/store';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Dimensions, Pressable, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import NaverMapView from 'react-native-nmap';
+import styled from 'styled-components';
+
+import Info from './components/Info';
+import Location from './LocationCircle';
+import {PAGE_NAME as MapSearchResult} from './SearchResult';
+import ArrowIcon from '../../assets/icons/Map/changeArrow.svg';
+import FindIcon from '../../assets/icons/Map/find.svg';
+import Button from '../../components/Button';
+import Toast from '../../components/Toast';
+import Typography from '../../components/Typography';
+import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {width, height} from '../../theme';
+import {userLocationAtom} from '../../utils/store';
+import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 console.log(height, 'didi');
 const WIDTH = Dimensions.get('screen').width;
 
@@ -112,7 +113,8 @@ const MySpotMap = ({route}) => {
           zoomControl={false}
           center={{...initCenter, zoom: 18}}
           style={{width: '100%', height: '100%'}}
-          onCameraChange={handleCameraChange}></NaverMapView>
+          onCameraChange={handleCameraChange}
+        />
         <View
           style={{
             position: 'absolute',

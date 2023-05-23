@@ -1,10 +1,11 @@
+import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {View, Image, Text} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../components/Typography';
-import {MySpot, ShareSpot, PrivateSpot} from '../../assets';
-import ModalComponent from './components/ModalComponent';
-import {useNavigation} from '@react-navigation/native';
 
+import ModalComponent from './components/ModalComponent';
+import {MySpot, ShareSpot, PrivateSpot} from '../../assets';
+import Typography from '../../components/Typography';
 import {PAGE_NAME as MySpotMap} from '../Map/MySpotMap';
 import {PAGE_NAME as ShareSpotMap} from '../Map/ShareSpotMap';
 import {PAGE_NAME as PrivateInfo} from '../Spots/privateSpot/PrivateInfo';

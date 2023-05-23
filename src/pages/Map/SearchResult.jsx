@@ -1,3 +1,6 @@
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -5,17 +8,15 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import Search from './Search';
 import styled from 'styled-components';
-import Location from './Location';
-import Typography from '../../components/Typography';
-import {useCallback, useEffect, useState} from 'react';
+
 import AddressList from './components/AddressList';
 import NoResult from './components/NoResult';
-import {useAtom} from 'jotai';
-import {userLocationAtom} from '../../utils/store';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import Location from './Location';
+import Search from './Search';
 import {mapApis} from '../../api/map';
+import Typography from '../../components/Typography';
+import {userLocationAtom} from '../../utils/store';
 
 export const PAGE_NAME = 'MAP_SEARCH_RESULT';
 const SearchResult = () => {

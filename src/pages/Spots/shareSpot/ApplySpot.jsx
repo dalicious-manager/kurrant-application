@@ -1,11 +1,13 @@
+import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {FormProvider, useForm} from 'react-hook-form';
 import {View, Text, Keyboard} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../components/Typography';
-import {FormProvider, useForm} from 'react-hook-form';
-import SpotTextInput from '../../../components/SpotTextInput';
+
 import Icon from '../../../assets/icons/Map/map.svg';
 import Button from '../../../components/Button';
-import {useNavigation} from '@react-navigation/native';
+import SpotTextInput from '../../../components/SpotTextInput';
+import Typography from '../../../components/Typography';
 import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
 import {PAGE_NAME as NotDeliveryPage} from '../../Spots/mySpot/NotDelivery';
 

@@ -1,16 +1,17 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {View, Text, Modal, Pressable, Image} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../components/Typography';
-import QuestionIcon from '../../../assets/icons/Map/question.svg';
-import {CloseButton} from '../../../assets';
-import Button from '../../../components/Button';
+
 import {
   modalDscText,
   modalImage,
   modalTitleDscText,
   modalTitleText,
 } from './data';
+import {CloseButton} from '../../../assets';
+import QuestionIcon from '../../../assets/icons/Map/question.svg';
+import Button from '../../../components/Button';
+import Typography from '../../../components/Typography';
 
 const ModalComponent = ({title}) => {
   const [modalVisible, setModalVisible] = useState(false);

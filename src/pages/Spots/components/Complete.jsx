@@ -1,8 +1,9 @@
+import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
+import React from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../components/Typography';
-import Button from '../../../components/Button';
-import Close from '../../../assets/icons/Map/close20.svg';
+
 import {
   alramButtonText,
   alramDscText,
@@ -10,9 +11,10 @@ import {
   alramTitleText,
   subButtonText,
 } from './data';
+import Close from '../../../assets/icons/Map/close20.svg';
 import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
-import {useAtom} from 'jotai';
-import {useNavigation} from '@react-navigation/native';
+import Button from '../../../components/Button';
+import Typography from '../../../components/Typography';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
 
