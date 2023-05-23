@@ -126,13 +126,11 @@ const MySpotMap = ({route}) => {
               move ? require('./icons/pick.png') : require('./icons/marker.png')
             }
             style={{
-              width: 37,
-              height: 47,
-              borderRadius: 7,
+              width: 36,
+              height: 49,
             }}
           />
         </View>
-        <CircleView markerColor={move} />
       </MapView>
 
       <AddressView>

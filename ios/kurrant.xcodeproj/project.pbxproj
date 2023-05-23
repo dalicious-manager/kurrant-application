@@ -20,6 +20,7 @@
 		94590B3B30F24F4C8152DA81 /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9AEDF384CAA848929259B0C5 /* Pretendard-Black.otf */; };
 		A6E2DF83B7D3442987129D5D /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 763A59BDFCC64FBFBFE34199 /* Pretendard-Bold.otf */; };
 		B005111A2930A11C0035F28D /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = B00511192930A11C0035F28D /* Fonts */; };
+		B065B7152A1C335200C75E5A /* main.m in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		B068103B2966B4E700A4D3AB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B068103A2966B4E700A4D3AB /* GoogleService-Info.plist */; };
 		B4D2137514CC45B88DE9C20C /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89AB231CA7C14416B4894EA1 /* Pretendard-Regular.otf */; };
 		B7DB5E91EEE741959BCEC57C /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 027BC5742DEB44B788FDCD2A /* OFL.txt */; };
@@ -460,6 +461,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B065B7152A1C335200C75E5A /* main.m in Resources */,
 				FF13321828E1CC5100D27A78 /* SpoqaHanSansNeo-Bold.otf in Resources */,
 				FF13321928E1CC5100D27A78 /* SpoqaHanSansNeo-Light.otf in Resources */,
 				FF13321A28E1CC5100D27A78 /* SpoqaHanSansNeo-Medium.otf in Resources */,

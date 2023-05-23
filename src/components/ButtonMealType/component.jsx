@@ -1,33 +1,36 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 
 import Typography from '../Typography';
+import {width, heigth} from '../../theme';
 
 const Component = ({
   label,
   disabled = false,
+
   touch,
   setTouch,
-  apartment,
-  corporation,
-}) => {
-  const title = ['아침', '점심', '저녁'];
 
+  margin = '0',
+  title = ['아침', '점심', '저녁'],
+}) => {
   const onPressButton = idx => {
     if (touch?.includes(idx)) {
-      return setTouch(touch?.filter(v => v !== idx));
+      if (touch?.length > 1) {
+        return setTouch(touch?.filter(v => v !== idx));
+      }
+      return;
     }
+
     setTouch([...touch, idx]);
   };
 
-  const touchPress = () => {
-    setTouch(prev => !prev);
-  };
   return (
     <>
       {title.map((t, idx) => {
         return (
           <Wrap
+            margins={margin}
             key={idx}
             onPress={() => {
               onPressButton(idx);
@@ -49,11 +52,11 @@ const Component = ({
 export default Component;
 
 const Wrap = styled.Pressable`
-  border-color: ${({theme, disabled, touch}) =>
+  border-color: ${({theme, disabled, touch, allTouch}) =>
     !touch ? theme.colors.grey[8] : disabled && theme.colors.grey[7]};
   border-width: 1px;
   border-radius: 14px;
-  background-color: ${({theme, disabled, touch}) =>
+  background-color: ${({theme, disabled, touch, allTouch}) =>
     touch
       ? theme.colors.grey[2]
       : disabled
@@ -62,6 +65,9 @@ const Wrap = styled.Pressable`
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  width: ${width * 103}px;
+  height: 40px;
+  margin-right: ${({margins}) => margins && margins}px;
 `;
 
 const Line = styled.View`
@@ -75,9 +81,7 @@ const Line = styled.View`
   box-sizing: border-box;
 `;
 
-const TextView = styled.View`
-  padding: 8px 36px;
-`;
+const TextView = styled.View``;
 
 const Label = styled(Typography).attrs({text: 'BottomButtonSB'})`
   color: ${({theme, disabled, touch}) =>

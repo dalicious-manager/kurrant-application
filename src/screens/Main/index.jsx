@@ -327,6 +327,9 @@ import Complete, {
 import PrivateInfo, {
   PAGE_NAME as PrivateInfoPage,
 } from '../../pages/Spots/privateSpot/PrivateInfo';
+import ApplySpot, {
+  PAGE_NAME as ApplySpotPage,
+} from '../../pages/Spots/shareSpot/ApplySpot';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -2148,7 +2151,6 @@ const Screen = () => {
             headerShown: false,
             headerShadowVisible: false,
             //headerTransparent: true,
-            title: '상세 주소 입력',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
@@ -2199,6 +2201,23 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             title: '',
+          }}
+        />
+        <MainRoot.Screen
+          name={ApplySpotPage}
+          component={ApplySpot}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '스팟/시간 신청',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
           }}
         />
       </MainRoot.Group>

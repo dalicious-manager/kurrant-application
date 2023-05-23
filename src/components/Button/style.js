@@ -107,6 +107,11 @@ const buttonColor = {
     border: ${({theme}) => `1px solid ${theme.colors.grey[5]}`};
     box-sizing: border-box;
   `,
+  white2: css`
+    background-color: ${({theme}) => theme.colors.grey[0]};
+    border: ${({theme}) => `1px solid ${theme.colors.grey[5]}`};
+    box-sizing: border-box;
+  `,
   yellow: css`
     background-color: ${({theme}) => theme.colors.yellow[500]};
   `,
@@ -133,6 +138,11 @@ const disabledButtonColor = {
     background-color: ${({theme}) => theme.colors.grey[8]};
   `,
   white: css`
+    background-color: ${({theme}) => theme.colors.grey[0]};
+    border: ${({theme}) => `1px solid ${theme.colors.grey[7]}`};
+    box-sizing: border-box;
+  `,
+  white2: css`
     background-color: ${({theme}) => theme.colors.grey[0]};
     border: ${({theme}) => `1px solid ${theme.colors.grey[7]}`};
     box-sizing: border-box;

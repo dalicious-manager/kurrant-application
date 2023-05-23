@@ -112,7 +112,7 @@ const Location = ({setInitCenter, setShow, toast}) => {
 
   return (
     <Wrap onPress={userLocation}>
-      <Shadow style={{borderRadius: 50}}>
+      <Shadow style={{borderRadius: 50}} distance={5}>
         <LocationIcon>
           <Icon />
         </LocationIcon>

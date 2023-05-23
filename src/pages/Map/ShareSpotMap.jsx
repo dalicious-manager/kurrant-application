@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
-import {Dimensions, Pressable, View} from 'react-native';
-import NaverMapView from 'react-native-nmap';
+import {Dimensions, Pressable, View, Text, Image} from 'react-native';
+import NaverMapView, {Marker, Circle} from 'react-native-nmap';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import styled from 'styled-components';
 import Location from './LocationCircle';
@@ -10,6 +10,9 @@ import Toast from '../../components/Toast';
 import ArrowIcon from '../../assets/icons/Map/changeArrow.svg';
 import Button from '../../components/Button';
 import FindIcon from '../../assets/icons/Map/find.svg';
+import ListIcon from '../../assets/icons/Map/list.svg';
+import AddSpotIcon from '../../assets/icons/Map/addSpot.svg';
+import CategoryIcon from '../../assets/icons/Map/category.svg';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as MapSearchResult} from './SearchResult';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
@@ -17,41 +20,59 @@ import Info from './components/Info';
 import {useAtom} from 'jotai';
 import {userLocationAtom} from '../../utils/store';
 import {width, height} from '../../theme';
-console.log(height, 'didi');
-const WIDTH = Dimensions.get('screen').width;
+import {Shadow} from 'react-native-shadow-2';
+import {MarkerIcon, SpotIcon, SpotNameIcon} from '../../assets';
+import ShareSpotList from '../Spots/shareSpot/ShareSpotList';
+import BottomSheetSpot from '../../components/BottomSheetSpotInfo';
+import BottomSheetFilter from '../../components/BottomSheetSpotFilter';
 
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'SHARE_SPOT_MAP';
-const ShareSpotMap = ({route}) => {
-  const paramLocation = route?.params?.center;
-
+const ShareSpotMap = () => {
   const toast = Toast();
-  const navigation = useNavigation();
-  const [tab, setTab] = useState(false);
+
+  const [modalVisible2, setModalVisible2] = useState(false);
+
+  const [mealTouch, setMealTouch] = useState([0, 1, 2]);
+  const [touchInfo, setTouchInfo] = useState([0, 1]);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [showList, setShowList] = useState(false);
+  const [tab, setTab] = useState();
+  const [touch, setTouch] = useState();
   const [show, setShow] = useState(false);
   const [move, setMove] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const [center, setCenter] = useState();
+  const [zoom, setZoom] = useState(18);
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
-  console.log(move, initCenter);
-  const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
-    center ? center?.longitude : initCenter.longitude,
-    center ? center?.latitude : initCenter.latitude,
-  );
-  const {data: address, refetch: addressRefetch} = useGetAddress(
-    roadAddress?.roadAddress,
-  );
 
-  const changAddress = () => {
-    setShowAddress(prev => !prev);
-  };
+  // const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
+  //   center ? center?.longitude : initCenter.longitude,
+  //   center ? center?.latitude : initCenter.latitude,
+  // );
+  // const {data: address, refetch: addressRefetch} = useGetAddress(
+  //   roadAddress?.roadAddress,
+  // );
 
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
     setCenter(newCenter);
     // setInitCenter(newCenter);
+    setZoom(event.zoom);
     setMove(false);
   };
+
+  const spot0 = [
+    {
+      latitude: 37.504624,
+      longitude: 127.045503,
+      name: '스파크플러스 선릉점',
+    },
+    {latitude: 37.505607, longitude: 127.05154, name: '스파크플러스 선릉3호점'},
+    {latitude: 37.505102, longitude: 127.045989, name: '달리셔스'},
+  ];
+
   useEffect(() => {
     setTimeout(() => {
       setInitCenter({
@@ -60,80 +81,128 @@ const ShareSpotMap = ({route}) => {
       });
     }, 500);
   }, []);
-  useEffect(() => {
-    roadAddressRefetch();
-  }, [center, initCenter]);
-  useEffect(() => {
-    addressRefetch();
-  }, [roadAddress, initCenter]);
+  // useEffect(() => {
+  //   roadAddressRefetch();
+  // }, [center, initCenter]);
+  // useEffect(() => {
+  //   addressRefetch();
+  // }, [roadAddress, initCenter]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (paramLocation !== undefined) {
-        setInitCenter(paramLocation);
-      }
-    }, [paramLocation]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (paramLocation !== undefined) {
+  //       setInitCenter(paramLocation);
+  //     }
+  //   }, [paramLocation]),
+  // );
 
   return (
     <Wrap>
       <Pressable
         style={{position: 'relative', marginTop: 8, marginBottom: 12}}
-        onPress={() => {
-          navigation.navigate(MapSearchResult);
-        }}>
+        // onPress={() => {
+        //   navigation.navigate(MapSearchResult);
+        // }}
+      >
         <Icon />
         <Search>
           <PlaceHolderText>지번, 도로명, 건물명으로 검색</PlaceHolderText>
         </Search>
       </Pressable>
 
-      <MapView>
-        <LocationButtonWrap>
-          <Location
-            setInitCenter={setInitCenter}
-            setShow={setShow}
-            toast={toast}
-          />
-        </LocationButtonWrap>
-        {/* 탭 */}
-        {/* <InfoView tab={tab}>
-          <Info
-            onPressEvent={() => {
-              setTab(true);
+      {showList ? (
+        <ShareSpotList setShowList={setShowList} />
+      ) : (
+        <MapView>
+          <LocationButtonWrap>
+            <Location
+              setInitCenter={setInitCenter}
+              setShow={setShow}
+              toast={toast}
+            />
+          </LocationButtonWrap>
+          <ListButtonWrap>
+            <ListButton onPress={() => setShowList(true)}>
+              <ListIcon />
+              <ListButtonText>목록보기</ListButtonText>
+            </ListButton>
+          </ListButtonWrap>
+          <CategoryWrap onPress={() => setModalVisible2(true)}>
+            <CategoryButton distance={6}>
+              <CategoryIcon />
+            </CategoryButton>
+          </CategoryWrap>
+          <AddSpotWrap onPress={() => console.log('didi')}>
+            <AddSpotButton distance={6}>
+              <Image source={SpotIcon} style={{width: 30, height: 29}} />
+            </AddSpotButton>
+          </AddSpotWrap>
+
+          <NaverMapView
+            onTouch={() => {
+              setMove(true);
             }}
-          />
-        </InfoView> */}
-        <NaverMapView
-          onTouch={() => {
-            setMove(true);
-          }}
-          scaleBar={false}
-          zoomControl={false}
-          center={{...initCenter, zoom: 18}}
-          style={{width: '100%', height: '100%'}}
-          onCameraChange={handleCameraChange}></NaverMapView>
-        {/* <View
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            zIndex: 1,
-            top: (height * 462) / 2 - 47,
-          }}>
-          <FastImage
-            source={
-              move ? require('./icons/pick.png') : require('./icons/marker.png')
-            }
+            scaleBar={false}
+            zoomControl={true}
+            center={{...initCenter, zoom: 18}}
+            style={{width: '100%', height: '100%'}}
+            onCameraChange={handleCameraChange}>
+            {spot0.map((el, idx) => {
+              return (
+                <Marker
+                  onClick={() => {
+                    setTab(el.name);
+                    setModalVisible(true);
+                  }}
+                  onPress={() => {
+                    setTab(el.name);
+                    setModalVisible(true);
+                  }}
+                  key={idx}
+                  coordinate={el}
+                  width={43}
+                  height={43}
+                  image={
+                    tab === el.name
+                      ? require('./icons/selectSpot.png')
+                      : require('./icons/shareSpotMarker.png')
+                  }
+                />
+              );
+            })}
+          </NaverMapView>
+          <View
             style={{
-              width: 37,
-              height: 47,
-              borderRadius: 7,
-            }}
-          />
-        </View>
-        <CircleView markerColor={move} /> */}
-      </MapView>
+              position: 'absolute',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              zIndex: 1,
+              top: '50%',
+            }}>
+            <FastImage
+              source={MarkerIcon}
+              style={{
+                width: 36,
+                height: 36,
+              }}
+            />
+          </View>
+        </MapView>
+      )}
+      {modalVisible && (
+        <BottomSheetSpot
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          title={tab}
+          data={[]}
+          // onPressEvent={id => {
+          //   anotherSpot(id);
+          // }}
+          // onPressEvent2={() => {
+          //   groupManagePress();
+          // }}
+        />
+      )}
 
       {show && (
         <toast.ToastWrap
@@ -141,14 +210,25 @@ const ShareSpotMap = ({route}) => {
           isHeader={false}
         />
       )}
+      <BottomSheetFilter
+        touch={mealTouch}
+        setTouch={setMealTouch}
+        touchInfo={touchInfo}
+        setTouchInfo={setTouchInfo}
+        modalVisible={modalVisible2}
+        setModalVisible={setModalVisible2}
+        title="필터"
+        // onPressEvent2={() => {
+        //   groupManagePress();
+        // }}
+      />
     </Wrap>
   );
 };
 
 export default ShareSpotMap;
 
-const MapView = styled.View`
-  /* height: ${height * 462}px; */
+const MapView = styled.Pressable`
   flex: 1;
   position: relative;
 `;
@@ -156,56 +236,6 @@ const MapView = styled.View`
 const Wrap = styled.View`
   flex: 1;
   background-color: ${({theme}) => theme.colors.grey[0]};
-`;
-
-const AddressView = styled.View`
-  padding: 24px;
-  padding-top: 16px;
-`;
-const AddressText = styled(Typography).attrs({text: 'Title03SB'})`
-  color: ${({theme}) => theme.colors.grey[2]};
-`;
-
-const CircleView = styled.View`
-  background-color: ${({markerColor}) =>
-    markerColor ? 'rgba(255, 30, 30, 0.1)' : ' rgba(90, 30, 255, 0.1)'};
-
-  width: 20px;
-  height: 20px;
-  border-radius: 50px;
-  position: absolute;
-  /* z-index: 999; */
-  top: ${(height * 462) / 2 - 11}px;
-  left: ${WIDTH / 2 - 8}px;
-`;
-
-const ChangeAddressWrap = styled.Pressable`
-  flex-direction: row;
-  align-items: center;
-  background-color: ${({theme, move}) =>
-    move ? theme.colors.grey[7] : theme.colors.grey[8]};
-
-  padding: 3px 8px;
-  border-radius: 4px;
-  align-self: flex-start;
-  margin-top: 8px;
-`;
-
-const ChangeAddressText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme, move}) =>
-    move ? theme.colors.grey[0] : theme.colors.grey[2]};
-`;
-
-const Arrow = styled(ArrowIcon)`
-  margin-right: 8px;
-  color: ${({move, theme}) =>
-    move ? theme.colors.grey[0] : theme.colors.grey[2]};
-`;
-
-const ButtonWrap = styled.View`
-  position: absolute;
-  bottom: 35px;
-  padding: 0px 20px;
 `;
 
 const Search = styled.View`
@@ -227,14 +257,60 @@ const Icon = styled(FindIcon)`
   margin-right: 4px;
 `;
 
-const InfoView = styled.Pressable`
-  position: absolute;
-  z-index: ${({tab}) => (tab ? 0 : 999)};
-`;
-
 const LocationButtonWrap = styled.View`
   position: absolute;
-  bottom: 24px;
+  bottom: 132px;
   right: 24px;
+  z-index: 99;
+`;
+
+const ListButtonWrap = styled.View`
+  z-index: 999;
+  position: absolute;
+  right: 24px;
+  bottom: 56px;
+`;
+
+const ListButton = styled.Pressable`
+  background-color: ${({theme}) => theme.colors.grey[2]};
+  width: ${width * 116}px;
+  height: ${height * 56}px;
+  border-radius: 100px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ListButtonText = styled(Typography).attrs({text: 'Button09SB'})`
+  color: ${({theme}) => theme.colors.grey[0]};
+  margin-left: 4px;
+`;
+
+const CategoryButton = styled(Shadow)`
+  border-radius: 50px;
+  width: ${width * 48}px;
+  height: ${height * 48}px;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+`;
+const CategoryWrap = styled.Pressable`
+  position: absolute;
+  right: 24px;
+  top: 16px;
+  z-index: 99;
+`;
+
+const AddSpotButton = styled(Shadow)`
+  border-radius: 50px;
+  width: ${width * 56}px;
+  height: ${height * 56}px;
+  background-color: white;
+  padding: 13px 12px 14px 14px;
+`;
+const AddSpotWrap = styled.Pressable`
+  position: absolute;
+  left: 24px;
+  bottom: 56px;
   z-index: 99;
 `;
