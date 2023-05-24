@@ -308,6 +308,34 @@ import NotificationCenter, {
 } from '../../pages/NotificationCenter';
 import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
 
+// map
+import SpotType, {PAGE_NAME as SpotTypePage} from '../../pages/Spots/SpotType';
+import MySpotMap, {PAGE_NAME as MySpotMapPage} from '../../pages/Map/MySpotMap';
+import ShareSpotMap, {
+  PAGE_NAME as ShareSpotMapPage,
+} from '../../pages/Map/ShareSpotMap';
+import SearchResult, {
+  PAGE_NAME as MapSearchResult,
+} from '../../pages/Map/SearchResult';
+import MySpotDetail, {
+  PAGE_NAME as MySpotDetailPage,
+} from '../../pages/Spots/mySpot/DetailAddress';
+import NotDelivery, {
+  PAGE_NAME as NotDeliveryPage,
+} from '../../pages/Spots/mySpot/NotDelivery';
+import Complete, {
+  PAGE_NAME as CompletePage,
+} from '../../pages/Spots/components/Complete';
+import PrivateInfo, {
+  PAGE_NAME as PrivateInfoPage,
+} from '../../pages/Spots/privateSpot/PrivateInfo';
+import ApplySpot, {
+  PAGE_NAME as ApplySpotPage,
+} from '../../pages/Spots/shareSpot/ApplySpot';
+import ShareSpotList, {
+  PAGE_NAME as ShareSpotListPage,
+} from '../../pages/Spots/shareSpot/ShareSpotList';
+
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
@@ -2096,6 +2124,170 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             headerLeft: () => <ReviewCloseIcon />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={MySpotMapPage}
+          component={MySpotMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '주소 설정',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={ShareSpotMapPage}
+          component={ShareSpotMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '공유 스팟 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={ShareSpotListPage}
+          component={ShareSpotList}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '공유 스팟 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={MapSearchResult}
+          component={SearchResult}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '주소 검색',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={MySpotDetailPage}
+          component={MySpotDetail}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '상세 주소 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={SpotTypePage}
+          component={SpotType}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={NotDeliveryPage}
+          component={NotDelivery}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={CompletePage}
+          component={Complete}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={PrivateInfoPage}
+          component={PrivateInfo}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '',
+          }}
+        />
+        <MainRoot.Screen
+          name={ApplySpotPage}
+          component={ApplySpot}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '스팟/시간 신청',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
           }}
         />
       </MainRoot.Group>
