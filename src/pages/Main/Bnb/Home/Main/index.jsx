@@ -12,6 +12,8 @@ import {
   AppState,
   Platform,
   Linking,
+  Pressable,
+  Text,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Sound from 'react-native-sound';
@@ -62,6 +64,7 @@ import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/in
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -737,6 +740,9 @@ const Pages = () => {
                 </MembershipText>
               </MenbershipBanner>
             )}
+            <Pressable onPress={() => navigation.navigate(SpotTypePageName)}>
+              <Text>스팟 선택 임시 버튼</Text>
+            </Pressable>
             {/* <MarketWrap>
             <Market>
               <MarketIcon/>

@@ -1,6 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {Dimensions, Pressable, View, Text, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import NaverMapView, {Marker, Circle} from 'react-native-nmap';
@@ -16,6 +16,7 @@ import CategoryIcon from '../../assets/icons/Map/category.svg';
 import ArrowIcon from '../../assets/icons/Map/changeArrow.svg';
 import FindIcon from '../../assets/icons/Map/find.svg';
 import ListIcon from '../../assets/icons/Map/list.svg';
+import BackButton from '../../components/BackButton';
 import BottomSheetFilter from '../../components/BottomSheetSpotFilter';
 import BottomSheetSpot from '../../components/BottomSheetSpotInfo';
 import Button from '../../components/Button';
@@ -25,13 +26,14 @@ import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {width, height} from '../../theme';
 import {userLocationAtom} from '../../utils/store';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
+import {PAGE_NAME as ShareSpotListPage} from '../Spots/shareSpot/ShareSpotList';
 import ShareSpotList from '../Spots/shareSpot/ShareSpotList';
 
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'SHARE_SPOT_MAP';
 const ShareSpotMap = () => {
   const toast = Toast();
-
+  const navigation = useNavigation();
   const [modalVisible2, setModalVisible2] = useState(false);
 
   const [mealTouch, setMealTouch] = useState([0, 1, 2]);
@@ -59,7 +61,7 @@ const ShareSpotMap = () => {
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
     setCenter(newCenter);
-    // setInitCenter(newCenter);
+    //setInitCenter(newCenter);
     setZoom(event.zoom);
     setMove(false);
   };
@@ -111,68 +113,70 @@ const ShareSpotMap = () => {
         </Search>
       </Pressable>
 
-      {showList ? (
-        <ShareSpotList setShowList={setShowList} />
-      ) : (
-        <MapView>
-          <LocationButtonWrap>
-            <Location
-              setInitCenter={setInitCenter}
-              setShow={setShow}
-              toast={toast}
-            />
-          </LocationButtonWrap>
-          <ListButtonWrap>
-            <ListButton onPress={() => setShowList(true)}>
-              <ListIcon />
-              <ListButtonText>목록보기</ListButtonText>
-            </ListButton>
-          </ListButtonWrap>
-          <CategoryWrap onPress={() => setModalVisible2(true)}>
-            <CategoryButton distance={6}>
-              <CategoryIcon />
-            </CategoryButton>
-          </CategoryWrap>
-          <AddSpotWrap onPress={() => console.log('didi')}>
-            <AddSpotButton distance={6}>
-              <Image source={SpotIcon} style={{width: 30, height: 29}} />
-            </AddSpotButton>
-          </AddSpotWrap>
+      <MapView onPress={() => console.log('sisisisi')}>
+        <LocationButtonWrap>
+          <Location
+            setInitCenter={setInitCenter}
+            setShow={setShow}
+            toast={toast}
+          />
+        </LocationButtonWrap>
+        <ListButtonWrap>
+          <ListButton onPress={() => navigation.navigate(ShareSpotListPage)}>
+            <ListIcon />
+            <ListButtonText>목록보기</ListButtonText>
+          </ListButton>
+        </ListButtonWrap>
+        <CategoryWrap onPress={() => setModalVisible2(true)}>
+          <CategoryButton distance={6}>
+            <CategoryIcon />
+          </CategoryButton>
+        </CategoryWrap>
+        <AddSpotWrap onPress={() => console.log('didi')}>
+          <AddSpotButton distance={6}>
+            <Image source={SpotIcon} style={{width: 30, height: 29}} />
+          </AddSpotButton>
+        </AddSpotWrap>
 
-          <NaverMapView
-            onTouch={() => {
-              setMove(true);
-            }}
-            scaleBar={false}
-            zoomControl={true}
-            center={{...initCenter, zoom: 18}}
-            style={{width: '100%', height: '100%'}}
-            onCameraChange={handleCameraChange}>
-            {spot0.map((el, idx) => {
-              return (
-                <Marker
-                  onClick={() => {
-                    setTab(el.name);
-                    setModalVisible(true);
-                  }}
-                  onPress={() => {
-                    setTab(el.name);
-                    setModalVisible(true);
-                  }}
-                  key={idx}
-                  coordinate={el}
-                  width={43}
-                  height={43}
-                  image={
-                    tab === el.name
-                      ? require('./icons/selectSpot.png')
-                      : require('./icons/shareSpotMarker.png')
-                  }
-                />
-              );
-            })}
-          </NaverMapView>
-          <View
+        <NaverMapView
+          onTouch={() => {
+            setMove(true);
+          }}
+          scaleBar={false}
+          zoomControl={true}
+          center={{...initCenter, zoom: 18}}
+          style={{width: '100%', height: '100%'}}
+          onCameraChange={handleCameraChange}>
+          {spot0.map((el, idx) => {
+            return (
+              <Marker
+                onClick={() => {
+                  setTab(el.name);
+                  setModalVisible(true);
+                }}
+                onPress={() => {
+                  setTab(el.name);
+                  setModalVisible(true);
+                }}
+                key={idx}
+                coordinate={el}
+                width={43}
+                height={43}
+                image={
+                  tab === el.name
+                    ? require('./icons/selectSpot.png')
+                    : require('./icons/shareSpotMarker.png')
+                }
+              />
+            );
+          })}
+          <Marker
+            image={MarkerIcon}
+            coordinate={initCenter}
+            style={{width: 36, height: 36}}
+          />
+        </NaverMapView>
+        {/* <View
             style={{
               position: 'absolute',
               alignSelf: 'center',
@@ -187,9 +191,9 @@ const ShareSpotMap = () => {
                 height: 36,
               }}
             />
-          </View>
-        </MapView>
-      )}
+          </View> */}
+      </MapView>
+
       {modalVisible && (
         <BottomSheetSpot
           modalVisible={modalVisible}

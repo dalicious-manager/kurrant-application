@@ -23,26 +23,44 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import styled from 'styled-components/native';
-import {KeyboardAccessoryView} from 'react-native-keyboard-accessory';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import FastImage from 'react-native-fast-image';
+import {KeyboardAccessoryView} from 'react-native-keyboard-accessory';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useQueryClient} from 'react-query';
+import styled from 'styled-components/native';
+
+import PaymentsList from './components/PaymentsList';
+import Point from './components/Point/Point';
+import ArrowRightIcon from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import ArrowUpIcon from '../../../../../assets/icons/Payment/arrow.svg';
 import ArrowDownIcon from '../../../../../assets/icons/Payment/arrowDown.svg';
-import ArrowRightIcon from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import PayError from '../../../../../assets/icons/Payment/payError.svg';
+import useOrderMeal from '../../../../../biz/useOrderMeal';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import useUserInfo from '../../../../../biz/useUserInfo';
+import useUserMe from '../../../../../biz/useUserMe';
 import BottomModal from '../../../../../components/BottomModal';
+import BottomSheet from '../../../../../components/BottomSheet';
+import BottomSheetCard from '../../../../../components/BottomSheetCard';
 import Button from '../../../../../components/Button';
 import Check from '../../../../../components/Check';
 import Form from '../../../../../components/Form';
 import Typography from '../../../../../components/Typography';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import {PurchaseDetailPageName} from '../../../../../pages/Main/MyPage/PurchaseHistory/Detail';
+import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {
   formattedDate,
   formattedMonthDay,
 } from '../../../../../utils/dateFormatter';
+import {
+  cardListData,
+  formattedCardCode,
+} from '../../../../../utils/statusFormatter';
 import withCommas, {generateOrderCode} from '../../../../../utils/withCommas';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {PAGE_NAME as PayCheckPasswordPayPageName} from '../../../MyPage/PersonalInfo/pages/PayCheckPasswordPay';
 import {
   ButtonWrap,
   ContentWrap,
@@ -66,25 +84,8 @@ import {
   TotalPriceTitle,
   XIcon,
 } from '../../MealCart/Main';
-import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import useUserMe from '../../../../../biz/useUserMe';
-import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
-import {PurchaseDetailPageName} from '../../../../../pages/Main/MyPage/PurchaseHistory/Detail';
 import {PAGE_NAME as DefaultPaymentManagePageName} from '../DefaultPaymentManage';
-import {PAGE_NAME as PayCheckPasswordPayPageName} from '../../../MyPage/PersonalInfo/pages/PayCheckPasswordPay';
 import {PAGE_NAME as MealPaymentPageName} from '../MealPayment';
-import {
-  cardListData,
-  formattedCardCode,
-} from '../../../../../utils/statusFormatter';
-import BottomSheet from '../../../../../components/BottomSheet';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
-import BottomSheetCard from '../../../../../components/BottomSheetCard';
-import PaymentsList from './components/PaymentsList';
-import useOrderMeal from '../../../../../biz/useOrderMeal';
-import Point from './components/Point/Point';
-import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -404,7 +405,7 @@ const Pages = ({route}) => {
           {
             onPress: () => {
               setValue('point', '0');
-              viewRef?.current?.scrollToEnd({animated: true})
+              viewRef?.current?.scrollToEnd({animated: true});
             },
             text: '확인',
           },
@@ -481,7 +482,7 @@ const Pages = ({route}) => {
       }
       queryClient.invalidateQueries('orderMeal');
     } catch (err) {
-      Alert.alert("결제",err.toString().replace('error: ',''));
+      Alert.alert('결제', err.toString().replace('error: ', ''));
     } finally {
       setIsPay(false);
     }

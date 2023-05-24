@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useLayoutEffect, useState} from 'react';
+import {ScrollView, Text, View, Pressable} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styled from 'styled-components';
 
 import CategoryIcon from '../../../assets/icons/Map/category.svg';
+import FindIcon from '../../../assets/icons/Map/find.svg';
+import BackArrow from '../../../assets/icons/MealDetail/backArrow.svg';
 import MapIcon from '../../../assets/icons/Spot/map.svg';
 import MealIcon from '../../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../../assets/icons/Spot/user.svg';
@@ -12,15 +15,34 @@ import Typography from '../../../components/Typography';
 import {width, height} from '../../../theme';
 
 export const PAGE_NAME = 'SHARE_SPOT_LIST';
-const ShareSpotList = ({setShowList}) => {
+const ShareSpotList = ({setShowList, showList}) => {
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
   const [touch, setTouch] = useState([0, 1, 2]);
   const [touchInfo, setTouchInfo] = useState([0, 1]);
+
   return (
     <Wrap>
+      <Pressable
+        style={{position: 'relative', marginTop: 8, marginBottom: 12}}
+        // onPress={() => {
+        //   navigation.navigate(MapSearchResult);
+        // }}
+      >
+        <Icon />
+        <Search>
+          <PlaceHolderText>지번, 도로명, 건물명으로 검색</PlaceHolderText>
+        </Search>
+      </Pressable>
+
+      <Caption>가까운 거리순으로 나열됩니다.</Caption>
+      <CategoryWrap onPress={() => setModalVisible(true)}>
+        <CategoryButton distance={6}>
+          <CategoryIcon />
+        </CategoryButton>
+      </CategoryWrap>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Caption>가까운 거리순으로 나열됩니다.</Caption>
         <Contents>
           <SpotNameText>스파크플러스 선릉점</SpotNameText>
           <DiningTypeWrap>
@@ -87,13 +109,9 @@ const ShareSpotList = ({setShowList}) => {
           <Border />
         </Contents>
       </ScrollView>
-      <CategoryWrap onPress={() => setModalVisible(true)}>
-        <CategoryButton distance={6}>
-          <CategoryIcon />
-        </CategoryButton>
-      </CategoryWrap>
+
       <ListButtonWrap>
-        <ListButton onPress={() => setShowList(false)}>
+        <ListButton onPress={() => navigation.goBack()}>
           <MapIcon />
           <ListButtonText>지도보기</ListButtonText>
         </ListButton>
@@ -117,8 +135,9 @@ const ShareSpotList = ({setShowList}) => {
 export default ShareSpotList;
 
 const Wrap = styled.View`
-  margin: 0px 24px;
+  padding: 0px 24px;
   flex: 1;
+  background-color: white;
 `;
 
 const Contents = styled.View`
@@ -160,7 +179,7 @@ const Caption = styled(Typography).attrs({text: 'CaptionR'})`
 const ListButtonWrap = styled.View`
   z-index: 999;
   position: absolute;
-  right: 0px;
+  right: 24px;
   bottom: 56px;
 `;
 
@@ -195,7 +214,26 @@ const CategoryButton = styled(Shadow)`
 `;
 const CategoryWrap = styled.Pressable`
   position: absolute;
-  right: 0px;
-  top: 16px;
+  right: 24px;
+  top: 80px;
   z-index: 99;
+`;
+
+const Search = styled.View`
+  //margin: 0px 24px;
+  background-color: ${({theme}) => theme.colors.grey[8]};
+  padding: 11px 14px 11px 28px;
+  border-radius: 8px;
+  height: 44px;
+`;
+
+const PlaceHolderText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+`;
+const Icon = styled(FindIcon)`
+  position: absolute;
+  bottom: 14px;
+  left: 10px;
+  z-index: 1;
+  margin-right: 4px;
 `;

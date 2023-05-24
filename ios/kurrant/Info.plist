@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.4</string>
+	<string>1.4.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -133,8 +133,6 @@ LwIDAQAB
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSUserNotificationsUsageDescription</key>
-	<string>알림 받기 위해서 권한 허용이 필요 합니다.</string>
 	<key>NMFClientId</key>
 	<string>frbi51gn4o</string>
 	<key>NSAppTransportSecurity</key>
@@ -158,6 +156,8 @@ LwIDAQAB
 	<string>The microphone is accessed for the first time</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Your message to user when the photo library is accessed for the first time</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>알림 받기 위해서 권한 허용이 필요 합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-SemiBold.otf</string>

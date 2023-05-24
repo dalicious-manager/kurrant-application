@@ -3,12 +3,9 @@ import {Controller, useFormContext} from 'react-hook-form';
 import {Image, TouchableOpacity} from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 
-import EyeOff from '../../assets/icons/TextInput/eyeOff.svg';
-import EyeOn from '../../assets/icons/TextInput/eyeOn.svg';
-
+import {textStyles} from './styles';
 import {AntDesignIcon} from '../Icon';
 import Typography from '../Typography';
-import {textStyles} from './styles';
 
 /**
  *
@@ -51,7 +48,7 @@ const Component = forwardRef(
       },
 
       additionalCssOnTextInput = '',
-
+      height = '56px',
       setisFocused,
       label = '',
       caption = '',
@@ -69,15 +66,9 @@ const Component = forwardRef(
       formState: {errors},
       resetField,
     } = useFormContext();
-    const [timer, setTimer] = useState({
-      remainTime: suffix.timer || 0,
-      isRunning: false,
-      firstRunning: false,
-    });
+
     const data = watch(name);
-    const [isShowing, setShowing] = useState(false);
     const [focus, setFocused] = useState(false);
-    const [values, setValues] = useState();
     const themeApp = useTheme();
 
     // Props
@@ -94,18 +85,6 @@ const Component = forwardRef(
     // Suffix Contents
     let suffixContent = '';
     let timerContent = '';
-
-    if (suffix.isNeedDelete && data && focus) {
-      suffixContent = (
-        <TouchableOpacity
-          onPress={() => {
-            resetField(name);
-            ref?.current?.focus();
-          }}>
-          <AntDesignIcon name="closecircle" />
-        </TouchableOpacity>
-      );
-    }
 
     return (
       <Controller
@@ -132,6 +111,7 @@ const Component = forwardRef(
               )}
               {/* TextInput */}
               <ControlContainer
+                heights={height}
                 isEditable={isEditable}
                 isError={errors[name]}
                 {...containerProps}
@@ -217,7 +197,7 @@ const CaptionContainer = styled.View`
 const ControlContainer = styled.View`
   position: relative;
   width: 100%;
-
+  height: ${({heights}) => heights && heights};
   border-radius: 14px;
   ${({isEditable, theme, isError, focus}) => {
     if (isEditable) {

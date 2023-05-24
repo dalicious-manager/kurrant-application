@@ -334,6 +334,9 @@ import PrivateInfo, {
 import ApplySpot, {
   PAGE_NAME as ApplySpotPage,
 } from '../../pages/Spots/shareSpot/ApplySpot';
+import ShareSpotList, {
+  PAGE_NAME as ShareSpotListPage,
+} from '../../pages/Spots/shareSpot/ShareSpotList';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -343,11 +346,7 @@ const Screen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   return (
-
-//     <MainRoot.Navigator initialRouteName={SplashPageName}> 스플래시 돌려놔야함 !!!!
-
-    <MainRoot.Navigator initialRouteName={SpotTypePage}>
-
+    <MainRoot.Navigator initialRouteName={SplashPageName}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -2154,6 +2153,23 @@ const Screen = () => {
         <MainRoot.Screen
           name={ShareSpotMapPage}
           component={ShareSpotMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '공유 스팟 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={ShareSpotListPage}
+          component={ShareSpotList}
           options={{
             headerLeft: () => <BackButton margin={[10, 0]} />,
             headerShown: true,
