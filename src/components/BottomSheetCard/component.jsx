@@ -10,6 +10,7 @@ import {
   Pressable,
   PanResponder,
 } from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
@@ -128,65 +129,65 @@ const BottomSheetCard = props => {
         <TouchableWithoutFeedback onPress={closeModal}>
           <Background />
         </TouchableWithoutFeedback>
-
-        <BottomSheet
-          ref={list}
-          snapPoints={snapPoints}
-          onChange={handleSheetChange}
-          style={{
-            marginBottom: 50,
-          }}>
-          <BottomSheetTitleView>
-            <BottomSheetTitle>{title}</BottomSheetTitle>
-            {description !== '' && (
-              <BottomSheetDecs>{description}</BottomSheetDecs>
-            )}
-          </BottomSheetTitleView>
-          <BottomSheetFlatList
-            data={data}
-            scrollEnabled={snap === 1}
-            onScrollBeginDrag={e => {
-              setScrollStart(e.nativeEvent.contentOffset.y);
-            }}
-            onMomentumScrollBegin={e => {
-              if (scrollEnd === 0) {
-                handleSnapPress(0);
-              }
-            }}
-            onScrollEndDrag={e => {
-              setContentScroll(e.nativeEvent.contentOffset.y === 0);
-              setScrollEnd(e.nativeEvent.contentOffset.y);
-              if (e.nativeEvent.contentOffset.y === 0) {
-                if (contentScroll) {
+        <GestureHandlerRootView style={{flex: 1}}>
+          <BottomSheet
+            ref={list}
+            snapPoints={snapPoints}
+            onChange={handleSheetChange}
+            style={{
+              marginBottom: 50,
+            }}>
+            <BottomSheetTitleView>
+              <BottomSheetTitle>{title}</BottomSheetTitle>
+              {description !== '' && (
+                <BottomSheetDecs>{description}</BottomSheetDecs>
+              )}
+            </BottomSheetTitleView>
+            <BottomSheetFlatList
+              data={data}
+              scrollEnabled={snap === 1}
+              onScrollBeginDrag={e => {
+                setScrollStart(e.nativeEvent.contentOffset.y);
+              }}
+              onMomentumScrollBegin={e => {
+                if (scrollEnd === 0) {
                   handleSnapPress(0);
                 }
-              }
-            }}
-            renderItem={({item}) => (
-              <ContentItemContainer
-                disabled={item.id === 11}
-                onPressIn={pressInUp}
-                onPressOut={pressOutUp}
-                onPress={() => onSelect(item.id, item.text)}>
-                {selected === item.id ? (
-                  <ContentItemBox>
+              }}
+              onScrollEndDrag={e => {
+                setContentScroll(e.nativeEvent.contentOffset.y === 0);
+                setScrollEnd(e.nativeEvent.contentOffset.y);
+                if (e.nativeEvent.contentOffset.y === 0) {
+                  if (contentScroll) {
+                    handleSnapPress(0);
+                  }
+                }
+              }}
+              renderItem={({item}) => (
+                <ContentItemContainer
+                  disabled={item.id === 11}
+                  onPressIn={pressInUp}
+                  onPressOut={pressOutUp}
+                  onPress={() => onSelect(item.id, item.text)}>
+                  {selected === item.id ? (
+                    <ContentItemBox>
+                      <ContentItemText status={item.id}>
+                        {item.text}
+                      </ContentItemText>
+                      <CheckedIcon />
+                    </ContentItemBox>
+                  ) : (
                     <ContentItemText status={item.id}>
                       {item.text}
                     </ContentItemText>
-                    <CheckedIcon />
-                  </ContentItemBox>
-                ) : (
-                  <ContentItemText status={item.id}>
-                    {item.text}
-                  </ContentItemText>
-                )}
-              </ContentItemContainer>
-            )}
-            keyExtractor={item => item.id.toString()}
-          />
-          <ManagePressView />
-        </BottomSheet>
-
+                  )}
+                </ContentItemContainer>
+              )}
+              keyExtractor={item => item.id.toString()}
+            />
+            <ManagePressView />
+          </BottomSheet>
+        </GestureHandlerRootView>
         {booleanValue && (
           <ManagePressView
             onPress={() => {

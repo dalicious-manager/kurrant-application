@@ -12,6 +12,7 @@ import {
   View,
   PanResponder,
 } from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
@@ -126,85 +127,85 @@ const BottomSheetSpot = props => {
         <TouchableWithoutFeedback onPress={closeModal}>
           <Background />
         </TouchableWithoutFeedback>
-
-        <BottomSheet
-          ref={list}
-          snapPoints={snapPoints}
-          onChange={handleSheetChange}
-          style={{
-            marginBottom: 50,
-          }}>
-          <BottomSheetTitleView>
-            <BottomSheetTitle>{title}</BottomSheetTitle>
-            {description !== '' && (
-              <BottomSheetDecs>{description}</BottomSheetDecs>
-            )}
-          </BottomSheetTitleView>
-          <BottomSheetFlatList
-            data={data}
-            scrollEnabled={snap === 1}
-            onScrollBeginDrag={e => {
-              setScrollStart(e.nativeEvent.contentOffset.y);
-            }}
-            onMomentumScrollBegin={() => {
-              if (scrollEnd === 0) {
-                handleSnapPress(0);
-              }
-            }}
-            onScrollEndDrag={e => {
-              setContentScroll(e.nativeEvent.contentOffset.y === 0);
-              setScrollEnd(e.nativeEvent.contentOffset.y);
-              if (e.nativeEvent.contentOffset.y === 0) {
-                if (contentScroll) {
+        <GestureHandlerRootView style={{flex: 1}}>
+          <BottomSheet
+            ref={list}
+            snapPoints={snapPoints}
+            onChange={handleSheetChange}
+            style={{
+              marginBottom: 50,
+            }}>
+            <BottomSheetTitleView>
+              <BottomSheetTitle>{title}</BottomSheetTitle>
+              {description !== '' && (
+                <BottomSheetDecs>{description}</BottomSheetDecs>
+              )}
+            </BottomSheetTitleView>
+            <BottomSheetFlatList
+              data={data}
+              scrollEnabled={snap === 1}
+              onScrollBeginDrag={e => {
+                setScrollStart(e.nativeEvent.contentOffset.y);
+              }}
+              onMomentumScrollBegin={() => {
+                if (scrollEnd === 0) {
                   handleSnapPress(0);
                 }
-              }
-            }}
-            renderItem={({item}) => (
-              <>
-                <ItemContainer>
-                  <GroupView>
-                    <GroupName>{item.clientName}</GroupName>
-                    <View style={{marginLeft: 8}}>
-                      <Label
-                        label={
-                          item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
-                        }
-                        type={item.spotType === 0 ? 'red' : 'green'}
-                      />
-                    </View>
-                  </GroupView>
-                  <Border />
-                </ItemContainer>
+              }}
+              onScrollEndDrag={e => {
+                setContentScroll(e.nativeEvent.contentOffset.y === 0);
+                setScrollEnd(e.nativeEvent.contentOffset.y);
+                if (e.nativeEvent.contentOffset.y === 0) {
+                  if (contentScroll) {
+                    handleSnapPress(0);
+                  }
+                }
+              }}
+              renderItem={({item}) => (
+                <>
+                  <ItemContainer>
+                    <GroupView>
+                      <GroupName>{item.clientName}</GroupName>
+                      <View style={{marginLeft: 8}}>
+                        <Label
+                          label={
+                            item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
+                          }
+                          type={item.spotType === 0 ? 'red' : 'green'}
+                        />
+                      </View>
+                    </GroupView>
+                    <Border />
+                  </ItemContainer>
 
-                {item.spots.map(el => {
-                  return (
-                    <ContentItemContainer
-                      onPressIn={pressInUp}
-                      onPressOut={pressOutUp}
-                      onPress={() => {
-                        onSelect(el.spotId);
-                        onPressEvent(el.spotId);
-                      }}
-                      key={el.spotId}>
-                      {el.spotId === userSpotId ? (
-                        <ContentItemBox>
+                  {item.spots.map(el => {
+                    return (
+                      <ContentItemContainer
+                        onPressIn={pressInUp}
+                        onPressOut={pressOutUp}
+                        onPress={() => {
+                          onSelect(el.spotId);
+                          onPressEvent(el.spotId);
+                        }}
+                        key={el.spotId}>
+                        {el.spotId === userSpotId ? (
+                          <ContentItemBox>
+                            <ContentItemText>{el.spotName}</ContentItemText>
+                            <CheckedIcon />
+                          </ContentItemBox>
+                        ) : (
                           <ContentItemText>{el.spotName}</ContentItemText>
-                          <CheckedIcon />
-                        </ContentItemBox>
-                      ) : (
-                        <ContentItemText>{el.spotName}</ContentItemText>
-                      )}
-                    </ContentItemContainer>
-                  );
-                })}
-              </>
-            )}
-            keyExtractor={item => item.clientId.toString()}
-          />
-          <ManagePressView />
-        </BottomSheet>
-
+                        )}
+                      </ContentItemContainer>
+                    );
+                  })}
+                </>
+              )}
+              keyExtractor={item => item.clientId.toString()}
+            />
+            <ManagePressView />
+          </BottomSheet>
+        </GestureHandlerRootView>
         {booleanValue && (
           <ManagePressView
             onPress={() => {
