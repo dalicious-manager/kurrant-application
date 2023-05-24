@@ -1,6 +1,6 @@
 {
   "name": "kurrant",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -52,7 +52,7 @@
     "react-native-event-source": "^1.1.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-fbsdk-next": "^11.1.0",
-    "react-native-gesture-handler": "^2.10.0",
+    "react-native-gesture-handler": "^2.10.1",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-get-random-values": "^1.8.0",
     "react-native-image-picker": "^5.0.1",
@@ -84,7 +84,6 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "pod-install": "0.1.38",
     "@babel/core": "^7.12.9",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/plugin-transform-destructuring": "^7.20.2",
@@ -99,29 +98,15 @@
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.72.1",
+    "pod-install": "0.1.38",
     "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "18.1.0"
   },
   "reactNativePermissionsIOS": [
-    "AppTrackingTransparency",
-    "BluetoothPeripheral",
-    "Calendars",
     "Camera",
-    "Contacts",
-    "FaceID",
-    "LocationAccuracy",
-    "LocationAlways",
     "LocationWhenInUse",
-    "MediaLibrary",
-    "Microphone",
-    "Motion",
     "Notifications",
-    "PhotoLibrary",
-    "PhotoLibraryAddOnly",
-    "Reminders",
-    "Siri",
-    "SpeechRecognition",
-    "StoreKit"
+    "PhotoLibrary"
   ],
   "resolutions": {
     "react-native-reanimated": "^2.10.0"

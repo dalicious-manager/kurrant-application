@@ -1,5 +1,4 @@
 import React from 'react';
-
 import NaverSnsIcon from '~assets/icons/NaverSnsIcon.svg';
 
 import IconWrapper from '../component';

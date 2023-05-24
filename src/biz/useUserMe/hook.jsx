@@ -3,6 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import {Alert} from 'react-native';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
+
 import * as Fetch from './Fetch';
 import {
   isAlarmSettingLoadingAtom,
@@ -89,11 +90,11 @@ const useUserMe = () => {
       setMyInfo(res.data);
     } catch (err) {
       console.log(
-        err.toString().replace('Error:', '').replace('error:', ''),
+        err.toString()?.replace('Error:', '')?.replace('error:', ''),
         '123456',
       );
       if (
-        err.toString().replace('Error:', '').trim().replace('error:', '') ===
+        err.toString()?.replace('Error:', '').trim()?.replace('error:', '') ===
         '403'
       ) {
         AsyncStorage.clear();

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import CheckIcon from '../../../assets/icons/check.svg';
-
 import IconWrapper from '../component';
 /**
  *

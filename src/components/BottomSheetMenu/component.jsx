@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState, useCallback} from 'react';
 import {
   Modal,
@@ -10,19 +11,18 @@ import {
   View,
   Text,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 
-import WarningIcon from '../../assets/icons/MealCart/warning.svg';
-import Count from '../Count';
-import FastImage from 'react-native-fast-image';
-import Label from '../Label';
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
-import Typography from '../Typography';
-import withCommas from '../../utils/withCommas';
+import WarningIcon from '../../assets/icons/MealCart/warning.svg';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
-import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
-import {useNavigation} from '@react-navigation/native';
 import useUserInfo from '../../biz/useUserInfo';
+import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
+import withCommas from '../../utils/withCommas';
+import Count from '../Count';
+import Label from '../Label';
+import Typography from '../Typography';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 const BottomSheet = props => {

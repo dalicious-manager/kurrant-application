@@ -9,7 +9,6 @@ export const getLabelSizeStyle = sizeType => {
 const labelSizeStyle = {
   labelM: textStyles.Body06R,
   labelS: textStyles.SmallLabel,
-  labelSpot: textStyles.Body06R,
 };
 
 export const getLabelWrapColor = type => {
@@ -17,8 +16,6 @@ export const getLabelWrapColor = type => {
 };
 
 const labelWrapColor = {
-
-
     grey2: css`
         background-color: ${({ theme }) => theme.colors.grey[2]};
     `,
@@ -54,11 +51,11 @@ const labelWrapColor = {
 }
 
 
+
 export const getLabelColor = type => {
   return labelColor[type];
 };
 const labelColor = {
-
 
     grey2: css`
         color: ${({ theme }) => theme.colors.grey[0]};

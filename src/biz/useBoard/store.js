@@ -1,4 +1,4 @@
-import { atomWithReset } from 'jotai/utils';
+import {atomWithReset} from 'jotai/utils';
 
 export const noticeAtom = atomWithReset();
 export const alarmAtom = atomWithReset();

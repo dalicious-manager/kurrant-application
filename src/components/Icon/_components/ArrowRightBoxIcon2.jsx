@@ -1,5 +1,4 @@
 import React from 'react';
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight2.svg';
 
 import IconWrapper from '../component';

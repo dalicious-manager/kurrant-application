@@ -482,7 +482,7 @@ const Pages = ({route}) => {
       }
       queryClient.invalidateQueries('orderMeal');
     } catch (err) {
-      Alert.alert('결제', err.toString().replace('error: ', ''));
+      Alert.alert('결제', err.toString()?.replace('error: ', ''));
     } finally {
       setIsPay(false);
     }

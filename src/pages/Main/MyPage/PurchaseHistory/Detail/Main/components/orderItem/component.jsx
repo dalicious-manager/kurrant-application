@@ -26,7 +26,7 @@ const Component = ({orderItem, onCancel = () => {}}) => {
     try {
       await orderState({id: id});
     } catch (error) {
-      Alert.alert('상태변경', error.toString().replace('error: '));
+      Alert.alert('상태변경', error.toString()?.replace('error: '));
     }
   };
   const {
@@ -100,7 +100,7 @@ const Component = ({orderItem, onCancel = () => {}}) => {
                               } catch (error) {
                                 Alert.alert(
                                   '메뉴취소 불가',
-                                  error.toString().replace('error: ', ''),
+                                  error.toString()?.replace('error: ', ''),
                                 );
                               }
                             },

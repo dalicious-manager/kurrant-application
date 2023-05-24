@@ -55,7 +55,7 @@ const Pages = ({route}) => {
       };
       setPurchaseDetail(refund);
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   const cancelAll = async () => {
@@ -88,7 +88,7 @@ const Pages = ({route}) => {
       getPurchaseDetail(reqs);
       queryClient.invalidateQueries('pointList');
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   const possibleOrder =
@@ -220,7 +220,7 @@ const Pages = ({route}) => {
                           } catch (error) {
                             Alert.alert(
                               '메뉴취소 불가',
-                              error.toString().replace('error: ', ''),
+                              error.toString()?.replace('error: ', ''),
                             );
                           }
                         },

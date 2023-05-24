@@ -3,7 +3,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
-import React, {useRef, useState, useEffect, useCallback} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   ScrollView,
   View,
@@ -16,15 +16,13 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import PagerView from 'react-native-pager-view';
-import Animateds, {useEvent, useHandler} from 'react-native-reanimated';
+import Animateds from 'react-native-reanimated';
 import styled, {css} from 'styled-components/native';
 
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import useSupportPrices from '../../../../../biz/useSupportPrice/hook';
 import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 import useUserInfo from '../../../../../biz/useUserInfo/hook';
 import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
@@ -36,7 +34,6 @@ import CalendarButton from '../../../../../components/CalendarButton';
 import Label from '../../../../../components/Label';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
-import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {
   useAddShoppingBasket,
   useGetShoppingBasket,
@@ -544,7 +541,7 @@ const Pages = ({route}) => {
     //       await updateMeal(req);
     //     }
     //   } catch (error) {
-    //     if (error.toString().replace('Error.:', '').trim() === '403') {
+    //     if (error.toString()?.replace('Error.:', '').trim() === '403') {
     //       navigation.reset({
     //         index: 0,
     //         routes: [

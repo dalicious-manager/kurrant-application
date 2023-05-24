@@ -1,4 +1,5 @@
 import {useAtom} from 'jotai';
+import {Alert} from 'react-native';
 
 import * as Fetch from './Fetch';
 import {
@@ -7,7 +8,6 @@ import {
   isCancelSpotAtom,
   userGroupSpotListAtom,
 } from './store';
-import { Alert } from 'react-native';
 
 const useGroupSpots = () => {
   const [isApplicationList, setApplicationList] = useAtom(applicationListAtom); // 아파트 + 프라이빗 스팟
@@ -24,13 +24,17 @@ const useGroupSpots = () => {
 
       setApplicationList(res.data);
     } catch (err) {
-      Alert.alert('그룹/스팟 신청 목록 조회', err.toString().replace('error: ', ''), [
-        {
-          text: '확인',
-          onPress: () => {},
-          style: 'cancel',
-        },
-      ]);
+      Alert.alert(
+        '그룹/스팟 신청 목록 조회',
+        err.toString()?.replace('error: ', ''),
+        [
+          {
+            text: '확인',
+            onPress: () => {},
+            style: 'cancel',
+          },
+        ],
+      );
     }
   };
   // 유저가 속한 그룹 스팟 조회
@@ -41,7 +45,7 @@ const useGroupSpots = () => {
       setUserGroupSpotCheck(res.data);
       return res;
     } catch (err) {
-      Alert.alert('그룹/스팟', err.toString().replace('error: ', ''), [
+      Alert.alert('그룹/스팟', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},
@@ -100,7 +104,7 @@ const useGroupSpots = () => {
 
       return res;
     } catch (err) {
-      Alert.alert('그룹 탈퇴', err.toString().replace('error: ', ''), [
+      Alert.alert('그룹 탈퇴', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},

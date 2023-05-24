@@ -6,7 +6,6 @@ import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
-  StyleSheet,
   Alert,
   StatusBar,
   AppState,
@@ -15,7 +14,6 @@ import {
   Pressable,
   Text,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import styled, {css} from 'styled-components/native';
@@ -31,36 +29,24 @@ import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
-import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
 import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useMembership from '../../../../../biz/useMembership';
-import useOrderMeal from '../../../../../biz/useOrderMeal';
-import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
-import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
 import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
-import {
-  getStorage,
-  setStorage,
-  removeItemFromStorage,
-} from '../../../../../utils/asyncStorage';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
-import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
-import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
@@ -86,8 +72,7 @@ const Pages = () => {
 
   const [isVisible, setIsVisible] = useState(true);
   const weekly = useAtomValue(weekAtom);
-  const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
-    useUserInfo();
+  const {isUserInfo, userInfo} = useUserInfo();
 
   const currentVersion = VersionCheck.getCurrentVersion();
   const userName = isUserInfo?.name;
@@ -97,7 +82,7 @@ const Pages = () => {
   const clientId = isUserInfo?.groupId;
   const {
     saveFcmToken,
-    readableAtom: {userRole, fcmToken},
+    readableAtom: {userRole},
   } = useAuth();
   const {
     userGroupSpotCheck,
@@ -128,12 +113,10 @@ const Pages = () => {
     readableAtom: {membershipHistory},
   } = useMembership();
 
-  const {
-    data: dailyfoodData,
-    refetch: dailyfoodRefetch,
-    isLoading: dailyLoading,
-    isFetching: dailyFetching,
-  } = useGetDailyfood(userSpotId, formattedWeekDate(new Date()));
+  const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
+    userSpotId,
+    formattedWeekDate(new Date()),
+  );
   const [modalVisible, setModalVisible] = useState(false);
 
   const [show, setShow] = useState(false);
@@ -290,7 +273,7 @@ const Pages = () => {
       try {
         orderMealRefetch();
       } catch (e) {
-        alert(e.toString().replace('error:'));
+        alert(e.toString()?.replace('error:'));
       }
     }, [isCancelSpot, appState]),
   );
@@ -507,7 +490,6 @@ const Pages = () => {
   const handleStatus = e => {
     setAppState(e);
   };
-  const mockStatus = 10;
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
     return () => {
@@ -520,8 +502,8 @@ const Pages = () => {
         await userGroupSpotCheck();
         await VersionCheck.getLatestVersion().then(latestVersion => {
           const regex = /[^0-9]/g;
-          const result = currentVersion.replace(regex, '');
-          const result2 = latestVersion.replace(regex, '');
+          const result = currentVersion?.replace(regex, '');
+          const result2 = latestVersion?.replace(regex, '');
           if (Number(result) < Number(result2)) {
             Alert.alert(
               '앱 업데이트',
@@ -632,7 +614,7 @@ const Pages = () => {
               if (m.serviceDate === date)
                 return (
                   <React.Fragment key={`${m.id} ${idx}`}>
-                    {m.orderItemDtoList.map((meal, i) => {
+                    {m.orderItemDtoList.map(meal => {
                       return (
                         <MealInfoComponent
                           m={m}
@@ -921,35 +903,9 @@ const MembershipImages = styled.Image`
   border-radius: 14px;
 `;
 
-const CatorWrap = styled.View`
-  ${BoxWrap};
-  ${Display};
-  justify-content: space-between;
-`;
-
-const Cator = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const MarketWrap = styled.View`
-  ${BoxWrap};
-  ${Display};
-  justify-content: space-between;
-`;
-
-const Market = styled.View`
-  flex-direction: row;
-`;
-
 const TitleText = styled(Typography).attrs({text: 'Body05SB'})`
   margin-left: 14px;
   color: ${props => props.theme.colors.grey[2]};
-`;
-
-const CountWrap = styled.View`
-  flex-direction: row;
-  align-items: center;
 `;
 
 const ButtonWrap = styled.View`
@@ -957,11 +913,6 @@ const ButtonWrap = styled.View`
   bottom: 17px;
   /* margin:0px 24px; */
   width: 100%;
-`;
-
-const MealCheckWrap = styled.View`
-  justify-content: center;
-  align-items: center;
 `;
 
 // text
@@ -973,10 +924,6 @@ const LargeTitle = styled(Typography).attrs({text: 'LargeTitle'})`
 `;
 
 const SemiBoldTxt = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
-const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[2]};
 `;
 
@@ -994,14 +941,6 @@ const SpotNameText = styled(Typography).attrs({text: 'BottomButtonSB'})`
   margin-right: 6px;
 `;
 
-const DiningType = styled(Typography).attrs({text: 'CaptionSB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
-const Count = styled(Typography).attrs({text: 'Title03SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-`;
-
 const CountText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-left: 4px;
@@ -1014,15 +953,6 @@ const MembershipText = styled(SemiBoldTxt)`
   position: absolute;
   left: 24px;
   top: 20px;
-`;
-
-const MealCheckText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-  margin-bottom: 4px;
-`;
-
-const MealCheckButtonText = styled(Typography).attrs({text: 'Button09SB'})`
-  color: ${props => props.theme.colors.grey[0]};
 `;
 
 const Button = styled.Pressable`

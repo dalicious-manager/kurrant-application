@@ -1,8 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, Alert, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  Alert,
+  View,
+  ScrollView,
+} from 'react-native';
 import styled from 'styled-components/native';
 
 import useAuth from '../../../../../biz/useAuth';
@@ -61,29 +67,29 @@ const Pages = ({route}) => {
   const callPhoneAuth = async () => {
     if (phoneNumber && !errors.phone) {
       try {
-        if(!isAuthLoading){
-          setAuthLoading(true)
+        if (!isAuthLoading) {
+          setAuthLoading(true);
           await auth.requestPhoneAuth({to: phoneNumber}, 3);
           setAuth(true);
         }
       } catch (err) {
-        Alert.alert("핸드폰 인증",err.toString().replace('error: '))
-      }finally{
-        setAuthLoading(false)
+        Alert.alert('핸드폰 인증', err.toString()?.replace('error: '));
+      } finally {
+        setAuthLoading(false);
       }
     }
   };
   const callMailAuth = async () => {
     try {
-      if(!isAuthLoading){
-        setAuthLoading(true)
+      if (!isAuthLoading) {
+        setAuthLoading(true);
         await auth.requestEmailAuth({receivers: [email]}, 3);
         setAuth(true);
-      } 
+      }
     } catch (err) {
-      Alert.alert("이메일 인증",err.toString().replace('error: '))
-    }finally{
-      setAuthLoading(false)
+      Alert.alert('이메일 인증', err.toString()?.replace('error: '));
+    } finally {
+      setAuthLoading(false);
     }
   };
   const isValidation =
@@ -189,7 +195,7 @@ const Pages = ({route}) => {
                             isAuth: true,
                             authText: '인증요청',
                             authPressEvent: callPhoneAuth,
-                            disabledEvent:!isAuthLoading
+                            disabledEvent: !isAuthLoading,
                             // timer:900,
                           }}
                           rules={{
@@ -217,14 +223,14 @@ const Pages = ({route}) => {
                             isAuth: true,
                             authText: '인증요청',
                             authPressEvent: callMailAuth,
-                            disabledEvent:!isAuthLoading
+                            disabledEvent: !isAuthLoading,
                             // timer:900,
                           }}
                           rules={{
                             required: '필수 입력 항목 입니다.',
                             pattern: {
                               value:
-                              /^(([^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                /^(([^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                               message: '올바른 이메일 주소를 입력해주세요.',
                             },
                           }}
@@ -245,7 +251,7 @@ const Pages = ({route}) => {
                             authPressEvent:
                               type === 'phone' ? callPhoneAuth : callMailAuth,
                             timer: 180,
-                            disabledEvent:!isAuthLoading
+                            disabledEvent: !isAuthLoading,
                           }}
                           rules={{
                             required: '필수 입력 항목 입니다.',

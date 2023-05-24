@@ -1,5 +1,4 @@
-import { fetchJson } from '../../utils/fetch';
-
+import {fetchJson} from '../../utils/fetch';
 
 export async function joinUser(body, option) {
   const fetchRes = await fetchJson(`/auth/join`, 'POST', {
@@ -8,4 +7,3 @@ export async function joinUser(body, option) {
   });
   return fetchRes;
 }
-

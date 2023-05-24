@@ -1,4 +1,5 @@
 import {useMutation, useQuery, useQueryClient} from 'react-query';
+
 import {alramApis} from '../api/arlam';
 
 export function useGetAlramSetting() {
@@ -8,9 +9,9 @@ export function useGetAlramSetting() {
 }
 export function useSetAlramSetting() {
   const queryClient = useQueryClient();
-  return useMutation(data => alramApis.setAlram(data),{
-    onSuccess:()=>{
-      queryClient.invalidateQueries('alramSetting')
-    }
+  return useMutation(data => alramApis.setAlram(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('alramSetting');
+    },
   });
 }

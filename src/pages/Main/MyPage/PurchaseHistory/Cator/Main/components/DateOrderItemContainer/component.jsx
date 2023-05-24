@@ -61,7 +61,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
       });
       setMealPurchase(refund);
     } catch (error) {
-      alert(error.toString().replace('error:', ''));
+      alert(error.toString()?.replace('error:', ''));
     }
   };
   const {mutateAsync: orderState} = useConfirmOrderState();
@@ -70,7 +70,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
     try {
       await orderState({id: id});
     } catch (error) {
-      Alert.alert('상태변경', error.toString().replace('error: '));
+      Alert.alert('상태변경', error.toString()?.replace('error: '));
     }
   };
   const changeItem = async (id, serviceDate) => {
@@ -244,7 +244,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                           '메뉴취소 불가',
                                           error
                                             .toString()
-                                            .replace('error: ', ''),
+                                            ?.replace('error: ', ''),
                                         );
                                       }
                                     },

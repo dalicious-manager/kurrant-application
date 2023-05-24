@@ -144,7 +144,7 @@ const Pages = ({route}) => {
               return `${card.id}`;
           })
           .join()
-          .replace(',', '')
+          ?.replace(',', '')
           .toString(),
       ),
     );
@@ -177,7 +177,7 @@ const Pages = ({route}) => {
                       .slice(-4)})`;
                 })
                 ?.join()
-                .replace(/,/g, '')
+                ?.replace(/,/g, '')
                 .toString().length > 1
                 ? cardList
                     .map(card => {
@@ -187,7 +187,7 @@ const Pages = ({route}) => {
                           .slice(-4)})`;
                     })
                     ?.join()
-                    .replace(/,/g, '')
+                    ?.replace(/,/g, '')
                     .toString()
                 : '선택'}
             </SpotName>
@@ -208,7 +208,7 @@ const Pages = ({route}) => {
                       .slice(-4)})`;
                 })
                 ?.join()
-                .replace(/,/g, '')
+                ?.replace(/,/g, '')
                 .toString().length > 1
                 ? cardList
                     .map(card => {
@@ -218,7 +218,7 @@ const Pages = ({route}) => {
                           .slice(-4)})`;
                     })
                     .join()
-                    .replace(/,/g, '')
+                    ?.replace(/,/g, '')
                     .toString()
                 : '선택'}
             </SpotName>

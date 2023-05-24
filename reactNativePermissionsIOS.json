@@ -1,23 +1,8 @@
 {
-    "reactNativePermissionsIOS": [
-        "AppTrackingTransparency",
-        "BluetoothPeripheral",
-        "Calendars",
-        "Camera",
-        "Contacts",
-        "FaceID",
-        "LocationAccuracy",
-        "LocationAlways",
-        "LocationWhenInUse",
-        "MediaLibrary",
-        "Microphone",
-        "Motion",
-        "Notifications",
-        "PhotoLibrary",
-        "PhotoLibraryAddOnly",
-        "Reminders",
-        "Siri",
-        "SpeechRecognition",
-        "StoreKit"
-      ]
+  "reactNativePermissionsIOS": [
+    "Camera",
+    "LocationWhenInUse",
+    "Notifications",
+    "PhotoLibrary"
+  ]
 }

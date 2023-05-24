@@ -1,14 +1,14 @@
-import { atomWithReset } from 'jotai/utils';
+import {atomWithReset} from 'jotai/utils';
 
-// 신청자 
-export const isCorporationApplicant = atomWithReset({})
+// 신청자
+export const isCorporationApplicant = atomWithReset({});
 
 // 그룹 postCode
 export const isCorpFullAddressAtom = atomWithReset('');
 export const isCorpSendAddressAtom = atomWithReset({});
 export const isCorpSendAddressInfoAtom = atomWithReset({});
 
-// 배송 날짜 
+// 배송 날짜
 export const corpApplicationDate = atomWithReset('');
 
 // 식사 정보

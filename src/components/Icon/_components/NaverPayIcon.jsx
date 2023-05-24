@@ -1,5 +1,4 @@
 import React from 'react';
-
 import NaverPayIcon from '~assets/icons/NaverPay.svg';
 
 import IconWrapper from '../component';

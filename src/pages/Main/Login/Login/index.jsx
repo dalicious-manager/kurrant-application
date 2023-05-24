@@ -1,44 +1,39 @@
+/* eslint-disable import/order */
+import {appleAuthAndroid} from '@invertase/react-native-apple-authentication';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useCallback} from 'react';
 import {
-  ActivityIndicator,
   Alert,
   BackHandler,
   Dimensions,
   Platform,
   Pressable,
-  SafeAreaView,
-  TouchableOpacity,
-  View,
   Linking,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import styled, {css} from 'styled-components/native';
+import Config from 'react-native-config';
 import {Settings} from 'react-native-fbsdk-next';
+import VersionCheck from 'react-native-version-check';
+import styled, {css} from 'styled-components/native';
+import {v4 as uuid} from 'uuid';
 
+import LoginMain from './LoginMain';
 import {LogoBackground} from '../../../../assets';
+import CsIcon from '../../../../assets/icons/Home/cs.svg';
+import Balloon from '../../../../components/Balloon';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
-import Balloon from '../../../../components/Balloon';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
-import {appleAuthAndroid} from '@invertase/react-native-apple-authentication';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {getStorage} from '../../../../utils/asyncStorage';
 import snsLogin from '../../../../utils/snsLogin';
-import LoginMain from './LoginMain';
-import CsIcon from '../../../../assets/icons/Home/cs.svg';
+
 import 'react-native-get-random-values';
-import {v4 as uuid} from 'uuid';
 
 import LogoImageSvg from '../../../../assets/icons/Logo.svg';
 import useAuth from '../../../../biz/useAuth';
-import Config from 'react-native-config';
-import useUserMe from '../../../../biz/useUserMe';
 import {PAGE_NAME as FAQListPageName} from '../../MyPage/FAQ';
-import VersionCheck from 'react-native-version-check';
-import {formattedLogin} from '../../../../utils/statusFormatter';
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -61,8 +56,8 @@ const Pages = ({route}) => {
   const navigation = useNavigation();
   const toast = Toast();
 
-  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
-  const [lastLogin,setLastLogin] = useState();
+  const {balloonEvent, BalloonWrap, balloonEventNotOut} = Balloon();
+  const [lastLogin, setLastLogin] = useState();
 
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
@@ -160,8 +155,8 @@ const Pages = ({route}) => {
       const getData = async () => {
         await VersionCheck.getLatestVersion().then(latestVersion => {
           const regex = /[^0-9]/g;
-          const result = currentVersion.replace(regex, "");
-          const result2 = latestVersion.replace(regex, "");
+          const result = currentVersion?.replace(regex, '');
+          const result2 = latestVersion?.replace(regex, '');
           if (Number(result) < Number(result2)) {
             Alert.alert(
               '앱 업데이트',
@@ -267,7 +262,6 @@ const Pages = ({route}) => {
           </Pressable>
         </LoginContainer>
         <toast.ToastWrap message={'뒤로버튼 한번 더 누르시면 종료됩니다.'} />
-       
       </WrapperBox>
     </SafeView>
   );

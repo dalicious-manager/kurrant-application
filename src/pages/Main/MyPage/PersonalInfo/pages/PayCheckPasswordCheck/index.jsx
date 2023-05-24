@@ -50,7 +50,7 @@ export default function PasswordCheck({route}) {
           });
         if (email?.data === 3) setModalVisible(true);
       } catch (e) {
-        Alert.alert('알림', e.toString().replace('error: ', ''));
+        Alert.alert('알림', e.toString()?.replace('error: ', ''));
       }
     }
   };

@@ -14,21 +14,21 @@ export function cardNumberFormatter(oldValue, newValue) {
 }
 export const cardSerialNumberFormatter = serialnumber => {
   if (!serialnumber) return;
-  if (serialnumber.replace(/\W/gi, '').length > 16)
+  if (serialnumber?.replace(/\W/gi, '').length > 16)
     return serialnumber.substring(0, 19);
   const {card} = cardValidator.number(serialnumber);
   console.log(serialnumber.match(/[0-9●]{1,3}/));
   if (card?.type === 'american-express') {
     const fir = serialnumber
-      .replace(/\W/gi, '')
+      ?.replace(/\W/gi, '')
       .match(/[0-9●]{1,10}/)[0]
       ?.substring(0, 4);
     const sec = serialnumber
-      .replace(/\W/gi, '')
+      ?.replace(/\W/gi, '')
       .match(/[0-9●]{1,10}/)[0]
       ?.substring(4, 10);
     const thir = serialnumber
-      .replace(/\W/gi, '')
+      ?.replace(/\W/gi, '')
       .match(/[0-9●]{1,15}/)[0]
       ?.substring(10, 15);
     console.log(fir, sec, thir);
@@ -49,7 +49,7 @@ export const cardSerialNumberFormatter = serialnumber => {
 };
 export function expirationDateFormatter(serialnumber) {
   if (!serialnumber) return;
-  if (serialnumber.replace(/\W/gi, '').length > 4)
+  if (serialnumber?.replace(/\W/gi, '').length > 4)
     return serialnumber.substring(0, 5);
   return (
     serialnumber
@@ -61,7 +61,7 @@ export function expirationDateFormatter(serialnumber) {
 
 export function checkCorporateRegiNumber(number) {
   var numberMap = number
-    .replace(/-/gi, '')
+    ?.replace(/-/gi, '')
     .split('')
     .map(function (d) {
       return parseInt(d, 10);

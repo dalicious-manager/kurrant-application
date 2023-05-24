@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components/native';
-
 import SettingIcon from '~assets/icons/notify-setting.svg';
 
 import IconWrapper from '../component';
@@ -13,7 +12,7 @@ import IconWrapper from '../component';
  * @Reference https://oblador.github.io/react-native-vector-icons/
  * @returns
  */
-const Component = ({ size = 20, color, style, onPressEvent}) => {
+const Component = ({size = 20, color, style, onPressEvent}) => {
   return (
     <Container onPress={onPressEvent}>
       <IconWrapper style={style}>
@@ -25,6 +24,4 @@ const Component = ({ size = 20, color, style, onPressEvent}) => {
 
 export default Component;
 
-const Container = styled.Pressable`
-  
-`
+const Container = styled.Pressable``;

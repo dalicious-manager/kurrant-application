@@ -48,7 +48,7 @@ export default function PasswordCheck({route}) {
     } catch (error) {
       Alert.alert(
         '결제비밀번호 변경 실패',
-        error.toString().replace('error:', ''),
+        error.toString()?.replace('error:', ''),
       );
     }
   };

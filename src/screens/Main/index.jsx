@@ -307,8 +307,6 @@ import NotificationCenter, {
   PAGE_NAME as NotificationCenterName,
 } from '../../pages/NotificationCenter';
 import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
-import {getStorage} from '../../utils/asyncStorage';
-import {SCREEN_NAME} from '../Main/Bnb';
 
 // map
 import SpotType, {PAGE_NAME as SpotTypePage} from '../../pages/Spots/SpotType';
@@ -344,7 +342,6 @@ const Screen = () => {
   const [isLoginLoading] = useAtom(isLoginLoadingAtom);
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
-  const route = useRoute();
   return (
     <MainRoot.Navigator initialRouteName={SplashPageName}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
@@ -353,7 +350,7 @@ const Screen = () => {
           component={LoginMainModal}
           options={{
             headerLeft: () => <BackButton mode="modal" />,
-            headerShown: false,
+            headerShown: true,
             headerShadowVisible: false,
             headerTransparent: true,
             title: '',
@@ -493,7 +490,7 @@ const Screen = () => {
           name={EmailLoginModalModalPageName}
           component={EmailLoginModal}
           options={{
-            headerShown: !isLoginLoading,
+            headerShown: !isLoginLoading || false,
             headerShadowVisible: false,
             title: '',
             headerTitleAlign: 'center',
@@ -819,51 +816,49 @@ const Screen = () => {
                 <DeleteTxt>
                   <NotifySettingIcon
                     onPressEvent={async () => {
-                      await checkNotifications().then(
-                        async ({status, settings}) => {
-                          if (status !== RESULTS.GRANTED) {
-                            if (
-                              status === RESULTS.BLOCKED ||
-                              status === RESULTS.DENIED
-                            ) {
-                              Alert.alert(
-                                '알림 권한 설정',
-                                '알림을 설정 하기 위해서는 권한 설정이 필요합니다.',
-                                [
-                                  {
-                                    text: '확인',
-                                    onPress: () => {
-                                      openSettings().catch(() =>
-                                        console.warn('알림설정 화면 이동 오류'),
-                                      );
-                                    },
-                                    style: 'cancel',
+                      await checkNotifications().then(async ({status}) => {
+                        if (status !== RESULTS.GRANTED) {
+                          if (
+                            status === RESULTS.BLOCKED ||
+                            status === RESULTS.DENIED
+                          ) {
+                            Alert.alert(
+                              '알림 권한 설정',
+                              '알림을 설정 하기 위해서는 권한 설정이 필요합니다.',
+                              [
+                                {
+                                  text: '확인',
+                                  onPress: () => {
+                                    openSettings().catch(() =>
+                                      console.warn('알림설정 화면 이동 오류'),
+                                    );
                                   },
-                                  {
-                                    text: '취소',
-                                    onPress: () => {},
-                                    style: 'cancel',
-                                  },
-                                ],
-                              );
-                            } else {
-                              await requestNotifications([
-                                'alert',
-                                'badge',
-                                'sound',
-                                'providesAppSettings',
-                              ]).then(({status, settings}) => {
-                                if (status === RESULTS.BLOCKED) {
-                                  console.log(settings, 'notificationCenter');
-                                  // openSettings().catch(() => console.warn('cannot open settings'));
-                                }
-                              });
-                            }
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: '취소',
+                                  onPress: () => {},
+                                  style: 'cancel',
+                                },
+                              ],
+                            );
                           } else {
-                            navigation.navigate(NotificationSettingPageName);
+                            await requestNotifications([
+                              'alert',
+                              'badge',
+                              'sound',
+                              'providesAppSettings',
+                            ]).then(({status, settings}) => {
+                              if (status === RESULTS.BLOCKED) {
+                                console.log(settings, 'notificationCenter');
+                                // openSettings().catch(() => console.warn('cannot open settings'));
+                              }
+                            });
                           }
-                        },
-                      );
+                        } else {
+                          navigation.navigate(NotificationSettingPageName);
+                        }
+                      });
                     }}
                   />
                 </DeleteTxt>

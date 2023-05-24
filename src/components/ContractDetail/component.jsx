@@ -1,11 +1,11 @@
 import React from 'react';
-import styled, { css } from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 
 import Typography from '../Typography';
 
 /** 예시 */
 // <ContractDetail renderItem={renderItem} />
-// 
+//
 // const renderItem = {
 //   contractState: 'selling',
 //   contractSymbol: 'XRP/BTC',
@@ -16,7 +16,7 @@ import Typography from '../Typography';
 // }
 
 /**
- * 
+ *
  * @param { object } props
  * @param { object } props.renderItem
  * @param { 'selling' | 'buying' } props.renderItem.contractState
@@ -28,7 +28,7 @@ import Typography from '../Typography';
  * @returns
  */
 
-const Component = ({ renderItem }) => {
+const Component = ({renderItem}) => {
   return (
     <Wrap key={renderItem?.contractDate}>
       <Wrapper>
@@ -69,7 +69,7 @@ const Component = ({ renderItem }) => {
       </Wrapper>
     </Wrap>
   );
-}
+};
 
 export default Component;
 
@@ -85,17 +85,17 @@ const HeadWrap = styled.View`
 const HeadDetailWrap = styled.View`
   margin-right: 8px;
 `;
-const HeadLabel = styled(Typography).attrs({ variant: 'h600' })`
-  color: ${({ theme }) => theme.colors.neutral[900]};
-  ${({ contractState }) =>
+const HeadLabel = styled(Typography).attrs({variant: 'h600'})`
+  color: ${({theme}) => theme.colors.neutral[900]};
+  ${({contractState}) =>
     contractState === 'selling' &&
     css`
-      color: ${({ theme }) => theme.colors.blue[500]};
+      color: ${({theme}) => theme.colors.blue[500]};
     `}
-  ${({ contractState }) =>
+  ${({contractState}) =>
     contractState === 'buying' &&
     css`
-      color: ${({ theme }) => theme.colors.red[500]};
+      color: ${({theme}) => theme.colors.red[500]};
     `}
 `;
 const BodyWrap = styled.View`
@@ -106,15 +106,15 @@ const BodyLeftWrap = styled.View`
   flex: 1;
 `;
 const DateWrap = styled.View``;
-const DateLabel = styled(Typography).attrs({ variant: '500', weight: 'R' })`
-  color: ${({ theme }) => theme.colors.neutral[400]};
+const DateLabel = styled(Typography).attrs({variant: '500', weight: 'R'})`
+  color: ${({theme}) => theme.colors.neutral[400]};
 `;
 const CancelWrap = styled.Pressable`
   align-items: flex-start;
 `;
-const CancelLabel = styled(Typography).attrs({ variant: '500', weight: 'B' })`
-  background-color: ${({ theme }) => theme.colors.neutral[30]};
-  color: ${({ theme }) => theme.colors.neutral[700]};
+const CancelLabel = styled(Typography).attrs({variant: '500', weight: 'B'})`
+  background-color: ${({theme}) => theme.colors.neutral[30]};
+  color: ${({theme}) => theme.colors.neutral[700]};
   padding: 7px 12px;
   margin-top: 12px;
   border-radius: 6px;
@@ -128,9 +128,9 @@ const OrderWrap = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
-const Label = styled(Typography).attrs({ variant: '500', weight: 'R' })`
-  color: ${({ theme }) => theme.colors.neutral[500]};
+const Label = styled(Typography).attrs({variant: '500', weight: 'R'})`
+  color: ${({theme}) => theme.colors.neutral[500]};
 `;
-const Value = styled(Typography).attrs({ variant: '500', weight: 'R' })`
-  color: ${({ theme }) => theme.colors.neutral[900]};
+const Value = styled(Typography).attrs({variant: '500', weight: 'R'})`
+  color: ${({theme}) => theme.colors.neutral[900]};
 `;
