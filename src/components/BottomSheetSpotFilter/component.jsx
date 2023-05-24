@@ -1,3 +1,4 @@
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
@@ -11,13 +12,14 @@ import {
   View,
   Text,
 } from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+
+import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
 import Button from '../../components/Button';
 import ButtonMealType from '../../components/ButtonMealType';
-import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
-import Typography from '../Typography';
 import {width} from '../../theme';
+import Typography from '../Typography';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 console.log((screenWidth - 48 - width * 103 * 3) / 2);
@@ -118,61 +120,65 @@ const BottomSheetSpot = props => {
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <Background />
-        </TouchableWithoutFeedback>
+        <GestureHandlerRootView style={{flex: 1}}>
+          <TouchableWithoutFeedback onPress={closeModal}>
+            <Background />
+          </TouchableWithoutFeedback>
 
-        <BottomSheet
-          ref={list}
-          handleStyle={{height: 32}}
-          handleIndicatorStyle={{
-            backgroundColor: '#E4E3E7',
-            width: 40,
-            height: 4,
-          }}
-          snapPoints={snapPoints}
-          onChange={handleSheetChange}
-          style={{
-            marginBottom: 50,
-          }}>
-          <Content>
-            <BottomSheetTitleView>
-              <BottomSheetTitle>{title}</BottomSheetTitle>
-              <Pressable
-                onPress={() => {
-                  setTouch([0, 1, 2]);
-                  setTouchInfo([0, 1]);
-                }}>
-                <BottomSheetDecs>초기화</BottomSheetDecs>
-              </Pressable>
-            </BottomSheetTitleView>
-
-            <View>
-              <TitleText>식사 타입</TitleText>
-
-              <ButtonTypeWrap>
-                <ButtonMealType touch={touch} setTouch={setTouch} />
-              </ButtonTypeWrap>
-              <TitleText style={{marginTop: 24}}>출입 정보</TitleText>
-
-              <ButtonTypeWrap style={{justifyContent: 'flex-start'}}>
-                <ButtonMealType
-                  margin={((screenWidth - 48 - width * 103 * 3) / 2).toFixed(1)}
-                  touch={touchInfo}
-                  setTouch={setTouchInfo}
-                  title={['제한 없음', '카드키 필요']}
-                />
-              </ButtonTypeWrap>
-            </View>
-          </Content>
-
-          <ManagePressView
-            onPress={() => {
-              onPressEvent2(setModalVisible(false));
+          <BottomSheet
+            ref={list}
+            handleStyle={{height: 32}}
+            handleIndicatorStyle={{
+              backgroundColor: '#E4E3E7',
+              width: 40,
+              height: 4,
+            }}
+            snapPoints={snapPoints}
+            onChange={handleSheetChange}
+            style={{
+              marginBottom: 50,
             }}>
-            <Button label="적용" text="Button09SB" />
-          </ManagePressView>
-        </BottomSheet>
+            <Content>
+              <BottomSheetTitleView>
+                <BottomSheetTitle>{title}</BottomSheetTitle>
+                <Pressable
+                  onPress={() => {
+                    setTouch([0, 1, 2]);
+                    setTouchInfo([0, 1]);
+                  }}>
+                  <BottomSheetDecs>초기화</BottomSheetDecs>
+                </Pressable>
+              </BottomSheetTitleView>
+
+              <View>
+                <TitleText>식사 타입</TitleText>
+
+                <ButtonTypeWrap>
+                  <ButtonMealType touch={touch} setTouch={setTouch} />
+                </ButtonTypeWrap>
+                <TitleText style={{marginTop: 24}}>출입 정보</TitleText>
+
+                <ButtonTypeWrap style={{justifyContent: 'flex-start'}}>
+                  <ButtonMealType
+                    margin={((screenWidth - 48 - width * 103 * 3) / 2).toFixed(
+                      1,
+                    )}
+                    touch={touchInfo}
+                    setTouch={setTouchInfo}
+                    title={['제한 없음', '카드키 필요']}
+                  />
+                </ButtonTypeWrap>
+              </View>
+            </Content>
+
+            <ManagePressView
+              onPress={() => {
+                onPressEvent2(setModalVisible(false));
+              }}>
+              <Button label="적용" text="Button09SB" />
+            </ManagePressView>
+          </BottomSheet>
+        </GestureHandlerRootView>
       </Overlay>
     </Modal>
   );

@@ -1,3 +1,5 @@
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Modal,
@@ -11,18 +13,17 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import styled, {useTheme} from 'styled-components/native';
-import {SharePickSpot, PickGrey, TimeIcon, Card} from '../../assets';
-import Button from '../Button';
-import Typography from '../Typography';
+import LinearGradient from 'react-native-linear-gradient';
 import {Shadow} from 'react-native-shadow-2';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+import styled, {useTheme} from 'styled-components/native';
+
+import {SharePickSpot, PickGrey, TimeIcon, Card} from '../../assets';
+import PlusIcon from '../../assets/icons/Map/plus.svg';
 import MealIcon from '../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../assets/icons/Spot/user.svg';
-import PlusIcon from '../../assets/icons/Map/plus.svg';
-import LinearGradient from 'react-native-linear-gradient';
 import {PAGE_NAME as ApplySpotPage} from '../../pages/Spots/shareSpot/ApplySpot';
-import {useNavigation} from '@react-navigation/native';
+import Button from '../Button';
+import Typography from '../Typography';
 
 const Component = props => {
   const {

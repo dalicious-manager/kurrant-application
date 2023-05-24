@@ -126,10 +126,11 @@ const BottomSheetCard = props => {
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <Background />
-        </TouchableWithoutFeedback>
         <GestureHandlerRootView style={{flex: 1}}>
+          <TouchableWithoutFeedback onPress={closeModal}>
+            <Background />
+          </TouchableWithoutFeedback>
+
           <BottomSheet
             ref={list}
             snapPoints={snapPoints}
