@@ -1,5 +1,4 @@
 import React from 'react';
-
 import GreyLockerIcon from '~assets/icons/GreyLockerIcon.svg';
 
 import IconWrapper from '../component';

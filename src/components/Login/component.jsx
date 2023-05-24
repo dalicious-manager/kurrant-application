@@ -17,6 +17,7 @@ import useKeyboardEvent from '../../hook/useKeyboardEvent';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../pages/Group/GroupCreate';
 import {PAGE_NAME as FindUserPageName} from '../../pages/Main/Login/FindUser';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
+import {getStorage, setStorage} from '../../utils/asyncStorage';
 import Button from '../Button';
 import Check from '../Check';
 import KeyboardButton from '../KeyboardButton';
@@ -27,7 +28,8 @@ const {StatusBarManager} = NativeModules;
 
 const Component = ({userId}) => {
   const navigation = useNavigation();
-  const {userInfo} =useUserInfo();
+  const {userInfo} = useUserInfo();
+  const [emailId, setEmailId] = useState(userId);
   const labelItems = [
     {label: '아이디'},
     {label: '/'},
@@ -39,6 +41,7 @@ const Component = ({userId}) => {
   const emailRef = useRef(null);
   const {
     handleSubmit,
+    setValue,
     formState: {errors, dirtyFields},
   } = useFormContext();
   const keyboardStatus = useKeyboardEvent();
@@ -47,7 +50,9 @@ const Component = ({userId}) => {
   };
   const onSubmit = async datas => {
     try {
+      console.log(datas);
       await login(datas);
+      setStorage('userId', datas.email);
       const userData = await userInfo();
       navigation.reset({
         index: 0,
@@ -61,7 +66,7 @@ const Component = ({userId}) => {
       //await userInfo();
     } catch (err) {
       console.log(err);
-      Alert.alert('로그인 실패', err.toString().replace('error: ', ''), [
+      Alert.alert('로그인 실패', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},
@@ -84,7 +89,7 @@ const Component = ({userId}) => {
   });
 
   const isValidation =
-    (dirtyFields.email || userId) &&
+    (dirtyFields.email || emailId) &&
     dirtyFields.password &&
     !errors.email &&
     !errors.password;
@@ -95,8 +100,18 @@ const Component = ({userId}) => {
           setStatusBarHeight(statusBarFrameData.height);
         })
       : null;
-  }, []);
-
+    const getUserId = async () => {
+      const userIds = await getStorage('userId');
+      if (userIds) {
+        console.log(userIds);
+        setEmailId(userIds);
+      }
+    };
+    getUserId();
+  }, [navigation]);
+  useEffect(() => {
+    setValue('email', emailId);
+  }, [emailId, setValue, userId]);
   return (
     <SafeContainer>
       <KeyDismiss onPress={() => Keyboard.dismiss()}>
@@ -111,7 +126,7 @@ const Component = ({userId}) => {
               returnKeyType="next"
               autoCapitalize="none"
               onSubmitEditing={() => passwordRef.current?.focus()}
-              defaultValue={userId && userId}
+              defaultValue={emailId}
               blurOnSubmit={false}
               suffix={{
                 isNeedDelete: true,

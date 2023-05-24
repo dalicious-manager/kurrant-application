@@ -1,65 +1,58 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, StatusBar, AppState, Platform, Linking} from 'react-native';
+import {
+  View,
+  Alert,
+  StatusBar,
+  AppState,
+  Platform,
+  Linking,
+} from 'react-native';
+import Sound from 'react-native-sound';
+import VersionCheck from 'react-native-version-check';
 import styled, {css} from 'styled-components/native';
 
-import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
+import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
+import {BespinMembers, FoundersMembers} from '../../../../../assets';
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
+import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
+import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
+import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
-import useOrderMeal from '../../../../../biz/useOrderMeal';
+import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
+import useMembership from '../../../../../biz/useMembership';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
+import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
+import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
+import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
-import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
-import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
+import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
+import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
+import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
+import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
+import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
+import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {
-  getStorage,
-  setStorage,
-  removeItemFromStorage,
-} from '../../../../../utils/asyncStorage';
-import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
-import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
-import Toast from '../../../../../components/Toast';
-import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
-import {BespinMembers, FoundersMembers} from '../../../../../assets';
-import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
-import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
-import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
-import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import FastImage from 'react-native-fast-image';
-import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useAuth from '../../../../../biz/useAuth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
-import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
-
-import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
-import useMembership from '../../../../../biz/useMembership';
-import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
-import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
-
-import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
-import {useGetOrderMeal} from '../../../../../hook/useOrder';
-import Sound from 'react-native-sound';
-import { useGetDailyfood } from '../../../../../hook/useDailyfood';
-import VersionCheck from 'react-native-version-check';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -73,11 +66,10 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   const navigation = useNavigation();
-  
+
   const [isVisible, setIsVisible] = useState(true);
   const weekly = useAtomValue(weekAtom);
-  const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
-    useUserInfo();
+  const {isUserInfo, userInfo} = useUserInfo();
 
   const currentVersion = VersionCheck.getCurrentVersion();
   const userName = isUserInfo?.name;
@@ -87,7 +79,7 @@ const Pages = () => {
   const clientId = isUserInfo?.groupId;
   const {
     saveFcmToken,
-    readableAtom: {userRole, fcmToken},
+    readableAtom: {userRole},
   } = useAuth();
   const {
     userGroupSpotCheck,
@@ -95,24 +87,33 @@ const Pages = () => {
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-  
+
   const [coinSound, setCoinSound] = useState(null);
-  
+
   const loadCoinSound = () => {
-    const sound = new Sound(require('../../../../../assets/sounds/coin.wav'), Platform.OS === 'android' ? Sound.MAIN_BUNDLE : Sound.MAIN_BUNDLE.bundlePath, (error) => {
-      if (error) {
-        console.log('failed to load the sound', error);
-        return;
-      }
-    });
+    const sound = new Sound(
+      require('../../../../../assets/sounds/coin.wav'),
+      Platform.OS === 'android'
+        ? Sound.MAIN_BUNDLE
+        : Sound.MAIN_BUNDLE.bundlePath,
+      error => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+      },
+    );
     setCoinSound(sound);
   };
   const {
     getMembershipHistory,
     readableAtom: {membershipHistory},
   } = useMembership();
-  
-  const {data:dailyfoodData, refetch:dailyfoodRefetch ,isLoading : dailyLoading ,isFetching:dailyFetching} =useGetDailyfood(userSpotId,formattedWeekDate(new Date()));
+
+  const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
+    userSpotId,
+    formattedWeekDate(new Date()),
+  );
   const [modalVisible, setModalVisible] = useState(false);
 
   const [show, setShow] = useState(false);
@@ -124,7 +125,7 @@ const Pages = () => {
   const toast = Toast();
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
-  
+
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
   // const start = weekly.map(s => {
@@ -137,19 +138,21 @@ const Pages = () => {
   //   return endData;
   // });
   const date = formattedWeekDate(new Date());
-  const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(formattedWeekDate(weekly[0][0]),
-  formattedWeekDate(
-    weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
-  ));
+  const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(
+      weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
+    ),
+  );
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
-  useEffect(()=>{
+  useEffect(() => {
     userInfo();
-  },[])
-  useEffect(()=>{
+  }, []);
+  useEffect(() => {
     dailyfoodRefetch();
-  },[isUserInfo])
+  }, [isUserInfo]);
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
@@ -209,8 +212,6 @@ const Pages = () => {
     setIsOneAnnouncementModalVisible,
   } = useGetOneAnnouncements();
 
- 
-
   // useEffect(() => {
   //   removeItemFromStorage('announcementsClickedOneDate');
   // }, []);
@@ -245,8 +246,7 @@ const Pages = () => {
     };
     handleShowModal();
     getOneAnnouncement(2);
-    if(coinSound ===null)
-        loadCoinSound();
+    if (coinSound === null) loadCoinSound();
   }, []);
 
   const closeBalloon = async () => {
@@ -266,11 +266,11 @@ const Pages = () => {
     getHistory();
   }, [isUserInfo]);
   useFocusEffect(
-    useCallback(() => { 
+    useCallback(() => {
       try {
         orderMealRefetch();
       } catch (e) {
-        alert(e.toString().replace('error:'));
+        alert(e.toString()?.replace('error:'));
       }
     }, [isCancelSpot, appState]),
   );
@@ -326,31 +326,31 @@ const Pages = () => {
           'Notification caused app to open from quit state:',
           remoteMessage.data,
         );
-          if (remoteMessage.data.page !== 'Home') {
-            if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
-              return navigation.navigate(remoteMessage.data.page, {
-                date: date,
-              });
-            }
-            if (remoteMessage.data.page === 'S_MAIN__REVIEW') {  
-              navigation.navigate(remoteMessage.data.page, {
-                from: 'point',
-                id:remoteMessage.data.reviewId
-              });              
-            }
-            if (remoteMessage.data.page === 'P_MAIN__MYPAGE__WRITTENREVIEW') {
-              return navigation.navigate('S_MAIN__REVIEW');
-            }
-            if (remoteMessage.data.page === 'P__MY_PAGE__PUBLIC_NOTICE') {
-              return navigation.navigate('S_MAIN__NOTICE', {
-                from: 'public',
-              });
-            }
-            if (remoteMessage.data.page === 'P__MY_PAGE__SPOT_NOTICE') {
-              return navigation.navigate('S_MAIN__NOTICE', {
-                from: 'spot',
-              });
-            }
+        if (remoteMessage.data.page !== 'Home') {
+          if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
+            return navigation.navigate(remoteMessage.data.page, {
+              date: date,
+            });
+          }
+          if (remoteMessage.data.page === 'S_MAIN__REVIEW') {
+            navigation.navigate(remoteMessage.data.page, {
+              from: 'point',
+              id: remoteMessage.data.reviewId,
+            });
+          }
+          if (remoteMessage.data.page === 'P_MAIN__MYPAGE__WRITTENREVIEW') {
+            return navigation.navigate('S_MAIN__REVIEW');
+          }
+          if (remoteMessage.data.page === 'P__MY_PAGE__PUBLIC_NOTICE') {
+            return navigation.navigate('S_MAIN__NOTICE', {
+              from: 'public',
+            });
+          }
+          if (remoteMessage.data.page === 'P__MY_PAGE__SPOT_NOTICE') {
+            return navigation.navigate('S_MAIN__NOTICE', {
+              from: 'spot',
+            });
+          }
           navigation.navigate(remoteMessage.data.page);
         }
       }
@@ -363,18 +363,23 @@ const Pages = () => {
             'Notification caused app to open from quit state:',
             remoteMessage.data,
           );
-          console.log(remoteMessage.data.page, remoteMessage.data.page === 'S_MAIN__REVIEW',remoteMessage.data.page.toString() === 'S_MAIN__REVIEW','data');
+          console.log(
+            remoteMessage.data.page,
+            remoteMessage.data.page === 'S_MAIN__REVIEW',
+            remoteMessage.data.page.toString() === 'S_MAIN__REVIEW',
+            'data',
+          );
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
                 date: date,
               });
             }
-            if (remoteMessage.data.page === 'S_MAIN__REVIEW') {  
+            if (remoteMessage.data.page === 'S_MAIN__REVIEW') {
               navigation.navigate(remoteMessage.data.page, {
                 from: 'point',
-                id:remoteMessage.data.reviewId
-              });              
+                id: remoteMessage.data.reviewId,
+              });
             }
             if (remoteMessage.data.page === 'P_MAIN__MYPAGE__WRITTENREVIEW') {
               return navigation.navigate('S_MAIN__REVIEW');
@@ -421,8 +426,6 @@ const Pages = () => {
       console.log(err);
     }
   };
-
-  
 
   // useEffect(() => {
   //   async function dailys() {
@@ -484,7 +487,6 @@ const Pages = () => {
   const handleStatus = e => {
     setAppState(e);
   };
-  const mockStatus = 10;
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
     return () => {
@@ -497,8 +499,8 @@ const Pages = () => {
         await userGroupSpotCheck();
         await VersionCheck.getLatestVersion().then(latestVersion => {
           const regex = /[^0-9]/g;
-          const result = currentVersion.replace(regex, "");
-          const result2 = latestVersion.replace(regex, "");
+          const result = currentVersion?.replace(regex, '');
+          const result2 = latestVersion?.replace(regex, '');
           if (Number(result) < Number(result2)) {
             Alert.alert(
               '앱 업데이트',
@@ -599,27 +601,28 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {orderMealList?.data?.filter((order)=>order.serviceDate === date).length === 0 ? (
+          {orderMealList?.data?.filter(order => order.serviceDate === date)
+            .length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
             orderMealList?.data?.map((m, idx) => {
-              if(m.serviceDate === date)
-              return (
-                <React.Fragment key={`${m.id} ${idx}`}>
-                  {m.orderItemDtoList.map((meal, i) => {
-                    return (
-                      <MealInfoComponent
-                        m={m}
-                        meal={meal}
-                        coinSound={coinSound}
-                        key={`${meal.id} ${meal.dailyFoodId}`}
-                      />
-                    );
-                  })}
-                </React.Fragment>
-              );
+              if (m.serviceDate === date)
+                return (
+                  <React.Fragment key={`${m.id} ${idx}`}>
+                    {m.orderItemDtoList.map(meal => {
+                      return (
+                        <MealInfoComponent
+                          m={m}
+                          meal={meal}
+                          coinSound={coinSound}
+                          key={`${meal.id} ${meal.dailyFoodId}`}
+                        />
+                      );
+                    })}
+                  </React.Fragment>
+                );
             })
           )}
         </MainWrap>
@@ -894,35 +897,9 @@ const MembershipImages = styled.Image`
   border-radius: 14px;
 `;
 
-const CatorWrap = styled.View`
-  ${BoxWrap};
-  ${Display};
-  justify-content: space-between;
-`;
-
-const Cator = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const MarketWrap = styled.View`
-  ${BoxWrap};
-  ${Display};
-  justify-content: space-between;
-`;
-
-const Market = styled.View`
-  flex-direction: row;
-`;
-
 const TitleText = styled(Typography).attrs({text: 'Body05SB'})`
   margin-left: 14px;
   color: ${props => props.theme.colors.grey[2]};
-`;
-
-const CountWrap = styled.View`
-  flex-direction: row;
-  align-items: center;
 `;
 
 const ButtonWrap = styled.View`
@@ -930,11 +907,6 @@ const ButtonWrap = styled.View`
   bottom: 17px;
   /* margin:0px 24px; */
   width: 100%;
-`;
-
-const MealCheckWrap = styled.View`
-  justify-content: center;
-  align-items: center;
 `;
 
 // text
@@ -946,10 +918,6 @@ const LargeTitle = styled(Typography).attrs({text: 'LargeTitle'})`
 `;
 
 const SemiBoldTxt = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
-const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[2]};
 `;
 
@@ -967,14 +935,6 @@ const SpotNameText = styled(Typography).attrs({text: 'BottomButtonSB'})`
   margin-right: 6px;
 `;
 
-const DiningType = styled(Typography).attrs({text: 'CaptionSB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
-const Count = styled(Typography).attrs({text: 'Title03SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-`;
-
 const CountText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-left: 4px;
@@ -987,15 +947,6 @@ const MembershipText = styled(SemiBoldTxt)`
   position: absolute;
   left: 24px;
   top: 20px;
-`;
-
-const MealCheckText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-  margin-bottom: 4px;
-`;
-
-const MealCheckButtonText = styled(Typography).attrs({text: 'Button09SB'})`
-  color: ${props => props.theme.colors.grey[0]};
 `;
 
 const Button = styled.Pressable`

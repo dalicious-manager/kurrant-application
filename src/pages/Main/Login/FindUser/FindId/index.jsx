@@ -1,10 +1,16 @@
 import {StackActions, useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, Alert} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import styled from 'styled-components/native';
 
+import {PAGE_NAME as FindIdComplatePageName} from './FindIdComplate';
 import useAuth from '../../../../../biz/useAuth';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
@@ -15,7 +21,6 @@ import Wrapper from '../../../../../components/Wrapper';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 import {PAGE_NAME as LoginPageName} from '../../Login';
 import {PAGE_NAME as SignUpPageName} from '../../SignUp';
-import {PAGE_NAME as FindIdComplatePageName} from './FindIdComplate';
 
 export const PAGE_NAME = 'P_LOGIN__MODAL__FIND_ID';
 /**
@@ -76,7 +81,7 @@ const Pages = () => {
         }
         setPhoneAuth(true);
       } catch (err) {
-        Alert.alert('인증 오류', err.toString().replace('error:', ''), [
+        Alert.alert('인증 오류', err.toString()?.replace('error:', ''), [
           {
             text: '확인',
             onPress: () => {},

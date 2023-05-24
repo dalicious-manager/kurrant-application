@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
-import { Animated, Dimensions } from 'react-native';
+import React, {useRef, useState} from 'react';
+import {Controller, useFormContext} from 'react-hook-form';
+import {Animated, Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 
-import { AntDesignIcon } from '../Icon';
+import {AntDesignIcon} from '../Icon';
 import SimpleLineIcon from '../Icon/_components/SimpleLineIcon';
 
-const Component = ({ }) => {
-  const { control } = useFormContext();
+const Component = ({}) => {
+  const {control} = useFormContext();
 
   const [text, setText] = useState('');
   const [focused, setFocused] = useState(false);
@@ -16,71 +16,77 @@ const Component = ({ }) => {
   const animatedScale = useRef(new Animated.Value(0)).current;
 
   const changeWidthEvent = () => {
-    !focused ?
-      Animated.timing(animatedScale, {
-        toValue: Dimensions.get('window').width,
-        duration: 300,
-        useNativeDriver: false,
-      }).start()
-      :
-      Animated.timing(animatedScale, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start()
-  }
+    !focused
+      ? Animated.timing(animatedScale, {
+          toValue: Dimensions.get('window').width,
+          duration: 300,
+          useNativeDriver: false,
+        }).start()
+      : Animated.timing(animatedScale, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: false,
+        }).start();
+  };
 
   const focusEvent = () => {
-    setFocused(true), changeWidthEvent()
-  }
+    setFocused(true), changeWidthEvent();
+  };
 
   const blurEvent = () => {
-    setFocused(false), changeWidthEvent()
-  }
+    setFocused(false), changeWidthEvent();
+  };
 
   return (
     <Controller
-      name='search'
+      name="search"
       control={control}
-      render={({ field: { onChange, value } }) => {
-        const typingEvent = (value) => {
-          onChange(value.trim()),
-            setText(value)
-        }
+      render={({field: {onChange, value}}) => {
+        const typingEvent = value => {
+          onChange(value.trim()), setText(value);
+        };
 
         const deleteEvent = () => {
-          onChange(''),
-            setText('')
-        }
+          onChange(''), setText('');
+        };
 
         return (
           <Wrap>
             <SearchWrap focused={focused}>
               <IconWrap>
-                <SimpleLineIcon name={'magnifier'} size={20} color={focusColor} />
+                <SimpleLineIcon
+                  name={'magnifier'}
+                  size={20}
+                  color={focusColor}
+                />
               </IconWrap>
               <InputWrap>
                 <Input
-                  placeholder='코인명/심볼 검색'
-                  returnKeyType='search'
-                  useRef='search'
+                  placeholder="코인명/심볼 검색"
+                  returnKeyType="search"
+                  useRef="search"
                   blurOnSubmit={true}
                   value={value}
-                  placeholderTextColor='#A9ACAE'
+                  placeholderTextColor="#A9ACAE"
                   onFocus={focusEvent}
                   onBlur={blurEvent}
                   onChangeText={value => typingEvent(value)}
                 />
               </InputWrap>
-              {value &&
+              {value && (
                 <DeleteWrap onPress={deleteEvent}>
-                  <AntDesignIcon name={'closecircle'} size={16} color={'#d4d8dd'} />
-                </DeleteWrap>}
+                  <AntDesignIcon
+                    name={'closecircle'}
+                    size={16}
+                    color={'#d4d8dd'}
+                  />
+                </DeleteWrap>
+              )}
             </SearchWrap>
-            <Line style={{ backgroundColor: '#EEEEEE' }} />
-            <Line style={{ backgroundColor: '#006adc', width: animatedScale }} />
+            <Line style={{backgroundColor: '#EEEEEE'}} />
+            <Line style={{backgroundColor: '#006adc', width: animatedScale}} />
           </Wrap>
-        )
+        );
       }}
     />
   );
@@ -118,5 +124,5 @@ const Input = styled.TextInput`
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: ${({ theme }) => theme.colors.neutral[900]};
+  color: ${({theme}) => theme.colors.neutral[900]};
 `;

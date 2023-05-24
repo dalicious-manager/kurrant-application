@@ -3,11 +3,12 @@ import React, {useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Text, View} from 'react-native';
 import styled from 'styled-components';
+
+import {reportReviewInputAtom} from './store';
+import TextAreaInput from './TextAreaInput';
 import Button from '../../../../components/Button';
 import CheckAndText from '../../../../components/CheckAndText';
 import Typography from '../../../../components/Typography';
-import {reportReviewInputAtom} from './store';
-import TextAreaInput from './TextAreaInput';
 
 export const PAGE_NAME = 'P_MAIN__REPORT_REVIEW';
 

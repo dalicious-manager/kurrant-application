@@ -1,2 +1,2 @@
-export { default } from './hook';
-export { getMembershipProduct } from './Fetch';
+export {default} from './hook';
+export {getMembershipProduct} from './Fetch';

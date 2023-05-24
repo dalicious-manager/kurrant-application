@@ -16,7 +16,7 @@ export const calculateReviewDDay = reviewDDay => {
 
   const myRegex = /\:/g;
 
-  if (!!reviewDDay.match(myRegex)) {
+  if (reviewDDay.match(myRegex)) {
     // 하루남음
 
     const hour = parseInt(reviewDDay.split(':')[0]);

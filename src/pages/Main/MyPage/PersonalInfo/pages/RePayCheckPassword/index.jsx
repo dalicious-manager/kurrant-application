@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
+
 import {registCardAtom} from '../../../../../../atoms/store';
 import useUserMe from '../../../../../../biz/useUserMe';
 import {payCheckPassword} from '../../../../../../biz/useUserMe/Fetch';
@@ -18,13 +19,12 @@ import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
 import Typography from '../../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
-
-import {PAGE_NAME as RePayCheckPasswordCheckPageName} from '../RePayCheckPasswordCheck';
-
+import {PAGE_NAME as MemebershipPaymentManage} from '../../../../../Membership/MembershipJoin/MemebershipPaymentManage';
+import {PAGE_NAME as DefaultPaymentManage} from '../../../../Bnb/Payment/DefaultPaymentManage';
 import {PAGE_NAME as EveryCardPageName} from '../PaymentManage/EveryCard';
 import {PAGE_NAME as SelectedDefaultCardName} from '../PaymentManage/SelectedDefaultCard';
-import {PAGE_NAME as DefaultPaymentManage} from '../../../../Bnb/Payment/DefaultPaymentManage';
-import {PAGE_NAME as MemebershipPaymentManage} from '../../../../../Membership/MembershipJoin/MemebershipPaymentManage';
+import {PAGE_NAME as RePayCheckPasswordCheckPageName} from '../RePayCheckPasswordCheck';
+
 export const PAGE_NAME = 'P__MY_PAGE__PAYMENT_MANAGE__RE_PAY_CHECK_PASSWORD';
 
 const {StatusBarManager} = NativeModules;
@@ -83,12 +83,12 @@ export default function Password() {
             inputRef.current.blur();
             inputRef.current.focus();
           }}>
-          <PasswordText active={state.length > 0}></PasswordText>
-          <PasswordText active={state.length > 1}></PasswordText>
-          <PasswordText active={state.length > 2}></PasswordText>
-          <PasswordText active={state.length > 3}></PasswordText>
-          <PasswordText active={state.length > 4}></PasswordText>
-          <PasswordText active={state.length > 5}></PasswordText>
+          <PasswordText active={state.length > 0} />
+          <PasswordText active={state.length > 1} />
+          <PasswordText active={state.length > 2} />
+          <PasswordText active={state.length > 3} />
+          <PasswordText active={state.length > 4} />
+          <PasswordText active={state.length > 5} />
         </PasswordBox>
         <PasswordInput
           value={state}

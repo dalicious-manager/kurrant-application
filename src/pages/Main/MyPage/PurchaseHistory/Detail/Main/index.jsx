@@ -10,15 +10,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components/native';
+
+import OrderItem from './components/orderItem';
 import useOrderMeal from '../../../../../../biz/useOrderMeal';
 import usePurchaseHistory from '../../../../../../biz/usePurchaseHistory';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
 import {formattedDateAndDay} from '../../../../../../utils/dateFormatter';
 import withCommas from '../../../../../../utils/withCommas';
-import OrderItem from './components/orderItem';
-import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'P_MAIN__PURCHASE_DETAIL';
 
@@ -54,7 +55,7 @@ const Pages = ({route}) => {
       };
       setPurchaseDetail(refund);
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   const cancelAll = async () => {
@@ -87,7 +88,7 @@ const Pages = ({route}) => {
       getPurchaseDetail(reqs);
       queryClient.invalidateQueries('pointList');
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   const possibleOrder =
@@ -200,7 +201,9 @@ const Pages = ({route}) => {
                     '주문 취소',
                     `${purchaseDetail?.orderItems?.length}개의 주문 중 ${
                       purchaseDetail?.orderItems?.filter(
-                        v => (v.orderStatus === 5 && (v.dailyFoodStatus ===1 || v.dailyFoodStatus===2)),
+                        v =>
+                          v.orderStatus === 5 &&
+                          (v.dailyFoodStatus === 1 || v.dailyFoodStatus === 2),
                       )?.length || 0
                     }개를 취소 하시겠어요?\n${possibleOrder}`,
                     [
@@ -213,11 +216,13 @@ const Pages = ({route}) => {
                         onPress: async () => {
                           try {
                             cancelAll();
-                          queryClient.invalidateQueries('orderMeal');
+                            queryClient.invalidateQueries('orderMeal');
                           } catch (error) {
-                            Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
+                            Alert.alert(
+                              '메뉴취소 불가',
+                              error.toString()?.replace('error: ', ''),
+                            );
                           }
-                          
                         },
                         style: 'destructive',
                       },
@@ -535,7 +540,7 @@ const Pages = ({route}) => {
               )}
             </ReceiptBox>
           </PaymentsMethodBox>
-          <CancelBox></CancelBox>
+          <CancelBox />
         </Wrapper>
       </ScrollView>
     </SafeView>

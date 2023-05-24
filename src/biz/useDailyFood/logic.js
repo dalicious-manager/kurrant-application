@@ -6,7 +6,7 @@ export const calculateSelectDatePosition = (selectDate, weekly) => {
     return v1.map(v2 => formattedDate(v2, '-'));
   });
 
-  let calculatedWeek = undefined;
+  let calculatedWeek;
   sliced.forEach((v, i) => {
     if (v.includes(selectDate)) {
       calculatedWeek = i;

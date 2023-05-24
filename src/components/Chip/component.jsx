@@ -1,8 +1,8 @@
 import React from 'react';
-import styled, { css } from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 
+import {getChipColor} from './style';
 import Typography from '../Typography';
-import { getChipColor } from './style';
 
 /**
  *
@@ -11,7 +11,7 @@ import { getChipColor } from './style';
  * @returns
  */
 
-const Component = ({ type = 'auth_need' }) => {
+const Component = ({type = 'auth_need'}) => {
   const authLabel = {
     auth_need: '인증필요',
     auth_ing: '인증중',
@@ -35,9 +35,9 @@ const Wrapper = styled.View`
 `;
 const ChipWrap = styled.View`
   border-radius: 6px;
-  background-color: ${({ type }) => getChipColor(type)};
+  background-color: ${({type}) => getChipColor(type)};
 `;
-const ChipLabel = styled(Typography).attrs({ variant: 'h400', weight: 'B' })`
+const ChipLabel = styled(Typography).attrs({variant: 'h400', weight: 'B'})`
   padding: 2px 6px;
-  color: ${({ theme }) => theme.colors.neutral[0]};
+  color: ${({theme}) => theme.colors.neutral[0]};
 `;

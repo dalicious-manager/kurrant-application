@@ -1,10 +1,11 @@
 import {useAtom} from 'jotai';
 import {useEffect, useState} from 'react';
+
+import * as Fetch from './Fetch';
+import {toStringByFormatting} from './logic';
+import {OneAnnouncementsAtom} from './store';
 import {getStorage} from '../../utils/asyncStorage';
 import {isTimeDifferenceLarger} from '../../utils/dateFormatter';
-import * as Fetch from './Fetch';
-import {OneAnnouncementsAtom} from './store';
-import {toStringByFormatting} from './logic';
 
 const useGetOneAnnouncements = () => {
   const [oneAnnouncement, setOneAnnouncement] = useAtom(OneAnnouncementsAtom);
@@ -46,7 +47,7 @@ const useGetOneAnnouncements = () => {
         await getStorage('announcementsClickedOneDate'),
       );
 
-      if (!!timeObject) {
+      if (timeObject) {
         if (
           isTimeDifferenceLarger(
             new Date(Object.values(timeObject)[0]),

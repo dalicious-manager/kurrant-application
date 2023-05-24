@@ -1,19 +1,20 @@
-import React from 'react';
-import styled from 'styled-components/native';
-import {Alert, Dimensions} from 'react-native';
-import {css, useTheme} from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {Alert, Dimensions} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {useQueryClient} from 'react-query';
+import styled from 'styled-components/native';
+import {css, useTheme} from 'styled-components/native';
+
+import TextButton from '../../../../../../../../components/TextButton';
 import Typography from '../../../../../../../../components/Typography';
+import {useConfirmOrderState} from '../../../../../../../../hook/useOrder';
 import {
   formattedDateAndDay,
   formattedDateType,
 } from '../../../../../../../../utils/dateFormatter';
-import withCommas from '../../../../../../../../utils/withCommas';
-import TextButton from '../../../../../../../../components/TextButton';
 import {formattedMealFoodStatus} from '../../../../../../../../utils/statusFormatter';
-import {useQueryClient} from 'react-query';
-import { useConfirmOrderState } from '../../../../../../../../hook/useOrder';
+import withCommas from '../../../../../../../../utils/withCommas';
 
 const {width} = Dimensions.get('screen');
 const Component = ({orderItem, onCancel = () => {}}) => {
@@ -21,13 +22,12 @@ const Component = ({orderItem, onCancel = () => {}}) => {
   const queryClient = useQueryClient();
   const {mutateAsync: orderState} = useConfirmOrderState();
 
-  const deliveryConfirmPress = async (id) => {
+  const deliveryConfirmPress = async id => {
     try {
       await orderState({id: id});
     } catch (error) {
-      Alert.alert("상태변경",error.toString().replace("error: "))
+      Alert.alert('상태변경', error.toString()?.replace('error: '));
     }
-   
   };
   const {
     serviceDate,
@@ -39,7 +39,7 @@ const Component = ({orderItem, onCancel = () => {}}) => {
     id,
     price,
     orderStatus,
-    dailyFoodStatus
+    dailyFoodStatus,
   } = orderItem;
   const navigation = useNavigation();
   const statusColor = () => {
@@ -76,44 +76,53 @@ const Component = ({orderItem, onCancel = () => {}}) => {
                 식사일 : {formattedDateAndDay(serviceDate)}{' '}
                 {formattedDateType(diningType)}
               </ServiceDate>
-              {(dailyFoodStatus ===1 || dailyFoodStatus ===2) && orderStatus === 5 && (
+              {(dailyFoodStatus === 1 || dailyFoodStatus === 2) &&
+                orderStatus === 5 && (
+                  <TextButton
+                    label="주문취소"
+                    type="blue"
+                    size="label13R"
+                    onPressEvent={() => {
+                      Alert.alert(
+                        '메뉴 취소',
+                        '메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
+                        [
+                          {
+                            text: '아니요',
+                            onPress: () => {},
+                          },
+                          {
+                            text: '메뉴 취소',
+                            onPress: () => {
+                              try {
+                                onCancel(id);
+                                queryClient.invalidateQueries('orderMeal');
+                              } catch (error) {
+                                Alert.alert(
+                                  '메뉴취소 불가',
+                                  error.toString()?.replace('error: ', ''),
+                                );
+                              }
+                            },
+                            style: 'destructive',
+                          },
+                        ],
+                      );
+                    }}
+                  />
+                )}
+              {orderStatus === 10 && (
                 <TextButton
-                  label="주문취소"
+                  label="수령확인"
                   type="blue"
                   size="label13R"
-                  onPressEvent={() => {
-                    Alert.alert(
-                      '메뉴 취소',
-                      '메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
-                      [
-                        {
-                          text: '아니요',
-                          onPress: () => {},
-                        },
-                        {
-                          text: '메뉴 취소',
-                          onPress: () => {
-                            try {
-                              onCancel(id);
-                            queryClient.invalidateQueries('orderMeal');
-                            } catch (error) {
-                              Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
-                            }
-                            
-                          },
-                          style: 'destructive',
-                        },
-                      ],
-                    );
-                  }}
+                  onPressEvent={() => deliveryConfirmPress(id)}
                 />
               )}
-              {orderStatus === 10 && (
-                <TextButton label="수령확인" type="blue" size="label13R" onPressEvent={()=>deliveryConfirmPress(id)}/>
-              )}
-              {(dailyFoodStatus === 6 &&  (orderStatus === 6 || orderStatus === 9)) &&(
-                <TextButton label="취소불가" type="red" size="label13R"/>
-              )}
+              {dailyFoodStatus === 6 &&
+                (orderStatus === 6 || orderStatus === 9) && (
+                  <TextButton label="취소불가" type="red" size="label13R" />
+                )}
             </ServiceDateBox>
             <Body06R19 textColor={themeApp.colors.grey[2]}>
               [{makers}] {foodName}

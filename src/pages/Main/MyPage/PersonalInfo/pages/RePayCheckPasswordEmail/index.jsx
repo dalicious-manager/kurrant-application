@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
+
 import {registCardAtom} from '../../../../../../atoms/store';
 import useAuth from '../../../../../../biz/useAuth';
 import useUserInfo from '../../../../../../biz/useUserInfo';
@@ -44,7 +45,7 @@ export default function PasswordCheck({route}) {
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
-        err.toString().replace('error: ', ''),
+        err.toString()?.replace('error: ', ''),
         [
           {
             text: '확인',
@@ -71,7 +72,7 @@ export default function PasswordCheck({route}) {
       inputRef.current.blur();
       navigation.navigate(RePayCheckPasswordPageName);
     } catch (error) {
-      Alert.alert('이메일 인증 실패', error.toString().replace('error:', ''));
+      Alert.alert('이메일 인증 실패', error.toString()?.replace('error:', ''));
     }
   };
   useEffect(() => {
@@ -139,7 +140,7 @@ export default function PasswordCheck({route}) {
               isAuth: true,
               authText: '인증요청',
               authPressEvent: callMailAuth,
-              disabledEvent:!auth.readableAtom.isEmailLoading
+              disabledEvent: !auth.readableAtom.isEmailLoading,
               // timer:900,
             }}
             additionalCssOnTextInput={'padding-right: 90px'}
@@ -147,7 +148,7 @@ export default function PasswordCheck({route}) {
               required: '필수 입력 항목 입니다.',
               pattern: {
                 value:
-                /^(([^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  /^(([^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                 message: '올바른 이메일 주소를 입력해주세요.',
               },
             }}

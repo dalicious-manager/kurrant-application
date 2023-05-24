@@ -132,15 +132,15 @@ export function formattedApplicationDate(data) {
   const year = dateTime.getFullYear();
   const month = leftPad(dateTime.getMonth() + 1);
   const day = leftPad(dateTime.getDate());
-  return `${[year, month, day]}`.replace(/[^0-9 ^\-]/g, '');
+  return `${[year, month, day]}`?.replace(/[^0-9 ^\-]/g, '');
 }
 export function formattedSameDate(startData, endDate) {
   const dateTime1 = transDateType(
     startData
-      .replace('년', '-')
-      .replace('월', '-')
-      .replace('일', '')
-      .replace(/\s/gi, ''),
+      ?.replace('년', '-')
+      ?.replace('월', '-')
+      ?.replace('일', '')
+      ?.replace(/\s/gi, ''),
   );
   const dateTime2 = transDateType(endDate);
 
@@ -224,7 +224,7 @@ export const convertDateFormat1 = stringDate => {
 
   // 2. - -> '. '
 
-  date1.replace('-', '. ');
+  date1?.replace('-', '. ');
 
   return date1;
 };

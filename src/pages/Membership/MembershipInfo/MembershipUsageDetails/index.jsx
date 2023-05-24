@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import Typography from '~components/Typography';
 
 import useMembership from '../../../../biz/useMembership';

@@ -1,3 +1,7 @@
+import BottomSheet, {
+  BottomSheetFlatList,
+  BottomSheetModal,
+} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
@@ -5,20 +9,16 @@ import {
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
-  FlatList,
-  Pressable,
   View,
   PanResponder,
 } from 'react-native';
 import styled from 'styled-components/native';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
-import Typography from '../Typography';
 import Label from '../Label';
+import Typography from '../Typography';
 
 const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 const BottomSheetSpot = props => {
   const {
@@ -27,7 +27,6 @@ const BottomSheetSpot = props => {
     title = '옵션 선택',
     description = '',
     data = {},
-    selected,
     setSelected,
     onPressEvent = () => {},
     userSpotId,
@@ -36,8 +35,6 @@ const BottomSheetSpot = props => {
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
-
-  const navigation = useNavigation();
 
   const onSelect = useCallback(
     id => {
@@ -149,7 +146,7 @@ const BottomSheetSpot = props => {
             onScrollBeginDrag={e => {
               setScrollStart(e.nativeEvent.contentOffset.y);
             }}
-            onMomentumScrollBegin={e => {
+            onMomentumScrollBegin={() => {
               if (scrollEnd === 0) {
                 handleSnapPress(0);
               }
@@ -180,7 +177,7 @@ const BottomSheetSpot = props => {
                   <Border />
                 </ItemContainer>
 
-                {item.spots.map((el, idx) => {
+                {item.spots.map(el => {
                   return (
                     <ContentItemContainer
                       onPressIn={pressInUp}
@@ -205,7 +202,7 @@ const BottomSheetSpot = props => {
             )}
             keyExtractor={item => item.clientId.toString()}
           />
-          <ManagePressView></ManagePressView>
+          <ManagePressView />
         </BottomSheet>
 
         {booleanValue && (
@@ -230,26 +227,6 @@ const Overlay = styled.Pressable`
 
 const Background = styled.View`
   flex: 1;
-`;
-
-const AnimatedView = styled(Animated.View)`
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  padding-top: 20px;
-`;
-
-const DragButton = styled.TouchableOpacity`
-  flex: 1;
-`;
-
-const DragButtonView = styled.View`
-  background-color: white;
-  width: 40px;
-  height: 5px;
-  border-radius: 10px;
 `;
 
 const BottomSheetTitleView = styled.View`

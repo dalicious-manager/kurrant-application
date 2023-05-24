@@ -1,3 +1,4 @@
+import DatePicker from '@react-native-community/datetimepicker';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
@@ -5,11 +6,11 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   Pressable,
+  Platform,
 } from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-import Typography from '../../../../../../components/Typography';
 
-import DatePicker from '@react-native-community/datetimepicker';
+import Typography from '../../../../../../components/Typography';
 
 /**
  * @param {object} props

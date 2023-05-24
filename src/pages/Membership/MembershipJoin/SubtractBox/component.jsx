@@ -5,7 +5,7 @@ import {Subtract} from '../../../../assets';
 import Image from '../../../../components/Image';
 import Typography from '../../../../components/Typography';
 
-const Component = ({children, text, disabled = false,beta =false}) => {
+const Component = ({children, text, disabled = false, beta = false}) => {
   return (
     <Container>
       <BoxImage imagePath={Subtract} scale={1.0} />
@@ -17,9 +17,7 @@ const Component = ({children, text, disabled = false,beta =false}) => {
           {disabled && (
             <OnPreparationText disabled={disabled}>(준비중)</OnPreparationText>
           )}
-          {beta && (
-            <OnPreparationText beta={beta}>(베타)</OnPreparationText>
-          )}
+          {beta && <OnPreparationText beta={beta}>(베타)</OnPreparationText>}
         </MembershipText>
       </ContentsBox>
     </Container>

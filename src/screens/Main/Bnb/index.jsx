@@ -1,30 +1,17 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import styled, {useTheme} from 'styled-components/native';
-
-import ActiveCator from '~assets/icons/TabBarIcon/activeCator.svg';
 import ActiveHome from '~assets/icons/TabBarIcon/activeHome.svg';
-import ActiveMarket from '~assets/icons/TabBarIcon/activeMarket.svg';
 import ActiveMeal from '~assets/icons/TabBarIcon/activeMeal.svg';
 import ActiveMore from '~assets/icons/TabBarIcon/activeMore.svg';
-import Cator from '~assets/icons/TabBarIcon/inactiveCator.svg';
 import Home from '~assets/icons/TabBarIcon/inactiveHome.svg';
-import Market from '~assets/icons/TabBarIcon/inactiveMarket.svg';
 import Meal from '~assets/icons/TabBarIcon/inactiveMeal.svg';
 import More from '~assets/icons/TabBarIcon/inactiveMore.svg';
-import Cs from '~assets/icons/Home/cs.svg';
-import BackButton from '../../../components/BackButton';
 
 // import BackButton from '../../../components/BackButton';
-import CatorMainPage, {
-  PAGE_NAME as CatorMainPageName,
-} from '../../../pages/Main/Bnb/Cator/Main';
 import HomeMainPage, {
   PAGE_NAME as HomeMainPageName,
 } from '../../../pages/Main/Bnb/Home/Main';
-import MarketMainPage, {
-  PAGE_NAME as MarketMainPageName,
-} from '../../../pages/Main/Bnb/Market/Main';
 import MealMainPage, {
   PAGE_NAME as MealMainPageName,
 } from '../../../pages/Main/Bnb/Meal/Main';

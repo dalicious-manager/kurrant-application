@@ -1,5 +1,4 @@
 import {useAtom} from 'jotai';
-import useAuth from '../useAuth';
 
 import * as Fetch from './Fetch';
 import {
@@ -7,6 +6,7 @@ import {
   isFoodDetailDiscountAtom,
   isFoodDetailLoadingAtom,
 } from './store';
+import useAuth from '../useAuth';
 
 const useFoodDetail = () => {
   const [isFoodDetail, setFoodDetail] = useAtom(isFoodDetailAtom);

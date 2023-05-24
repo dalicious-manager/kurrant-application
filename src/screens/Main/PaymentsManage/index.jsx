@@ -1,13 +1,13 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import React from 'react';
 import styled, {useTheme} from 'styled-components/native';
-
-import SelectedDefaultCard, {
-  PAGE_NAME as SelectedDefaultCardPageName,
-} from '~pages/Main/MyPage/PersonalInfo/pages/PaymentManage/SelectedDefaultCard';
 import EveryCard, {
   PAGE_NAME as EveryCardPageName,
 } from '~pages/Main/MyPage/PersonalInfo/pages/PaymentManage/EveryCard';
+import SelectedDefaultCard, {
+  PAGE_NAME as SelectedDefaultCardPageName,
+} from '~pages/Main/MyPage/PersonalInfo/pages/PaymentManage/SelectedDefaultCard';
+
 import Toast from '../../../components/Toast';
 
 export const SCREEN_NAME = 'S_MAIN__PAYMENTS_MANAGE';

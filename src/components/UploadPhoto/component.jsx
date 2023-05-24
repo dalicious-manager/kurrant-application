@@ -1,9 +1,7 @@
 import React from 'react';
-
-import styled from 'styled-components';
-
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Alert, PermissionsAndroid} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import styled from 'styled-components';
 
 const Component = ({photosArray, setPhotosArray}) => {
   const widthNum = 80;

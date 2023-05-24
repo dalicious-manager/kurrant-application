@@ -1,5 +1,4 @@
 import React from 'react';
-
 import DisabledPoint from '~assets/icons/ReviewPoint/DisabledPoint.svg';
 
 import IconWrapper from '../component';

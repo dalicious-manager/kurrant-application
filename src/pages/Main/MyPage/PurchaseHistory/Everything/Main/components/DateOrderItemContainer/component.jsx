@@ -1,30 +1,32 @@
+import {useNavigation} from '@react-navigation/native';
 import id from 'date-fns/esm/locale/id/index.js';
 import React, {useState} from 'react';
-import styled from 'styled-components/native';
+import {Alert, Dimensions, Pressable, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {useQueryClient} from 'react-query';
+import styled from 'styled-components/native';
+import {css, useTheme} from 'styled-components/native';
+import ArrowDown from '~assets/icons/Group/arrowDown.svg';
+import ArrowRight from '~assets/icons/Group/checkArrow.svg';
 import ButtonMeal from '~components/ButtonMeal';
 import ButtonMealCancel from '~components/ButtonMealCancel';
 import Typography from '~components/Typography';
-import ArrowRight from '~assets/icons/Group/checkArrow.svg';
-import ArrowDown from '~assets/icons/Group/arrowDown.svg';
-import {Alert, Dimensions, Pressable, View} from 'react-native';
-import {css, useTheme} from 'styled-components/native';
+
+import useOrderMeal from '../../../../../../../../biz/useOrderMeal';
+import usePurchaseHistory from '../../../../../../../../biz/usePurchaseHistory';
+import TextButton from '../../../../../../../../components/TextButton';
+import {useConfirmOrderState} from '../../../../../../../../hook/useOrder';
 import {
   formattedDate,
   formattedDateAndDay,
   formattedDateType,
   formattedDateWeekBtn,
 } from '../../../../../../../../utils/dateFormatter';
-import withCommas from '../../../../../../../../utils/withCommas';
 import {formattedMealFoodStatus} from '../../../../../../../../utils/statusFormatter';
-import TextButton from '../../../../../../../../components/TextButton';
-import {useNavigation} from '@react-navigation/native';
-import {PurchaseDetailPageName} from '../../../../Detail';
-import useOrderMeal from '../../../../../../../../biz/useOrderMeal';
-import usePurchaseHistory from '../../../../../../../../biz/usePurchaseHistory';
+import withCommas from '../../../../../../../../utils/withCommas';
 import {PAGE_NAME as BuyMealPageName} from '../../../../../../Bnb/BuyMeal/Main';
-import {useQueryClient} from 'react-query';
-import { useConfirmOrderState } from '../../../../../../../../hook/useOrder';
+import {PurchaseDetailPageName} from '../../../../Detail';
+
 const {width} = Dimensions.get('screen');
 const Component = ({purchaseId, date, itemIndex}) => {
   const themeApp = useTheme();
@@ -38,13 +40,12 @@ const Component = ({purchaseId, date, itemIndex}) => {
   } = usePurchaseHistory();
   const {mutateAsync: orderState} = useConfirmOrderState();
 
-  const deliveryConfirmPress = async (id) => {
+  const deliveryConfirmPress = async id => {
     try {
       await orderState({id: id});
     } catch (error) {
-      Alert.alert("상태변경",error.toString().replace("error: "))
+      Alert.alert('상태변경', error.toString()?.replace('error: '));
     }
-   
   };
   const purchase = allPurchase.filter(v => v.id === purchaseId)[0];
   const cancelItem = async id => {
@@ -70,7 +71,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
       });
       setAllPurchase(refund);
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   const changeItem = async (id, serviceDate) => {
@@ -100,7 +101,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
         date: serviceDate ? serviceDate : formattedDate(new Date()),
       });
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   return (
@@ -197,73 +198,89 @@ const Component = ({purchaseId, date, itemIndex}) => {
                           </Typography>
                         </PriceBox>
                       </TextBox>
-                      {(order.dailyFoodStatus ===1 || order.dailyFoodStatus ===2) && order.orderStatus === 5 && (
-                        <ButtonContainer>
-                          <ButtonMeal
-                            label={'취소'}
-                            onPressEvent={() =>
-                              Alert.alert(
-                                '메뉴 취소',
-                                '메뉴를 취소하시겠어요?',
-                                [
-                                  {
-                                    text: '아니요',
-                                    onPress: () => {},
-                                  },
-                                  {
-                                    text: '메뉴 취소',
-                                    onPress: () => {
-                                      try {
-                                        cancelItem(order.id);
-                                        queryClient.invalidateQueries(
-                                          'orderMeal',
-                                        );
-                                      } catch (error) {
-                                        Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
-                                      }
-                                      
+                      {(order.dailyFoodStatus === 1 ||
+                        order.dailyFoodStatus === 2) &&
+                        order.orderStatus === 5 && (
+                          <ButtonContainer>
+                            <ButtonMeal
+                              label={'취소'}
+                              onPressEvent={() =>
+                                Alert.alert(
+                                  '메뉴 취소',
+                                  '메뉴를 취소하시겠어요?',
+                                  [
+                                    {
+                                      text: '아니요',
+                                      onPress: () => {},
                                     },
-                                    style: 'destructive',
-                                  },
-                                ],
-                              )
-                            }
-                          />
-                          <ButtonMeal
-                            label={'메뉴변경'}
-                            onPressEvent={() =>
-                              Alert.alert(
-                                '메뉴 변경',
-                                '현재 메뉴 취소 후 진행됩니다.\n메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
-                                [
-                                  {
-                                    text: '아니요',
-                                    onPress: () => {},
-                                  },
-                                  {
-                                    text: '메뉴 취소',
-                                    onPress: () => {
-                                      try {
-                                        changeItem(order.id, order.serviceDate);
-                                        queryClient.invalidateQueries(
-                                          'orderMeal',
-                                        );
-                                      } catch (error) {
-                                        Alert.alert("메뉴취소 불가",error.toString().replace('error: ',""));
-                                      }
-                                     
+                                    {
+                                      text: '메뉴 취소',
+                                      onPress: () => {
+                                        try {
+                                          cancelItem(order.id);
+                                          queryClient.invalidateQueries(
+                                            'orderMeal',
+                                          );
+                                        } catch (error) {
+                                          Alert.alert(
+                                            '메뉴취소 불가',
+                                            error
+                                              .toString()
+                                              ?.replace('error: ', ''),
+                                          );
+                                        }
+                                      },
+                                      style: 'destructive',
                                     },
-                                    style: 'destructive',
-                                  },
-                                ],
-                              )
-                            }
-                          />
-                        </ButtonContainer>
-                      )}
+                                  ],
+                                )
+                              }
+                            />
+                            <ButtonMeal
+                              label={'메뉴변경'}
+                              onPressEvent={() =>
+                                Alert.alert(
+                                  '메뉴 변경',
+                                  '현재 메뉴 취소 후 진행됩니다.\n메뉴를 취소하시겠어요?\n메뉴 부분 취소의 경우 환불까지 영업일 기준으로 2~3일이 소요될 수 있어요',
+                                  [
+                                    {
+                                      text: '아니요',
+                                      onPress: () => {},
+                                    },
+                                    {
+                                      text: '메뉴 취소',
+                                      onPress: () => {
+                                        try {
+                                          changeItem(
+                                            order.id,
+                                            order.serviceDate,
+                                          );
+                                          queryClient.invalidateQueries(
+                                            'orderMeal',
+                                          );
+                                        } catch (error) {
+                                          Alert.alert(
+                                            '메뉴취소 불가',
+                                            error
+                                              .toString()
+                                              ?.replace('error: ', ''),
+                                          );
+                                        }
+                                      },
+                                      style: 'destructive',
+                                    },
+                                  ],
+                                )
+                              }
+                            />
+                          </ButtonContainer>
+                        )}
                       {order.orderStatus === 10 && (
                         <ButtonContainer>
-                          <ButtonMeal label={'수령확인'} onPressEvent={()=>deliveryConfirmPress(order.id)}/>
+                          <ButtonMeal
+                            label={'수령확인'}
+                            onPressEvent={() => deliveryConfirmPress(order.id)}
+                          />
                         </ButtonContainer>
                       )}
                       {order.dailyFoodStatus === 6 && (

@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import analytics from '@react-native-firebase/analytics';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useState, useRef, useEffect, useLayoutEffect} from 'react';
 import {
@@ -10,12 +12,16 @@ import {
   Platform,
   TouchableWithoutFeedback,
 } from 'react-native';
-import styled from 'styled-components';
-import analytics from '@react-native-firebase/analytics';
-import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
+import LinearGradient from 'react-native-linear-gradient';
+import styled from 'styled-components';
+
+import MealDetailReview from './Review/MealDetailReview';
+import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
+import useAuth from '../../../../../biz/useAuth';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
+import useUserInfo from '../../../../../biz/useUserInfo';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
@@ -26,15 +32,11 @@ import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import Typography from '../../../../../components/Typography';
 import withCommas from '../../../../../utils/withCommas';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
-import Skeleton from '../Skeleton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import useAuth from '../../../../../biz/useAuth';
-import useUserInfo from '../../../../../biz/useUserInfo';
-import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import CarouselImage from '../components/CarouselImage';
-import MealDetailReview from './Review/MealDetailReview';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
+import Skeleton from '../Skeleton';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -216,7 +218,7 @@ const Pages = ({route}) => {
       balloonEvent();
       // await loadMeal();
     } catch (err) {
-      alert(err.toString().replace('error:', '').trim());
+      alert(err.toString()?.replace('error:', '').trim());
       console.log(err);
       //  throw err
     }

@@ -4,9 +4,7 @@ import {useAtom} from 'jotai';
 import {useState} from 'react';
 import {Alert} from 'react-native';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
-import useAuth from '../useAuth';
-import {userRoleAtom} from '../useAuth/store';
-import {supportPriceAtom} from '../useSupportPrice/store';
+
 import * as Fetch from './Fetch';
 import {
   isDailyFoodAtom,
@@ -19,6 +17,9 @@ import {
   isMorningFoodLoadingAtom,
   isServiceDaysAtom,
 } from './store';
+import useAuth from '../useAuth';
+import {userRoleAtom} from '../useAuth/store';
+import {supportPriceAtom} from '../useSupportPrice/store';
 
 const useFoodDaily = () => {
   const [isDiningTypes, setDiningTypes] = useAtom(isDailyFoodAtom);
@@ -64,7 +65,7 @@ const useFoodDaily = () => {
       setLunch([]);
       setDinner([]);
       setServiceDays([]);
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
