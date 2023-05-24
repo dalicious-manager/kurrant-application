@@ -101,25 +101,10 @@
     "react-test-renderer": "18.1.0"
   },
   "reactNativePermissionsIOS": [
-    "AppTrackingTransparency",
-    "BluetoothPeripheral",
-    "Calendars",
     "Camera",
-    "Contacts",
-    "FaceID",
-    "LocationAccuracy",
-    "LocationAlways",
     "LocationWhenInUse",
-    "MediaLibrary",
-    "Microphone",
-    "Motion",
     "Notifications",
-    "PhotoLibrary",
-    "PhotoLibraryAddOnly",
-    "Reminders",
-    "Siri",
-    "SpeechRecognition",
-    "StoreKit"
+    "PhotoLibrary"
   ],
   "resolutions": {
     "react-native-reanimated": "^2.10.0"
