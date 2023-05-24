@@ -13,6 +13,7 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import {Shadow} from 'react-native-shadow-2';
 import styled, {useTheme} from 'styled-components/native';
@@ -93,7 +94,7 @@ const Component = props => {
 
   // variables
   const [snap, setSnap] = useState(0);
-  const snapPoints = useMemo(() => ['6%', '30%', '100%'], []);
+  const snapPoints = useMemo(() => ['6%', '35%', '100%'], []);
 
   // callbacks
   const handleSheetChanges = useCallback(index => {
@@ -106,136 +107,147 @@ const Component = props => {
 
   // renders
   return (
-    <BottomSheet
-      handleStyle={{height: 20}}
-      handleIndicatorStyle={{
-        backgroundColor: '#E4E3E7',
-        width: 40,
-        height: 4,
-      }}
-      ref={bottomSheetRef}
-      index={1}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}>
-      {(snap === 0 || snap === 1) && (
-        <Contents>
-          <SpotNameText>{title}</SpotNameText>
-          <SpotPickWrap>
-            <Image source={SharePickSpot} style={{width: 20, height: 24}} />
-          </SpotPickWrap>
-          <DiningTypeWrap>
-            <MealIcon />
-            <DiningTypeText>아침・점심・저녁</DiningTypeText>
-            <Body06RText>운영중</Body06RText>
-          </DiningTypeWrap>
-          <UserViewWrap>
-            <UserIcon />
-            <Body06RText style={{marginLeft: 12}}>152명</Body06RText>
-          </UserViewWrap>
-          <Button
-            label="상세보기"
-            type="white2"
-            onPressEvent={() => detailButton()}
-          />
-        </Contents>
-      )}
-      {snap === 2 && (
-        <Content>
+    <GestureHandlerRootView
+      style={{
+        flex: 1,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        height: '100%',
+        width: '100%',
+      }}>
+      <BottomSheet
+        handleStyle={{height: 20}}
+        handleIndicatorStyle={{
+          backgroundColor: '#E4E3E7',
+          width: 40,
+          height: 4,
+        }}
+        ref={bottomSheetRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}>
+        {(snap === 0 || snap === 1) && (
           <Contents>
-            <Title>{title}</Title>
-            <ScrollView
-              style={{marginTop: 24}}
-              showsVerticalScrollIndicator={false}>
-              <Address>
-                <Image source={PickGrey} style={{width: 20, height: 20}} />
-                <Body06RText style={{marginLeft: 16}}>
-                  서울 강남구 선릉로93길 40 1층
-                  스파크플러스(역삼동,나라키움역삼A빌딩)
-                  {'\n'}
-                  <Body06RText style={{color: '#BDBAC1'}}>
-                    역삼동 704-45
-                  </Body06RText>
-                </Body06RText>
-              </Address>
-              <Border />
-              <DiningTypeWrap snap={snap}>
-                <MealIcon width={20} height={20} />
-                <DiningTypeText snap={snap}>아침・점심・저녁</DiningTypeText>
-                <Body06RText>운영중</Body06RText>
-              </DiningTypeWrap>
-              <Border />
-              <UserViewWrap snap={snap}>
-                <UserIcon width={20} height={20} />
-                <Body06RText style={{marginLeft: 16}}>152명</Body06RText>
-              </UserViewWrap>
-              <Border />
-              <DeliveryWrap>
-                <Delivery>
-                  <Image source={TimeIcon} style={{width: 20, height: 20}} />
-                  <Body06RText style={{marginLeft: 16}}>
-                    배송 스팟/시간
-                  </Body06RText>
-                </Delivery>
-                <ApplyButton onPress={() => navigation.navigate(ApplySpotPage)}>
-                  <PlusIcon />
-                  <ApplyText>스팟/시간 신청</ApplyText>
-                </ApplyButton>
-              </DeliveryWrap>
-              <InnerView>
-                {data.map((el, idx) => {
-                  const lastArr = data[data.length - 1];
-
-                  return (
-                    <DetailSpotTimeWrap key={idx} last={el === lastArr}>
-                      <DetailSpotWrap>
-                        <DetailSpotName>{el.name}</DetailSpotName>
-                        {el.key && (
-                          <CardBoolean>
-                            <VerticalBorder />
-                            <Image
-                              source={Card}
-                              style={{width: 14, height: 14}}
-                            />
-                            <NeedCardText>카드키 필요</NeedCardText>
-                          </CardBoolean>
-                        )}
-                      </DetailSpotWrap>
-                      <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}>
-                        {el.time.map((v, i) => {
-                          return (
-                            <Label key={i}>
-                              <LabelText>{v}</LabelText>
-                            </Label>
-                          );
-                        })}
-                      </ScrollView>
-                    </DetailSpotTimeWrap>
-                  );
-                })}
-              </InnerView>
-            </ScrollView>
+            <SpotNameText>{title}</SpotNameText>
+            <SpotPickWrap>
+              <Image source={SharePickSpot} style={{width: 20, height: 24}} />
+            </SpotPickWrap>
+            <DiningTypeWrap>
+              <MealIcon />
+              <DiningTypeText>아침・점심・저녁</DiningTypeText>
+              <Body06RText>운영중</Body06RText>
+            </DiningTypeWrap>
+            <UserViewWrap>
+              <UserIcon />
+              <Body06RText style={{marginLeft: 12}}>152명</Body06RText>
+            </UserViewWrap>
+            <Button
+              label="상세보기"
+              type="white2"
+              onPressEvent={() => detailButton()}
+            />
           </Contents>
-          <ButtonWrap
-            colors={[
-              'rgba(255, 255, 255, 0.0)',
-              'rgba(255, 255, 255, 0.0)',
-              'rgba(255, 255, 255, 0.0)',
-              'rgba(255, 255, 255, 0.5)',
-              'rgba(255, 255, 255, 0.7)',
-              'rgba(255, 255, 255, 0.9)',
-              'rgba(255, 255, 255, 1)',
-              'rgba(255, 255, 255, 1)',
-              'rgba(255, 255, 255, 1)',
-            ]}
-            useAngle={true}
-            angle={180}>
-            <Button label="이 스팟 사용하기" />
-          </ButtonWrap>
-        </Content>
-      )}
-    </BottomSheet>
+        )}
+        {snap === 2 && (
+          <Content>
+            <Contents>
+              <Title>{title}</Title>
+              <ScrollView
+                style={{marginTop: 24, paddingBottom: 200}}
+                showsVerticalScrollIndicator={false}>
+                <Address>
+                  <Image source={PickGrey} style={{width: 20, height: 20}} />
+                  <Body06RText style={{marginLeft: 16}}>
+                    서울 강남구 선릉로93길 40 1층
+                    스파크플러스(역삼동,나라키움역삼A빌딩)
+                    {'\n'}
+                    <Body06RText style={{color: '#BDBAC1'}}>
+                      역삼동 704-45
+                    </Body06RText>
+                  </Body06RText>
+                </Address>
+                <Border />
+                <DiningTypeWrap snap={snap}>
+                  <MealIcon width={20} height={20} />
+                  <DiningTypeText snap={snap}>아침・점심・저녁</DiningTypeText>
+                  <Body06RText>운영중</Body06RText>
+                </DiningTypeWrap>
+                <Border />
+                <UserViewWrap snap={snap}>
+                  <UserIcon width={20} height={20} />
+                  <Body06RText style={{marginLeft: 16}}>152명</Body06RText>
+                </UserViewWrap>
+                <Border />
+                <DeliveryWrap>
+                  <Delivery>
+                    <Image source={TimeIcon} style={{width: 20, height: 20}} />
+                    <Body06RText style={{marginLeft: 16}}>
+                      배송 스팟/시간
+                    </Body06RText>
+                  </Delivery>
+                  <ApplyButton
+                    onPress={() => navigation.navigate(ApplySpotPage)}>
+                    <PlusIcon />
+                    <ApplyText>스팟/시간 신청</ApplyText>
+                  </ApplyButton>
+                </DeliveryWrap>
+                <InnerView>
+                  {data.map((el, idx) => {
+                    const lastArr = data[data.length - 1];
+
+                    return (
+                      <DetailSpotTimeWrap key={idx} last={el === lastArr}>
+                        <DetailSpotWrap>
+                          <DetailSpotName>{el.name}</DetailSpotName>
+                          {el.key && (
+                            <CardBoolean>
+                              <VerticalBorder />
+                              <Image
+                                source={Card}
+                                style={{width: 14, height: 14}}
+                              />
+                              <NeedCardText>카드키 필요</NeedCardText>
+                            </CardBoolean>
+                          )}
+                        </DetailSpotWrap>
+                        <ScrollView
+                          horizontal
+                          showsHorizontalScrollIndicator={false}>
+                          {el.time.map((v, i) => {
+                            return (
+                              <Label key={i}>
+                                <LabelText>{v}</LabelText>
+                              </Label>
+                            );
+                          })}
+                        </ScrollView>
+                      </DetailSpotTimeWrap>
+                    );
+                  })}
+                </InnerView>
+              </ScrollView>
+            </Contents>
+            <ButtonWrap
+              colors={[
+                'rgba(255, 255, 255, 0.0)',
+                'rgba(255, 255, 255, 0.0)',
+                'rgba(255, 255, 255, 0.0)',
+                'rgba(255, 255, 255, 0.5)',
+                'rgba(255, 255, 255, 0.7)',
+                'rgba(255, 255, 255, 0.9)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+              ]}
+              useAngle={true}
+              angle={180}>
+              <Button label="이 스팟 사용하기" />
+            </ButtonWrap>
+          </Content>
+        )}
+      </BottomSheet>
+    </GestureHandlerRootView>
   );
 };
 
