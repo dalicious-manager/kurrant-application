@@ -81,7 +81,9 @@ const MySpotMap = ({route}) => {
       <Pressable
         style={{position: 'relative', marginTop: 8, marginBottom: 12}}
         onPress={() => {
-          navigation.navigate(MapSearchResult);
+          navigation.navigate(MapSearchResult, {
+            name: 'mySpot',
+          });
         }}>
         <Icon />
         <Search>

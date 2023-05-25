@@ -2187,7 +2187,7 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             //headerTransparent: true,
-            title: '주소 검색',
+            // title: '주소 검색',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
