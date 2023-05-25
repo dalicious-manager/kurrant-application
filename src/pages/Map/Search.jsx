@@ -9,7 +9,6 @@ import FindIcon from '../../assets/icons/Map/find.svg';
 const Search = ({focus, setFocus, searchPress, text, setText}) => {
   const deleteButton = () => {
     setText('');
-    console.log('누름');
   };
 
   return (

@@ -142,8 +142,6 @@ const Component = ({
                 // ]);
               }
             } catch (err) {
-              console.log('리뷰 삭제 에러뜸');
-              console.log(err);
               Alert.alert('리뷰 삭제 실패', '', [
                 {
                   text: '확인',

@@ -54,12 +54,6 @@ const Component = ({
     // setModalOffPriorityOne(false);
   };
 
-  useEffect(() => {
-    return () => {
-      console.log('컴포넌트 없어짐' + data.id);
-    };
-  }, []);
-
   return (
     <CenteredView>
       <Modal

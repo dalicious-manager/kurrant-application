@@ -101,7 +101,6 @@ const Pages = () => {
         : Sound.MAIN_BUNDLE.bundlePath,
       error => {
         if (error) {
-          console.log('failed to load the sound', error);
           return;
         }
       },
@@ -287,9 +286,7 @@ const Pages = () => {
           requestPermission();
         }
       })
-      .catch(error => {
-        console.log('error checking permisions ' + error);
-      });
+      .catch(error => {});
   };
 
   //2
@@ -299,9 +296,7 @@ const Pages = () => {
       .then(() => {
         getToken();
       })
-      .catch(error => {
-        console.log('permission rejected ' + error);
-      });
+      .catch(error => {});
   };
 
   //3
@@ -309,26 +304,19 @@ const Pages = () => {
     messaging()
       .getToken()
       .then(token => {
-        console.log('push token ' + token);
         if (token) {
           saveFcmToken({
             token: token,
           });
         }
       })
-      .catch(error => {
-        console.log('error getting push token ' + error);
-      });
+      .catch(error => {});
   };
   useEffect(() => {
     checkPermission();
     // Check whether an initial notification is available
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       if (remoteMessage) {
-        console.log(
-          'Notification caused app to open from quit state:',
-          remoteMessage.data,
-        );
         if (remoteMessage.data.page !== 'Home') {
           if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
             return navigation.navigate(remoteMessage.data.page, {
@@ -362,16 +350,6 @@ const Pages = () => {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.data,
-          );
-          console.log(
-            remoteMessage.data.page,
-            remoteMessage.data.page === 'S_MAIN__REVIEW',
-            remoteMessage.data.page.toString() === 'S_MAIN__REVIEW',
-            'data',
-          );
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
@@ -426,7 +404,7 @@ const Pages = () => {
         }, 2000);
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('스팟', err?.toString()?.replace('error: ', ''));
     }
   };
 
@@ -483,9 +461,7 @@ const Pages = () => {
         id: userSpotId,
         clientId: clientId,
       });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const handleStatus = e => {
     setAppState(e);

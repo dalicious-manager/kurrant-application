@@ -34,7 +34,6 @@ const MySpotMap = ({route}) => {
   const [showAddress, setShowAddress] = useState(false);
   const [center, setCenter] = useState();
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
-  console.log(move, initCenter);
   const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
     center ? center?.longitude : initCenter.longitude,
     center ? center?.latitude : initCenter.latitude,

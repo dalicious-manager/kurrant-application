@@ -51,11 +51,8 @@ const Screens = () => {
     setInput({...input, detail: form.watch('report_detail')});
   }, [form.watch('report_detail')]);
 
-  const onSignInPressed = data => {
-    console.log(input);
-
-    console.log('report succefully sent');
-  };
+  //신고하기 버튼
+  const onSignInPressed = data => {};
 
   return (
     <Container2>

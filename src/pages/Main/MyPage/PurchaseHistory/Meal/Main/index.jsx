@@ -20,6 +20,7 @@ import {purchaseMealAtom} from '../../../../../../biz/usePurchaseHistory/store';
 import {CalendarIcon} from '../../../../../../components/Icon';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
+import {useGetMealPurchaseHistory} from '../../../../../../hook/usePurchaseHistory';
 import {formattedWeekDate} from '../../../../../../utils/dateFormatter';
 import Skeleton from '../../Skeleton';
 
@@ -29,7 +30,9 @@ const Pages = () => {
   const navigation = useNavigation();
   const themeApp = useTheme();
   const [, setMealPurchase] = useAtom(purchaseMealAtom);
-  const [startDate, setStartDate] = useState(startDate || new Date());
+  const [startDate, setStartDate] = useState(
+    startDate || new Date().setDate(new Date().getDate() - 7),
+  );
   const [showDateModal, setShowDateModal] = useState(false);
   const [endDate, setEndDate] = useState(endDate || new Date());
   const [showDateModal2, setShowDateModal2] = useState(false);
@@ -59,8 +62,15 @@ const Pages = () => {
   ]);
   const {
     getPurchaseHistoryMeal,
-    readAbleAtom: {mealPurchase, isMealPurchaseLoading},
+    readAbleAtom: {isMealPurchaseLoading},
   } = usePurchaseHistory();
+  const body = {
+    startDate: formattedWeekDate(startDate),
+    endDate: formattedWeekDate(endDate),
+    orderType: 1,
+  };
+  const {data: mealPurchase, refetch: mealPurchaceRefetch} =
+    useGetMealPurchaseHistory(body);
   const selectDate = date => {
     if (!isMealPurchaseLoading) {
       const setDate = searchDate.map(item =>
@@ -230,13 +240,14 @@ const Pages = () => {
         )}
         {isMealPurchaseLoading ? (
           <Skeleton />
-        ) : mealPurchase?.length > 0 ? (
+        ) : mealPurchase?.data?.length > 0 ? (
           <ScrollViewBox>
-            {mealPurchase?.map((v, i) => {
+            {mealPurchase?.data?.map((v, i) => {
               return (
                 <DateOrderItemContainer
                   key={`${v.orderDate}${i}`}
                   itemIndex={i}
+                  data={mealPurchase?.data}
                   purchaseId={v.id}
                   date={v.orderDate}
                 />

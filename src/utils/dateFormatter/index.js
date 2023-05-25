@@ -146,7 +146,6 @@ export function formattedSameDate(startData, endDate) {
 
   const diffMSec = dateTime1.getTime() - dateTime2.getTime();
   const diffHour = diffMSec / (60 * 60 * 1000 * 24);
-  console.log(Math.round(diffHour));
   return Math.round(diffHour);
 }
 

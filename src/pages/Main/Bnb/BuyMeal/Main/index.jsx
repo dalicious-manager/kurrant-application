@@ -51,12 +51,10 @@ import Modal from '../components/Modal';
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
 const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 const AnimatedPagerView = Animateds.createAnimatedComponent(PagerView);
 
 const Pages = ({route}) => {
   const params = route.params;
-  const isFocused = useIsFocused();
   const navigation = useNavigation();
   const diningRef = useRef();
   const MorningRef = useRef();
@@ -100,7 +98,6 @@ const Pages = ({route}) => {
   const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
   const {isUserInfo} = useUserInfo();
-  const userInfo = useAtomValue(isUserInfoAtom);
   const fadeAnim = useRef(new Animated.Value(32)).current;
   const handlePress = anim => {
     Animated.timing(fadeAnim, {
@@ -182,7 +179,6 @@ const Pages = ({route}) => {
   const {
     data: dailyfoodData,
     refetch: dailyfoodRefetch,
-    isLoading: dailyLoading,
     isFetching: dailyFetching,
   } = useGetDailyfood(spotId, params?.date ? params.date : date);
   const onPageScroll2 = e => {
@@ -195,9 +191,6 @@ const Pages = ({route}) => {
       if (position === 2) {
         const currentDate = formattedWeekDate(new Date());
         const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
-        const todayDate = new Date(currentDate).setDate(
-          new Date(currentDate).getDate(),
-        );
 
         const week = weekly.map(w => {
           const find = w.findIndex(v => {
@@ -218,7 +211,7 @@ const Pages = ({route}) => {
               return formattedWeekDate(s);
             });
           });
-          const index = dateIndex.findIndex((v, i) => {
+          const index = dateIndex.findIndex(v => {
             return v.includes(
               formattedWeekDate(
                 new Date(date).setDate(new Date(date).getDate() + 1),
@@ -245,7 +238,7 @@ const Pages = ({route}) => {
               return formattedWeekDate(s);
             });
           });
-          const index = dateIndex.findIndex((v, i) => {
+          const index = dateIndex.findIndex(v => {
             return v.includes(
               formattedWeekDate(
                 new Date(date).setDate(new Date(date).getDate() - 1),
@@ -270,13 +263,9 @@ const Pages = ({route}) => {
 
     if (offset === 0) {
       if (nowPage === position) {
-        console.log(nowPage, position, 'tests');
         if (position === 2) {
           const currentDate = formattedWeekDate(new Date());
           const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
-          const todayDate = new Date(currentDate).setDate(
-            new Date(currentDate).getDate(),
-          );
 
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
@@ -297,7 +286,7 @@ const Pages = ({route}) => {
                 return formattedWeekDate(s);
               });
             });
-            const index = dateIndex.findIndex((v, i) => {
+            const index = dateIndex.findIndex(v => {
               return v.includes(
                 formattedWeekDate(
                   new Date(date).setDate(new Date(date).getDate() + 1),
@@ -312,9 +301,6 @@ const Pages = ({route}) => {
         if (position === 0) {
           const currentDate = formattedWeekDate(new Date());
           const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
-          const todayDate = new Date(currentDate).setDate(
-            new Date(currentDate).getDate(),
-          );
 
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
@@ -339,7 +325,7 @@ const Pages = ({route}) => {
                   return formattedWeekDate(s);
                 });
               });
-              const index = dateIndex.findIndex((v, i) => {
+              const index = dateIndex.findIndex(v => {
                 return v.includes(
                   formattedWeekDate(
                     new Date(date).setDate(new Date(date).getDate() - 1),
@@ -393,9 +379,6 @@ const Pages = ({route}) => {
         if (position === 2) {
           const currentDate = formattedWeekDate(new Date());
           const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
-          const todayDate = new Date(currentDate).setDate(
-            new Date(currentDate).getDate(),
-          );
 
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
@@ -416,7 +399,7 @@ const Pages = ({route}) => {
                 return formattedWeekDate(s);
               });
             });
-            const index = dateIndex.findIndex((v, i) => {
+            const index = dateIndex.findIndex(v => {
               return v.includes(
                 formattedWeekDate(
                   new Date(date).setDate(new Date(date).getDate() + 1),
@@ -430,9 +413,6 @@ const Pages = ({route}) => {
         if (position === 0) {
           const currentDate = formattedWeekDate(new Date());
           const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
-          const todayDate = new Date(currentDate).setDate(
-            new Date(currentDate).getDate(),
-          );
 
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
@@ -457,7 +437,7 @@ const Pages = ({route}) => {
                   return formattedWeekDate(s);
                 });
               });
-              const index = dateIndex.findIndex((v, i) => {
+              const index = dateIndex.findIndex(v => {
                 return v.includes(
                   formattedWeekDate(
                     new Date(date).setDate(new Date(date).getDate() - 1),
@@ -495,8 +475,7 @@ const Pages = ({route}) => {
       setDate(selectedDate);
       // dailyFood(spotId,selectedDate);
     } catch (err) {
-      console.log(err);
-      throw err;
+      Alert.alert('날짜 선택', err?.toString()?.replace('error: ', ''));
     }
   };
   // const isDiningType = (type)=>{
@@ -566,7 +545,6 @@ const Pages = ({route}) => {
   useEffect(() => {
     let price = null;
     if (dailyfoodData?.data.supportPrice) {
-      console.log(dailyfoodData?.data.supportPrice);
       switch (sliderValue) {
         case 0:
           price = dailyfoodData?.data.supportPrice.morningSupportPrice;
@@ -624,8 +602,7 @@ const Pages = ({route}) => {
   );
   const quantity = quantityArr?.reduce((acc, val) => [...acc, ...val], []);
   const modifyQty = quantity?.reduce((acc, cur) => [...acc, ...cur], []);
-  const req = {updateCartList: modifyQty};
-  const addToCart = async (id, m) => {
+  const addToCart = async id => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
         '로그인이 필요합니다',
@@ -667,7 +644,7 @@ const Pages = ({route}) => {
         setShow(false);
       }, 3000);
     } catch (err) {
-      console.log(err);
+      Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
     }
     closeModal();
   };
@@ -709,19 +686,16 @@ const Pages = ({route}) => {
         return DinnerRef;
       }
     };
-    const threshold = 0;
-    let lastScrollY = window.pageYOffset;
-    let ticking = false;
 
     const onScrollStart = e => {
       const {
-        contentOffset: {x, y},
+        contentOffset: {y},
       } = e.nativeEvent;
       setStartScroll(y);
     };
     const onScrollEnd = e => {
       const {
-        contentOffset: {x, y},
+        contentOffset: {y},
       } = e.nativeEvent;
       if (y < 20) {
         handlePress(true);
@@ -1185,37 +1159,12 @@ const Contents = styled.Pressable`
   min-height: 160px;
 `;
 
-const BlurView = styled.View`
-  position: absolute;
-  width: 114px;
-  height: 114px;
-  border-radius: 7px;
-  left: 0px;
-  background-color: #ffffffcc;
-  z-index: 999;
-`;
-
 const LabelWrap = styled.View`
   margin-top: 6px;
 `;
 
 const ContentsText = styled.View`
   width: 60%;
-`;
-
-const MealImageWrap = styled.View``;
-
-const CartIconWrap = styled.Pressable`
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(4px);
-  border-radius: 50px;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
 `;
 
 const PriceWrap = styled.View`
@@ -1240,12 +1189,6 @@ const ButtonWrap = styled(LinearGradient)`
   height: 100px;
   //background-color: white;
   justify-content: flex-start;
-`;
-
-const ReviewWrap = styled.View`
-  flex-direction: row;
-  align-items: center;
-  text-align: center;
 `;
 
 export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
@@ -1281,7 +1224,7 @@ const MealDsc = styled(Typography).attrs({text: 'MealDes'})`
 `;
 
 const ProgressText = styled(Typography).attrs({text: 'Title04SB'})`
-  color: ${({theme, type, index}) =>
+  color: ${({theme, type}) =>
     type ? theme.colors.grey[2] : theme.colors.grey[7]};
 `;
 
@@ -1302,20 +1245,6 @@ const OriginPrice = styled(Typography).attrs({text: 'Body06R'})`
       ? theme.colors.grey[6]
       : theme.colors.grey[5]};
   margin-left: 6px;
-`;
-
-const ReviewText = styled(Typography).attrs({text: 'SmallLabel'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[2]};
-`;
-
-const ReviewCount = styled(Typography).attrs({text: 'SmallLabel'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[4]};
 `;
 
 const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`
@@ -1340,14 +1269,3 @@ const NoSpotView = styled(NoServieceView)`
 `;
 
 const DiningPress = styled.Pressable``;
-
-const AItext = styled(Typography).attrs({text: 'CaptionSB'})`
-  color: ${({theme}) => theme.colors.purple[500]};
-  margin-left: 3px;
-`;
-
-const AIrecommend = styled.View`
-  flex-direction: row;
-  margin-left: 7px;
-  margin-top: 2px;
-`;

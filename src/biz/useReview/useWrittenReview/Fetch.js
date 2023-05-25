@@ -57,9 +57,6 @@ export async function deleteReview(body, token, successCallback) {
       }
     })
     .catch(error => {
-      console.log('삭제 에러뜸');
-      console.log(error);
-
       Alert.alert('작성 실패', '', [
         {
           text: '확인',

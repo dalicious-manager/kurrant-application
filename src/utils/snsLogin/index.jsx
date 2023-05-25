@@ -79,7 +79,7 @@ export default () => {
           ],
         });
       } else {
-        console.log(failureResponse);
+        // console.log(failureResponse);
       }
     } catch (error) {
       Alert.alert('네이버 로그인 에러', error.toString());
@@ -119,7 +119,7 @@ export default () => {
         ],
       });
     } catch (error) {
-      console.log('err', error.toString());
+      // console.log('err', error.toString());
     }
   };
   const appleLogin = async (name = '') => {
@@ -252,7 +252,6 @@ export default () => {
   const kakaoLogin = async () => {
     const token = await login();
     // Clipboard.setString(token.accessToken);
-    console.log(token.accessToken);
 
     await snsLogin(
       {
@@ -320,7 +319,7 @@ export default () => {
         });
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

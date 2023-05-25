@@ -76,9 +76,6 @@ const Pages = () => {
           <ResultScrollView>
             {searchTerm !== '' &&
               filtered.map(el => {
-                if (el.name.includes(searchTerm)) {
-                  console.log(el);
-                }
                 return (
                   <ResultView
                     key={el.id}
@@ -124,7 +121,6 @@ const Pages = () => {
             {focus &&
               searchTerm === '' &&
               isApartSearch?.map((el, idx) => {
-                console.log(el.spotType);
                 return (
                   <ResultView
                     key={el.id}

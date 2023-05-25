@@ -46,7 +46,7 @@ const Location = ({setInitCenter, setShow, toast}) => {
             },
           },
         ]);
-        console.log('Location permission denied.');
+        // console.log('Location permission denied.');
       }
     } catch (error) {
       console.log('Error requesting location permission: ', error);

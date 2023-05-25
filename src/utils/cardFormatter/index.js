@@ -1,7 +1,6 @@
 import cardValidator from 'card-validator';
 
 export function cardNumberFormatter(oldValue, newValue) {
-  console.log(oldValue, 'old');
   // user is deleting so return without formatting
   if (oldValue?.length > newValue?.length) {
     return newValue;
@@ -17,7 +16,6 @@ export const cardSerialNumberFormatter = serialnumber => {
   if (serialnumber?.replace(/\W/gi, '').length > 16)
     return serialnumber.substring(0, 19);
   const {card} = cardValidator.number(serialnumber);
-  console.log(serialnumber.match(/[0-9●]{1,3}/));
   if (card?.type === 'american-express') {
     const fir = serialnumber
       ?.replace(/\W/gi, '')
@@ -31,7 +29,6 @@ export const cardSerialNumberFormatter = serialnumber => {
       ?.replace(/\W/gi, '')
       .match(/[0-9●]{1,15}/)[0]
       ?.substring(10, 15);
-    console.log(fir, sec, thir);
     const array = [];
     if (fir?.length > 0) array.push(fir);
     if (sec?.length > 0) array.push(sec);
@@ -39,7 +36,6 @@ export const cardSerialNumberFormatter = serialnumber => {
 
     return array.join(' ');
   }
-  console.log(serialnumber.match(/[0-9●]{3}/));
   return (
     serialnumber
       .match(/[0-9●]{1,4}/g)
@@ -76,7 +72,6 @@ export function checkCorporateRegiNumber(number) {
     });
 
     chk += parseInt((keyArr[8] * numberMap[8]) / 10, 10);
-    console.log(chk);
     return Math.floor(numberMap[9]) === (10 - (chk % 10)) % 10;
   }
 

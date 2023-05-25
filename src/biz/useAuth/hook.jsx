@@ -237,7 +237,6 @@ const useAuth = () => {
 
       const res = await Fetch.autoLogin();
       if (res?.data?.isActive) {
-        console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
@@ -302,7 +301,6 @@ const useAuth = () => {
         type,
         option,
       );
-      console.log(res?.data);
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());

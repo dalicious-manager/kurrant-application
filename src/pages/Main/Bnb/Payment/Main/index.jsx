@@ -141,11 +141,6 @@ const Pages = ({route}) => {
     medtronicPrice,
     medtronicSupportArr,
   } = route.params;
-  const selectCard = async (text, id) => {
-    // await setStorage('selectCard', id.toString());
-    console.log(text, id);
-    // setSelectDefaultCard(id.toString());
-  };
 
   const fundButton = () => {
     setModalVisible3(true);
@@ -352,7 +347,6 @@ const Pages = ({route}) => {
         medtronicSupportArr.includes(62471004) &&
         medtronicTotalPrice - Number(points) > 0
       ) {
-        console.log(medtronicTotalPrice - Number(points), '0000000');
         return navigation.navigate(MealPaymentPageName, {
           amount: medtronicTotalPrice - Number(points),
           orderName: orderName,
@@ -382,7 +376,7 @@ const Pages = ({route}) => {
         }
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('결제', err?.toString()?.replace('error: ', ''));
     } finally {
       setIsPay(false);
     }

@@ -505,7 +505,7 @@ const Pages = () => {
       await deleteMeal(foodId);
       setLoadMeal(deleteArrs);
     } catch (err) {
-      console.log(err);
+      Alert.alert('메뉴 취소', err?.toString()?.replace('error: ', ''));
     }
   };
 
@@ -538,7 +538,10 @@ const Pages = () => {
             allDeleteMeal(spotId);
             setLoadMeal(data);
           } catch (err) {
-            console.log(err);
+            Alert.alert(
+              '메뉴 전체 삭제',
+              err?.toString()?.replace('error: ', ''),
+            );
           }
         },
       },

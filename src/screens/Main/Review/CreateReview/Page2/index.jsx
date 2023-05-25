@@ -194,17 +194,6 @@ const Screen = ({route}) => {
         Authorization: `Bearer ${token}`,
       };
 
-      console.log('크리에이트 리뷰');
-
-      console.log([
-        ...photosArray,
-        {
-          name: 'reviewDto',
-          data: JSON.stringify(sendCreateData),
-          type: 'application/json',
-        },
-      ]);
-
       return RNFetchBlob.fetch('POST', url, headers, [
         ...photosArray,
         {
@@ -223,9 +212,6 @@ const Screen = ({route}) => {
       const token = await getToken();
 
       // photosArray에서 웹에있는 데이터, 로컬인 데이터 배열 둘로 나눠야됨
-
-      console.log('보내는 데이터임');
-      console.log(data);
 
       // editItem && editItem.reviewText
       // ? editItem.reviewText
@@ -285,7 +271,6 @@ const Screen = ({route}) => {
       createReview(photoDataArray)
         .then(response => response.json())
         .then(data => {
-          console.log('Success:', data);
           setIsLoading(true);
           if (data.statusCode === 200) {
             Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
@@ -351,14 +336,9 @@ const Screen = ({route}) => {
           setIsLoading(false);
         });
     } else if (status === 'edit') {
-      console.log('edit 이여');
-      console.log(photosArray);
-
       editReview(id, photosArray)
         .then(response => response.json())
         .then(data => {
-          console.log('Success:', data);
-
           if (data.statusCode === 200) {
             Alert.alert('수정 완료', '리뷰가 수정되었습니다 ', [
               {
@@ -393,8 +373,6 @@ const Screen = ({route}) => {
           setIsLoading(false);
         });
     }
-
-    console.log('input registered');
   };
 
   // isLoading중이면 다시 클릭했을때 alert 뜨게 하기

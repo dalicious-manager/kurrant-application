@@ -95,7 +95,7 @@ const ModalCalendar = props => {
               </IosButton>
             )}
             <DatePicker
-              value={calendarProps.selected}
+              value={calendarProps?.selected}
               display="spinner"
               onChange={(event, date) =>
                 calendarProps.onChange(

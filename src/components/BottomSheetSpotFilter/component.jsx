@@ -22,7 +22,6 @@ import {width} from '../../theme';
 import Typography from '../Typography';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
-console.log((screenWidth - 48 - width * 103 * 3) / 2);
 const BottomSheetSpot = props => {
   const {
     touch,

@@ -50,7 +50,6 @@ const Component = ({userId}) => {
   };
   const onSubmit = async datas => {
     try {
-      console.log(datas);
       await login(datas);
       setStorage('userId', datas.email);
       const userData = await userInfo();
@@ -65,7 +64,6 @@ const Component = ({userId}) => {
       //navigation.reset({routes:[{ name:GroupCreateMainPageName}]});
       //await userInfo();
     } catch (err) {
-      console.log(err);
       Alert.alert('로그인 실패', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
@@ -103,7 +101,6 @@ const Component = ({userId}) => {
     const getUserId = async () => {
       const userIds = await getStorage('userId');
       if (userIds) {
-        console.log(userIds);
         setEmailId(userIds);
       }
     };

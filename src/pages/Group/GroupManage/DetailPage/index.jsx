@@ -77,7 +77,6 @@ const Pages = ({route}) => {
     // }
     try {
       const res = await userSpotRegister({id: id});
-      console.log(res, '----');
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
@@ -85,7 +84,7 @@ const Pages = ({route}) => {
         groupSpotDetail(id);
       }
     } catch (error) {
-      console.log(error);
+      Alert.alert('유저 스팟 가입', error?.toString()?.replace('error: ', ''));
     }
   };
 
@@ -114,7 +113,7 @@ const Pages = ({route}) => {
                 navigation.navigate(SelectSpotPageName);
               }
             } catch (err) {
-              console.log(err);
+              Alert.alert('스팟 탈퇴', err?.toString()?.replace('error: ', ''));
             }
           },
           style: 'destructive',
@@ -150,7 +149,7 @@ const Pages = ({route}) => {
         await groupSpotDetail(spotId);
         await userGroupSpotCheck();
       } catch (err) {
-        console.log(err);
+        Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
       }
     }
     LoadGroupDetail();

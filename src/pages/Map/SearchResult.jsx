@@ -62,7 +62,6 @@ const SearchResult = () => {
         onPress={() => {
           Keyboard.dismiss();
           setFocus(false);
-          console.log('ㄴㄴ');
         }}>
         <View style={{flex: 1}}>
           {/* 디폴드화면 */}

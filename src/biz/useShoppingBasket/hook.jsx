@@ -1,5 +1,6 @@
 import {useAtom} from 'jotai';
 import react from 'react';
+import {Alert} from 'react-native';
 import {useQueryClient} from 'react-query';
 
 import * as Fetch from './Fetch';
@@ -103,7 +104,6 @@ const useShoppingBasket = () => {
   };
 
   const updateMeal = async body => {
-    // console.log(isLoadMeal.map(v=>v.cartDailyFoodDtoList.map(s=>console.log(s))));
     try {
       const res = await Fetch.updateMealCart({
         ...body,
@@ -133,7 +133,7 @@ const useShoppingBasket = () => {
       setSoldOutChange(list);
       setSoldOutMeal(data);
     } catch (err) {
-      console.log(err);
+      Alert.alert('매진 상품', err?.toString()?.replace('error: ', ''));
     }
   };
 
@@ -144,7 +144,7 @@ const useShoppingBasket = () => {
       });
       return res;
     } catch (err) {
-      console.log(err);
+      Alert.alert('주문 상품', err?.toString()?.replace('error: ', ''));
     }
   };
 

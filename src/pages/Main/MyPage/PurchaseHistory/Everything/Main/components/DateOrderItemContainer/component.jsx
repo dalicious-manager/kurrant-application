@@ -28,16 +28,14 @@ import {PAGE_NAME as BuyMealPageName} from '../../../../../../Bnb/BuyMeal/Main';
 import {PurchaseDetailPageName} from '../../../../Detail';
 
 const {width} = Dimensions.get('screen');
-const Component = ({purchaseId, date, itemIndex}) => {
+const Component = ({purchaseId, date, itemIndex, data}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
   const {refundItem} = useOrderMeal();
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
-  const {
-    setAllPurchase,
-    readAbleAtom: {allPurchase},
-  } = usePurchaseHistory();
+  const {setAllPurchase} = usePurchaseHistory();
+
   const {mutateAsync: orderState} = useConfirmOrderState();
 
   const deliveryConfirmPress = async id => {
@@ -47,7 +45,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
       Alert.alert('상태변경', error.toString()?.replace('error: '));
     }
   };
-  const purchase = allPurchase.filter(v => v.id === purchaseId)[0];
+  const purchase = data.filter(v => v.id === purchaseId)[0];
   const cancelItem = async id => {
     try {
       const req = {
@@ -55,7 +53,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
         id: id,
       };
       await refundItem(req);
-      const refund = allPurchase.map(o => {
+      const refund = data.map(o => {
         return {
           ...o,
           orderItems: [
@@ -81,7 +79,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
         id: id,
       };
       await refundItem(req);
-      const refund = allPurchase.map(o => {
+      const refund = data.map(o => {
         return {
           ...o,
           orderItems: [
@@ -184,13 +182,16 @@ const Component = ({purchaseId, date, itemIndex}) => {
                           식사일 : {formattedDateAndDay(order.serviceDate)}{' '}
                           {formattedDateType(order.diningType)}
                         </ServiceDate>
-                        <Body06R19 textColor={themeApp.colors.grey[2]}>
+                        <Body06R19
+                          textColor={themeApp.colors.grey[2]}
+                          numberOfLines={1}
+                          ellipsizeMode="tail">
                           [{order.makersName}]{order.name}
                         </Body06R19>
                         <PriceBox>
-                          <Body06R19 textColor={themeApp.colors.grey[4]}>
+                          <Body06R19Count textColor={themeApp.colors.grey[4]}>
                             {order.count}개
-                          </Body06R19>
+                          </Body06R19Count>
                           <Typography
                             text="Body06SB"
                             textColor={themeApp.colors.grey[2]}>
@@ -366,6 +367,9 @@ const ButtonContainer = styled.View`
 `;
 const TextBox = styled.View``;
 const Body06R19 = styled(Typography).attrs({text: 'Body06R'})`
+  line-height: 19px;
+`;
+const Body06R19Count = styled(Typography).attrs({text: 'Body06R'})`
   line-height: 19px;
   margin-right: 6px;
 `;

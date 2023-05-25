@@ -156,7 +156,7 @@ const Pages = ({route}) => {
           style: 'cancel',
         },
       ]);
-      console.log(err);
+      Alert.alert('비밀번호 변경', err?.toString()?.replace('error: ', ''));
     }
   };
   useEffect(() => {

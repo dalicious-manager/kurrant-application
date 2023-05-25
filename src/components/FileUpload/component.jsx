@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Alert} from 'react-native';
 import DocumentPicker, {types} from 'react-native-document-picker';
 import styled from 'styled-components/native';
 
@@ -16,7 +17,7 @@ const Component = () => {
       });
       setFileResponse(response);
     } catch (err) {
-      console.log(err);
+      Alert.alert('사진 선택', err?.toString()?.replace('error: ', ''));
     }
   };
 

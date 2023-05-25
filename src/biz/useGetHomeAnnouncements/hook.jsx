@@ -121,11 +121,6 @@ const useGetAnnouncements = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('일단 로컬스토리지에는 없어 리스판스 여기여~~~~');
-    console.log(announcementModalVisible);
-  }, [announcementModalVisible]);
-
   return {
     getAnnouncements,
     announcements,

@@ -88,7 +88,6 @@ const Pages = () => {
             style: 'cancel',
           },
         ]);
-        console.log(err);
         setModalVisible(true);
       }
     }
@@ -116,7 +115,6 @@ const Pages = () => {
           style: 'cancel',
         },
       ]);
-      console.log(err);
     }
   };
   useEffect(() => {

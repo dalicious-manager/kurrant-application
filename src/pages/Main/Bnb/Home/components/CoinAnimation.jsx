@@ -18,13 +18,7 @@ const CoinAnimation = ({isStart, setStart, coinSound}) => {
   // See notes below about preloading sounds within initialization code below.
   const playSound = () => {
     if (coinSound) {
-      coinSound.play(success => {
-        if (success) {
-          console.log('successfully finished playing');
-        } else {
-          console.log('playback failed due to audio decoding errors');
-        }
-      });
+      coinSound.play();
     }
   };
   const themeApp = useTheme();

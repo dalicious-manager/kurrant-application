@@ -10,6 +10,7 @@ import {
   ScrollView,
   View,
   Text,
+  Alert,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
@@ -162,7 +163,7 @@ const BottomSheet = props => {
         setShow(false);
       }, 3000);
     } catch (err) {
-      console.log(err);
+      Alert.alert('장바구니 추가', err?.toString()?.replace('error: ', ''));
     }
   };
 

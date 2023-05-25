@@ -1,7 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, ScrollView} from 'react-native';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import styled from 'styled-components/native';
 import Button from '~components/Button';
 import KeyboardButton from '~components/KeyboardButton';
@@ -39,7 +45,7 @@ const Pages = () => {
         ],
       });
     } catch (err) {
-      console.log(err);
+      Alert.alert('이름 정하기', err?.toString()?.replace('error: ', ''));
     }
   };
 

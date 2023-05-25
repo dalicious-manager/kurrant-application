@@ -201,7 +201,7 @@ const Pages = ({route}) => {
       try {
         await addToCart();
       } catch (err) {
-        console.log(err);
+        Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
       }
     }
   };
@@ -219,7 +219,7 @@ const Pages = ({route}) => {
       // await loadMeal();
     } catch (err) {
       alert(err.toString()?.replace('error:', '').trim());
-      console.log(err);
+      Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
       //  throw err
     }
     closeModal();
