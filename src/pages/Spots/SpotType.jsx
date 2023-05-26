@@ -1,7 +1,17 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {View, Image, Text} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Image,
+  Text,
+  Alert,
+  Platform,
+  Linking,
+  PermissionsAndroid,
+} from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import styled from 'styled-components';
+import Toast from '~components/Toast';
 
 import ModalComponent from './components/ModalComponent';
 import {MySpot, ShareSpot, PrivateSpot} from '../../assets';
@@ -13,7 +23,70 @@ import {PAGE_NAME as PrivateInfo} from '../Spots/privateSpot/PrivateInfo';
 export const PAGE_NAME = 'SPOT_TYPE';
 const SpotType = () => {
   const navigation = useNavigation();
+  const [show, setShow] = useState(false);
+  const toast = Toast();
+  const openAppSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:root');
+    }
+  };
+  const userLocation = () => {
+    if (Platform.OS === 'ios') {
+      requestLocationIosPermission();
+    } else {
+      requestLocationAndroidPermission();
+    }
+  };
+  const requestLocationAndroidPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: '커런트',
+          message: `'정확한 위치' 접근 권한을 허용해 주세요`,
+          buttonNeutral: '다음에 다시 묻기',
+          buttonNegative: '취소',
+          buttonPositive: '확인',
+        },
+      );
 
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        navigation.navigate(MySpotMap);
+      } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+        setShow(true);
+        toast.toastEvent();
+        setTimeout(() => {
+          setShow(false);
+        }, 3000);
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  const requestLocationIosPermission = async () => {
+    try {
+      const granted = await Geolocation.requestAuthorization('whenInUse');
+      console.log(granted);
+      if (granted === 'granted') {
+        navigation.navigate(MySpotMap);
+      } else {
+        Alert.alert('커런트', '위치 사용을 위해 접근 권한을 허용해 주세요', [
+          {
+            text: '취소',
+          },
+          {
+            text: '확인',
+            onPress: () => {
+              openAppSettings();
+            },
+          },
+        ]);
+        console.log('Location permission denied.');
+      }
+    } catch (error) {
+      console.log('Error requesting location permission: ', error);
+    }
+  };
   return (
     <Wrap showsVerticalScrollIndicator={false}>
       <View>
@@ -25,7 +98,7 @@ const SpotType = () => {
       </View>
 
       <BoxWrap>
-        <Box onPress={() => navigation.navigate(MySpotMap)}>
+        <Box onPress={userLocation}>
           <ImageWrap>
             <Image source={MySpot} style={{width: 70, height: 60}} />
             <ImageDscText>
@@ -73,6 +146,12 @@ const SpotType = () => {
         </Box>
         <ModalComponent title={3} />
       </BoxWrap>
+      {show && (
+        <toast.ToastWrap
+          message={`설정>권한 에서 '정확한 위치' 접근 권한을 허용해 주세요`}
+          isHeader={false}
+        />
+      )}
     </Wrap>
   );
 };

@@ -119,7 +119,6 @@ const Page = () => {
     messaging()
       .getToken()
       .then(token => {
-        console.log('push token ' + token);
         // if (token) {
         //   saveFcmToken({
         //     token: token,

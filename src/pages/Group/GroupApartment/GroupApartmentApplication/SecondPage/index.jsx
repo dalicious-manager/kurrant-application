@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 
+import {PAGE_NAME as ApartmentApplicationPostcodePageName} from './Pages';
 import Arrow from '../../../../../assets/icons/Group/arrowDown.svg';
 import {
   apartApplicationDate,
@@ -40,7 +41,6 @@ import {
   formattedMealTime,
 } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as ApartmentApplicationThirdPageName} from '../ThirdPage';
-import {PAGE_NAME as ApartmentApplicationPostcodePageName} from './Pages';
 
 export const PAGE_NAME = 'P__GROUP__CREATE__APARTMENT__APPLICATION__SECOND';
 const Pages = () => {
