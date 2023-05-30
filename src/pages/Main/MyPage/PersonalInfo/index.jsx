@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -356,6 +357,7 @@ const Pages = ({route}) => {
                   const lastLogin = await getStorage('lastLogin');
                   console.log(lastLogin);
                   const getToken = JSON.parse(token);
+                  await GoogleSignin.signOut();
                   await logout({
                     accessToken: getToken?.accessToken,
                     refreshToken: getToken?.refreshToken,

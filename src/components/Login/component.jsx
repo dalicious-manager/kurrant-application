@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
+import Toast from '~components/Toast';
 
 import useAuth from '../../biz/useAuth';
 import useUserInfo from '../../biz/useUserInfo';
@@ -26,10 +27,11 @@ import Typography from '../Typography';
 
 const {StatusBarManager} = NativeModules;
 
-const Component = ({userId}) => {
+const Component = ({userId, isPassword, setPassword}) => {
   const navigation = useNavigation();
   const {userInfo} = useUserInfo();
   const [emailId, setEmailId] = useState(userId);
+  const ToastMessage = Toast();
   const labelItems = [
     {label: '아이디'},
     {label: '/'},
@@ -104,8 +106,20 @@ const Component = ({userId}) => {
         setEmailId(userIds);
       }
     };
+
     getUserId();
   }, [navigation]);
+  useEffect(() => {
+    if (isPassword) {
+      ToastMessage.toastEvent();
+      setTimeout(() => {
+        setPassword(false);
+        navigation.setParams({
+          isPassword: false,
+        });
+      }, 3000);
+    }
+  }, [ToastMessage, isPassword, navigation, setPassword]);
   useEffect(() => {
     setValue('email', emailId);
   }, [emailId, setValue, userId]);
@@ -194,6 +208,12 @@ const Component = ({userId}) => {
           />
         </KeyContainer>
       </KeyDismiss>
+      {isPassword && (
+        <ToastMessage.ToastWrap
+          message="비밀번호가 변경됐어요"
+          icon="checked"
+        />
+      )}
     </SafeContainer>
   );
 };
