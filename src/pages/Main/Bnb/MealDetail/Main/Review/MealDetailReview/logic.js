@@ -33,3 +33,12 @@ export const buildCustomUrl = (
 
   return basicUrl.join('');
 };
+
+export const modifyStarRatingCount = starRatingCount =>
+  Object.entries(starRatingCount).map((v, i) => {
+    return {
+      id: v[0],
+      text: v[0],
+      reviewCount: v[1],
+    };
+  });

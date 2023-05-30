@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {useQuery} from 'react-query';
+import {useEffect, useState} from 'react';
+import {useInfiniteQuery, useQuery} from 'react-query';
 import {fetchJson} from '../../../../../../../utils/fetch';
 
 const useGetMealDetailReview = url => {
@@ -8,6 +8,9 @@ const useGetMealDetailReview = url => {
   const [totalCount, setTotalCount] = useState(0);
 
   const [isError, setIsError] = useState(false);
+
+  // 리뷰 별점 갯수 조회
+  const [starRatingCounts, setStarRatingCounts] = useState({});
 
   const {
     data,
@@ -46,8 +49,46 @@ const useGetMealDetailReview = url => {
     },
   );
 
+  const {} = useQuery(
+    ['review', 'stars'],
+    async ({queryKey}) => {
+      const response = await fetchJson(
+        `/users/me/reviews/satisfaction?dailyFoodId=${4395}`,
+        'GET',
+      );
+
+      setStarRatingCounts(response.data);
+    },
+    {},
+  );
+
+  // const {} = useInfiniteQuery(['review', 'GetMealDetailReviewInfinite'],
+
+  // // condition, pageParam=1
+
+  // async ({queryKey}) => {
+  //   const res = await fetchJson(
+  //     `/users/me/point?condition=${condition}&limit=20&page=${pageParam}`,
+  //   );
+
+  //   const {items, isLast} = res.data;
+  //   return {items, currentPage: pageParam, isLast};
+  // },
+
+  // {
+  //   getNextPageParam: lastPage => {
+  //     if (!lastPage.isLast) {
+  //       return lastPage.currentPage + 1;
+  //     }
+  //     return undefined;
+  //   },
+  // },
+
+  // )
+
   return {
     starAverage,
+    starRatingCounts,
     totalCount,
     isError,
     mealDetailReview,

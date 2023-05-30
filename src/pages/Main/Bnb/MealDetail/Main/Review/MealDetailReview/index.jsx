@@ -16,12 +16,12 @@ import {
 } from '../../../../../../../components/Icon';
 import {useEffect, useState} from 'react';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
-import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
+import BottomModalMultipleSample from '~components/Review/BottomModalMultipleSample';
 // import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import {Shadow} from 'react-native-shadow-2';
 import useGetMealDetailReview from '../useGetMealDetailReview/useGetMealDetailReview';
-import {buildCustomUrl} from './logic';
+import {buildCustomUrl, modifyStarRatingCount} from './logic';
 
 const Component = ({dailyFoodId}) => {
   const theme = useTheme();
@@ -53,6 +53,7 @@ const Component = ({dailyFoodId}) => {
 
   const {
     starAverage,
+    starRatingCounts,
     totalCount,
     isError,
     mealDetailReview,
@@ -278,13 +279,7 @@ const Component = ({dailyFoodId}) => {
         modalVisible={bottomModalOpen}
         setModalVisible={setBottomModalOpen}
         title="별점 필터"
-        data={[
-          {id: 5, text: 5, reviewCount: 1120},
-          {id: 4, text: 4, reviewCount: 112},
-          {id: 3, text: 3, reviewCount: 11},
-          {id: 2, text: 2, reviewCount: 1},
-          {id: 1, text: 1, reviewCount: 0},
-        ]}
+        data={modifyStarRatingCount(starRatingCounts)}
         multiple={true}
         selected={rateSelected}
         setSelected={handleSelectBottomModal}
