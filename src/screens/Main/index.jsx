@@ -490,7 +490,7 @@ const Screen = () => {
           name={EmailLoginModalModalPageName}
           component={EmailLoginModal}
           options={{
-            headerShown: !isLoginLoading || false,
+            headerShown: true,
             headerShadowVisible: false,
             title: '',
             headerTitleAlign: 'center',

@@ -30,7 +30,7 @@ const {StatusBarManager} = NativeModules;
 const Component = ({userId, isPassword, setPassword}) => {
   const navigation = useNavigation();
   const {userInfo} = useUserInfo();
-  const [emailId, setEmailId] = useState(userId);
+  const [emailId, setEmailId] = useState((userId && userId) || emailId);
   const ToastMessage = Toast();
   const labelItems = [
     {label: '아이디'},
@@ -121,6 +121,7 @@ const Component = ({userId, isPassword, setPassword}) => {
     }
   }, [ToastMessage, isPassword, navigation, setPassword]);
   useEffect(() => {
+    console.log(emailId);
     setValue('email', emailId);
   }, [emailId, setValue, userId]);
   return (
@@ -137,7 +138,7 @@ const Component = ({userId, isPassword, setPassword}) => {
               returnKeyType="next"
               autoCapitalize="none"
               onSubmitEditing={() => passwordRef.current?.focus()}
-              defaultValue={emailId}
+              defaultValue={emailId && emailId}
               blurOnSubmit={false}
               suffix={{
                 isNeedDelete: true,
