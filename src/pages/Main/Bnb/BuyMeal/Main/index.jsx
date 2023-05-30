@@ -965,7 +965,7 @@ const Pages = ({route}) => {
           message={'장바구니에 담았어요'}
           horizontal={'right'}
           size={'B'}
-          location={{top: '8px', right: '14px'}}
+          location={{top: '8px', right: '16px'}}
         />
       )}
       <ButtonWrap

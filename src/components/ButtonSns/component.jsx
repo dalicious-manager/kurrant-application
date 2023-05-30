@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import styled, {css} from 'styled-components/native';
-import Balloon from '~components/Balloon';
+import BalloonLastLogin from '~components/BalloonLastLogin';
 
 import {getSnsButtonColor, getSnsButtonBorder} from './style';
 import KakaoTalk from '../../assets/icons/KakaoTalk.svg';
@@ -27,7 +27,7 @@ const Component = ({
     login: '로그인',
     naver: '네이버로 로그인',
   };
-  const {balloonEvent, BalloonWrap, balloonEventNotOut} = Balloon();
+  const {balloonEvent, BalloonWrap, balloonEventNotOut} = BalloonLastLogin();
   const renderButton = () => {
     switch (type_sns) {
       case 'naver':

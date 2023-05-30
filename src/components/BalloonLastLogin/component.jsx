@@ -73,7 +73,7 @@ const Component = () => {
   }, [fadeBalloon]);
   const BalloonWrap = useCallback(
     ({
-      message = '메세지 입니다3.',
+      message = '메세지 입니다2.',
       vertical = 'up',
       horizontal = 'left',
       location = {},
@@ -128,7 +128,6 @@ const Container = styled.View`
   position: absolute;
   flex-direction: row;
   align-items: center;
-  z-index: -1;
   padding: ${({size}) => (size === 'B' ? '6px 12px' : '3.5px 12px')};
   justify-content: center;
   border-radius: ${({size}) => (size === 'B' ? '10px' : '7px')};

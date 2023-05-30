@@ -21,8 +21,6 @@ const Pages = ({isLast}) => {
   };
   const {naverLogin, kakaoLogin} = snsLogin();
 
-  const balloon = Balloon();
-
   // useEffect(()=>{
   //   fetch('https://nid.naver.com/oauth2.0/authorize')
   // },[])
@@ -32,7 +30,6 @@ const Pages = ({isLast}) => {
         <Login />
       </FormProvider> */}
       <View style={styles.SNSContainer}>
-        <balloon.BalloonWrap />
         <View style={styles.buttonContainer}>
           <ButtonSns
             type_sns="login"

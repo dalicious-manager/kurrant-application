@@ -27,7 +27,7 @@ import Typography from '../Typography';
  */
 
 const Component = () => {
-  const fadeBalloon = useRef(new Animated.Value(0)).current;
+  const fadeBalloon = useRef(new Animated.Value(1)).current;
 
   const balloonEvent = useCallback(() => {
     Animated.sequence([
@@ -73,7 +73,7 @@ const Component = () => {
   }, [fadeBalloon]);
   const BalloonWrap = useCallback(
     ({
-      message = '메세지 입니다.',
+      message = '메세지 입니다1.',
       vertical = 'up',
       horizontal = 'left',
       location = {},
@@ -113,7 +113,7 @@ const Component = () => {
 export default Component;
 
 const Wrapper = styled(Animated.View)`
-  position: relative;
+  position: absolute;
   align-items: center;
   ${({location}) => {
     let retSpot = location?.top ? `top :${location.top}; ` : '';
@@ -125,7 +125,7 @@ const Wrapper = styled(Animated.View)`
   }}
 `;
 const Container = styled.View`
-  position: absolute;
+  position: relative;
   flex-direction: row;
   align-items: center;
   padding: ${({size}) => (size === 'B' ? '6px 12px' : '3.5px 12px')};

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import NaverLogin from '@react-native-seoul/naver-login';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -15,7 +16,6 @@ import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import useUserMe from '~biz/useUserMe';
 import {isSNSConnectAtom} from '~biz/useUserMe/store';
 import {SocialConnectIcons} from '~components/Icon';
-import Image from '~components/Image';
 import TextButton from '~components/TextButton';
 import Toast from '~components/Toast';
 import Typography from '~components/Typography';
@@ -30,7 +30,6 @@ import {PAGE_NAME as NotificationSettingPageName} from './pages/NotificationSett
 import {PAGE_NAME as PasswordSettingPageName} from './pages/PasswordSetting';
 import {PAGE_NAME as PhoneNumberSettingPageName} from './pages/PhoneNumberSetting';
 import useAuth from '../../../../biz/useAuth';
-import useGroupSpots from '../../../../biz/useGroupSpots/hook';
 import {isUserInfoAtom} from '../../../../biz/useUserInfo/store';
 import BottomModal from '../../../../components/BottomModal';
 import {SCREEN_NAME as PaymentsManageScreenName} from '../../../../screens/Main/PaymentsManage';
@@ -39,8 +38,6 @@ import {PAGE_NAME as CreateGroupPageName} from '../../../Group/GroupCreate';
 import {PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/DetailPage';
 import {PAGE_NAME as LoginPageName} from '../../../Main/Login/Login';
 import {PAGE_NAME as NameSettingPageName} from '../../Login/AppleSignup';
-
-import {AvatarNon} from '~assets';
 
 export const PAGE_NAME = 'P__MY_PAGE__PERSONAL_INFO';
 
@@ -357,7 +354,8 @@ const Pages = ({route}) => {
                   const lastLogin = await getStorage('lastLogin');
                   console.log(lastLogin);
                   const getToken = JSON.parse(token);
-                  await GoogleSignin.signOut();
+                  if (GoogleSignin.isSignedIn()) GoogleSignin.signOut();
+                  if (lastLogin === 'NAVER') NaverLogin.logout();
                   await logout({
                     accessToken: getToken?.accessToken,
                     refreshToken: getToken?.refreshToken,

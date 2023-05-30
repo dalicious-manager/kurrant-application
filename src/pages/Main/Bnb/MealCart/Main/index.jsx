@@ -100,111 +100,48 @@ const Pages = () => {
 
   const keyboardStatus = useKeyboardEvent();
 
-  useFocusEffect(
-    useCallback(() => {
-      async function loadCart() {
-        try {
-          const res = await loadMeal();
-          if (res) {
-          }
-        } catch (error) {
-          if (error.toString()?.replace('Error:', '').trim() === '403') {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: LoginPageName,
-                },
-              ],
-            });
-          }
-        }
-      }
-      const getData = async () => {
-        const card = await getCardList();
-        if (card.statusCode === 200) {
-          const update = await updateMeal(req);
-          if (update.statusCode === 200) {
-            await loadCart();
-          }
-        }
-      };
-      getData();
-    }, []),
-  );
-  useEffect(() => {}, [isFocused]);
-  useEffect(() => {}, []);
+  const fundButton = () => {
+    setModalVisible(true);
+  };
 
-  const quantityArr = isLoadMeal?.data?.spotCarts?.map(el =>
-    el.cartDailyFoodDtoList.map(v =>
-      v.cartDailyFoods.map(c => {
+  const addHandle = async (cartData, id) => {
+    const modifyQty = cartData.map(c => {
+      if (id === c.dailyFoodId)
+        return {
+          dailyFoodId: c.dailyFoodId,
+          count: c.count + 1,
+          cartItemId: c.id,
+        };
+      else
         return {
           dailyFoodId: c.dailyFoodId,
           count: c.count,
           cartItemId: c.id,
         };
-      }),
-    ),
-  );
-  const quantity = quantityArr.reduce((acc, val) => [...acc, ...val], []);
-  const modifyQty = quantity.reduce((acc, cur) => [...acc, ...cur], []);
-  const req = {updateCartList: modifyQty};
+    });
 
-  const fundButton = () => {
-    setModalVisible(true);
+    const req = {updateCartList: modifyQty};
+    updateMeal(req);
   };
 
-  const addHandle = productId => {
-    const addQty = isLoadMeal?.data?.spotCarts?.map(el => {
-      return {
-        ...el,
-        cartDailyFoodDtoList: [
-          ...el.cartDailyFoodDtoList.map(v => {
-            return {
-              ...v,
-              cartDailyFoods: [
-                ...v.cartDailyFoods.map(food => {
-                  if (food.dailyFoodId === productId) {
-                    return {...food, count: food.count + 1};
-                  } else {
-                    return {...food};
-                  }
-                }),
-              ],
-            };
-          }),
-        ],
-      };
+  const substractHandle = async (cartData, id) => {
+    const modifyQty = cartData.map(c => {
+      if (id === c.dailyFoodId)
+        return {
+          dailyFoodId: c.dailyFoodId,
+          count: c.count > 0 ? c.count - 1 : 0,
+          cartItemId: c.id,
+        };
+      else
+        return {
+          dailyFoodId: c.dailyFoodId,
+          count: c.count,
+          cartItemId: c.id,
+        };
     });
-    setLoadMeal(addQty);
-  };
 
-  const substractHandle = productId => {
-    const substracQty = isLoadMeal?.data?.spotCarts?.map(el => {
-      return {
-        ...el,
-        cartDailyFoodDtoList: [
-          ...el.cartDailyFoodDtoList.map(v => {
-            return {
-              ...v,
-              cartDailyFoods: [
-                ...v.cartDailyFoods.map(food => {
-                  if (food.dailyFoodId === productId) {
-                    return {
-                      ...food,
-                      count: food.count <= 1 ? 1 : food.count - 1,
-                    };
-                  } else {
-                    return {...food};
-                  }
-                }),
-              ],
-            };
-          }),
-        ],
-      };
-    });
-    setLoadMeal(substracQty);
+    const req = {updateCartList: modifyQty};
+    updateMeal(req);
   };
 
   // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
@@ -813,6 +750,7 @@ const Pages = () => {
                                   }}
                                   increasePress={addHandle}
                                   decreasePress={substractHandle}
+                                  data={v.cartDailyFoods}
                                   count={food.count}
                                   id={food.dailyFoodId}
                                   status={food.status}
@@ -927,7 +865,6 @@ const Pages = () => {
             onPressEvent={() => {
               deadline !== 0 && isDeadline();
               soldout.length !== 0 && isSoldOut();
-              updateMeal(req);
               isLack.includes(true) && isShortage();
               soldout.length === 0 &&
                 totalCount !== 0 &&

@@ -31,6 +31,7 @@ import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import Typography from '../../../../../components/Typography';
+import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
@@ -54,7 +55,8 @@ const Pages = ({route}) => {
   const {
     readableAtom: {userRole},
   } = useAuth();
-  const {addMeal, loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
+  const {loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
+  const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {isUserInfo} = useUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
@@ -155,8 +157,6 @@ const Pages = ({route}) => {
           </View>
         ),
     });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTitle, navigation, scroll]);
 
   const addCartPress = async () => {
@@ -215,10 +215,10 @@ const Pages = ({route}) => {
         },
       ]);
       //console.log(data);
+      console.log('test');
       balloonEvent();
       // await loadMeal();
     } catch (err) {
-      alert(err.toString()?.replace('error:', '').trim());
       Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
       //  throw err
     }
@@ -471,7 +471,7 @@ const Pages = ({route}) => {
           message={'장바구니에 담았어요'}
           horizontal={'right'}
           size={'B'}
-          location={{top: '96px', right: '14px'}}
+          location={{top: '10%', right: '16px'}}
         />
         <BottomModal
           modalVisible={modalVisible}
