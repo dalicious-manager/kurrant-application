@@ -29,6 +29,10 @@ const Component = ({dailyFoodId}) => {
   console.log(dailyFoodId);
 
   // 필터 값들 모으기
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(2);
+
   // 베스트순,최신순,리뷰순 (sort)
   // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
 
@@ -45,10 +49,22 @@ const Component = ({dailyFoodId}) => {
 
   // 상품 상세 리뷰 키워드
 
-  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+  const [url, setUrl] = useState(
+    // `/dailyfoods/${dailyFoodId}/review?sort=0&page=${page}&limit=${limit}`,
+    `/dailyfoods/${40681}/review?sort=0&page=${page}&limit=${limit}`,
+  );
 
   useEffect(() => {
-    setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, rateSelected));
+    setUrl(
+      buildCustomUrl(
+        dailyFoodId,
+        orderFilter,
+        isOnlyPhoto,
+        rateSelected,
+        page,
+        limit,
+      ),
+    );
   }, [dailyFoodId, orderFilter, isOnlyPhoto, rateSelected, setUrl]);
 
   const {
