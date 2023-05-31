@@ -48,6 +48,7 @@ import Check from '../../../../../components/Check';
 import Form from '../../../../../components/Form';
 import Typography from '../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {PurchaseDetailPageName} from '../../../../../pages/Main/MyPage/PurchaseHistory/Detail';
 import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
@@ -98,12 +99,14 @@ const Pages = ({route}) => {
   const [modalVisible3, setModalVisible3] = useState(false);
   const [modalVisible4, setModalVisible4] = useState(false);
   const [statusBarHeight, setStatusBarHeight] = useState(0);
+  const [spotFilter, setSpotFilter] = useState();
   const [payments, setPayments] = useState('NOMAL');
   const [isPay, setIsPay] = useState(false);
   const viewRef = useRef();
   const queryClient = useQueryClient();
-  const {isLoadMeal, loadMeal} = useShoppingBasket();
-  const {order, orderNice, orderLoading} = useOrderMeal();
+  const {loadMeal} = useShoppingBasket();
+  const {data: isLoadMeal} = useGetShoppingBasket();
+  const {order, orderLoading} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
   const {
     getCardList,
@@ -113,13 +116,7 @@ const Pages = ({route}) => {
   const [isInputFocus, setIsInputFocus] = useState(true);
   const inputRef = useRef(null);
   const form = useForm();
-  const {
-    formState: {errors},
-    watch,
-    handleSubmit,
-    setValue,
-    getValues,
-  } = form;
+  const {watch, setValue, getValues} = form;
   const points = watch('point');
 
   const {
@@ -128,7 +125,6 @@ const Pages = ({route}) => {
     membershipDiscountPrice,
     makersDiscountPrice,
     periodDiscountPrice,
-    supportPrice,
     deliveryFee,
     totalDiscountPrice,
     discountPrice,
@@ -210,9 +206,6 @@ const Pages = ({route}) => {
 
     setValue('point', '');
   };
-  const onBlurInput = () => {
-    setIsInputFocus(false);
-  };
   const keyboardStatus = useKeyboardEvent(inputRef);
 
   const handleEventPayments = () => {
@@ -221,14 +214,6 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     const getCard = async () => {
-      // const nowCard = await getStorage('selectCard');
-      // const easyPay = await getStorage('easyPay');
-      // if (easyPay) {
-      //   setPayments(easyPay);
-      // }
-      // if (nowCard) {
-      //   setCard(Number(nowCard));
-      // }
       await getCardList();
     };
     getCard();
@@ -238,149 +223,63 @@ const Pages = ({route}) => {
         })
       : null;
   }, []);
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const getCard = async () => {
-  //       // const nowCard = await getStorage('selectCard');
-  //       // const easyPay = await getStorage('easyPay');
-  //       // if (easyPay) {
-  //       //   setPayments(easyPay);
-  //       // }
-  //       // if (nowCard) {
-  //       //   setCard(Number(nowCard));
-  //       // }
-  //       await getCardList();
-  //     };
-  //     getCard();
-  //   }, []),
-  // );
-
+  useEffect(() => {
+    if (isLoadMeal?.data?.spotCarts) {
+      setSpotFilter(
+        isLoadMeal?.data?.spotCarts?.filter(el => el.spotId === selected),
+      );
+    }
+  }, [isLoadMeal?.data?.spotCarts, selected]);
   const registerCard = () => {
     navigation.navigate(RegisterCardPageName, {defaultType: 1});
     setModalVisible(false);
   };
-  const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
 
-  const arr = spotFilter.map(el => {
+  const arr = spotFilter?.map(el => {
     return {
-      cartDailyFoodDtoList: [
-        ...el.cartDailyFoodDtoList.map(v => {
-          return {
-            ...v,
-            cartDailyFoods: [
-              ...v.cartDailyFoods.filter(food => {
-                return food.status !== 6;
-              }),
-            ],
-          };
-        }),
-      ],
+      cartDailyFoodDtoList: el.cartDailyFoodDtoList.map(v => {
+        return {
+          ...v,
+          cartDailyFoods: [
+            ...v.cartDailyFoods.filter(food => {
+              return food.status !== 6;
+            }),
+          ],
+        };
+      }),
     };
   });
 
-  const arrs = arr.reduce((acc, cur) => {
+  const arrs = arr?.reduce((acc, cur) => {
     return acc.concat(cur);
   });
-
   // body 값 최종
-  const lastArr = arrs.cartDailyFoodDtoList.filter(
+  const lastArr = arrs?.cartDailyFoodDtoList.filter(
     el => el.cartDailyFoods.length !== 0,
   );
-
   // 배송일자 계산
   const date = spotFilter
     ?.map(el => el.cartDailyFoodDtoList.map(v => v.serviceDate))
     .flat();
 
-  const deliveryStart = date.reduce((prev, curr) => {
-    return new Date(prev).getTime() <= new Date(curr).getTime() ? prev : curr;
-  });
+  const deliveryStart =
+    date?.length > 0
+      ? date.reduce((prev, curr) => {
+          return new Date(prev).getTime() <= new Date(curr).getTime()
+            ? prev
+            : curr;
+        })
+      : [];
 
-  const deliveryEnd = date.reduce((prev, curr) => {
-    return new Date(prev).getTime() <= new Date(curr).getTime() ? curr : prev;
-  });
+  const deliveryEnd =
+    date?.length > 0
+      ? date.reduce((prev, curr) => {
+          return new Date(prev).getTime() <= new Date(curr).getTime()
+            ? curr
+            : prev;
+        })
+      : [];
 
-  const orderPress = async spotId => {
-    const data = {
-      spotId: spotId,
-      // "cardId": selectDefaultCard[0]?.id,
-      cartDailyFoodDtoList: lastArr,
-      totalPrice: medtronicSupportArr.includes(62471004)
-        ? medtronicTotalPrice - Number(points)
-        : totalPrice - Number(points),
-      supportPrice: medtronicSupportArr.includes(62471004)
-        ? medtronicPrice
-        : usedSupportPrice,
-      deliveryFee: deliveryFee,
-      userPoint: points,
-    };
-
-    try {
-      // const res = await orderMeal(spotId,data);
-      // console.log(lastArr?.length > 0  ? lastArr[0].cartDailyFoods.length > 0 && lastArr[0].cartDailyFoods[0].name : "");
-      const firstName =
-        lastArr?.length > 0
-          ? lastArr[0].cartDailyFoods.length > 0 &&
-            lastArr[0].cartDailyFoods[0].name
-          : '';
-      const orderName =
-        totalCount > 1 ? `${firstName} 외 ${totalCount}건` : firstName;
-      // console.log(isUserInfo?.userId)
-      const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
-      loadMeal();
-      if (totalPrice - Number(points) > 0) {
-        // setLoadMeal([])
-        // const resetAction = StackActions.popToTop();
-        // navigation.dispatch(resetAction);
-        return navigation.navigate(MealPaymentPageName, {
-          amount: totalPrice - Number(points),
-          orderName: orderName,
-          orderId: orderId,
-          email: isUserInfo?.email,
-          name: isUserInfo?.name,
-          orderItems: JSON.stringify(data),
-          easyPay: payments,
-          flowMode: 'DIRECT',
-          cardCompany: card,
-        });
-      } else if (
-        medtronicSupportArr.includes(62471004) &&
-        medtronicTotalPrice - Number(points) > 0
-      ) {
-        return navigation.navigate(MealPaymentPageName, {
-          amount: medtronicTotalPrice - Number(points),
-          orderName: orderName,
-          orderId: orderId,
-          email: isUserInfo?.email,
-          name: isUserInfo?.name,
-          orderItems: JSON.stringify(data),
-          easyPay: payments,
-          flowMode: 'DIRECT',
-          cardCompany: card,
-        });
-      } else {
-        if (!orderLoading) {
-          const result = await order({
-            amount: totalPrice,
-            orderId: orderId,
-            orderItems: data,
-          });
-
-          if (result?.data) {
-            const resetAction = StackActions.popToTop();
-            navigation.dispatch(resetAction);
-            navigation.navigate(PurchaseDetailPageName, {
-              id: result?.data,
-            });
-          }
-        }
-      }
-    } catch (err) {
-      Alert.alert('결제', err?.toString()?.replace('error: ', ''));
-    } finally {
-      setIsPay(false);
-    }
-  };
   const orderPress2 = async spotId => {
     if (
       !(
@@ -394,7 +293,7 @@ const Pages = ({route}) => {
     ) {
       Alert.alert(
         '카드선택',
-        '카드를 선택해주세요.\n카드 선택은 아래 결제 카드 등록 을 통해 할 수 잇습니다.',
+        '카드를 선택해주세요.\n카드 선택은 아래 결제 카드 등록을 통해 할 수 있습니다.',
         [
           {
             onPress: () => {
@@ -460,6 +359,11 @@ const Pages = ({route}) => {
           orderData: JSON.stringify(orderData),
         });
       } else {
+        console.log({
+          amount: totalPrice - Number(points),
+          orderId: orderId,
+          orderItems: data,
+        });
         const result = await order({
           amount: totalPrice - Number(points),
           orderId: orderId,
@@ -533,7 +437,7 @@ const Pages = ({route}) => {
               </Container>
               {show && (
                 <ProductInfo>
-                  {isLoadMeal?.map((el, idx) => {
+                  {isLoadMeal?.data?.spotCarts?.map((el, idx) => {
                     const arrs =
                       el.cartDailyFoodDtoList[
                         el.cartDailyFoodDtoList.length - 1
@@ -954,13 +858,6 @@ const Container = styled.View`
   margin: 0px 24px;
 `;
 
-const AgreeTextBox = styled.View`
-  flex-direction: row;
-  justify-content: flex-start;
-  padding-top: 24px;
-  padding-bottom: 10px;
-`;
-
 const DeliveryTextWrap = styled.View`
   margin-bottom: 12px;
 `;
@@ -1060,24 +957,8 @@ const DiscountTextView = styled.View`
   white-space: nowrap;
 `;
 
-const KeyContainer = styled.KeyboardAvoidingView`
-  /* flex: 1; */
-  position: relative;
-`;
 const CardSelectContainer = styled.View`
   height: 82px;
-`;
-
-const KeyboardInner = styled.View`
-  width: 100%;
-  padding: 8px 20px;
-  flex-direction: row;
-  background-color: ${({theme}) => theme.colors.grey[8]};
-  justify-content: flex-end;
-`;
-
-const PointApply = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme}) => theme.colors.blue[500]};
 `;
 
 const PriceView = styled.View`
@@ -1108,7 +989,6 @@ const UserPointView = styled.View`
 
 const UserPointText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[4]};
-  //margin-top: 16px;
 `;
 
 const TotalPriceWrap = styled.View`
@@ -1116,13 +996,6 @@ const TotalPriceWrap = styled.View`
   justify-content: space-between;
   margin-top: 24px;
   width: 100%;
-`;
-
-const ClearInputButton = styled.Pressable`
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
 `;
 
 const PointInfoText = styled(Typography).attrs({text: 'CaptionR'})`

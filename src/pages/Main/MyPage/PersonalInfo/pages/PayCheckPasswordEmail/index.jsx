@@ -1,18 +1,14 @@
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {
   KeyboardAvoidingView,
   NativeModules,
   Platform,
-  Keyboard,
-  Text,
-  TextInput,
-  View,
   Alert,
 } from 'react-native';
-import styled, {css, useTheme} from 'styled-components/native';
+import styled, {useTheme} from 'styled-components/native';
 
 import {registCardAtom} from '../../../../../../atoms/store';
 import useAuth from '../../../../../../biz/useAuth';
@@ -158,7 +154,7 @@ export default function PasswordCheck({route}) {
               required: '필수 입력 항목 입니다.',
               pattern: {
                 value:
-                  /^(([^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\,;:\s@#$%^&+/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                 message: '올바른 이메일 주소를 입력해주세요.',
               },
             }}

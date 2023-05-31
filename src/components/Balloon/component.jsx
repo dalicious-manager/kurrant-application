@@ -27,7 +27,7 @@ import Typography from '../Typography';
  */
 
 const Component = () => {
-  const fadeBalloon = useRef(new Animated.Value(1)).current;
+  const fadeBalloon = useRef(new Animated.Value(0)).current;
 
   const balloonEvent = useCallback(() => {
     Animated.sequence([

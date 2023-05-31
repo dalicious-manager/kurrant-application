@@ -118,26 +118,16 @@ const Pages = ({route}) => {
   // 식사일정 -> 식사 선택하기 올때 선택된 날짜 가져오기, date 에 초기값 등록시키기
 
   useEffect(() => {
-    if (params) {
-      if (params.date) {
-        setIsMount(true);
-        setDate(params.date);
-        dailyfoodRefetch();
-      } else {
-        setDate(formattedWeekDate(new Date()));
-      }
+    if (params?.date) {
+      setDate(params.date);
+      dailyfoodRefetch();
     }
-  }, [params]);
+  }, [dailyfoodRefetch, params]);
 
   // 첫 렌더링때만 dailyFood 불러오게 하기
 
   // isMount처리가 없을 떄: 오늘 날짜, 선택된 날짜꺼 까지 둘다 받아버림
   // isMount처리가 있을 떄: 선택된 날짜꺼만 받는다 그래서 더 효율적이다
-  const [isMount, setIsMount] = useState(false);
-
-  useEffect(() => {
-    setIsMount(true);
-  }, []);
 
   // 일일 식사지원금
   const [supportPrices] = useAtom(supportPriceAtom);
@@ -187,6 +177,7 @@ const Pages = ({route}) => {
   };
   const onPageScrollAndroid = e => {
     const {position, offset} = e.nativeEvent;
+    console.log(position);
     if (offset !== 0) {
       if (position === 2) {
         const currentDate = formattedWeekDate(new Date());
@@ -260,7 +251,7 @@ const Pages = ({route}) => {
   };
   const onPageScroll3 = e => {
     const {position, offset} = e.nativeEvent;
-
+    console.log(position, offset);
     if (offset === 0) {
       if (nowPage === position) {
         if (position === 2) {
@@ -295,13 +286,15 @@ const Pages = ({route}) => {
             });
             setChk(index);
             pager.current.setPage(index);
-            return setNowPage(0);
+            // return setNowPage(0);
           }
         }
         if (position === 0) {
           const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
-
+          const nextDate = new Date(formattedWeekDate(date)).setDate(
+            new Date(formattedWeekDate(date)).getDate() - 1,
+          );
+          console.log(formattedWeekDate(date), nextDate);
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
               return (
@@ -312,9 +305,29 @@ const Pages = ({route}) => {
           });
 
           if (week.includes(true)) {
-            const prevDate = new Date(date).getDate();
-            const todayDate = new Date().getDate();
-            if (todayDate < prevDate) {
+            const prevDate2 = new Date(nextDate);
+            const todayDate2 = new Date(date);
+            const nowDates = new Date().setDate(new Date().getDate() - 1);
+            const nowDate = new Date(nowDates);
+            const utc =
+              todayDate2.getTime() + todayDate2.getTimezoneOffset() * 60 * 1000;
+            const utc2 =
+              prevDate2.getTime() + prevDate2.getTimezoneOffset() * 60 * 1000;
+            const utc3 =
+              nowDate.getTime() + nowDate.getTimezoneOffset() * 60 * 1000;
+
+            // 3. UTC to KST (UTC + 9시간)
+            const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+            const kr_curr = new Date(utc + KR_TIME_DIFF);
+            const kr_curr2 = new Date(utc2 + KR_TIME_DIFF);
+            const kr_curr3 = new Date(utc3 + KR_TIME_DIFF);
+            console.log(kr_curr, kr_curr2, kr_curr3);
+            if (
+              new Date(formattedWeekDate(kr_curr)) >
+                new Date(formattedWeekDate(kr_curr2)) &&
+              new Date(formattedWeekDate(kr_curr3)) <
+                new Date(formattedWeekDate(kr_curr2))
+            ) {
               setDate(
                 formattedWeekDate(
                   new Date(date).setDate(new Date(date).getDate() - 1),
@@ -334,16 +347,18 @@ const Pages = ({route}) => {
               });
               setChk(index);
               pager.current.setPage(index);
-              return setNowPage(2);
+              // return setNowPage(isDiningTypes[isDiningTypes.length - 1]);
             }
           }
         }
       }
+      console.log(position);
       setNowPage(position);
     }
   };
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
+    console.log(position);
     if (
       isDiningTypes?.length > 0 &&
       isDiningTypes[0] &&
@@ -412,8 +427,10 @@ const Pages = ({route}) => {
         }
         if (position === 0) {
           const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
-
+          const nextDate = new Date(formattedWeekDate(date)).setDate(
+            new Date(formattedWeekDate(date)).getDate() - 1,
+          );
+          console.log(formattedWeekDate(date), nextDate);
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
               return (
@@ -424,9 +441,29 @@ const Pages = ({route}) => {
           });
 
           if (week.includes(true)) {
-            const prevDate = new Date(date).getDate();
-            const todayDate = new Date().getDate();
-            if (todayDate < prevDate) {
+            const prevDate2 = new Date(nextDate);
+            const todayDate2 = new Date(date);
+            const nowDates = new Date().setDate(new Date().getDate() - 1);
+            const nowDate = new Date(nowDates);
+            const utc =
+              todayDate2.getTime() + todayDate2.getTimezoneOffset() * 60 * 1000;
+            const utc2 =
+              prevDate2.getTime() + prevDate2.getTimezoneOffset() * 60 * 1000;
+            const utc3 =
+              nowDate.getTime() + nowDate.getTimezoneOffset() * 60 * 1000;
+
+            // 3. UTC to KST (UTC + 9시간)
+            const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+            const kr_curr = new Date(utc + KR_TIME_DIFF);
+            const kr_curr2 = new Date(utc2 + KR_TIME_DIFF);
+            const kr_curr3 = new Date(utc3 + KR_TIME_DIFF);
+            console.log(kr_curr, kr_curr2, kr_curr3);
+            if (
+              new Date(formattedWeekDate(kr_curr)) >
+                new Date(formattedWeekDate(kr_curr2)) &&
+              new Date(formattedWeekDate(kr_curr3)) <
+                new Date(formattedWeekDate(kr_curr2))
+            ) {
               setDate(
                 formattedWeekDate(
                   new Date(date).setDate(new Date(date).getDate() - 1),
@@ -509,39 +546,9 @@ const Pages = ({route}) => {
   //     },[])
   // )
   useEffect(() => {
-    // async function loadDailyFood() {
-    //   try {
-    //     const data = await dailyFood(spotId, date);
-    //     if (data[0]) {
-    //       diningRef.current.setPage(Number(data[0]) - 1);
-    //       setSliderValue(Number(data[0]) - 1);
-    //     }
-    //     if (isFocused) {
-    //       await updateMeal(req);
-    //     }
-    //   } catch (error) {
-    //     if (error.toString()?.replace('Error.:', '').trim() === '403') {
-    //       navigation.reset({
-    //         index: 0,
-    //         routes: [
-    //           {
-    //             name: LoginPageName,
-    //           },
-    //         ],
-    //       });
-    //     }
-    //   }
-    // }
-    // if(isDiningTypes.length ===0) loadDailyFood();
-
-    // console.log(generateOrderCode(1,42),"test432")
-
-    if (isMount) {
-      // loadDailyFood();
-
-      dailyfoodRefetch();
-    }
-  }, [date, isMount]);
+    console.log(date);
+    if (date) dailyfoodRefetch();
+  }, [dailyfoodRefetch, date]);
   useEffect(() => {
     let price = null;
     if (dailyfoodData?.data.supportPrice) {
@@ -1082,15 +1089,9 @@ const LoadingPage = styled.View`
 `;
 const PagerViewWrap = styled.View`
   flex: 1;
-  //padding-bottom: 120px;
-  /* background-color: red; */
 `;
 
 const ProgressWrap = styled.View`
-  /* flex-direction: row;
-  padding: 12px 0px;
-  margin-left: 24px; */
-
   flex-direction: row;
   align-items: center;
   padding: 0px 24px;
@@ -1187,7 +1188,6 @@ const ButtonWrap = styled(LinearGradient)`
   padding-top: 20px;
   width: 100%;
   height: 100px;
-  //background-color: white;
   justify-content: flex-start;
 `;
 

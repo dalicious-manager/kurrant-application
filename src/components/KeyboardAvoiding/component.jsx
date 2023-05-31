@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import Minus from '../../assets/icons/MealDetail/minus.svg';
 import Plus from '../../assets/icons/MealDetail/plus.svg';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
+import {useGetShoppingBasket} from '../../hook/useShoppingBasket';
 import {PressableView} from '../Count/component';
 
 const {StatusBarManager} = NativeModules;
@@ -29,9 +30,9 @@ const Component = ({
   addHandle,
   substractHandle,
   id,
+  data,
 }) => {
-  const {isLoadMeal} = useShoppingBasket();
-
+  const {data: isLoadMeal} = useGetShoppingBasket();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
 
   useEffect(() => {
@@ -42,11 +43,11 @@ const Component = ({
       : null;
   }, []);
 
-  const arr = isLoadMeal
+  const arr = data
     ?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods))
     .flat();
-  const quantityArr = arr.reduce((acc, val) => [...acc, ...val], []);
-  const quantity = quantityArr.find(v => v.dailyFoodId === id);
+  const quantityArr = arr?.reduce((acc, val) => [...acc, ...val], []);
+  const quantity = quantityArr?.find(v => v.dailyFoodId === id);
 
   return (
     <React.Fragment>
@@ -62,7 +63,8 @@ const Component = ({
             <KeypadInput focus={focus}>
               <PressableView
                 onPress={() => {
-                  substractHandle(id);
+                  const data = arr.flat();
+                  substractHandle(data, id);
                 }}
                 disabled={quantity?.count === 1 && true}>
                 <MinusIcon disabled={quantity?.count} />
@@ -72,13 +74,15 @@ const Component = ({
                 keyboardType="number-pad"
                 ref={bodyRef}
                 onChangeText={text => {
-                  changeText(text, id);
+                  const data = arr.flat();
+                  changeText(data, text, id);
                 }}
                 defaultValue={quantity?.count.toString()}
               />
               <PressableView
                 onPress={() => {
-                  addHandle(id);
+                  const data = arr.flat();
+                  addHandle(data, id);
                 }}>
                 <PlusIcon />
               </PressableView>
@@ -133,7 +137,6 @@ const KeypadInput = styled.View`
 `;
 
 const Wrap = styled.KeyboardAvoidingView`
-  //background-color:gold;
   ${({focus}) => !focus && 'height:0px'};
   ${({platform}) => platform === 'ios' && 'height:0px'};
   opacity: ${({focus}) => (!focus ? 0 : 1)};

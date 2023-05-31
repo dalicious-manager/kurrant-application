@@ -66,49 +66,15 @@ const BottomSheetSpot = props => {
     duration: 50,
     useNativeDriver: true,
   });
-  const list = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => false,
-      onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > 0 && gestureState.vy > 1.5) {
-          closeModal();
-        } else {
-          resetBottomSheet.start();
-        }
-      },
-    }),
-  );
+
   const handleSheetChange = useCallback(index => {
+    console.log(index);
     setSnap(index);
   }, []);
   const handleSnapPress = useCallback(index => {
-    list.current?.snapToIndex(index);
+    console.log(index);
+    setSnap(index);
   }, []);
-  const pressOutUp = e => {
-    e.stopPropagation();
-    const {pageY} = e.nativeEvent;
-    if (pageY > y + 50) {
-      if (snap === 0) {
-        closeModal();
-      } else {
-        if (contentScroll && scrollStart == 0) {
-          handleSnapPress(0);
-        }
-      }
-    } else if (pageY < y - 50) {
-      handleSnapPress(1);
-    } else {
-      if (contentScroll && scrollStart == 0) {
-        handleSnapPress(0);
-      }
-    }
-  };
-  const pressInUp = e => {
-    e.stopPropagation();
-    const {pageY} = e.nativeEvent;
-    setY(pageY);
-  };
 
   useEffect(() => {
     if (props.modalVisible) {
@@ -123,14 +89,13 @@ const BottomSheetSpot = props => {
   };
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
-      <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
-        <GestureHandlerRootView style={{flex: 1}}>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <Overlay>
           <TouchableWithoutFeedback onPress={closeModal}>
             <Background />
           </TouchableWithoutFeedback>
 
           <BottomSheet
-            ref={list}
             snapPoints={snapPoints}
             onChange={handleSheetChange}
             style={{
@@ -182,8 +147,6 @@ const BottomSheetSpot = props => {
                   {item.spots.map(el => {
                     return (
                       <ContentItemContainer
-                        onPressIn={pressInUp}
-                        onPressOut={pressOutUp}
                         onPress={() => {
                           onSelect(el.spotId);
                           onPressEvent(el.spotId);
@@ -206,16 +169,17 @@ const BottomSheetSpot = props => {
             />
             <ManagePressView />
           </BottomSheet>
-        </GestureHandlerRootView>
-        {booleanValue && (
-          <ManagePressView
-            onPress={() => {
-              onPressEvent2(setModalVisible(false));
-            }}>
-            <ContentItemText>스팟 관리하기</ContentItemText>
-          </ManagePressView>
-        )}
-      </Overlay>
+
+          {booleanValue && (
+            <ManagePressView
+              onPress={() => {
+                onPressEvent2(setModalVisible(false));
+              }}>
+              <ContentItemText>스팟 관리하기</ContentItemText>
+            </ManagePressView>
+          )}
+        </Overlay>
+      </GestureHandlerRootView>
     </Modal>
   );
 };
@@ -278,7 +242,6 @@ const Border = styled.View`
 
 const ManagePressView = styled.Pressable`
   width: ${Dimensions.get('screen').width}px;
-  height: 100px;
   padding: 19px 24px 55px 24px;
   background-color: white;
 `;

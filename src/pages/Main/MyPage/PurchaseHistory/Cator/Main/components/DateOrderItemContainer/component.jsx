@@ -78,23 +78,23 @@ const Component = ({purchaseId, date, itemIndex}) => {
       orderId: purchase.id,
       id: id,
     };
-    await refundItem(req);
-    const refund = mealPurchase.map(o => {
-      return {
-        ...o,
-        orderItems: [
-          ...o.orderItems.map(v => {
-            if (v.id === id) {
-              return {...v, orderStatus: 7};
-            } else {
-              return v;
-            }
-          }),
-        ],
-      };
-    });
-    setMealPurchase(refund);
-
+    // await refundItem(req);
+    // const refund = mealPurchase.map(o => {
+    //   return {
+    //     ...o,
+    //     orderItems: [
+    //       ...o.orderItems.map(v => {
+    //         if (v.id === id) {
+    //           return {...v, orderStatus: 7};
+    //         } else {
+    //           return v;
+    //         }
+    //       }),
+    //     ],
+    //   };
+    // });
+    // setMealPurchase(refund);
+    console.log(serviceDate, 'serviceDate');
     navigation.navigate(BuyMealPageName, {
       date: serviceDate ? serviceDate : formattedDate(new Date()),
     });

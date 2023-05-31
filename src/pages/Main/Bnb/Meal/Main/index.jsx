@@ -263,7 +263,9 @@ const Pages = ({route}) => {
                               <CancelBtnWrap status={sm.orderStatus}>
                                 <LabelButton
                                   label={'취소'}
-                                  onPressEvent={() => cancelMealPress(sm.id)}
+                                  onPressEvent={() =>
+                                    cancelMealPress(sm.id, s.serviceDate)
+                                  }
                                   disabled={sm.orderStatus === 7}
                                 />
                               </CancelBtnWrap>
@@ -275,7 +277,9 @@ const Pages = ({route}) => {
                               <MealChangeWrap>
                                 <LabelButton
                                   label={'메뉴변경'}
-                                  onPressEvent={() => changeMealPress(sm.id)}
+                                  onPressEvent={() =>
+                                    changeMealPress(sm.id, s.serviceDate)
+                                  }
                                 />
                               </MealChangeWrap>
                             )}

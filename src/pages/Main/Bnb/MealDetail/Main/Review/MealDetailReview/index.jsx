@@ -1,6 +1,7 @@
 import {Text} from 'react-native';
 import styled from 'styled-components';
 import Typography from '~components/Typography';
+
 import {
   RightSkinnyArrow,
   YellowStar,
@@ -74,9 +75,4 @@ const GoToWriteReviewText = styled(Typography).attrs({text: 'Button10R'})`
 const IconWrap = styled.View`
   width: 12px;
   height: 12px;
-
-  /* border: 1px solid black; */
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
 `;

@@ -698,9 +698,9 @@ const Pages = () => {
                 </MembershipText>
               </MenbershipBanner>
             )}
-            <Pressable onPress={() => navigation.navigate(SpotTypePageName)}>
+            {/* <Pressable onPress={() => navigation.navigate(SpotTypePageName)}>
               <Text>스팟 선택 임시 버튼</Text>
-            </Pressable>
+            </Pressable> */}
             {/* <MarketWrap>
             <Market>
               <MarketIcon/>
@@ -818,7 +818,6 @@ const Icons = styled.View`
 
 const MainWrap = styled.View`
   align-items: center;
-  /* padding:24px 0px; */
   margin: 0px 24px;
 `;
 
@@ -836,7 +835,6 @@ const MealCalendar = styled.View`
   padding: 16px;
   min-height: 130px;
   padding-bottom: 10px;
-  //padding:15px 16px;
 `;
 
 const MealCalendarTitle = styled.View`
@@ -863,8 +861,6 @@ const MenbershipBanner = styled.Pressable`
   margin-left: 24px;
   margin-right: 24px;
   margin-bottom: 16px;
-  /* justify-content:center;
-align-items:center; */
 `;
 
 const MembershipImage = styled.Image`
@@ -887,7 +883,6 @@ const TitleText = styled(Typography).attrs({text: 'Body05SB'})`
 const ButtonWrap = styled.View`
   position: absolute;
   bottom: 17px;
-  /* margin:0px 24px; */
   width: 100%;
 `;
 

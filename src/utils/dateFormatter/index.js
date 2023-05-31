@@ -39,7 +39,6 @@ export function formattedMealTime(data) {
   return `${hour < 12 ? '오전' : '오후'} ${
     hour > 12 ? hour - 12 : hour
   }:${minute}`;
-  // return `${hour}:${minute}`;
 }
 
 export function formattedDate(data, delimiter = '.') {

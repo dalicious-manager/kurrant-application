@@ -29,7 +29,6 @@ const ModalCalendar = props => {
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
 
-  const themeApp = useTheme();
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const upY = useRef(new Animated.Value(0)).current;
@@ -127,9 +126,6 @@ const Background = styled.View`
 const AnimatedView = styled(Animated.View)`
   align-items: center;
   background-color: white;
-  /* border-top-left-radius: 25px; */
-  /* border-top-right-radius: 25px; */
-  /* padding-top: 20px; */
   padding-bottom: 56px;
 `;
 export const IosButton = styled.Pressable`
@@ -148,36 +144,5 @@ export const Cancel = styled(Typography).attrs({text: 'Body05R'})`
 export const Confirm = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme}) => theme.colors.blue[500]};
 `;
-
-// const ButtonMargin = styled.View`
-//   margin: 0px 3px;
-// `;
-// const BottomSheetTitleView = styled.View`
-//   width: 100%;
-//   padding: 0px 24px;
-//   padding-top: 18px;
-//   align-items: center;
-// `;
-// const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
-//   color: ${props => props.theme.colors.grey[2]};
-//   margin-bottom: 6px;
-//   max-width: 285px;
-//   text-align: center;
-// `;
-// const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
-//   margin-bottom: 22px;
-//   max-width: 300px;
-//   text-align: center;
-//   color: ${props => props.theme.colors.grey[3]};
-// `;
-// const HalfBox = styled.View`
-//   width: 100%;
-//   flex-direction: row;
-//   justify-content: center;
-// `;
-
-// const ButtonWrap = styled.View`
-//   margin: 0px 24px;
-// `;
 
 export default ModalCalendar;

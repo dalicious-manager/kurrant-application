@@ -214,13 +214,9 @@ const Pages = ({route}) => {
           spotId: isUserInfo?.spotId,
         },
       ]);
-      //console.log(data);
-      console.log('test');
       balloonEvent();
-      // await loadMeal();
     } catch (err) {
       Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
-      //  throw err
     }
     closeModal();
   };
@@ -471,7 +467,7 @@ const Pages = ({route}) => {
           message={'장바구니에 담았어요'}
           horizontal={'right'}
           size={'B'}
-          location={{top: '10%', right: '16px'}}
+          location={{top: '11.5%', right: '16px'}}
         />
         <BottomModal
           modalVisible={modalVisible}

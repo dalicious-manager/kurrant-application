@@ -109,7 +109,7 @@ const useShoppingBasket = () => {
         ...body,
       });
       // console.log(res.message ,body.updateCartList.map((v)=>v.count))
-      queryClient.invalidateQueries('shopping-basket');
+      // queryClient.invalidateQueries('shopping-basket');
       return res;
     } catch (err) {
       throw err;
