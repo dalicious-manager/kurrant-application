@@ -68,7 +68,12 @@ const App = () => {
     </QueryClientProvider>
   );
 };
-export default codePush(App);
+let codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.IMMEDIATE,
+  mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
+};
+export default codePush(codePushOptions)(App);
 
 const IsDevelop = styled.Text`
   width: 100%;
