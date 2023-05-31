@@ -29,6 +29,8 @@ import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import {Shadow} from 'react-native-shadow-2';
 import useGetMealDetailReview from '../useGetMealDetailReview/useGetMealDetailReview';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
+import {useAtom} from 'jotai';
+import {infiniteQueryRefetchStatusAtom} from './store';
 
 const Component = ({dailyFoodId}) => {
   const theme = useTheme();
@@ -55,6 +57,9 @@ const Component = ({dailyFoodId}) => {
   const [rateSelected, setRateSelected] = useState([]);
 
   // 상품 상세 리뷰 키워드
+  const [refetchStatus, setRefetchStatus] = useAtom(
+    infiniteQueryRefetchStatusAtom,
+  );
 
   const [url, setUrl] = useState(
     // `/dailyfoods/${dailyFoodId}/review?sort=0&page=${page}&limit=${limit}`,
@@ -63,7 +68,14 @@ const Component = ({dailyFoodId}) => {
 
   useEffect(() => {
     setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, rateSelected));
-  }, [dailyFoodId, orderFilter, isOnlyPhoto, rateSelected, setUrl]);
+  }, [
+    dailyFoodId,
+    orderFilter,
+    isOnlyPhoto,
+    rateSelected,
+    setUrl,
+    setRefetchStatus,
+  ]);
 
   const {
     data,
@@ -79,6 +91,7 @@ const Component = ({dailyFoodId}) => {
   } = useGetMealDetailReview(url, dailyFoodId);
 
   useEffect(() => {
+    setRefetchStatus('filter');
     getMealDetailReviewInfiniteQueryRefetch();
   }, [url]);
 
@@ -130,6 +143,7 @@ const Component = ({dailyFoodId}) => {
         onPress={() => {
           // refetch();
           if (!isLast) {
+            setRefetchStatus('scroll');
             getMealDetailReviewInfiniteQueryRefetch();
           }
         }}>

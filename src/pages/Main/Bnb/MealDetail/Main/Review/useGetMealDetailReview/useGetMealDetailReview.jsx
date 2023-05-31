@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react';
 import {useInfiniteQuery, useQuery} from 'react-query';
 import {fetchJson} from '../../../../../../../utils/fetch';
+import {useAtom} from 'jotai';
+import {infiniteQueryRefetchStatusAtom} from '../MealDetailReview/store';
 
 const useGetMealDetailReview = (url, dailyFoodId) => {
   const [mealDetailReview, setMealDetailReview] = useState([]);
@@ -46,6 +48,10 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
   // pageParam이 작동을 안해서 걍 내가 만든다
 
+  const [refetchStatus, setRefetchStatus] = useAtom(
+    infiniteQueryRefetchStatusAtom,
+  );
+
   const [page, setPage] = useState(1);
 
   // const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
@@ -72,6 +78,9 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
     ['review', 'GetMealDetailInfiniteReview'],
 
     async ({queryKey}) => {
+      console.log('queryKey');
+      console.log(queryKey);
+
       const response = await fetchJson(`${url}&limit=1&page=${page}`, 'GET');
 
       return response.data;
@@ -83,13 +92,13 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
         // 스크롤이면 데이터 추가, 필터면 데이터 새로
         setMealDetailReview([...mealDetailReview, ...data.items]);
-        // if(){
-        //   // 스크롤일경우
-        //   setMealDetailReview([...mealDetailReview, ...data.items]);
-        // }else{
-        //   // 필터일 경우
-        //   setMealDetailReview([data.items]);
-        // }
+        if (refetchStatus === 'scroll') {
+          // 스크롤일경우
+          setMealDetailReview([...mealDetailReview, ...data.items]);
+        } else if (refetchStatus === 'filter') {
+          // 필터일 경우
+          setMealDetailReview([...data.items]);
+        }
 
         setStarAverage(data.starEverage);
         setTotalCount(data.total);
