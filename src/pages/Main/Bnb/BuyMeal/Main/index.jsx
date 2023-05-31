@@ -177,6 +177,9 @@ const Pages = ({route}) => {
   };
   const onPageScrollAndroid = e => {
     const {position, offset} = e.nativeEvent;
+    navigation.setParams({
+      date: null,
+    });
     console.log(position);
     if (offset !== 0) {
       if (position === 2) {
@@ -250,6 +253,9 @@ const Pages = ({route}) => {
     }
   };
   const onPageScroll3 = e => {
+    navigation.setParams({
+      date: null,
+    });
     const {position, offset} = e.nativeEvent;
     console.log(position, offset);
     if (offset === 0) {
@@ -357,6 +363,9 @@ const Pages = ({route}) => {
     }
   };
   const onPageScroll = e => {
+    navigation.setParams({
+      date: null,
+    });
     const {position} = e.nativeEvent;
     console.log(position);
     if (
@@ -546,7 +555,6 @@ const Pages = ({route}) => {
   //     },[])
   // )
   useEffect(() => {
-    console.log(date);
     if (date) dailyfoodRefetch();
   }, [dailyfoodRefetch, date]);
   useEffect(() => {
