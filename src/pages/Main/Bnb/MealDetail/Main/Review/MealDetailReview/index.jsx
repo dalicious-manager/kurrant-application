@@ -1,4 +1,11 @@
-import {Dimensions, FlatList, Platform, Text, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 import Typography from '~components/Typography';
 import {RightSkinnyArrow, YellowStar} from '~components/Icon';
@@ -51,33 +58,28 @@ const Component = ({dailyFoodId}) => {
 
   const [url, setUrl] = useState(
     // `/dailyfoods/${dailyFoodId}/review?sort=0&page=${page}&limit=${limit}`,
-    `/dailyfoods/${40681}/review?sort=0&page=${page}&limit=${limit}`,
+    `/dailyfoods/${40681}/review?sort=0`,
   );
 
   useEffect(() => {
-    setUrl(
-      buildCustomUrl(
-        dailyFoodId,
-        orderFilter,
-        isOnlyPhoto,
-        rateSelected,
-        page,
-        limit,
-      ),
-    );
+    setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, rateSelected));
   }, [dailyFoodId, orderFilter, isOnlyPhoto, rateSelected, setUrl]);
 
   const {
+    data,
+    isLast,
+    refetch,
     starAverage,
     starRatingCounts,
     totalCount,
     isError,
     mealDetailReview,
     getMealDetailReviewQueryRefetch,
-  } = useGetMealDetailReview(url);
+    getMealDetailReviewInfiniteQueryRefetch,
+  } = useGetMealDetailReview(url, dailyFoodId);
 
   useEffect(() => {
-    getMealDetailReviewQueryRefetch();
+    getMealDetailReviewInfiniteQueryRefetch();
   }, [url]);
 
   const [showSelectList, setShowSelectList] = useState(false);
@@ -94,11 +96,6 @@ const Component = ({dailyFoodId}) => {
       setRateSelected([...rateSelected, id]);
     }
   };
-
-  useEffect(() => {
-    console.log('랄랄라');
-    console.log(rateSelected);
-  }, [rateSelected]);
 
   const showSelectedOrderFilter = orderFilter => {
     if (orderFilter === 0) {
@@ -125,6 +122,16 @@ const Component = ({dailyFoodId}) => {
 
   return (
     <Container>
+      <Pressable
+        onPress={() => {
+          // refetch();
+          if (!isLast) {
+            getMealDetailReviewInfiniteQueryRefetch();
+          }
+        }}>
+        <Text>랄랄ㄹ라라라ㅏ라ㅏ</Text>
+      </Pressable>
+
       <Wrap1>
         <TitleWrap>
           <ReviewCount>리뷰({totalCount})</ReviewCount>
@@ -206,7 +213,10 @@ const Component = ({dailyFoodId}) => {
           </FilterPressable>
         </Wrap4>
         <Wrap5>
-          <GoToWriteReviewPressable onPress={() => {}}>
+          <GoToWriteReviewPressable
+            onPress={() => {
+              refetch();
+            }}>
             <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>
             <RightSkinnyArrow
               width={'5px'}
@@ -254,7 +264,6 @@ const Component = ({dailyFoodId}) => {
       )}
 
       <ReviewListWrap>
-        {/* <SampleView /> */}
         <CardsWrap>
           {Array.isArray(mealDetailReview) &&
             mealDetailReview.length > 0 &&
@@ -280,15 +289,6 @@ const Component = ({dailyFoodId}) => {
               );
             })}
         </CardsWrap>
-
-        {/* <MoreReviewPressable>
-          <MoreReviewText>131개 리뷰 전체보기</MoreReviewText>
-          <RightSkinnyArrow
-            width={'5px'}
-            height={'9px'}
-            color={theme.colors.grey[4]}
-          />
-        </MoreReviewPressable> */}
       </ReviewListWrap>
 
       <BottomModalMultipleSelect

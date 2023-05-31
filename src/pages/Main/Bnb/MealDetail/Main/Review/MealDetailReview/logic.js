@@ -3,17 +3,13 @@ export const buildCustomUrl = (
   orderFilter = 0,
   isOnlyPhoto = undefined,
   rateSelected = [],
-  page = 1,
-  limit = 10,
 ) => {
-  const basicUrl = [
-    `/dailyfoods/${dailyFoodId}/review?&page=${page}&limit=${limit}`,
-  ];
+  const basicUrl = [`/dailyfoods/${40681}/review`];
 
   // 베스트순
 
   if (orderFilter + 1) {
-    basicUrl.push(`&sort=${orderFilter}`);
+    basicUrl.push(`?sort=${orderFilter}`);
   }
 
   // 포토리뷰
@@ -32,8 +28,8 @@ export const buildCustomUrl = (
     basicUrl.push(`&starFilter=${rateSelected.join(',')}`);
   }
 
-  console.log('basicUrl');
-  console.log(basicUrl);
+  // console.log('basicUrl');
+  // console.log(basicUrl);
 
   return basicUrl.join('');
 };
