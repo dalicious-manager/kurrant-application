@@ -82,6 +82,10 @@ const Component = ({dailyFoodId}) => {
     getMealDetailReviewInfiniteQueryRefetch();
   }, [url]);
 
+  const onEndReached = () => {
+    console.log('fkfkkfkfkfkfkkfkfkfk');
+  };
+
   const [showSelectList, setShowSelectList] = useState(false);
 
   // best, latest, photo, rating, like
@@ -160,6 +164,7 @@ const Component = ({dailyFoodId}) => {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               horizontal={true}
+              onEndReached={onEndReached}
               contentContainerStyle={{
                 height: 56,
                 alignItems: 'center',

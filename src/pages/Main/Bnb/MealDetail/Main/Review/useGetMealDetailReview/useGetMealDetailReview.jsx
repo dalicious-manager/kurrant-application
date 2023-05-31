@@ -81,7 +81,16 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
         console.log('data 라라라라라ㅏ ');
         console.log(data);
 
+        // 스크롤이면 데이터 추가, 필터면 데이터 새로
         setMealDetailReview([...mealDetailReview, ...data.items]);
+        // if(){
+        //   // 스크롤일경우
+        //   setMealDetailReview([...mealDetailReview, ...data.items]);
+        // }else{
+        //   // 필터일 경우
+        //   setMealDetailReview([data.items]);
+        // }
+
         setStarAverage(data.starEverage);
         setTotalCount(data.total);
         setIsLast(data.isLast);
