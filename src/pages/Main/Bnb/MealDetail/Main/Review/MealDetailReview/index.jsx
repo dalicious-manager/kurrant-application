@@ -30,7 +30,11 @@ import {Shadow} from 'react-native-shadow-2';
 import useGetMealDetailReview from '../useGetMealDetailReview/useGetMealDetailReview';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
 import {useAtom} from 'jotai';
-import {isFetchingFoodDetailAtom} from './store';
+import {
+  fetchNextPageReviewDetailAtom,
+  hasNextPageReviewDetailAtom,
+  isFetchingReviewDetailAtom,
+} from './store';
 
 // const Component = ({dailyFoodId}) => {
 const Component = () => {
@@ -40,7 +44,13 @@ const Component = () => {
   const dailyFoodId = 40827;
 
   const [isFetchingFoodDetail, setIsFetchingFoodDetail] = useAtom(
-    isFetchingFoodDetailAtom,
+    isFetchingReviewDetailAtom,
+  );
+  const [hasNextPageReviewDetail, setHasNextPageReviewDetail] = useAtom(
+    hasNextPageReviewDetailAtom,
+  );
+  const [fetchNextPageReviewDetail, setFetchNextPageReviewDetail] = useAtom(
+    fetchNextPageReviewDetailAtom,
   );
 
   const [starAverage, setStarAverage] = useState(1);
@@ -96,7 +106,13 @@ const Component = () => {
 
   useEffect(() => {
     setIsFetchingFoodDetail(isFetching);
-  }, [isFetching]);
+  }, [isFetching, setIsFetchingFoodDetail]);
+  useEffect(() => {
+    setHasNextPageReviewDetail(isFetching);
+  }, [hasNextPage, setHasNextPageReviewDetail]);
+  useEffect(() => {
+    setFetchNextPageReviewDetail(isFetching);
+  }, [fetchNextPage, setFetchNextPageReviewDetail]);
 
   useEffect(() => {
     if (data?.pages) {

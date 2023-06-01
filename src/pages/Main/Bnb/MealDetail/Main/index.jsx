@@ -36,7 +36,7 @@ import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import CarouselImage from '../components/CarouselImage';
 import MealDetailReview from './Review/MealDetailReview';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
-import {isFetchingFoodDetailAtom} from './Review/MealDetailReview/store';
+import {isFetchingReviewDetailAtom} from './Review/MealDetailReview/store';
 import {useAtom} from 'jotai';
 import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
 
@@ -61,8 +61,8 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
 
-  const [isFetchingFoodDetail, setIsFetchingFoodDetail] = useAtom(
-    isFetchingFoodDetailAtom,
+  const [isFetchingReviewDetail, setIsFetchingReviewDetail] = useAtom(
+    isFetchingReviewDetailAtom,
   );
 
   const isFocused = useIsFocused();
