@@ -39,8 +39,6 @@ const Component = () => {
   // 샘플 대에터
   const dailyFoodId = 40827;
 
-  const [mealDetailReview, setMealDetailReview] = useState([]);
-
   // 필터 값들 모으기
 
   const [page, setPage] = useState(1);
@@ -83,18 +81,20 @@ const Component = () => {
 
   const {
     getInfiniteQuery,
+
+    mealDetailReview,
     isLast,
     starAverage,
-    starRatingCounts,
     totalCount,
     isError,
+    foodId,
+    reviewWrite,
 
-    getMealDetailReviewQueryRefetch,
+    starRatingCounts,
     // getMealDetailReviewInfiniteQueryRefetch,
   } = useGetMealDetailReview(url, dailyFoodId);
 
-  const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
-    getInfiniteQuery;
+  const {hasNextPage, fetchNextPage, refetch, isFetching} = getInfiniteQuery;
 
   // useEffect(() => {
   //   setRefetchStatus('filter');
@@ -147,11 +147,16 @@ const Component = () => {
     '한식',
   ];
 
+  // useEffect(() => {
+  //   console.log('데이터 확인 infinite');
+  //   console.log(data?.pages[0]);
+  //   setMealDetailReview(data?.pages[0]?.items);
+  // }, [data]);
+
   useEffect(() => {
-    console.log('데이터 확인 infinite');
-    console.log(data?.pages[0]);
-    setMealDetailReview(data?.pages[0]?.items);
-  }, [data]);
+    console.log('밀 디테일 리뷰 확인하기 ');
+    console.log(mealDetailReview);
+  }, [mealDetailReview]);
 
   return (
     <Container>
