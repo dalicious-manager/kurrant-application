@@ -54,69 +54,71 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
   const [page, setPage] = useState(1);
 
-  // const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
-  //   useInfiniteQuery(
-  //     ['review', 'GetMealDetailReviewInfinite'],
+  const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
+    useInfiniteQuery(
+      ['review', 'GetMealDetailReviewInfinite'],
 
-  //     // condition, pageParam=1
+      // condition, pageParam=1
 
-  //     ({pageParam = 1}) => getMealDetailReview(pageParam, url, page, setPage),
+      ({pageParam = 1}) =>
+        getMealDetailReview(
+          pageParam,
+          url,
+          page,
+          setPage,
+          mealDetailReview,
+          setMealDetailReview,
+        ),
 
-  //     {
-  //       getNextPageParam: lastPage => {
-  //         // console.log('라스트페이지');
-  //         // console.log(lastPage);
-  //         // console.log(lastPage.currentPage + 1);
+      {
+        getNextPageParam: lastPage => {
+          // console.log('라스트페이지');
+          // console.log(lastPage);
+          // console.log(lastPage.currentPage + 1);
 
-  //         if (!lastPage.isLast) return lastPage.currentPage + 1;
-  //         return undefined;
-  //       },
+          // if (!lastPage.isLast) return lastPage.currentPage + 1;
+          return undefined;
+        },
+      },
+    );
+
+  // const {data, refetch: getMealDetailReviewInfiniteQueryRefetch} = useQuery(
+  //   ['review', 'GetMealDetailInfiniteReview'],
+
+  //   async ({queryKey}) => {
+  //     const response = await fetchJson(`${url}&limit=1&page=${page}`, 'GET');
+
+  //     return response.data;
+  //   },
+  //   {
+  //     onSuccess: data => {
+  //       setMealDetailReview([...mealDetailReview, ...data.items]);
+  //       if (refetchStatus === 'scroll') {
+  //         // 스크롤일경우
+  //         setMealDetailReview([...mealDetailReview, ...data.items]);
+  //       } else if (refetchStatus === 'filter') {
+  //         // 필터일 경우
+  //         setMealDetailReview([...data.items]);
+  //       }
+
+  //       setStarAverage(data.starEverage);
+  //       setTotalCount(data.total);
+  //       setIsLast(data.isLast);
+
+  //       if (!data.isLast) {
+  //         setPage(prev => prev + 1);
+  //       }
   //     },
-  //   );
+  //     onError: () => {
+  //       setIsError(true);
+  //     },
 
-  const {data, refetch: getMealDetailReviewInfiniteQueryRefetch} = useQuery(
-    ['review', 'GetMealDetailInfiniteReview'],
+  //     enabled: !isLast,
+  //     retry: 1,
+  //     retryDelay: 800,
+  //   },
+  // );
 
-    async ({queryKey}) => {
-      console.log('queryKey');
-      console.log(queryKey);
-
-      const response = await fetchJson(`${url}&limit=1&page=${page}`, 'GET');
-
-      return response.data;
-    },
-    {
-      onSuccess: data => {
-        console.log('data 라라라라라ㅏ ');
-        console.log(data);
-
-        // 스크롤이면 데이터 추가, 필터면 데이터 새로
-        setMealDetailReview([...mealDetailReview, ...data.items]);
-        if (refetchStatus === 'scroll') {
-          // 스크롤일경우
-          setMealDetailReview([...mealDetailReview, ...data.items]);
-        } else if (refetchStatus === 'filter') {
-          // 필터일 경우
-          setMealDetailReview([...data.items]);
-        }
-
-        setStarAverage(data.starEverage);
-        setTotalCount(data.total);
-        setIsLast(data.isLast);
-
-        if (!data.isLast) {
-          setPage(prev => prev + 1);
-        }
-      },
-      onError: () => {
-        setIsError(true);
-      },
-
-      enabled: !isLast,
-      retry: 1,
-      retryDelay: 800,
-    },
-  );
   useQuery(['review', 'stars'], async ({queryKey}) => {
     const response = await fetchJson(
       `/users/me/reviews/satisfaction?dailyFoodId=${40681}`,
@@ -126,19 +128,20 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
     setStarRatingCounts(response.data);
   });
 
-  useEffect(() => {
-    console.log('page변화 감지하기');
-    console.log(page);
-  }, [page]);
+  // useEffect(() => {
+  //   console.log('page변화 감지하기');
+  //   console.log(page);
+  // }, [page]);
 
   return {
     data,
+    refetch,
     isLast,
     starAverage,
     totalCount,
     isError,
     mealDetailReview,
-    getMealDetailReviewInfiniteQueryRefetch,
+    // getMealDetailReviewInfiniteQueryRefetch,
 
     starRatingCounts,
   };
@@ -146,31 +149,42 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
 export default useGetMealDetailReview;
 
-// const getMealDetailReview = async (pageParam, url, page, setPage) => {
-//   console.log('리스폰스 확인');
-//   console.log(pageParam);
-//   console.log(`${url}&limit=1&page=${pageParam}`);
+const getMealDetailReview = async (
+  pageParam,
+  url,
+  page,
+  setPage,
+  mealDetailReview,
+  setMealDetailReview,
+) => {
+  console.log('리스폰스 확인');
+  console.log(pageParam);
+  console.log(`${url}&limit=1&page=${page}`);
 
-//   // const res = await fetchJson(`${url}&limit=1&page=${pageParam}`);
-//   const res = await fetchJson(`${url}&limit=1&page=${page}`);
+  // const res = await fetchJson(`${url}&limit=1&page=${pageParam}`);
+  const res = await fetchJson(`${url}&limit=1&page=${page}`);
 
-//   // console.log(res.data);
-//   // console.log('이스 라스트');
-//   // console.log(res.data.isLast);
-//   const {items, isLast} = res.data;
+  // console.log(res.data);
+  // console.log('이스 라스트');
+  // console.log(res.data.isLast);
 
-//   if (isLast) {
-//   } else {
-//     setPage(prev => prev + 1);
-//   }
+  const {items, isLast} = res.data;
 
-//   return {items, currentPage: pageParam, isLast};
-// };
+  console.log(items);
 
-// const res = useInfiniteQuery(
-//   ['infinitePerson'],
-//   ({ pageParam = 5 }) => axios.get('http://localhost:8080/person', {
+  // setMealDetailReview([...mealDetailReview, ...items]);
+
+  if (!isLast) {
+    setPage(prev => prev + 1);
+  }
+
+  return {items, currentPage: pageParam, isLast};
+};
+
+// const res = useInfiniteQuery(['infinitePerson'], ({pageParam = 5}) =>
+//   axios.get('http://localhost:8080/person', {
 //     params: {
-//         id: pageParam
-//     }
-//   }));
+//       id: pageParam,
+//     },
+//   }),
+// );

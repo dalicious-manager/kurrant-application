@@ -87,16 +87,21 @@ const Component = ({dailyFoodId}) => {
     isError,
     mealDetailReview,
     getMealDetailReviewQueryRefetch,
-    getMealDetailReviewInfiniteQueryRefetch,
+    // getMealDetailReviewInfiniteQueryRefetch,
   } = useGetMealDetailReview(url, dailyFoodId);
 
   useEffect(() => {
     setRefetchStatus('filter');
-    getMealDetailReviewInfiniteQueryRefetch();
+    // getMealDetailReviewInfiniteQueryRefetch();
   }, [url]);
 
   const onEndReached = () => {
-    console.log('fkfkkfkfkfkfkkfkfkfk');
+    // console.log('onEndReached 적용됨');
+    console.log(isLast);
+    if (!isLast) {
+      setRefetchStatus('scroll');
+      // getMealDetailReviewInfiniteQueryRefetch();
+    }
   };
 
   const [showSelectList, setShowSelectList] = useState(false);
@@ -141,16 +146,16 @@ const Component = ({dailyFoodId}) => {
     <Container>
       <Pressable
         onPress={() => {
-          // refetch();
+          refetch();
           if (!isLast) {
             setRefetchStatus('scroll');
-            getMealDetailReviewInfiniteQueryRefetch();
+            // getMealDetailReviewInfiniteQueryRefetch();
           }
         }}>
         <Text>랄랄ㄹ라라라ㅏ라ㅏ</Text>
       </Pressable>
 
-      <Wrap1>
+      {/* <Wrap1>
         <TitleWrap>
           <ReviewCount>리뷰({totalCount})</ReviewCount>
         </TitleWrap>
@@ -179,6 +184,7 @@ const Component = ({dailyFoodId}) => {
               showsHorizontalScrollIndicator={false}
               horizontal={true}
               onEndReached={onEndReached}
+              onEndReachedThreshold={0.5}
               contentContainerStyle={{
                 height: 56,
                 alignItems: 'center',
@@ -244,9 +250,9 @@ const Component = ({dailyFoodId}) => {
             />
           </GoToWriteReviewPressable>
         </Wrap5>
-      </Wrap1>
+      </Wrap1> */}
 
-      {showSelectList && (
+      {/* {showSelectList && (
         <WrapWrapView>
           <ShadowWrap startColor="rgba(0, 0, 0, 0.03)" distance={14}>
             <FilterSelecterWrap>
@@ -280,9 +286,9 @@ const Component = ({dailyFoodId}) => {
             </FilterSelecterWrap>
           </ShadowWrap>
         </WrapWrapView>
-      )}
+      )} */}
 
-      <ReviewListWrap>
+      {/* <ReviewListWrap>
         <CardsWrap>
           {Array.isArray(mealDetailReview) &&
             mealDetailReview.length > 0 &&
@@ -308,7 +314,7 @@ const Component = ({dailyFoodId}) => {
               );
             })}
         </CardsWrap>
-      </ReviewListWrap>
+      </ReviewListWrap> */}
 
       <BottomModalMultipleSelect
         modalVisible={bottomModalOpen}
