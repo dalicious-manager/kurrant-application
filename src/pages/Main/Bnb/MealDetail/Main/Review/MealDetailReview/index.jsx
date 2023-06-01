@@ -92,8 +92,9 @@ const Component = () => {
   } = useGetMealDetailReview(url, dailyFoodId);
 
   useEffect(() => {
-    setIsFetchingFoodDetail(isFetching);
-  }, [isFetching, setIsFetchingFoodDetail]);
+    refetch();
+  }, [url]);
+
   useEffect(() => {
     setHasNextPageReviewDetail(hasNextPage);
   }, [hasNextPage, setHasNextPageReviewDetail]);
@@ -113,8 +114,6 @@ const Component = () => {
       setReviewWrite(reviewWrite);
     }
   }, [data?.pages]);
-
-  const onEndReached = () => {};
 
   const [showSelectList, setShowSelectList] = useState(false);
 
@@ -193,8 +192,6 @@ const Component = () => {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               horizontal={true}
-              onEndReached={onEndReached}
-              onEndReachedThreshold={0.5}
               contentContainerStyle={{
                 height: 56,
                 alignItems: 'center',
