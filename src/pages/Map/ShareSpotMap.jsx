@@ -24,6 +24,7 @@ import ArrowIcon from '../../assets/icons/Map/changeArrow.svg';
 import FindIcon from '../../assets/icons/Map/find.svg';
 import ListIcon from '../../assets/icons/Map/list.svg';
 import BackButton from '../../components/BackButton';
+import BalloonSpot from '../../components/BalloonSpot';
 import BottomSheetFilter from '../../components/BottomSheetSpotFilter';
 import BottomSheetSpot from '../../components/BottomSheetSpotInfo';
 import Button from '../../components/Button';
@@ -32,6 +33,7 @@ import Typography from '../../components/Typography';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {width, height} from '../../theme';
 import {userLocationAtom} from '../../utils/store';
+import {PAGE_NAME as RegisterSpotMapPage} from '../Map/RegisterSpotMap';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 import {PAGE_NAME as ShareSpotListPage} from '../Spots/shareSpot/ShareSpotList';
 import ShareSpotList from '../Spots/shareSpot/ShareSpotList';
@@ -46,7 +48,7 @@ const ShareSpotMap = () => {
   const [snap, setSnap] = useState(0);
   const [mealTouch, setMealTouch] = useState([0, 1, 2]);
   const [touchInfo, setTouchInfo] = useState([0, 1]);
-
+  const {balloonEvent, BalloonWrap, balloonEventNotOut} = BalloonSpot();
   const [modalVisible, setModalVisible] = useState(false);
   const [showList, setShowList] = useState(false);
   const [tab, setTab] = useState();
@@ -115,6 +117,10 @@ const ShareSpotMap = () => {
   //   }, [paramLocation]),
   // );
 
+  useEffect(() => {
+    balloonEvent();
+  }, []);
+
   return (
     <Wrap>
       <Pressable
@@ -147,7 +153,15 @@ const ShareSpotMap = () => {
             <CategoryIcon />
           </CategoryButton>
         </CategoryWrap>
-        <AddSpotWrap onPress={() => console.log('didi')}>
+        <BalloonWrapper>
+          <BalloonWrap
+            message={'원하시는 스팟이 없나요?'}
+            vertical="down"
+            size="B"
+            location={{bottom: '56px', left: '24px'}}
+          />
+        </BalloonWrapper>
+        <AddSpotWrap onPress={() => navigation.navigate(RegisterSpotMapPage)}>
           <AddSpotButton distance={6}>
             <Image source={SpotIcon} style={{width: 30, height: 29}} />
           </AddSpotButton>
@@ -156,7 +170,7 @@ const ShareSpotMap = () => {
         <NaverMapView
           onMapClick={() => test()}
           scaleBar={false}
-          zoomControl={true}
+          zoomControl={false}
           center={{...initCenter, zoom: 18}}
           style={{width: '100%', height: '100%'}}
           onCameraChange={handleCameraChange}>
@@ -337,4 +351,11 @@ const AddSpotWrap = styled.Pressable`
   left: 24px;
   bottom: 56px;
   z-index: 99;
+`;
+
+const BalloonWrapper = styled.View`
+  z-index: 99;
+  position: absolute;
+  left: 80px;
+  bottom: 104px;
 `;

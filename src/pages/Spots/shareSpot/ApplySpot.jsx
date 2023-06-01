@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {View, Text, Keyboard} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -15,12 +15,13 @@ import {PAGE_NAME as NotDeliveryPage} from '../../Spots/mySpot/NotDelivery';
 export const PAGE_NAME = 'SHARE_SPOT_APPLY';
 const ApplySpot = ({route}) => {
   const navigation = useNavigation();
-  const center = route?.params?.center; // 좌표
-  const address = route?.params?.address; // 지번 주소
-  const roadAddress = route?.params?.roadAddress; // 도로명 주소
-  const showAddress = route?.params?.showAddress; // true면 지번주소로 넘어온거
-  const zipcode = route?.params?.zipcode;
-
+  const center = route?.params?.params?.center; // 좌표
+  const address = route?.params?.params?.address; // 지번 주소
+  const roadAddress = route?.params?.params?.roadAddress; // 도로명 주소
+  const showAddress = route?.params?.params?.showAddress; // true면 지번주소로 넘어온거
+  const zipcode = route?.params?.params?.zipcode;
+  const type = route?.params?.params?.type;
+  console.log(route.params);
   const [use, setUse] = useState();
 
   const form = useForm({
@@ -44,6 +45,12 @@ const ApplySpot = ({route}) => {
 
   const data = ['예', '아니요'];
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle:
+        type === 'registerSpot' ? '상세 정보 입력' : '스팟/시간 신청',
+    });
+  }, []);
   return (
     <Wrap onPress={() => Keyboard.dismiss()}>
       <KeyboardAwareScrollView
@@ -52,13 +59,13 @@ const ApplySpot = ({route}) => {
         extraScrollHeight={120}
         enableOnAndroid={true}
         resetScrollToCoords={{x: 0, y: 0}}>
-        <SpotName>달리셔스</SpotName>
+        <SpotName>{showAddress ? address : roadAddress}</SpotName>
         {/* <SpotName>{showAddress ? address : roadAddress}</SpotName> */}
         <AddressWrap>
           <Label>
             <LabelText>도로명</LabelText>
           </Label>
-          <Address>서울특별시 강남구 테헤란로 51길 21 상경빌딩</Address>
+          <Address>{roadAddress}</Address>
           {/* <Address>{roadAddress}</Address> */}
         </AddressWrap>
         <InputWrap>

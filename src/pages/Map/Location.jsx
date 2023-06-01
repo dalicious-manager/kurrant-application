@@ -101,13 +101,12 @@ const Location = ({setInitCenter, setShow, toast}) => {
   };
 
   // useEffect(() => {
+  //   console.log('ss');
   //   if (Platform.OS === 'ios') {
   //     requestLocationIosPermission();
+  //   } else {
+  //     requestLocationAndroidPermission();
   //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (Platform.OS === 'android') requestLocationAndroidPermission();
   // }, []);
 
   return (

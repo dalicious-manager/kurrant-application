@@ -335,6 +335,18 @@ import ApplySpot, {
 import ShareSpotList, {
   PAGE_NAME as ShareSpotListPage,
 } from '../../pages/Spots/shareSpot/ShareSpotList';
+import RegisterSpotMap, {
+  PAGE_NAME as RegisterSpotMapPage,
+} from '../../pages/Map/RegisterSpotMap';
+import SpotGuide, {
+  PAGE_NAME as SpotGuidePage,
+} from '../../pages/Spots/spotGuide/SpotGuide';
+import InviteSpot, {
+  PAGE_NAME as InviteSpotPage,
+} from '../../pages/Spots/spotGuide/InviteSpot';
+import MainDim, {
+  PAGE_NAME as MainDimPage,
+} from '../../pages/Spots/spotGuide/MainDim';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -343,7 +355,7 @@ const Screen = () => {
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
   return (
-    <MainRoot.Navigator initialRouteName={SplashPageName}>
+    <MainRoot.Navigator initialRouteName={InviteSpotPage}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -2282,6 +2294,57 @@ const Screen = () => {
             headerShadowVisible: false,
             //headerTransparent: true,
             title: '스팟/시간 신청',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterSpotMapPage}
+          component={RegisterSpotMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '신규 스팟 신청',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={SpotGuidePage}
+          component={SpotGuide}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={InviteSpotPage}
+          component={InviteSpot}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',

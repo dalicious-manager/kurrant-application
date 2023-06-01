@@ -1,5 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
+import {back} from 'react-native/Libraries/Animated/Easing';
 import styled, {useTheme} from 'styled-components/native';
 import ActiveHome from '~assets/icons/TabBarIcon/activeHome.svg';
 import ActiveMeal from '~assets/icons/TabBarIcon/activeMeal.svg';
@@ -18,7 +19,7 @@ import MealMainPage, {
 import MoreMainPage, {
   PAGE_NAME as MoreMainPageName,
 } from '../../../pages/Main/Bnb/More/Main';
-
+import MainDim from '../../../pages/Spots/spotGuide/MainDim';
 // import BackButton from '../../../components/BackButton';
 
 export const SCREEN_NAME = 'S_MAIN__BNB';
@@ -29,50 +30,51 @@ const Screen = () => {
   const theme = useTheme();
 
   return (
-    <BottomTab.Navigator
-      initialRouteName={HomeMainPageName}
-      screenOptions={{
-        tabBarActiveTintColor: theme.colors.grey[3],
-        //tabBarActiveBackgroundColor: theme.colors.neutral[0],
-        tabBarInactiveTintColor: theme.colors.grey[5],
-        //tabBarInactiveBackgroundColor: theme.colors.neutral[0],
-      }}>
-      <BottomTab.Screen
-        name={HomeMainPageName}
-        component={HomeMainPage}
-        options={{
-          title: '홈',
-          headerShown: false,
-          tabBarIcon: ({focused}) => (
-            <TabBarIconWrap>
-              {focused ? <ActiveHome /> : <Home />}
-            </TabBarIconWrap>
-          ),
-        }}
-      />
-      <BottomTab.Screen
-        name={MealMainPageName}
-        component={MealMainPage}
-        options={{
-          title: '식사',
-          headerTitle: '식사일정',
-          headerShown: true,
-          headerShadowVisible: false,
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontFamily: 'Pretendard-SemiBold',
-            fontSize: 14,
-            lineHeight: 22,
-          },
-          // headerLeft: () => <BackButton margin={[24,24]}/>,
-          tabBarIcon: ({focused}) => (
-            <TabBarIconWrap>
-              {focused ? <ActiveMeal /> : <Meal />}
-            </TabBarIconWrap>
-          ),
-        }}
-      />
-      {/* <BottomTab.Screen
+    <React.Fragment>
+      <MainDim />
+      <BottomTab.Navigator
+        initialRouteName={HomeMainPageName}
+        screenOptions={{
+          tabBarActiveTintColor: theme.colors.grey[3],
+
+          tabBarInactiveTintColor: theme.colors.grey[5],
+        }}>
+        <BottomTab.Screen
+          name={HomeMainPageName}
+          component={HomeMainPage}
+          options={{
+            title: '홈',
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <TabBarIconWrap>
+                {focused ? <ActiveHome /> : <Home />}
+              </TabBarIconWrap>
+            ),
+          }}
+        />
+        <BottomTab.Screen
+          name={MealMainPageName}
+          component={MealMainPage}
+          options={{
+            title: '식사',
+            headerTitle: '식사일정',
+            headerShown: true,
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            // headerLeft: () => <BackButton margin={[24,24]}/>,
+            tabBarIcon: ({focused}) => (
+              <TabBarIconWrap>
+                {focused ? <ActiveMeal /> : <Meal />}
+              </TabBarIconWrap>
+            ),
+          }}
+        />
+        {/* <BottomTab.Screen
         name={CatorMainPageName}
         component={CatorMainPage}
         options={{
@@ -107,21 +109,22 @@ const Screen = () => {
           ),
         }}
       /> */}
-      <BottomTab.Screen
-        name={MoreMainPageName}
-        component={MoreMainPage}
-        options={{
-          title: '마이페이지',
-          headerShown: false,
-          // headerTransparent:true,
-          tabBarIcon: ({focused}) => (
-            <TabBarIconWrap>
-              {focused ? <ActiveMore /> : <More />}
-            </TabBarIconWrap>
-          ),
-        }}
-      />
-    </BottomTab.Navigator>
+        <BottomTab.Screen
+          name={MoreMainPageName}
+          component={MoreMainPage}
+          options={{
+            title: '마이페이지',
+            headerShown: false,
+            // headerTransparent:true,
+            tabBarIcon: ({focused}) => (
+              <TabBarIconWrap>
+                {focused ? <ActiveMore /> : <More />}
+              </TabBarIconWrap>
+            ),
+          }}
+        />
+      </BottomTab.Navigator>
+    </React.Fragment>
   );
 };
 

@@ -14,7 +14,14 @@ import styled from 'styled-components';
 import Toast from '~components/Toast';
 
 import ModalComponent from './components/ModalComponent';
-import {MySpot, ShareSpot, PrivateSpot} from '../../assets';
+import {
+  MySpot,
+  ShareSpot,
+  PrivateSpot,
+  DisabledMySpot,
+  DisabledPrivateSpot,
+  DisabledShareSpot,
+} from '../../assets';
 import Typography from '../../components/Typography';
 import {PAGE_NAME as MySpotMap} from '../Map/MySpotMap';
 import {PAGE_NAME as ShareSpotMap} from '../Map/ShareSpotMap';
@@ -25,6 +32,9 @@ const SpotType = () => {
   const navigation = useNavigation();
   const [show, setShow] = useState(false);
   const toast = Toast();
+
+  const usedSpot = false;
+
   const openAppSettings = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:root');
@@ -98,50 +108,71 @@ const SpotType = () => {
       </View>
 
       <BoxWrap>
-        <Box onPress={userLocation}>
+        <Box onPress={userLocation} disabled={usedSpot}>
           <ImageWrap>
-            <Image source={MySpot} style={{width: 70, height: 60}} />
+            <Image
+              source={usedSpot ? DisabledMySpot : MySpot}
+              style={{width: 70, height: 60}}
+            />
             <ImageDscText>
-              <ImageDsc>0</ImageDsc>/1 이용중
+              <UsedSpotCountDsc usedSpot={usedSpot}>0</UsedSpotCountDsc>/1
+              이용중
             </ImageDscText>
           </ImageWrap>
           <TextWrap>
-            <Title>마이스팟</Title>
-            <Contents>문 앞으로 개인배송{`\n`}받고 싶어요</Contents>
+            <Title usedSpot={usedSpot}>마이스팟</Title>
+            <Contents usedSpot={usedSpot}>
+              문 앞으로 개인배송{`\n`}받고 싶어요
+            </Contents>
           </TextWrap>
         </Box>
         <ModalComponent title={1} />
       </BoxWrap>
       <BoxWrap>
-        <Box onPress={() => navigation.navigate(ShareSpotMap)}>
+        <Box
+          onPress={() => navigation.navigate(ShareSpotMap)}
+          disabled={usedSpot}>
           <ImageWrap>
-            <Image source={ShareSpot} style={{width: 70, height: 60}} />
+            <Image
+              source={usedSpot ? DisabledShareSpot : ShareSpot}
+              style={{width: 70, height: 60}}
+            />
             <ImageDscText>
-              <ImageDsc>0</ImageDsc>/1 이용중
+              <UsedSpotCountDsc usedSpot={usedSpot}>0</UsedSpotCountDsc>/1
+              이용중
             </ImageDscText>
           </ImageWrap>
 
           <TextWrap>
-            <Title>공유 스팟</Title>
-            <Contents>가까운 공유 배송 장소에서{`\n`}가져갈게요</Contents>
+            <Title usedSpot={usedSpot}>공유 스팟</Title>
+            <Contents usedSpot={usedSpot}>
+              가까운 공유 배송 장소에서{`\n`}가져갈게요
+            </Contents>
           </TextWrap>
         </Box>
         <ModalComponent title={2} />
       </BoxWrap>
       <BoxWrap>
         <Box
+          disabled={usedSpot}
           onPress={() => navigation.navigate(PrivateInfo)}
           style={{paddingLeft: 52}}>
           <ImageWrap>
-            <Image source={PrivateSpot} style={{width: 60, height: 60}} />
+            <Image
+              source={usedSpot ? DisabledPrivateSpot : PrivateSpot}
+              style={{width: 60, height: 60}}
+            />
             <ImageDscText style={{paddingLeft: 0}}>
-              <ImageDsc>0</ImageDsc>/1 이용중
+              <UsedSpotCountDsc usedSpot={usedSpot}>0</UsedSpotCountDsc>/1
+              이용중
             </ImageDscText>
           </ImageWrap>
 
           <TextWrap>
-            <Title>프라이빗 스팟</Title>
-            <Contents>특정 단체 내 사람들끼리{`\n`}함께 배송받을래요</Contents>
+            <Title usedSpot={usedSpot}>프라이빗 스팟</Title>
+            <Contents usedSpot={usedSpot}>
+              특정 단체 내 사람들끼리{`\n`}함께 배송받을래요
+            </Contents>
           </TextWrap>
         </Box>
         <ModalComponent title={3} />
@@ -175,11 +206,13 @@ const Box = styled.Pressable`
 `;
 
 const Title = styled(Typography).attrs({text: 'Title03SB'})`
-  color: ${({theme}) => theme.colors.grey[2]};
+  color: ${({theme, usedSpot}) =>
+    usedSpot ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 const Contents = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[4]};
+  color: ${({theme, usedSpot}) =>
+    usedSpot ? theme.colors.grey[6] : theme.colors.grey[2]};
   margin-top: 8px;
 `;
 
@@ -193,7 +226,7 @@ const HeaderTitle = styled(Typography).attrs({text: 'LargeTitle'})`
 
 const HeaderDscText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme}) => theme.colors.grey[2]};
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   margin-top: 8px;
 `;
 
@@ -217,6 +250,7 @@ const ImageDscText = styled(Typography).attrs({text: 'SmallLabel'})`
   padding-left: 6px;
 `;
 
-const ImageDsc = styled(Typography).attrs({text: 'SmallLabel'})`
-  color: ${({theme}) => theme.colors.blue[500]};
+const UsedSpotCountDsc = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme, usedSpot}) =>
+    usedSpot ? theme.colors.grey[3] : theme.colors.blue[500]};
 `;

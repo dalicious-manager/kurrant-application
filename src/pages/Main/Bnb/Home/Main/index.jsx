@@ -50,6 +50,8 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/De
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import MainDim from '../../../../Spots/spotGuide/MainDim';
+import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
@@ -722,7 +724,7 @@ const Pages = () => {
                 </MembershipText>
               </MenbershipBanner>
             )}
-            <Pressable onPress={() => navigation.navigate(SpotTypePageName)}>
+            <Pressable onPress={() => navigation.navigate(SpotGuidePageName)}>
               <Text>스팟 선택 임시 버튼</Text>
             </Pressable>
             {/* <MarketWrap>

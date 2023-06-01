@@ -29,7 +29,7 @@ const SearchResult = ({route}) => {
   const [text, setText] = useState('');
 
   const searchPress = async () => {
-    if (type === 'mySpot') {
+    if (type === 'mySpot' || type === 'registerSpot') {
       const res = await mapApis.searchObject(text);
       setScreen(false);
       setData(res);
@@ -39,7 +39,10 @@ const SearchResult = ({route}) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: type === 'mySpot' ? '주소 검색' : '공유 스팟 찾기',
+      headerTitle:
+        type === 'mySpot' || type === 'registerSpot'
+          ? '주소 검색'
+          : '공유 스팟 찾기',
     });
   }, []);
   return (
@@ -88,7 +91,7 @@ const SearchResult = ({route}) => {
           {!screen && data?.length === 0 ? (
             <NoResult />
           ) : (
-            <AddressList setFocus={setFocus} data={data} />
+            <AddressList setFocus={setFocus} data={data} type={type} />
           )}
         </View>
       </TouchableWithoutFeedback>

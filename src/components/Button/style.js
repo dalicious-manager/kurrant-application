@@ -154,7 +154,7 @@ const disabledButtonColor = {
     background-color: ${({theme}) => theme.colors.yellow[100]};
   `,
   map: css`
-    background-color: ${({theme}) => theme.colors.grey[7]};
+    background-color: ${({theme}) => theme.colors.grey[8]};
   `,
 };
 

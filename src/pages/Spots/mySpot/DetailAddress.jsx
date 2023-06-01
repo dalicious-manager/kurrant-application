@@ -19,7 +19,7 @@ const DetailAddress = ({route}) => {
   const roadAddress = route?.params?.roadAddress; // 도로명 주소
   const showAddress = route?.params?.showAddress; // true면 지번주소로 넘어온거
   const zipcode = route?.params?.zipcode;
-
+  console.log(center, address, roadAddress, zipcode);
   const form = useForm({
     mode: 'all',
   });

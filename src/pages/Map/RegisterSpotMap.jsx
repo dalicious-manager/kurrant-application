@@ -25,11 +25,11 @@ import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {height} from '../../theme';
 import {userLocationAtom} from '../../utils/store';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
-console.log(height, 'didi');
+import {PAGE_NAME as ApplySpotPage} from '../Spots/shareSpot/ApplySpot';
 
 // latitude : 위도 (y) ,longitude :경도 (x)
-export const PAGE_NAME = 'MAP';
-const MySpotMap = ({route}) => {
+export const PAGE_NAME = 'REGISTER_SPOT_MAP';
+const RegisterSpotMap = ({route}) => {
   const paramLocation = route?.params?.center;
   const mapRef = useRef(null);
   const toast = Toast();
@@ -49,7 +49,7 @@ const MySpotMap = ({route}) => {
   const {data: address, refetch: addressRefetch} = useGetAddress(
     roadAddress && roadAddress.roadAddress,
   );
-
+  console.log(address, '999999');
   const changAddress = () => {
     setShowAddress(prev => !prev);
   };
@@ -62,6 +62,7 @@ const MySpotMap = ({route}) => {
     }
     setMove(false);
   };
+
   const getLocation = useCallback(() => {
     setInitCenter();
     Geolocation.getCurrentPosition(
@@ -118,7 +119,7 @@ const MySpotMap = ({route}) => {
         style={{position: 'relative', marginTop: 8, marginBottom: 12}}
         onPress={() => {
           navigation.navigate(MapSearchResult, {
-            name: 'mySpot',
+            name: 'registerSpot',
           });
         }}>
         <Icon />
@@ -199,14 +200,17 @@ const MySpotMap = ({route}) => {
           <ButtonWrap>
             <Button
               onPressEvent={() =>
-                navigation.navigate(MySpotDetailPage, {
-                  address: address,
-                  roadAddress: roadAddress?.roadAddress,
-                  showAddress: showAddress,
-                  center: initCenter,
+                navigation.navigate(ApplySpotPage, {
+                  params: {
+                    address: address,
+                    roadAddress: roadAddress?.roadAddress,
+                    showAddress: showAddress,
+                    center: initCenter,
+                    type: 'registerSpot',
+                  },
                 })
               }
-              label="이 위치로 주소 설정"
+              label="이 위치에 신청"
               disabled={move}
               type={move ? 'map' : 'yellow'}
             />
@@ -224,7 +228,7 @@ const MySpotMap = ({route}) => {
   );
 };
 
-export default MySpotMap;
+export default RegisterSpotMap;
 
 const MapView = styled.View`
   flex: 1;
