@@ -149,7 +149,7 @@ const Component = () => {
 
   useEffect(() => {
     console.log('데이터 확인 infinite');
-    // console.log(data?.pages[0]);
+    console.log(data?.pages[0]);
     setMealDetailReview(data?.pages[0]?.items);
   }, [data]);
 
