@@ -124,10 +124,10 @@ const Component = () => {
     }
   }, [data?.pages]);
 
-  useEffect(() => {
-    console.log('fhlfhlfhlfhl');
-    console.log(mealDetailReview);
-  }, [mealDetailReview]);
+  // useEffect(() => {
+  //   console.log('fhlfhlfhlfhl');
+  //   console.log(mealDetailReview);
+  // }, [mealDetailReview]);
 
   const onEndReached = () => {
     // console.log('onEndReached 적용됨');
@@ -326,31 +326,33 @@ const Component = () => {
       )}
 
       <ReviewListWrap>
-        <CardsWrap>
-          {Array.isArray(mealDetailReview) &&
-            mealDetailReview.length > 0 &&
-            mealDetailReview.map(item => {
-              return (
-                <Card
-                  key={item.reviewId}
-                  id={item.reviewId}
-                  userName={item.userName}
-                  item={item}
-                  likeNum={item.like}
-                  isLike={item.isLike}
-                  createDate={item.createDate}
-                  updateDate={item.updateDate}
-                  writtenDate={convertDateFormat1(item.createDate)}
-                  option={item.option}
-                  rating={item.satisfaction}
-                  reviewText={item.content}
-                  imageLocation={item.imageLocation}
-                  forMakers={item.forMakers}
-                  commentList={item.commentList}
-                />
-              );
-            })}
-        </CardsWrap>
+        {data?.pages.map((v, i) => {
+          return (
+            <View key={i}>
+              {v.items.map((item, i2) => {
+                return (
+                  <Card
+                    key={item.reviewId}
+                    id={item.reviewId}
+                    userName={item.userName}
+                    item={item}
+                    likeNum={item.like}
+                    isLike={item.isLike}
+                    createDate={item.createDate}
+                    updateDate={item.updateDate}
+                    writtenDate={convertDateFormat1(item.createDate)}
+                    option={item.option}
+                    rating={item.satisfaction}
+                    reviewText={item.content}
+                    imageLocation={item.imageLocation}
+                    forMakers={item.forMakers}
+                    commentList={item.commentList}
+                  />
+                );
+              })}
+            </View>
+          );
+        })}
       </ReviewListWrap>
 
       <BottomModalMultipleSelect
