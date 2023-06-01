@@ -39,7 +39,6 @@ import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
-  isFetchingReviewDetailAtom,
 } from './Review/MealDetailReview/store';
 import {useAtom} from 'jotai';
 import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
@@ -65,7 +64,6 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
 
-  const [isFetchingFoodDetail] = useAtom(isFetchingReviewDetailAtom);
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();

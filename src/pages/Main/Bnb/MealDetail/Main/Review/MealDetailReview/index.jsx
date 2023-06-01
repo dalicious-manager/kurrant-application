@@ -34,7 +34,6 @@ import {useAtom} from 'jotai';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
-  isFetchingReviewDetailAtom,
 } from './store';
 
 // const Component = ({dailyFoodId}) => {
@@ -44,9 +43,6 @@ const Component = () => {
   // 샘플 대에터
   const dailyFoodId = 40827;
 
-  const [isFetchingFoodDetail, setIsFetchingFoodDetail] = useAtom(
-    isFetchingReviewDetailAtom,
-  );
   const [hasNextPageReviewDetail, setHasNextPageReviewDetail] = useAtom(
     hasNextPageReviewDetailAtom,
   );
@@ -92,17 +88,7 @@ const Component = () => {
 
   const {
     getInfiniteQuery: {data, hasNextPage, fetchNextPage, refetch, isFetching},
-
-    // mealDetailReview,
-    // isLast,
-    // starAverage,
-    // totalReview,
-    // isError,
-    // foodId,
-    // reviewWrite,
-
     starRatingCounts,
-    // getMealDetailReviewInfiniteQueryRefetch,
   } = useGetMealDetailReview(url, dailyFoodId);
 
   useEffect(() => {

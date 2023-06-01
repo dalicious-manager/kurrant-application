@@ -43,23 +43,14 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 export default useGetMealDetailReview;
 
 const getMealDetailReview = async (pageParam, url) => {
+  console.log('url 확인');
+  console.log(url);
+
   const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
   // const res = await fetchJson(`${url}&limit=1&page=${page}`);
 
   const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
     res.data;
-  // console.log('아이텤 확인');
-  // console.log(res);
-  // console.log(res.data);
-  // console.log(res.data.items);
-
-  // console.log(items);
-  // setMealDetailReview(items);
-  // setIsLast(isLast);
-  // setStarAverage(starAverage);
-  // setFoodId(foodId);
-  // setTotalCount(totalReview);
-  // setReviewWrite(reviewWrite);
 
   return {
     items,
