@@ -5,13 +5,6 @@ import {useAtom} from 'jotai';
 import {infiniteQueryRefetchStatusAtom} from '../MealDetailReview/store';
 
 const useGetMealDetailReview = (url, dailyFoodId) => {
-  const [mealDetailReview, setMealDetailReview] = useState([]);
-  const [starAverage, setStarAverage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const [foodId, setFoodId] = useState(undefined);
-  const [reviewWrite, setReviewWrite] = useState(0);
-  const [isLast, setIsLast] = useState(false);
-
   const [isError, setIsError] = useState(false);
 
   // useEffect(() => {
@@ -58,23 +51,7 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
     // condition, pageParam=1
 
-    ({pageParam = 1}) =>
-      getMealDetailReview(
-        pageParam,
-        url,
-        mealDetailReview,
-        setMealDetailReview,
-        starAverage,
-        setStarAverage,
-        totalCount,
-        setTotalCount,
-        foodId,
-        setFoodId,
-        reviewWrite,
-        setReviewWrite,
-        isLast,
-        setIsLast,
-      ),
+    ({pageParam = 1}) => getMealDetailReview(pageParam, url),
     // ({pageParam = 1}) =>
     //   async (pageParam, url) => {
     //     const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
@@ -106,49 +83,39 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
   return {
     getInfiniteQuery,
-
-    mealDetailReview,
-    isLast,
-    starAverage,
-    totalCount,
     isError,
-    foodId,
-    reviewWrite,
-
     starRatingCounts,
   };
 };
 
 export default useGetMealDetailReview;
 
-const getMealDetailReview = async (
-  pageParam,
-  url,
-
-  setMealDetailReview,
-
-  setStarAverage,
-
-  setTotalCount,
-
-  setFoodId,
-
-  setReviewWrite,
-
-  setIsLast,
-) => {
+const getMealDetailReview = async (pageParam, url) => {
   const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
   // const res = await fetchJson(`${url}&limit=1&page=${page}`);
 
-  const {items, isLast, starAverage, foodId, totalReview, reviewWrite} =
+  const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
     res.data;
+  // console.log('아이텤 확인');
+  // console.log(res);
+  // console.log(res.data);
+  // console.log(res.data.items);
 
-  setMealDetailReview(items);
-  setIsLast(isLast);
-  setStarAverage(starAverage);
-  setFoodId(foodId);
-  setTotalCount(totalReview);
-  setReviewWrite(reviewWrite);
+  // console.log(items);
+  // setMealDetailReview(items);
+  // setIsLast(isLast);
+  // setStarAverage(starAverage);
+  // setFoodId(foodId);
+  // setTotalCount(totalReview);
+  // setReviewWrite(reviewWrite);
 
-  return {items, currentPage: pageParam, isLast};
+  return {
+    items,
+    currentPage: pageParam,
+    isLast,
+    starAverage,
+    foodId,
+    totalReview,
+    reviewWrite,
+  };
 };

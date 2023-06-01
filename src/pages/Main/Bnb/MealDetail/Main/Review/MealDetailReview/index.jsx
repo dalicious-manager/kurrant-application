@@ -39,6 +39,13 @@ const Component = () => {
   // 샘플 대에터
   const dailyFoodId = 40827;
 
+  const [mealDetailReview, setMealDetailReview] = useState([]);
+  const [starAverage, setStarAverage] = useState(1);
+  const [totalReview, setTotalReview] = useState(0);
+  const [foodId, setFoodId] = useState(undefined);
+  const [reviewWrite, setReviewWrite] = useState(0);
+  const [isLast, setIsLast] = useState(false);
+
   // 필터 값들 모으기
 
   const [page, setPage] = useState(1);
@@ -82,24 +89,45 @@ const Component = () => {
   const {
     getInfiniteQuery,
 
-    mealDetailReview,
-    isLast,
-    starAverage,
-    totalCount,
-    isError,
-    foodId,
-    reviewWrite,
+    // mealDetailReview,
+    // isLast,
+    // starAverage,
+    // totalReview,
+    // isError,
+    // foodId,
+    // reviewWrite,
 
     starRatingCounts,
     // getMealDetailReviewInfiniteQueryRefetch,
   } = useGetMealDetailReview(url, dailyFoodId);
 
-  const {hasNextPage, fetchNextPage, refetch, isFetching} = getInfiniteQuery;
+  const {
+    // data: {items, starAverage, isLast, foodId, totalReview, reviewWrite},
+    data,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+    isFetching,
+  } = getInfiniteQuery;
 
-  // useEffect(() => {
-  //   setRefetchStatus('filter');
-  //   // getMealDetailReviewInfiniteQueryRefetch();
-  // }, [url]);
+  useEffect(() => {
+    if (data?.pages) {
+      const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
+        data?.pages[0];
+
+      setMealDetailReview(items);
+      setStarAverage(starAverage);
+      setIsLast(isLast);
+      setFoodId(foodId);
+      setTotalReview(totalReview);
+      setReviewWrite(reviewWrite);
+    }
+  }, [data?.pages]);
+
+  useEffect(() => {
+    console.log('fhlfhlfhlfhl');
+    console.log(mealDetailReview);
+  }, [mealDetailReview]);
 
   const onEndReached = () => {
     // console.log('onEndReached 적용됨');
@@ -153,11 +181,6 @@ const Component = () => {
   //   setMealDetailReview(data?.pages[0]?.items);
   // }, [data]);
 
-  useEffect(() => {
-    console.log('밀 디테일 리뷰 확인하기 ');
-    console.log(mealDetailReview);
-  }, [mealDetailReview]);
-
   return (
     <Container>
       <Pressable
@@ -169,9 +192,9 @@ const Component = () => {
         <Text>랄랄ㄹ라라라ㅏ라ㅏ</Text>
       </Pressable>
 
-      {/* <Wrap1>
+      <Wrap1>
         <TitleWrap>
-          <ReviewCount>리뷰({totalCount})</ReviewCount>
+          <ReviewCount>리뷰({totalReview})</ReviewCount>
         </TitleWrap>
 
         <StarRatingWrap>
@@ -264,9 +287,9 @@ const Component = () => {
             />
           </GoToWriteReviewPressable>
         </Wrap5>
-      </Wrap1> */}
+      </Wrap1>
 
-      {/* {showSelectList && (
+      {showSelectList && (
         <WrapWrapView>
           <ShadowWrap startColor="rgba(0, 0, 0, 0.03)" distance={14}>
             <FilterSelecterWrap>
@@ -300,7 +323,7 @@ const Component = () => {
             </FilterSelecterWrap>
           </ShadowWrap>
         </WrapWrapView>
-      )} */}
+      )}
 
       <ReviewListWrap>
         <CardsWrap>
