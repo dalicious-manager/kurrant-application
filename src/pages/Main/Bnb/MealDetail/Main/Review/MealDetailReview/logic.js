@@ -4,7 +4,7 @@ export const buildCustomUrl = (
   isOnlyPhoto = undefined,
   rateSelected = [],
 ) => {
-  const basicUrl = [`/dailyfoods/${40681}/review`];
+  const basicUrl = [`/dailyfoods/${dailyFoodId}/review`];
 
   // 베스트순
 

@@ -32,10 +32,14 @@ import {buildCustomUrl, modifyStarRatingCount} from './logic';
 import {useAtom} from 'jotai';
 import {infiniteQueryRefetchStatusAtom} from './store';
 
-const Component = ({dailyFoodId}) => {
+// const Component = ({dailyFoodId}) => {
+const Component = () => {
   const theme = useTheme();
 
-  console.log(dailyFoodId);
+  // 샘플 대에터
+  const dailyFoodId = 40827;
+
+  const [mealDetailReview, setMealDetailReview] = useState([]);
 
   // 필터 값들 모으기
 
@@ -63,7 +67,7 @@ const Component = ({dailyFoodId}) => {
 
   const [url, setUrl] = useState(
     // `/dailyfoods/${dailyFoodId}/review?sort=0&page=${page}&limit=${limit}`,
-    `/dailyfoods/${40681}/review?sort=0`,
+    `/dailyfoods/${dailyFoodId}/review?sort=0`,
   );
 
   useEffect(() => {
@@ -78,29 +82,30 @@ const Component = ({dailyFoodId}) => {
   ]);
 
   const {
-    data,
+    getInfiniteQuery,
     isLast,
-    refetch,
     starAverage,
     starRatingCounts,
     totalCount,
     isError,
-    mealDetailReview,
+
     getMealDetailReviewQueryRefetch,
     // getMealDetailReviewInfiniteQueryRefetch,
   } = useGetMealDetailReview(url, dailyFoodId);
 
-  useEffect(() => {
-    setRefetchStatus('filter');
-    // getMealDetailReviewInfiniteQueryRefetch();
-  }, [url]);
+  const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
+    getInfiniteQuery;
+
+  // useEffect(() => {
+  //   setRefetchStatus('filter');
+  //   // getMealDetailReviewInfiniteQueryRefetch();
+  // }, [url]);
 
   const onEndReached = () => {
     // console.log('onEndReached 적용됨');
-    console.log(isLast);
-    if (!isLast) {
+
+    if (hasNextPage) {
       setRefetchStatus('scroll');
-      // getMealDetailReviewInfiniteQueryRefetch();
     }
   };
 
@@ -142,14 +147,18 @@ const Component = ({dailyFoodId}) => {
     '한식',
   ];
 
+  useEffect(() => {
+    console.log('데이터 확인 infinite');
+    // console.log(data?.pages[0]);
+    setMealDetailReview(data?.pages[0]?.items);
+  }, [data]);
+
   return (
     <Container>
       <Pressable
         onPress={() => {
-          refetch();
-          if (!isLast) {
-            setRefetchStatus('scroll');
-            // getMealDetailReviewInfiniteQueryRefetch();
+          if (hasNextPage) {
+            fetchNextPage();
           }
         }}>
         <Text>랄랄ㄹ라라라ㅏ라ㅏ</Text>
@@ -288,7 +297,7 @@ const Component = ({dailyFoodId}) => {
         </WrapWrapView>
       )} */}
 
-      {/* <ReviewListWrap>
+      <ReviewListWrap>
         <CardsWrap>
           {Array.isArray(mealDetailReview) &&
             mealDetailReview.length > 0 &&
@@ -314,7 +323,7 @@ const Component = ({dailyFoodId}) => {
               );
             })}
         </CardsWrap>
-      </ReviewListWrap> */}
+      </ReviewListWrap>
 
       <BottomModalMultipleSelect
         modalVisible={bottomModalOpen}

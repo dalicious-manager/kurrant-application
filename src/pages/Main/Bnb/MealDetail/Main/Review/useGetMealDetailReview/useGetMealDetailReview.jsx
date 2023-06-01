@@ -48,143 +48,54 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
   // pageParam이 작동을 안해서 걍 내가 만든다
 
-  const [refetchStatus, setRefetchStatus] = useAtom(
-    infiniteQueryRefetchStatusAtom,
-  );
-
-  const [page, setPage] = useState(1);
-
-  const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
-    useInfiniteQuery(
-      ['review', 'GetMealDetailReviewInfinite'],
-
-      // condition, pageParam=1
-
-      ({pageParam = 1}) =>
-        getMealDetailReview(
-          pageParam,
-          url,
-          page,
-          setPage,
-          mealDetailReview,
-          setMealDetailReview,
-        ),
-
-      {
-        getNextPageParam: lastPage => {
-          // console.log('라스트페이지');
-          // console.log(lastPage);
-          // console.log(lastPage.currentPage + 1);
-
-          // if (!lastPage.isLast) return lastPage.currentPage + 1;
-          return undefined;
-        },
-      },
-    );
-
-  // const {data, refetch: getMealDetailReviewInfiniteQueryRefetch} = useQuery(
-  //   ['review', 'GetMealDetailInfiniteReview'],
-
-  //   async ({queryKey}) => {
-  //     const response = await fetchJson(`${url}&limit=1&page=${page}`, 'GET');
-
-  //     return response.data;
-  //   },
-  //   {
-  //     onSuccess: data => {
-  //       setMealDetailReview([...mealDetailReview, ...data.items]);
-  //       if (refetchStatus === 'scroll') {
-  //         // 스크롤일경우
-  //         setMealDetailReview([...mealDetailReview, ...data.items]);
-  //       } else if (refetchStatus === 'filter') {
-  //         // 필터일 경우
-  //         setMealDetailReview([...data.items]);
-  //       }
-
-  //       setStarAverage(data.starEverage);
-  //       setTotalCount(data.total);
-  //       setIsLast(data.isLast);
-
-  //       if (!data.isLast) {
-  //         setPage(prev => prev + 1);
-  //       }
-  //     },
-  //     onError: () => {
-  //       setIsError(true);
-  //     },
-
-  //     enabled: !isLast,
-  //     retry: 1,
-  //     retryDelay: 800,
-  //   },
+  // const [refetchStatus, setRefetchStatus] = useAtom(
+  //   infiniteQueryRefetchStatusAtom,
   // );
+
+  const getInfiniteQuery = useInfiniteQuery(
+    ['review', 'GetMealDetailReviewInfinite'],
+
+    // condition, pageParam=1
+
+    ({pageParam = 1}) => getMealDetailReview(pageParam, url),
+
+    {
+      getNextPageParam: lastPage => {
+        if (!lastPage.isLast) {
+          return lastPage.currentPage + 1;
+        }
+        return undefined;
+      },
+    },
+  );
 
   useQuery(['review', 'stars'], async ({queryKey}) => {
     const response = await fetchJson(
-      `/users/me/reviews/satisfaction?dailyFoodId=${40681}`,
+      `/users/me/reviews/satisfaction?dailyFoodId=${dailyFoodId}`,
       'GET',
     );
 
     setStarRatingCounts(response.data);
   });
 
-  // useEffect(() => {
-  //   console.log('page변화 감지하기');
-  //   console.log(page);
-  // }, [page]);
-
   return {
-    data,
-    refetch,
+    getInfiniteQuery,
     isLast,
     starAverage,
     totalCount,
     isError,
     mealDetailReview,
-    // getMealDetailReviewInfiniteQueryRefetch,
-
     starRatingCounts,
   };
 };
 
 export default useGetMealDetailReview;
 
-const getMealDetailReview = async (
-  pageParam,
-  url,
-  page,
-  setPage,
-  mealDetailReview,
-  setMealDetailReview,
-) => {
-  console.log('리스폰스 확인');
-  console.log(pageParam);
-  console.log(`${url}&limit=1&page=${page}`);
-
-  // const res = await fetchJson(`${url}&limit=1&page=${pageParam}`);
-  const res = await fetchJson(`${url}&limit=1&page=${page}`);
-
-  // console.log(res.data);
-  // console.log('이스 라스트');
-  // console.log(res.data.isLast);
+const getMealDetailReview = async (pageParam, url) => {
+  const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
+  // const res = await fetchJson(`${url}&limit=1&page=${page}`);
 
   const {items, isLast} = res.data;
 
-  console.log(items);
-
-  // setMealDetailReview([...mealDetailReview, ...items]);
-
-  if (!isLast) {
-    setPage(prev => prev + 1);
-  }
-
   return {items, currentPage: pageParam, isLast};
 };
-
-// const res = useInfiniteQuery(['infinitePerson'], ({pageParam = 5}) =>
-//   axios.get('http://localhost:8080/person', {
-//     params: {
-//       id: pageParam,
-//     },
-//   }),
-// );
