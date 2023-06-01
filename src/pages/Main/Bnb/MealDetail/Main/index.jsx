@@ -244,11 +244,8 @@ const Pages = ({route}) => {
 
     // 상세페이지 리뷰
     if (isCloseToBottomOfScrollView(e.nativeEvent)) {
-      console.log(
-        '바닥에 도달함 ' + isCloseToBottomOfScrollView(e.nativeEvent),
-      );
+      //'바닥에 도달함 '
     } else {
-      console.log('바닥에 도달?' + isCloseToBottomOfScrollView(e.nativeEvent));
     }
   };
 
@@ -287,10 +284,6 @@ const Pages = ({route}) => {
 
   // 상세페이지 리뷰 로직
 
-  const onEndReached = () => {
-    console.log('끝 지점 도달');
-  };
-
   if (isFoodDetailLoading) {
     return <Skeleton />;
   }
@@ -302,8 +295,7 @@ const Pages = ({route}) => {
           scrollEnabled={Platform.OS === 'android' ? imgScroll : true}
           showsVerticalScrollIndicator={false}
           onScroll={e => handleScroll(e)}
-          scrollEventThrottle={16}
-          onEndReached={onEndReached}>
+          scrollEventThrottle={16}>
           <View style={{marginBottom: 150}}>
             {scroll > 60 ? (
               <StatusBar />
