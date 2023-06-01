@@ -108,10 +108,10 @@ const Component = () => {
     setIsFetchingFoodDetail(isFetching);
   }, [isFetching, setIsFetchingFoodDetail]);
   useEffect(() => {
-    setHasNextPageReviewDetail(isFetching);
+    setHasNextPageReviewDetail(hasNextPage);
   }, [hasNextPage, setHasNextPageReviewDetail]);
   useEffect(() => {
-    setFetchNextPageReviewDetail(isFetching);
+    setFetchNextPageReviewDetail(fetchNextPage);
   }, [fetchNextPage, setFetchNextPageReviewDetail]);
 
   useEffect(() => {

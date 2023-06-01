@@ -36,7 +36,11 @@ import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import CarouselImage from '../components/CarouselImage';
 import MealDetailReview from './Review/MealDetailReview';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
-import {isFetchingReviewDetailAtom} from './Review/MealDetailReview/store';
+import {
+  fetchNextPageReviewDetailAtom,
+  hasNextPageReviewDetailAtom,
+  isFetchingReviewDetailAtom,
+} from './Review/MealDetailReview/store';
 import {useAtom} from 'jotai';
 import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
 
@@ -61,10 +65,9 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
 
-  const [isFetchingReviewDetail, setIsFetchingReviewDetail] = useAtom(
-    isFetchingReviewDetailAtom,
-  );
-
+  const [isFetchingFoodDetail] = useAtom(isFetchingReviewDetailAtom);
+  const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
+  const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
   const closeModal = () => {
@@ -242,10 +245,18 @@ const Pages = ({route}) => {
     const scrollY = e.nativeEvent.contentOffset.y;
     setScroll(scrollY);
 
+    // hasNextPageReviewDetail
+    // fetchNextPageReviewDetail
+
     // 상세페이지 리뷰
     if (isCloseToBottomOfScrollView(e.nativeEvent)) {
       //'바닥에 도달함 '
-    } else {
+      console.log('바닥에 도달함 ');
+      console.log(hasNextPageReviewDetail);
+      console.log(fetchNextPageReviewDetail.fetchNextPage);
+      if (hasNextPageReviewDetail) {
+        fetchNextPageReviewDetail.fetchNextPage();
+      }
     }
   };
 
