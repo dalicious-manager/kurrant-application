@@ -92,12 +92,45 @@ const Component = () => {
   } = useGetMealDetailReview(url, dailyFoodId);
 
   useEffect(() => {
+    // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
+
     refetch();
   }, [url]);
+
+  const [isFetchingTop, setIsFetchingTop] = useState(false);
+  const [isFetchingBottom, setIsFetchingBottom] = useState(false);
+
+  useEffect(() => {
+    setIsFetchingTop(true);
+  }, [url]);
+
+  useEffect(() => {
+    if (isFetching && isFetchingTop) {
+      setIsFetchingTop(true);
+      setIsFetchingBottom(false);
+    } else {
+      setIsFetchingTop(false);
+    }
+  }, [isFetching]);
+
+  useEffect(() => {
+    if (isFetching) {
+      setIsFetchingBottom(true);
+    } else {
+      setIsFetchingBottom(false);
+    }
+  }, [isFetching]);
+
+  useEffect(() => {
+    if (isFetchingBottom && isFetchingTop) {
+      setIsFetchingBottom(false);
+    }
+  }, [isFetchingBottom, isFetchingTop]);
 
   useEffect(() => {
     setHasNextPageReviewDetail(hasNextPage);
   }, [hasNextPage, setHasNextPageReviewDetail]);
+
   useEffect(() => {
     setFetchNextPageReviewDetail(fetchNextPage);
   }, [fetchNextPage, setFetchNextPageReviewDetail]);
@@ -296,6 +329,11 @@ const Component = () => {
       )}
 
       <ReviewListWrap>
+        {isFetchingTop && (
+          <LoadingPage1>
+            <ActivityIndicator size={'large'} />
+          </LoadingPage1>
+        )}
         {data?.pages.map((v, i) => {
           return (
             <View key={i}>
@@ -324,7 +362,7 @@ const Component = () => {
           );
         })}
 
-        {isFetching && (
+        {isFetchingBottom && (
           <LoadingPage>
             <ActivityIndicator size={'large'} />
           </LoadingPage>
@@ -583,6 +621,10 @@ const LoadingPage = styled.View`
   width: 100%;
   flex: 1;
   padding-bottom: 150px;
+`;
+
+const LoadingPage1 = styled.View`
+  margin-bottom: 18px;
 `;
 
 const BottomModalSelecterComponent = ({selected, item}) => {
