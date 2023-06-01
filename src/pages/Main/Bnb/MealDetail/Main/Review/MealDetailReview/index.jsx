@@ -30,7 +30,7 @@ import {Shadow} from 'react-native-shadow-2';
 import useGetMealDetailReview from '../useGetMealDetailReview/useGetMealDetailReview';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
 import {useAtom} from 'jotai';
-import {infiniteQueryRefetchStatusAtom} from './store';
+import {isFetchingFoodDetailAtom} from './store';
 
 // const Component = ({dailyFoodId}) => {
 const Component = () => {
@@ -38,6 +38,10 @@ const Component = () => {
 
   // 샘플 대에터
   const dailyFoodId = 40827;
+
+  const [isFetchingFoodDetail, setIsFetchingFoodDetail] = useAtom(
+    isFetchingFoodDetailAtom,
+  );
 
   const [starAverage, setStarAverage] = useState(1);
   const [totalReview, setTotalReview] = useState(0);
@@ -65,9 +69,6 @@ const Component = () => {
   const [rateSelected, setRateSelected] = useState([]);
 
   // 상품 상세 리뷰 키워드
-  const [refetchStatus, setRefetchStatus] = useAtom(
-    infiniteQueryRefetchStatusAtom,
-  );
 
   const [url, setUrl] = useState(
     // `/dailyfoods/${dailyFoodId}/review?sort=0&page=${page}&limit=${limit}`,
@@ -76,17 +77,10 @@ const Component = () => {
 
   useEffect(() => {
     setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, rateSelected));
-  }, [
-    dailyFoodId,
-    orderFilter,
-    isOnlyPhoto,
-    rateSelected,
-    setUrl,
-    setRefetchStatus,
-  ]);
+  }, [dailyFoodId, orderFilter, isOnlyPhoto, rateSelected, setUrl]);
 
   const {
-    getInfiniteQuery,
+    getInfiniteQuery: {data, hasNextPage, fetchNextPage, refetch, isFetching},
 
     // mealDetailReview,
     // isLast,
@@ -100,8 +94,9 @@ const Component = () => {
     // getMealDetailReviewInfiniteQueryRefetch,
   } = useGetMealDetailReview(url, dailyFoodId);
 
-  const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
-    getInfiniteQuery;
+  useEffect(() => {
+    setIsFetchingFoodDetail(isFetching);
+  }, [isFetching]);
 
   useEffect(() => {
     if (data?.pages) {
@@ -116,11 +111,7 @@ const Component = () => {
     }
   }, [data?.pages]);
 
-  const onEndReached = () => {
-    if (hasNextPage) {
-      setRefetchStatus('scroll');
-    }
-  };
+  const onEndReached = () => {};
 
   const [showSelectList, setShowSelectList] = useState(false);
 

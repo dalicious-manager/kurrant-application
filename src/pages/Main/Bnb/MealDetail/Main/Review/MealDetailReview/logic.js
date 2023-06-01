@@ -42,3 +42,15 @@ export const modifyStarRatingCount = starRatingCount =>
       reviewCount: v[1],
     };
   });
+
+export const isCloseToBottomOfScrollView = ({
+  layoutMeasurement,
+  contentOffset,
+  contentSize,
+}) => {
+  const paddingToBottom = 20;
+  return (
+    layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom
+  );
+};

@@ -9,6 +9,7 @@ import {
   Pressable,
   Platform,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import styled from 'styled-components';
 import analytics from '@react-native-firebase/analytics';
@@ -35,6 +36,9 @@ import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import CarouselImage from '../components/CarouselImage';
 import MealDetailReview from './Review/MealDetailReview';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
+import {isFetchingFoodDetailAtom} from './Review/MealDetailReview/store';
+import {useAtom} from 'jotai';
+import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -56,6 +60,10 @@ const Pages = ({route}) => {
   const {isUserInfo} = useUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
+
+  const [isFetchingFoodDetail, setIsFetchingFoodDetail] = useAtom(
+    isFetchingFoodDetailAtom,
+  );
 
   const isFocused = useIsFocused();
 
@@ -233,6 +241,15 @@ const Pages = ({route}) => {
   const handleScroll = e => {
     const scrollY = e.nativeEvent.contentOffset.y;
     setScroll(scrollY);
+
+    // 상세페이지 리뷰
+    if (isCloseToBottomOfScrollView(e.nativeEvent)) {
+      console.log(
+        '바닥에 도달함 ' + isCloseToBottomOfScrollView(e.nativeEvent),
+      );
+    } else {
+      console.log('바닥에 도달?' + isCloseToBottomOfScrollView(e.nativeEvent));
+    }
   };
 
   const focusPress = () => {
@@ -267,6 +284,13 @@ const Pages = ({route}) => {
     }
     detail();
   }, []);
+
+  // 상세페이지 리뷰 로직
+
+  const onEndReached = () => {
+    console.log('끝 지점 도달');
+  };
+
   if (isFoodDetailLoading) {
     return <Skeleton />;
   }
@@ -278,7 +302,8 @@ const Pages = ({route}) => {
           scrollEnabled={Platform.OS === 'android' ? imgScroll : true}
           showsVerticalScrollIndicator={false}
           onScroll={e => handleScroll(e)}
-          scrollEventThrottle={16}>
+          scrollEventThrottle={16}
+          onEndReached={onEndReached}>
           <View style={{marginBottom: 150}}>
             {scroll > 60 ? (
               <StatusBar />
