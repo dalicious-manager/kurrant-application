@@ -245,15 +245,10 @@ const Pages = ({route}) => {
     const scrollY = e.nativeEvent.contentOffset.y;
     setScroll(scrollY);
 
-    // hasNextPageReviewDetail
-    // fetchNextPageReviewDetail
-
     // 상세페이지 리뷰
     if (isCloseToBottomOfScrollView(e.nativeEvent)) {
       //'바닥에 도달함 '
-      console.log('바닥에 도달함 ');
-      console.log(hasNextPageReviewDetail);
-      console.log(fetchNextPageReviewDetail.fetchNextPage);
+
       if (hasNextPageReviewDetail) {
         fetchNextPageReviewDetail.fetchNextPage();
       }
