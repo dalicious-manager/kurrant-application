@@ -39,7 +39,6 @@ const Component = () => {
   // 샘플 대에터
   const dailyFoodId = 40827;
 
-  const [mealDetailReview, setMealDetailReview] = useState([]);
   const [starAverage, setStarAverage] = useState(1);
   const [totalReview, setTotalReview] = useState(0);
   const [foodId, setFoodId] = useState(undefined);
@@ -101,21 +100,14 @@ const Component = () => {
     // getMealDetailReviewInfiniteQueryRefetch,
   } = useGetMealDetailReview(url, dailyFoodId);
 
-  const {
-    // data: {items, starAverage, isLast, foodId, totalReview, reviewWrite},
-    data,
-    hasNextPage,
-    fetchNextPage,
-    refetch,
-    isFetching,
-  } = getInfiniteQuery;
+  const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
+    getInfiniteQuery;
 
   useEffect(() => {
     if (data?.pages) {
       const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
         data?.pages[0];
 
-      setMealDetailReview(items);
       setStarAverage(starAverage);
       setIsLast(isLast);
       setFoodId(foodId);
@@ -124,14 +116,7 @@ const Component = () => {
     }
   }, [data?.pages]);
 
-  // useEffect(() => {
-  //   console.log('fhlfhlfhlfhl');
-  //   console.log(mealDetailReview);
-  // }, [mealDetailReview]);
-
   const onEndReached = () => {
-    // console.log('onEndReached 적용됨');
-
     if (hasNextPage) {
       setRefetchStatus('scroll');
     }
@@ -174,12 +159,6 @@ const Component = () => {
     '국',
     '한식',
   ];
-
-  // useEffect(() => {
-  //   console.log('데이터 확인 infinite');
-  //   console.log(data?.pages[0]);
-  //   setMealDetailReview(data?.pages[0]?.items);
-  // }, [data]);
 
   return (
     <Container>
