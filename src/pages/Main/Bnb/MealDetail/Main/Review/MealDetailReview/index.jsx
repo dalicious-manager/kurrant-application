@@ -35,10 +35,17 @@ import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from './store';
+import {useNavigation} from '@react-navigation/native';
+import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
 
 // const Component = ({dailyFoodId}) => {
-const Component = () => {
+const Component = ({imageLocation, foodName}) => {
+  console.log(imageLocation);
+  // console.log(foodName);
+
   const theme = useTheme();
+
+  const navigation = useNavigation();
 
   // 샘플 대에터
   const dailyFoodId = 40827;
@@ -188,14 +195,14 @@ const Component = () => {
 
   return (
     <Container>
-      <Pressable
+      {/* <Pressable
         onPress={() => {
           if (hasNextPage) {
             fetchNextPage();
           }
         }}>
         <Text>랄랄ㄹ라라라ㅏ라ㅏ</Text>
-      </Pressable>
+      </Pressable> */}
 
       <Wrap1>
         <TitleWrap>
@@ -232,7 +239,6 @@ const Component = () => {
               renderItem={({item, index}) => {
                 return (
                   <ButtonPressable
-                    // isClicked={true}
                     isClicked={false}
                     isFirst={index === 0}
                     isLast={index === sampleData1.length - 1}>
@@ -265,6 +271,7 @@ const Component = () => {
                   isOnlyPhoto ? theme.colors.blue[500] : theme.colors.grey[4]
                 }
               />
+
               <FilterText isOn={isOnlyPhoto}>포토리뷰만</FilterText>
             </FilterPressable>
           </Wrap6>
@@ -277,19 +284,26 @@ const Component = () => {
             <FilterText>별점필터</FilterText>
           </FilterPressable>
         </Wrap4>
-        <Wrap5>
-          <GoToWriteReviewPressable
-            onPress={() => {
-              refetch();
-            }}>
-            <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>
-            <RightSkinnyArrow
-              width={'5px'}
-              height={'9px'}
-              color={theme.colors.blue[500]}
-            />
-          </GoToWriteReviewPressable>
-        </Wrap5>
+
+        {foodId && (
+          <Wrap5>
+            <GoToWriteReviewPressable
+              onPress={() => {
+                navigation.navigate(CreateReviewScreenName, {
+                  orderItemId: foodId,
+                  imageLocation: imageLocation[0],
+                  foodName,
+                });
+              }}>
+              <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>
+              <RightSkinnyArrow
+                width={'5px'}
+                height={'9px'}
+                color={theme.colors.blue[500]}
+              />
+            </GoToWriteReviewPressable>
+          </Wrap5>
+        )}
       </Wrap1>
 
       {showSelectList && (

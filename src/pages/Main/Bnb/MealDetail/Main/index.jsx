@@ -442,7 +442,11 @@ const Pages = ({route}) => {
               </InfoWrap>
             </Content>
             {/* 리뷰자리 */}
-            <MealDetailReview dailyFoodId={dailyFoodId} />
+            <MealDetailReview
+              foodName={isFoodDetail?.name}
+              imageLocation={isFoodDetail?.imageList}
+              dailyFoodId={dailyFoodId}
+            />
           </View>
         </ScrollViewWrap>
 
