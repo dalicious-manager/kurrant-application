@@ -358,8 +358,8 @@ const Component = ({imageLocation, foodName}) => {
                     id={item.reviewId}
                     userName={item.userName}
                     item={item}
-                    likeNum={item.like}
-                    isLike={item.isLike}
+                    likeNum={item.good}
+                    isLike={item.isGood}
                     createDate={item.createDate}
                     updateDate={item.updateDate}
                     writtenDate={convertDateFormat1(item.createDate)}
