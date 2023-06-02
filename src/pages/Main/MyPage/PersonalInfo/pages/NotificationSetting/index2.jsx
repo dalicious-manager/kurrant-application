@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React from 'react';
@@ -7,11 +8,11 @@ import {useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {ActivityIndicator} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from '~components/Toast';
 import Wrapper from '~components/Wrapper';
-import {getStorage, setStorage} from '../../../../../../utils/asyncStorage';
+
 import useUserMe from '../../../../../../biz/useUserMe';
+import {getStorage, setStorage} from '../../../../../../utils/asyncStorage';
 import {formattedDate} from '../../../../../../utils/dateFormatter';
 import ListBox from '../../ListBox';
 import {PAGE_NAME as MarketingAgreePageName} from '../MarketingAgree';
