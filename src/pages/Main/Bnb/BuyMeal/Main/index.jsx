@@ -1071,7 +1071,24 @@ const Pages = ({route}) => {
                 />
               </View>
             </ProgressWrap>
-            <HeaderWrap
+            {showSupportPrice && (
+              <MiniWrap2
+                onPress={() => {
+                  setModalVisible4(true);
+                }}>
+                <Typography2>일일 식사지원금</Typography2>
+                <QuestionPressable>
+                  <QuestionCircleMonoIcon />
+                </QuestionPressable>
+
+                {whenSupportPriceKor ? (
+                  <Typography4>{supportPrice}</Typography4>
+                ) : (
+                  <Typography3> {supportPrice}원</Typography3>
+                )}
+              </MiniWrap2>
+            )}
+            {/* <HeaderWrap
               colors={[
                 'rgba(255, 255, 255, 0.0)',
                 'rgba(255, 255, 255, 0.2)',
@@ -1139,89 +1156,10 @@ const Pages = ({route}) => {
                 );
               }}
               keyExtractor={item => item.id}
-            />
-            {/* <TimeWrap showsHorizontalScrollIndicator={false} horizontal={true}>
-              <TimeBox
-                isSelect={time === '11:30'}
-                onPress={() => {
-                  setTime('11:30');
-                  timeRef.current.scrollToIndex(1);
-                }}>
-                <Typography
-                  text={time === '11:30' ? 'Body06SB' : 'Body06R'}
-                  textColor={
-                    time === '11:30'
-                      ? themeApp.colors.grey[0]
-                      : themeApp.colors.grey[4]
-                  }>
-                  11:30
-                </Typography>
-              </TimeBox>
-              <TimeBox
-                isSelect={time === '12:00'}
-                onPress={() => {
-                  setTime('12:00');
-                }}>
-                <Typography
-                  text={time === '12:00' ? 'Body06SB' : 'Body06R'}
-                  textColor={
-                    time === '12:00'
-                      ? themeApp.colors.grey[0]
-                      : themeApp.colors.grey[4]
-                  }>
-                  12:00
-                </Typography>
-              </TimeBox>
-              <TimeBox
-                isSelect={time === '12:30'}
-                onPress={() => {
-                  setTime('12:30');
-                }}>
-                <Typography
-                  text={time === '12:30' ? 'Bdy06SB' : 'Body06R'}
-                  textColor={
-                    time === '12:30'
-                      ? themeApp.colors.grey[0]
-                      : themeApp.colors.grey[4]
-                  }>
-                  12:30
-                </Typography>
-              </TimeBox>
-              <TimeBox
-                isSelect={time === '01:00'}
-                onPress={() => {
-                  setTime('01:00');
-                }}>
-                <Typography
-                  text={time === '01:00' ? 'Body06SB' : 'Body06R'}
-                  textColor={
-                    time === '01:00'
-                      ? themeApp.colors.grey[0]
-                      : themeApp.colors.grey[4]
-                  }>
-                  01:00
-                </Typography>
-              </TimeBox>
-              <TimeBox
-                isSelect={time === '01:30'}
-                onPress={() => {
-                  setTime('01:30');
-                }}>
-                <Typography
-                  text={time === '01:30' ? 'Body06SB' : 'Body06R'}
-                  textColor={
-                    time === '01:30'
-                      ? themeApp.colors.grey[0]
-                      : themeApp.colors.grey[4]
-                  }>
-                  01:30
-                </Typography>
-              </TimeBox>
-              <View style={{width: 50, height: 24}} />
-            </TimeWrap> */}
+            /> */}
           </StatusWrap>
         )}
-        {showSupportPrice && (
+        {/* {showSupportPrice && (
           <MiniWrap
             onPress={() => {
               setModalVisible4(true);
@@ -1243,7 +1181,7 @@ const Pages = ({route}) => {
               <Typography3> {supportPrice}원</Typography3>
             )}
           </MiniWrap>
-        )}
+        )} */}
         {!isUserInfo?.isMembership && (
           <View>
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
@@ -1374,6 +1312,17 @@ const SafeView = styled.View`
   background-color: ${props => props.theme.colors.grey[0]};
   flex: 1;
 `;
+const MiniWrap2 = styled.Pressable`
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  width: 181px;
+  height: 32px;
+  padding-right: 24px;
+  border-radius: 7px;
+`;
 
 const CalendarWrap = styled.View`
   height: 72px;
@@ -1397,6 +1346,10 @@ const PagerViewWrap = styled.View`
 const StatusWrap = styled.View`
   width: 100%;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.5px solid ${({theme}) => theme.colors.grey[8]};
+  border-bottom-width: 6px;
 `;
 const ProgressWrap = styled.View`
   flex-direction: column;
@@ -1450,7 +1403,7 @@ const QuestionPressable = styled.Pressable`
   margin-right: 3px;
 `;
 
-const Typography2 = styled(Typography).attrs({text: 'Body06R'})`
+const Typography2 = styled(Typography).attrs({text: 'SmallLabel'})`
   margin-right: 4px;
   color: ${({theme}) => theme.colors.grey[2]};
 `;

@@ -17,7 +17,7 @@ export function useSetAlramSetting() {
 }
 export function useSetAlramAllSetting() {
   const queryClient = useQueryClient();
-  return useMutation(data => alramApis.setAlram(data), {
+  return useMutation(data => alramApis.setAlramAll(data), {
     onSuccess: () => {
       queryClient.invalidateQueries('alramSetting');
     },

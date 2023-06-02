@@ -7,7 +7,7 @@ export const alramApis = {
       body: JSON.stringify(data),
     }),
   setAlramAll: async data =>
-    await fetchJson(`/users/me/setting`, 'POST', {
+    await fetchJson(`/users/me/setting/all`, 'POST', {
       body: JSON.stringify(data),
     }),
 };

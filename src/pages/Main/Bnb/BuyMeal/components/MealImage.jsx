@@ -171,6 +171,6 @@ const OrderView = styled.View`
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
   left: 0px;
-  background-color: #1d1c21cc;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 `;
