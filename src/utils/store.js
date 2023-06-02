@@ -4,6 +4,6 @@ export const currentPageAtom = atomWithReset();
 // 지도
 export const locationInfoAtom = atomWithReset();
 export const userLocationAtom = atomWithReset({
-  latitude: 0,
-  longitude: 0,
+  latitude: 37.49703,
+  longitude: 127.028191,
 });
