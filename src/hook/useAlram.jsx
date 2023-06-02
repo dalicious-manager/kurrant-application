@@ -15,3 +15,11 @@ export function useSetAlramSetting() {
     },
   });
 }
+export function useSetAlramAllSetting() {
+  const queryClient = useQueryClient();
+  return useMutation(data => alramApis.setAlram(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('alramSetting');
+    },
+  });
+}

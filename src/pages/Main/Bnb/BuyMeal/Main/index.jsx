@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  FlatList,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import PagerView from 'react-native-pager-view';
@@ -21,7 +22,7 @@ import styled, {css} from 'styled-components/native';
 
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
 import useAuth from '../../../../../biz/useAuth';
-import {weekAtom} from '../../../../../biz/useBanner/store';
+import {weekAtom, weekServiceAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 import useUserInfo from '../../../../../biz/useUserInfo/hook';
@@ -29,7 +30,7 @@ import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/Balloon';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
-import BuyCalendar from '../../../../../components/BuyCalendar';
+import BuyCalendar2 from '../../../../../components/BuyCalendar2';
 import CalendarButton from '../../../../../components/CalendarButton';
 import Label from '../../../../../components/Label';
 import Typography from '../../../../../components/Typography';
@@ -47,6 +48,11 @@ import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 
 import MealImage from '../components/MealImage';
 import Modal from '../components/Modal';
+import {useTheme} from 'styled-components';
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
+import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {height} from '../../../../../theme';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -61,9 +67,11 @@ const Pages = ({route}) => {
   const LunchRef = useRef();
   const DinnerRef = useRef();
   const pager = useRef();
+  const themeApp = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
+  const [time, setTime] = useState('11:00');
   const [modalVisible4, setModalVisible4] = useState(false);
   const [startScroll, setStartScroll] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
@@ -72,7 +80,24 @@ const Pages = ({route}) => {
   const [show, setShow] = useState(false);
   const [scrollDir, setScrollDir] = useState(true);
   const [hideModal, setHideModal] = useState(true);
-
+  const [cartDailyFoodId, setCartDailyFoodId] = useState();
+  const [orderDailyFoodId, setOrderDailyFoodId] = useState();
+  const [weekly] = useAtom(weekAtom);
+  const [weeklyService, setWeeklyService] = useAtom(weekServiceAtom);
+  const {data: isOrderMeal, refetch: orderMealRefetch} = useGetOrderMeal(
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(
+      weekly[weekly.length - 1][weekly[weekly.length - 1].length - 1],
+    ),
+  );
+  const timeData = [
+    {id: 0, value: '11:00'},
+    {id: 1, value: '11:30'},
+    {id: 2, value: '12:00'},
+    {id: 3, value: '12:30'},
+    {id: 4, value: '01:00'},
+    {id: 5, value: '01:30'},
+  ];
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -99,6 +124,7 @@ const Pages = ({route}) => {
   const {balloonEvent, BalloonWrap} = Balloon();
   const {isUserInfo} = useUserInfo();
   const fadeAnim = useRef(new Animated.Value(32)).current;
+  const timeRef = useRef(null);
   const handlePress = anim => {
     Animated.timing(fadeAnim, {
       toValue: !anim ? 0 : 32,
@@ -113,8 +139,6 @@ const Pages = ({route}) => {
     params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
   ); // 오늘
 
-  const [weekly] = useAtom(weekAtom);
-
   // 식사일정 -> 식사 선택하기 올때 선택된 날짜 가져오기, date 에 초기값 등록시키기
 
   useEffect(() => {
@@ -123,7 +147,36 @@ const Pages = ({route}) => {
       dailyfoodRefetch();
     }
   }, [dailyfoodRefetch, params]);
-
+  useEffect(() => {
+    setWeeklyService(
+      weekly
+        .map(week => {
+          const data = week.filter(day => {
+            return (
+              dailyfoodData?.data?.serviceDays?.lunchServiceDays?.includes(
+                format(day, 'EEE', {locale: ko}),
+              ) ||
+              dailyfoodData?.data?.serviceDays?.morningServiceDays?.includes(
+                format(day, 'EEE', {locale: ko}),
+              ) ||
+              dailyfoodData?.data?.serviceDays?.dinnerServiceDays?.includes(
+                format(day, 'EEE', {locale: ko}),
+              )
+            );
+          });
+          return data;
+        })
+        .reduce(function (acc, cur) {
+          return acc.concat(cur);
+        }),
+    );
+  }, [
+    dailyfoodData?.data?.serviceDays?.dinnerServiceDays,
+    dailyfoodData?.data?.serviceDays?.lunchServiceDays,
+    dailyfoodData?.data?.serviceDays?.morningServiceDays,
+    setWeeklyService,
+    weekly,
+  ]);
   // 첫 렌더링때만 dailyFood 불러오게 하기
 
   // isMount처리가 없을 떄: 오늘 날짜, 선택된 날짜꺼 까지 둘다 받아버림
@@ -137,10 +190,9 @@ const Pages = ({route}) => {
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
-    if (parseInt(supportPrice)) {
+    if (parseInt(supportPrice) || supportPrice === '0') {
       // 숫자이면
-
-      if (parseInt(supportPrice) > 0) {
+      if (parseInt(supportPrice) >= 0) {
         setShowSupportPrice(true);
         setWhenSupportPriceKor(false);
       } else {
@@ -158,7 +210,30 @@ const Pages = ({route}) => {
       }
     }
   }, [supportPrice]);
-
+  useEffect(() => {
+    const cart = isLoadMeal?.data?.spotCarts
+      .map(data => {
+        return data.cartDailyFoodDtoList
+          .map(el => el.cartDailyFoods.map(c => c.dailyFoodId).flat())
+          .flat();
+      })
+      .flat();
+    setCartDailyFoodId(cart);
+    // console.log(cart, 'cart');
+  }, [isLoadMeal?.data?.spotCarts]);
+  useEffect(() => {
+    const orderMealData = isOrderMeal?.data
+      .map(meal => {
+        return meal.orderItemDtoList
+          .map(data => {
+            return data.dailyFoodId;
+          })
+          .flat();
+      })
+      .flat();
+    setOrderDailyFoodId(orderMealData);
+    console.log(orderMealData, 'orderMealData');
+  }, [isOrderMeal?.data]);
   const daily = true;
 
   // const todayMeal = mealInfo?.filter((m) => m.date === date);
@@ -180,11 +255,15 @@ const Pages = ({route}) => {
     navigation.setParams({
       date: null,
     });
-    console.log(position);
+    const result = weeklyService.findIndex(day => {
+      return formattedWeekDate(date) === formattedWeekDate(day);
+    });
     if (offset !== 0) {
       if (position === 2) {
         const currentDate = formattedWeekDate(new Date());
-        const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+        const nextDate = new Date(
+          weeklyService[result === weeklyService?.length ? result : result + 1],
+        );
 
         const week = weekly.map(w => {
           const find = w.findIndex(v => {
@@ -197,7 +276,11 @@ const Pages = ({route}) => {
         if (week.includes(true)) {
           setDate(
             formattedWeekDate(
-              new Date(date).setDate(new Date(date).getDate() + 1),
+              new Date(
+                weeklyService[
+                  result === weeklyService?.length ? result : result + 1
+                ],
+              ),
             ),
           );
           const dateIndex = weekly.map(v => {
@@ -208,7 +291,11 @@ const Pages = ({route}) => {
           const index = dateIndex.findIndex(v => {
             return v.includes(
               formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() + 1),
+                new Date(
+                  weeklyService[
+                    result === weeklyService?.length ? result : result + 1
+                  ],
+                ),
               ),
             );
           });
@@ -218,30 +305,63 @@ const Pages = ({route}) => {
         }
       }
       if (position === -1) {
-        const prevDate = new Date(date).getDate();
-        const todayDate = new Date().getDate();
-        // console.log(todayDate, prevDate);
-        if (todayDate < prevDate) {
-          setDate(
-            formattedWeekDate(
-              new Date(date).setDate(new Date(date).getDate() - 1),
-            ),
-          );
-          const dateIndex = weekly.map(v => {
-            return v.map(s => {
-              return formattedWeekDate(s);
-            });
-          });
-          const index = dateIndex.findIndex(v => {
-            return v.includes(
-              formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() - 1),
-              ),
+        const currentDate = formattedWeekDate(new Date());
+        const nextDate = new Date(
+          weeklyService[result === 0 ? result : result - 1],
+        );
+        const week = weekly.map(w => {
+          const find = w.findIndex(v => {
+            return (
+              formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
             );
           });
-          setChk(index);
-          pager.current.setPage(index);
-          return setNowPage(2);
+          return find !== -1;
+        });
+
+        if (week.includes(true)) {
+          const prevDate2 = new Date(nextDate);
+          const todayDate2 = new Date(date);
+          const nowDates = new Date().setDate(new Date().getDate() - 1);
+          const nowDate = new Date(nowDates);
+          const utc =
+            todayDate2.getTime() + todayDate2.getTimezoneOffset() * 60 * 1000;
+          const utc2 =
+            prevDate2.getTime() + prevDate2.getTimezoneOffset() * 60 * 1000;
+          const utc3 =
+            nowDate.getTime() + nowDate.getTimezoneOffset() * 60 * 1000;
+
+          // 3. UTC to KST (UTC + 9시간)
+          const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+          const kr_curr = new Date(utc + KR_TIME_DIFF);
+          const kr_curr2 = new Date(utc2 + KR_TIME_DIFF);
+          const kr_curr3 = new Date(utc3 + KR_TIME_DIFF);
+          if (
+            new Date(formattedWeekDate(kr_curr)) >
+              new Date(formattedWeekDate(kr_curr2)) &&
+            new Date(formattedWeekDate(kr_curr3)) <
+              new Date(formattedWeekDate(kr_curr2))
+          ) {
+            setDate(
+              formattedWeekDate(
+                new Date(weeklyService[result === 0 ? result : result - 1]),
+              ),
+            );
+            const dateIndex = weekly.map(v => {
+              return v.map(s => {
+                return formattedWeekDate(s);
+              });
+            });
+            const index = dateIndex.findIndex(v => {
+              return v.includes(
+                formattedWeekDate(
+                  new Date(weeklyService[result === 0 ? result : result - 1]),
+                ),
+              );
+            });
+            setChk(index);
+            pager.current.setPage(index);
+            return setNowPage(2);
+          }
         }
 
         if (position === -1) {
@@ -257,12 +377,18 @@ const Pages = ({route}) => {
       date: null,
     });
     const {position, offset} = e.nativeEvent;
-    console.log(position, offset);
+    const result = weeklyService.findIndex(day => {
+      return formattedWeekDate(date) === formattedWeekDate(day);
+    });
     if (offset === 0) {
       if (nowPage === position) {
         if (position === 2) {
           const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+          const nextDate = new Date(
+            weeklyService[
+              result === weeklyService?.length ? result : result + 1
+            ],
+          );
 
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
@@ -275,7 +401,11 @@ const Pages = ({route}) => {
           if (week.includes(true)) {
             setDate(
               formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() + 1),
+                new Date(
+                  weeklyService[
+                    result === weeklyService?.length ? result : result + 1
+                  ],
+                ),
               ),
             );
             const dateIndex = weekly.map(v => {
@@ -286,21 +416,24 @@ const Pages = ({route}) => {
             const index = dateIndex.findIndex(v => {
               return v.includes(
                 formattedWeekDate(
-                  new Date(date).setDate(new Date(date).getDate() + 1),
+                  new Date(
+                    weeklyService[
+                      result === weeklyService?.length ? result : result + 1
+                    ],
+                  ),
                 ),
               );
             });
             setChk(index);
             pager.current.setPage(index);
-            // return setNowPage(0);
+            return setNowPage(isDiningTypes[0] - 1);
           }
         }
         if (position === 0) {
           const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(formattedWeekDate(date)).setDate(
-            new Date(formattedWeekDate(date)).getDate() - 1,
+          const nextDate = new Date(
+            weeklyService[result === 0 ? result : result - 1],
           );
-          console.log(formattedWeekDate(date), nextDate);
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
               return (
@@ -327,7 +460,6 @@ const Pages = ({route}) => {
             const kr_curr = new Date(utc + KR_TIME_DIFF);
             const kr_curr2 = new Date(utc2 + KR_TIME_DIFF);
             const kr_curr3 = new Date(utc3 + KR_TIME_DIFF);
-            console.log(kr_curr, kr_curr2, kr_curr3);
             if (
               new Date(formattedWeekDate(kr_curr)) >
                 new Date(formattedWeekDate(kr_curr2)) &&
@@ -336,7 +468,7 @@ const Pages = ({route}) => {
             ) {
               setDate(
                 formattedWeekDate(
-                  new Date(date).setDate(new Date(date).getDate() - 1),
+                  new Date(weeklyService[result === 0 ? result : result - 1]),
                 ),
               );
               const dateIndex = weekly.map(v => {
@@ -347,18 +479,17 @@ const Pages = ({route}) => {
               const index = dateIndex.findIndex(v => {
                 return v.includes(
                   formattedWeekDate(
-                    new Date(date).setDate(new Date(date).getDate() - 1),
+                    new Date(weeklyService[result === 0 ? result : result - 1]),
                   ),
                 );
               });
               setChk(index);
               pager.current.setPage(index);
-              // return setNowPage(isDiningTypes[isDiningTypes.length - 1]);
+              return setNowPage(isDiningTypes[isDiningTypes.length - 1] - 1);
             }
           }
         }
       }
-      console.log(position);
       setNowPage(position);
     }
   };
@@ -367,7 +498,6 @@ const Pages = ({route}) => {
       date: null,
     });
     const {position} = e.nativeEvent;
-    console.log(position);
     if (
       isDiningTypes?.length > 0 &&
       isDiningTypes[0] &&
@@ -399,10 +529,17 @@ const Pages = ({route}) => {
           : isDiningTypes?.includes(1)
           ? 0
           : 2;
+      const result = weeklyService.findIndex(day => {
+        return formattedWeekDate(date) === formattedWeekDate(day);
+      });
       if (page !== position) {
         if (position === 2) {
           const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(date).setDate(new Date(date).getDate() + 1);
+          const nextDate = new Date(
+            weeklyService[
+              result === weeklyService?.length ? result : result + 1
+            ],
+          );
 
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
@@ -415,7 +552,11 @@ const Pages = ({route}) => {
           if (week.includes(true)) {
             setDate(
               formattedWeekDate(
-                new Date(date).setDate(new Date(date).getDate() + 1),
+                new Date(
+                  weeklyService[
+                    result === weeklyService?.length ? result : result + 1
+                  ],
+                ),
               ),
             );
             const dateIndex = weekly.map(v => {
@@ -426,7 +567,11 @@ const Pages = ({route}) => {
             const index = dateIndex.findIndex(v => {
               return v.includes(
                 formattedWeekDate(
-                  new Date(date).setDate(new Date(date).getDate() + 1),
+                  new Date(
+                    weeklyService[
+                      result === weeklyService?.length ? result : result + 1
+                    ],
+                  ),
                 ),
               );
             });
@@ -436,10 +581,9 @@ const Pages = ({route}) => {
         }
         if (position === 0) {
           const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(formattedWeekDate(date)).setDate(
-            new Date(formattedWeekDate(date)).getDate() - 1,
+          const nextDate = new Date(
+            weeklyService[result === 0 ? result : result - 1],
           );
-          console.log(formattedWeekDate(date), nextDate);
           const week = weekly.map(w => {
             const find = w.findIndex(v => {
               return (
@@ -466,7 +610,6 @@ const Pages = ({route}) => {
             const kr_curr = new Date(utc + KR_TIME_DIFF);
             const kr_curr2 = new Date(utc2 + KR_TIME_DIFF);
             const kr_curr3 = new Date(utc3 + KR_TIME_DIFF);
-            console.log(kr_curr, kr_curr2, kr_curr3);
             if (
               new Date(formattedWeekDate(kr_curr)) >
                 new Date(formattedWeekDate(kr_curr2)) &&
@@ -475,7 +618,7 @@ const Pages = ({route}) => {
             ) {
               setDate(
                 formattedWeekDate(
-                  new Date(date).setDate(new Date(date).getDate() - 1),
+                  new Date(weeklyService[result === 0 ? result : result - 1]),
                 ),
               );
               const dateIndex = weekly.map(v => {
@@ -486,7 +629,7 @@ const Pages = ({route}) => {
               const index = dateIndex.findIndex(v => {
                 return v.includes(
                   formattedWeekDate(
-                    new Date(date).setDate(new Date(date).getDate() - 1),
+                    new Date(weeklyService[result === 0 ? result : result - 1]),
                   ),
                 );
               });
@@ -824,6 +967,9 @@ const Pages = ({route}) => {
                 <MealImage
                   status={m.status}
                   image={m.image}
+                  dailyFoodId={m.id}
+                  orderFoodList={orderDailyFoodId}
+                  cartFoodList={cartDailyFoodId}
                   onPressEvent={() => {
                     addCartPress(m.id, m.serviceDate, m.diningType, m);
                   }}
@@ -864,11 +1010,11 @@ const Pages = ({route}) => {
 
   return (
     <SafeView>
-      <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
+      {/* <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
         <CalendarButton pager={pager} daily chk={chk} />
-      </Animated.View>
+      </Animated.View> */}
       <CalendarWrap>
-        <BuyCalendar
+        <BuyCalendar2
           BooleanValue={false}
           type={'grey2'}
           color={'white'}
@@ -885,32 +1031,14 @@ const Pages = ({route}) => {
           isServiceDays={dailyfoodData?.data.serviceDays}
         />
       </CalendarWrap>
-
       <PagerViewWrap isMembership={isUserInfo?.isMembership}>
         {!isDailyFoodLoading && (
-          <ProgressWrap>
-            <ProgressInner>
-              <Slider
-                value={sliderValue}
-                onValueChange={e => setSliderValue(...e)}
-                minimumValue={0}
-                maximumValue={2}
-                maximumTrackTintColor="#fff"
-                minimumTrackTintColor="#fff"
-                onSlidingComplete={e => {
-                  diningRef.current.setPage(...e);
-                }}
-                step={1}
-                trackStyle={styles.trackStyle}
-                thumbStyle={styles.thumbStyle}
-                containerStyle={{height: 12}}
-              />
-
+          <StatusWrap>
+            <ProgressWrap>
               <Progress>
                 {DININGTYPE.map((btn, i) => {
                   const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
                   const typeBoolean = isDiningTypes?.includes(type);
-
                   return (
                     <DiningPress
                       key={i}
@@ -926,26 +1054,195 @@ const Pages = ({route}) => {
                   );
                 })}
               </Progress>
-            </ProgressInner>
-
-            {showSupportPrice && (
-              <MiniWrap
+              <View style={{position: 'relative', top: -10}}>
+                <Slider
+                  value={sliderValue}
+                  onValueChange={e => setSliderValue(...e)}
+                  minimumValue={0}
+                  maximumValue={2}
+                  maximumTrackTintColor="#fff"
+                  minimumTrackTintColor="#fff"
+                  onSlidingComplete={e => {
+                    diningRef.current.setPage(...e);
+                  }}
+                  step={1}
+                  trackStyle={styles.trackStyle}
+                  thumbStyle={styles.thumbStyle}
+                />
+              </View>
+            </ProgressWrap>
+            <HeaderWrap
+              colors={[
+                'rgba(255, 255, 255, 0.0)',
+                'rgba(255, 255, 255, 0.2)',
+                'rgba(255, 255, 255, 0.5)',
+                'rgba(255, 255, 255, 0.7)',
+                'rgba(255, 255, 255, 0.8)',
+                'rgba(255, 255, 255, 0.9)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+              ]}
+              useAngle={true}
+              angle={90}
+            />
+            <TimeWrap
+              ref={timeRef}
+              showsHorizontalScrollIndicator={false}
+              horizontal={true}
+              data={timeData}
+              renderItem={({item, index}) => {
+                if (timeData?.length - 1 === index) {
+                  return (
+                    <TimeBoxlast
+                      isSelect={time === item.value}
+                      onPress={() => {
+                        setTime(item.value);
+                        timeRef.current.scrollToIndex({
+                          animated: true,
+                          index: index,
+                        });
+                      }}>
+                      <Typography
+                        text={time === item.value ? 'Body06SB' : 'Body06R'}
+                        textColor={
+                          time === item.value
+                            ? themeApp.colors.grey[0]
+                            : themeApp.colors.grey[4]
+                        }>
+                        {item.value}
+                      </Typography>
+                    </TimeBoxlast>
+                  );
+                }
+                return (
+                  <TimeBox
+                    isSelect={time === item.value}
+                    onPress={() => {
+                      setTime(item.value);
+                      timeRef.current.scrollToIndex({
+                        animated: true,
+                        index: index,
+                      });
+                    }}>
+                    <Typography
+                      text={time === item.value ? 'Body06SB' : 'Body06R'}
+                      textColor={
+                        time === item.value
+                          ? themeApp.colors.grey[0]
+                          : themeApp.colors.grey[4]
+                      }>
+                      {item.value}
+                    </Typography>
+                  </TimeBox>
+                );
+              }}
+              keyExtractor={item => item.id}
+            />
+            {/* <TimeWrap showsHorizontalScrollIndicator={false} horizontal={true}>
+              <TimeBox
+                isSelect={time === '11:30'}
                 onPress={() => {
-                  setModalVisible4(true);
+                  setTime('11:30');
+                  timeRef.current.scrollToIndex(1);
                 }}>
-                <Typography2>일일 식사지원금</Typography2>
-                <QuestionPressable>
-                  <QuestionCircleMonoIcon />
-                </QuestionPressable>
-
-                {whenSupportPriceKor ? (
-                  <Typography4>{supportPrice}</Typography4>
-                ) : (
-                  <Typography3> {supportPrice}원</Typography3>
-                )}
-              </MiniWrap>
+                <Typography
+                  text={time === '11:30' ? 'Body06SB' : 'Body06R'}
+                  textColor={
+                    time === '11:30'
+                      ? themeApp.colors.grey[0]
+                      : themeApp.colors.grey[4]
+                  }>
+                  11:30
+                </Typography>
+              </TimeBox>
+              <TimeBox
+                isSelect={time === '12:00'}
+                onPress={() => {
+                  setTime('12:00');
+                }}>
+                <Typography
+                  text={time === '12:00' ? 'Body06SB' : 'Body06R'}
+                  textColor={
+                    time === '12:00'
+                      ? themeApp.colors.grey[0]
+                      : themeApp.colors.grey[4]
+                  }>
+                  12:00
+                </Typography>
+              </TimeBox>
+              <TimeBox
+                isSelect={time === '12:30'}
+                onPress={() => {
+                  setTime('12:30');
+                }}>
+                <Typography
+                  text={time === '12:30' ? 'Bdy06SB' : 'Body06R'}
+                  textColor={
+                    time === '12:30'
+                      ? themeApp.colors.grey[0]
+                      : themeApp.colors.grey[4]
+                  }>
+                  12:30
+                </Typography>
+              </TimeBox>
+              <TimeBox
+                isSelect={time === '01:00'}
+                onPress={() => {
+                  setTime('01:00');
+                }}>
+                <Typography
+                  text={time === '01:00' ? 'Body06SB' : 'Body06R'}
+                  textColor={
+                    time === '01:00'
+                      ? themeApp.colors.grey[0]
+                      : themeApp.colors.grey[4]
+                  }>
+                  01:00
+                </Typography>
+              </TimeBox>
+              <TimeBox
+                isSelect={time === '01:30'}
+                onPress={() => {
+                  setTime('01:30');
+                }}>
+                <Typography
+                  text={time === '01:30' ? 'Body06SB' : 'Body06R'}
+                  textColor={
+                    time === '01:30'
+                      ? themeApp.colors.grey[0]
+                      : themeApp.colors.grey[4]
+                  }>
+                  01:30
+                </Typography>
+              </TimeBox>
+              <View style={{width: 50, height: 24}} />
+            </TimeWrap> */}
+          </StatusWrap>
+        )}
+        {showSupportPrice && (
+          <MiniWrap
+            onPress={() => {
+              setModalVisible4(true);
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Typography2>일일 식사지원금</Typography2>
+              <QuestionPressable>
+                <QuestionCircleMonoIcon />
+              </QuestionPressable>
+            </View>
+            {whenSupportPriceKor ? (
+              <Typography4>{supportPrice}</Typography4>
+            ) : (
+              <Typography3> {supportPrice}원</Typography3>
             )}
-          </ProgressWrap>
+          </MiniWrap>
         )}
         {!isUserInfo?.isMembership && (
           <View>
@@ -1051,13 +1348,12 @@ const Pages = ({route}) => {
 const styles = StyleSheet.create({
   trackStyle: {
     backgroundColor: 'white',
-    width: 93,
+    width: 102,
     height: 2,
-    borderRadius: 50,
   },
   thumbStyle: {
-    width: 28,
-    height: 1,
+    width: 16,
+    height: 1.5,
     borderRadius: 10,
     backgroundColor: '#343337',
   },
@@ -1080,7 +1376,7 @@ const SafeView = styled.View`
 `;
 
 const CalendarWrap = styled.View`
-  height: 85px;
+  height: 72px;
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   border-bottom-width: 1px;
   width: 100%;
@@ -1098,35 +1394,55 @@ const LoadingPage = styled.View`
 const PagerViewWrap = styled.View`
   flex: 1;
 `;
-
-const ProgressWrap = styled.View`
+const StatusWrap = styled.View`
+  width: 100%;
   flex-direction: row;
+`;
+const ProgressWrap = styled.View`
+  flex-direction: column;
   align-items: center;
-  padding: 0px 24px;
-  justify-content: space-between;
-  height: 56px;
-  position: relative;
-
-  justify-content: space-between;
+  padding-top: 13px;
+  height: 48px;
+  width: 142px;
+  /* padding: 0px 24px; */
+  /* justify-content: space-between; */
 `;
 
-const ProgressInner = styled.View`
+const TimeWrap = styled.FlatList`
+  flex-direction: row;
+  overflow: hidden;
+  flex: 1;
+  padding: 13px 0px;
+`;
+const TimeBox = styled.Pressable`
+  padding: 1px 8px;
+  margin-right: 8px;
+  border-radius: 4px;
+  align-items: center;
   justify-content: center;
-
-  position: relative;
-  top: -6.5px;
+  background-color: ${({theme, isSelect}) =>
+    isSelect ? theme.colors.grey[2] : theme.colors.grey[8]};
 `;
-
+const TimeBoxlast = styled.Pressable`
+  padding: 1px 8px;
+  margin-right: 100px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({theme, isSelect}) =>
+    isSelect ? theme.colors.grey[2] : theme.colors.grey[8]};
+`;
 const MiniWrap = styled.Pressable`
   display: flex;
   flex-flow: row;
   align-items: center;
-  justify-content: center;
-  margin-left: 6px;
-  width: 181px;
-  height: 32px;
-
-  border: 0.5px solid ${({theme}) => theme.colors.grey[7]};
+  justify-content: space-between;
+  padding-left: 24px;
+  padding-right: 24px;
+  width: 100%;
+  height: 48px;
+  border: 0.5px solid ${({theme}) => theme.colors.grey[8]};
+  border-bottom-width: 6px;
   border-radius: 7px;
 `;
 
@@ -1134,7 +1450,7 @@ const QuestionPressable = styled.Pressable`
   margin-right: 3px;
 `;
 
-const Typography2 = styled(Typography).attrs({text: 'SmallLabel'})`
+const Typography2 = styled(Typography).attrs({text: 'Body06R'})`
   margin-right: 4px;
   color: ${({theme}) => theme.colors.grey[2]};
 `;
@@ -1198,7 +1514,14 @@ const ButtonWrap = styled(LinearGradient)`
   height: 100px;
   justify-content: flex-start;
 `;
-
+const HeaderWrap = styled(LinearGradient)`
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 48px;
+  width: 48px;
+  z-index: 1;
+`;
 export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme, soldOut}) =>
     soldOut === 2 || soldOut === 6

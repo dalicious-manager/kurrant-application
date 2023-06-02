@@ -361,7 +361,7 @@ const DetailSpotName = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[2]};
 `;
 
-const NeedCardText = styled(Typography).attrs({text: 'SmallLabelR'})`
+const NeedCardText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme}) => theme.colors.blue[500]};
   padding-left: 4px;
   text-align: center;

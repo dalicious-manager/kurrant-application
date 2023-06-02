@@ -1,12 +1,23 @@
 import {ImageBackground, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 
 import {AIbackground} from '../../../../../assets';
 import AIicon from '../../../../../assets/icons/BuyMeal/ai.svg';
 import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
+import CheckCart from '../../../../../assets/icons/MealCart/checkCart.svg';
 import Typography from '../../../../../components/Typography';
-const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
+const MealImage = ({
+  status,
+  image,
+  onPressEvent,
+  isAddMeal,
+  rank,
+  dailyFoodId,
+  orderFoodList = [],
+  cartFoodList = [],
+}) => {
+  const themeApp = useTheme();
   return (
     <>
       {rank === 1 ? (
@@ -20,6 +31,16 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
           </AIrecommend>
           <MealImageWrap>
             {(status === 2 || status === 6) && <BlurView />}
+            {!(status === 2 || status === 6) &&
+              orderFoodList.includes(dailyFoodId) && (
+                <OrderView>
+                  <Typography
+                    textColor={themeApp.colors.grey[0]}
+                    text="SmallLabel">
+                    주문 완료
+                  </Typography>
+                </OrderView>
+              )}
             <FastImage
               source={{
                 uri: `${image}`,
@@ -39,6 +60,11 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
                   onPressEvent();
                 }}>
                 <CartIcon />
+                {cartFoodList.includes(dailyFoodId) && (
+                  <CheckWrap>
+                    <CheckCart />
+                  </CheckWrap>
+                )}
               </CartIconWrap>
             )}
           </MealImageWrap>
@@ -46,6 +72,16 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
       ) : (
         <View>
           {(status === 2 || status === 6) && <BlurView />}
+          {!(status === 2 || status === 6) &&
+            orderFoodList.includes(dailyFoodId) && (
+              <OrderView>
+                <Typography
+                  textColor={themeApp.colors.grey[0]}
+                  text="SmallLabel">
+                  주문 완료
+                </Typography>
+              </OrderView>
+            )}
           <FastImage
             source={{
               uri: `${image}`,
@@ -66,6 +102,11 @@ const MealImage = ({status, image, onPressEvent, isAddMeal, rank}) => {
                 onPressEvent();
               }}>
               <CartIcon />
+              {cartFoodList.includes(dailyFoodId) && (
+                <CheckWrap>
+                  <CheckCart />
+                </CheckWrap>
+              )}
             </CartIconWrap>
           )}
         </View>
@@ -93,6 +134,11 @@ const MealImageWrap = styled.View`
   bottom: 8px;
   right: 8px;
 `;
+const CheckWrap = styled.View`
+  position: absolute;
+  top: 2px;
+  right: 4px;
+`;
 
 const CartIconWrap = styled.Pressable`
   width: 40px;
@@ -114,5 +160,17 @@ const BlurView = styled.View`
   border-radius: 7px;
   left: 0px;
   background-color: #ffffffcc;
+  z-index: 999;
+`;
+const OrderView = styled.View`
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 114px;
+  height: 24px;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  left: 0px;
+  background-color: #1d1c21cc;
   z-index: 999;
 `;
