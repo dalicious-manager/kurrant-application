@@ -56,17 +56,6 @@ const Pages = () => {
   const handleSubmit = async period => {
     if (signUpCheck1 && signUpCheck2 && signUpCheck3) {
       if (signUpCheck4) {
-        await alarmSetting({
-          isMarketingAlarmAgree: true,
-          isOrderAlarmAgree: alarm.isOrderAlarmAgree,
-          isMarketingInfoAgree: alarm.isMarketingInfoAgree,
-        });
-      } else if (!signUpCheck4) {
-        await alarmSetting({
-          isMarketingAlarmAgree: false,
-          isOrderAlarmAgree: alarm.isOrderAlarmAgree,
-          isMarketingInfoAgree: alarm.isMarketingInfoAgree,
-        });
       }
       navigation.navigate(MembershipJoinPaymentsPageName, {
         period: period === '월간구독' ? 'month' : 'yaers',
@@ -149,11 +138,11 @@ const Pages = () => {
               <CommentsIcon />
             </SubtractBox>
           </SubtractView>
-          <SubtractView>
+          {/* <SubtractView>
             <SubtractBox text={'마켓 상품 구매 시 포인트 적립'} disabled={true}>
               <PointIcon />
             </SubtractBox>
-          </SubtractView>
+          </SubtractView> */}
         </SubtractWrapper>
         <Form form={signUpCheck}>
           <CheckWrap>
@@ -191,7 +180,6 @@ const Pages = () => {
           </CheckWrap>
           <ButtonContainer>
             {membershipData?.map(membership => {
-              console.log(membership);
               return (
                 <ButtonBox key={membership.membershipSubscriptionType}>
                   <MembershipButton
