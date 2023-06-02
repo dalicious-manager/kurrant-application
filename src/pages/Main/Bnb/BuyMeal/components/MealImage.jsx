@@ -37,7 +37,7 @@ const MealImage = ({
                   <Typography
                     textColor={themeApp.colors.grey[0]}
                     text="SmallLabel">
-                    주문 완료
+                    주문 상품
                   </Typography>
                 </OrderView>
               )}
@@ -78,7 +78,7 @@ const MealImage = ({
                 <Typography
                   textColor={themeApp.colors.grey[0]}
                   text="SmallLabel">
-                  주문 완료
+                  주문 상품
                 </Typography>
               </OrderView>
             )}
