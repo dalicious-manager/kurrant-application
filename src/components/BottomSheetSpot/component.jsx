@@ -11,11 +11,13 @@ import {
   Dimensions,
   View,
   PanResponder,
+  Text,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
+import BalloonMessage from '../BalloonMessage';
 import Label from '../Label';
 import Typography from '../Typography';
 
@@ -51,11 +53,11 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['35%', '90%'], []);
+  const snapPoints = useMemo(() => ['60%', '90%'], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
-
+  console.log(snap);
   const resetBottomSheet = Animated.timing(panY, {
     toValue: 0,
     duration: 50,
@@ -89,18 +91,24 @@ const BottomSheetSpot = props => {
   };
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <Overlay>
+
+      <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
+        <GestureHandlerRootView style={{flex: 1}}>
+          {snap === 0 && (
+            <BalloonMessage
+              location={{top: '200px'}}
+              vertical="down"
+              message={`배송받으실 스팟을 선택해주세요.${'\n'}추후 변경 가능합니다.`}
+            />
+          )}
+
           <TouchableWithoutFeedback onPress={closeModal}>
             <Background />
           </TouchableWithoutFeedback>
 
           <BottomSheet
             snapPoints={snapPoints}
-            onChange={handleSheetChange}
-            style={{
-              marginBottom: 50,
-            }}>
+            onChange={handleSheetChange}>
             <BottomSheetTitleView>
               <BottomSheetTitle>{title}</BottomSheetTitle>
               {description !== '' && (
@@ -165,7 +173,7 @@ const BottomSheetSpot = props => {
                   })}
                 </>
               )}
-              keyExtractor={item => item.clientId.toString()}
+              // keyExtractor={item => item.clientId.toString()}
             />
             <ManagePressView />
           </BottomSheet>
@@ -252,3 +260,7 @@ const GroupView = styled.View`
 `;
 
 export default BottomSheetSpot;
+
+const MessageWrap = styled.View`
+  position: absolute;
+`;

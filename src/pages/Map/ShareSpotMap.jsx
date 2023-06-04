@@ -1,8 +1,15 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {Dimensions, Pressable, View, Text, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NaverMapView, {Marker, Circle} from 'react-native-nmap';
 import {Shadow} from 'react-native-shadow-2';
 import styled from 'styled-components';
@@ -17,6 +24,7 @@ import ArrowIcon from '../../assets/icons/Map/changeArrow.svg';
 import FindIcon from '../../assets/icons/Map/find.svg';
 import ListIcon from '../../assets/icons/Map/list.svg';
 import BackButton from '../../components/BackButton';
+import BalloonSpot from '../../components/BalloonSpot';
 import BottomSheetFilter from '../../components/BottomSheetSpotFilter';
 import BottomSheetSpot from '../../components/BottomSheetSpotInfo';
 import Button from '../../components/Button';
@@ -25,6 +33,7 @@ import Typography from '../../components/Typography';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {width, height} from '../../theme';
 import {userLocationAtom} from '../../utils/store';
+import {PAGE_NAME as RegisterSpotMapPage} from '../Map/RegisterSpotMap';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 import {PAGE_NAME as ShareSpotListPage} from '../Spots/shareSpot/ShareSpotList';
 import ShareSpotList from '../Spots/shareSpot/ShareSpotList';
@@ -34,11 +43,12 @@ export const PAGE_NAME = 'SHARE_SPOT_MAP';
 const ShareSpotMap = () => {
   const toast = Toast();
   const navigation = useNavigation();
+  const bottomSheetRef = useRef(null);
   const [modalVisible2, setModalVisible2] = useState(false);
-
+  const [snap, setSnap] = useState(0);
   const [mealTouch, setMealTouch] = useState([0, 1, 2]);
   const [touchInfo, setTouchInfo] = useState([0, 1]);
-
+  const {balloonEvent, BalloonWrap, balloonEventNotOut} = BalloonSpot();
   const [modalVisible, setModalVisible] = useState(false);
   const [showList, setShowList] = useState(false);
   const [tab, setTab] = useState();
@@ -49,7 +59,7 @@ const ShareSpotMap = () => {
   const [center, setCenter] = useState();
   const [zoom, setZoom] = useState(18);
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
-
+  console.log(initCenter);
   // const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
   //   center ? center?.longitude : initCenter.longitude,
   //   center ? center?.latitude : initCenter.latitude,
@@ -76,6 +86,14 @@ const ShareSpotMap = () => {
     {latitude: 37.505102, longitude: 127.045989, name: '달리셔스'},
   ];
 
+  const test = () => {
+    bottomSheetRef.current?.snapToIndex(0);
+  };
+
+  const markerPress = () => {
+    bottomSheetRef.current?.snapToIndex(1);
+  };
+
   useEffect(() => {
     setTimeout(() => {
       setInitCenter({
@@ -99,22 +117,25 @@ const ShareSpotMap = () => {
   //   }, [paramLocation]),
   // );
 
+  useEffect(() => {
+    balloonEvent();
+  }, []);
+
   return (
     <Wrap>
       <Pressable
-        style={{position: 'relative', marginTop: 8, marginBottom: 12}}
-        // onPress={() => {
-        //   navigation.navigate(MapSearchResult);
-        // }}
-      >
+        style={{marginTop: 8, marginBottom: 12}}
+        onPress={() => {
+          navigation.navigate(MapSearchResult);
+        }}>
         <Icon />
         <Search>
           <PlaceHolderText>지번, 도로명, 건물명으로 검색</PlaceHolderText>
         </Search>
       </Pressable>
 
-      <MapView onPress={() => console.log('sisisisi')}>
-        <LocationButtonWrap>
+      <MapView>
+        <LocationButtonWrap snap={snap}>
           <Location
             setInitCenter={setInitCenter}
             setShow={setShow}
@@ -132,30 +153,40 @@ const ShareSpotMap = () => {
             <CategoryIcon />
           </CategoryButton>
         </CategoryWrap>
-        <AddSpotWrap onPress={() => console.log('didi')}>
+        <BalloonWrapper>
+          <BalloonWrap
+            message={'원하시는 스팟이 없나요?'}
+            vertical="down"
+            size="B"
+            location={{bottom: '56px', left: '24px'}}
+          />
+        </BalloonWrapper>
+        <AddSpotWrap onPress={() => navigation.navigate(RegisterSpotMapPage)}>
           <AddSpotButton distance={6}>
             <Image source={SpotIcon} style={{width: 30, height: 29}} />
           </AddSpotButton>
         </AddSpotWrap>
 
         <NaverMapView
-          onTouch={() => {
-            setMove(true);
-          }}
+          onMapClick={() => test()}
           scaleBar={false}
-          zoomControl={true}
+          zoomControl={false}
           center={{...initCenter, zoom: 18}}
           style={{width: '100%', height: '100%'}}
           onCameraChange={handleCameraChange}>
           {spot0.map((el, idx) => {
             return (
               <Marker
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   setTab(el.name);
+                  markerPress();
                   setModalVisible(true);
                 }}
-                onPress={() => {
+                onPress={e => {
+                  e.stopPropagation();
                   setTab(el.name);
+                  markerPress();
                   setModalVisible(true);
                 }}
                 key={idx}
@@ -196,8 +227,11 @@ const ShareSpotMap = () => {
 
       {modalVisible && (
         <BottomSheetSpot
+          snap={snap}
+          setSnap={setSnap}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+          bottomSheetRef={bottomSheetRef}
           title={tab}
           data={[]}
           // onPressEvent={id => {
@@ -235,10 +269,9 @@ export default ShareSpotMap;
 
 const MapView = styled.Pressable`
   flex: 1;
-  position: relative;
 `;
 
-const Wrap = styled.View`
+const Wrap = styled(GestureHandlerRootView)`
   flex: 1;
   background-color: ${({theme}) => theme.colors.grey[0]};
 `;
@@ -264,7 +297,7 @@ const Icon = styled(FindIcon)`
 
 const LocationButtonWrap = styled.View`
   position: absolute;
-  bottom: 132px;
+  bottom: ${({snap}) => (snap === 1 ? '35%' : '132px')};
   right: 24px;
   z-index: 99;
 `;
@@ -318,4 +351,11 @@ const AddSpotWrap = styled.Pressable`
   left: 24px;
   bottom: 56px;
   z-index: 99;
+`;
+
+const BalloonWrapper = styled.View`
+  z-index: 99;
+  position: absolute;
+  left: 80px;
+  bottom: 104px;
 `;

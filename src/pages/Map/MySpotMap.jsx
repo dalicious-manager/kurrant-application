@@ -1,10 +1,17 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, Pressable, View} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Platform,
+  Pressable,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Geolocation from 'react-native-geolocation-service';
 import NaverMapView from 'react-native-nmap';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 import Info from './components/Info';
 import Location from './LocationCircle';
@@ -15,30 +22,33 @@ import Button from '../../components/Button';
 import Toast from '../../components/Toast';
 import Typography from '../../components/Typography';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
-import {width, height} from '../../theme';
+import {height} from '../../theme';
 import {userLocationAtom} from '../../utils/store';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
+
 const WIDTH = Dimensions.get('screen').width;
+
 
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'MAP';
 const MySpotMap = ({route}) => {
   const paramLocation = route?.params?.center;
-
+  const mapRef = useRef(null);
   const toast = Toast();
+  const [mapHeight, setMapHeight] = useState(0);
   const navigation = useNavigation();
   const [tab, setTab] = useState(false);
   const [show, setShow] = useState(false);
   const [move, setMove] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
-  const [center, setCenter] = useState();
+  // const [center, setCenter] = useState();
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
   const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
-    center ? center?.longitude : initCenter.longitude,
-    center ? center?.latitude : initCenter.latitude,
+    initCenter ? initCenter.longitude : 0,
+    initCenter ? initCenter.latitude : 0,
   );
   const {data: address, refetch: addressRefetch} = useGetAddress(
-    roadAddress?.roadAddress,
+    roadAddress && roadAddress.roadAddress,
   );
 
   const changAddress = () => {
@@ -47,39 +57,70 @@ const MySpotMap = ({route}) => {
 
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
-    setCenter(newCenter);
-    // setInitCenter(newCenter);
+    // setCenter(newCenter);
+    if (move) {
+      setInitCenter(newCenter);
+    }
     setMove(false);
   };
-  useEffect(() => {
-    setTimeout(() => {
-      setInitCenter({
-        latitude: 37.49703,
-        longitude: 127.028191,
-      });
-    }, 500);
-  }, []);
+  const getLocation = useCallback(() => {
+    setInitCenter();
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        setInitCenter({latitude: latitude, longitude: longitude});
+      },
+      error => {
+        console.error(error.code, error.message, '에러');
+      },
+      {enableHighAccuracy: true, timeout: 5000, maximumAge: 100},
+    );
+  }, [setInitCenter]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     getLocation();
+  //   }, 100);
+  // }, [getLocation, setInitCenter]);
   useEffect(() => {
     roadAddressRefetch();
-  }, [center, initCenter]);
+  }, [initCenter, roadAddressRefetch]);
   useEffect(() => {
     addressRefetch();
-  }, [roadAddress, initCenter]);
+  }, [roadAddress, initCenter, addressRefetch]);
 
   useFocusEffect(
     useCallback(() => {
       if (paramLocation !== undefined) {
         setInitCenter(paramLocation);
       }
-    }, [paramLocation]),
+    }, [paramLocation, setInitCenter]),
   );
-
+  const handleLayout = () => {
+    mapRef.current.measure((x, y, width, height) => {
+      setMapHeight(height);
+    });
+  };
+  if (!initCenter || initCenter.latitude === 0 || !roadAddress) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+        }}>
+        <ActivityIndicator size={'large'} />
+      </View>
+    );
+  }
   return (
     <Wrap>
       <Pressable
         style={{position: 'relative', marginTop: 8, marginBottom: 12}}
         onPress={() => {
-          navigation.navigate(MapSearchResult);
+          navigation.navigate(MapSearchResult, {
+            name: 'mySpot',
+          });
         }}>
         <Icon />
         <Search>
@@ -87,7 +128,7 @@ const MySpotMap = ({route}) => {
         </Search>
       </Pressable>
 
-      <MapView>
+      <MapView ref={mapRef} onLayout={handleLayout}>
         <LocationButtonWrap>
           <Location
             setInitCenter={setInitCenter}
@@ -103,23 +144,31 @@ const MySpotMap = ({route}) => {
             }}
           />
         </InfoView>
-        <NaverMapView
-          onTouch={() => {
-            setMove(true);
-          }}
-          scaleBar={false}
-          zoomControl={false}
-          center={{...initCenter, zoom: 18}}
-          style={{width: '100%', height: '100%'}}
-          onCameraChange={handleCameraChange}
-        />
+        {initCenter && (
+          <Pressable
+            style={{flex: 1}}
+            onPressIn={() => {
+              if (Platform.OS === 'ios') setMove(true);
+            }}>
+            <NaverMapView
+              onTouch={() => {
+                if (Platform.OS === 'android') setMove(true);
+              }}
+              scaleBar={false}
+              zoomControl={false}
+              center={{...initCenter, zoom: 18}}
+              style={{flex: 1}}
+              onCameraChange={handleCameraChange}
+            />
+          </Pressable>
+        )}
         <View
           style={{
             position: 'absolute',
             alignSelf: 'center',
             justifyContent: 'center',
             zIndex: 1,
-            top: (height * 462) / 2 - 47,
+            top: (mapHeight - 49 / 2) / 2,
           }}>
           <FastImage
             source={
@@ -133,36 +182,39 @@ const MySpotMap = ({route}) => {
         </View>
       </MapView>
 
-      <AddressView>
-        {showAddress ? (
-          <AddressText>{address}</AddressText>
-        ) : (
-          <AddressText>{roadAddress?.roadAddress}</AddressText>
-        )}
-        <ChangeAddressWrap onPress={changAddress} move={move}>
-          <Arrow move={move} />
+      {roadAddress?.roadAddress && (
+        <AddressView>
           {showAddress ? (
-            <ChangeAddressText move={move}>도로명으로 보기</ChangeAddressText>
+            <AddressText>{address}</AddressText>
           ) : (
-            <ChangeAddressText move={move}>지번으로 보기</ChangeAddressText>
+            <AddressText>{roadAddress?.roadAddress}</AddressText>
           )}
-        </ChangeAddressWrap>
-      </AddressView>
-      <ButtonWrap>
-        <Button
-          onPressEvent={() =>
-            navigation.navigate(MySpotDetailPage, {
-              address: address,
-              roadAddress: roadAddress?.roadAddress,
-              showAddress: showAddress,
-              center: center,
-            })
-          }
-          label="이 위치로 주소 설정"
-          disabled={move}
-          type={move ? 'map' : 'yellow'}
-        />
-      </ButtonWrap>
+          <ChangeAddressWrap onPress={changAddress} move={move}>
+            <Arrow move={move} />
+            {showAddress ? (
+              <ChangeAddressText move={move}>도로명으로 보기</ChangeAddressText>
+            ) : (
+              <ChangeAddressText move={move}>지번으로 보기</ChangeAddressText>
+            )}
+          </ChangeAddressWrap>
+          <ButtonWrap>
+            <Button
+              onPressEvent={() =>
+                navigation.navigate(MySpotDetailPage, {
+                  address: address,
+                  roadAddress: roadAddress?.roadAddress,
+                  showAddress: showAddress,
+                  center: initCenter,
+                  zipcode: roadAddress?.zipcode,
+                })
+              }
+              label="이 위치로 주소 설정"
+              disabled={move}
+              type={move ? 'map' : 'yellow'}
+            />
+          </ButtonWrap>
+        </AddressView>
+      )}
 
       {show && (
         <toast.ToastWrap
@@ -177,7 +229,9 @@ const MySpotMap = ({route}) => {
 export default MySpotMap;
 
 const MapView = styled.View`
-  height: ${height * 462}px;
+  flex: 1;
+  background-color: 'red';
+  width: 100%;
   position: relative;
 `;
 
@@ -189,29 +243,16 @@ const Wrap = styled.SafeAreaView`
 const AddressView = styled.View`
   padding: 24px;
   padding-top: 16px;
+  height: 198px;
 `;
 const AddressText = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
 `;
 
-const CircleView = styled.View`
-  background-color: ${({markerColor}) =>
-    markerColor ? 'rgba(255, 30, 30, 0.1)' : ' rgba(90, 30, 255, 0.1)'};
-
-  width: 20px;
-  height: 20px;
-  border-radius: 50px;
-  position: absolute;
-  /* z-index: 999; */
-  top: ${(height * 462) / 2 - 11}px;
-  left: ${WIDTH / 2 - 8}px;
-`;
-
 const ChangeAddressWrap = styled.Pressable`
   flex-direction: row;
   align-items: center;
-  background-color: ${({theme, move}) =>
-    move ? theme.colors.grey[7] : theme.colors.grey[8]};
+  background-color: ${({theme, move}) => theme.colors.grey[8]};
 
   padding: 3px 8px;
   border-radius: 4px;
@@ -221,21 +262,20 @@ const ChangeAddressWrap = styled.Pressable`
 
 const ChangeAddressText = styled(Typography).attrs({text: 'Button10R'})`
   color: ${({theme, move}) =>
-    move ? theme.colors.grey[0] : theme.colors.grey[2]};
+    move ? theme.colors.grey[5] : theme.colors.grey[2]};
 `;
 
 const Arrow = styled(ArrowIcon)`
   margin-right: 8px;
   color: ${({move, theme}) =>
-    move ? theme.colors.grey[0] : theme.colors.grey[2]};
+    move ? theme.colors.grey[5] : theme.colors.grey[2]};
 `;
 
 const ButtonWrap = styled.View`
   position: absolute;
   bottom: 35px;
-  padding: 0px 20px;
+  left: 24px;
 `;
-
 const Search = styled.View`
   margin: 0px 24px;
   background-color: ${({theme}) => theme.colors.grey[8]};
@@ -257,6 +297,7 @@ const Icon = styled(FindIcon)`
 
 const InfoView = styled.Pressable`
   position: absolute;
+  height: 100%;
   z-index: ${({tab}) => (tab ? 0 : 999)};
 `;
 

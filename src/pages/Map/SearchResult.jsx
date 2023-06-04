@@ -1,6 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -19,26 +19,32 @@ import Typography from '../../components/Typography';
 import {userLocationAtom} from '../../utils/store';
 
 export const PAGE_NAME = 'MAP_SEARCH_RESULT';
-const SearchResult = () => {
+const SearchResult = ({route}) => {
+  const type = route?.params?.name;
   const navigation = useNavigation();
-  const [screen, setScreen] = useState(true);
+  const [screen, setScreen] = useState(true); // 검색 결과 유무 전환
   const [data, setData] = useState([]);
   const [initCenter, setInitCenter] = useAtom(userLocationAtom);
   const [focus, setFocus] = useState(false);
   const [text, setText] = useState('');
 
   const searchPress = async () => {
-    const res = await mapApis.searchObject(text);
-    setScreen(false);
-    setData(res);
+    if (type === 'mySpot' || type === 'registerSpot') {
+      const res = await mapApis.searchObject(text);
+      setScreen(false);
+      setData(res);
+    }
     setFocus(false);
   };
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setData(null);
-  //   }, [data]),
-  // );
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle:
+        type === 'mySpot' || type === 'registerSpot'
+          ? '주소 검색'
+          : '공유 스팟 찾기',
+    });
+  }, []);
   return (
     <Wrap>
       <View>
@@ -84,7 +90,7 @@ const SearchResult = () => {
           {!screen && data?.length === 0 ? (
             <NoResult />
           ) : (
-            <AddressList setFocus={setFocus} data={data} />
+            <AddressList setFocus={setFocus} data={data} type={type} />
           )}
         </View>
       </TouchableWithoutFeedback>

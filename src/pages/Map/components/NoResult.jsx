@@ -1,7 +1,8 @@
 import {View, Text} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../components/Typography';
+
 import Icon from '../../../assets/icons/Map/noResult.svg';
+import Typography from '../../../components/Typography';
 
 const NoResult = () => {
   return (

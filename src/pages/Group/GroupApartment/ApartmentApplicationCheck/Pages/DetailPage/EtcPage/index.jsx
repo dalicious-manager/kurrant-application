@@ -27,7 +27,9 @@ const Pages = ({route}) => {
       );
       setApartCheck({...isApartCheck, memo: text});
     } catch (err) {
+
       Alert.alert('아파트 메모', err?.toString()?.replace('error: ', ''));
+
     }
   };
 
