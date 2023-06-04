@@ -7,3 +7,5 @@ export const userLocationAtom = atomWithReset({
   latitude: 0,
   longitude: 0,
 });
+
+export const mainDimAtom = atomWithReset(true);

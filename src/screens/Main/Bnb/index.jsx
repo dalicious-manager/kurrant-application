@@ -1,4 +1,5 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useAtom} from 'jotai';
 import React from 'react';
 import {back} from 'react-native/Libraries/Animated/Easing';
 import styled, {useTheme} from 'styled-components/native';
@@ -20,6 +21,7 @@ import MoreMainPage, {
   PAGE_NAME as MoreMainPageName,
 } from '../../../pages/Main/Bnb/More/Main';
 import MainDim from '../../../pages/Spots/spotGuide/MainDim';
+import {mainDimAtom} from '../../../utils/store';
 // import BackButton from '../../../components/BackButton';
 
 export const SCREEN_NAME = 'S_MAIN__BNB';
@@ -28,10 +30,10 @@ const BottomTab = createBottomTabNavigator();
 
 const Screen = () => {
   const theme = useTheme();
-
+  const [showDim, setShowDim] = useAtom(mainDimAtom);
   return (
     <React.Fragment>
-      <MainDim />
+      {showDim && <MainDim />}
       <BottomTab.Navigator
         initialRouteName={HomeMainPageName}
         screenOptions={{

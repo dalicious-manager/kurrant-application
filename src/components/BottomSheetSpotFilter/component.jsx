@@ -165,7 +165,7 @@ const BottomSheetSpot = props => {
                     )}
                     touch={touchInfo}
                     setTouch={setTouchInfo}
-                    title={['제한 없음', '카드키 필요']}
+                    title={['모두 보기', '제한 없음', '제한 있음']}
                   />
                 </ButtonTypeWrap>
               </View>

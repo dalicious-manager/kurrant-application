@@ -17,7 +17,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Shadow} from 'react-native-shadow-2';
 import styled, {useTheme} from 'styled-components/native';
 
-import {SharePickSpot, PickGrey, TimeIcon, Card} from '../../assets';
+import {
+  SharePickSpot,
+  PickGrey,
+  TimeIcon,
+  Card,
+  DeliverySpot,
+} from '../../assets';
 import PlusIcon from '../../assets/icons/Map/plus.svg';
 import MealIcon from '../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../assets/icons/Spot/user.svg';
@@ -29,11 +35,16 @@ const Component = props => {
   const {title = '옵션 선택', snap, setSnap, bottomSheetRef} = props;
 
   const navigation = useNavigation();
-
+  const data2 = {
+    time: {
+      morning: ['09:00', '09:00'],
+      lunch: ['09:00', '09:00', '09:00'],
+      dinner: ['09:00', '09:00'],
+    },
+  };
   const data = [
     {
       name: '13F 라운지',
-      time: ['09:00', '09:00', '09:00', '09:00', '09:00', '09:00', '09:00'],
       key: true,
     },
     {
@@ -77,7 +88,7 @@ const Component = props => {
       key: true,
     },
   ];
-
+  console.log(data);
   // variables
 
   const snapPoints = useMemo(() => ['6%', '30%', '100%'], []);
@@ -150,25 +161,74 @@ const Component = props => {
                 <DiningTypeText snap={snap}>아침・점심・저녁</DiningTypeText>
                 <Body06RText>운영중</Body06RText>
               </DiningTypeWrap>
+
+              <Border />
+              <DeliveryWrap>
+                <Delivery>
+                  <Image
+                    source={DeliverySpot}
+                    style={{width: 20, height: 20}}
+                  />
+                  <Body06RText style={{marginLeft: 16}}>배송 시간</Body06RText>
+                </Delivery>
+                <ApplyButton onPress={() => navigation.navigate(ApplySpotPage)}>
+                  <PlusIcon />
+                  <ApplyText>시간 추가 신청</ApplyText>
+                </ApplyButton>
+              </DeliveryWrap>
+              <InnerView>
+                <DetailSpotWrap>
+                  <DetailSpotName style={{marginRight: 8}}>아침</DetailSpotName>
+                  <VerticalBorder />
+                  <ApplyText>09:30</ApplyText>
+                  <ApplyText>09:30</ApplyText>
+                </DetailSpotWrap>
+                <DetailSpotWrap>
+                  <DetailSpotName style={{marginRight: 8}}>아침</DetailSpotName>
+                  <VerticalBorder />
+                  <ApplyText>09:30</ApplyText>
+                  <ApplyText>09:30</ApplyText>
+                </DetailSpotWrap>
+                <DetailSpotWrap>
+                  <DetailSpotName style={{marginRight: 8}}>아침</DetailSpotName>
+                  <VerticalBorder />
+                  <ApplyText>09:30</ApplyText>
+                  <ApplyText>09:30</ApplyText>
+                </DetailSpotWrap>
+              </InnerView>
+              <Border />
+              <DeliveryWrap>
+                <Delivery>
+                  <Image source={TimeIcon} style={{width: 20, height: 20}} />
+                  <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
+                </Delivery>
+                <ApplyButton onPress={() => navigation.navigate(ApplySpotPage)}>
+                  <PlusIcon />
+                  <ApplyText>스팟 추가 신청</ApplyText>
+                </ApplyButton>
+              </DeliveryWrap>
+              <InnerView>
+                {data.map((el, idx) => {
+                  return (
+                    <DetailSpotWrap>
+                      <DetailSpotName>{el.name}</DetailSpotName>
+                      {el.key && (
+                        <CardBoolean>
+                          <VerticalBorder />
+
+                          <NeedCardText>외부인 출입 제한</NeedCardText>
+                        </CardBoolean>
+                      )}
+                    </DetailSpotWrap>
+                  );
+                })}
+              </InnerView>
               <Border />
               <UserViewWrap snap={snap}>
                 <UserIcon width={20} height={20} />
                 <Body06RText style={{marginLeft: 16}}>152명</Body06RText>
               </UserViewWrap>
-              <Border />
-              <DeliveryWrap>
-                <Delivery>
-                  <Image source={TimeIcon} style={{width: 20, height: 20}} />
-                  <Body06RText style={{marginLeft: 16}}>
-                    배송 스팟/시간
-                  </Body06RText>
-                </Delivery>
-                <ApplyButton onPress={() => navigation.navigate(ApplySpotPage)}>
-                  <PlusIcon />
-                  <ApplyText>스팟/시간 신청</ApplyText>
-                </ApplyButton>
-              </DeliveryWrap>
-              <InnerView>
+              {/* <InnerView>
                 {data.map((el, idx) => {
                   const lastArr = data[data.length - 1];
 
@@ -201,7 +261,7 @@ const Component = props => {
                     </DetailSpotTimeWrap>
                   );
                 })}
-              </InnerView>
+              </InnerView> */}
             </ScrollView>
           </Contents>
           <ButtonWrap
@@ -336,9 +396,9 @@ const DetailSpotName = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[2]};
 `;
 
-const NeedCardText = styled(Typography).attrs({text: 'SmallLabelR'})`
+const NeedCardText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme}) => theme.colors.blue[500]};
-  padding-left: 4px;
+
   text-align: center;
 `;
 
@@ -355,7 +415,7 @@ const DetailSpotWrap = styled.View`
 `;
 
 const InnerView = styled.View`
-  padding: 16px 0px 0px 32px;
+  padding: 16px 0px 0px 36px;
 `;
 
 const DetailSpotTimeWrap = styled.View`

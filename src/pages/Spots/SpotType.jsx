@@ -138,7 +138,7 @@ const SpotType = () => {
               style={{width: 70, height: 60}}
             />
             <ImageDscText>
-              <UsedSpotCountDsc usedSpot={usedSpot}>0</UsedSpotCountDsc>/1
+              <UsedSpotCountDsc usedSpot={usedSpot}>0</UsedSpotCountDsc>/2
               이용중
             </ImageDscText>
           </ImageWrap>
@@ -183,6 +183,7 @@ const SpotType = () => {
           isHeader={false}
         />
       )}
+      <NextText>다음에 설정하기</NextText>
     </Wrap>
   );
 };
@@ -230,9 +231,9 @@ const HeaderDscText = styled(Typography).attrs({text: 'Body05R'})`
   margin-top: 8px;
 `;
 
-const MoreText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme}) => theme.colors.grey[4]};
-  padding-right: 2px;
+const NextText = styled(Typography).attrs({text: 'BottomButtonR'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+  text-align: center;
 `;
 
 const MoreButton = styled.Pressable`

@@ -204,6 +204,7 @@ const MySpotMap = ({route}) => {
                   roadAddress: roadAddress?.roadAddress,
                   showAddress: showAddress,
                   center: initCenter,
+                  zipcode: roadAddress?.zipcode,
                 })
               }
               label="이 위치로 주소 설정"

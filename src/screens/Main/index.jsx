@@ -344,9 +344,9 @@ import SpotGuide, {
 import InviteSpot, {
   PAGE_NAME as InviteSpotPage,
 } from '../../pages/Spots/spotGuide/InviteSpot';
-import MainDim, {
-  PAGE_NAME as MainDimPage,
-} from '../../pages/Spots/spotGuide/MainDim';
+import MySpotDelivery, {
+  PAGE_NAME as MySpotDeliveryPage,
+} from '../../pages/Spots/mySpot/Delivery';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -355,7 +355,7 @@ const Screen = () => {
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
   return (
-    <MainRoot.Navigator initialRouteName={InviteSpotPage}>
+    <MainRoot.Navigator initialRouteName={SplashPageName}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
@@ -2345,6 +2345,23 @@ const Screen = () => {
             headerShadowVisible: false,
             //headerTransparent: true,
             title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={MySpotDeliveryPage}
+          component={MySpotDelivery}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '기본 배송 시간 설정',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',

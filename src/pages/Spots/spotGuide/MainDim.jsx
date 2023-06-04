@@ -1,3 +1,4 @@
+import {useAtom} from 'jotai';
 import React from 'react';
 import {Text, View, Platform} from 'react-native';
 import styled from 'styled-components';
@@ -6,11 +7,13 @@ import Arrow from '../../../assets/icons/Spot/messageArrow.svg';
 import BalloonMessage from '../../../components/BalloonMessage';
 import Typography from '../../../components/Typography';
 import {height, width} from '../../../theme';
+import {mainDimAtom} from '../../../utils/store';
 
 export const PAGE_NAME = 'MAIN_DIM_PAGE';
 const MainDim = () => {
+  const [showDim, setShowDim] = useAtom(mainDimAtom);
   const selectButton = () => {
-    console.log('sss');
+    setShowDim(false);
   };
   return (
     <Wrap>

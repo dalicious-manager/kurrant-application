@@ -45,6 +45,7 @@ import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {mainDimATom, mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
@@ -120,7 +121,8 @@ const Pages = () => {
     formattedWeekDate(new Date()),
   );
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [showDim, setShowDim] = useAtom(mainDimAtom);
+  console.log(showDim);
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const [appState, setAppState] = useState();
@@ -536,6 +538,12 @@ const Pages = () => {
       getData();
     }, []),
   );
+
+  useEffect(() => {
+    if (!showDim) {
+      setModalVisible(true);
+    }
+  }, [showDim]);
   if (!isUserInfo) {
     return <SkeletonUI />;
   }
@@ -769,8 +777,8 @@ const Pages = () => {
       <BottomSheetSpot
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        title="상세스팟 선택"
-        data={isUserGroupSpotCheck}
+        title="배송 스팟 선택"
+        data={isUserGroupSpotCheck.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}

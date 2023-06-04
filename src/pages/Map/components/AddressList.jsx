@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {Text, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import styled from 'styled-components';
 
@@ -12,20 +13,25 @@ const AddressList = ({setFocus, data, type}) => {
 
   const onPress = async (name, address, x, y) => {
     const res = await mapApis.getRoadAddress(x, y);
-    const params = {
-      address: name,
-      roadAddress: address,
-      center: {latitude: Number(y), longitude: Number(x)},
-      zipcode: res.zipcode,
-      showAddress: true,
-    };
+    const jibunRes = await mapApis.getAddress(address);
+    console.log(name, 'nameㅗㅗㅗㅗㅗㅗ');
     if (type === 'registerSpot') {
       navigation.navigate(ApplySpot, {
-        params,
+        address: name,
+        roadAddress: address,
+        jibunAddress: jibunRes,
+        center: {latitude: Number(y), longitude: Number(x)},
+        zipcode: res.zipcode,
+        showAddress: true,
       });
     } else {
       navigation.navigate(DetailAddressPage, {
-        params,
+        address: name,
+        roadAddress: address,
+        jibunAddress: jibunRes,
+        center: {latitude: Number(y), longitude: Number(x)},
+        zipcode: res.zipcode,
+        showAddress: true,
       });
     }
 
@@ -48,9 +54,9 @@ const AddressList = ({setFocus, data, type}) => {
             <Contents
               key={idx}
               lastArr={lastArr}
-              onPress={() =>
-                onPress(el.place_name, el.road_address_name, el.x, el.y)
-              }>
+              onPress={() => {
+                onPress(el.place_name, el.road_address_name, el.x, el.y);
+              }}>
               <Name>{el.place_name}</Name>
               <Address>
                 {el.road_address_name} {el.place_name}
