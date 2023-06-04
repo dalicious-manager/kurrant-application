@@ -60,6 +60,7 @@ const Pages = ({route}) => {
   const {isUserInfo} = useUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
+  const time = route.params.deliveryTime;
 
   const isFocused = useIsFocused();
 
@@ -207,11 +208,12 @@ const Pages = ({route}) => {
   };
   const addToCart = async () => {
     try {
-      const data = await addMeal([
+      await addMeal([
         {
           dailyFoodId: dailyFoodId,
           count: count,
           spotId: isUserInfo?.spotId,
+          deliveryTime: time,
         },
       ]);
       balloonEvent();

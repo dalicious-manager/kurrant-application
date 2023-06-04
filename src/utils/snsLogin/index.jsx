@@ -69,7 +69,6 @@ export default () => {
           },
           'NAVER',
         );
-        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -109,7 +108,6 @@ export default () => {
         },
         'GOOGLE',
       );
-      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [
@@ -143,7 +141,6 @@ export default () => {
           },
           'APPLE',
         );
-        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -189,8 +186,6 @@ export default () => {
           },
           'APPLE',
         );
-        const userData = await userInfo();
-        // console.log(userCredential.additionalUserInfo.isNewUser);
         if (!userCredential.additionalUserInfo.isNewUser) {
           navigation.reset({
             index: 0,
@@ -260,7 +255,6 @@ export default () => {
       },
       'KAKAO',
     );
-    const userData = await userInfo();
     navigation.reset({
       index: 0,
       routes: [
@@ -289,7 +283,6 @@ export default () => {
           },
           'FACEBOOK',
         );
-        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -308,7 +301,6 @@ export default () => {
           },
           'FACEBOOK',
         );
-        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [

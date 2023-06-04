@@ -41,24 +41,12 @@ const Page = () => {
   const widthAnim = useRef(new Animated.Value(0)).current;
   const paddingAnim = useRef(new Animated.Value(0)).current;
 
-  const weekly = useAtomValue(weekAtom);
-  const [isCancelSpot] = useAtom(isCancelSpotAtom);
-  const [isLoginLoading, setLoginLoading] = useState();
   const [fadeIn, setFadeIn] = useState(false);
   const [scale, setScale] = useState(81);
   const [height, setHeight] = useState(64);
   const [widthScale, setWidthScale] = useState(0);
   const [slide, setSlide] = useState(174);
-  const {userInfo} = useUserInfo();
-  const {userGroupSpotCheck} = useGroupSpots();
-
-  const {loadMeal} = useShoppingBasket();
-  const {dailyFood} = useFoodDaily();
-  const {
-    autoLogin,
-    saveFcmToken,
-    readableAtom: {userRole},
-  } = useAuth();
+  const {autoLogin} = useAuth();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -118,34 +106,20 @@ const Page = () => {
   const getToken = () => {
     messaging()
       .getToken()
-      .then(token => {
-        console.log('push token ' + token);
+      .then(() => {
+        // console.log('push token ' + token);
         // if (token) {
         //   saveFcmToken({
         //     token: token,
         //   });
         // }
       })
-      .catch(error => {
-        console.log('error getting push token ' + error);
+      .catch(() => {
+        // console.log('error getting push token ' + error);
       });
   };
 
   useEffect(() => {
-    async function loadUser() {
-      try {
-        const userData = await userInfo();
-        if (userData?.email) {
-          if (userData?.spotId) {
-            await dailyFood(userData?.spotId, formattedWeekDate(new Date()));
-          }
-        }
-        return true;
-      } catch (error) {
-        Alert.alert('에러', error.toString());
-        return false;
-      }
-    }
     const handlePress = async () => {
       Animated.timing(scaleAnim, {
         toValue: fadeIn ? 0 : 1,
@@ -191,48 +165,6 @@ const Page = () => {
         }, 1000);
       }
     };
-    const isTester = async () => {
-      const user = loadUser();
-
-      if (!(userRole === 'ROLE_GUEST')) {
-        const status = async () => {
-          const userStatus = await getStorage('spotStatus');
-          // const result = await todayOrderMeal(start[0], end[0]);
-
-          const getUserStatus = Number(userStatus);
-          if (getUserStatus === 1) {
-            navigation.navigate(GroupSelectPageName);
-          }
-          if (getUserStatus === 2 && !isCancelSpot) {
-            navigation.navigate(GroupCreateMainPageName);
-          }
-          // return result;
-        };
-        try {
-          if (!(userRole === 'ROLE_GUEST')) {
-            if (user) {
-              const data = await status();
-
-              const group = await userGroupSpotCheck();
-              if (group.statusCode === 200) {
-                await loadMeal();
-              }
-            }
-          }
-        } catch (error) {
-          if (error.toString()?.replace('Error:', '').trim() === '403') {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: LoginPageName,
-                },
-              ],
-            });
-          }
-        }
-      }
-    };
 
     const isAutoLogin = async () => {
       const isLogin = await getStorage('isLogin');
@@ -240,14 +172,13 @@ const Page = () => {
       if (isLogin !== 'false') {
         const token = await getStorage('token');
 
-        setLoginLoading(false);
         if (token) {
           const getToken = JSON.parse(token);
           if (getToken?.accessToken) {
             const res = await autoLogin();
 
             if (res?.statusCode === 200) {
-              await isTester();
+              // await isTester();
 
               navigation.reset({
                 index: 0,
@@ -272,7 +203,6 @@ const Page = () => {
           }, 1000);
         }
       } else {
-        setLoginLoading(false);
         navigation.reset({
           index: 0,
           routes: [
@@ -283,8 +213,6 @@ const Page = () => {
         });
       }
     };
-
-    setLoginLoading(true);
 
     async function requestUserPermission() {
       await messaging().deleteToken();

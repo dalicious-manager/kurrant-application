@@ -1,38 +1,32 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable import/order */
 import {Slider} from '@miblanchard/react-native-slider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {useAtom, useAtomValue} from 'jotai';
+import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useRef, useState, useEffect} from 'react';
 import {
-  ScrollView,
   View,
-  Dimensions,
   StyleSheet,
   Platform,
   ActivityIndicator,
   Alert,
   Animated,
-  FlatList,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import PagerView from 'react-native-pager-view';
 import Animateds from 'react-native-reanimated';
-import styled, {css} from 'styled-components/native';
+import styled from 'styled-components/native';
 
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom, weekServiceAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import {supportPriceAtom} from '../../../../../biz/useSupportPrice/store';
 import useUserInfo from '../../../../../biz/useUserInfo/hook';
-import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/Balloon';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import BuyCalendar2 from '../../../../../components/BuyCalendar2';
-import CalendarButton from '../../../../../components/CalendarButton';
-import Label from '../../../../../components/Label';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {
@@ -40,23 +34,23 @@ import {
   useGetShoppingBasket,
 } from '../../../../../hook/useShoppingBasket';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
-import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
-import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 // import TossPayment from 'react-native-toss-payments';
 
-import MealImage from '../components/MealImage';
 import Modal from '../components/Modal';
 import {useTheme} from 'styled-components';
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
-import {height} from '../../../../../theme';
+import {diningTimeFoodAtom} from '../../../../../biz/useDailyFood/store';
+import BuyMealPage from '../components/BuyMealPage';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {goNextPage, goPrevPage} from '../util/movePage';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
-const screenHeight = Dimensions.get('window').height;
 const AnimatedPagerView = Animateds.createAnimatedComponent(PagerView);
 
 const Pages = ({route}) => {
@@ -73,7 +67,6 @@ const Pages = ({route}) => {
   const [modalVisible3, setModalVisible3] = useState(false);
   const [time, setTime] = useState('11:00');
   const [modalVisible4, setModalVisible4] = useState(false);
-  const [startScroll, setStartScroll] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
   const [nowPage, setNowPage] = useState(1);
   const [selectFood, setSelectFood] = useState();
@@ -82,22 +75,17 @@ const Pages = ({route}) => {
   const [hideModal, setHideModal] = useState(true);
   const [cartDailyFoodId, setCartDailyFoodId] = useState();
   const [orderDailyFoodId, setOrderDailyFoodId] = useState();
+
+  const fadeAnim = useRef(new Animated.Value(32)).current;
   const [weekly] = useAtom(weekAtom);
   const [weeklyService, setWeeklyService] = useAtom(weekServiceAtom);
-  const {data: isOrderMeal, refetch: orderMealRefetch} = useGetOrderMeal(
+  const [diningTime, setDiningTime] = useAtom(diningTimeFoodAtom);
+  const {data: isOrderMeal} = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
     formattedWeekDate(
       weekly[weekly.length - 1][weekly[weekly.length - 1].length - 1],
     ),
   );
-  const timeData = [
-    {id: 0, value: '11:00'},
-    {id: 1, value: '11:30'},
-    {id: 2, value: '12:00'},
-    {id: 3, value: '12:30'},
-    {id: 4, value: '01:00'},
-    {id: 5, value: '01:30'},
-  ];
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -114,39 +102,24 @@ const Pages = ({route}) => {
     isDailyFoodLoading,
   } = useFoodDaily();
 
-  // const {
-  //   // addMeal,
-  //   // isLoadMeal,
-  //   // isAddMeal,
-  // } = useShoppingBasket();
   const {data: isLoadMeal} = useGetShoppingBasket();
   const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
   const {isUserInfo} = useUserInfo();
-  const fadeAnim = useRef(new Animated.Value(32)).current;
   const timeRef = useRef(null);
-  const handlePress = anim => {
-    Animated.timing(fadeAnim, {
-      toValue: !anim ? 0 : 32,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-    setScrollDir(prev => !prev);
-  };
+
   const DININGTYPE = ['아침', '점심', '저녁'];
 
   const [date, setDate] = useState(
     params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
-  ); // 오늘
-
-  // 식사일정 -> 식사 선택하기 올때 선택된 날짜 가져오기, date 에 초기값 등록시키기
+  );
 
   useEffect(() => {
     if (params?.date) {
       setDate(params.date);
       dailyfoodRefetch();
     }
-  }, [dailyfoodRefetch, params]);
+  }, [dailyfoodRefetch, params, userRole]);
   useEffect(() => {
     setWeeklyService(
       weekly
@@ -168,6 +141,9 @@ const Pages = ({route}) => {
         })
         .reduce(function (acc, cur) {
           return acc.concat(cur);
+        })
+        .filter(v => {
+          return formattedWeekDate(new Date()) < formattedWeekDate(new Date(v));
         }),
     );
   }, [
@@ -177,22 +153,16 @@ const Pages = ({route}) => {
     setWeeklyService,
     weekly,
   ]);
-  // 첫 렌더링때만 dailyFood 불러오게 하기
 
-  // isMount처리가 없을 떄: 오늘 날짜, 선택된 날짜꺼 까지 둘다 받아버림
-  // isMount처리가 있을 떄: 선택된 날짜꺼만 받는다 그래서 더 효율적이다
-
-  // 일일 식사지원금
-  const [supportPrices] = useAtom(supportPriceAtom);
   const [supportPrice, setSupportPrice] = useState(0);
   const [whenSupportPriceKor, setWhenSupportPriceKor] = useState(false);
 
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
-    if (parseInt(supportPrice) || supportPrice === '0') {
+    if (parseInt(supportPrice, 10) || supportPrice === '0') {
       // 숫자이면
-      if (parseInt(supportPrice) >= 0) {
+      if (parseInt(supportPrice, 10) >= 0) {
         setShowSupportPrice(true);
         setWhenSupportPriceKor(false);
       } else {
@@ -219,7 +189,6 @@ const Pages = ({route}) => {
       })
       .flat();
     setCartDailyFoodId(cart);
-    // console.log(cart, 'cart');
   }, [isLoadMeal?.data?.spotCarts]);
   useEffect(() => {
     const orderMealData = isOrderMeal?.data
@@ -232,267 +201,89 @@ const Pages = ({route}) => {
       })
       .flat();
     setOrderDailyFoodId(orderMealData);
-    console.log(orderMealData, 'orderMealData');
   }, [isOrderMeal?.data]);
   const daily = true;
 
-  // const todayMeal = mealInfo?.filter((m) => m.date === date);
-  // const selectDate = mealInfo?.filter((m) => m.date === touchDate);
   const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.spotId;
-  // const spotId = 1;
-  const [chk, setChk] = useState(0);
+  console.log(userRole);
   const {
     data: dailyfoodData,
     refetch: dailyfoodRefetch,
     isFetching: dailyFetching,
-  } = useGetDailyfood(spotId, params?.date ? params.date : date);
+  } = useGetDailyfood(spotId, params?.date ? params.date : date, userRole);
+
+  const handlePress = anim => {
+    Animated.timing(fadeAnim, {
+      toValue: !anim ? 0 : 32,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+    setScrollDir(prev => !prev);
+  };
+
   const onPageScroll2 = e => {
-    const {position} = e.nativeEvent;
-    setChk(position);
-  };
-  const onPageScrollAndroid = e => {
     const {position, offset} = e.nativeEvent;
     navigation.setParams({
       date: null,
     });
-    const result = weeklyService.findIndex(day => {
-      return formattedWeekDate(date) === formattedWeekDate(day);
-    });
-    if (offset !== 0) {
-      if (position === 2) {
-        const currentDate = formattedWeekDate(new Date());
-        const nextDate = new Date(
-          weeklyService[result === weeklyService?.length ? result : result + 1],
-        );
-
-        const week = weekly.map(w => {
-          const find = w.findIndex(v => {
-            return (
-              formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
+    if (Platform.OS === 'android') {
+      if (offset === 0) {
+        if (nowPage === position) {
+          if (position === 2) {
+            goNextPage(
+              weekly,
+              weeklyService,
+              date,
+              setDate,
+              pager,
+              setNowPage,
+              isDiningTypes,
             );
-          });
-          return find !== -1;
-        });
-        if (week.includes(true)) {
-          setDate(
-            formattedWeekDate(
-              new Date(
-                weeklyService[
-                  result === weeklyService?.length ? result : result + 1
-                ],
-              ),
-            ),
-          );
-          const dateIndex = weekly.map(v => {
-            return v.map(s => {
-              return formattedWeekDate(s);
-            });
-          });
-          const index = dateIndex.findIndex(v => {
-            return v.includes(
-              formattedWeekDate(
-                new Date(
-                  weeklyService[
-                    result === weeklyService?.length ? result : result + 1
-                  ],
-                ),
-              ),
+          }
+          if (position === 0) {
+            goPrevPage(
+              weekly,
+              weeklyService,
+              date,
+              position,
+              setDate,
+              pager,
+              setNowPage,
+              isDiningTypes,
             );
-          });
-          setChk(index);
-          pager.current.setPage(index);
-          return setNowPage(0);
-        }
-      }
-      if (position === -1) {
-        const currentDate = formattedWeekDate(new Date());
-        const nextDate = new Date(
-          weeklyService[result === 0 ? result : result - 1],
-        );
-        const week = weekly.map(w => {
-          const find = w.findIndex(v => {
-            return (
-              formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
-            );
-          });
-          return find !== -1;
-        });
-
-        if (week.includes(true)) {
-          const prevDate2 = new Date(nextDate);
-          const todayDate2 = new Date(date);
-          const nowDates = new Date().setDate(new Date().getDate() - 1);
-          const nowDate = new Date(nowDates);
-          const utc =
-            todayDate2.getTime() + todayDate2.getTimezoneOffset() * 60 * 1000;
-          const utc2 =
-            prevDate2.getTime() + prevDate2.getTimezoneOffset() * 60 * 1000;
-          const utc3 =
-            nowDate.getTime() + nowDate.getTimezoneOffset() * 60 * 1000;
-
-          // 3. UTC to KST (UTC + 9시간)
-          const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-          const kr_curr = new Date(utc + KR_TIME_DIFF);
-          const kr_curr2 = new Date(utc2 + KR_TIME_DIFF);
-          const kr_curr3 = new Date(utc3 + KR_TIME_DIFF);
-          if (
-            new Date(formattedWeekDate(kr_curr)) >
-              new Date(formattedWeekDate(kr_curr2)) &&
-            new Date(formattedWeekDate(kr_curr3)) <
-              new Date(formattedWeekDate(kr_curr2))
-          ) {
-            setDate(
-              formattedWeekDate(
-                new Date(weeklyService[result === 0 ? result : result - 1]),
-              ),
-            );
-            const dateIndex = weekly.map(v => {
-              return v.map(s => {
-                return formattedWeekDate(s);
-              });
-            });
-            const index = dateIndex.findIndex(v => {
-              return v.includes(
-                formattedWeekDate(
-                  new Date(weeklyService[result === 0 ? result : result - 1]),
-                ),
-              );
-            });
-            setChk(index);
-            pager.current.setPage(index);
-            return setNowPage(2);
           }
         }
-
-        if (position === -1) {
-          setNowPage(0);
-        } else {
-          setNowPage(position);
-        }
+        setNowPage(position);
       }
-    }
-  };
-  const onPageScroll3 = e => {
-    navigation.setParams({
-      date: null,
-    });
-    const {position, offset} = e.nativeEvent;
-    const result = weeklyService.findIndex(day => {
-      return formattedWeekDate(date) === formattedWeekDate(day);
-    });
-    if (offset === 0) {
-      if (nowPage === position) {
+    } else {
+      if (offset !== 0) {
         if (position === 2) {
-          const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(
-            weeklyService[
-              result === weeklyService?.length ? result : result + 1
-            ],
+          goNextPage(
+            weekly,
+            weeklyService,
+            date,
+            setDate,
+            pager,
+            setNowPage,
+            isDiningTypes,
           );
-
-          const week = weekly.map(w => {
-            const find = w.findIndex(v => {
-              return (
-                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
-              );
-            });
-            return find !== -1;
-          });
-          if (week.includes(true)) {
-            setDate(
-              formattedWeekDate(
-                new Date(
-                  weeklyService[
-                    result === weeklyService?.length ? result : result + 1
-                  ],
-                ),
-              ),
-            );
-            const dateIndex = weekly.map(v => {
-              return v.map(s => {
-                return formattedWeekDate(s);
-              });
-            });
-            const index = dateIndex.findIndex(v => {
-              return v.includes(
-                formattedWeekDate(
-                  new Date(
-                    weeklyService[
-                      result === weeklyService?.length ? result : result + 1
-                    ],
-                  ),
-                ),
-              );
-            });
-            setChk(index);
-            pager.current.setPage(index);
-            return setNowPage(isDiningTypes[0] - 1);
-          }
         }
-        if (position === 0) {
-          const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(
-            weeklyService[result === 0 ? result : result - 1],
+        if (position === -1) {
+          goPrevPage(
+            weekly,
+            weeklyService,
+            date,
+            position,
+            setDate,
+            pager,
+            setNowPage,
+            isDiningTypes,
           );
-          const week = weekly.map(w => {
-            const find = w.findIndex(v => {
-              return (
-                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
-              );
-            });
-            return find !== -1;
-          });
-
-          if (week.includes(true)) {
-            const prevDate2 = new Date(nextDate);
-            const todayDate2 = new Date(date);
-            const nowDates = new Date().setDate(new Date().getDate() - 1);
-            const nowDate = new Date(nowDates);
-            const utc =
-              todayDate2.getTime() + todayDate2.getTimezoneOffset() * 60 * 1000;
-            const utc2 =
-              prevDate2.getTime() + prevDate2.getTimezoneOffset() * 60 * 1000;
-            const utc3 =
-              nowDate.getTime() + nowDate.getTimezoneOffset() * 60 * 1000;
-
-            // 3. UTC to KST (UTC + 9시간)
-            const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-            const kr_curr = new Date(utc + KR_TIME_DIFF);
-            const kr_curr2 = new Date(utc2 + KR_TIME_DIFF);
-            const kr_curr3 = new Date(utc3 + KR_TIME_DIFF);
-            if (
-              new Date(formattedWeekDate(kr_curr)) >
-                new Date(formattedWeekDate(kr_curr2)) &&
-              new Date(formattedWeekDate(kr_curr3)) <
-                new Date(formattedWeekDate(kr_curr2))
-            ) {
-              setDate(
-                formattedWeekDate(
-                  new Date(weeklyService[result === 0 ? result : result - 1]),
-                ),
-              );
-              const dateIndex = weekly.map(v => {
-                return v.map(s => {
-                  return formattedWeekDate(s);
-                });
-              });
-              const index = dateIndex.findIndex(v => {
-                return v.includes(
-                  formattedWeekDate(
-                    new Date(weeklyService[result === 0 ? result : result - 1]),
-                  ),
-                );
-              });
-              setChk(index);
-              pager.current.setPage(index);
-              return setNowPage(isDiningTypes[isDiningTypes.length - 1] - 1);
-            }
-          }
         }
       }
-      setNowPage(position);
     }
   };
+
   const onPageScroll = e => {
     navigation.setParams({
       date: null,
@@ -529,114 +320,29 @@ const Pages = ({route}) => {
           : isDiningTypes?.includes(1)
           ? 0
           : 2;
-      const result = weeklyService.findIndex(day => {
-        return formattedWeekDate(date) === formattedWeekDate(day);
-      });
       if (page !== position) {
         if (position === 2) {
-          const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(
-            weeklyService[
-              result === weeklyService?.length ? result : result + 1
-            ],
+          goNextPage(
+            weekly,
+            weeklyService,
+            date,
+            setDate,
+            pager,
+            setNowPage,
+            isDiningTypes,
           );
-
-          const week = weekly.map(w => {
-            const find = w.findIndex(v => {
-              return (
-                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
-              );
-            });
-            return find !== -1;
-          });
-          if (week.includes(true)) {
-            setDate(
-              formattedWeekDate(
-                new Date(
-                  weeklyService[
-                    result === weeklyService?.length ? result : result + 1
-                  ],
-                ),
-              ),
-            );
-            const dateIndex = weekly.map(v => {
-              return v.map(s => {
-                return formattedWeekDate(s);
-              });
-            });
-            const index = dateIndex.findIndex(v => {
-              return v.includes(
-                formattedWeekDate(
-                  new Date(
-                    weeklyService[
-                      result === weeklyService?.length ? result : result + 1
-                    ],
-                  ),
-                ),
-              );
-            });
-            setChk(index);
-            pager.current.setPage(index);
-          }
         }
         if (position === 0) {
-          const currentDate = formattedWeekDate(new Date());
-          const nextDate = new Date(
-            weeklyService[result === 0 ? result : result - 1],
+          goPrevPage(
+            weekly,
+            weeklyService,
+            date,
+            position,
+            setDate,
+            pager,
+            setNowPage,
+            isDiningTypes,
           );
-          const week = weekly.map(w => {
-            const find = w.findIndex(v => {
-              return (
-                formattedWeekDate(v) === formattedWeekDate(new Date(nextDate))
-              );
-            });
-            return find !== -1;
-          });
-
-          if (week.includes(true)) {
-            const prevDate2 = new Date(nextDate);
-            const todayDate2 = new Date(date);
-            const nowDates = new Date().setDate(new Date().getDate() - 1);
-            const nowDate = new Date(nowDates);
-            const utc =
-              todayDate2.getTime() + todayDate2.getTimezoneOffset() * 60 * 1000;
-            const utc2 =
-              prevDate2.getTime() + prevDate2.getTimezoneOffset() * 60 * 1000;
-            const utc3 =
-              nowDate.getTime() + nowDate.getTimezoneOffset() * 60 * 1000;
-
-            // 3. UTC to KST (UTC + 9시간)
-            const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-            const kr_curr = new Date(utc + KR_TIME_DIFF);
-            const kr_curr2 = new Date(utc2 + KR_TIME_DIFF);
-            const kr_curr3 = new Date(utc3 + KR_TIME_DIFF);
-            if (
-              new Date(formattedWeekDate(kr_curr)) >
-                new Date(formattedWeekDate(kr_curr2)) &&
-              new Date(formattedWeekDate(kr_curr3)) <
-                new Date(formattedWeekDate(kr_curr2))
-            ) {
-              setDate(
-                formattedWeekDate(
-                  new Date(weeklyService[result === 0 ? result : result - 1]),
-                ),
-              );
-              const dateIndex = weekly.map(v => {
-                return v.map(s => {
-                  return formattedWeekDate(s);
-                });
-              });
-              const index = dateIndex.findIndex(v => {
-                return v.includes(
-                  formattedWeekDate(
-                    new Date(weeklyService[result === 0 ? result : result - 1]),
-                  ),
-                );
-              });
-              setChk(index);
-              pager.current.setPage(index);
-            }
-          }
         }
         diningRef.current.setPage(page);
         setSliderValue(page);
@@ -660,21 +366,13 @@ const Pages = ({route}) => {
           date: null,
         });
       }
-
       setDate(selectedDate);
-      // dailyFood(spotId,selectedDate);
     } catch (err) {
       Alert.alert('날짜 선택', err?.toString()?.replace('error: ', ''));
     }
   };
-  // const isDiningType = (type)=>{
-  //     return type === '아침' ? 1 : type === '점심' ? 2 : 3;
-  // }
-  const openModal = async diningType => {
-    // console.log(modalVisible,
-    //     modalVisible2,
-    //     modalVisible3,)
 
+  const openModal = async diningType => {
     if (diningType === 1) {
       return setModalVisible(true);
     }
@@ -685,82 +383,7 @@ const Pages = ({route}) => {
       return setModalVisible3(true);
     }
   };
-
-  const closeModal = () => {
-    setModalVisible(false);
-    setModalVisible2(false);
-    setModalVisible3(false);
-  };
-
-  // useFocusEffect(
-  //     useCallback(()=>{
-  //         loadMeal();
-  //     },[])
-  // )
-  useEffect(() => {
-    if (date) dailyfoodRefetch();
-  }, [dailyfoodRefetch, date]);
-  useEffect(() => {
-    let price = null;
-    if (dailyfoodData?.data.supportPrice) {
-      switch (sliderValue) {
-        case 0:
-          price = dailyfoodData?.data.supportPrice.morningSupportPrice;
-          break;
-        case 1:
-          price = dailyfoodData?.data.supportPrice.lunchSupportPrice;
-          break;
-        case 2:
-          price = dailyfoodData?.data.supportPrice.dinnerSupportPrice;
-          break;
-      }
-
-      setSupportPrice(price);
-    }
-  }, [sliderValue, dailyfoodData?.data, date]);
-  useEffect(() => {
-    setMorning(
-      dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 1),
-    );
-    setLunch(dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 2));
-    setDinner(
-      dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 3),
-    );
-    setDiningTypes(dailyfoodData?.data.diningTypes);
-  }, [dailyfoodData?.data]);
-  const addCartPress = async (id, day, type, m) => {
-    const diningType = type;
-    const duplication = isLoadMeal?.data?.spotCarts
-      ?.map(v =>
-        v.cartDailyFoodDtoList.map(el =>
-          el.cartDailyFoods.some(c => c.dailyFoodId === id),
-        ),
-      )
-      .flat();
-
-    if (duplication?.includes(true)) {
-      await openModal(diningType);
-      setSelectFood({
-        id: id,
-      });
-    } else {
-      await addToCart(id, m);
-    }
-  };
-  const quantityArr = isLoadMeal?.data?.spotCarts?.map(el =>
-    el.cartDailyFoodDtoList.map(v =>
-      v.cartDailyFoods.map(c => {
-        return {
-          dailyFoodId: c.dailyFoodId,
-          count: c.count,
-          cartItemId: c.id,
-        };
-      }),
-    ),
-  );
-  const quantity = quantityArr?.reduce((acc, val) => [...acc, ...val], []);
-  const modifyQty = quantity?.reduce((acc, cur) => [...acc, ...cur], []);
-  const addToCart = async id => {
+  const isGuest = () => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
         '로그인이 필요합니다',
@@ -788,12 +411,108 @@ const Pages = ({route}) => {
         ],
       );
     }
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+    setModalVisible2(false);
+    setModalVisible3(false);
+  };
+
+  useEffect(() => {
+    if (date) dailyfoodRefetch();
+  }, [dailyfoodRefetch, date]);
+
+  useEffect(() => {
+    let price = null;
+    if (dailyfoodData?.data.supportPrice) {
+      switch (sliderValue) {
+        case 0:
+          price = dailyfoodData?.data.supportPrice.morningSupportPrice;
+          break;
+        case 1:
+          price = dailyfoodData?.data.supportPrice.lunchSupportPrice;
+          break;
+        case 2:
+          price = dailyfoodData?.data.supportPrice.dinnerSupportPrice;
+          break;
+      }
+
+      setSupportPrice(price);
+    }
+    const diningTimes = dailyfoodData?.data.diningTypes.filter(
+      v => v.diningType === sliderValue + 1,
+    );
+
+    const getTime = async () => {
+      const localTime = JSON.parse(await getStorage('diningTime'));
+      if (localTime?.time) setTime(localTime.time);
+      else {
+        setTime(diningTimes[0].times[0]);
+        const times = {
+          diningType: diningTime.diningType,
+          time: diningTimes[0].times[0],
+        };
+        setStorage('diningTime', JSON.stringify(times));
+      }
+    };
+    if (diningTimes?.length > 0) {
+      setDiningTime(
+        diningTimes[0].times.map(t => {
+          return {id: time.diningType + t, value: t};
+        }),
+      );
+      getTime();
+    }
+  }, [
+    sliderValue,
+    dailyfoodData?.data,
+    date,
+    setDiningTime,
+    time.diningType,
+    diningTime.diningType,
+  ]);
+
+  useEffect(() => {
+    setMorning(
+      dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 1),
+    );
+    setLunch(dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 2));
+    setDinner(
+      dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 3),
+    );
+    setDiningTypes(
+      dailyfoodData?.data.diningTypes.map(dining => dining.diningType),
+    );
+  }, [dailyfoodData?.data, setDiningTypes, setDinner, setLunch, setMorning]);
+
+  const addCartPress = async (id, day, type, m) => {
+    const diningType = type;
+    const duplication = isLoadMeal?.data?.spotCarts
+      ?.map(v =>
+        v.cartDailyFoodDtoList.map(el =>
+          el.cartDailyFoods.some(c => c.dailyFoodId === id),
+        ),
+      )
+      .flat();
+
+    if (duplication?.includes(true)) {
+      await openModal(diningType);
+      setSelectFood({
+        id: id,
+      });
+    } else {
+      await addToCart(id, m);
+    }
+  };
+  const addToCart = async id => {
+    isGuest();
     try {
       await addMeal([
         {
           dailyFoodId: id,
           count: 1,
           spotId: isUserInfo?.spotId,
+          deliveryTime: time,
         },
       ]);
       setShow(true);
@@ -806,213 +525,35 @@ const Pages = ({route}) => {
     }
     closeModal();
   };
-
-  const BuyMeal = diningFood => {
-    const setModal = type => {
-      if (type === isMorningFood) {
-        return setModalVisible;
-      }
-      if (type === isLunchFood) {
-        return setModalVisible2;
-      }
-      if (type === isDinnerFood) {
-        return setModalVisible3;
-      }
-    };
-    const modal = type => {
-      if (type === isMorningFood) {
-        // console.log("1",modalVisible)
-        return modalVisible;
-      }
-      if (type === isLunchFood) {
-        // console.log("2",modalVisible2)
-        return modalVisible2;
-      }
-      if (type === isDinnerFood) {
-        // console.log("3",modalVisible3)
-        return modalVisible3;
-      }
-    };
-    const refType = type => {
-      if (type === isMorningFood) {
-        return MorningRef;
-      }
-      if (type === isLunchFood) {
-        return LunchRef;
-      }
-      if (type === isDinnerFood) {
-        return DinnerRef;
-      }
-    };
-
-    const onScrollStart = e => {
-      const {
-        contentOffset: {y},
-      } = e.nativeEvent;
-      setStartScroll(y);
-    };
-    const onScrollEnd = e => {
-      const {
-        contentOffset: {y},
-      } = e.nativeEvent;
-      if (y < 20) {
-        handlePress(true);
-      } else {
-        handlePress(startScroll > y ? true : false);
-      }
-    };
-    return (
-      <ScrollView
-        ref={refType(diningFood)}
-        onScrollBeginDrag={onScrollStart}
-        onScrollEndDrag={onScrollEnd}
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={
-          !(diningFood?.length === 0 && spotId !== null) || !spotId === null
-        }>
-        <FoodContainer isFood={diningFood?.length === 0 && spotId !== null}>
-          {diningFood?.length === 0 && spotId !== null && (
-            <NoServieceView
-              status={hideModal}
-              isMembership={isUserInfo?.isMembership}>
-              <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
-            </NoServieceView>
-          )}
-          {spotId === null && (
-            <NoSpotView
-              status={hideModal}
-              isMembership={isUserInfo?.isMembership}>
-              <NoServiceText>메뉴는 스팟 선택 또는 </NoServiceText>
-              <NoServiceText>
-                스팟 개설 신청 승인후 확인할 수 있어요
-              </NoServiceText>
-            </NoSpotView>
-          )}
-
-          {diningFood?.map(m => {
-            const realToTalDiscountRate =
-              100 -
-              (100 - m.membershipDiscountRate) *
-                0.01 *
-                ((100 - m.makersDiscountRate) * 0.01) *
-                ((100 - m.periodDiscountRate) * 0.01) *
-                100;
-            // console.log(m.discountedPrice, 'test');
-            const totalDiscount =
-              m.membershipDiscountPrice +
-              m.makersDiscountPrice +
-              m.periodDiscountPrice;
-
-            return (
-              <Contents
-                key={m.id}
-                spicy={m.spicy}
-                vegan={m.vegan}
-                disabled={
-                  m.status === 2 ||
-                  m.status === 6 ||
-                  isAddMeal ||
-                  m.status === 5
-                }
-                onPress={e => {
-                  navigation.navigate(MealDetailPageName, {dailyFoodId: m.id});
-                  e.stopPropagation();
-                }}>
-                <ContentsText>
-                  <MakersName soldOut={m.status}>{m.makersName}</MakersName>
-                  <MealName
-                    soldOut={m.status}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
-                    {m.foodName}
-                  </MealName>
-                  <MealDsc
-                    soldOut={m.status}
-                    numberOfLines={2}
-                    ellipsizeMode="tail">
-                    {m.description}
-                  </MealDsc>
-                  <PriceWrap>
-                    {realToTalDiscountRate !== 0 && (
-                      <PercentText soldOut={m.status}>
-                        {Math.round(realToTalDiscountRate * 100) / 100}%
-                      </PercentText>
-                    )}
-                    <Price soldOut={m.status}>
-                      {withCommas(m.price - totalDiscount)}원
-                    </Price>
-                    {realToTalDiscountRate !== 0 && (
-                      <OriginPrice>{withCommas(m.price)}원</OriginPrice>
-                    )}
-                  </PriceWrap>
-                  {m.spicy !== null && (
-                    <LabelWrap>
-                      {m.status === 2 || m.status === 6 ? (
-                        <Label label={`${m.spicy}`} type={'soldOut'} />
-                      ) : (
-                        <Label label={`${m.spicy}`} />
-                      )}
-                    </LabelWrap>
-                  )}
-                  {m.vegan && m.vegan !== null && (
-                    <LabelWrap>
-                      {m.status === 2 || m.status === 6 ? (
-                        <Label label={`${m.vegan}`} type={'soldOut'} />
-                      ) : (
-                        <Label label={`${m.vegan}`} type={'vegan'} />
-                      )}
-                    </LabelWrap>
-                  )}
-                </ContentsText>
-                <MealImage
-                  status={m.status}
-                  image={m.image}
-                  dailyFoodId={m.id}
-                  orderFoodList={orderDailyFoodId}
-                  cartFoodList={cartDailyFoodId}
-                  onPressEvent={() => {
-                    addCartPress(m.id, m.serviceDate, m.diningType, m);
-                  }}
-                  isAddMeal={isAddMeal}
-                  rank={m.rank}
-                />
-
-                {m.status === 2 && (
-                  <SoldOut soldOut={m.status} rank={m.rank}>
-                    품절됐어요
-                  </SoldOut>
-                )}
-                {m.status === 6 && (
-                  <SoldOut soldOut={m.status} rank={m.rank}>
-                    마감됐어요
-                  </SoldOut>
-                )}
-              </Contents>
-            );
-          })}
-          <BottomModal
-            modalVisible={modal(diningFood)}
-            setModalVisible={setModal(diningFood)}
-            title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`}
-            description={'그래도 추가하시겠어요?'}
-            buttonTitle1={'아니요'}
-            buttonType1="grey7"
-            buttonTitle2={'추가'}
-            buttonType2="yellow"
-            onPressEvent1={closeModal}
-            onPressEvent2={() => addToCart(selectFood.id)}
-          />
-          <View style={{height: 120}} />
-        </FoodContainer>
-      </ScrollView>
-    );
+  const mealData = {
+    isMorningFood: isMorningFood,
+    setModalVisible: setModalVisible,
+    isLunchFood: isLunchFood,
+    setModalVisible2: setModalVisible2,
+    isDinnerFood: isDinnerFood,
+    setModalVisible3: setModalVisible3,
+    modalVisible: modalVisible,
+    modalVisible2: modalVisible2,
+    modalVisible3: modalVisible3,
+    MorningRef: MorningRef,
+    LunchRef: LunchRef,
+    DinnerRef: DinnerRef,
+    setScrollDir: setScrollDir,
+    spotId: spotId,
+    hideModal: hideModal,
+    orderDailyFoodId: orderDailyFoodId,
+    cartDailyFoodId: cartDailyFoodId,
+    isAddMeal: isAddMeal,
+    navigation: navigation,
+    addCartPress: addCartPress,
+    closeModal: closeModal,
+    addToCart: addToCart,
+    selectFood: selectFood,
+    handlePress: handlePress,
+    time: time,
   };
-
   return (
     <SafeView>
-      {/* <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
-        <CalendarButton pager={pager} daily chk={chk} />
-      </Animated.View> */}
       <CalendarWrap>
         <BuyCalendar2
           BooleanValue={false}
@@ -1021,12 +562,10 @@ const Pages = ({route}) => {
           size={'Body05R'}
           onPressEvent2={dayPress}
           daily={daily}
-          // selectDate={date}
           selectDate={date}
           margin={'0px 28px'}
-          scrollDir
+          scrollDir={scrollDir}
           pagerRef={pager}
-          onPageScroll2={onPageScroll2}
           sliderValue={sliderValue}
           isServiceDays={dailyfoodData?.data.serviceDays}
         />
@@ -1071,24 +610,7 @@ const Pages = ({route}) => {
                 />
               </View>
             </ProgressWrap>
-            {showSupportPrice && (
-              <MiniWrap2
-                onPress={() => {
-                  setModalVisible4(true);
-                }}>
-                <Typography2>일일 식사지원금</Typography2>
-                <QuestionPressable>
-                  <QuestionCircleMonoIcon />
-                </QuestionPressable>
-
-                {whenSupportPriceKor ? (
-                  <Typography4>{supportPrice}</Typography4>
-                ) : (
-                  <Typography3> {supportPrice}원</Typography3>
-                )}
-              </MiniWrap2>
-            )}
-            {/* <HeaderWrap
+            <HeaderWrap
               colors={[
                 'rgba(255, 255, 255, 0.0)',
                 'rgba(255, 255, 255, 0.2)',
@@ -1108,14 +630,19 @@ const Pages = ({route}) => {
               ref={timeRef}
               showsHorizontalScrollIndicator={false}
               horizontal={true}
-              data={timeData}
+              data={diningTime}
               renderItem={({item, index}) => {
-                if (timeData?.length - 1 === index) {
+                if (diningTime?.length - 1 === index) {
                   return (
                     <TimeBoxlast
                       isSelect={time === item.value}
                       onPress={() => {
                         setTime(item.value);
+                        const times = {
+                          diningType: diningTime.diningType,
+                          time: item.value,
+                        };
+                        setStorage('diningTime', JSON.stringify(times));
                         timeRef.current.scrollToIndex({
                           animated: true,
                           index: index,
@@ -1138,6 +665,11 @@ const Pages = ({route}) => {
                     isSelect={time === item.value}
                     onPress={() => {
                       setTime(item.value);
+                      const times = {
+                        diningType: diningTime.diningType,
+                        time: item.value,
+                      };
+                      setStorage('diningTime', JSON.stringify(times));
                       timeRef.current.scrollToIndex({
                         animated: true,
                         index: index,
@@ -1156,32 +688,27 @@ const Pages = ({route}) => {
                 );
               }}
               keyExtractor={item => item.id}
-            /> */}
+            />
           </StatusWrap>
         )}
-        {/* {showSupportPrice && (
+        {showSupportPrice && (
           <MiniWrap
             onPress={() => {
               setModalVisible4(true);
             }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Typography2>일일 식사지원금</Typography2>
+            <SupportPriceInfoWrap>
+              <Typography22>일일 식사지원금</Typography22>
               <QuestionPressable>
                 <QuestionCircleMonoIcon />
               </QuestionPressable>
-            </View>
+            </SupportPriceInfoWrap>
             {whenSupportPriceKor ? (
               <Typography4>{supportPrice}</Typography4>
             ) : (
               <Typography3> {supportPrice}원</Typography3>
             )}
           </MiniWrap>
-        )} */}
+        )}
         {!isUserInfo?.isMembership && (
           <View>
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
@@ -1192,21 +719,21 @@ const Pages = ({route}) => {
             <ActivityIndicator size={'large'} />
           </LoadingPage>
         ) : (
-          <Pager
-            ref={diningRef}
-            overdrag={true}
-            initialPage={nowPage}
-            overScrollMode={'always'}
-            onPageScroll={
-              Platform.OS === 'android' ? onPageScroll3 : onPageScrollAndroid
-            }
-            onPageSelected={e => {
-              onPageScroll(e);
-            }}>
-            {BuyMeal(isMorningFood)}
-            {BuyMeal(isLunchFood)}
-            {BuyMeal(isDinnerFood)}
-          </Pager>
+          <GestureHandlerRootView style={{flex: 1}}>
+            <Pager
+              ref={diningRef}
+              overdrag={true}
+              initialPage={nowPage}
+              overScrollMode={'always'}
+              onPageScroll={onPageScroll2}
+              onPageSelected={e => {
+                onPageScroll(e);
+              }}>
+              <BuyMealPage diningFood={isMorningFood} mealData={mealData} />
+              <BuyMealPage diningFood={isLunchFood} mealData={mealData} />
+              <BuyMealPage diningFood={isDinnerFood} mealData={mealData} />
+            </Pager>
+          </GestureHandlerRootView>
         )}
       </PagerViewWrap>
 
@@ -1236,33 +763,7 @@ const Pages = ({route}) => {
           label={'장바구니 보기'}
           type={'yellow'}
           onPressEvent={() => {
-            if (userRole === 'ROLE_GUEST') {
-              return Alert.alert(
-                '로그인이 필요합니다',
-                '해당 기능은 로그인 이후 사용할수 있습니다.',
-                [
-                  {
-                    text: '취소',
-                    onPress: () => {},
-                  },
-                  {
-                    text: '확인',
-                    onPress: async () => {
-                      await AsyncStorage.clear();
-                      navigation.reset({
-                        index: 0,
-                        routes: [
-                          {
-                            name: LoginPageName,
-                          },
-                        ],
-                      });
-                    },
-                    style: 'destructive',
-                  },
-                ],
-              );
-            }
+            isGuest();
             navigation.navigate(MealCartPageName);
           }}
         />
@@ -1299,29 +800,9 @@ const styles = StyleSheet.create({
 
 export default Pages;
 
-const FoodContainer = styled.View`
-  ${({isFood}) => {
-    if (isFood)
-      return css`
-        height: ${screenHeight}px;
-      `;
-  }}
-  padding-bottom:24px;
-`;
 const SafeView = styled.View`
   background-color: ${props => props.theme.colors.grey[0]};
   flex: 1;
-`;
-const MiniWrap2 = styled.Pressable`
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: center;
-  margin-left: 6px;
-  width: 181px;
-  height: 32px;
-  padding-right: 24px;
-  border-radius: 7px;
 `;
 
 const CalendarWrap = styled.View`
@@ -1339,6 +820,12 @@ const LoadingPage = styled.View`
   width: 100%;
   flex: 1;
   padding-bottom: 150px;
+`;
+
+const SupportPriceInfoWrap = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
 const PagerViewWrap = styled.View`
   flex: 1;
@@ -1403,7 +890,7 @@ const QuestionPressable = styled.Pressable`
   margin-right: 3px;
 `;
 
-const Typography2 = styled(Typography).attrs({text: 'SmallLabel'})`
+const Typography22 = styled(Typography).attrs({text: 'Body05R'})`
   margin-right: 4px;
   color: ${({theme}) => theme.colors.grey[2]};
 `;
@@ -1425,39 +912,6 @@ const Pager = styled(AnimatedPagerView)`
   flex: 1;
 `;
 
-const Contents = styled.Pressable`
-  padding: ${({spicy, vegan}) =>
-    spicy || vegan ? '18px 0px 28px 0px' : '18px 0px 28px 0px'};
-  margin: 0px 28px;
-  flex-direction: row;
-  justify-content: space-between;
-  border-bottom-color: ${props => props.theme.colors.grey[8]};
-  border-bottom-width: 1px;
-  align-items: center;
-  min-height: 160px;
-`;
-
-const LabelWrap = styled.View`
-  margin-top: 6px;
-`;
-
-const ContentsText = styled.View`
-  width: 60%;
-`;
-
-const PriceWrap = styled.View`
-  flex-direction: row;
-  margin-top: 4px;
-  margin-bottom: 6px;
-`;
-
-const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
-  position: absolute;
-  right: ${({rank}) => (rank === 1 ? '17px' : '15px')};
-  top: ${({rank}) => (rank === 1 ? '60%' : '55%')};
-  color: ${props => props.theme.colors.grey[4]};
-  z-index: 1000;
-`;
 const ButtonWrap = styled(LinearGradient)`
   position: absolute;
   bottom: 0;
@@ -1492,64 +946,16 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
       : theme.colors.grey[2]};
 `;
 
-const Price = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[2]};
-`;
-
-const MealDsc = styled(Typography).attrs({text: 'MealDes'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[4]};
-  margin-top: 6px;
-`;
-
 const ProgressText = styled(Typography).attrs({text: 'Title04SB'})`
   color: ${({theme, type}) =>
     type ? theme.colors.grey[2] : theme.colors.grey[7]};
 `;
 
-const PercentText = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6 ? theme.colors.grey[6] : '#DD5257'};
-  margin-right: 4px;
-`;
-
-const OriginPrice = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[5]};
-  text-decoration: line-through;
-  text-decoration-color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[5]};
-  margin-left: 6px;
-`;
-
-const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme}) => theme.colors.grey[5]};
-`;
 const Typography4 = styled(Typography).attrs({text: 'Body05SB'})`
   margin-right: 4px;
   color: ${({theme}) => theme.colors.grey[2]};
   font-size: 14px;
   font-weight: 600;
-`;
-const NoServieceView = styled.View`
-  position: absolute;
-  top: ${({status, isMembership}) => (status && !isMembership ? '10%' : '30%')};
-  left: 29%;
-`;
-
-const NoSpotView = styled(NoServieceView)`
-  justify-content: center;
-  align-items: center;
-  left: 18%;
 `;
 
 const DiningPress = styled.Pressable``;

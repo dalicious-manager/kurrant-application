@@ -25,6 +25,7 @@ import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
+import {getStorage} from '../../../../../utils/asyncStorage';
 import {formattedMonthDay} from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -50,6 +51,7 @@ const Pages = () => {
   } = useShoppingBasket();
   const {data: isLoadMeal, isFetching} = useGetShoppingBasket();
   const [spotCartData, setSpotCartData] = useState();
+  const [time, setTime] = useState('11:00');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
@@ -74,6 +76,12 @@ const Pages = () => {
   useEffect(() => {
     if (isLoadMeal?.data?.spotCarts)
       setSpotCartData(isLoadMeal?.data?.spotCarts);
+
+    const getTime = async () => {
+      const localTime = JSON.parse(await getStorage('diningTime'));
+      setTime(localTime.time);
+    };
+    getTime();
   }, [isLoadMeal?.data]);
   if (!isLoadMeal?.data) {
     return <ActivityIndicator size={'large'} />;
@@ -714,6 +722,7 @@ const Pages = () => {
                               data={soldOutMeal}
                               toast={toast}
                               setShow={setShow}
+                              time={time}
                             />
                             <CountWrap>
                               {food.status !== 6 && !isFetching && (

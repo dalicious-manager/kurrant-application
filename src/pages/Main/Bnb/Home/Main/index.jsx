@@ -11,8 +11,6 @@ import {
   AppState,
   Platform,
   Linking,
-  Pressable,
-  Text,
 } from 'react-native';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
@@ -50,7 +48,6 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/De
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
@@ -130,15 +127,6 @@ const Pages = () => {
 
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
-  // const start = weekly.map(s => {
-  //   const startData = formattedWeekDate(s[0]);
-  //   return startData;
-  // });
-
-  // const end = weekly.map(e => {
-  //   const endData = formattedWeekDate(e.slice(-1)[0]);
-  //   return endData;
-  // });
   const date = formattedWeekDate(new Date());
   const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
@@ -150,11 +138,12 @@ const Pages = () => {
     return el.serviceDate;
   });
   useEffect(() => {
-    userInfo();
+    const getUser = async () => {
+      const user = await userInfo();
+      if (user.spotId) dailyfoodRefetch();
+    };
+    getUser();
   }, []);
-  useEffect(() => {
-    dailyfoodRefetch();
-  }, [isUserInfo]);
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
@@ -272,7 +261,7 @@ const Pages = () => {
       try {
         orderMealRefetch();
       } catch (e) {
-        alert(e.toString()?.replace('error:'));
+        Alert.alert(e.toString()?.replace('error:'));
       }
     }, [isCancelSpot, appState]),
   );
@@ -408,17 +397,6 @@ const Pages = () => {
     }
   };
 
-  // useEffect(() => {
-  //   async function dailys() {
-  //     try {
-  //       if (userSpotId)
-  //         await dailyFood(userSpotId, formattedWeekDate(new Date()));
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  //   dailys();
-  // }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
@@ -629,16 +607,7 @@ const Pages = () => {
               <CountText>건</CountText>
             </CountWrap>
           </CatorWrap> */}
-            {/* {isUserInfo?.isMembership && <MembershipWrap>
-            <Membership>
-              <MembershipIcon/>
-              <TitleText>멤버십</TitleText>
-            </Membership>
-            <CountWrap>
-              <Count>2</Count>
-              <CountText>건</CountText>
-            </CountWrap>
-          </MembershipWrap>} */}
+
             {isUserInfo?.isMembership ? (
               <MembershipWrap
                 onPress={() => navigation.navigate(MembershipInfoPageName)}>
@@ -724,11 +693,6 @@ const Pages = () => {
       <ButtonWrap>
         <Button
           onPress={async () => {
-            // 임시 재신
-            // const lalala = await getData();
-            // console.log(lalala)
-            // removeItemFromStorage('announcementsClickedOneDate');
-
             if (userSpotId) {
               navigation.navigate(BuyMealPageName);
               closeBalloon();

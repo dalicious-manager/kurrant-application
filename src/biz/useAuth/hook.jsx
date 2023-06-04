@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
+import {useResetAtom} from 'jotai/utils';
 import jwtDecode from 'jwt-decode';
 import {Alert} from 'react-native';
 
@@ -19,7 +20,7 @@ import {
 } from './store';
 import {PAGE_NAME as LoginPageName} from '../../pages/Main/Login/Login';
 import {setStorage} from '../../utils/asyncStorage';
-import {isUserSpotStatusAtom} from '../useUserInfo/store';
+import {isUserInfoAtom, isUserSpotStatusAtom} from '../useUserInfo/store';
 
 const useAuth = () => {
   const [isEmailAuthLoading, setEmailAuthLoading] = useAtom(
@@ -40,6 +41,7 @@ const useAuth = () => {
   const [isChangePasswordLoading, setChangePasswordLoading] = useAtom(
     isChangePasswordLoadingAtom,
   );
+  const resetAtom = useResetAtom(isUserInfoAtom);
   const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
   const [fcmToken, setFcmToken] = useAtom(fcmTokenAtom);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
@@ -433,6 +435,7 @@ const useAuth = () => {
       },
       option,
     );
+    resetAtom();
     return res;
   };
   const saveFcmToken = async (body, option = {}) => {

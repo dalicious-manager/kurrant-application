@@ -18,7 +18,6 @@ import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {width, height} from '../../theme';
 import {userLocationAtom} from '../../utils/store';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
-console.log(height, 'didi');
 const WIDTH = Dimensions.get('screen').width;
 
 // latitude : 위도 (y) ,longitude :경도 (x)
