@@ -41,11 +41,12 @@ const SpotType = () => {
     }
   };
   const userLocation = () => {
-    if (Platform.OS === 'ios') {
-      requestLocationIosPermission();
-    } else {
-      requestLocationAndroidPermission();
-    }
+    navigation.navigate(MySpotMap);
+    // if (Platform.OS === 'ios') {
+    //   requestLocationIosPermission();
+    // } else {
+    //   requestLocationAndroidPermission();
+    // }
   };
   const requestLocationAndroidPermission = async () => {
     try {

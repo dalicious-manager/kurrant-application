@@ -75,11 +75,11 @@ const MySpotMap = ({route}) => {
       {enableHighAccuracy: true, timeout: 5000, maximumAge: 100},
     );
   }, [setInitCenter]);
-  useEffect(() => {
-    setTimeout(() => {
-      getLocation();
-    }, 100);
-  }, [getLocation, setInitCenter]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     getLocation();
+  //   }, 100);
+  // }, [getLocation, setInitCenter]);
   useEffect(() => {
     roadAddressRefetch();
   }, [initCenter, roadAddressRefetch]);
