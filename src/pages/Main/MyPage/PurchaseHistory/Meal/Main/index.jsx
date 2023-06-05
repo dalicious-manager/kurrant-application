@@ -2,16 +2,7 @@ import DatePicker from '@react-native-community/datetimepicker';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  Dimensions,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Platform, Pressable, ScrollView} from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
 
 import DateOrderItemContainer from './components/DateOrderItemContainer';
@@ -69,8 +60,11 @@ const Pages = () => {
     endDate: formattedWeekDate(endDate),
     orderType: 1,
   };
-  const {data: mealPurchase, refetch: mealPurchaceRefetch} =
-    useGetMealPurchaseHistory(body);
+  const {
+    data: mealPurchase,
+    refetch: mealPurchaceRefetch,
+    isFetching,
+  } = useGetMealPurchaseHistory(body);
   const selectDate = date => {
     if (!isMealPurchaseLoading) {
       const setDate = searchDate.map(item =>
@@ -137,9 +131,9 @@ const Pages = () => {
     await getPurchaseHistoryMeal(body);
   };
   useEffect(() => {
-    const purchaseHistory = async date => {
-      await getPurchaseHistoryMeal(date);
-    };
+    // const purchaseHistory = async date => {
+    //   await getPurchaseHistoryMeal(date);
+    // };
     const selectDate = searchDate.filter(v => v.isActive === true);
     // console.log(selectDate[0])
     const dateArray = () => {
@@ -162,17 +156,22 @@ const Pages = () => {
       }
     };
     if (selectDate[0].id !== 3) {
-      const [start, end] = dateArray();
-      const req = {
-        startDate: formattedWeekDate(start),
-        endDate: formattedWeekDate(end),
-        orderType: 1,
-      };
-      purchaseHistory(req);
+      const [starts, ends] = dateArray();
+      setStartDate(starts);
+      setEndDate(ends);
+      // const req = {
+      //   startDate: formattedWeekDate(starts),
+      //   endDate: formattedWeekDate(ends),
+      //   orderType: 1,
+      // };
+      // purchaseHistory(req);
     } else {
       setMealPurchase([]);
     }
   }, [searchDate]);
+  useEffect(() => {
+    mealPurchaceRefetch();
+  }, [startDate, endDate, mealPurchaceRefetch]);
   return (
     <Container>
       <Wrapper>
@@ -238,7 +237,7 @@ const Pages = () => {
             </SubmitButton>
           </ConditionSearch>
         )}
-        {isMealPurchaseLoading ? (
+        {isFetching ? (
           <Skeleton />
         ) : mealPurchase?.data?.length > 0 ? (
           <ScrollViewBox>

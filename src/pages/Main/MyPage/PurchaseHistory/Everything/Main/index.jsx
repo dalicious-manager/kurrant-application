@@ -234,7 +234,6 @@ const Pages = () => {
             {allPurchase?.data ? (
               <ScrollViewBox>
                 {allPurchase?.data?.map((v, i) => {
-                  console.log(v, 'testsett');
                   return (
                     <DateOrderItemContainer
                       key={`${v.orderDate}${i}`}

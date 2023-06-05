@@ -143,7 +143,9 @@ const Pages = ({route}) => {
           return acc.concat(cur);
         })
         .filter(v => {
-          return formattedWeekDate(new Date()) < formattedWeekDate(new Date(v));
+          return (
+            formattedWeekDate(new Date()) <= formattedWeekDate(new Date(v))
+          );
         }),
     );
   }, [

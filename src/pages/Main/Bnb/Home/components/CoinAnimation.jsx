@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Animated, Vibration} from 'react-native';
 import Sound from 'react-native-sound';
+import styled, {css} from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
 import Typography from '~components/Typography';
 
@@ -87,12 +88,11 @@ const CoinAnimation = ({isStart, setStart, coinSound}) => {
             transform: [{translateX: moveValue.x}, {translateY: moveValue.y}],
           },
         ]}>
-        <Typography
-          style={{backgroundColor: textTime && 'white'}}
-          text={'Body06SB'}
-          textColor={themeApp.colors.blue[500]}>
-          {textTime ? '파운더스 포인트 적립!' : ' '}
-        </Typography>
+        <PointTextBox textTime={textTime}>
+          <Typography text={'CaptionR'} textColor={themeApp.colors.grey[2]}>
+            {textTime ? '+ 80 포인트' : ''}
+          </Typography>
+        </PointTextBox>
         <Animated.Image
           style={[styles.coin, {transform: [{rotateY: spin}]}]}
           source={require('../../../../../assets/images/coin.png')}
@@ -122,3 +122,13 @@ const styles = StyleSheet.create({
 });
 
 export default CoinAnimation;
+
+const PointTextBox = styled.View`
+  ${({textTime}) =>
+    textTime &&
+    css`
+      background-color: '#FDC800';
+      padding: 3px 10px;
+      border-radius: 50px;
+    `}
+`;
