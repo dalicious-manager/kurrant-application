@@ -91,9 +91,8 @@ const BottomSheetSpot = props => {
   };
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
-
-      <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
-        <GestureHandlerRootView style={{flex: 1}}>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <Overlay>
           {snap === 0 && (
             <BalloonMessage
               location={{top: '200px'}}
@@ -106,9 +105,7 @@ const BottomSheetSpot = props => {
             <Background />
           </TouchableWithoutFeedback>
 
-          <BottomSheet
-            snapPoints={snapPoints}
-            onChange={handleSheetChange}>
+          <BottomSheet snapPoints={snapPoints} onChange={handleSheetChange}>
             <BottomSheetTitleView>
               <BottomSheetTitle>{title}</BottomSheetTitle>
               {description !== '' && (

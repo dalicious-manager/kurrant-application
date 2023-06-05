@@ -99,14 +99,14 @@ const Location = ({setInitCenter, setShow, toast}) => {
       console.warn(err);
     }
   };
-  // useEffect(() => {
-  //   console.log('ss');
-  //   if (Platform.OS === 'ios') {
-  //     requestLocationIosPermission();
-  //   } else {
-  //     requestLocationAndroidPermission();
-  //   }
-  // }, []);
+  useEffect(() => {
+    console.log('ss');
+    if (Platform.OS === 'ios') {
+      requestLocationIosPermission();
+    } else {
+      requestLocationAndroidPermission();
+    }
+  }, []);
 
   return (
     <Wrap onPress={userLocation}>

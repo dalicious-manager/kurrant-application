@@ -45,7 +45,7 @@ const ApplySpot = ({route}) => {
   const memo = watch('memo');
 
   const onSaveAddress = () => {
-    navigation.navigate(NotDeliveryPage);
+    //navigation.navigate(NotDeliveryPage);
   };
 
   const data = ['예', '아니요'];

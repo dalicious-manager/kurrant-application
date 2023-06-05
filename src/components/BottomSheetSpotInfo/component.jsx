@@ -88,7 +88,7 @@ const Component = props => {
       key: true,
     },
   ];
-  console.log(data);
+
   // variables
 
   const snapPoints = useMemo(() => ['6%', '30%', '100%'], []);

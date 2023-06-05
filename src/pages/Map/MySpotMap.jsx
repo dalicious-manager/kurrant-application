@@ -28,7 +28,6 @@ import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 
 const WIDTH = Dimensions.get('screen').width;
 
-
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'MAP';
 const MySpotMap = ({route}) => {
@@ -63,24 +62,7 @@ const MySpotMap = ({route}) => {
     }
     setMove(false);
   };
-  const getLocation = useCallback(() => {
-    setInitCenter();
-    Geolocation.getCurrentPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        setInitCenter({latitude: latitude, longitude: longitude});
-      },
-      error => {
-        console.error(error.code, error.message, '에러');
-      },
-      {enableHighAccuracy: true, timeout: 5000, maximumAge: 100},
-    );
-  }, [setInitCenter]);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     getLocation();
-  //   }, 100);
-  // }, [getLocation, setInitCenter]);
+
   useEffect(() => {
     roadAddressRefetch();
   }, [initCenter, roadAddressRefetch]);

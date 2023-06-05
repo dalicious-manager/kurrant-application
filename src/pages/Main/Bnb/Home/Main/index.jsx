@@ -11,6 +11,8 @@ import {
   AppState,
   Platform,
   Linking,
+  Pressable,
+  Text,
 } from 'react-native';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
@@ -49,7 +51,6 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/De
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-
 import MainDim from '../../../../Spots/spotGuide/MainDim';
 import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';

@@ -201,13 +201,11 @@ const RegisterSpotMap = ({route}) => {
             <Button
               onPressEvent={() =>
                 navigation.navigate(ApplySpotPage, {
-                  params: {
-                    address: address,
-                    roadAddress: roadAddress?.roadAddress,
-                    showAddress: showAddress,
-                    center: initCenter,
-                    type: 'registerSpot',
-                  },
+                  address: address,
+                  roadAddress: roadAddress?.roadAddress,
+                  showAddress: showAddress,
+                  center: initCenter,
+                  type: 'registerSpot',
                 })
               }
               label="이 위치에 신청"

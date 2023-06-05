@@ -22,7 +22,7 @@ export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
   const [isUserInfo] = useAtom(isUserInfoAtom);
-  const data = route?.params?.data;
+  const type = route?.params?.type;
 
   const nextUseButton = () => {
     navigation.navigate(SCREEN_NAME);
@@ -35,15 +35,15 @@ const Complete = ({route}) => {
       </CloseButton>
       <Wrap showsVerticalScrollIndicator={false}>
         <Contents>
-          <Title>{alramTitleText(data)}</Title>
-          {alramImage(data)}
-          <Desc>{alramDscText(data)}</Desc>
+          <Title>{alramTitleText(type)}</Title>
+          {alramImage(type)}
+          <Desc>{alramDscText(type)}</Desc>
         </Contents>
       </Wrap>
       <ButtonWrap>
-        <Button label={alramButtonText(data)} />
+        <Button label={alramButtonText(type)} />
         <Pressable onPress={nextUseButton}>
-          <ButtonText>{subButtonText(data)}</ButtonText>
+          <ButtonText>{subButtonText(type)}</ButtonText>
         </Pressable>
       </ButtonWrap>
     </View>

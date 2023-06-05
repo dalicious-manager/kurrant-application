@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React from 'react';
 import {View, Text, Image} from 'react-native';
@@ -7,22 +8,38 @@ import {DeliveryImage} from '../../../assets';
 import useUserInfo from '../../../biz/useUserInfo/hook';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {PAGE_NAME as ModalPage} from '../components/Complete';
+
 export const PAGE_NAME = 'MY_SPOT_DELIVERY';
 const Delivery = ({route}) => {
-  console.log(route, 'route');
+  //console.log(route, 'route');
+  const navigation = useNavigation();
   const mySpotName = route?.params?.mySpotName;
   const address = route?.params?.address;
   const name = route?.params?.name;
+  const addressData = address?.includes(null);
+  const useAddress = addressData ? address.split('null')[0] : address;
 
   const {isUserInfo} = useUserInfo();
   console.log(isUserInfo, 'dfdf');
 
+  const confirmButton = () => {
+    if (isUserInfo?.isMembership) {
+      navigation.navigate(ModalPage, {
+        type: 'mySpotCompleteMembership',
+      });
+    } else {
+      navigation.navigate(ModalPage, {
+        type: 'mySpotCompleteNotMembership',
+      });
+    }
+  };
   return (
     <Wrap>
       <HeaderView>
         <Title>스팟 주소</Title>
-        <SpotName>{mySpotName ?? address}</SpotName>
-        <SpotAddress>{address}</SpotAddress>
+        <SpotName>{mySpotName ?? useAddress}</SpotName>
+        <SpotAddress>{useAddress}</SpotAddress>
       </HeaderView>
       <Border />
       <Contents>
@@ -33,7 +50,7 @@ const Delivery = ({route}) => {
         <Image source={DeliveryImage} style={{width: 339, height: 289}} />
       </Contents>
       <ButtonWrap>
-        <Button label="확인했어요" />
+        <Button label="확인했어요" onPressEvent={confirmButton} />
       </ButtonWrap>
     </Wrap>
   );
