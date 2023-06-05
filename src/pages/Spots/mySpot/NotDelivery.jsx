@@ -11,8 +11,9 @@ import {height} from '../../../theme';
 import {PAGE_NAME as CompletePage} from '../components/Complete';
 
 export const PAGE_NAME = 'MY_SPOT_NOT_DELIVERY';
-const NotDelivery = () => {
+const NotDelivery = ({route}) => {
   const navigation = useNavigation();
+  const type = route?.params.isExist;
 
   const NoAlarm = () => {
     navigation.navigate(CompletePage, {

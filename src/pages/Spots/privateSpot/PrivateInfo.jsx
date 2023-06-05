@@ -9,6 +9,7 @@ import PrivateIcon from '../../../assets/icons/Map/private.svg';
 import BottomModal from '../../../components/BottomModal';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {PAGE_NAME as CompletePage} from '../../Spots/components/Complete';
 
 export const PAGE_NAME = 'PRIVATE_INFO_PAGE';
@@ -56,6 +57,7 @@ const PrivateInfo = () => {
         </Pressable>
       </ButtonWrap>
       <BottomModal
+        closeType={false}
         image={<SongE />}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -65,8 +67,12 @@ const PrivateInfo = () => {
         buttonType1="grey7"
         buttonTitle2={'다른 스팟 타입 신청'}
         buttonType2="yellow"
-        onPressEvent1={() => {}}
-        onPressEvent2={() => {}}
+        onPressEvent1={() => {
+          navigation.navigate(SCREEN_NAME);
+        }}
+        onPressEvent2={() => {
+          navigation.goBack();
+        }}
       />
     </Wrap>
   );

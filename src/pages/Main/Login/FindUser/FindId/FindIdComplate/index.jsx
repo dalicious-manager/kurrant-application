@@ -4,7 +4,9 @@ import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import styled from 'styled-components';
 import {useTheme} from 'styled-components/native';
+
 import GeneralIcon from '~assets/icons/Social/general.svg';
+
 import Typography from '~components/Typography';
 import {formattedDate} from '~utils/dateFormatter';
 

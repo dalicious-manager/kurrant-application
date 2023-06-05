@@ -31,7 +31,7 @@ const Location = ({setInitCenter, setShow, toast}) => {
   const requestLocationIosPermission = async () => {
     try {
       const granted = await Geolocation.requestAuthorization('whenInUse');
-
+      console.log(granted);
       if (granted === 'granted') {
         getLocation();
       } else {
@@ -57,7 +57,7 @@ const Location = ({setInitCenter, setShow, toast}) => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        //console.log(latitude, longitude, 'sffssf');
+        console.log(latitude, longitude, 'sffssf');
         setInitCenter({latitude: latitude, longitude: longitude});
       },
       error => {
@@ -83,7 +83,6 @@ const Location = ({setInitCenter, setShow, toast}) => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(position => {
           const {latitude, longitude} = position.coords;
-
           setInitCenter({
             latitude: latitude,
             longitude: longitude,
@@ -100,16 +99,14 @@ const Location = ({setInitCenter, setShow, toast}) => {
       console.warn(err);
     }
   };
-
-  // useEffect(() => {
-  //   if (Platform.OS === 'ios') {
-  //     requestLocationIosPermission();
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (Platform.OS === 'android') requestLocationAndroidPermission();
-  // }, []);
+  useEffect(() => {
+    console.log('ss');
+    if (Platform.OS === 'ios') {
+      requestLocationIosPermission();
+    } else {
+      requestLocationAndroidPermission();
+    }
+  }, []);
 
   return (
     <Wrap onPress={userLocation}>

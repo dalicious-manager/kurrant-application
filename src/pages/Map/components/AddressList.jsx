@@ -1,23 +1,40 @@
+import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {Text, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../components/Typography';
-import {useNavigation} from '@react-navigation/native';
-import {PAGE_NAME as DetailAddressPage} from '../../Spots/mySpot/DetailAddress';
-import {mapApis} from '../../../api/map';
 
-const AddressList = ({setFocus, data}) => {
+import {mapApis} from '../../../api/map';
+import Typography from '../../../components/Typography';
+import {PAGE_NAME as DetailAddressPage} from '../../Spots/mySpot/DetailAddress';
+import {PAGE_NAME as ApplySpot} from '../../Spots/shareSpot/ApplySpot';
+
+const AddressList = ({setFocus, data, type}) => {
   const navigation = useNavigation();
 
   const onPress = async (name, address, x, y) => {
     const res = await mapApis.getRoadAddress(x, y);
+    const jibunRes = await mapApis.getAddress(address);
+    console.log(name, 'nameㅗㅗㅗㅗㅗㅗ');
+    if (type === 'registerSpot') {
+      navigation.navigate(ApplySpot, {
+        address: name,
+        roadAddress: address,
+        jibunAddress: jibunRes,
+        center: {latitude: Number(y), longitude: Number(x)},
+        zipcode: res.zipcode,
+        showAddress: true,
+      });
+    } else {
+      navigation.navigate(DetailAddressPage, {
+        address: name,
+        roadAddress: address,
+        jibunAddress: jibunRes,
+        center: {latitude: Number(y), longitude: Number(x)},
+        zipcode: res.zipcode,
+        showAddress: true,
+      });
+    }
 
-    navigation.navigate(DetailAddressPage, {
-      address: name,
-      roadAddress: address,
-      center: {latitude: Number(y), longitude: Number(x)},
-      zipcode: res.zipcode,
-      showAddress: true,
-    });
     // console.log(name, address, x, y);
   };
   return (
@@ -37,9 +54,9 @@ const AddressList = ({setFocus, data}) => {
             <Contents
               key={idx}
               lastArr={lastArr}
-              onPress={() =>
-                onPress(el.place_name, el.road_address_name, el.x, el.y)
-              }>
+              onPress={() => {
+                onPress(el.place_name, el.road_address_name, el.x, el.y);
+              }}>
               <Name>{el.place_name}</Name>
               <Address>
                 {el.road_address_name} {el.place_name}

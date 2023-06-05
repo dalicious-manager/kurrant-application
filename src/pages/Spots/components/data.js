@@ -1,9 +1,10 @@
-import {MySpot, ShareSpot, PrivateSpot} from '../../../assets';
+import styled from 'styled-components';
+
+import {MySpot, ShareSpot, PrivateSpot, SpotComplete} from '../../../assets';
+import PlusIcon from '../../../assets/icons/Home/plus.svg';
+import OpenSpot from '../../../assets/icons/Map/openSpot.svg';
 import Songe from '../../../assets/icons/Map/songe.svg';
 import SongeMembership from '../../../assets/icons/Map/songeMembership.svg';
-import OpenSpot from '../../../assets/icons/Map/openSpot.svg';
-import PlusIcon from '../../../assets/icons/Home/plus.svg';
-import styled from 'styled-components';
 import Typography from '../../../components/Typography';
 
 export function modalImage(data) {
@@ -14,6 +15,10 @@ export function modalImage(data) {
       return ShareSpot;
     case 3:
       return PrivateSpot;
+    case 'mySpotCompleteNotMembership':
+      return SpotComplete;
+    case 'mySpotCompleteMembership':
+      return SpotComplete;
   }
 }
 
@@ -69,7 +74,9 @@ export function alramTitleText(data) {
       return `알림 신청 완료!${`\n`}빨리 오픈해서 알려드릴게요`;
     case 2:
       return `최소 주문 금액 없이${`\n`}한 달 동안 배송비 무료!`;
-    case 3:
+    case 'mySpotCompleteMembership':
+      return `스팟 설정 완료!`;
+    case 'mySpotCompleteNotMembership':
       return `스팟 설정 완료!`;
     case 4:
       return `스팟 오픈에 최선을 다할게요`;
@@ -82,7 +89,7 @@ export function alramDscText(data) {
   switch (data) {
     case 1:
       return `님만을 위한${`\n`}마이스팟 개설에 최선을 다할게요`;
-    case 2:
+    case 'mySpotCompleteNotMembership':
       return (
         <Desc>
           <EmphasisDesc>배송비 절감</EmphasisDesc>과 나만을 위한
@@ -101,7 +108,7 @@ export function alramDscText(data) {
           사용하시겠어요?
         </Desc>
       );
-    case 4:
+    case 'mySpotCompleteMembership':
       return `커런트를 이용하기 위한 준비를 마쳤어요.${`\n`}이제 식사를 구매해볼까요?`;
     case 5:
       return (
@@ -132,11 +139,11 @@ export function alramButtonText(data) {
   switch (data) {
     case 1:
       return `홈으로 가기`;
-    case 2:
+    case 'mySpotCompleteNotMembership':
       return `배송비 절약해볼래요`;
     case 3:
       return `다른 타입 스팟 사용하기`;
-    case 4:
+    case 'mySpotCompleteMembership':
       return `식사 구매하기`;
     case 5:
       return `확인했어요`;

@@ -106,8 +106,8 @@ const Page = () => {
   const getToken = () => {
     messaging()
       .getToken()
-      .then(() => {
-        // console.log('push token ' + token);
+
+      .then(token => {
         // if (token) {
         //   saveFcmToken({
         //     token: token,

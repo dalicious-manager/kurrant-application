@@ -12,21 +12,29 @@ export const mapApis = {
     const data = await res.json();
 
     const roadAddress =
-      data.results[0].region?.area1?.name +
-      ' ' +
-      (data.results[0].region?.area2?.name &&
-        data.results[0].region?.area2?.name) +
-      ' ' +
-      (data.results[0].land?.name === undefined
-        ? data.results[0].region?.area3?.name
-        : '') +
-      (data.results[0].land?.name ? data.results[0].land?.name : '') +
-      ' ' +
-      (data.results[0].land?.number1 ? data.results[0].land.number1 : '') +
-      (data.results[0].land.number2 !== ''
-        ? '-' + data.results[0].land?.number2
-        : ' ');
-    const zipcode = data.results[0].land.addition1.value;
+      data?.results &&
+      data?.results?.length > 0 &&
+      data.results[0]?.region?.area1?.name +
+        ' ' +
+        (data.results[0]?.region?.area2?.name &&
+          data.results[0]?.region?.area2?.name) +
+        ' ' +
+        (data?.results[0]?.land
+          ? (data.results[0].land?.name === undefined
+              ? data.results[0]?.region?.area3?.name
+              : '') +
+            (data.results[0].land?.name ? data.results[0].land?.name : '') +
+            ' ' +
+            (data.results[0].land?.number1
+              ? data.results[0].land.number1
+              : '') +
+            (data.results[0].land.number2 !== ''
+              ? '-' + data.results[0].land?.number2
+              : ' ')
+          : '');
+    const zipcode = data.results[0]?.land
+      ? data.results[0].land.addition1.value
+      : '';
 
     return {roadAddress: roadAddress, zipcode: zipcode};
   },
