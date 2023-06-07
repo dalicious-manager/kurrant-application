@@ -72,6 +72,7 @@ const ShareSpotMap = () => {
     if (move) {
       setInitCenter(newCenter);
     }
+
     setZoom(event.zoom);
     setMove(false);
   };
@@ -86,36 +87,13 @@ const ShareSpotMap = () => {
     {latitude: 37.505102, longitude: 127.045989, name: '달리셔스'},
   ];
 
-  const test = () => {
+  const bottomSheetDown = () => {
     bottomSheetRef.current?.snapToIndex(0);
   };
 
   const markerPress = () => {
     bottomSheetRef.current?.snapToIndex(1);
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setInitCenter({
-        latitude: 37.49703,
-        longitude: 127.028191,
-      });
-    }, 500);
-  }, []);
-  // useEffect(() => {
-  //   roadAddressRefetch();
-  // }, [center, initCenter]);
-  // useEffect(() => {
-  //   addressRefetch();
-  // }, [roadAddress, initCenter]);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (paramLocation !== undefined) {
-  //       setInitCenter(paramLocation);
-  //     }
-  //   }, [paramLocation]),
-  // );
 
   useEffect(() => {
     balloonEvent();
@@ -168,6 +146,7 @@ const ShareSpotMap = () => {
             <Image source={SpotIcon} style={{width: 30, height: 29}} />
           </AddSpotButton>
         </AddSpotWrap>
+
         <Pressable
           style={{flex: 1}}
           onPressIn={() => {
@@ -217,6 +196,7 @@ const ShareSpotMap = () => {
             />
           </NaverMapView>
         </Pressable>
+
         {/* <View
             style={{
               position: 'absolute',

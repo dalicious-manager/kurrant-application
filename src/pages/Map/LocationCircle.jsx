@@ -22,11 +22,14 @@ const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
     }
   };
   const userLocation = () => {
-    if (Platform.OS === 'ios') {
-      requestLocationIosPermission();
-    } else {
-      requestLocationAndroidPermission();
-    }
+    setInitCenter();
+    setTimeout(() => {
+      if (Platform.OS === 'ios') {
+        requestLocationIosPermission();
+      } else {
+        requestLocationAndroidPermission();
+      }
+    }, 300);
   };
   const requestLocationIosPermission = async () => {
     try {
@@ -56,7 +59,7 @@ const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        console.log(latitude, longitude, 'sffssf');
+        //console.log(latitude, longitude, 'sffssf');
         setInitCenter({latitude: latitude, longitude: longitude});
         if (setMyLocation)
           setMyLocation({latitude: latitude, longitude: longitude});
@@ -103,6 +106,7 @@ const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
     }
   };
   useEffect(() => {
+
     if (Platform.OS === 'ios') {
       requestLocationIosPermission();
     } else {

@@ -3,38 +3,137 @@ import React from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components';
 
-import {NotDeliveryIcon} from '../../../assets';
+import {NotDeliveryIcon, SpotOpen} from '../../../assets';
 import Close from '../../../assets/icons/Map/close20.svg';
+import useUserInfo from '../../../biz/useUserInfo/hook';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useSetAlramSetting} from '../../../hook/useAlram';
+import {PAGE_NAME as MembershipPage} from '../../../pages/Membership/MembershipIntro';
+import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
 import {PAGE_NAME as CompletePage} from '../components/Complete';
+import {
+  notDeliveryAlarm,
+  notDeliveryNoAlarm,
+  notDeliveryNoAlarmButton,
+} from '../components/data';
+import {PAGE_NAME as SpotTypePage} from '../SpotType';
 
 export const PAGE_NAME = 'MY_SPOT_NOT_DELIVERY';
 const NotDelivery = ({route}) => {
   const navigation = useNavigation();
-  const type = route?.params.isExist;
+  const type = route?.params?.isExist;
+  const isAlarm = route?.params?.isAlarm;
+  const {isUserInfo} = useUserInfo();
+  const spot = isUserInfo?.spotId;
+
+  const {mutateAsync: setAlram} = useSetAlramSetting();
+
+  const buttonType =
+    spot === null && isAlarm === true
+      ? 'noSpot'
+      : spot !== null && isUserInfo.isMembership && isAlarm === true
+      ? 'alramMembership'
+      : spot !== null &&
+        !isUserInfo.isMembership &&
+        isAlarm === true &&
+        'alramNoMembership';
 
   const NoAlarm = () => {
-    navigation.navigate(CompletePage, {
-      data: 1,
+    if (spot !== null) {
+      navigation.navigate(CompletePage, {
+        type: isUserInfo?.isMembership
+          ? 'noAlarmUsedMembership'
+          : 'noAlarmNotUsedMembership',
+      });
+    } else {
+      navigation.navigate(CompletePage, {
+        type: 'noAlramNoSpot',
+      });
+    }
+  };
+
+  const goHome = () => {
+    navigation.navigate(SCREEN_NAME);
+  };
+
+  const goMembershipPage = () => {
+    navigation.navigate(MembershipPage, {
+      isFounders: isUserInfo?.leftFoundersNumber > 0,
     });
+  };
+
+  const settingAlarm = async () => {
+    await setAlram({
+      code: 4001,
+      isActive: true,
+    });
+
+    if (spot !== null) {
+      navigation.navigate(CompletePage, {
+        type: isUserInfo?.isMembership ? 'usedMembership' : 'notUsedMembership',
+      });
+    } else {
+      navigation.navigate(CompletePage, {
+        type: 'noDeliveryNoSpot',
+      });
+    }
   };
   return (
     <Wrap>
-      <CloseButton>
+      <CloseButton onPress={goHome}>
         <Close />
       </CloseButton>
       <Contents>
         <Title>아직 배송 가능 지역이 아니에요</Title>
-        <Image source={NotDeliveryIcon} style={{width: 162, height: 149}} />
-        <Desc>하지만 곧 오픈해드릴게요.{`\n`}오픈시 알림 보내드릴까요?</Desc>
+        {buttonType !== 'noSpot' && (
+          <Title2>
+            알려 주신 곳으로{'\n'}
+            {isUserInfo?.name}님의 스팟 개설에 최선을 다할게요
+          </Title2>
+        )}
+        <Image
+          source={buttonType === 'alramMembership' ? SpotOpen : NotDeliveryIcon}
+          style={{width: 162, height: 149}}
+        />
+        {isAlarm ? notDeliveryAlarm(buttonType) : notDeliveryNoAlarm(isAlarm)}
       </Contents>
       <ButtonWrap>
-        <Button label="알림 받기" />
-        <Pressable onPress={NoAlarm}>
-          <ButtonText>괜찮아요</ButtonText>
-        </Pressable>
+        <Button
+          label={notDeliveryNoAlarmButton(buttonType)}
+          onPressEvent={() => {
+            if (!isAlarm) {
+              settingAlarm();
+            }
+            if (buttonType === 'alramMembership') {
+              goHome();
+            }
+
+            if (buttonType === 'alramNoMembership') {
+              goMembershipPage();
+            }
+            if (buttonType === 'noSpot') {
+              navigation.navigate(SpotTypePage);
+            }
+          }}
+        />
+        {buttonType !== 'alramMembership' && (
+          <Pressable
+            onPress={() => {
+              if (
+                buttonType === 'alramNoMembership' ||
+                buttonType === 'noSpot'
+              ) {
+                navigation.navigate(SCREEN_NAME);
+              }
+              if (!isAlarm) {
+                NoAlarm();
+              }
+            }}>
+            <ButtonText>괜찮아요</ButtonText>
+          </Pressable>
+        )}
       </ButtonWrap>
     </Wrap>
   );
@@ -51,10 +150,6 @@ const Wrap = styled.View`
 const Title = styled(Typography).attrs({text: 'Title02SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
   margin-bottom: 24px;
-`;
-const Desc = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme}) => theme.colors.grey[4]};
-  margin-top: 24px;
 `;
 
 const Contents = styled.View`
@@ -83,4 +178,10 @@ const CloseButton = styled.Pressable`
   position: absolute;
   left: 24px;
   top: 52px;
+`;
+
+const Title2 = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+  margin-bottom: 24px;
+  text-align: center;
 `;

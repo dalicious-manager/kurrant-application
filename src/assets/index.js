@@ -67,3 +67,5 @@ export const MessageTopIcon = require('../assets/images/spot/messageTop.png');
 export const MessageDownIcon = require('../assets/images/spot/messageDown.png');
 export const DeliveryImage = require('../assets/images/spot/deliveryMenu.png');
 export const SpotComplete = require('../assets/images/spot/spotComplete.png');
+export const SongE = require('../assets/images/spot/SongE.png');
+export const SpotOpen = require('../assets/images/spot/spotOpen.png');

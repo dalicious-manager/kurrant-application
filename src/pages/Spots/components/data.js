@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 
-import {MySpot, ShareSpot, PrivateSpot, SpotComplete} from '../../../assets';
+import {
+  MySpot,
+  ShareSpot,
+  PrivateSpot,
+  SpotComplete,
+  SongE,
+  SpotOpen,
+} from '../../../assets';
 import PlusIcon from '../../../assets/icons/Home/plus.svg';
 import OpenSpot from '../../../assets/icons/Map/openSpot.svg';
 import Songe from '../../../assets/icons/Map/songe.svg';
@@ -15,10 +22,6 @@ export function modalImage(data) {
       return ShareSpot;
     case 3:
       return PrivateSpot;
-    case 'mySpotCompleteNotMembership':
-      return SpotComplete;
-    case 'mySpotCompleteMembership':
-      return SpotComplete;
   }
 }
 
@@ -55,100 +58,124 @@ export function modalDscText(data) {
   }
 }
 
+// complete component
 export function alramImage(data) {
-  switch (data) {
-    case 1:
-      return <Songe />;
-    case 2:
-      return <SongeMembership />;
-    case 3:
-      return <OpenSpot />;
-    case 'private':
-      return <Songe />;
+  if (
+    data === 'usedMembership' ||
+    data === 'notUsedMembership' ||
+    data === 'noDeliveryNoSpot' ||
+    data === 'noAlarmNotUsedMembership' ||
+    data === 'noAlarmNotUsedMembership' ||
+    data === 'noAlramNoSpot'
+  ) {
+    return SongE;
+  }
+  if (data === 'noAlarmUsedMembership') {
+    return SpotOpen;
+  }
+  if (
+    data === 'mySpotCompleteNotMembership' ||
+    data === 'mySpotCompleteMembership'
+  ) {
+    return SpotComplete;
   }
 }
 
 export function alramTitleText(data) {
-  switch (data) {
-    case 1:
-      return `알림 신청 완료!${`\n`}빨리 오픈해서 알려드릴게요`;
-    case 2:
-      return `최소 주문 금액 없이${`\n`}한 달 동안 배송비 무료!`;
-    case 'mySpotCompleteMembership':
-      return `스팟 설정 완료!`;
-    case 'mySpotCompleteNotMembership':
-      return `스팟 설정 완료!`;
-    case 4:
-      return `스팟 오픈에 최선을 다할게요`;
-    case 'private':
-      return `알림 신청 완료!`;
+  if (
+    data === 'usedMembership' ||
+    data === 'notUsedMembership' ||
+    data === 'noDeliveryNoSpot'
+  ) {
+    return `알림 신청 완료!${`\n`}빨리 오픈해서 알려드릴게요`;
+  }
+
+  if (
+    data === 'mySpotCompleteMembership' ||
+    data === 'mySpotCompleteNotMembership'
+  ) {
+    return `스팟 설정 완료!`;
+  }
+
+  if (
+    data === 'noAlarmUsedMembership' ||
+    data === 'noAlarmNotUsedMembership' ||
+    data === 'noAlramNoSpot'
+  ) {
+    return `스팟 오픈에 최선을 다할게요`;
   }
 }
 
 export function alramDscText(data) {
-  switch (data) {
-    case 1:
-      return `님만을 위한${`\n`}마이스팟 개설에 최선을 다할게요`;
-    case 'mySpotCompleteNotMembership':
-      return (
-        <Desc>
-          <EmphasisDesc>배송비 절감</EmphasisDesc>과 나만을 위한
-          <EmphasisDesc>음식 추천</EmphasisDesc>을{`\n`}받을 수 있는 방법이
-          있는데 알아보시겠어요?
-        </Desc>
-      );
-    case 3:
-      return (
-        <Desc>
-          스팟 등록이 안되면{`\n`}
-          <EmphasisDesc>서비스 이용에 제한이 있어요</EmphasisDesc>
-          {`\n`}
-          {`\n`}
-          개설 전까지 다른 스팟을{`\n`}
-          사용하시겠어요?
-        </Desc>
-      );
-    case 'mySpotCompleteMembership':
-      return `커런트를 이용하기 위한 준비를 마쳤어요.${`\n`}이제 식사를 구매해볼까요?`;
-    case 5:
-      return (
-        <Desc>
-          <EmphasisDesc>배송비 절감</EmphasisDesc>과 나만을 위한
-          <EmphasisDesc>음식 추천</EmphasisDesc>을{`\n`}받을 수 있는 방법이
-          있는데 알아보시겠어요?
-        </Desc>
-      );
-    case 6:
-      return `개설되면 배송 스팟 선택할때${`\n`}확인할 수 있어요`;
-    case 7:
-      return (
-        <Desc>
-          개설 상황은 <EmphasisDesc>'마이페이지'</EmphasisDesc>에서 확인
-          가능해요
-          {`\n`}
-          {`\n`}개설 되면 <EmphasisDesc>배송 스팟 선택시</EmphasisDesc>
-          {`\n`}확인할 수 있어요
-        </Desc>
-      );
-    case 'private':
-      return `둘러보러 홈으로 이동할까요?${`\n`}아니면 다른 스팟을 사용해보시겠어요?`;
+  if (data === 'usedMembership') {
+    return `님만을 위한${`\n`}마이스팟 개설에 최선을 다할게요`;
+  }
+
+  if (
+    data === 'mySpotCompleteNotMembership' ||
+    data === 'noAlarmNotUsedMembership' ||
+    data === 'notUsedMembership'
+  ) {
+    return (
+      <Desc>
+        <EmphasisDesc>배송비 절감</EmphasisDesc>과 나만을 위한
+        <EmphasisDesc>음식 추천</EmphasisDesc>을{`\n`}받을 수 있는 방법이 있는데
+        알아보시겠어요?
+      </Desc>
+    );
+  }
+
+  if (data === 'noDeliveryNoSpot' || data === 'noAlramNoSpot') {
+    return (
+      <Desc>
+        스팟 등록이 안되면{`\n`}
+        <EmphasisDesc>서비스 이용에 제한</EmphasisDesc>이 있어요
+        {`\n`}
+        {`\n`}
+        개설 전까지 다른 스팟을{`\n`}
+        사용하시겠어요?
+      </Desc>
+    );
+  }
+
+  if (data === 'noAlarmUsedMembership') {
+    return (
+      <Desc>
+        개설 상황은<EmphasisDesc> '마이페이지'</EmphasisDesc>에서 확인 가능해요
+        {`\n`}
+        {`\n`}개설 되면<EmphasisDesc> 배송 스팟 선택시</EmphasisDesc>
+        {`\n`}확인 할 수 있어요
+      </Desc>
+    );
+  }
+
+  if (data === 'mySpotCompleteMembership') {
+    return `커런트를 이용하기 위한 준비를 마쳤어요.${`\n`}이제 식사를 구매해볼까요?`;
   }
 }
 
 export function alramButtonText(data) {
-  switch (data) {
-    case 1:
-      return `홈으로 가기`;
-    case 'mySpotCompleteNotMembership':
-      return `배송비 절약해볼래요`;
-    case 3:
-      return `다른 타입 스팟 사용하기`;
-    case 'mySpotCompleteMembership':
-      return `식사 구매하기`;
-    case 5:
-      return `확인했어요`;
-    case 'private':
-      return `다른 배송 타입 신청`;
+  if (data === 'usedMembership') {
+    return `홈으로 가기`;
+  }
+
+  if (
+    data === 'mySpotCompleteNotMembership' ||
+    data === 'noAlarmNotUsedMembership' ||
+    data === 'notUsedMembership'
+  ) {
+    return `배송비 절약해볼래요`;
+  }
+
+  if (data === 'noDeliveryNoSpot' || data === 'noAlramNoSpot') {
+    return `다른 타입 스팟 사용하기`;
+  }
+
+  if (data === 'mySpotCompleteMembership') {
+    return `식사 구매하기`;
+  }
+  if (data === 'noAlarmUsedMembership') {
+    return `확인했어요`;
   }
 }
 
@@ -156,10 +183,63 @@ export function subButtonText(data) {
   switch (data) {
     case 'private':
       return '둘러보기';
+    case 'noAlarmUsedMembership':
+      return;
+    case 'usedMembership':
+      return;
   }
   return '다음에 할게요';
 }
 
+// NotDelivery component
+export function notDeliveryAlarm(data) {
+  switch (data) {
+    case 'noSpot':
+      return (
+        <Desc>
+          스팟 등록이 안되면{`\n`}
+          <EmphasisDesc>서비스 이용에 제한</EmphasisDesc>이 있어요.{`\n`}
+          {`\n`}개설 전 까지{`\n`}다른 스팟을 사용하시겠어요?
+        </Desc>
+      );
+    case 'alramMembership':
+      return (
+        <Desc>
+          개설 상황은<EmphasisDesc>'마이페이지'</EmphasisDesc>에서 확인가능해요.
+        </Desc>
+      );
+    case 'alramNoMembership':
+      return (
+        <Desc>
+          <EmphasisDesc>배송비 절감</EmphasisDesc>과 나만을 위한
+          <EmphasisDesc> 음식 추천</EmphasisDesc>을{`\n`}받을 수 있는 방법이
+          있는데 알아보시겠어요?
+        </Desc>
+      );
+  }
+}
+
+export function notDeliveryNoAlarm(data) {
+  switch (data) {
+    case false:
+      return (
+        <Desc>하지만 곧 오픈해드릴게요.{`\n`}오픈시 알림 보내드릴까요?</Desc>
+      );
+  }
+}
+
+export function notDeliveryNoAlarmButton(data) {
+  switch (data) {
+    case false:
+      return '알림 받기';
+    case 'noSpot':
+      return '다른 타입 스팟 사용하기';
+    case 'alramMembership':
+      return '홈으로 가기';
+    case 'alramNoMembership':
+      return '배송비 절약해볼래요';
+  }
+}
 const EmphasisDesc = styled(Typography).attrs({text: 'Body05R'})`
   color: ${({theme}) => theme.colors.blue[500]};
   text-align: center;
