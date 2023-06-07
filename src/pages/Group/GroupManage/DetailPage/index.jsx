@@ -47,7 +47,7 @@ const Pages = ({route}) => {
     el => el.supportPrice,
   );
   const {groupId, spotId} = userInfo;
-  const myGroupList = isUserGroupSpotCheck.spotListResponseDtoList.filter(
+  const myGroupList = isUserGroupSpotCheck?.spotListResponseDtoList?.filter(
     el => el.clientId !== groupId,
   );
 

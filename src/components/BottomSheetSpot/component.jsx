@@ -57,7 +57,7 @@ const BottomSheetSpot = props => {
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
-  console.log(snap);
+
   const resetBottomSheet = Animated.timing(panY, {
     toValue: 0,
     duration: 50,
@@ -70,11 +70,9 @@ const BottomSheetSpot = props => {
   });
 
   const handleSheetChange = useCallback(index => {
-    console.log(index);
     setSnap(index);
   }, []);
   const handleSnapPress = useCallback(index => {
-    console.log(index);
     setSnap(index);
   }, []);
 

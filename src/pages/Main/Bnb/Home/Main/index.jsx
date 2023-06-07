@@ -121,7 +121,7 @@ const Pages = () => {
   );
   const [modalVisible, setModalVisible] = useState(false);
   const [showDim, setShowDim] = useAtom(mainDimAtom);
-  console.log(showDim);
+  // console.log(showDim);
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const [appState, setAppState] = useState();
@@ -453,13 +453,15 @@ const Pages = () => {
   };
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
+    console.log(isUserGroupSpotCheck);
     return () => {
       listener.remove();
     };
-  }, []);
+  }, [isUserGroupSpotCheck]);
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
+        console.log('testseet');
         await userGroupSpotCheck();
         await VersionCheck.getLatestVersion().then(latestVersion => {
           const regex = /[^0-9]/g;

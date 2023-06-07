@@ -5,6 +5,8 @@ import styled, {css} from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
 import Typography from '~components/Typography';
 
+import {PointArrow} from '../../../../../components/Icon';
+
 const CoinAnimation = ({isStart, setStart, coinSound}) => {
   const [spinValue, setSpinValue] = useState(new Animated.Value(0));
   const [opacityValue, setOpacityValue] = useState(new Animated.Value(1));
@@ -88,11 +90,23 @@ const CoinAnimation = ({isStart, setStart, coinSound}) => {
             transform: [{translateX: moveValue.x}, {translateY: moveValue.y}],
           },
         ]}>
-        <PointTextBox textTime={textTime}>
-          <Typography text={'CaptionR'} textColor={themeApp.colors.grey[2]}>
-            {textTime ? '+ 80 포인트' : ''}
-          </Typography>
-        </PointTextBox>
+        {textTime ? (
+          <PointTextBox>
+            <PointText
+              style={{
+                backgroundColor: '#FDC800',
+              }}
+              text={'CaptionSB'}
+              textColor={themeApp.colors.grey[2]}>
+              {textTime ? '+ 80 포인트' : ''}
+            </PointText>
+            <ArrowBox>
+              <PointArrow />
+            </ArrowBox>
+          </PointTextBox>
+        ) : (
+          <PointTextBox />
+        )}
         <Animated.Image
           style={[styles.coin, {transform: [{rotateY: spin}]}]}
           source={require('../../../../../assets/images/coin.png')}
@@ -111,12 +125,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   coin: {
-    width: 40,
-    height: 40,
+    width: 45,
+    height: 45,
   },
   coinbox: {
-    width: 150,
-    height: 20,
+    width: 85,
+    height: 75,
     alignItems: 'center',
   },
 });
@@ -124,11 +138,20 @@ const styles = StyleSheet.create({
 export default CoinAnimation;
 
 const PointTextBox = styled.View`
-  ${({textTime}) =>
-    textTime &&
-    css`
-      background-color: '#FDC800';
-      padding: 3px 10px;
-      border-radius: 50px;
-    `}
+  margin-bottom: 5px;
+  min-height: 30px;
+`;
+const PointText = styled(Typography)`
+  padding: 3px 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+`;
+const ArrowBox = styled.View`
+  position: absolute;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  bottom: -3px;
+  z-index: -2;
 `;

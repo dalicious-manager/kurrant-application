@@ -100,7 +100,6 @@ const Pages = () => {
       .filter(element => element);
     setSpotCartData(
       spotCartData.map(food => {
-        console.log(food);
         return {
           ...food,
           cartDailyFoodDtoList: food.cartDailyFoodDtoList.map(f => {
@@ -136,7 +135,6 @@ const Pages = () => {
       .filter(element => element);
     setSpotCartData(
       spotCartData.map(food => {
-        console.log(food);
         return {
           ...food,
           cartDailyFoodDtoList: food.cartDailyFoodDtoList.map(f => {

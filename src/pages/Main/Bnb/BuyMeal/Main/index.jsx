@@ -48,6 +48,7 @@ import BuyMealPage from '../components/BuyMealPage';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {goNextPage, goPrevPage} from '../util/movePage';
+import {foodDeliveryTimeFilter, getTime} from '../util/time';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -65,7 +66,7 @@ const Pages = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
-  const [time, setTime] = useState('11:00');
+  const [time, setTime] = useState('25:00');
   const [modalVisible4, setModalVisible4] = useState(false);
   const [sliderValue, setSliderValue] = useState(1);
   const [nowPage, setNowPage] = useState(1);
@@ -207,7 +208,7 @@ const Pages = ({route}) => {
   const daily = true;
 
   const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.spotId;
-  console.log(userRole);
+  // console.log(userRole);
   const {
     data: dailyfoodData,
     refetch: dailyfoodRefetch,
@@ -422,7 +423,7 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     if (date) dailyfoodRefetch();
-  }, [dailyfoodRefetch, date]);
+  }, [dailyfoodRefetch, date, isUserInfo]);
 
   useEffect(() => {
     let price = null;
@@ -444,36 +445,67 @@ const Pages = ({route}) => {
     const diningTimes = dailyfoodData?.data.diningTypes.filter(
       v => v.diningType === sliderValue + 1,
     );
-
-    const getTime = async () => {
-      const localTime = JSON.parse(await getStorage('diningTime'));
-      if (localTime?.time) setTime(localTime.time);
-      else {
-        setTime(diningTimes[0].times[0]);
-        const times = {
-          diningType: diningTime.diningType,
-          time: diningTimes[0].times[0],
-        };
-        setStorage('diningTime', JSON.stringify(times));
-      }
+    const timeSetting = async () => {
+      const times = await getTime(
+        isUserInfo,
+        dailyfoodData?.data.diningTypes,
+        sliderValue,
+      );
+      setTime(times);
     };
+    if (isLunchFood || isMorningFood || isDinnerFood) timeSetting();
     if (diningTimes?.length > 0) {
       setDiningTime(
         diningTimes[0].times.map(t => {
-          return {id: time.diningType + t, value: t};
+          return {id: t, value: t};
         }),
       );
-      getTime();
     }
   }, [
-    sliderValue,
-    dailyfoodData?.data,
-    date,
+    dailyfoodData?.data.diningTypes,
+    dailyfoodData?.data.supportPrice,
+    isUserInfo,
     setDiningTime,
+    sliderValue,
     time.diningType,
-    diningTime.diningType,
   ]);
+  useEffect(() => {
+    if (
+      diningTime.length > 0 &&
+      time !== '25:00' &&
+      timeRef?.current &&
+      diningRef?.current
+    ) {
+      const getTimeIndex = diningTime.findIndex(v => {
+        return v.value === time;
+      });
+      if (getTimeIndex !== -1)
+        timeRef.current.scrollToIndex({
+          animated: true,
+          index: getTimeIndex,
+        });
+    }
 
+    const lunchData = dailyfoodData?.data.dailyFoodDtos.filter(
+      x => x.diningType === 2,
+    );
+    const morningData = dailyfoodData?.data.dailyFoodDtos.filter(
+      x => x.diningType === 1,
+    );
+    const dinnerData = dailyfoodData?.data.dailyFoodDtos.filter(
+      x => x.diningType === 3,
+    );
+    foodDeliveryTimeFilter(lunchData, time, setLunch);
+    foodDeliveryTimeFilter(morningData, time, setMorning);
+    foodDeliveryTimeFilter(dinnerData, time, setDinner);
+  }, [
+    diningTime,
+    time,
+    dailyfoodData?.data.dailyFoodDtos,
+    setLunch,
+    setMorning,
+    setDinner,
+  ]);
   useEffect(() => {
     setMorning(
       dailyfoodData?.data.dailyFoodDtos.filter(x => x.diningType === 1),
@@ -631,6 +663,15 @@ const Pages = ({route}) => {
             <TimeWrap
               ref={timeRef}
               showsHorizontalScrollIndicator={false}
+              onScrollToIndexFailed={info => {
+                const wait = new Promise(resolve => setTimeout(resolve, 500));
+                wait.then(() => {
+                  timeRef.current?.scrollToIndex({
+                    index: info.index,
+                    animated: true,
+                  });
+                });
+              }}
               horizontal={true}
               data={diningTime}
               renderItem={({item, index}) => {
@@ -638,13 +679,15 @@ const Pages = ({route}) => {
                   return (
                     <TimeBoxlast
                       isSelect={time === item.value}
-                      onPress={() => {
-                        setTime(item.value);
-                        const times = {
-                          diningType: diningTime.diningType,
-                          time: item.value,
-                        };
-                        setStorage('diningTime', JSON.stringify(times));
+                      onPress={async () => {
+                        const selectTime = await getTime(
+                          isUserInfo,
+                          dailyfoodData?.data.diningTypes,
+                          sliderValue,
+                          item.value,
+                        );
+                        console.log(selectTime);
+                        setTime(selectTime);
                         timeRef.current.scrollToIndex({
                           animated: true,
                           index: index,
@@ -665,13 +708,14 @@ const Pages = ({route}) => {
                 return (
                   <TimeBox
                     isSelect={time === item.value}
-                    onPress={() => {
-                      setTime(item.value);
-                      const times = {
-                        diningType: diningTime.diningType,
-                        time: item.value,
-                      };
-                      setStorage('diningTime', JSON.stringify(times));
+                    onPress={async () => {
+                      const selectTime = await getTime(
+                        isUserInfo,
+                        dailyfoodData?.data.diningTypes,
+                        sliderValue,
+                        item.value,
+                      );
+                      setTime(selectTime);
                       timeRef.current.scrollToIndex({
                         animated: true,
                         index: index,

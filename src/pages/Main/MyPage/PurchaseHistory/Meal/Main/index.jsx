@@ -159,12 +159,6 @@ const Pages = () => {
       const [starts, ends] = dateArray();
       setStartDate(starts);
       setEndDate(ends);
-      // const req = {
-      //   startDate: formattedWeekDate(starts),
-      //   endDate: formattedWeekDate(ends),
-      //   orderType: 1,
-      // };
-      // purchaseHistory(req);
     } else {
       setMealPurchase([]);
     }
@@ -252,6 +246,7 @@ const Pages = () => {
                 />
               );
             })}
+            <BottomView />
           </ScrollViewBox>
         ) : (
           <NothingContainer>
@@ -347,7 +342,10 @@ const Container = styled.View`
 const ScrollViewBox = styled(ScrollView)`
   flex: 1;
 `;
-
+const BottomView = styled.View`
+  width: 100%;
+  height: 28px;
+`;
 const Bridge = styled.View`
   margin: 0px 4px;
 `;

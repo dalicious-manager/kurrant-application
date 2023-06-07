@@ -17,7 +17,6 @@ const Pages = ({route}) => {
   const {alarm} = params;
   const {alarmLookup, alarmSetting, setAlarm, setAgree} = useUserMe();
   const navigation = useNavigation();
-  console.log(alarm);
   const onSetAlarm = async () => {
     await alarmSetting({
       isMarketingAlarmAgree: !(

@@ -57,7 +57,7 @@ const useFoodDaily = () => {
       setMorning(res.data.dailyFoodDtos.filter(x => x.diningType === 1));
       setLunch(res.data.dailyFoodDtos.filter(x => x.diningType === 2));
       setDinner(res.data.dailyFoodDtos.filter(x => x.diningType === 3));
-      setSupportPrices(res.data.supportPrice);
+      // setSupportPrices(res.data.supportPrice);
       setIsFetchingDone(true);
       return res.data.diningTypes;
     } catch (err) {
