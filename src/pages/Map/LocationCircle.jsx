@@ -58,7 +58,6 @@ const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
         const {latitude, longitude} = position.coords;
         console.log(latitude, longitude, 'sffssf');
         setInitCenter({latitude: latitude, longitude: longitude});
-        console.log(setMyLocation, 'testset');
         if (setMyLocation)
           setMyLocation({latitude: latitude, longitude: longitude});
       },
