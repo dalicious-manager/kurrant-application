@@ -8,4 +8,4 @@ export const userLocationAtom = atomWithReset({
   longitude: 127.028191,
 });
 
-export const mainDimAtom = atomWithReset(true);
+export const mainDimAtom = atomWithReset(false);

@@ -82,7 +82,7 @@ const MySpotMap = ({route}) => {
       setMapHeight(height);
     });
   };
-  if (!initCenter || initCenter.latitude === 0 || !roadAddress) {
+  if (!roadAddress) {
     return (
       <View
         style={{
@@ -188,6 +188,7 @@ const MySpotMap = ({route}) => {
                   showAddress: showAddress,
                   center: initCenter,
                   zipcode: roadAddress?.zipcode,
+                  jibunAddress: address,
                 })
               }
               label="이 위치로 주소 설정"

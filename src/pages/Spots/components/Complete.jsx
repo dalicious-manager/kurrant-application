@@ -15,33 +15,64 @@ import Close from '../../../assets/icons/Map/close20.svg';
 import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {PAGE_NAME as MembershipIntroPageName} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
-
+import {PAGE_NAME as BuyMealPageName} from '../../Main/Bnb/BuyMeal/Main';
 export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
   const [isUserInfo] = useAtom(isUserInfoAtom);
   const type = route?.params?.type;
-
+  console.log(type);
   const nextUseButton = () => {
     navigation.navigate(SCREEN_NAME);
   };
 
+  const buyMealButton = () => {
+    navigation.navigate(BuyMealPageName);
+  };
+  const membershipButton = () => {
+    navigation.navigate(MembershipIntroPageName, {
+      isFounders: isUserInfo?.leftFoundersNumber > 0,
+    });
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <CloseButton>
+      <CloseButton onPress={nextUseButton}>
         <Close />
       </CloseButton>
       <Wrap showsVerticalScrollIndicator={false}>
         <Contents>
           <Title>{alramTitleText(type)}</Title>
-          {alramImage(type)}
-          <Desc>{alramDscText(type)}</Desc>
+          <Image source={alramImage(type)} />
+          <Desc>
+            {type === 'usedMembership' && isUserInfo?.name}
+            {alramDscText(type)}
+          </Desc>
         </Contents>
       </Wrap>
       <ButtonWrap>
-        <Button label={alramButtonText(type)} />
+        <Button
+          icon={type === 'mySpotCompleteMembership' && 'plus'}
+          label={alramButtonText(type)}
+          onPressEvent={() => {
+            if (
+              type === 'mySpotCompleteNotMembership' ||
+              type === 'noAlarmNotUsedMembership' ||
+              type === 'notUsedMembership'
+            ) {
+              membershipButton();
+            }
+            if (type === 'noAlarmUsedMembership') {
+              nextUseButton();
+            }
+            if (type === 'mySpotCompleteMembership') {
+              buyMealButton();
+            }
+          }}
+        />
         <Pressable onPress={nextUseButton}>
           <ButtonText>{subButtonText(type)}</ButtonText>
         </Pressable>

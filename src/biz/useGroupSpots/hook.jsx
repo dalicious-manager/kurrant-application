@@ -45,13 +45,13 @@ const useGroupSpots = () => {
       setUserGroupSpotCheck(res.data);
       return res;
     } catch (err) {
-      Alert.alert('그룹/스팟', err.toString()?.replace('error: ', ''), [
-        {
-          text: '확인',
-          onPress: () => {},
-          style: 'cancel',
-        },
-      ]);
+      // Alert.alert('그룹/스팟', err.toString()?.replace('error: ', ''), [
+      //   {
+      //     text: '확인',
+      //     onPress: () => {},
+      //     style: 'cancel',
+      //   },
+      // ]);
     }
   };
 

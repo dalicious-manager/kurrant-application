@@ -76,7 +76,6 @@ const Pages = () => {
   const [isVisible, setIsVisible] = useState(true);
   const weekly = useAtomValue(weekAtom);
   const {isUserInfo, userInfo} = useUserInfo();
-
   const currentVersion = VersionCheck.getCurrentVersion();
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
@@ -121,7 +120,6 @@ const Pages = () => {
   );
   const [modalVisible, setModalVisible] = useState(false);
   const [showDim, setShowDim] = useAtom(mainDimAtom);
-  console.log(showDim);
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const [appState, setAppState] = useState();
@@ -497,10 +495,17 @@ const Pages = () => {
   );
 
   useEffect(() => {
-    if (!showDim) {
+    if (isUserInfo?.spotId === null && !showDim) {
       setModalVisible(true);
     }
   }, [showDim]);
+
+  useEffect(() => {
+    if (isUserInfo?.spotId === null) {
+      setShowDim(true);
+    }
+  }, [isUserInfo?.spotId]);
+
   if (!isUserInfo) {
     return <SkeletonUI />;
   }
@@ -722,7 +727,7 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
-        data={isUserGroupSpotCheck.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}

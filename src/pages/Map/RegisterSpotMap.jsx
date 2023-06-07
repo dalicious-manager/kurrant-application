@@ -49,7 +49,7 @@ const RegisterSpotMap = ({route}) => {
   const {data: address, refetch: addressRefetch} = useGetAddress(
     roadAddress && roadAddress.roadAddress,
   );
-  console.log(address, '999999');
+
   const changAddress = () => {
     setShowAddress(prev => !prev);
   };
@@ -63,24 +63,24 @@ const RegisterSpotMap = ({route}) => {
     setMove(false);
   };
 
-  const getLocation = useCallback(() => {
-    setInitCenter();
-    Geolocation.getCurrentPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        setInitCenter({latitude: latitude, longitude: longitude});
-      },
-      error => {
-        console.error(error.code, error.message, '에러');
-      },
-      {enableHighAccuracy: true, timeout: 5000, maximumAge: 100},
-    );
-  }, [setInitCenter]);
-  useEffect(() => {
-    setTimeout(() => {
-      getLocation();
-    }, 100);
-  }, [getLocation, setInitCenter]);
+  // const getLocation = useCallback(() => {
+  //   setInitCenter();
+  //   Geolocation.getCurrentPosition(
+  //     position => {
+  //       const {latitude, longitude} = position.coords;
+  //       setInitCenter({latitude: latitude, longitude: longitude});
+  //     },
+  //     error => {
+  //       console.error(error.code, error.message, '에러');
+  //     },
+  //     {enableHighAccuracy: true, timeout: 5000, maximumAge: 100},
+  //   );
+  // }, [setInitCenter]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     getLocation();
+  //   }, 100);
+  // }, [getLocation, setInitCenter]);
   useEffect(() => {
     roadAddressRefetch();
   }, [initCenter, roadAddressRefetch]);

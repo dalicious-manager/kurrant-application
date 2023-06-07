@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {Dimensions, Pressable, View, Text, Image} from 'react-native';
+import {Dimensions, Pressable, View, Text, Image, Platform} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NaverMapView, {Marker, Circle} from 'react-native-nmap';
@@ -70,7 +70,10 @@ const ShareSpotMap = () => {
 
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
-    setCenter(newCenter);
+    if (move) {
+      setCenter(newCenter);
+    }
+
     //setInitCenter(newCenter);
     setZoom(event.zoom);
     setMove(false);
@@ -86,36 +89,13 @@ const ShareSpotMap = () => {
     {latitude: 37.505102, longitude: 127.045989, name: '달리셔스'},
   ];
 
-  const test = () => {
+  const bottomSheetDown = () => {
     bottomSheetRef.current?.snapToIndex(0);
   };
 
   const markerPress = () => {
     bottomSheetRef.current?.snapToIndex(1);
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setInitCenter({
-        latitude: 37.49703,
-        longitude: 127.028191,
-      });
-    }, 500);
-  }, []);
-  // useEffect(() => {
-  //   roadAddressRefetch();
-  // }, [center, initCenter]);
-  // useEffect(() => {
-  //   addressRefetch();
-  // }, [roadAddress, initCenter]);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (paramLocation !== undefined) {
-  //       setInitCenter(paramLocation);
-  //     }
-  //   }, [paramLocation]),
-  // );
 
   useEffect(() => {
     balloonEvent();
@@ -166,47 +146,54 @@ const ShareSpotMap = () => {
             <Image source={SpotIcon} style={{width: 30, height: 29}} />
           </AddSpotButton>
         </AddSpotWrap>
-
-        <NaverMapView
-          onMapClick={() => test()}
-          scaleBar={false}
-          zoomControl={false}
-          center={{...initCenter, zoom: 18}}
-          style={{width: '100%', height: '100%'}}
-          onCameraChange={handleCameraChange}>
-          {spot0.map((el, idx) => {
-            return (
+        {initCenter && (
+          <Pressable
+            style={{flex: 1}}
+            onPressIn={() => {
+              if (Platform.OS === 'ios') setMove(true);
+            }}>
+            <NaverMapView
+              onMapClick={() => bottomSheetDown()}
+              scaleBar={false}
+              zoomControl={false}
+              center={{...initCenter, zoom: 18}}
+              style={{width: '100%', height: '100%'}}
+              onCameraChange={handleCameraChange}>
+              {spot0.map((el, idx) => {
+                return (
+                  <Marker
+                    onClick={e => {
+                      e.stopPropagation();
+                      setTab(el.name);
+                      markerPress();
+                      setModalVisible(true);
+                    }}
+                    onPress={e => {
+                      e.stopPropagation();
+                      setTab(el.name);
+                      markerPress();
+                      setModalVisible(true);
+                    }}
+                    key={idx}
+                    coordinate={el}
+                    width={43}
+                    height={43}
+                    image={
+                      tab === el.name
+                        ? require('./icons/selectSpot.png')
+                        : require('./icons/shareSpotMarker.png')
+                    }
+                  />
+                );
+              })}
               <Marker
-                onClick={e => {
-                  e.stopPropagation();
-                  setTab(el.name);
-                  markerPress();
-                  setModalVisible(true);
-                }}
-                onPress={e => {
-                  e.stopPropagation();
-                  setTab(el.name);
-                  markerPress();
-                  setModalVisible(true);
-                }}
-                key={idx}
-                coordinate={el}
-                width={43}
-                height={43}
-                image={
-                  tab === el.name
-                    ? require('./icons/selectSpot.png')
-                    : require('./icons/shareSpotMarker.png')
-                }
+                image={MarkerIcon}
+                coordinate={initCenter}
+                style={{width: 36, height: 36}}
               />
-            );
-          })}
-          <Marker
-            image={MarkerIcon}
-            coordinate={initCenter}
-            style={{width: 36, height: 36}}
-          />
-        </NaverMapView>
+            </NaverMapView>
+          </Pressable>
+        )}
         {/* <View
             style={{
               position: 'absolute',
