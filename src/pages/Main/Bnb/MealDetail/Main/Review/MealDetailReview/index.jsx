@@ -75,6 +75,8 @@ const Component = ({imageLocation, foodName}) => {
 
   // 상품 상세 리뷰 키워드
 
+  const [selectedKeyword, setSelectedKeyword] = useState('');
+
   const [url, setUrl] = useState(
     // `/dailyfoods/${dailyFoodId}/review?sort=0&page=${page}&limit=${limit}`,
     `/dailyfoods/${dailyFoodId}/review?sort=0`,
@@ -89,11 +91,6 @@ const Component = ({imageLocation, foodName}) => {
     starRatingCounts,
     reviewKeyword,
   } = useGetMealDetailReview(url, dailyFoodId);
-
-  useEffect(() => {
-    console.log('whfkwhkfwhk');
-    console.log(reviewKeyword);
-  }, [reviewKeyword]);
 
   useEffect(() => {
     // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
@@ -241,10 +238,19 @@ const Component = ({imageLocation, foodName}) => {
               renderItem={({item, index}) => {
                 return (
                   <ButtonPressable
-                    isClicked={false}
+                    onPress={() => {
+                      if (selectedKeyword === item) {
+                        setSelectedKeyword('');
+                      } else {
+                        setSelectedKeyword(item);
+                      }
+                    }}
+                    isClicked={selectedKeyword === item}
                     isFirst={index === 0}
                     isLast={index === sampleData1.length - 1}>
-                    <ButtonText isClicked={false}>{item}</ButtonText>
+                    <ButtonText isClicked={selectedKeyword === item}>
+                      {item}
+                    </ButtonText>
                   </ButtonPressable>
                 );
               }}
