@@ -70,11 +70,10 @@ const Component = ({imageLocation, foodName}) => {
   const [isOnlyPhoto, setIsOnlyPhoto] = useState(false);
 
   // 별점 필터(starFilter)
-  // starFilter : 없음, 1,2,3,4,5
+
   const [rateSelected, setRateSelected] = useState([]);
 
   // 상품 상세 리뷰 키워드
-
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
   const [url, setUrl] = useState(
@@ -83,8 +82,27 @@ const Component = ({imageLocation, foodName}) => {
   );
 
   useEffect(() => {
-    setUrl(buildCustomUrl(dailyFoodId, orderFilter, isOnlyPhoto, rateSelected));
-  }, [dailyFoodId, orderFilter, isOnlyPhoto, rateSelected, setUrl]);
+    console.log(selectedKeyword);
+  }, [selectedKeyword]);
+
+  useEffect(() => {
+    setUrl(
+      buildCustomUrl(
+        dailyFoodId,
+        orderFilter,
+        isOnlyPhoto,
+        selectedKeyword,
+        rateSelected,
+      ),
+    );
+  }, [
+    dailyFoodId,
+    orderFilter,
+    isOnlyPhoto,
+    rateSelected,
+    selectedKeyword,
+    setUrl,
+  ]);
 
   const {
     getInfiniteQuery: {data, hasNextPage, fetchNextPage, refetch, isFetching},
@@ -193,15 +211,6 @@ const Component = ({imageLocation, foodName}) => {
 
   return (
     <Container>
-      {/* <Pressable
-        onPress={() => {
-          if (hasNextPage) {
-            fetchNextPage();
-          }
-        }}>
-        <Text>랄랄ㄹ라라라ㅏ라ㅏ</Text>
-      </Pressable> */}
-
       <Wrap1>
         <TitleWrap>
           <ReviewCount>리뷰({totalReview})</ReviewCount>
@@ -223,7 +232,6 @@ const Component = ({imageLocation, foodName}) => {
         </StarRatingWrap>
 
         <Wrap3>
-          {/* {Array.isArray(sampleData1) && sampleData1.length > 0 && ( */}
           {Array.isArray(reviewKeyword) && reviewKeyword.length > 0 && (
             <FlatFlatList
               data={reviewKeyword}

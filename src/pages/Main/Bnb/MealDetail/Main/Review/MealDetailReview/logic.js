@@ -2,6 +2,7 @@ export const buildCustomUrl = (
   dailyFoodId,
   orderFilter = 0,
   isOnlyPhoto = undefined,
+  selectedKeyword,
   rateSelected = [],
 ) => {
   const basicUrl = [`/dailyfoods/${dailyFoodId}/review`];
@@ -26,6 +27,13 @@ export const buildCustomUrl = (
 
   if (rateSelected.length > 0) {
     basicUrl.push(`&starFilter=${rateSelected.join(',')}`);
+  }
+
+  //
+  if (selectedKeyword) {
+    basicUrl.push(`&keywordFilter=${selectedKeyword}`);
+  } else {
+    basicUrl.push(`&keywordFilter=`);
   }
 
   // console.log('basicUrl');
