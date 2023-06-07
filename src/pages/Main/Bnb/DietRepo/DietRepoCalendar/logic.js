@@ -23,6 +23,11 @@ export const makeDietRepoCalendarDateArr = date => {
   const firstArrayDate = new Date(
     date.getFullYear(),
     date.getMonth(),
+    date.getDate() - day - 8,
+  );
+  const secondArrayDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
     date.getDate() - day - 1,
   );
 
@@ -31,12 +36,19 @@ export const makeDietRepoCalendarDateArr = date => {
     date.getMonth(),
     date.getDate() + 7 - day,
   );
+  const fourthArrayDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() + 14 - day,
+  );
 
   // return thirdArrayDate
 
   return [
     [...calcWeekArr(firstArrayDate)],
+    [...calcWeekArr(secondArrayDate)],
     [...calcWeekArr(date)],
     [...calcWeekArr(thirdArrayDate)],
+    [...calcWeekArr(fourthArrayDate)],
   ];
 };

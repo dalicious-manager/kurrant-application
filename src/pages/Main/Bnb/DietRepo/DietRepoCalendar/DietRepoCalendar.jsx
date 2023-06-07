@@ -120,8 +120,8 @@ const DietRepoCalendar = ({
 
   useEffect(() => {
     setTimeout(() => {
-      pager.current.setPage(1);
-      setChk(1);
+      pager.current.setPage(2);
+      setChk(2);
       setIsMount(false);
     }, 100);
   }, []);
@@ -135,13 +135,17 @@ const DietRepoCalendar = ({
   //   console.log('chk ' + chk);
   // }, [chk]);
 
+  useEffect(() => {
+    console.log(makeDietRepoCalendarDateArr(calendarDate));
+  }, [calendarDate]);
+
   return (
     <React.Fragment>
       {BooleanValue ? <Button pager={pager} daily chk={chk} /> : <></>}
 
       <PagerViewWrap
         ref={pager}
-        initialPage={1}
+        initialPage={2}
         pageMargin={22}
         onPageScroll={e => {}}
         onPageSelected={e => {
@@ -158,14 +162,14 @@ const DietRepoCalendar = ({
             //뒤로가기
 
             setCalendarDate(calcDate(-7, calendarDate));
-            pager.current.setPageWithoutAnimation(1);
-            setChk(1);
+            pager.current.setPageWithoutAnimation(2);
+            setChk(2);
           } else if (chk < position) {
             // 앞으로 가기
 
             setCalendarDate(calcDate(7, calendarDate));
-            pager.current.setPageWithoutAnimation(1);
-            setChk(1);
+            pager.current.setPageWithoutAnimation(2);
+            setChk(2);
           } else {
           }
 
