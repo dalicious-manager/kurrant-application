@@ -29,7 +29,7 @@ export const makeDietRepoCalendarDateArr = date => {
   const thirdArrayDate = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate() + 6 - day + 1,
+    date.getDate() + 7 - day,
   );
 
   // return thirdArrayDate

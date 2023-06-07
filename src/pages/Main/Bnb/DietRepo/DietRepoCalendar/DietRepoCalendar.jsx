@@ -95,29 +95,45 @@ const DietRepoCalendar = ({
     setCurrentPress(day);
   };
 
-  const [isMount, setIsMount] = useState(false);
+  const [isMount, setIsMount] = useState(true);
+
+  // useEffect(() => {
+  //   setIsMount(true);
+  // }, []);
+
+  // useEffect(() => {
+  //   // '첫 렌더시 해당 날짜로 위치하게 하기'
+
+  //   console.log('isMount');
+  //   console.log(isMount);
+
+  //   if (isMount) {
+  //     setTimeout(() => {
+  //       pager.current.setPage(1);
+  //       setChk(1);
+  //       setIsMount(false);
+  //     }, 100);
+  //   }
+
+  //   setCurrentPress(selectDate);
+  //   }, [selectDate, weekly, isMount, setIsMount]);
 
   useEffect(() => {
-    setIsMount(true);
+    setTimeout(() => {
+      pager.current.setPage(1);
+      setChk(1);
+      setIsMount(false);
+    }, 100);
   }, []);
 
   useEffect(() => {
-    // '첫 렌더시 해당 날짜로 위치하게 하기'
+    console.log('isMount');
+    console.log(isMount);
+  }, [isMount]);
 
-    if (isMount) {
-      setTimeout(() => {
-        pager.current.setPage(1);
-        setChk(1);
-        setIsMount(false);
-      }, 100);
-    }
-
-    setCurrentPress(selectDate);
-  }, [selectDate, weekly, isMount, setIsMount]);
-
-  useEffect(() => {
-    console.log('chk ' + chk);
-  }, [chk]);
+  // useEffect(() => {
+  //   console.log('chk ' + chk);
+  // }, [chk]);
 
   return (
     <React.Fragment>
@@ -131,32 +147,51 @@ const DietRepoCalendar = ({
         onPageSelected={e => {
           const {position} = e.nativeEvent;
           console.log('스크롤 중임 ' + position);
-          //   return;
-          // }
+
+          // 지금 문제가 첫 렌더링때 이게 되버림
+
+          // 뒤로 가기 , 앞으로 가기
+
+          if (isMount) return false;
 
           if (chk > position) {
-            // 뒤로 가기
-            console.log('뒤로가기');
-            console.log(chk);
-            console.log(position);
-            console.log(toStringByFormatting(calendarDate));
-            console.log('------');
+            //뒤로가기
+
             setCalendarDate(calcDate(-7, calendarDate));
+            pager.current.setPageWithoutAnimation(1);
+            setChk(1);
           } else if (chk < position) {
-            console.log('앞으로가기');
-            console.log(chk);
-            console.log(position);
-            console.log(toStringByFormatting(calendarDate));
-            console.log('------');
+            // 앞으로 가기
+
             setCalendarDate(calcDate(7, calendarDate));
+            pager.current.setPageWithoutAnimation(1);
+            setChk(1);
           } else {
-            console.log('chk === position');
-            console.log(chk);
-            console.log(position);
-            console.log(toStringByFormatting(calendarDate));
           }
-          pager.current.setPageWithoutAnimation(1);
-          setChk(1);
+
+          // if (chk > position) {
+          //   // 뒤로 가기
+          //   console.log('뒤로가기');
+          //   console.log(chk);
+          //   console.log(position);
+          //   console.log(toStringByFormatting(calendarDate));
+          //   console.log('------');
+          //   setCalendarDate(calcDate(-7, calendarDate));
+          // } else if (chk < position) {
+          //   console.log('앞으로가기');
+          //   console.log(chk);
+          //   console.log(position);
+          //   console.log(toStringByFormatting(calendarDate));
+          //   console.log('------');
+          //   setCalendarDate(calcDate(7, calendarDate));
+          // } else {
+          //   console.log('chk === position');
+          //   console.log(chk);
+          //   console.log(position);
+          //   console.log(toStringByFormatting(calendarDate));
+          // }
+          // pager.current.setPageWithoutAnimation(1);
+          // setChk(1);
         }}
         margins={margin}>
         {[
