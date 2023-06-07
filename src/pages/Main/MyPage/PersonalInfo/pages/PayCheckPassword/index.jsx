@@ -49,7 +49,6 @@ export default function Password({route}) {
   };
   const onSubmit = async () => {
     if (params?.isFirst) {
-      console.log(params?.isFirst);
       inputRef.current.blur();
       navigation.navigate(PayCheckPasswordCheckPageName, {
         password: state,
@@ -78,7 +77,6 @@ export default function Password({route}) {
           });
         }
         if (isCard === 3) {
-          console.log(state, '기본 카드 등록');
           navigation.navigate(DefaultPaymentManage, {
             params: {isRegist: true},
           });

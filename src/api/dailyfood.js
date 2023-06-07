@@ -3,7 +3,6 @@ import {fetchJson} from '../utils/fetch';
 
 export const dailyfoodApis = {
   dailyfood: async (spotId, selectedDate, userRole) => {
-    console.log(spotId, selectedDate, userRole, 'ROLE_GUEST');
     if (userRole === 'ROLE_GUEST') {
       await mSleep(100);
       return {

@@ -92,7 +92,6 @@ const Pages = () => {
         toggleEvent: name => alarmAgree(name),
       },
     ]);
-    console.log(result.data);
     setAlarm({
       marketingAgreedDateTime: result.data.marketingAgreedDateTime,
       isMarketingInfoAgree: result.data.marketingAgree,

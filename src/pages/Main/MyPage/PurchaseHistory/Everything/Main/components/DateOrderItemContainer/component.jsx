@@ -284,11 +284,11 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                           />
                         </ButtonContainer>
                       )}
-                      {order.dailyFoodStatus === 6 && (
+                      {/* {order.dailyFoodStatus === 6 && (
                         <ButtonContainer>
                           <ButtonMealCancel label={'취소불가'} />
                         </ButtonContainer>
-                      )}
+                      )} */}
                     </DateOrderItemContent>
                   </DateOrderItemContentBox>
                 </DateOrderItemBox>

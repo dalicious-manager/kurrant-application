@@ -122,6 +122,12 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                       <Typography text="Title04SB" textColor={statusColor()}>
                         {formattedMealFoodStatus(order.orderStatus)}
                       </Typography>
+                      <Typography
+                        style={{marginLeft: 5, alignSelf: 'center'}}
+                        text="CaptionR"
+                        textColor={themeApp.colors.grey[5]}>
+                        주문 마감 • 취소 불가
+                      </Typography>
                     </StatusText>
                     {order?.cancelDate && (
                       <Typography
@@ -252,11 +258,11 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                           />
                         </ButtonContainer>
                       )}
-                      {order.dailyFoodStatus === 6 && (
+                      {/* {order.dailyFoodStatus === 6 && (
                         <ButtonContainer>
                           <ButtonMealCancel label={'취소불가'} />
                         </ButtonContainer>
-                      )}
+                      )} */}
                     </DateOrderItemContent>
                   </DateOrderItemContentBox>
                 </DateOrderItemBox>
@@ -347,7 +353,10 @@ const StatusBox = styled.View`
   align-items: center;
 `;
 const StatusText = styled.View`
+  flex-direction: row;
   margin-right: 5px;
+  align-items: center;
+  background-color: red;
 `;
 
 const DateDetailBox = styled.View`

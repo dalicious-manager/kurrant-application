@@ -15,7 +15,7 @@ import Icon from '../../assets/icons/Map/locationCircle.svg';
 import Arrow from '../../assets/icons/Map/rightArrow.svg';
 import Typography from '../../components/Typography';
 
-const Location = ({setInitCenter, setShow, toast}) => {
+const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
   const openAppSettings = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:root');
@@ -34,7 +34,6 @@ const Location = ({setInitCenter, setShow, toast}) => {
   const requestLocationIosPermission = async () => {
     try {
       const granted = await Geolocation.requestAuthorization('whenInUse');
-      console.log(granted);
       if (granted === 'granted') {
         getLocation();
       } else {
@@ -62,6 +61,8 @@ const Location = ({setInitCenter, setShow, toast}) => {
         const {latitude, longitude} = position.coords;
         //console.log(latitude, longitude, 'sffssf');
         setInitCenter({latitude: latitude, longitude: longitude});
+        if (setMyLocation)
+          setMyLocation({latitude: latitude, longitude: longitude});
       },
       error => {
         console.error(error.code, error.message, '에러');
@@ -90,6 +91,8 @@ const Location = ({setInitCenter, setShow, toast}) => {
             latitude: latitude,
             longitude: longitude,
           });
+          if (setMyLocation)
+            setMyLocation({latitude: latitude, longitude: longitude});
         });
       } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
         setShow(true);
@@ -103,7 +106,7 @@ const Location = ({setInitCenter, setShow, toast}) => {
     }
   };
   useEffect(() => {
-    // console.log('ss');
+
     if (Platform.OS === 'ios') {
       requestLocationIosPermission();
     } else {

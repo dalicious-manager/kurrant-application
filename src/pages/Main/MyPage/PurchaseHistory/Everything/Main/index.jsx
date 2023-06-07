@@ -234,7 +234,6 @@ const Pages = () => {
             {allPurchase?.data ? (
               <ScrollViewBox>
                 {allPurchase?.data?.map((v, i) => {
-                  console.log(v, 'testsett');
                   return (
                     <DateOrderItemContainer
                       key={`${v.orderDate}${i}`}
@@ -245,6 +244,7 @@ const Pages = () => {
                     />
                   );
                 })}
+                <BottomView />
               </ScrollViewBox>
             ) : (
               <NothingContainer>
@@ -344,7 +344,10 @@ const Container = styled.View`
 `;
 const ScrollViewBox = styled(ScrollView)`
   flex: 1;
-  margin-bottom: 50px;
+`;
+const BottomView = styled.View`
+  width: 100%;
+  height: 28px;
 `;
 const Bridge = styled.View`
   margin: 0px 4px;

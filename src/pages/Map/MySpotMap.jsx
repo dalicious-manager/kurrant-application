@@ -113,6 +113,7 @@ const MySpotMap = ({route}) => {
       <MapView ref={mapRef} onLayout={handleLayout}>
         <LocationButtonWrap>
           <Location
+            initCenter={initCenter}
             setInitCenter={setInitCenter}
             setShow={setShow}
             toast={toast}
@@ -126,24 +127,31 @@ const MySpotMap = ({route}) => {
             }}
           />
         </InfoView>
-        {initCenter && (
-          <Pressable
+        <Pressable
+          style={{flex: 1}}
+          onPressIn={() => {
+            if (Platform.OS === 'ios') setMove(true);
+          }}>
+          <NaverMapView
+            onTouch={() => {
+              if (Platform.OS === 'android') setMove(true);
+            }}
+            scaleBar={false}
+            zoomControl={false}
+            center={
+              initCenter
+                ? {...initCenter, zoom: 18}
+                : {
+                    latitude: 37.49703,
+                    longitude: 127.028191,
+                    zoom: 18,
+                  }
+            }
             style={{flex: 1}}
-            onPressIn={() => {
-              if (Platform.OS === 'ios') setMove(true);
-            }}>
-            <NaverMapView
-              onTouch={() => {
-                if (Platform.OS === 'android') setMove(true);
-              }}
-              scaleBar={false}
-              zoomControl={false}
-              center={{...initCenter, zoom: 18}}
-              style={{flex: 1}}
-              onCameraChange={handleCameraChange}
-            />
-          </Pressable>
-        )}
+            onCameraChange={handleCameraChange}
+          />
+        </Pressable>
+
         <View
           style={{
             position: 'absolute',

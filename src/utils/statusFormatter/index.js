@@ -15,7 +15,7 @@ export function formattedMealFoodStatus(data) {
     case 5:
       return '결제완료';
     case 6:
-      return '배송대기';
+      return '상품준비중';
     case 7:
       return '취소';
     case 8:
@@ -49,7 +49,7 @@ export function formattedCatorFoodStatus(data) {
     case 5:
       return '결제완료';
     case 6:
-      return '배송대기';
+      return '상품준비중';
     case 7:
       return '주문취소';
     case 8:

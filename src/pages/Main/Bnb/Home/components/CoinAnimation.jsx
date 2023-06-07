@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Animated, Vibration} from 'react-native';
 import Sound from 'react-native-sound';
+import styled, {css} from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
 import Typography from '~components/Typography';
+
+import {PointArrow} from '../../../../../components/Icon';
 
 const CoinAnimation = ({isStart, setStart, coinSound}) => {
   const [spinValue, setSpinValue] = useState(new Animated.Value(0));
@@ -87,12 +90,23 @@ const CoinAnimation = ({isStart, setStart, coinSound}) => {
             transform: [{translateX: moveValue.x}, {translateY: moveValue.y}],
           },
         ]}>
-        <Typography
-          style={{backgroundColor: textTime && 'white'}}
-          text={'Body06SB'}
-          textColor={themeApp.colors.blue[500]}>
-          {textTime ? '파운더스 포인트 적립!' : ' '}
-        </Typography>
+        {textTime ? (
+          <PointTextBox>
+            <PointText
+              style={{
+                backgroundColor: '#FDC800',
+              }}
+              text={'CaptionSB'}
+              textColor={themeApp.colors.grey[2]}>
+              {textTime ? '+ 80 포인트' : ''}
+            </PointText>
+            <ArrowBox>
+              <PointArrow />
+            </ArrowBox>
+          </PointTextBox>
+        ) : (
+          <PointTextBox />
+        )}
         <Animated.Image
           style={[styles.coin, {transform: [{rotateY: spin}]}]}
           source={require('../../../../../assets/images/coin.png')}
@@ -111,14 +125,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   coin: {
-    width: 40,
-    height: 40,
+    width: 45,
+    height: 45,
   },
   coinbox: {
-    width: 150,
-    height: 20,
+    width: 85,
+    height: 75,
     alignItems: 'center',
   },
 });
 
 export default CoinAnimation;
+
+const PointTextBox = styled.View`
+  margin-bottom: 5px;
+  min-height: 30px;
+`;
+const PointText = styled(Typography)`
+  padding: 3px 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+`;
+const ArrowBox = styled.View`
+  position: absolute;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  bottom: -3px;
+  z-index: -2;
+`;
