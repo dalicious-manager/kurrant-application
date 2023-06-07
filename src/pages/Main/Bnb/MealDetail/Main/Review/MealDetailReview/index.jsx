@@ -24,8 +24,7 @@ import {
 } from '../../../../../../../components/Icon';
 import {useEffect, useState} from 'react';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
-import BottomModalMultipleSample from '~components/Review/BottomModalMultipleSample';
-// import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
+
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import {Shadow} from 'react-native-shadow-2';
 import useGetMealDetailReview from './useGetMealDetailReview';
@@ -60,11 +59,6 @@ const Component = ({imageLocation, foodName}) => {
   const [reviewWrite, setReviewWrite] = useState(0);
   const [isLast, setIsLast] = useState(false);
 
-  // 필터 값들 모으기
-
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(2);
-
   // 베스트순,최신순,리뷰순 (sort)
   // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
 
@@ -93,7 +87,13 @@ const Component = ({imageLocation, foodName}) => {
   const {
     getInfiniteQuery: {data, hasNextPage, fetchNextPage, refetch, isFetching},
     starRatingCounts,
+    reviewKeyword,
   } = useGetMealDetailReview(url, dailyFoodId);
+
+  useEffect(() => {
+    console.log('whfkwhkfwhk');
+    console.log(reviewKeyword);
+  }, [reviewKeyword]);
 
   useEffect(() => {
     // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
@@ -153,6 +153,10 @@ const Component = ({imageLocation, foodName}) => {
   }, [data?.pages]);
 
   const [showSelectList, setShowSelectList] = useState(false);
+
+  useEffect(() => {
+    console.log(foodId);
+  }, [foodId]);
 
   // best, latest, photo, rating, like
 
@@ -222,9 +226,10 @@ const Component = ({imageLocation, foodName}) => {
         </StarRatingWrap>
 
         <Wrap3>
-          {Array.isArray(sampleData1) && sampleData1.length > 0 && (
+          {/* {Array.isArray(sampleData1) && sampleData1.length > 0 && ( */}
+          {Array.isArray(reviewKeyword) && reviewKeyword.length > 0 && (
             <FlatFlatList
-              data={sampleData1}
+              data={reviewKeyword}
               scrollEnabled={true}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}

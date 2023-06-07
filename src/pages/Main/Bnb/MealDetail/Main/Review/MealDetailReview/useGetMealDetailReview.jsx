@@ -6,8 +6,9 @@ import {useAtom} from 'jotai';
 const useGetMealDetailReview = (url, dailyFoodId) => {
   const [isError, setIsError] = useState(false);
 
-  // 리뷰 별점 갯수 조회
   const [starRatingCounts, setStarRatingCounts] = useState({});
+
+  const [reviewKeyword, setReviewKeyword] = useState([]);
 
   const getInfiniteQuery = useInfiniteQuery(
     ['review', 'GetMealDetailReviewInfinite'],
@@ -33,10 +34,20 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
     setStarRatingCounts(response.data);
   });
 
+  useQuery(['review', 'keyword'], async ({queryKey}) => {
+    const response = await fetchJson(
+      `/dailyfoods/${dailyFoodId}/review/keyword`,
+      'GET',
+    );
+
+    setReviewKeyword(response.data);
+  });
+
   return {
     getInfiniteQuery,
     isError,
     starRatingCounts,
+    reviewKeyword,
   };
 };
 
