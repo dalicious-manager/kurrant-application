@@ -28,7 +28,7 @@ import BottomModalMultipleSample from '~components/Review/BottomModalMultipleSam
 // import BottomModalMultipleSample from '../../../../../../../components/Review/BottomModalMultipleSample';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import {Shadow} from 'react-native-shadow-2';
-import useGetMealDetailReview from '../useGetMealDetailReview/useGetMealDetailReview';
+import useGetMealDetailReview from './useGetMealDetailReview';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
 import {useAtom} from 'jotai';
 import {
@@ -40,9 +40,6 @@ import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/Create
 
 // const Component = ({dailyFoodId}) => {
 const Component = ({imageLocation, foodName}) => {
-  console.log(imageLocation);
-  // console.log(foodName);
-
   const theme = useTheme();
 
   const navigation = useNavigation();
@@ -355,6 +352,7 @@ const Component = ({imageLocation, foodName}) => {
                 return (
                   <Card
                     key={item.reviewId}
+                    dailyFoodId={dailyFoodId}
                     id={item.reviewId}
                     userName={item.userName}
                     item={item}

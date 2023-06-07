@@ -28,11 +28,13 @@ import {SkinnyArrowDown} from '~components/Icon';
 import {css} from 'styled-components/native';
 import {ThumbsUp} from '../../../../../../../../components/Icon';
 import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
+import useMealDetailReviewMutation from '../useMealDetailReviewMutation';
 
 // 상세페이지 카드
 
 const Component = ({
   id,
+  dailyFoodId,
   item,
   userName,
   writtenDate,
@@ -52,7 +54,7 @@ const Component = ({
 
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
-  // const {getWrittenReview} = useWrittenReview();
+  const {pressLike} = useMealDetailReviewMutation();
 
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
@@ -118,7 +120,13 @@ const Component = ({
         </RowWrap>
 
         <EditWrap>
-          <LikePressable onPress={() => {}}>
+          <LikePressable
+            onPress={() => {
+              pressLike({
+                dailyFoodId,
+                reviewId: id,
+              });
+            }}>
             <EditText isLike={likeNum}>도움이 되요 </EditText>
             <ThumbsUp
               width="14px"
