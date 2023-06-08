@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components';
 
@@ -13,15 +13,20 @@ import {
 } from './data';
 import Close from '../../../assets/icons/Map/close20.svg';
 import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
+import {alarmSetting} from '../../../biz/useUserMe/Fetch';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
 import {PAGE_NAME as BuyMealPageName} from '../../Main/Bnb/BuyMeal/Main';
+import {PAGE_NAME as SpotTypePage} from '../SpotType';
+
 export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
+  const [press, setPress] = useState(false);
+
   const [isUserInfo] = useAtom(isUserInfoAtom);
   const type = route?.params?.type;
   console.log(type);
@@ -38,6 +43,9 @@ const Complete = ({route}) => {
     });
   };
 
+  const noDeliveryNoSpotNextUseButton = () => {
+    setPress(true);
+  };
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <CloseButton onPress={nextUseButton}>
@@ -45,23 +53,35 @@ const Complete = ({route}) => {
       </CloseButton>
       <Wrap showsVerticalScrollIndicator={false}>
         <Contents>
-          <Title>{alramTitleText(type)}</Title>
-          <Image source={alramImage(type)} />
+          <Title>
+            {press
+              ? alramTitleText('noDeliveryNoSpotNextUse')
+              : alramTitleText(type)}
+          </Title>
+          {press ? alramImage('noDeliveryNoSpotNextUse') : alramImage(type)}
           <Desc>
             {type === 'usedMembership' && isUserInfo?.name}
-            {alramDscText(type)}
+            {press
+              ? alramDscText('noDeliveryNoSpotNextUse')
+              : alramDscText(type)}
           </Desc>
         </Contents>
       </Wrap>
       <ButtonWrap>
         <Button
           icon={type === 'mySpotCompleteMembership' && 'plus'}
-          label={alramButtonText(type)}
+          label={
+            press
+              ? alramButtonText('noDeliveryNoSpotNextUse')
+              : alramButtonText(type)
+          }
           onPressEvent={() => {
             if (
               type === 'mySpotCompleteNotMembership' ||
               type === 'noAlarmNotUsedMembership' ||
-              type === 'notUsedMembership'
+              type === 'notUsedMembership' ||
+              type === 'noSpot' ||
+              (type === 'noDeliveryNoSpot' && press)
             ) {
               membershipButton();
             }
@@ -71,9 +91,17 @@ const Complete = ({route}) => {
             if (type === 'mySpotCompleteMembership') {
               buyMealButton();
             }
+            if (type === 'noDeliveryNoSpot' && !press) {
+              navigation.navigate(SpotTypePage);
+            }
           }}
         />
-        <Pressable onPress={nextUseButton}>
+        <Pressable
+          onPress={
+            type === 'noDeliveryNoSpot' && !press
+              ? noDeliveryNoSpotNextUseButton
+              : nextUseButton
+          }>
           <ButtonText>{subButtonText(type)}</ButtonText>
         </Pressable>
       </ButtonWrap>

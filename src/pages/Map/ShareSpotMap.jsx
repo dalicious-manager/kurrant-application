@@ -31,6 +31,7 @@ import Button from '../../components/Button';
 import Toast from '../../components/Toast';
 import Typography from '../../components/Typography';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
+import {useGetShareSpotList} from '../../hook/useShareSpot';
 import {width, height} from '../../theme';
 import {myLocationAtom, userLocationAtom} from '../../utils/store';
 import {PAGE_NAME as RegisterSpotMapPage} from '../Map/RegisterSpotMap';
@@ -40,7 +41,10 @@ import ShareSpotList from '../Spots/shareSpot/ShareSpotList';
 
 // latitude : 위도 (y) ,longitude :경도 (x)
 export const PAGE_NAME = 'SHARE_SPOT_MAP';
-const ShareSpotMap = () => {
+const ShareSpotMap = ({route}) => {
+  const paramsLocation = route?.params?.location;
+  const paramsId = route?.params?.id;
+
   const toast = Toast();
   const navigation = useNavigation();
   const bottomSheetRef = useRef(null);
@@ -59,13 +63,14 @@ const ShareSpotMap = () => {
   const [zoom, setZoom] = useState(18);
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
   const [myLocation, setMyLocation] = useAtom(myLocationAtom); // 기초 좌표 강남역
-  // const {data: roadAddress, refetch: roadAddressRefetch} = useGetRoadAddress(
-  //   center ? center?.longitude : initCenter.longitude,
-  //   center ? center?.latitude : initCenter.latitude,
-  // );
-  // const {data: address, refetch: addressRefetch} = useGetAddress(
-  //   roadAddress?.roadAddress,
-  // );
+
+  const {
+    data: groupList,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+    isFetching,
+  } = useGetShareSpotList(myLocation.latitude, myLocation.longitude);
 
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
@@ -98,6 +103,16 @@ const ShareSpotMap = () => {
   useEffect(() => {
     balloonEvent();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (paramsLocation !== undefined) {
+        setTab(paramsId);
+        setInitCenter(paramsLocation);
+        setModalVisible(true);
+      }
+    }, [paramsLocation, setInitCenter, paramsId]),
+  );
 
   return (
     <Wrap>
@@ -153,7 +168,7 @@ const ShareSpotMap = () => {
             if (Platform.OS === 'ios') setMove(true);
           }}>
           <NaverMapView
-            onMapClick={() => test()}
+            onMapClick={() => bottomSheetDown()}
             onTouch={() => {
               if (Platform.OS === 'android') setMove(true);
             }}
@@ -162,33 +177,41 @@ const ShareSpotMap = () => {
             center={{...initCenter, zoom: 18}}
             style={{width: '100%', height: '100%'}}
             onCameraChange={handleCameraChange}>
-            {spot0.map((el, idx) => {
-              return (
-                <Marker
-                  onClick={e => {
-                    e.stopPropagation();
-                    setTab(el.name);
-                    markerPress();
-                    setModalVisible(true);
-                  }}
-                  onPress={e => {
-                    e.stopPropagation();
-                    setTab(el.name);
-                    markerPress();
-                    setModalVisible(true);
-                  }}
-                  key={idx}
-                  coordinate={el}
-                  width={43}
-                  height={43}
-                  image={
-                    tab === el.name
-                      ? require('./icons/selectSpot.png')
-                      : require('./icons/shareSpotMarker.png')
-                  }
-                />
-              );
-            })}
+            {groupList?.pages?.map(v =>
+              v.items.map(el => {
+                const center = {
+                  latitude: Number(el.latitude),
+                  longitude: Number(el.longitude),
+                };
+
+                return (
+                  <Marker
+                    onClick={e => {
+                      e.stopPropagation();
+                      setTab(el.id);
+                      markerPress();
+                      setModalVisible(true);
+                    }}
+                    onPress={e => {
+                      e.stopPropagation();
+                      setTab(el.id);
+                      markerPress();
+                      setModalVisible(true);
+                    }}
+                    key={el.id}
+                    coordinate={{...center}}
+                    width={43}
+                    height={43}
+                    image={
+                      tab === el.id
+                        ? require('./icons/selectSpot.png')
+                        : require('./icons/shareSpotMarker.png')
+                    }
+                  />
+                );
+              }),
+            )}
+
             <Marker
               image={MarkerIcon}
               coordinate={myLocation}
@@ -196,23 +219,6 @@ const ShareSpotMap = () => {
             />
           </NaverMapView>
         </Pressable>
-
-        {/* <View
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              justifyContent: 'center',
-              zIndex: 1,
-              top: '50%',
-            }}>
-            <FastImage
-              source={MarkerIcon}
-              style={{
-                width: 36,
-                height: 36,
-              }}
-            />
-          </View> */}
       </MapView>
 
       {modalVisible && (
