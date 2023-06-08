@@ -27,14 +27,13 @@ import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
 
 import Card from './Card';
 
-// const Component = ({dailyFoodId}) => {
-const Component = ({imageLocation, foodName}) => {
+const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const theme = useTheme();
 
   const navigation = useNavigation();
 
   // 샘플 대에터
-  const dailyFoodId = 40827;
+  // const dailyFoodId = 40827;
 
   const [hasNextPageReviewDetail, setHasNextPageReviewDetail] = useAtom(
     hasNextPageReviewDetailAtom,
@@ -66,14 +65,7 @@ const Component = ({imageLocation, foodName}) => {
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
-  const [url, setUrl] = useState(
-    // `/dailyfoods/${dailyFoodId}/review?sort=0&page=${page}&limit=${limit}`,
-    `/dailyfoods/${dailyFoodId}/review?sort=0`,
-  );
-
-  useEffect(() => {
-    console.log(selectedKeyword);
-  }, [selectedKeyword]);
+  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
 
   useEffect(() => {
     setUrl(
@@ -405,15 +397,12 @@ const Container = styled.View`
   padding: 16px 24px;
   width: 100%;
   position: relative;
-  /* border: 1px solid black; */
-  /* background-color: bisque; */
 `;
 
 const TitleWrap = styled.View`
   width: 100%;
   display: flex;
   flex-direction: row;
-  /* justify-content: space-between; */
 `;
 
 const Wrap1 = styled.View`
