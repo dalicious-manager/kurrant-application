@@ -1,12 +1,4 @@
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  Platform,
-  Pressable,
-  Text,
-  View,
-} from 'react-native';
+import {ActivityIndicator, Dimensions, View} from 'react-native';
 import styled, {useTheme} from 'styled-components';
 import Typography from '~components/Typography';
 import {
@@ -330,7 +322,9 @@ const Component = ({imageLocation, foodName}) => {
 
                   setShowSelectList(false);
                 }}>
-                <SelectorText>베스트 순</SelectorText>
+                <SelectorText isClicked={orderFilter === 0}>
+                  베스트 순
+                </SelectorText>
               </FilterSelecterPressable>
               <FilterSelecterPressable
                 isTopBorder={true}
@@ -339,7 +333,9 @@ const Component = ({imageLocation, foodName}) => {
 
                   setShowSelectList(false);
                 }}>
-                <SelectorText>최신 순</SelectorText>
+                <SelectorText isClicked={orderFilter === 1}>
+                  최신 순
+                </SelectorText>
                 <></>
               </FilterSelecterPressable>
               <FilterSelecterPressable
@@ -349,7 +345,9 @@ const Component = ({imageLocation, foodName}) => {
 
                   setShowSelectList(false);
                 }}>
-                <SelectorText>리뷰 추천순</SelectorText>
+                <SelectorText isClicked={orderFilter === 2}>
+                  리뷰 추천순
+                </SelectorText>
               </FilterSelecterPressable>
             </FilterSelecterWrap>
           </ShadowWrap>
@@ -524,7 +522,8 @@ const ButtonText = styled(Typography).attrs({text: 'Body06R'})`
 
 const WrapWrapView = styled.View`
   position: absolute;
-  top: 215px;
+  /* top: 215px; */
+  top: 175px;
   left: 30px;
   z-index: 1;
 `;
