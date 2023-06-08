@@ -8,7 +8,7 @@ const calcWeekArr = date => {
     const nextDate = new Date(
       date.getFullYear(),
       date.getMonth(),
-      date.getDate() - day + i,
+      date.getDate() - day + i + 1,
     );
 
     // yo.push(toStringByFormatting(nextDate));
