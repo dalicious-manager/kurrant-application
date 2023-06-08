@@ -89,7 +89,7 @@ const Pages = () => {
   //   console.log(spotId);
   // }, [date]);
 
-  const handlePress = () => {
+  const handleHistoryPress = () => {
     navigation.navigate(DietRepoHistoryPageName);
   };
 
@@ -220,6 +220,8 @@ const Pages = () => {
         data={FlatListSampleData}
         scrollEnabled={true}
         renderItem={({item}) => {
+          console.log('item 값 확인하기 ');
+          console.log(item);
           return (
             <FlatListView style={{paddingLeft: 24, paddingRight: 24}}>
               <FlatListView2>
@@ -227,6 +229,7 @@ const Pages = () => {
 
                 <AddMealPressable
                   onPress={() => {
+                    // navigation.navigate(DietRepoAddDietPageName, {date: });
                     navigation.navigate(DietRepoAddDietPageName);
                   }}>
                   <AddMealText>식사 추가</AddMealText>
@@ -265,7 +268,7 @@ const Pages = () => {
           text={'BottomButtonSB'}
           // disabled={!clickAvaliable}
           onPressEvent={() => {
-            handlePress();
+            handleHistoryPress();
           }}
         />
       </ButtonWrapper>

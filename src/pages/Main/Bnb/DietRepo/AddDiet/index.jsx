@@ -10,9 +10,12 @@ import Typography from '~components/Typography';
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddDiet';
 
 import {PAGE_NAME as DietRepoAddMyDietPageName} from '~pages/Main/Bnb/DietRepo/AddMyDiet';
+import useGetDietRepo from '../useGetDietRepo';
 
 const Pages = ({route}) => {
   const navigation = useNavigation();
+
+  // const yo = useGetDietRepo(undefined, '2023-05-30', 2);
 
   const handlePress = () => {
     navigation.navigate(DietRepoAddMyDietPageName);

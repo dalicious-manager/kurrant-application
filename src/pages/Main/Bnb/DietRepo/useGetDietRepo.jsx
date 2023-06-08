@@ -23,6 +23,9 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
         //   `/users/me/daily/report/order?date=2023-05-30&diningType=2`,
         'GET',
       );
+      console.log('shlfhslhfls');
+      console.log(addMealDate);
+      console.log(addMealDiningType);
 
       console.log(response.data);
     },
