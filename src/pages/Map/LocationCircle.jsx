@@ -22,14 +22,11 @@ const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
     }
   };
   const userLocation = () => {
-    setInitCenter();
-    setTimeout(() => {
-      if (Platform.OS === 'ios') {
-        requestLocationIosPermission();
-      } else {
-        requestLocationAndroidPermission();
-      }
-    }, 300);
+    if (Platform.OS === 'ios') {
+      requestLocationIosPermission();
+    } else {
+      requestLocationAndroidPermission();
+    }
   };
   const requestLocationIosPermission = async () => {
     try {
@@ -106,7 +103,6 @@ const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
     }
   };
   useEffect(() => {
-
     if (Platform.OS === 'ios') {
       requestLocationIosPermission();
     } else {

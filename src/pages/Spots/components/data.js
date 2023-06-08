@@ -1,12 +1,18 @@
+import React from 'react';
+import {Image} from 'react-native';
 import styled from 'styled-components';
 
 import {
+  SpotTypeMySpot,
+  SpotTypeShareSpot,
+  SpotTypePrivateSpot,
   MySpot,
   ShareSpot,
   PrivateSpot,
   SpotComplete,
   SongE,
   SpotOpen,
+  MembershipSongE,
 } from '../../../assets';
 import PlusIcon from '../../../assets/icons/Home/plus.svg';
 import OpenSpot from '../../../assets/icons/Map/openSpot.svg';
@@ -17,11 +23,11 @@ import Typography from '../../../components/Typography';
 export function modalImage(data) {
   switch (data) {
     case 1:
-      return MySpot;
+      return SpotTypeMySpot;
     case 2:
-      return ShareSpot;
+      return SpotTypeShareSpot;
     case 3:
-      return PrivateSpot;
+      return SpotTypePrivateSpot;
   }
 }
 
@@ -68,16 +74,19 @@ export function alramImage(data) {
     data === 'noAlarmNotUsedMembership' ||
     data === 'noAlramNoSpot'
   ) {
-    return SongE;
+    return <Image source={SongE} style={{width: 178, height: 149}} />;
   }
   if (data === 'noAlarmUsedMembership') {
-    return SpotOpen;
+    return <Image source={SpotOpen} style={{width: 339, height: 215}} />;
   }
   if (
     data === 'mySpotCompleteNotMembership' ||
     data === 'mySpotCompleteMembership'
   ) {
-    return SpotComplete;
+    return <Image source={SpotComplete} style={{width: 162, height: 149}} />;
+  }
+  if (data === 'noSpot' || data === 'noDeliveryNoSpotNextUse') {
+    return <Image source={MembershipSongE} style={{width: 225, height: 122}} />;
   }
 }
 
@@ -104,6 +113,10 @@ export function alramTitleText(data) {
   ) {
     return `스팟 오픈에 최선을 다할게요`;
   }
+
+  if (data === 'noSpot' || data === 'noDeliveryNoSpotNextUse') {
+    return `최소 주문 금액 없이${`\n`}한 달 동안 배송비 무료!`;
+  }
 }
 
 export function alramDscText(data) {
@@ -114,26 +127,31 @@ export function alramDscText(data) {
   if (
     data === 'mySpotCompleteNotMembership' ||
     data === 'noAlarmNotUsedMembership' ||
-    data === 'notUsedMembership'
+    data === 'notUsedMembership' ||
+    data === 'noSpot' ||
+    data === 'noDeliveryNoSpotNextUse'
   ) {
     return (
       <Desc>
         <EmphasisDesc>배송비 절감</EmphasisDesc>과 나만을 위한
-        <EmphasisDesc>음식 추천</EmphasisDesc>을{`\n`}받을 수 있는 방법이 있는데
-        알아보시겠어요?
+        <EmphasisDesc> 음식 추천</EmphasisDesc>을{`\n`}받을 수 있는 방법이
+        있는데 알아보시겠어요?
       </Desc>
     );
   }
 
-  if (data === 'noDeliveryNoSpot' || data === 'noAlramNoSpot') {
+  if (
+    data === 'noDeliveryNoSpot' ||
+    data === 'noAlramNoSpot' ||
+    data === 'noDeliveryNoSpotNextUse'
+  ) {
     return (
       <Desc>
         스팟 등록이 안되면{`\n`}
         <EmphasisDesc>서비스 이용에 제한</EmphasisDesc>이 있어요
         {`\n`}
         {`\n`}
-        개설 전까지 다른 스팟을{`\n`}
-        사용하시겠어요?
+        개설 전까지{`\n`}다른 스팟을 사용하시겠어요?
       </Desc>
     );
   }
@@ -162,7 +180,9 @@ export function alramButtonText(data) {
   if (
     data === 'mySpotCompleteNotMembership' ||
     data === 'noAlarmNotUsedMembership' ||
-    data === 'notUsedMembership'
+    data === 'notUsedMembership' ||
+    data === 'noSpot' ||
+    data === 'noDeliveryNoSpotNextUse'
   ) {
     return `배송비 절약해볼래요`;
   }
@@ -205,7 +225,8 @@ export function notDeliveryAlarm(data) {
     case 'alramMembership':
       return (
         <Desc>
-          개설 상황은<EmphasisDesc>'마이페이지'</EmphasisDesc>에서 확인가능해요.
+          개설 상황은<EmphasisDesc> '마이페이지'</EmphasisDesc>에서
+          확인가능해요.
         </Desc>
       );
     case 'alramNoMembership':

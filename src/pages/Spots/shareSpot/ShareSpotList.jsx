@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useLayoutEffect, useState} from 'react';
-import {ScrollView, Text, View, Pressable} from 'react-native';
+import {useAtom} from 'jotai';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {ScrollView, Text, View, Pressable, FlatList} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styled from 'styled-components';
 
@@ -12,15 +13,41 @@ import MealIcon from '../../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../../assets/icons/Spot/user.svg';
 import BottomSheetFilter from '../../../components/BottomSheetSpotFilter';
 import Typography from '../../../components/Typography';
+import {useGetShareSpotList} from '../../../hook/useShareSpot';
 import {width, height} from '../../../theme';
+import {diningTypeString} from '../../../utils/diningType';
+import {myLocationAtom} from '../../../utils/store';
+import {PAGE_NAME as ShareSpotMapPage} from '../../Map/ShareSpotMap';
 
 export const PAGE_NAME = 'SHARE_SPOT_LIST';
 const ShareSpotList = ({setShowList, showList}) => {
   const navigation = useNavigation();
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const [touch, setTouch] = useState([0, 1, 2]);
   const [touchInfo, setTouchInfo] = useState([0, 1]);
+
+  const [myLocation, setMyLocation] = useAtom(myLocationAtom); // 기초 좌표 강남역
+
+  const goToMap = (lat, long, id) => {
+    navigation.navigate(ShareSpotMapPage, {
+      location: {latitude: Number(lat), longitude: Number(long)},
+      id: id,
+    });
+  };
+  const {
+    data: groupList,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetShareSpotList(myLocation.latitude, myLocation.longitude);
+
+  const dataList = groupList?.pages;
+  const onEndReached = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
 
   return (
     <Wrap>
@@ -42,74 +69,51 @@ const ShareSpotList = ({setShowList, showList}) => {
           <CategoryIcon />
         </CategoryButton>
       </CategoryWrap>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Contents>
-          <SpotNameText>스파크플러스 선릉점</SpotNameText>
-          <DiningTypeWrap>
-            <MealIcon />
-            <DiningTypeText>아침・점심・저녁</DiningTypeText>
-            <Body06RText>운영중</Body06RText>
-          </DiningTypeWrap>
-          <UserViewWrap>
-            <UserIcon />
-            <Body06RText style={{marginLeft: 12}}>152명</Body06RText>
-          </UserViewWrap>
-          <Border />
-        </Contents>
-        <Contents>
-          <SpotNameText>스파크플러스 선릉점</SpotNameText>
-          <DiningTypeWrap>
-            <MealIcon />
-            <DiningTypeText>아침・점심・저녁</DiningTypeText>
-            <Body06RText>운영중</Body06RText>
-          </DiningTypeWrap>
-          <UserViewWrap>
-            <UserIcon />
-            <Body06RText style={{marginLeft: 12}}>152명</Body06RText>
-          </UserViewWrap>
-          <Border />
-        </Contents>
-        <Contents>
-          <SpotNameText>스파크플러스 선릉점</SpotNameText>
-          <DiningTypeWrap>
-            <MealIcon />
-            <DiningTypeText>아침・점심・저녁</DiningTypeText>
-            <Body06RText>운영중</Body06RText>
-          </DiningTypeWrap>
-          <UserViewWrap>
-            <UserIcon />
-            <Body06RText style={{marginLeft: 12}}>152명</Body06RText>
-          </UserViewWrap>
-          <Border />
-        </Contents>
-        <Contents>
-          <SpotNameText>스파크플러스 선릉점</SpotNameText>
-          <DiningTypeWrap>
-            <MealIcon />
-            <DiningTypeText>아침・점심・저녁</DiningTypeText>
-            <Body06RText>운영중</Body06RText>
-          </DiningTypeWrap>
-          <UserViewWrap>
-            <UserIcon />
-            <Body06RText style={{marginLeft: 12}}>152명</Body06RText>
-          </UserViewWrap>
-          <Border />
-        </Contents>
-        <Contents>
-          <SpotNameText>스파크플러스 선릉점</SpotNameText>
-          <DiningTypeWrap>
-            <MealIcon />
-            <DiningTypeText>아침・점심・저녁</DiningTypeText>
-            <Body06RText>운영중</Body06RText>
-          </DiningTypeWrap>
-          <UserViewWrap>
-            <UserIcon />
-            <Body06RText style={{marginLeft: 12}}>152명</Body06RText>
-          </UserViewWrap>
-          <Border />
-        </Contents>
-      </ScrollView>
 
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        onEndReached={onEndReached}
+        data={dataList}
+        renderItem={({item}) => {
+          return (
+            <View>
+              {item?.items?.map(el => {
+                const diningType = [1, 2, 3];
+
+                return (
+                  <Contents
+                    key={el.id}
+                    onPress={() => goToMap(el.latitude, el.longitude, el.id)}>
+                    <SpotNameText>{el.name}</SpotNameText>
+                    <DiningTypeWrap>
+                      <MealIcon />
+                      {diningType.map(v => (
+                        <DiningTypeText
+                          type={el.diningType.includes(v)}
+                          value={v}>
+                          {diningTypeString(v)}
+                          {v !== 3 && (
+                            <DiningTypeDisabledText>・</DiningTypeDisabledText>
+                          )}
+                        </DiningTypeText>
+                      ))}
+
+                      <Body06RText>운영중</Body06RText>
+                    </DiningTypeWrap>
+                    <UserViewWrap>
+                      <UserIcon />
+                      <Body06RText style={{marginLeft: 12}}>
+                        {el.userCount}명
+                      </Body06RText>
+                    </UserViewWrap>
+                    <Border />
+                  </Contents>
+                );
+              })}
+            </View>
+          );
+        }}
+      />
       <ListButtonWrap>
         <ListButton onPress={() => navigation.goBack()}>
           <MapIcon />
@@ -140,7 +144,7 @@ const Wrap = styled.View`
   background-color: white;
 `;
 
-const Contents = styled.View`
+const Contents = styled.Pressable`
   padding-top: 24px;
   padding-bottom: 8px;
 `;
@@ -150,10 +154,17 @@ const SpotNameText = styled(Typography).attrs({text: 'Title04SB'})`
   margin-bottom: 8px;
 `;
 
-const DiningTypeText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.blue[500]};
+const DiningTypeDisabledText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[6]};
   margin-left: 12px;
   margin-right: 8px;
+`;
+
+const DiningTypeText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme, type}) =>
+    type ? theme.colors.blue[500] : theme.colors.grey[6]};
+  margin-left: ${({value}) => (value === 1 ? '12px' : '0px')};
+  margin-right: ${({value}) => (value === 3 ? '8px' : '0px')};
 `;
 
 const DiningTypeWrap = styled.View`
