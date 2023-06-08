@@ -17,6 +17,8 @@ import {
 import {useEffect, useState} from 'react';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 
+import RateStars from '~components//RateStars';
+import {RightSkinnyArrow} from '~components/Icon';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import {Shadow} from 'react-native-shadow-2';
 import useGetMealDetailReview from './useGetMealDetailReview';
@@ -28,6 +30,10 @@ import {
 } from './store';
 import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+
+import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
+
+import Card from './Card';
 
 // const Component = ({dailyFoodId}) => {
 const Component = ({imageLocation, foodName}) => {
@@ -658,4 +664,57 @@ const IconWrap = styled.View`
   /* display: flex; */
   /* justify-content: center; */
   /* align-items: center; */
+`;
+
+const BottomModalSelecterComponent = ({selected, item}) => {
+  return (
+    <>
+      {selected.includes(item.id) ? (
+        <ContentItemBox>
+          <RowView>
+            <RateStars
+              ratingInput={item.text}
+              width={'132px'}
+              margin={'3px'}
+              disableButton={true}
+              callback={() => {}}
+            />
+            <ContentItemText>({item.reviewCount})</ContentItemText>
+          </RowView>
+
+          <CheckedIcon />
+        </ContentItemBox>
+      ) : (
+        <ContentItemBox>
+          <RowView>
+            <RateStars
+              ratingInput={item.text}
+              width={'132px'}
+              margin={'3px'}
+              disableButton={true}
+              callback={() => {}}
+            />
+            <ContentItemText>({item.reviewCount})</ContentItemText>
+          </RowView>
+        </ContentItemBox>
+      )}
+    </>
+  );
+};
+
+const ContentItemBox = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  /* border: 1px solid black; */
+  padding-right: 6px;
+`;
+
+const RowView = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})`
+  margin-left: 10px;
 `;
