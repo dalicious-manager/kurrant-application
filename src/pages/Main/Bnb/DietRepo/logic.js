@@ -56,7 +56,7 @@ const sampleData = [
   },
 ];
 
-export const modifyDietRepoMainData = (data = sampleData) => {
+export const modifyDietRepoMainData = (data = sampleData, date) => {
   let breakfastArr = [];
   let lunchArr = [];
   let dinnerArr = [];
@@ -71,5 +71,9 @@ export const modifyDietRepoMainData = (data = sampleData) => {
     }
   });
 
-  return [{menuTime: '아침', menuList: breakfastArr}, lunchArr, dinnerArr];
+  return [
+    {menuTime: '아침', menuList: breakfastArr, diningType: 1, date: date},
+    {menuTime: '점심', menuList: lunchArr, diningType: 2, date: date},
+    {menuTime: '저녁', menuList: dinnerArr, diningType: 3, date: date},
+  ];
 };
