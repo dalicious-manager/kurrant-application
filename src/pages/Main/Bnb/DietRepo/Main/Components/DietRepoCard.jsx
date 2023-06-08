@@ -6,7 +6,7 @@ import Typography from '~components/Typography';
 
 import {Line} from 'react-native-svg';
 
-const DietRepoCard = ({type, item}) => {
+const DietRepoCard = ({type, item1 = undefined, item2 = undefined}) => {
   return (
     <Container>
       <CardContentBox>
@@ -15,10 +15,13 @@ const DietRepoCard = ({type, item}) => {
             // e.stopPropagation();
           }}>
           <MealImage
-            source={require('../../../../../../assets/images/logo/main-logo.png')}
-            // source={{
-            //   uri: imageLocation,
-            // }}
+            source={
+              item1?.imgLocation || item2?.imageLocation
+                ? {
+                    uri: item1?.imgLocation || item2?.imageLocation,
+                  }
+                : require('../../../../../../assets/images/logo/main-logo.png')
+            }
           />
         </ImagePressable>
 
@@ -26,14 +29,14 @@ const DietRepoCard = ({type, item}) => {
           <SmallRowWrap>
             <RestaurentNameText>
               {'['}
-              브라운 돈까스
+              {item1?.title || item2?.title}
               {']'}
             </RestaurentNameText>
             <MenuNameWrap>
               <MenuNameText numberOfLines={1} ellipsizeMode="tail">
-                정식 돈까스
+                {item1?.foodName}
               </MenuNameText>
-              <TotalCalText> · 2200kcal</TotalCalText>
+              <TotalCalText> · {item1?.calorie}kcal</TotalCalText>
             </MenuNameWrap>
           </SmallRowWrap>
 
@@ -42,15 +45,15 @@ const DietRepoCard = ({type, item}) => {
               <MainWrap5>
                 <MainWrap6>
                   <MainText6>탄수화물</MainText6>
-                  <MainText6>40g</MainText6>
+                  <MainText6>{item1?.carbohydrate}g</MainText6>
                 </MainWrap6>
                 <MainWrap6>
                   <MainText6>단백질</MainText6>
-                  <MainText6>40g</MainText6>
+                  <MainText6>{item1?.protein}g</MainText6>
                 </MainWrap6>
                 <MainWrap6>
                   <MainText6>지방</MainText6>
-                  <MainText6>40g</MainText6>
+                  <MainText6>{item1?.fat}g</MainText6>
                 </MainWrap6>
               </MainWrap5>
             ) : (

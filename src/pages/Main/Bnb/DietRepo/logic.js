@@ -56,6 +56,25 @@ const sampleData = [
   },
 ];
 
+const sampleData2 = [
+  {
+    makersName: '후레쉬빌',
+    foodName: '수비드닭가슴살샐러드',
+    spotName: '달리셔스',
+    count: 1,
+    imageLocation:
+      'https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/0001678329854957/%EC%88%98%EB%B9%84%EB%93%9C%20%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4%20%EC%83%90%EB%9F%AC%EB%93%9C.png',
+  },
+  {
+    makersName: '후레쉬빌2',
+    foodName: '수비드닭가슴살샐러드2',
+    spotName: '달리셔스2',
+    count: 2,
+    imageLocation:
+      'https://kurrant-v1-dev.s3.ap-northeast-2.amazonaws.com/food/0001678329854957/%EC%88%98%EB%B9%84%EB%93%9C%20%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4%20%EC%83%90%EB%9F%AC%EB%93%9C.png',
+  },
+];
+
 export const modifyDietRepoMainData = (data = sampleData, date) => {
   let breakfastArr = [];
   let lunchArr = [];

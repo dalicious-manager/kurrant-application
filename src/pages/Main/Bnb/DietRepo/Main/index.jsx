@@ -24,6 +24,7 @@ import DietRepoCard from './Components/DietRepoCard';
 import {ArrowRightBlue} from '../../../../../components/Icon';
 import DietRepoCalendar from '../DietRepoCalendar/DietRepoCalendar';
 import useGetDietRepo from '../useGetDietRepo';
+import {modifyDietRepoMainData} from '../logic';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -203,6 +204,7 @@ const Pages = () => {
       </CalendarWrap>
       {/* <ScrollViewContainer
         showsVerticalScrollIndicator={false}></ScrollViewContainer> */}
+
       <FlatList
         ListHeaderComponent={
           <View style={{paddingLeft: 24, paddingRight: 24}}>
@@ -217,7 +219,8 @@ const Pages = () => {
           </View>
         }
         contentContainerStyle={{paddingBottom: 190}}
-        data={FlatListSampleData}
+        // data={FlatListSampleData}
+        data={modifyDietRepoMainData()}
         scrollEnabled={true}
         renderItem={({item}) => {
           console.log('item 값 확인하기 ');
@@ -240,7 +243,9 @@ const Pages = () => {
               {Array.isArray(item.menuList) && item.menuList.length > 0 ? (
                 <View>
                   {item.menuList.map((v, i) => {
-                    return <DietRepoCard key={i} type="main" item={v} />;
+                    return (
+                      <DietRepoCard key={v.reportId} type="main" item1={item} />
+                    );
                   })}
                 </View>
               ) : (
