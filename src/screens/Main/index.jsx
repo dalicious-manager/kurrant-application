@@ -104,7 +104,6 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
-//import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 import PaymentsManage, {
@@ -116,17 +115,7 @@ import PurchaseHistory, {
 import RegisterCard, {
   SCREEN_NAME as RegisterCardScreenName,
 } from './RegisterCard';
-import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
-import CreateReviewPage1, {
-  SCREEN_NAME as CreateReviewPage1ScreenName,
-} from './Review/CreateReview/Page1';
-import CreateReviewPage2, {
-  SCREEN_NAME as CreateReviewPage2ScreenName,
-  SCREEN_NAME2 as EditReviewPage2ScreenName,
-} from './Review/CreateReview/Page2';
-import ReportReview, {
-  PAGE_NAME as ReportReviewPageName,
-} from './Review/ReportReview';
+
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 import useBoard from '../../biz/useBoard';
 import BackButton from '../../components/BackButton';
@@ -278,8 +267,6 @@ import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
 } from './Review/ReportReview';
 
-import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
-import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 // 식단 리포트
 
 import DietRepoMain, {

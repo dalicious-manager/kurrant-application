@@ -49,6 +49,7 @@ import {mainDimATom, mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
+import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
 import MainDim from '../../../../Spots/spotGuide/MainDim';
@@ -59,6 +60,7 @@ import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
+import {BowlIcon} from '../../../../../components/Icon';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
