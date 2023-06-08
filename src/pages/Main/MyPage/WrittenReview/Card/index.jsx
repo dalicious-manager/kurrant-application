@@ -6,16 +6,18 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
 import {css} from 'styled-components/native';
 
-import AdminOrMakersReview from './AdminOrMakersReview';
-import {useNavigation} from '@react-navigation/native';
-import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
+// import AdminOrMakersReview from './AdminOrMakersReview';
+
+import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
+
+// import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
 import OnlyForMakers from './OnlyForMakers';
 // import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-import {getStorage} from '../../../../../utils/asyncStorage';
+// import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+// import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
+// import {getStorage} from '../../../../../utils/asyncStorage';
 import {
   deleteReview,
   deleteReview2,
@@ -24,16 +26,15 @@ import useWrittenReview from '~biz/useReview/useWrittenReview/hook';
 import {SkinnyArrowDown} from '~components/Icon';
 import StarRating from '~components/StarRating/StarRating';
 import Typography from '~components/Typography';
-import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
-import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
+// import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
+// import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
 import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '~screens/Main/Review/CreateReview/Page2';
 // import {deleteReview} from '~biz/useReview/useWrittenReview/Fetch';
 
 import ImageModal from './ImageModal/ImageModal';
-import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+// import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import {changeSeperator} from '../../../../../utils/dateFormatter';
-import {SkinnyArrowDown} from '../../../../../components/Icon';
-import {css} from 'styled-components/native';
+// import {SkinnyArrowDown} from '../../../../../components/Icon';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
