@@ -79,16 +79,6 @@ const DietRepoCalendar = ({
 
   const [calendarDate, setCalendarDate] = useState(new Date());
 
-  useEffect(() => {
-    console.log('calendarDate ');
-    console.log(calendarDate);
-  }, [calendarDate]);
-
-  // useEffect(() => {
-  //   console.log('chk fffå');
-  //   console.log(chk);
-  // }, [chk]);
-
   // 스크롤 되면 데이터 새로 만들게하기
 
   const selectedPress = day => {
@@ -97,27 +87,6 @@ const DietRepoCalendar = ({
 
   const [isMount, setIsMount] = useState(true);
 
-  // useEffect(() => {
-  //   setIsMount(true);
-  // }, []);
-
-  // useEffect(() => {
-  //   // '첫 렌더시 해당 날짜로 위치하게 하기'
-
-  //   console.log('isMount');
-  //   console.log(isMount);
-
-  //   if (isMount) {
-  //     setTimeout(() => {
-  //       pager.current.setPage(1);
-  //       setChk(1);
-  //       setIsMount(false);
-  //     }, 100);
-  //   }
-
-  //   setCurrentPress(selectDate);
-  //   }, [selectDate, weekly, isMount, setIsMount]);
-
   useEffect(() => {
     setTimeout(() => {
       pager.current.setPage(2);
@@ -125,19 +94,6 @@ const DietRepoCalendar = ({
       setIsMount(false);
     }, 100);
   }, []);
-
-  useEffect(() => {
-    console.log('isMount');
-    console.log(isMount);
-  }, [isMount]);
-
-  // useEffect(() => {
-  //   console.log('chk ' + chk);
-  // }, [chk]);
-
-  useEffect(() => {
-    console.log(makeDietRepoCalendarDateArr(calendarDate));
-  }, [calendarDate]);
 
   return (
     <React.Fragment>
@@ -150,9 +106,7 @@ const DietRepoCalendar = ({
         onPageScroll={e => {}}
         onPageSelected={e => {
           const {position} = e.nativeEvent;
-          console.log('스크롤 중임 ' + position);
-
-          // 지금 문제가 첫 렌더링때 이게 되버림
+          // console.log('스크롤 중임 ' + position);
 
           // 뒤로 가기 , 앞으로 가기
 
@@ -172,62 +126,9 @@ const DietRepoCalendar = ({
             setChk(2);
           } else {
           }
-
-          // if (chk > position) {
-          //   // 뒤로 가기
-          //   console.log('뒤로가기');
-          //   console.log(chk);
-          //   console.log(position);
-          //   console.log(toStringByFormatting(calendarDate));
-          //   console.log('------');
-          //   setCalendarDate(calcDate(-7, calendarDate));
-          // } else if (chk < position) {
-          //   console.log('앞으로가기');
-          //   console.log(chk);
-          //   console.log(position);
-          //   console.log(toStringByFormatting(calendarDate));
-          //   console.log('------');
-          //   setCalendarDate(calcDate(7, calendarDate));
-          // } else {
-          //   console.log('chk === position');
-          //   console.log(chk);
-          //   console.log(position);
-          //   console.log(toStringByFormatting(calendarDate));
-          // }
-          // pager.current.setPageWithoutAnimation(1);
-          // setChk(1);
         }}
         margins={margin}>
-        {[
-          // [
-          //   stringDateToJavascriptDate('2023-04-30', '-'),
-          //   stringDateToJavascriptDate('2023-05-01', '-'),
-          //   stringDateToJavascriptDate('2023-05-02', '-'),
-          //   stringDateToJavascriptDate('2023-05-03', '-'),
-          //   stringDateToJavascriptDate('2023-05-04', '-'),
-          //   stringDateToJavascriptDate('2023-05-05', '-'),
-          //   stringDateToJavascriptDate('2023-05-06', '-'),
-          // ],
-          // [
-          //   stringDateToJavascriptDate('2023-05-07', '-'),
-          //   stringDateToJavascriptDate('2023-05-08', '-'),
-          //   stringDateToJavascriptDate('2023-05-09', '-'),
-          //   stringDateToJavascriptDate('2023-05-10', '-'),
-          //   stringDateToJavascriptDate('2023-05-11', '-'),
-          //   stringDateToJavascriptDate('2023-05-12', '-'),
-          //   stringDateToJavascriptDate('2023-05-13', '-'),
-          // ],
-          // [
-          //   stringDateToJavascriptDate('2023-05-14', '-'),
-          //   stringDateToJavascriptDate('2023-05-15', '-'),
-          //   stringDateToJavascriptDate('2023-05-16', '-'),
-          //   stringDateToJavascriptDate('2023-05-17', '-'),
-          //   stringDateToJavascriptDate('2023-05-18', '-'),
-          //   stringDateToJavascriptDate('2023-05-19', '-'),
-          //   stringDateToJavascriptDate('2023-05-20', '-'),
-          // ],
-          ...makeDietRepoCalendarDateArr(calendarDate),
-        ].map((week, i) => {
+        {[...makeDietRepoCalendarDateArr(calendarDate)].map((week, i) => {
           return (
             <View key={i}>
               <Wrap>
