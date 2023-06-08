@@ -16,6 +16,8 @@ import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import Typography from '~components/Typography';
 import RateStars from '~components/RateStars';
 
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 
@@ -57,7 +59,7 @@ const BottomModalMultipleSelect = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['48%', '90%'], []);
+  const snapPoints = useMemo(() => ['51%', '90%'], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
@@ -130,62 +132,71 @@ const BottomModalMultipleSelect = props => {
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <Background />
-        </TouchableWithoutFeedback>
-
-        <BottomSheet
-          ref={list}
-          snapPoints={snapPoints}
-          onChange={handleSheetChange}
+        <GestureHandlerRootView
           style={{
-            marginBottom: 50,
+            flex: 1,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            height: '100%',
+            width: '100%',
           }}>
-          <BottomSheetTitleView>
-            <BottomSheetTitle>{title}</BottomSheetTitle>
+          <TouchableWithoutFeedback onPress={closeModal}>
+            <Background />
+          </TouchableWithoutFeedback>
+          <BottomSheet
+            ref={list}
+            snapPoints={snapPoints}
+            onChange={handleSheetChange}
+            style={{
+              marginBottom: 50,
+            }}>
+            <BottomSheetTitleView>
+              <BottomSheetTitle>{title}</BottomSheetTitle>
 
-            <ConfirmPressable
-              onPress={() => {
-                setModalVisible(false);
-              }}>
-              <ConfirmText>확인</ConfirmText>
-            </ConfirmPressable>
-          </BottomSheetTitleView>
-          <BottomSheetFlatList
-            data={data}
-            scrollEnabled={snap === 1}
-            onScrollBeginDrag={e => {
-              setScrollStart(e.nativeEvent.contentOffset.y);
-            }}
-            onMomentumScrollBegin={e => {
-              if (scrollEnd === 0) {
-                handleSnapPress(0);
-              }
-            }}
-            onScrollEndDrag={e => {
-              setContentScroll(e.nativeEvent.contentOffset.y === 0);
-              setScrollEnd(e.nativeEvent.contentOffset.y);
-              if (e.nativeEvent.contentOffset.y === 0) {
-                if (contentScroll) {
+              <ConfirmPressable
+                onPress={() => {
+                  setModalVisible(false);
+                }}>
+                <ConfirmText>확인</ConfirmText>
+              </ConfirmPressable>
+            </BottomSheetTitleView>
+            <BottomSheetFlatList
+              data={data}
+              scrollEnabled={snap === 1}
+              onScrollBeginDrag={e => {
+                setScrollStart(e.nativeEvent.contentOffset.y);
+              }}
+              onMomentumScrollBegin={e => {
+                if (scrollEnd === 0) {
                   handleSnapPress(0);
                 }
-              }
-            }}
-            renderItem={({item}) => (
-              <ContentItemContainer
-                onPressIn={pressInUp}
-                onPressOut={pressOutUp}
-                onPress={() => {
-                  onSelect(item.id, item.text);
-                  onPressEvent(item.id);
-                }}>
-                <SelecterComponent selected={selected} item={item} />
-              </ContentItemContainer>
-            )}
-            keyExtractor={item => item.id.toString()}
-          />
-          <ManagePressView></ManagePressView>
-        </BottomSheet>
+              }}
+              onScrollEndDrag={e => {
+                setContentScroll(e.nativeEvent.contentOffset.y === 0);
+                setScrollEnd(e.nativeEvent.contentOffset.y);
+                if (e.nativeEvent.contentOffset.y === 0) {
+                  if (contentScroll) {
+                    handleSnapPress(0);
+                  }
+                }
+              }}
+              renderItem={({item}) => (
+                <ContentItemContainer
+                  onPressIn={pressInUp}
+                  onPressOut={pressOutUp}
+                  onPress={() => {
+                    onSelect(item.id, item.text);
+                    onPressEvent(item.id);
+                  }}>
+                  <SelecterComponent selected={selected} item={item} />
+                </ContentItemContainer>
+              )}
+              keyExtractor={item => item.id.toString()}
+            />
+            <ManagePressView></ManagePressView>
+          </BottomSheet>
+        </GestureHandlerRootView>
       </Overlay>
     </Modal>
   );
@@ -231,6 +242,8 @@ const ManagePressView = styled.Pressable`
   height: 60px;
   padding: 19px 24px;
   background-color: white;
+  /* background-color: black; */
+  /* border: 1px solid black; */
 `;
 
 export default BottomModalMultipleSelect;
