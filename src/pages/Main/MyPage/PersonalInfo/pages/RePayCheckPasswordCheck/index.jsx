@@ -11,6 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
+
 import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
@@ -47,7 +48,7 @@ export default function PasswordCheck({route}) {
     } catch (error) {
       Alert.alert(
         '결제비밀번호 변경 실패',
-        error.toString().replace('error:', ''),
+        error.toString()?.replace('error:', ''),
       );
     }
   };
@@ -84,12 +85,12 @@ export default function PasswordCheck({route}) {
             inputRef.current.blur();
             inputRef.current.focus();
           }}>
-          <PasswordText active={state.length > 0}></PasswordText>
-          <PasswordText active={state.length > 1}></PasswordText>
-          <PasswordText active={state.length > 2}></PasswordText>
-          <PasswordText active={state.length > 3}></PasswordText>
-          <PasswordText active={state.length > 4}></PasswordText>
-          <PasswordText active={state.length > 5}></PasswordText>
+          <PasswordText active={state.length > 0} />
+          <PasswordText active={state.length > 1} />
+          <PasswordText active={state.length > 2} />
+          <PasswordText active={state.length > 3} />
+          <PasswordText active={state.length > 4} />
+          <PasswordText active={state.length > 5} />
         </PasswordBox>
         <PasswordInput
           value={state}

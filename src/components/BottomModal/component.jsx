@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
+  View,
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
@@ -36,6 +37,8 @@ const Component = props => {
     buttonType2 = 'grey2',
     onPressEvent1 = () => {},
     onPressEvent2,
+    image,
+    closeType = true,
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
@@ -74,9 +77,12 @@ const Component = props => {
     };
   }, [up, upY]);
   const closeModal = () => {
-    closeBottomSheet.start(() => {
-      setModalVisible(false);
-    });
+    if (closeType) {
+      closeBottomSheet.start(() => {
+        setModalVisible(false);
+      });
+    }
+    return;
   };
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
@@ -95,6 +101,7 @@ const Component = props => {
             <DragButtonView/>
           </DragButton> */}
           <BottomSheetTitleView>
+            {image && <View style={{marginBottom: 24}}>{image}</View>}
             <BottomSheetTitle textColor={themeApp.colors.grey[2]}>
               {title}
             </BottomSheetTitle>

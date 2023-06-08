@@ -1,4 +1,6 @@
 import {useAtom} from 'jotai';
+import {Alert} from 'react-native';
+import {useQueryClient} from 'react-query';
 
 import * as Fetch from './Fetch';
 import {
@@ -7,7 +9,6 @@ import {
   isCancelSpotAtom,
   userGroupSpotListAtom,
 } from './store';
-import { Alert } from 'react-native';
 
 const useGroupSpots = () => {
   const [isApplicationList, setApplicationList] = useAtom(applicationListAtom); // 아파트 + 프라이빗 스팟
@@ -16,7 +17,7 @@ const useGroupSpots = () => {
   ); // 유저가 속한 그룹 스팟 조회
   const [isDetailSpot, setDetailSpot] = useAtom(groupSpotDetailAtom); // 그룹별 스팟 상세 조회
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom); // 그룹별 스팟 상세 조회
-
+  const queryClient = useQueryClient();
   // 그룹/스팟 신청 목록 조회 (아파트 + 프라이빗 스팟)
   const applicationList = async () => {
     try {
@@ -24,30 +25,34 @@ const useGroupSpots = () => {
 
       setApplicationList(res.data);
     } catch (err) {
-      Alert.alert('그룹/스팟 신청 목록 조회', err.toString().replace('error: ', ''), [
-        {
-          text: '확인',
-          onPress: () => {},
-          style: 'cancel',
-        },
-      ]);
+      Alert.alert(
+        '그룹/스팟 신청 목록 조회',
+        err.toString()?.replace('error: ', ''),
+        [
+          {
+            text: '확인',
+            onPress: () => {},
+            style: 'cancel',
+          },
+        ],
+      );
     }
   };
   // 유저가 속한 그룹 스팟 조회
   const userGroupSpotCheck = async () => {
     try {
       const res = await Fetch.GroupSpotCheck();
-
+      console.log(res);
       setUserGroupSpotCheck(res.data);
       return res;
     } catch (err) {
-      Alert.alert('그룹/스팟', err.toString().replace('error: ', ''), [
-        {
-          text: '확인',
-          onPress: () => {},
-          style: 'cancel',
-        },
-      ]);
+      // Alert.alert('그룹/스팟', err.toString()?.replace('error: ', ''), [
+      //   {
+      //     text: '확인',
+      //     onPress: () => {},
+      //     style: 'cancel',
+      //   },
+      // ]);
     }
   };
 
@@ -83,7 +88,7 @@ const useGroupSpots = () => {
       const res = await Fetch.SpotRegister({
         ...body,
       });
-
+      queryClient.invalidateQueries('dailyfood');
       return res;
     } catch (err) {
       throw err;
@@ -100,7 +105,7 @@ const useGroupSpots = () => {
 
       return res;
     } catch (err) {
-      Alert.alert('그룹 탈퇴', err.toString().replace('error: ', ''), [
+      Alert.alert('그룹 탈퇴', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},

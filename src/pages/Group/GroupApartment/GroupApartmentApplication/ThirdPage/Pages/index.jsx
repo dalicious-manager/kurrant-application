@@ -54,7 +54,6 @@ const Pages = ({route}) => {
   const [isMorning, setMorning] = useAtom(isApartMealMorningInfoAtom);
   const [isLunch, setLunch] = useAtom(isApartMealLunchInfoAtom);
   const [isDinner, setDinner] = useAtom(isApartMealDinnerInfoAtom);
-  console.log(isMorning, '모닝');
   const form = useForm({
     mode: 'all',
   });

@@ -1,22 +1,23 @@
 import {StackActions, useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
+import {Dimensions} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
-
 import Button from '~components/Button';
 import Image from '~components/Image';
 import Typography from '~components/Typography';
 
-import {PAGE_NAME as MembershipInfoPage} from '../../../Membership/MembershipInfo';
-import {PAGE_NAME as MoreMainPageName} from '../../../Main/Bnb/More';
-import {PAGE_NAME as MainPageName} from '../../../Main/Bnb/Home';
-import {SCREEN_NAME as BnbScreenName} from '../../../../screens/Main/Bnb';
-import {MembershipJoinComplateImage} from '~assets';
 import useUserInfo from '../../../../biz/useUserInfo';
-import FastImage from 'react-native-fast-image';
-import { Dimensions } from 'react-native';
+import {SCREEN_NAME as BnbScreenName} from '../../../../screens/Main/Bnb';
+import {PAGE_NAME as MainPageName} from '../../../Main/Bnb/Home';
+import {PAGE_NAME as MoreMainPageName} from '../../../Main/Bnb/More';
+import {PAGE_NAME as MembershipInfoPage} from '../../../Membership/MembershipInfo';
+
+import {MembershipJoinComplateImage} from '~assets';
+
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_COMPLATE';
-const screenHeight = Dimensions.get("screen").height
+const screenHeight = Dimensions.get('screen').height;
 const Pages = () => {
   const themeApp = useTheme();
   const {userInfo, isUserInfo} = useUserInfo();
@@ -30,7 +31,11 @@ const Pages = () => {
   return (
     <Conotainer>
       <FastImage
-        style={{ height:screenHeight/100*26, paddingRight:100, paddingLeft:100 }}
+        style={{
+          height: (screenHeight / 100) * 26,
+          paddingRight: 100,
+          paddingLeft: 100,
+        }}
         source={MembershipJoinComplateImage}
         resizeMode={FastImage.resizeMode.cover}
       />
@@ -93,4 +98,4 @@ const ImageBox = styled.View`
   padding-left: 100px;
   padding-right: 100px;
   background-color: red;
-`
+`;

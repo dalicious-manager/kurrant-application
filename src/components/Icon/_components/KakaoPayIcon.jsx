@@ -1,5 +1,4 @@
 import React from 'react';
-
 import KakaoPayIcon from '~assets/icons/KakaoPay.svg';
 
 import IconWrapper from '../component';

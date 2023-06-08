@@ -1,5 +1,5 @@
 module.exports = api => {
-  const isProd = api.cache(() => process.env.NODE_ENV === 'production');
+  const isProd = api.cache(() => process.env.NODE_ENV === 'prod');
   api.cache(false);
   return {
     presets: ['module:metro-react-native-babel-preset'],

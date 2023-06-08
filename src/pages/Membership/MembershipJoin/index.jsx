@@ -3,8 +3,11 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import useGroupSpots from '../../../biz/useGroupSpots';
 
+import MembershipButton from './MembershipButton';
+import {PAGE_NAME as MembershipJoinPaymentsPageName} from './MembershipJoinPayments';
+import SubtractBox from './SubtractBox';
+import useGroupSpots from '../../../biz/useGroupSpots';
 import useMembership from '../../../biz/useMembership';
 import useUserInfo from '../../../biz/useUserInfo';
 import useUserMe from '../../../biz/useUserMe';
@@ -19,9 +22,7 @@ import {
 } from '../../../components/Icon';
 import Typography from '../../../components/Typography';
 import Wrapper from '../../../components/Wrapper';
-import MembershipButton from './MembershipButton';
-import {PAGE_NAME as MembershipJoinPaymentsPageName} from './MembershipJoinPayments';
-import SubtractBox from './SubtractBox';
+import {useSetAlramAllSetting} from '../../../hook/useAlram';
 
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN';
 const Pages = () => {
@@ -31,6 +32,7 @@ const Pages = () => {
   const [eventSpot, setEventSpot] = useState(false);
   const {isUserInfo} = useUserInfo();
   const [membershipData, setMembershipData] = useState();
+  const {mutateAsync: setAlarmAll} = useSetAlramAllSetting();
   const {
     alarmLookup,
     getCardList,
@@ -51,30 +53,26 @@ const Pages = () => {
   const getMembershipData = useCallback(async () => {
     const {data} = await membershipProduct.getMembershipProduct();
     setMembershipData(data.reverse());
-  }, [membershipProduct]);
+  }, []);
 
   const handleSubmit = async period => {
-    if (signUpCheck1 && signUpCheck2 && signUpCheck3) {
-      if (signUpCheck4) {
-        await alarmSetting({
-          isMarketingAlarmAgree: true,
-          isOrderAlarmAgree: alarm.isOrderAlarmAgree,
-          isMarketingInfoAgree: alarm.isMarketingInfoAgree,
+    try {
+      if (signUpCheck1 && signUpCheck2 && signUpCheck3) {
+        if (signUpCheck4) {
+          await setAlarmAll({
+            isActive: true,
+          });
+        }
+        navigation.navigate(MembershipJoinPaymentsPageName, {
+          period: period === '월간구독' ? 'month' : 'yaers',
+          membershipData:
+            period === '월간구독' ? membershipData[1] : membershipData[0],
         });
-      } else if (!signUpCheck4) {
-        await alarmSetting({
-          isMarketingAlarmAgree: false,
-          isOrderAlarmAgree: alarm.isOrderAlarmAgree,
-          isMarketingInfoAgree: alarm.isMarketingInfoAgree,
-        });
+      } else {
+        Alert.alert('필수동의', '필수동의사항에 동의해주세요.');
       }
-      navigation.navigate(MembershipJoinPaymentsPageName, {
-        period: period === '월간구독' ? 'month' : 'yaers',
-        membershipData:
-          period === '월간구독' ? membershipData[1] : membershipData[0],
-      });
-    } else {
-      Alert.alert('필수동의', '필수동의사항에 동의해주세요.');
+    } catch (error) {
+      Alert.alert('알람 설정', error.toString());
     }
   };
   const handleSubmitError = () => {
@@ -87,12 +85,16 @@ const Pages = () => {
 
   const disabledCheck = signUpCheck1 && signUpCheck2 && signUpCheck3;
   //베스핀 글로벌 체크
-  useEffect(() => {
-    const getHistory = async () => {
-      await membershipProduct.getMembershipHistory();
-    };
-    getHistory();
-  }, []);
+  // useEffect(() => {
+  //   const getHistory = async () => {
+  //     try {
+  //       await membershipProduct.getMembershipHistory();
+  //     } catch (error) {
+  //       Alert.alert('멤버십', error.toString());
+  //     }
+  //   };
+  //   getHistory();
+  // }, []);
   useFocusEffect(
     useCallback(() => {
       getMembershipData();
@@ -138,22 +140,21 @@ const Pages = () => {
             </SubtractBox>
           </SubtractView>
           <SubtractView>
-            <SubtractBox text={'메뉴 추천 기능 오픈'} beta={true}>
-              <ThumbsUpWithThreeStarsIcon additionalCss={`margin-right: 5px`} />
-            </SubtractBox>
-          </SubtractView>
-          <SubtractView>
             <SubtractBox
-              text={'정기식사, 마켓 상품 리뷰 등록 시\n추가 포인트 적립'}
-              disabled={true}>
+              text={'정기식사, 마켓 상품 리뷰 등록 시\n추가 포인트 적립'}>
               <CommentsIcon />
             </SubtractBox>
           </SubtractView>
           <SubtractView>
+            <SubtractBox text={'메뉴 추천 기능 오픈'} beta={true}>
+              <ThumbsUpWithThreeStarsIcon additionalCss={`margin-right: 5px`} />
+            </SubtractBox>
+          </SubtractView>
+          {/* <SubtractView>
             <SubtractBox text={'마켓 상품 구매 시 포인트 적립'} disabled={true}>
               <PointIcon />
             </SubtractBox>
-          </SubtractView>
+          </SubtractView> */}
         </SubtractWrapper>
         <Form form={signUpCheck}>
           <CheckWrap>
@@ -191,7 +192,6 @@ const Pages = () => {
           </CheckWrap>
           <ButtonContainer>
             {membershipData?.map(membership => {
-              console.log(membership);
               return (
                 <ButtonBox key={membership.membershipSubscriptionType}>
                   <MembershipButton

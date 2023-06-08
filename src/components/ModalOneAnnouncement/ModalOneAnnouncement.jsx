@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
-import styled, {useTheme} from 'styled-components';
-import Typography from '../Typography';
-
-import HTML, {RenderHTML, defaultSystemFonts} from 'react-native-render-html';
-
 import {Dimensions, ScrollView} from 'react-native';
+import HTML, {RenderHTML, defaultSystemFonts} from 'react-native-render-html';
+import styled, {useTheme} from 'styled-components';
+
 import {setStorage} from '../../utils/asyncStorage';
 import {removeItemFromStorage} from '../../utils/asyncStorage';
+import Typography from '../Typography';
 
 const Component = ({modalVisible, data, setModalVisible}) => {
   const systemFonts = [...defaultSystemFonts, 'Pretendard'];
@@ -72,7 +71,7 @@ const Component = ({modalVisible, data, setModalVisible}) => {
                 />
               }
 
-              <Filler></Filler>
+              <Filler />
             </ContenContainerScrollView>
             <ConfirmPressable
               onPress={() => {

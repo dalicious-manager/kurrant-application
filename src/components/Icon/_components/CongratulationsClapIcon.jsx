@@ -1,6 +1,5 @@
-import React from 'react';
-
 // import CommentsIcon from '~assets/icons/comments.svg';
+import React from 'react';
 import CongratulationsClapIcon from '~assets/icons/CongratulationsClapIcon.svg';
 
 import IconWrapper from '../component';

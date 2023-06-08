@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import PlusIcon from '../../assets/icons/Home/plus.svg';
-import Typography from '../Typography';
 import {
   getButtonSizeStyles,
   getButtonColor,
   getDisabledColor,
   getLabelColor,
 } from './style';
+import PlusIcon from '../../assets/icons/Home/plus.svg';
+import Typography from '../Typography';
 
 /**
  * @param {object} props

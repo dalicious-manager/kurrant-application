@@ -1,14 +1,17 @@
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useEffect, useRef, useState} from 'react';
 import {Alert, FlatList, Text, View} from 'react-native';
 import styled from 'styled-components';
-import {DefaultProfile} from '../../../../assets';
-import Card from './Card';
-import NoOrder from '../NoOrder';
-import useWrittenReview from '../../../../biz/useReview/useWrittenReview/hook';
-
-import {convertDateFormat1} from '../../../../utils/dateFormatter';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Toast from '~components/Toast';
+
+import Card from './Card';
+import {DefaultProfile} from '../../../../assets';
+import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
+import useWrittenReview from '../../../../biz/useReview/useWrittenReview/hook';
+import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/store';
+import {convertDateFormat1} from '../../../../utils/dateFormatter';
+import NoOrder from '../NoOrder';
 
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const sampleAdminReview = {
@@ -80,7 +83,7 @@ const Pages = ({route}) => {
             // 서버 -> 프론트 객체 프로퍼티 이름 치환하기
 
             if (item.id === 'filler') {
-              return <Filler></Filler>;
+              return <Filler />;
             }
 
             const item2 = {

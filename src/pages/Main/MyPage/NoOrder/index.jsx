@@ -1,6 +1,7 @@
 import React from 'react';
 import {Dimensions, Text, View} from 'react-native';
 import styled from 'styled-components';
+
 import Typography from '../../../../components/Typography';
 
 const Component = ({isArrayEmpty, message}) => {

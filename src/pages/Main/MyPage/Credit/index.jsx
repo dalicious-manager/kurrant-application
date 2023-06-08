@@ -1,8 +1,7 @@
 import React, {useEffect} from 'react';
+import styled from 'styled-components/native';
 
 import Typography from '../../../../components/Typography';
-
-import styled from 'styled-components/native';
 
 export const PAGE_NAME = 'P__MY_PAGE__CREDIT';
 

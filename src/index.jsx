@@ -1,16 +1,17 @@
+import analytics from '@react-native-firebase/analytics';
 import messaging from '@react-native-firebase/messaging';
 import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
-import analytics from '@react-native-firebase/analytics';
 import React, {useCallback, useEffect} from 'react';
 import {StatusBar, LogBox, Text, TextInput} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {ThemeProvider} from 'styled-components';
 import codePush from 'react-native-code-push';
+import Config from 'react-native-config';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {QueryClient, QueryClientProvider} from 'react-query';
+import {ThemeProvider} from 'styled-components';
+import styled from 'styled-components/native';
+
 import Screen from './screens';
 import Theme from './theme';
-import Config from 'react-native-config';
-import styled from 'styled-components/native';
-import {QueryClient, QueryClientProvider} from 'react-query';
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -40,6 +41,7 @@ const App = () => {
         <SafeAreaProvider>
           <StatusBar />
           {Config.NODE_ENV === 'dev' && <IsDevelop>개발서버 입니다.</IsDevelop>}
+          {Config.NODE_ENV === 'rel' && <IsDevelop>QA 서버입니다.</IsDevelop>}
           <NavigationContainer
             ref={navigationRef}
             onReady={() => {
@@ -66,6 +68,7 @@ const App = () => {
     </QueryClientProvider>
   );
 };
+
 export default codePush(App);
 
 const IsDevelop = styled.Text`

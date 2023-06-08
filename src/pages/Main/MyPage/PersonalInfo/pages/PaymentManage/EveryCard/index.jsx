@@ -1,19 +1,19 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
+import {ScrollView} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import useUserMe from '~biz/useUserMe';
-
 import BottomSheet from '~components/BottomSheet/component';
 import Button from '~components/Button';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
+
 import {registCardAtom} from '../../../../../../../atoms/store';
 import Toast from '../../../../../../../components/Toast';
 import RegisteredBox from '../RegisteredBox';
 import Skeleton from '../SelectedDefaultCard/Skeleton';
-import {ScrollView} from 'react-native';
 
 export const PAGE_NAME = 'P__MY_PAGE__EVERY_CARD';
 

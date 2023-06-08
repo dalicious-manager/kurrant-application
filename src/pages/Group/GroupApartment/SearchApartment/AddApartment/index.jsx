@@ -4,11 +4,11 @@ import {Pressable, Text, View, Alert} from 'react-native';
 import styled from 'styled-components';
 
 import Apart from '../../../../../assets/icons/Group/apartImg.svg';
+import Corp from '../../../../../assets/icons/Group/corpImg.svg';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import Button from '../../../../../components/Button';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as MyGroupListPageName} from '../../../GroupManage/index';
-import Corp from '../../../../../assets/icons/Group/corpImg.svg';
 
 export const PAGE_NAME = 'P__GROUP__APARTMENT__SEARCH__ADD';
 
@@ -34,7 +34,6 @@ const Pages = ({route}) => {
           },
         },
       ]);
-      console.log(err);
     }
   };
   return (

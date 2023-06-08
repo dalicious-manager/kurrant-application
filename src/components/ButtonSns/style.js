@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import {css} from 'styled-components';
 
 export const getSnsButtonColor = type => {
   return snsButtonColor[type];
@@ -6,19 +6,19 @@ export const getSnsButtonColor = type => {
 
 const snsButtonColor = {
   kakao: css`
-    background-color: ${({ theme }) => theme.colors.etc.kakao}; 
+    background-color: ${({theme}) => theme.colors.etc.kakao};
   `,
   naver: css`
-    background-color: ${({ theme }) => theme.colors.etc.naver}; 
+    background-color: ${({theme}) => theme.colors.etc.naver};
   `,
   email: css`
-    background-color: ${({ theme }) => '#ffffff'}; 
+    background-color: ${({theme}) => '#ffffff'};
   `,
   login: css`
-    background-color: ${({ theme }) => theme.colors.yellow[500]}; 
+    background-color: ${({theme}) => theme.colors.yellow[500]};
   `,
   apple: css`
-    background-color: ${({ theme }) => theme.colors.neutral[0]}; 
+    background-color: ${({theme}) => theme.colors.neutral[0]};
   `,
 };
 
@@ -28,17 +28,16 @@ export const getSnsButtonBorder = type => {
 
 const snsButtonBorder = {
   kakao: css`
-    border: 1px solid ${({ theme }) => theme.colors.etc.kakao}; 
-    `,
+    border: 1px solid ${({theme}) => theme.colors.etc.kakao};
+  `,
   naver: css`
-    border: 1px solid ${({ theme }) => theme.colors.etc.naver}; 
-    `,
+    border: 1px solid ${({theme}) => theme.colors.etc.naver};
+  `,
   email: css`
-    border: 1px solid ${({ theme }) => '#BDBAC1'}; 
-    `,
-  login: css`
-    `,
+    border: 1px solid ${({theme}) => '#BDBAC1'};
+  `,
+  login: css``,
   apple: css`
-    border: 1px solid ${({ theme }) => theme.colors.neutral[900]}; 
+    border: 1px solid ${({theme}) => theme.colors.neutral[900]};
   `,
 };

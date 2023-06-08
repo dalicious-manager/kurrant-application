@@ -3,15 +3,16 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Animated, ScrollView, Alert} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import Arrow from '~assets/icons/Arrow/arrowTop.svg';
 import PayError from '~assets/icons/Payment/payError.svg';
 import Button from '~components/Button';
 import Typography from '~components/Typography';
+import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
 
 import {MembershipIconImage} from '../../../../assets';
 import useMembership from '../../../../biz/useMembership';
+import useUserInfo from '../../../../biz/useUserInfo';
 import useUserMe from '../../../../biz/useUserMe';
 import BottomModal from '../../../../components/BottomModal';
 import Check from '../../../../components/Check';
@@ -20,8 +21,6 @@ import Image from '../../../../components/Image';
 import withCommas from '../../../../utils/withCommas';
 import {PAGE_NAME as MembershipJoinComplatePageName} from '../MembershipJoinComplate';
 import {PAGE_NAME as MemebershipPaymentManagePageName} from '../MemebershipPaymentManage';
-import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
-import useUserInfo from '../../../../biz/useUserInfo';
 export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_PAYMENTS';
 const Pages = ({route}) => {
   const {period, membershipData} = route.params;

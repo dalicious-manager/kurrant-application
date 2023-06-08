@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
-import YellowStarIcon from '../../assets/icons/StarRating/YellowStar.svg';
 import GreyStarIcon from '../../assets/icons/StarRating/GreyStar.svg';
-
+import YellowStarIcon from '../../assets/icons/StarRating/YellowStar.svg';
 import YellowStar from '../../assets/images/StarRating/YellowStar.png';
 
 const StarRating = ({rating, width, margin}) => {

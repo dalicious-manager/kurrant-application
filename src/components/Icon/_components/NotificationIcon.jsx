@@ -16,30 +16,26 @@ import IconWrapper from '../component';
  */
 
 const Component = ({name, size = 16, color}) => {
-  const getNotifiIcon = ()=>{
+  const getNotifiIcon = () => {
     switch (name) {
-      case "프로모션":
-        return <PromotionIcon name={name} size={size} color={color} />
-      case "주문상태":
-        return <OrderIcon name={name} size={size} color={color} />
-      case "공지":
-        return <NoticeIcon name={name} size={size} color={color} />
-      case "이벤트":
-        return <EventIcon name={name} size={size} color={color} />
-      case "쿠폰":
-        return <CouponIcon name={name} size={size} color={color} />
-      case "정기식사":
-        return <BuymealIcon name={name} size={size} color={color} />
-      case "스팟공지":
-        return <SpotIcon name={name} size={size} color={color} />
+      case '프로모션':
+        return <PromotionIcon name={name} size={size} color={color} />;
+      case '주문상태':
+        return <OrderIcon name={name} size={size} color={color} />;
+      case '공지':
+        return <NoticeIcon name={name} size={size} color={color} />;
+      case '이벤트':
+        return <EventIcon name={name} size={size} color={color} />;
+      case '쿠폰':
+        return <CouponIcon name={name} size={size} color={color} />;
+      case '정기식사':
+        return <BuymealIcon name={name} size={size} color={color} />;
+      case '스팟공지':
+        return <SpotIcon name={name} size={size} color={color} />;
       default:
         break;
     }
-  }
-  return (
-    <IconWrapper>
-       {getNotifiIcon()}
-    </IconWrapper>
-  );
+  };
+  return <IconWrapper>{getNotifiIcon()}</IconWrapper>;
 };
 export default Component;

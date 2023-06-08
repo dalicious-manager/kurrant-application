@@ -1,6 +1,4 @@
 import React from 'react';
-
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 
 import IconWrapper from '../component';
@@ -13,7 +11,7 @@ import IconWrapper from '../component';
  * @Reference https://oblador.github.io/react-native-vector-icons/
  * @returns
  */
-const Component = ({ size = 20, color, style}) => {
+const Component = ({size = 20, color, style}) => {
   return (
     <IconWrapper style={style}>
       <ArrowRightIcon size={size} color={color} />

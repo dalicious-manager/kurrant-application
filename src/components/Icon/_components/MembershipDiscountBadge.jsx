@@ -1,5 +1,4 @@
 import React from 'react';
-
 import MembershipIcon from '~assets/icons/membershipDiscountBadge.svg';
 
 import IconWrapper from '../component';

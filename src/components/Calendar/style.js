@@ -1,6 +1,6 @@
 import {css} from 'styled-components';
 
-import {textStyles} from '~components/Typography/styles';
+import {textStyles} from '../Typography/styles';
 
 export const getCircleColor = type => {
   return circleColor[type];

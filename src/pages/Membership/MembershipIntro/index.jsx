@@ -7,16 +7,16 @@ import {
   ScrollView,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 
-import Button from '../../../components/Button';
-import Images from '../../../components/Image';
-import FastImage from 'react-native-fast-image';
-import {PAGE_NAME as MembershipJoinPageName} from '../MembershipJoin';
+import {BespinMembershipImage} from '../../../assets';
 import useGroupSpots from '../../../biz/useGroupSpots';
 import useMembership from '../../../biz/useMembership';
 import useUserInfo from '../../../biz/useUserInfo';
-import {BespinMembershipImage} from '../../../assets';
+import Button from '../../../components/Button';
+import Images from '../../../components/Image';
+import {PAGE_NAME as MembershipJoinPageName} from '../MembershipJoin';
 
 export const PAGE_NAME = 'P__MEMBERSHIP__INTRO';
 const {width} = Dimensions.get('screen');
@@ -79,7 +79,7 @@ const Pages = ({route}) => {
           {/* <Button type='yellow' label="멤버십 가입하기"  onPressEvent={()=>{
                     navigation.navigate(MembershipJoinPageName);
                   }}/> */}
-          <View style={{width: width, height: 150}}></View>
+          <View style={{width: width, height: 150}} />
         </ButtonSame>
       </ScrollView>
       <ButtonContainer>

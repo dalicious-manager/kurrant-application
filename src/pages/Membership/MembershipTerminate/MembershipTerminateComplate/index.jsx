@@ -1,17 +1,16 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
+import {View} from 'react-native';
 import styled from 'styled-components';
 import {useTheme} from 'styled-components/native';
-
 import Button from '~components/Button';
 import Image from '~components/Image';
 import Typography from '~components/Typography';
 
+import useUserInfo from '../../../../biz/useUserInfo';
 import {PAGE_NAME as LoginPage} from '../../../Main/Login/Login';
 
 import {Terminate} from '~assets';
-import useUserInfo from '../../../../biz/useUserInfo';
-import {View} from 'react-native';
 export const PAGE_NAME = 'P__MEMBERSHIP__TERMINATE_COMPLATE';
 
 const Pages = () => {

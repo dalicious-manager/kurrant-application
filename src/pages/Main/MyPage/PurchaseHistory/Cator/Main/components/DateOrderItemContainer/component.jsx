@@ -1,29 +1,31 @@
+import {useNavigation} from '@react-navigation/native';
 import id from 'date-fns/esm/locale/id/index.js';
 import React, {useState} from 'react';
-import styled from 'styled-components/native';
+import {Alert, Dimensions, Pressable, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {useQueryClient} from 'react-query';
+import styled from 'styled-components/native';
+import {css, useTheme} from 'styled-components/native';
+import ArrowDown from '~assets/icons/Group/arrowDown.svg';
+import ArrowRight from '~assets/icons/Group/checkArrow.svg';
 import ButtonMeal from '~components/ButtonMeal';
 import Typography from '~components/Typography';
-import ArrowRight from '~assets/icons/Group/checkArrow.svg';
-import ArrowDown from '~assets/icons/Group/arrowDown.svg';
-import {Alert, Dimensions, Pressable, View} from 'react-native';
-import {css, useTheme} from 'styled-components/native';
+
+import useOrderMeal from '../../../../../../../../biz/useOrderMeal';
+import usePurchaseHistory from '../../../../../../../../biz/usePurchaseHistory';
+import TextButton from '../../../../../../../../components/TextButton';
+import {useConfirmOrderState} from '../../../../../../../../hook/useOrder';
 import {
   formattedDate,
   formattedDateAndDay,
   formattedDateType,
   formattedDateWeekBtn,
 } from '../../../../../../../../utils/dateFormatter';
-import withCommas from '../../../../../../../../utils/withCommas';
 import {formattedMealFoodStatus} from '../../../../../../../../utils/statusFormatter';
-import TextButton from '../../../../../../../../components/TextButton';
-import {useNavigation} from '@react-navigation/native';
-import {PurchaseDetailPageName} from '../../../../Detail';
-import useOrderMeal from '../../../../../../../../biz/useOrderMeal';
-import usePurchaseHistory from '../../../../../../../../biz/usePurchaseHistory';
+import withCommas from '../../../../../../../../utils/withCommas';
 import {PAGE_NAME as BuyMealPageName} from '../../../../../../Bnb/BuyMeal/Main';
-import {useQueryClient} from 'react-query';
-import { useConfirmOrderState } from '../../../../../../../../hook/useOrder';
+import {PurchaseDetailPageName} from '../../../../Detail';
+
 const {width} = Dimensions.get('screen');
 const Component = ({purchaseId, date, itemIndex}) => {
   const themeApp = useTheme();
@@ -59,41 +61,40 @@ const Component = ({purchaseId, date, itemIndex}) => {
       });
       setMealPurchase(refund);
     } catch (error) {
-      alert(error.toString().replace('error:', ''));
+      alert(error.toString()?.replace('error:', ''));
     }
   };
   const {mutateAsync: orderState} = useConfirmOrderState();
 
-  const deliveryConfirmPress = async (id) => {
+  const deliveryConfirmPress = async id => {
     try {
       await orderState({id: id});
     } catch (error) {
-      Alert.alert("상태변경",error.toString().replace("error: "))
+      Alert.alert('상태변경', error.toString()?.replace('error: '));
     }
-   
   };
   const changeItem = async (id, serviceDate) => {
     const req = {
       orderId: purchase.id,
       id: id,
     };
-    await refundItem(req);
-    const refund = mealPurchase.map(o => {
-      return {
-        ...o,
-        orderItems: [
-          ...o.orderItems.map(v => {
-            if (v.id === id) {
-              return {...v, orderStatus: 7};
-            } else {
-              return v;
-            }
-          }),
-        ],
-      };
-    });
-    setMealPurchase(refund);
-
+    // await refundItem(req);
+    // const refund = mealPurchase.map(o => {
+    //   return {
+    //     ...o,
+    //     orderItems: [
+    //       ...o.orderItems.map(v => {
+    //         if (v.id === id) {
+    //           return {...v, orderStatus: 7};
+    //         } else {
+    //           return v;
+    //         }
+    //       }),
+    //     ],
+    //   };
+    // });
+    // setMealPurchase(refund);
+    console.log(serviceDate, 'serviceDate');
     navigation.navigate(BuyMealPageName, {
       date: serviceDate ? serviceDate : formattedDate(new Date()),
     });
@@ -239,9 +240,13 @@ const Component = ({purchaseId, date, itemIndex}) => {
                                           'orderMeal',
                                         );
                                       } catch (error) {
-                                        Alert.alert("메뉴취소 불가",err.toString().replace('error: ',""));
+                                        Alert.alert(
+                                          '메뉴취소 불가',
+                                          error
+                                            .toString()
+                                            ?.replace('error: ', ''),
+                                        );
                                       }
-                                      
                                     },
 
                                     style: 'destructive',
@@ -254,7 +259,10 @@ const Component = ({purchaseId, date, itemIndex}) => {
                       )}
                       {order.orderStatus === 10 && (
                         <ButtonContainer>
-                          <ButtonMeal label={'수령확인'} onPressEvent={()=>deliveryConfirmPress(order.id)}/>
+                          <ButtonMeal
+                            label={'수령확인'}
+                            onPressEvent={() => deliveryConfirmPress(order.id)}
+                          />
                         </ButtonContainer>
                       )}
                     </DateOrderItemContent>

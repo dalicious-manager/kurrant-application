@@ -2,7 +2,6 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useNavigation} from '@react-navigation/native';
 import React, {useLayoutEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';
-
 import PublicNotice, {
   PAGE_NAME as PublicNoticePageName,
 } from '~pages/Main/MyPage/Notice/PublicNotice';

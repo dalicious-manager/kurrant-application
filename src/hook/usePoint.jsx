@@ -1,4 +1,5 @@
 import {useInfiniteQuery, useQuery} from 'react-query';
+
 import {pointApis} from '../api/point';
 
 export function useGetPointList(condition) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import styled from 'styled-components';
+
 import Typography from '../../../../../../components/Typography';
 
 const Button = ({touch, setTouch, isDisabled}) => {

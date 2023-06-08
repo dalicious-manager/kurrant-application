@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import CartIcon from '../../assets/icons/BuyMeal/cart.svg';
 import useAuth from '../../biz/useAuth';
 import {PAGE_NAME as MealCartPageName} from '../../pages/Main/Bnb/MealCart/Main';
-
+import {PAGE_NAME as LoginPageName} from '../../pages/Main/Login/Login';
 /**
  *
  * @param {object} props
