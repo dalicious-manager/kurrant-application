@@ -39,15 +39,6 @@ const Pages = () => {
   const loadData = isApplicationList[0];
   const recentType = loadData?.clientType;
   const recentId = loadData?.id;
-  console.log(
-    selectType,
-    '-로드타입',
-    typeof state,
-    state,
-    '-state',
-    recentType,
-    '-최신타입',
-  );
 
   const user = isApartCheck.user;
   const info = isApartCheck.info;

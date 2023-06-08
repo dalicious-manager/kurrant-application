@@ -1,13 +1,12 @@
+/* eslint-disable import/order */
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
-import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
-import StarRating from '../../../../../components/StarRating/StarRating';
+import {css} from 'styled-components/native';
 
-import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
-
+import AdminOrMakersReview from './AdminOrMakersReview';
 import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
@@ -20,15 +19,21 @@ import {getStorage} from '../../../../../utils/asyncStorage';
 import {
   deleteReview,
   deleteReview2,
-} from '../../../../../biz/useReview/useWrittenReview/Fetch';
+} from '~biz/useReview/useWrittenReview/Fetch';
+import useWrittenReview from '~biz/useReview/useWrittenReview/hook';
+import {SkinnyArrowDown} from '~components/Icon';
+import StarRating from '~components/StarRating/StarRating';
+import Typography from '~components/Typography';
+import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
+import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
+import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '~screens/Main/Review/CreateReview/Page2';
+// import {deleteReview} from '~biz/useReview/useWrittenReview/Fetch';
 
-// import ImageModal from './ImageModal/ImageModal';
-import ImageModal from '~components/Review/ImageModal/ImageModal';
+import ImageModal from './ImageModal/ImageModal';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import {changeSeperator} from '../../../../../utils/dateFormatter';
 import {SkinnyArrowDown} from '../../../../../components/Icon';
 import {css} from 'styled-components/native';
-import {isOverThreeLines} from '../../../../../components/Review/WrittenReviewCard/logic';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -109,8 +114,6 @@ const Component = ({
                 await getWrittenReview();
               }
             } catch (err) {
-              console.log('리뷰 삭제 에러뜸');
-              console.log(err);
               Alert.alert('리뷰 삭제 실패', '', [
                 {
                   text: '확인',

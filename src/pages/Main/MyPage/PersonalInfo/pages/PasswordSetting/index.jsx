@@ -157,11 +157,6 @@ const Pages = () => {
                           value: 31,
                           message: '32글자 이하 입력',
                         },
-                        pattern: {
-                          value:
-                            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,32}$/,
-                          message: '비밀번호 형식에 맞지 않습니다.',
-                        },
                       }}
                       padding="4px 0"
                       style={inputStyle}

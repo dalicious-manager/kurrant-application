@@ -11,8 +11,6 @@ const DotPagination = ({index, totalLength, setIndex}) => {
   }
 
   const handleDotPress = i => {
-    console.log('잘 눌린다');
-
     setIndex(i);
   };
 

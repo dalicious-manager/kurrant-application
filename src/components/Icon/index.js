@@ -17,6 +17,7 @@ export {default as DeliveryFreeIcon} from './_components/DeliveryFreeIcon';
 export {default as ArrowRightBoxIcon} from './_components/ArrowRightBoxIcon';
 export {default as ArrowRightBoxIcon2} from './_components/ArrowRightBoxIcon2';
 export {default as ArrowLeftBoxIcon} from './_components/ArrowLeftBoxIcon';
+export {default as PointArrow} from './_components/PointArrow';
 export {default as PointIcon} from './_components/PointIcon';
 export {default as PointBadge} from './_components/PointBoxIcon';
 export {default as MembershipBadge} from './_components/MembershipBadge';

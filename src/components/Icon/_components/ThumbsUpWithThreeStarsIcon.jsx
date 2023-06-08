@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import ThumbsUpWithThreeStarsIcon from '~assets/icons/ThumbsUpWithThreeStarsIcon.svg';
 
 import IconWrapper from '../component';

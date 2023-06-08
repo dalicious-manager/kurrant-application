@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
 import {Platform, Text, TextInput, View} from 'react-native';
 import styled, {css} from 'styled-components';
-import Typography from '../../../../../../components/Typography';
 import {useTheme} from 'styled-components/native';
+
+import Typography from '../../../../../../components/Typography';
 
 const ReviewInput = ({
   editContentInput,

@@ -1,5 +1,6 @@
 import {useAtom} from 'jotai';
 import {useState} from 'react';
+import {Alert} from 'react-native';
 
 import * as Fetch from './Fetch';
 import {
@@ -24,7 +25,7 @@ const useReviewWait = () => {
       setReviewWaitList(res.data.orderFoodList);
       setRedeemablePoints(res.data.redeemablePoints);
     } catch (err) {
-      console.log(err);
+      Alert.alert('작성할 리뷰', err?.toString()?.replace('error: ', ''));
     }
   };
 

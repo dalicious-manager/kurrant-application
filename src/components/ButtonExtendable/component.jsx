@@ -1,11 +1,8 @@
-import {useLinkBuilder} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Text, Animated, Pressable, Dimensions, View} from 'react-native';
+import {Animated, Pressable, Dimensions} from 'react-native';
 import styled from 'styled-components';
 
 import Arrow from '../../assets/icons/Arrow/arrowTop.svg';
-import MinusIcon from '../../assets/icons/MealDetail/minus.svg';
-import PlusIcon from '../../assets/icons/MealDetail/plus.svg';
 import Trapezoid from '../../assets/icons/MealDetail/trapezoid.svg';
 import Count from '../../components/Count';
 import withCommas from '../../utils/withCommas';

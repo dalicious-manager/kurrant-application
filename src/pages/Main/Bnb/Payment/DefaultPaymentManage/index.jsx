@@ -1,19 +1,19 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {Alert, Dimensions, ScrollView} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import useUserMe from '~biz/useUserMe';
-
 import BottomSheet from '~components/BottomSheet/component';
 import Button from '~components/Button';
+import Check from '~components/Check';
+import Form from '~components/Form';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard';
+
 import RegisteredBox from './RegisteredBox';
-import Check from '~components/Check';
-import Form from '~components/Form';
-import {useForm} from 'react-hook-form';
-import {Alert, Dimensions, ScrollView} from 'react-native';
-import {useAtom} from 'jotai';
 import {registCardAtom} from '../../../../../atoms/store';
 import Toast from '../../../../../components/Toast';
 
@@ -45,7 +45,6 @@ const Pages = ({route}) => {
     });
   };
   const onSelectComplateEvent = async () => {
-    console.log(selectDefaultCard);
     try {
       if (agreeCheck.watch(agreeCheck).agreeCheck) {
         if (selectNowCard[0]?.id) {
@@ -68,14 +67,12 @@ const Pages = ({route}) => {
   };
   useFocusEffect(
     useCallback(() => {
-      console.log(route, '기본 카드 등록');
       if (params?.isRegist) {
         toast.toastEvent();
         navigation.setParams({
           isRegist: false,
         });
       }
-      console.log(selectDefaultCard, '선택된 카드');
       const getCardListData = async () => {
         await getCardList();
       };

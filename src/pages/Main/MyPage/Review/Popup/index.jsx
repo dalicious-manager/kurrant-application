@@ -11,36 +11,36 @@ export const PAGE_NAME = '';
 
 const Pages = ({setPopupShow}) => {
   return (
-    <Wrap onPress={()=>setPopupShow(false)}>
-      <TouchableWithoutFeedback style={{width:'100%', height:'100%'}} >
-    <Container>
-      <Typography>
-        리뷰 작성/수정은 식사일/배송일로부터
-        {'\n'}5일 이내에 가능합니다.
-      </Typography>
+    <Wrap onPress={() => setPopupShow(false)}>
+      <TouchableWithoutFeedback style={{width: '100%', height: '100%'}}>
+        <Container>
+          <Typography>
+            리뷰 작성/수정은 식사일/배송일로부터
+            {'\n'}5일 이내에 가능합니다.
+          </Typography>
 
-      <ClosePopup
-        onPress={() => {
-          setPopupShow(false);
-        }}>
-        <XVector />
-      </ClosePopup>
-    </Container>
-    </TouchableWithoutFeedback>
+          <ClosePopup
+            onPress={() => {
+              setPopupShow(false);
+            }}>
+            <XVector />
+          </ClosePopup>
+        </Container>
+      </TouchableWithoutFeedback>
     </Wrap>
   );
 };
 
 export default Pages;
 const Wrap = styled.Pressable`
-  background-color: #000000B2;
+  background-color: #000000b2;
   position: absolute;
   z-index: 1;
   top: 0px;
   bottom: 0px;
   right: 0px;
   left: 0px;
-`
+`;
 const Container = styled.View`
   align-self: center;
   justify-content: center;
@@ -51,7 +51,6 @@ const Container = styled.View`
 
   padding: 0 5%;
   border-radius: 7px;
-  
 
   box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
 `;

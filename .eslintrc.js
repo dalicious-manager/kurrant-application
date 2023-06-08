@@ -19,13 +19,13 @@ module.exports = {
   },
   plugins: ['import'],
   rules: {
+    'react-hooks/exhaustive-deps': 'warn',
     // sort for imports.
     'import/order': [
       'error',
       {
         groups: [
-          ['external', 'builtin'], // Built-in types are first
-          'internal',
+          ['external', 'builtin', 'internal'], // Built-in types are first
           ['sibling', 'parent'], // Then sibling and parent types. They can be mingled together
           'index', // Then the index file
           'object',
@@ -84,6 +84,5 @@ module.exports = {
         },
       },
     ],
-    parser: 'babel-eslint',
   },
 };

@@ -9,14 +9,6 @@ import {
 } from 'react-native';
 import styled, {useTheme} from 'styled-components';
 import Typography from '~components/Typography';
-import {RightSkinnyArrow, YellowStar} from '~components/Icon';
-
-import Card from './Card';
-
-import BottomSheet from '~components/BottomSheet';
-
-import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
-import RateStars from '~components/RateStars';
 import {
   ArrowUpAndDown,
   Picture,
@@ -658,55 +650,12 @@ const LoadingPage1 = styled.View`
   margin-bottom: 18px;
 `;
 
-const BottomModalSelecterComponent = ({selected, item}) => {
-  return (
-    <>
-      {selected.includes(item.id) ? (
-        <ContentItemBox>
-          <RowView>
-            <RateStars
-              ratingInput={item.text}
-              width={'132px'}
-              margin={'3px'}
-              disableButton={true}
-              callback={() => {}}
-            />
-            <ContentItemText>({item.reviewCount})</ContentItemText>
-          </RowView>
+const IconWrap = styled.View`
+  width: 12px;
+  height: 12px;
 
-          <CheckedIcon />
-        </ContentItemBox>
-      ) : (
-        <ContentItemBox>
-          <RowView>
-            <RateStars
-              ratingInput={item.text}
-              width={'132px'}
-              margin={'3px'}
-              disableButton={true}
-              callback={() => {}}
-            />
-            <ContentItemText>({item.reviewCount})</ContentItemText>
-          </RowView>
-        </ContentItemBox>
-      )}
-    </>
-  );
-};
-
-const ContentItemBox = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
   /* border: 1px solid black; */
-  padding-right: 6px;
-`;
-
-const RowView = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})`
-  margin-left: 10px;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
 `;

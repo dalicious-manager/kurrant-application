@@ -5,6 +5,7 @@ import {FormProvider, useForm} from 'react-hook-form';
 import {SafeAreaView, Text, View} from 'react-native';
 import styled from 'styled-components';
 
+import {PAGE_NAME as ApartmentApplicationInformationPageName} from './Pages/index';
 import Arrow from '../../../../../assets/icons/Spot/arrowRight.svg';
 import {
   apartApplicationDiningTypeAtom,
@@ -20,7 +21,6 @@ import ProgressBar from '../../../../../components/ProgressBar2';
 import Typography from '../../../../../components/Typography';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as ApartmentApplicationLastPageName} from '../LastPage';
-import {PAGE_NAME as ApartmentApplicationInformationPageName} from './Pages/index';
 
 export const PAGE_NAME = 'P__GROUP__CREATE__APARTMENT__APPLICATION__THIRD';
 const Pages = () => {
@@ -63,7 +63,6 @@ const Pages = () => {
             delete getDataPage3.deliveryTime2;
           }
           setMorning(getDataPage);
-          console.log(getDataPage, '922777');
           setLunch(getDataPage2);
           setDinner(getDataPage3);
         }

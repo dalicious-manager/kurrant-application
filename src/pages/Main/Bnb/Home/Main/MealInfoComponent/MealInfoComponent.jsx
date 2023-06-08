@@ -1,31 +1,28 @@
-import styled, {css} from 'styled-components';
-import React, {useState} from 'react';
-import Typography from '../../../../../../components/Typography';
-import {StyleSheet, View} from 'react-native';
-import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
-import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useConfirmOrderState} from '../../../../../../hook/useOrder';
-import {SCREEN_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
-import CoinAnimation from '../../components/CoinAnimation';
-
 import {Shadow} from 'react-native-shadow-2';
 import Sound from 'react-native-sound';
+import styled, {css} from 'styled-components';
 
-const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
-  
+import Typography from '../../../../../../components/Typography';
+import {useConfirmOrderState} from '../../../../../../hook/useOrder';
+import {SCREEN_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
+import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
+import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
+import CoinAnimation from '../../components/CoinAnimation';
+
+const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
   const {mutateAsync: orderState} = useConfirmOrderState();
-  const [startAni ,setStartAni] = useState(false);
+  const [startAni, setStartAni] = useState(false);
   const deliveryConfirmPress = async () => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
   };
-  
 
- 
   const goToReviewPage = (id, image, name) => {
     navigation.navigate(reviewPage, {
       orderItemId: id,
@@ -34,7 +31,6 @@ const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
       test: 'test',
     });
   };
-
   return (
     <>
       <MealInfoWrapper>
@@ -80,7 +76,9 @@ const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
                 </View>
                 <MealCount>
                   <GreyTxt status={meal.orderStatus}>
-                    {(meal.orderStatus === 10 || meal.orderStatus === 6|| meal.orderStatus === 9) &&
+                    {(meal.orderStatus === 10 ||
+                      meal.orderStatus === 6 ||
+                      meal.orderStatus === 9) &&
                       formattedMealFoodStatus(meal.orderStatus)}
                   </GreyTxt>
 
@@ -102,17 +100,16 @@ const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
             <ConfirmPressable
               disabled={startAni}
               startAni={startAni}
-              
-              onPress={() => {                
+              onPress={() => {
                 if (meal.orderStatus === 10) {
                   // 주문상태변경 - 수령완료 api보내야함
                   // console.log('000');
-                  setStartAni(true)
+                  setStartAni(true);
                   deliveryConfirmPress();
                 } else {
                   // console.log('00011');
                   // 리뷰로 가기
-                 goToReviewPage(meal.id, meal.image, meal.name);
+                  goToReviewPage(meal.id, meal.image, meal.name);
                 }
               }}>
               <ConfirmText>
@@ -120,9 +117,14 @@ const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
                   ? '맛 평가하기'
                   : meal.orderStatus === 10 && '네, 확인했어요'}
               </ConfirmText>
-              {startAni && <CoinAnimation isStart={startAni} coinSound={coinSound} setStart={setStartAni}/>}
+              {startAni && (
+                <CoinAnimation
+                  isStart={startAni}
+                  coinSound={coinSound}
+                  setStart={setStartAni}
+                />
+              )}
             </ConfirmPressable>
-            
           </OrderStatusWrap>
         )}
       </MealInfoWrapper>
@@ -131,23 +133,6 @@ const MealInfoComponent = ({m, meal, mockStatus,coinSound}) => {
 };
 
 export default MealInfoComponent;
-
-const styles = StyleSheet.create({
-  shadow: {
-    zIndex: 80,
-    // ios
-    shadowColor: '#5A1EFF',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-
-    // android
-    elevation: 10,
-  },
-});
 
 const Display = css`
   flex-direction: row;
@@ -183,7 +168,8 @@ const CommentText = styled(Typography).attrs({text: 'Body05SB'})`
   margin-bottom: 4px;
 `;
 const ConfirmPressable = styled.Pressable`
-  background-color: ${({theme, startAni}) => startAni ? theme.colors.grey[5]: theme.colors.purple[500]};
+  background-color: ${({theme, startAni}) =>
+    startAni ? theme.colors.grey[5] : theme.colors.purple[500]};
   border-radius: 999px;
   height: 28px;
   align-items: center;

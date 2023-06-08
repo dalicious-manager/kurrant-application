@@ -5,14 +5,12 @@ import {
 } from '@react-navigation/native';
 import React, {useCallback, useEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';
-
 import Button from '~components/Button';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
+
 import useBoard from '../../../../../biz/useBoard';
-
 import ListBox from '../ListBox';
-
 import {PAGE_NAME as NoticeDetailPageName} from '../NoticeDetail';
 
 export const PAGE_NAME = 'P__MY_PAGE__SPOT_NOTICE';

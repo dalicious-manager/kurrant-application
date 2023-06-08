@@ -1,26 +1,19 @@
+import DatePicker from '@react-native-community/datetimepicker';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  Dimensions,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Platform, Pressable, ScrollView} from 'react-native';
 import styled, {css, useTheme} from 'styled-components/native';
+
+import DateOrderItemContainer from './components/DateOrderItemContainer';
+import usePurchaseHistory from '../../../../../../biz/usePurchaseHistory';
+import {purchaseMealAtom} from '../../../../../../biz/usePurchaseHistory/store';
+import {CalendarIcon} from '../../../../../../components/Icon';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
-
-import usePurchaseHistory from '../../../../../../biz/usePurchaseHistory';
-import DateOrderItemContainer from './components/DateOrderItemContainer';
-import {purchaseMealAtom} from '../../../../../../biz/usePurchaseHistory/store';
-import {useAtom} from 'jotai';
-import Skeleton from '../../Skeleton';
+import {useGetMealPurchaseHistory} from '../../../../../../hook/usePurchaseHistory';
 import {formattedWeekDate} from '../../../../../../utils/dateFormatter';
-import {CalendarIcon} from '../../../../../../components/Icon';
-import DatePicker from '@react-native-community/datetimepicker';
+import Skeleton from '../../Skeleton';
 
 export const PAGE_NAME = 'P_MAIN__MEAL__HISTORY';
 
@@ -28,7 +21,9 @@ const Pages = () => {
   const navigation = useNavigation();
   const themeApp = useTheme();
   const [, setMealPurchase] = useAtom(purchaseMealAtom);
-  const [startDate, setStartDate] = useState(startDate || new Date());
+  const [startDate, setStartDate] = useState(
+    startDate || new Date().setDate(new Date().getDate() - 7),
+  );
   const [showDateModal, setShowDateModal] = useState(false);
   const [endDate, setEndDate] = useState(endDate || new Date());
   const [showDateModal2, setShowDateModal2] = useState(false);
@@ -58,8 +53,18 @@ const Pages = () => {
   ]);
   const {
     getPurchaseHistoryMeal,
-    readAbleAtom: {mealPurchase, isMealPurchaseLoading},
+    readAbleAtom: {isMealPurchaseLoading},
   } = usePurchaseHistory();
+  const body = {
+    startDate: formattedWeekDate(startDate),
+    endDate: formattedWeekDate(endDate),
+    orderType: 1,
+  };
+  const {
+    data: mealPurchase,
+    refetch: mealPurchaceRefetch,
+    isFetching,
+  } = useGetMealPurchaseHistory(body);
   const selectDate = date => {
     if (!isMealPurchaseLoading) {
       const setDate = searchDate.map(item =>
@@ -126,9 +131,9 @@ const Pages = () => {
     await getPurchaseHistoryMeal(body);
   };
   useEffect(() => {
-    const purchaseHistory = async date => {
-      await getPurchaseHistoryMeal(date);
-    };
+    // const purchaseHistory = async date => {
+    //   await getPurchaseHistoryMeal(date);
+    // };
     const selectDate = searchDate.filter(v => v.isActive === true);
     // console.log(selectDate[0])
     const dateArray = () => {
@@ -151,17 +156,16 @@ const Pages = () => {
       }
     };
     if (selectDate[0].id !== 3) {
-      const [start, end] = dateArray();
-      const req = {
-        startDate: formattedWeekDate(start),
-        endDate: formattedWeekDate(end),
-        orderType: 1,
-      };
-      purchaseHistory(req);
+      const [starts, ends] = dateArray();
+      setStartDate(starts);
+      setEndDate(ends);
     } else {
       setMealPurchase([]);
     }
   }, [searchDate]);
+  useEffect(() => {
+    mealPurchaceRefetch();
+  }, [startDate, endDate, mealPurchaceRefetch]);
   return (
     <Container>
       <Wrapper>
@@ -227,20 +231,22 @@ const Pages = () => {
             </SubmitButton>
           </ConditionSearch>
         )}
-        {isMealPurchaseLoading ? (
+        {isFetching ? (
           <Skeleton />
-        ) : mealPurchase?.length > 0 ? (
+        ) : mealPurchase?.data?.length > 0 ? (
           <ScrollViewBox>
-            {mealPurchase?.map((v, i) => {
+            {mealPurchase?.data?.map((v, i) => {
               return (
                 <DateOrderItemContainer
                   key={`${v.orderDate}${i}`}
                   itemIndex={i}
+                  data={mealPurchase?.data}
                   purchaseId={v.id}
                   date={v.orderDate}
                 />
               );
             })}
+            <BottomView />
           </ScrollViewBox>
         ) : (
           <NothingContainer>
@@ -336,7 +342,10 @@ const Container = styled.View`
 const ScrollViewBox = styled(ScrollView)`
   flex: 1;
 `;
-
+const BottomView = styled.View`
+  width: 100%;
+  height: 28px;
+`;
 const Bridge = styled.View`
   margin: 0px 4px;
 `;

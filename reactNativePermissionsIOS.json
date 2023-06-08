@@ -1,0 +1,8 @@
+{
+  "reactNativePermissionsIOS": [
+    "Camera",
+    "LocationWhenInUse",
+    "Notifications",
+    "PhotoLibrary"
+  ]
+}

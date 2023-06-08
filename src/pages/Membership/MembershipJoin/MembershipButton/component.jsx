@@ -1,8 +1,8 @@
 import React from 'react';
-import styled from 'styled-components/native';
-
-import ArrowRight from '~assets/icons/Arrow/btnArrowRight.svg';
 import {View} from 'react-native';
+import styled from 'styled-components/native';
+import ArrowRight from '~assets/icons/Arrow/btnArrowRight.svg';
+
 import Label from '../../../../components/Label';
 import Typography from '../../../../components/Typography';
 import withCommas from '../../../../utils/withCommas';

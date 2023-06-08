@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, Alert} from 'react-native';
 import styled from 'styled-components';
 
 import useApartApplication from '../../../biz/useApartApplication/hook';
@@ -55,7 +55,7 @@ const Pages = () => {
         });
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('스팟 가입', err?.toString()?.replace('error: ', ''));
     }
   };
   return (

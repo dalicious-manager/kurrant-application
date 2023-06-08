@@ -1,6 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { el } from 'date-fns/locale';
-import React, { useEffect, useRef, useState } from 'react';
+import {el} from 'date-fns/locale';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
   Animated,
@@ -9,7 +9,6 @@ import {
   Platform,
 } from 'react-native';
 import styled from 'styled-components/native';
-
 
 /**
  * @param {object} props
@@ -21,17 +20,16 @@ import styled from 'styled-components/native';
  * @returns
  */
 const Component = props => {
-  const { modalVisible, setModalVisible ,setTime,time,type} = props;
+  const {modalVisible, setModalVisible, setTime, time, type} = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
   function onTimeSelected(event, value) {
     // console.log(value.toLocaleTimeString('en-US'))
-    if(Platform.OS === 'android' ){
+    if (Platform.OS === 'android') {
       setModalVisible(false);
     }
     setTime(value);
-    
-  };
+  }
 
   const screenHeight = Dimensions.get('screen').height;
   // const panY = useRef(new Animated.Value(screenHeight)).current;
@@ -52,7 +50,6 @@ const Component = props => {
   //   useNativeDriver: true,
   // });
 
-
   // useEffect(() => {
   //   if (props.modalVisible && Platform.OS === 'ios' ) {
   //     resetBottomSheet.start();
@@ -67,40 +64,31 @@ const Component = props => {
   //       upY.removeListener(id);
   //     };
   //   }
-    
+
   // }, [up, upY]);
-  const closeModal = () => {
-    if(Platform.OS === 'android' ){
-      setModalVisible(false);
-    }else{
-      closeBottomSheet.start(() => {
-        setModalVisible(false);
-      });
-    }
-    
-  };
+
   return (
     <Modal visible={modalVisible} animationType={'slide'} transparent>
       <DateTimePicker
-            value={new Date()}
-            mode={type}
-            display={Platform.OS === 'ios' ? 'spinner' : 'spinner'}
-            is24Hour={false}
-            onChange={onTimeSelected}
-          />
+        value={new Date()}
+        mode={type}
+        display={Platform.OS === 'ios' ? 'spinner' : 'spinner'}
+        is24Hour={false}
+        onChange={onTimeSelected}
+      />
     </Modal>
   );
 };
 
-const Overlay =styled.View`
+const Overlay = styled.View`
   position: relative;
   flex: 1;
   justify-content: flex-end;
   background-color: rgba(0, 0, 0, 0.7);
-`
+`;
 const Background = styled.View`
   flex: 1;
-`
+`;
 
 const AnimatedView = styled(Animated.View)`
   align-items: center;
@@ -109,7 +97,6 @@ const AnimatedView = styled(Animated.View)`
   border-top-right-radius: 25px;
   padding-top: 20px;
   padding-bottom: 56px;
-`
-
+`;
 
 export default Component;

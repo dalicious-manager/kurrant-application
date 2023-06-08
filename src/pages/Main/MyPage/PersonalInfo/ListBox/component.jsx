@@ -2,11 +2,11 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
 import {Alert, View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import Switch from '~components/Switch';
 import Typography from '~components/Typography';
-import { useSetAlramSetting } from '../../../../../hook/useAlram';
+
+import {useSetAlramSetting} from '../../../../../hook/useAlram';
 
 /**
  * @param {object} props
@@ -42,7 +42,7 @@ const Component = ({
         isActive: !v.isActive,
       });
     } catch (error) {
-      Alert.alert('알람설정', error.toString().replace('error: ', ''));
+      Alert.alert('알람설정', error.toString()?.replace('error: ', ''));
     }
 
     // await getAlarm();
@@ -81,8 +81,8 @@ const Component = ({
             name={title}
             size={'md'}
             agree={toggle.isActive}
-            toggleEvent={async()=>{
-              await alarmAgree(toggle)
+            toggleEvent={async () => {
+              await alarmAgree(toggle);
             }}
           />
         )}

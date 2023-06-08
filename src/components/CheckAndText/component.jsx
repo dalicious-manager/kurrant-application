@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+
 import {CheckIcon} from '../Icon';
 import Typography from '../Typography';
 

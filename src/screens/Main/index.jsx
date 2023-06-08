@@ -1,9 +1,22 @@
+/* eslint-disable no-dupe-keys */
+/* eslint-disable import/order */
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useAtom} from 'jotai';
 import React from 'react';
+import {useEffect} from 'react';
 import {Alert, View} from 'react-native';
+import {
+  RESULTS,
+  checkNotifications,
+  openSettings,
+  requestNotifications,
+} from 'react-native-permissions';
 import styled from 'styled-components';
 
+import AppleSignup, {
+  PAGE_NAME as AppleSignupPageName,
+} from '~pages/Main/Login/AppleSignup';
 import EmailLoginModal, {
   PAGE_NAME as EmailLoginModalModalPageName,
 } from '~pages/Main/Login/EmailLogin';
@@ -26,9 +39,6 @@ import LoginMainModal, {
   PAGE_NAME as LoginMainModalPageName,
 } from '~pages/Main/Login/Login';
 import SignUp, {PAGE_NAME as SignUpPageName} from '~pages/Main/Login/SignUp';
-import AppleSignup, {
-  PAGE_NAME as AppleSignupPageName,
-} from '~pages/Main/Login/AppleSignup';
 import SignUpComplate, {
   PAGE_NAME as SignUpComplatePageName,
 } from '~pages/Main/Login/SignUp/SignUpComplate';
@@ -36,10 +46,6 @@ import FAQ, {PAGE_NAME as FAQPageName} from '~pages/Main/MyPage/FAQ';
 import FAQListPage, {
   PAGE_NAME as FAQListPageName,
 } from '~pages/Main/MyPage/FAQ/FAQListPage';
-import {
-  FAQListDetailPage,
-  FAQListDetailPageName,
-} from '../../pages/Main/MyPage/FAQ/FAQListDetailPage';
 import PersonalInfo, {
   PAGE_NAME as PersonalInfoPageName,
 } from '~pages/Main/MyPage/PersonalInfo';
@@ -76,9 +82,6 @@ import MembershipInfo, {
 import MembershipUsagedetails, {
   PAGE_NAME as MembershipUsagedetailsPageName,
 } from '~pages/Membership/MembershipInfo/MembershipUsageDetails';
-import MemebershipPaymentManage, {
-  PAGE_NAME as MemebershipPaymentManagePageName,
-} from '~pages/Membership/MembershipJoin/MemebershipPaymentManage';
 import MembershipIntro, {
   PAGE_NAME as MembershipIntroPageName,
 } from '~pages/Membership/MembershipIntro';
@@ -91,6 +94,9 @@ import MembershipJoinComplate, {
 import MembershipJoinPayments, {
   PAGE_NAME as MembershipJoinPaymentsPageName,
 } from '~pages/Membership/MembershipJoin/MembershipJoinPayments';
+import MemebershipPaymentManage, {
+  PAGE_NAME as MemebershipPaymentManagePageName,
+} from '~pages/Membership/MembershipJoin/MemebershipPaymentManage';
 import MembershipTerminate, {
   PAGE_NAME as MembershipTerminatePageName,
 } from '~pages/Membership/MembershipTerminate';
@@ -98,49 +104,41 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
-import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 //import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
-import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
-import PayCheckPassword, {
-  PAGE_NAME as PayCheckPasswordPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
-import PayEmailSetting, {
-  PAGE_NAME as PayEmailSettingPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayEmailSetting';
-import PayCheckPasswordPay, {
-  PAGE_NAME as PayCheckPasswordPayPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordPay';
-import PayCheckPasswordCheck, {
-  PAGE_NAME as PayCheckPasswordCheckPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordCheck';
-import RePayCheckEmail, {
-  PAGE_NAME as RePayCheckEmailPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordEmail';
-import RePayCheckPassword, {
-  PAGE_NAME as RePayCheckPasswordPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPassword';
-import RePayCheckPasswordCheck, {
-  PAGE_NAME as RePayCheckPasswordCheckPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordCheck';
-import PayCheckEmail, {
-  PAGE_NAME as PayCheckEmailPageName,
-} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordEmail';
-import RegisterCard, {
-  SCREEN_NAME as RegisterCardScreenName,
-} from './RegisterCard';
+import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 import PaymentsManage, {
   SCREEN_NAME as PaymentsManageScreenName,
 } from './PaymentsManage';
 import PurchaseHistory, {
   SCREEN_NAME as PurchaseHistoryScreenName,
 } from './PurchaseHistory';
-
+import RegisterCard, {
+  SCREEN_NAME as RegisterCardScreenName,
+} from './RegisterCard';
+import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+import CreateReviewPage1, {
+  SCREEN_NAME as CreateReviewPage1ScreenName,
+} from './Review/CreateReview/Page1';
+import CreateReviewPage2, {
+  SCREEN_NAME as CreateReviewPage2ScreenName,
+  SCREEN_NAME2 as EditReviewPage2ScreenName,
+} from './Review/CreateReview/Page2';
+import ReportReview, {
+  PAGE_NAME as ReportReviewPageName,
+} from './Review/ReportReview';
+import {isLoginLoadingAtom} from '../../biz/useAuth/store';
+import useBoard from '../../biz/useBoard';
 import BackButton from '../../components/BackButton';
 import Badge from '../../components/Badge';
 import ShoppingCart from '../../components/BasketButton';
 import CloseIcon from '../../components/CloseButton';
-
+import CloseButton from '../../components/CloseButton';
+import {
+  DeleteIcon,
+  NotifySettingIcon,
+  SettingIcon,
+} from '../../components/Icon';
 import GroupCreateApartmnet, {
   PAGE_NAME as GroupCreateApartmentPageName,
 } from '../../pages/Group/GroupApartment';
@@ -240,9 +238,6 @@ import GroupManageDetail, {
 import BuyMeal, {
   PAGE_NAME as BuyMealPageName,
 } from '../../pages/Main/Bnb/BuyMeal/Main';
-import NotificationCenter, {
-  PAGE_NAME as NotificationCenterName,
-} from '../../pages/NotificationCenter';
 import MealCart, {
   PAGE_NAME as MealCartPageName,
 } from '../../pages/Main/Bnb/MealCart/Main';
@@ -252,60 +247,106 @@ import MealDetail, {
 import MealDetailInformation, {
   PAGE_NAME as MealInformationPageName,
 } from '../../pages/Main/Bnb/MealDetail/Page';
+import DefaultPaymentManage, {
+  PAGE_NAME as DefaultPaymentManagePageName,
+} from '../../pages/Main/Bnb/Payment/DefaultPaymentManage';
 import Payment, {
   PAGE_NAME as PaymentPageName,
 } from '../../pages/Main/Bnb/Payment/Main';
 import MealPayment, {
   PAGE_NAME as MealPaymentPageName,
 } from '../../pages/Main/Bnb/Payment/MealPayment';
-import DefaultPaymentManage, {
-  PAGE_NAME as DefaultPaymentManagePageName,
-} from '../../pages/Main/Bnb/Payment/DefaultPaymentManage';
-import {
-  PurchaseDetailPage,
-  PurchaseDetailPageName,
-} from '../../pages/Main/MyPage/PurchaseHistory/Detail';
-import {SCREEN_NAME} from '../Main/Bnb';
-import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
-import NoticeDetail, {
-  PAGE_NAME as NoticeDetailPageName,
-} from '../../pages/Main/MyPage/Notice/NoticeDetail';
-import {
-  DeleteIcon,
-  NotifySettingIcon,
-  SettingIcon,
-} from '../../components/Icon';
-import {useAtom} from 'jotai';
-import useBoard from '../../biz/useBoard';
-import {useEffect} from 'react';
-import {getStorage} from '../../utils/asyncStorage';
 import CompanyInfo, {
   PAGE_NAME as CompanyInfoPageName,
 } from '../../pages/Main/MyPage/CompanyInfo';
 import Credit, {
   PAGE_NAME as CreditPageName,
 } from '../../pages/Main/MyPage/Credit';
-import {PointMainPage, PointMainPageName} from '../../pages/Main/MyPage/Point';
-import CloseButton from '../../components/CloseButton';
 
 // 리뷰 및 재신 개인
-import CreateReviewPage1, {
-  SCREEN_NAME as CreateReviewPage1ScreenName,
-} from './Review/CreateReview/Page1';
-import CreateReviewPage2, {
-  SCREEN_NAME as CreateReviewPage2ScreenName,
-  SCREEN_NAME2 as EditReviewPage2ScreenName,
-} from './Review/CreateReview/Page2';
-
-import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
-
-import ReportReview, {
-  PAGE_NAME as ReportReviewPageName,
-} from './Review/ReportReview';
-
+import {
+  FAQListDetailPage,
+  FAQListDetailPageName,
+} from '../../pages/Main/MyPage/FAQ/FAQListDetailPage';
+import NoticeDetail, {
+  PAGE_NAME as NoticeDetailPageName,
+} from '../../pages/Main/MyPage/Notice/NoticeDetail';
+import PayCheckPassword, {
+  PAGE_NAME as PayCheckPasswordPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPassword';
+import PayCheckPasswordCheck, {
+  PAGE_NAME as PayCheckPasswordCheckPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordCheck';
+import PayCheckEmail, {
+  PAGE_NAME as PayCheckEmailPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordEmail';
+import PayCheckPasswordPay, {
+  PAGE_NAME as PayCheckPasswordPayPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayCheckPasswordPay';
+import PayEmailSetting, {
+  PAGE_NAME as PayEmailSettingPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/PayEmailSetting';
+import RePayCheckPassword, {
+  PAGE_NAME as RePayCheckPasswordPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPassword';
+import RePayCheckPasswordCheck, {
+  PAGE_NAME as RePayCheckPasswordCheckPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordCheck';
+import RePayCheckEmail, {
+  PAGE_NAME as RePayCheckEmailPageName,
+} from '../../pages/Main/MyPage/PersonalInfo/pages/RePayCheckPasswordEmail';
+import {PointMainPage, PointMainPageName} from '../../pages/Main/MyPage/Point';
+import {
+  PurchaseDetailPage,
+  PurchaseDetailPageName,
+} from '../../pages/Main/MyPage/PurchaseHistory/Detail';
 import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
-import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
+import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
+import NotificationCenter, {
+  PAGE_NAME as NotificationCenterName,
+} from '../../pages/NotificationCenter';
+import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
+
+// map
+import SpotType, {PAGE_NAME as SpotTypePage} from '../../pages/Spots/SpotType';
+import MySpotMap, {PAGE_NAME as MySpotMapPage} from '../../pages/Map/MySpotMap';
+import ShareSpotMap, {
+  PAGE_NAME as ShareSpotMapPage,
+} from '../../pages/Map/ShareSpotMap';
+import SearchResult, {
+  PAGE_NAME as MapSearchResult,
+} from '../../pages/Map/SearchResult';
+import MySpotDetail, {
+  PAGE_NAME as MySpotDetailPage,
+} from '../../pages/Spots/mySpot/DetailAddress';
+import NotDelivery, {
+  PAGE_NAME as NotDeliveryPage,
+} from '../../pages/Spots/mySpot/NotDelivery';
+import Complete, {
+  PAGE_NAME as CompletePage,
+} from '../../pages/Spots/components/Complete';
+import PrivateInfo, {
+  PAGE_NAME as PrivateInfoPage,
+} from '../../pages/Spots/privateSpot/PrivateInfo';
+import ApplySpot, {
+  PAGE_NAME as ApplySpotPage,
+} from '../../pages/Spots/shareSpot/ApplySpot';
+import ShareSpotList, {
+  PAGE_NAME as ShareSpotListPage,
+} from '../../pages/Spots/shareSpot/ShareSpotList';
+import RegisterSpotMap, {
+  PAGE_NAME as RegisterSpotMapPage,
+} from '../../pages/Map/RegisterSpotMap';
+import SpotGuide, {
+  PAGE_NAME as SpotGuidePage,
+} from '../../pages/Spots/spotGuide/SpotGuide';
+import InviteSpot, {
+  PAGE_NAME as InviteSpotPage,
+} from '../../pages/Spots/spotGuide/InviteSpot';
+import MySpotDelivery, {
+  PAGE_NAME as MySpotDeliveryPage,
+} from '../../pages/Spots/mySpot/Delivery';
 
 const MainRoot = createNativeStackNavigator();
 
@@ -313,18 +354,15 @@ const Screen = () => {
   const [isLoginLoading] = useAtom(isLoginLoadingAtom);
   const {deleteAlarm} = useBoard();
   const navigation = useNavigation();
-  const route = useRoute();
   return (
-    <MainRoot.Navigator 
-      initialRouteName={SplashPageName}
-    >
+    <MainRoot.Navigator initialRouteName={SplashPageName}>
       <MainRoot.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <MainRoot.Screen
           name={LoginMainModalPageName}
           component={LoginMainModal}
           options={{
             headerLeft: () => <BackButton mode="modal" />,
-            headerShown: false,
+            headerShown: true,
             headerShadowVisible: false,
             headerTransparent: true,
             title: '',
@@ -464,7 +502,7 @@ const Screen = () => {
           name={EmailLoginModalModalPageName}
           component={EmailLoginModal}
           options={{
-            headerShown: !isLoginLoading,
+            headerShown: true,
             headerShadowVisible: false,
             title: '',
             headerTitleAlign: 'center',
@@ -789,9 +827,51 @@ const Screen = () => {
                 </DeleteTxt>
                 <DeleteTxt>
                   <NotifySettingIcon
-                    onPressEvent={() =>
-                      navigation.navigate(NotificationSettingPageName)
-                    }
+                    onPressEvent={async () => {
+                      await checkNotifications().then(async ({status}) => {
+                        if (status !== RESULTS.GRANTED) {
+                          if (
+                            status === RESULTS.BLOCKED ||
+                            status === RESULTS.DENIED
+                          ) {
+                            Alert.alert(
+                              '알림 권한 설정',
+                              '알림을 설정 하기 위해서는 권한 설정이 필요합니다.',
+                              [
+                                {
+                                  text: '확인',
+                                  onPress: () => {
+                                    openSettings().catch(() =>
+                                      console.warn('알림설정 화면 이동 오류'),
+                                    );
+                                  },
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: '취소',
+                                  onPress: () => {},
+                                  style: 'cancel',
+                                },
+                              ],
+                            );
+                          } else {
+                            await requestNotifications([
+                              'alert',
+                              'badge',
+                              'sound',
+                              'providesAppSettings',
+                            ]).then(({status, settings}) => {
+                              if (status === RESULTS.BLOCKED) {
+                                console.log(settings, 'notificationCenter');
+                                // openSettings().catch(() => console.warn('cannot open settings'));
+                              }
+                            });
+                          }
+                        } else {
+                          navigation.navigate(NotificationSettingPageName);
+                        }
+                      });
+                    }}
                   />
                 </DeleteTxt>
               </>
@@ -2056,6 +2136,238 @@ const Screen = () => {
             },
             headerShadowVisible: false,
             headerLeft: () => <ReviewCloseIcon />,
+          }}
+        />
+      </MainRoot.Group>
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={MySpotMapPage}
+          component={MySpotMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '주소 설정',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={ShareSpotMapPage}
+          component={ShareSpotMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '공유 스팟 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={ShareSpotListPage}
+          component={ShareSpotList}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '공유 스팟 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={MapSearchResult}
+          component={SearchResult}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            // title: '주소 검색',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={MySpotDetailPage}
+          component={MySpotDetail}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '상세 주소 입력',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={SpotTypePage}
+          component={SpotType}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={NotDeliveryPage}
+          component={NotDelivery}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={CompletePage}
+          component={Complete}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={PrivateInfoPage}
+          component={PrivateInfo}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '',
+          }}
+        />
+        <MainRoot.Screen
+          name={ApplySpotPage}
+          component={ApplySpot}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '스팟/시간 신청',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={RegisterSpotMapPage}
+          component={RegisterSpotMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '신규 스팟 신청',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={SpotGuidePage}
+          component={SpotGuide}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={InviteSpotPage}
+          component={InviteSpot}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: false,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={MySpotDeliveryPage}
+          component={MySpotDelivery}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '기본 배송 시간 설정',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
           }}
         />
       </MainRoot.Group>

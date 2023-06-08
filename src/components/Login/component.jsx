@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
+import Toast from '~components/Toast';
 
 import useAuth from '../../biz/useAuth';
 import useUserInfo from '../../biz/useUserInfo';
@@ -17,6 +18,7 @@ import useKeyboardEvent from '../../hook/useKeyboardEvent';
 import {PAGE_NAME as GroupCreateMainPageName} from '../../pages/Group/GroupCreate';
 import {PAGE_NAME as FindUserPageName} from '../../pages/Main/Login/FindUser';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
+import {getStorage, setStorage} from '../../utils/asyncStorage';
 import Button from '../Button';
 import Check from '../Check';
 import KeyboardButton from '../KeyboardButton';
@@ -25,8 +27,11 @@ import Typography from '../Typography';
 
 const {StatusBarManager} = NativeModules;
 
-const Component = ({userId}) => {
+const Component = ({userId, isPassword, setPassword}) => {
   const navigation = useNavigation();
+  const {userInfo} = useUserInfo();
+  const [emailId, setEmailId] = useState((userId && userId) || emailId);
+  const ToastMessage = Toast();
   const labelItems = [
     {label: '아이디'},
     {label: '/'},
@@ -38,6 +43,7 @@ const Component = ({userId}) => {
   const emailRef = useRef(null);
   const {
     handleSubmit,
+    setValue,
     formState: {errors, dirtyFields},
   } = useFormContext();
   const keyboardStatus = useKeyboardEvent();
@@ -47,7 +53,8 @@ const Component = ({userId}) => {
   const onSubmit = async datas => {
     try {
       await login(datas);
-
+      setStorage('userId', datas.email);
+      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [
@@ -59,8 +66,7 @@ const Component = ({userId}) => {
       //navigation.reset({routes:[{ name:GroupCreateMainPageName}]});
       //await userInfo();
     } catch (err) {
-      console.log(err);
-      Alert.alert('로그인 실패', err.toString().replace('error: ', ''), [
+      Alert.alert('로그인 실패', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
           onPress: () => {},
@@ -83,7 +89,7 @@ const Component = ({userId}) => {
   });
 
   const isValidation =
-    (dirtyFields.email || userId) &&
+    (dirtyFields.email || emailId) &&
     dirtyFields.password &&
     !errors.email &&
     !errors.password;
@@ -94,8 +100,30 @@ const Component = ({userId}) => {
           setStatusBarHeight(statusBarFrameData.height);
         })
       : null;
-  }, []);
+    const getUserId = async () => {
+      const userIds = await getStorage('userId');
+      if (userIds) {
+        setEmailId(userIds);
+      }
+    };
 
+    getUserId();
+  }, [navigation]);
+  useEffect(() => {
+    if (isPassword) {
+      ToastMessage.toastEvent();
+      setTimeout(() => {
+        setPassword(false);
+        navigation.setParams({
+          isPassword: false,
+        });
+      }, 3000);
+    }
+  }, [ToastMessage, isPassword, navigation, setPassword]);
+  useEffect(() => {
+    console.log(emailId);
+    setValue('email', emailId);
+  }, [emailId, setValue, userId]);
   return (
     <SafeContainer>
       <KeyDismiss onPress={() => Keyboard.dismiss()}>
@@ -110,7 +138,7 @@ const Component = ({userId}) => {
               returnKeyType="next"
               autoCapitalize="none"
               onSubmitEditing={() => passwordRef.current?.focus()}
-              defaultValue={userId && userId}
+              defaultValue={emailId && emailId}
               blurOnSubmit={false}
               suffix={{
                 isNeedDelete: true,
@@ -124,7 +152,7 @@ const Component = ({userId}) => {
                 required: '필수 입력 항목 입니다.',
                 pattern: {
                   value:
-                    /^(([a-zA-Z0-9]+(\.[^-<>()[\]\\.,;:\s@#$%^&+_/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\,;:\s@#$%^&+/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                   message: '올바른 이메일 주소를 입력해주세요.',
                 },
               }}
@@ -181,6 +209,12 @@ const Component = ({userId}) => {
           />
         </KeyContainer>
       </KeyDismiss>
+      {isPassword && (
+        <ToastMessage.ToastWrap
+          message="비밀번호가 변경됐어요"
+          icon="checked"
+        />
+      )}
     </SafeContainer>
   );
 };

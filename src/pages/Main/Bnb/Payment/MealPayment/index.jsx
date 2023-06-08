@@ -1,11 +1,12 @@
-import React, {useEffect} from 'react';
-
-import Wrapper from '~components/Wrapper';
 import {StackActions, useNavigation} from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {Alert} from 'react-native';
 import Config from 'react-native-config';
+import Wrapper from '~components/Wrapper';
+
 import PaymentContainer from './components/PaymentContainer';
 import {PurchaseDetailPageName} from '../../../MyPage/PurchaseHistory/Detail';
-import {Alert} from 'react-native';
+
 export const PAGE_NAME = 'P__PAYMENT__MEAL_PAYMENT';
 
 const Pages = ({route}) => {

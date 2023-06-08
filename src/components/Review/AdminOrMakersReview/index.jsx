@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-
 import styled, {css} from 'styled-components';
 import {GreyLockerIcon} from '~components/Icon';
 import {DefaultHumanIcon} from '~components/Icon';

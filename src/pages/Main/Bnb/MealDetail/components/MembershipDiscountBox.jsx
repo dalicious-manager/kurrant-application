@@ -1,20 +1,21 @@
+import {useNavigation} from '@react-navigation/native';
+import th from 'date-fns/esm/locale/th/index.js';
+import {useAtomValue} from 'jotai';
 import {View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import Typography from '~components/Typography';
+
 import {
   RightSkinnyArrow,
   YellowStar,
 } from '../../../../../../../components/Icon';
-import th from 'date-fns/esm/locale/th/index.js';
+import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import {
   ArrowRightBoxIcon2,
   MembershipDiscountBadge,
 } from '../../../../../components/Icon';
 import withCommas from '../../../../../utils/withCommas';
-import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
-import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
-import {useAtomValue} from 'jotai';
 
 const MembershipDiscountBox = ({isFoodDetail}) => {
   const themeApp = useTheme();

@@ -1,4 +1,5 @@
-import React, {useEffect, useRef, useState, useCallback} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
   Animated,
@@ -6,25 +7,19 @@ import {
   Dimensions,
   FlatList,
   Pressable,
-  ScrollView,
-  View,
-  Text,
+  Alert,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 
 import WarningIcon from '../../assets/icons/MealCart/warning.svg';
-import Count from '../Count';
-import FastImage from 'react-native-fast-image';
-import Label from '../Label';
-import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
-import Typography from '../Typography';
-import withCommas from '../../utils/withCommas';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
-import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
-import {useNavigation} from '@react-navigation/native';
 import useUserInfo from '../../biz/useUserInfo';
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
+import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
+import withCommas from '../../utils/withCommas';
+import Count from '../Count';
+import Label from '../Label';
+import Typography from '../Typography';
 const BottomSheet = props => {
   const {
     modalVisible,
@@ -36,17 +31,10 @@ const BottomSheet = props => {
     btn = '버튼이름',
     toast,
     setShow,
+    time,
   } = props;
   //멀티 셀렉터시 이용
   const [selected, setSelected] = useState();
-
-  const onSelect = useCallback(
-    id => {
-      setSelected(id);
-      //setModalVisible(false)
-    },
-    [setModalVisible, setSelected],
-  );
 
   const navigation = useNavigation();
   const {addMeal, setSoldOutMeal, loadMeal} = useShoppingBasket();
@@ -149,6 +137,7 @@ const BottomSheet = props => {
           dailyFoodId: v.id,
           count: v.count,
           spotId: isUserInfo?.spotId,
+          deliveryTime: time,
         };
       });
 
@@ -162,7 +151,7 @@ const BottomSheet = props => {
         setShow(false);
       }, 3000);
     } catch (err) {
-      console.log(err);
+      Alert.alert('장바구니 추가', err?.toString()?.replace('error: ', ''));
     }
   };
 
@@ -260,16 +249,6 @@ const Overlay = styled.Pressable`
   justify-content: flex-end;
   background-color: rgba(0, 0, 0, 0.7);
 `;
-const OverlayBack = styled.View`
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: ${screenWidth}px;
-  height: ${screenHeight}px;
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.7);
-`;
 
 const Background = styled.View`
   flex: 1;
@@ -318,19 +297,6 @@ const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[4]};
 `;
 
-const ContentItemContainer = styled.TouchableOpacity`
-  width: ${Dimensions.get('screen').width}px;
-  height: 60px;
-  padding: 19px 24px;
-`;
-
-const ContentItemBox = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
-
 const BottomSheetButton = styled(Typography).attrs({text: 'CaptionSB'})`
   color: ${({theme, count}) =>
     count === 0 ? theme.colors.grey[6] : theme.colors.blue[500]};
@@ -345,12 +311,6 @@ const Name = styled(Typography).attrs({text: 'Body06SB'})`
 const Price = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[4]};
   margin-bottom: 6px;
-`;
-
-const OriginPrice = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme}) => theme.colors.grey[5]};
-  text-decoration: line-through;
-  text-decoration-color: ${({theme}) => theme.colors.grey[5]};
 `;
 
 const MealImageWrap = styled.View``;

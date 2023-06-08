@@ -1,5 +1,4 @@
-import { atomWithReset } from 'jotai/utils';
-
+import {atomWithReset} from 'jotai/utils';
 
 export const isLoadMealCartAtom = atomWithReset([]);
 export const isLoadMealLoadingAtom = atomWithReset(false);

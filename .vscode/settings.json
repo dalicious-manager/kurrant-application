@@ -1,6 +1,19 @@
 {
-  "java.configuration.updateBuildConfiguration": "automatic",
   "cSpell.words": [
     "Pretendard"
-  ]
+  ],
+  "cSpell.enabledLanguageIds": [
+    "csharp",
+    "go",
+    "javascript",
+    "javascriptreact",
+    "markdown",
+    "php",
+    "plaintext",
+    "typescript",
+    "typescriptreact",
+    "yml"
+],
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": true },
+    "eslint.workingDirectories": [ {"mode": "auto"} ],
 }

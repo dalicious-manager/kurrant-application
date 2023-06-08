@@ -8,46 +8,19 @@ import {ActivityIndicator, Alert} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import Toast from '~components/Toast';
 import Wrapper from '~components/Wrapper';
-import ListBox from '../../ListBox';
+
 import {
   useGetAlramSetting,
   useSetAlramSetting,
 } from '../../../../../../hook/useAlram';
+import ListBox from '../../ListBox';
 export const PAGE_NAME = 'P__MY_PAGE__NOTIFICATION_SETTING';
 const Pages = () => {
   const form = useForm();
 
   const {data: alramData, isSuccess} = useGetAlramSetting();
-  const [toggleData, setToggleData] = useState([]);
 
   const themeApp = useTheme();
-
-  
-
-  useEffect(() => {
-    // setToggleData(
-    //   alramData?.data.map(v => {
-    //     return {
-    //       isToggle: true,
-    //       toggleName: v.code.toString(),
-    //       toggleEvent: () => alarmAgree(v),
-    //     };
-    //   }),
-    // );
-    // setToggleData([
-
-    //   {
-    //     isToggle: true,
-    //     toggleName: 'orderAlarm',
-    //     toggleEvent: name => alarmAgree(name),
-    //   },
-    //   {
-    //     isToggle: true,
-    //     toggleName: 'marketingAgree',
-    //     toggleEvent: name => alarmAgree(name),
-    //   },
-    // ]);
-  }, [alramData]);
 
   if (!isSuccess) {
     return (
@@ -61,7 +34,8 @@ const Pages = () => {
     <Wrapper paddingTop={24}>
       <FormProvider {...form}>
         {alramData?.data &&
-          alramData?.data.map((s, i) => {
+          alramData?.data.length > 0 &&
+          alramData?.data?.map((s, i) => {
             return (
               <ListBox
                 key={i}
@@ -93,7 +67,7 @@ const Pages = () => {
             });
           }}
         /> */}
-      </FormProvider>    
+      </FormProvider>
     </Wrapper>
   );
 };
