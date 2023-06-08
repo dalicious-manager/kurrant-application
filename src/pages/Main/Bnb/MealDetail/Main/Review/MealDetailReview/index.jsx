@@ -159,9 +159,9 @@ const Component = ({imageLocation, foodName}) => {
 
   const [showSelectList, setShowSelectList] = useState(false);
 
-  useEffect(() => {
-    console.log(foodId);
-  }, [foodId]);
+  // useEffect(() => {
+  //   console.log(foodId);
+  // }, [foodId]);
 
   // best, latest, photo, rating, like
 

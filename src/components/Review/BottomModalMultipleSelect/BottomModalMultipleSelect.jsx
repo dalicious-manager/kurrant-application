@@ -5,16 +5,12 @@ import {
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
-  FlatList,
-  Pressable,
   PanResponder,
 } from 'react-native';
 import styled from 'styled-components/native';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
-import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import Typography from '~components/Typography';
-import RateStars from '~components/RateStars';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 

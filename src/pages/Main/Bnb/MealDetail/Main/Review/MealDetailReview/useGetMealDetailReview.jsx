@@ -54,9 +54,6 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 export default useGetMealDetailReview;
 
 const getMealDetailReview = async (pageParam, url) => {
-  console.log('url 확인');
-  console.log(url);
-
   const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
   // const res = await fetchJson(`${url}&limit=1&page=${page}`);
 
