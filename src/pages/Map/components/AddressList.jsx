@@ -14,7 +14,7 @@ const AddressList = ({setFocus, data, type}) => {
   const onPress = async (name, address, x, y) => {
     const res = await mapApis.getRoadAddress(x, y);
     const jibunRes = await mapApis.getAddress(address);
-    console.log(name, 'nameㅗㅗㅗㅗㅗㅗ');
+
     if (type === 'registerSpot') {
       navigation.navigate(ApplySpot, {
         address: name,

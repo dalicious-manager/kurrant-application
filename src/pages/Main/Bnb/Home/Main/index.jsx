@@ -147,6 +147,7 @@ const Pages = () => {
     const getUser = async () => {
       const user = await userInfo();
       if (user.spotId) dailyfoodRefetch();
+      else setShowDim(true);
     };
     getUser();
   }, []);
@@ -452,7 +453,7 @@ const Pages = () => {
   };
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
-    console.log(isUserGroupSpotCheck);
+
     return () => {
       listener.remove();
     };
@@ -460,7 +461,6 @@ const Pages = () => {
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
-        console.log('testseet');
         await userGroupSpotCheck();
         await VersionCheck.getLatestVersion().then(latestVersion => {
           const regex = /[^0-9]/g;
@@ -502,12 +502,6 @@ const Pages = () => {
       setModalVisible(true);
     }
   }, [showDim]);
-
-  useEffect(() => {
-    if (isUserInfo?.spotId === null) {
-      setShowDim(true);
-    }
-  }, [isUserInfo?.spotId]);
 
   if (!isUserInfo) {
     return <SkeletonUI />;

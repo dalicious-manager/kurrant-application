@@ -3,6 +3,7 @@ import BottomSheet, {
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
   Modal,
@@ -17,6 +18,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
+import {mainDimAtom} from '../../utils/store';
 import BalloonMessage from '../BalloonMessage';
 import Label from '../Label';
 import Typography from '../Typography';
@@ -38,7 +40,7 @@ const BottomSheetSpot = props => {
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
-
+  const [showDim, setShowDim] = useAtom(mainDimAtom);
   const onSelect = useCallback(
     id => {
       //멀티 셀렉터시 이용
@@ -91,7 +93,7 @@ const BottomSheetSpot = props => {
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <GestureHandlerRootView style={{flex: 1}}>
         <Overlay>
-          {snap === 0 && (
+          {snap === 0 && !showDim && (
             <BalloonMessage
               location={{top: '200px'}}
               vertical="down"
