@@ -186,19 +186,6 @@ const Component = ({imageLocation, foodName}) => {
     }
   };
 
-  const sampleData1 = [
-    '맛',
-    '향',
-    '한우',
-    '국',
-    '한식',
-    '맛',
-    '향',
-    '한우',
-    '국',
-    '한식',
-  ];
-
   return (
     <Container>
       <Wrap1>
@@ -245,7 +232,7 @@ const Component = ({imageLocation, foodName}) => {
                     }}
                     isClicked={selectedKeyword === item}
                     isFirst={index === 0}
-                    isLast={index === sampleData1.length - 1}>
+                    isLast={index === reviewKeyword.length - 1}>
                     <ButtonText isClicked={selectedKeyword === item}>
                       {item}
                     </ButtonText>
@@ -256,7 +243,7 @@ const Component = ({imageLocation, foodName}) => {
           )}
         </Wrap3>
 
-        <Wrap4>
+        <Wrap4 isMarginBottom={reviewWrite === 0}>
           <Wrap6>
             <FilterPressable
               onPress={() => {
@@ -291,12 +278,12 @@ const Component = ({imageLocation, foodName}) => {
           </FilterPressable>
         </Wrap4>
 
-        {foodId && (
+        {reviewWrite !== 0 && (
           <Wrap5>
             <GoToWriteReviewPressable
               onPress={() => {
                 navigation.navigate(CreateReviewScreenName, {
-                  orderItemId: foodId,
+                  orderItemId: reviewWrite,
                   imageLocation: imageLocation[0],
                   foodName,
                 });
@@ -313,7 +300,8 @@ const Component = ({imageLocation, foodName}) => {
       </Wrap1>
 
       {showSelectList && (
-        <WrapWrapView>
+        <WrapWrapView
+          isOn={Array.isArray(reviewKeyword) && reviewKeyword.length > 0}>
           <ShadowWrap startColor="rgba(0, 0, 0, 0.03)" distance={14}>
             <FilterSelecterWrap>
               <FilterSelecterPressable
@@ -478,6 +466,12 @@ const Wrap4 = styled.View`
   align-items: center;
   justify-content: space-between;
 
+  ${({isMarginBottom}) => {
+    if (isMarginBottom) {
+      return `margin-bottom: 16px; `;
+    }
+  }}
+
   border-top-width: 1px;
   border-top-style: solid;
   border-top-color: ${props => props.theme.colors.grey[8]};
@@ -523,7 +517,7 @@ const ButtonText = styled(Typography).attrs({text: 'Body06R'})`
 const WrapWrapView = styled.View`
   position: absolute;
   /* top: 215px; */
-  top: 175px;
+  top: ${({isOn}) => (isOn ? '215px' : '175px')};
   left: 30px;
   z-index: 1;
 `;
