@@ -23,6 +23,7 @@ import FlatListBanner from './Components/FlatListBanner';
 import DietRepoCard from './Components/DietRepoCard';
 import {ArrowRightBlue} from '../../../../../components/Icon';
 import DietRepoCalendar from '../DietRepoCalendar/DietRepoCalendar';
+import useGetDietRepo from '../useGetDietRepo';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -48,6 +49,9 @@ const Pages = () => {
   const [sliderValue, setSliderValue] = useState(1);
 
   const [date, setDate] = useState(formattedWeekDate(new Date()));
+
+  // const yo = useGetDietRepo('2023-06-08', undefined, undefined);
+  const yo = useGetDietRepo(undefined, '2023-05-30', 2);
 
   // useEffect(() => {
   //   console.log('현재 클릭된 날짜');
