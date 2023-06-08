@@ -21,6 +21,9 @@ const BottomModalMultipleSelect = props => {
   const {
     modalVisible,
     setModalVisible,
+
+    onConfirmPress = () => {},
+
     title = '옵션 선택',
     description = '',
     data = {},
@@ -152,6 +155,8 @@ const BottomModalMultipleSelect = props => {
 
               <ConfirmPressable
                 onPress={() => {
+                  onConfirmPress();
+
                   setModalVisible(false);
                 }}>
                 <ConfirmText>확인</ConfirmText>

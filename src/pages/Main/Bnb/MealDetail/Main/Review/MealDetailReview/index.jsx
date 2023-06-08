@@ -81,7 +81,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     dailyFoodId,
     orderFilter,
     isOnlyPhoto,
-    rateSelected,
+    // rateSelected,
     selectedKeyword,
     setUrl,
   ]);
@@ -176,6 +176,18 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     } else if (orderFilter === 2) {
       return '리뷰 추천순';
     }
+  };
+
+  const handleConfirmPress = () => {
+    setUrl(
+      buildCustomUrl(
+        dailyFoodId,
+        orderFilter,
+        isOnlyPhoto,
+        selectedKeyword,
+        rateSelected,
+      ),
+    );
   };
 
   return (
@@ -377,6 +389,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
       </ReviewListWrap>
 
       <BottomModalMultipleSelect
+        onConfirmPress={handleConfirmPress}
         modalVisible={bottomModalOpen}
         setModalVisible={setBottomModalOpen}
         title="별점 필터"
