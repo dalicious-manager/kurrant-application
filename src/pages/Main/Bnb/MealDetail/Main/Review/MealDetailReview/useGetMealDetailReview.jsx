@@ -1,7 +1,8 @@
+import {useAtom} from 'jotai';
 import {useEffect, useState} from 'react';
 import {useInfiniteQuery, useQuery} from 'react-query';
+
 import {fetchJson} from '../../../../../../../utils/fetch';
-import {useAtom} from 'jotai';
 
 const useGetMealDetailReview = (url, dailyFoodId) => {
   const [isError, setIsError] = useState(false);
@@ -56,7 +57,7 @@ export default useGetMealDetailReview;
 const getMealDetailReview = async (pageParam, url) => {
   const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
   // const res = await fetchJson(`${url}&limit=1&page=${page}`);
-
+  console.log(res);
   const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
     res.data;
 

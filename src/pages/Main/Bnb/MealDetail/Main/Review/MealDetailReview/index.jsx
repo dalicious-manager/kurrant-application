@@ -1,31 +1,29 @@
+import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
+import {useEffect, useState} from 'react';
 import {ActivityIndicator, Dimensions, View} from 'react-native';
+import {Shadow} from 'react-native-shadow-2';
 import styled, {useTheme} from 'styled-components';
+import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
+import RateStars from '~components//RateStars';
+import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
+import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+
+import Card from './Card';
+import {buildCustomUrl, modifyStarRatingCount} from './logic';
+import {
+  fetchNextPageReviewDetailAtom,
+  hasNextPageReviewDetailAtom,
+} from './store';
+import useGetMealDetailReview from './useGetMealDetailReview';
 import {
   ArrowUpAndDown,
   Picture,
   Settings,
 } from '../../../../../../../components/Icon';
-import {useEffect, useState} from 'react';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
-
-import RateStars from '~components//RateStars';
-import {RightSkinnyArrow} from '~components/Icon';
-import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
-import {Shadow} from 'react-native-shadow-2';
-import useGetMealDetailReview from './useGetMealDetailReview';
-import {buildCustomUrl, modifyStarRatingCount} from './logic';
-import {useAtom} from 'jotai';
-import {
-  fetchNextPageReviewDetailAtom,
-  hasNextPageReviewDetailAtom,
-} from './store';
-import {useNavigation} from '@react-navigation/native';
-import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
-
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
-
-import Card from './Card';
 
 const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const theme = useTheme();

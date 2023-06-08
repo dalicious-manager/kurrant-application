@@ -12,14 +12,16 @@
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>47.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.7</string>
+	<string>1.4.8</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>48.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -63,8 +65,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>1</string>
 	<key>CodePushDeploymentKey</key>
 	<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>
 	<key>CodePushPublicKey</key>
