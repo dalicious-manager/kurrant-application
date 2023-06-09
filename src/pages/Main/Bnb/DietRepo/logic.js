@@ -101,3 +101,20 @@ export const modifyDietRepoMainData = (
     {menuTime: '저녁', menuList: dinnerArr, diningType: 3, date: date},
   ];
 };
+
+// 2023-05-02 -> [5,2]
+
+export const extractMonthAndDateFromDate = (date, seperator) => {
+  const arr1 = date.split(seperator);
+  let month = arr1[1];
+  let date2 = arr1[2];
+
+  if (month[0] === '0') {
+    month = month.substring(1);
+  }
+  if (date2[0] === '0') {
+    date2 = date2.substring(1);
+  }
+
+  return [month, date2];
+};

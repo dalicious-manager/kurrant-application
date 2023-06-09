@@ -7,17 +7,21 @@ import Button from '~components/Button';
 import DietRepoCard from '../Main/Components/DietRepoCard';
 import Typography from '~components/Typography';
 
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddDiet';
 
 import {PAGE_NAME as DietRepoAddMyDietPageName} from '~pages/Main/Bnb/DietRepo/AddMyDiet';
 import useGetDietRepo from '../useGetDietRepo';
-import {sampleData2} from '../logic';
+import {extractMonthAndDateFromDate, sampleData2} from '../logic';
+import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 
 const Pages = ({route}) => {
   const navigation = useNavigation();
 
   console.log('route');
   console.log(route?.params?.date);
+  console.log(extractMonthAndDateFromDate(route?.params?.date, '-'));
   console.log(route?.params?.diningType);
 
   // const yo = useGetDietRepo(undefined, '2023-05-30', 2);
@@ -28,7 +32,14 @@ const Pages = ({route}) => {
 
   return (
     <Container>
-      <TitleText>5월 8일 (월) 아침에 주문한 식사 목록</TitleText>
+      <TitleText>
+        {extractMonthAndDateFromDate(route?.params?.date, '-')[0]}월{' '}
+        {extractMonthAndDateFromDate(route?.params?.date, '-')[1]}일 (
+        {format(stringDateToJavascriptDate(route?.params?.date, '-'), 'EEE', {
+          locale: ko,
+        })}
+        ) 아침에 주문한 식사 목록
+      </TitleText>
 
       <FlatList
         ListHeaderComponent={
