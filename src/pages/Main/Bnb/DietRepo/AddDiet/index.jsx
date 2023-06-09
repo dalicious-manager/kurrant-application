@@ -76,10 +76,13 @@ const Pages = ({route}) => {
         />
       ) : (
         <Wrap1>
-          <FlexFiller flex={45} />
+          <FlexFiller flex={243} />
 
-          <NoData>해당 날짜에 주문 내역이 없습니다.</NoData>
-          <FlexFiller flex={50} />
+          <Wrap2>
+            <NoData>주문한 메뉴가 없어요</NoData>
+          </Wrap2>
+
+          <FlexFiller flex={321} />
         </Wrap1>
       )}
 
@@ -147,6 +150,9 @@ const ButtonNext = styled(Button)``;
 const Wrap1 = styled.View`
   flex: 1;
 `;
+const Wrap2 = styled.View`
+  align-items: center;
+`;
 
 const FlexFiller = styled.View`
   flex: ${({flex}) => flex};
@@ -154,7 +160,7 @@ const FlexFiller = styled.View`
   background-color: '#ffffff';
 `;
 
-const NoData = styled(Typography).attrs({text: 'Title04SB'})`
-  color: ${({theme}) => theme.colors.grey[2]};
+const NoData = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${({theme}) => theme.colors.grey[5]};
   /* margin-bottom: 24px; */
 `;
