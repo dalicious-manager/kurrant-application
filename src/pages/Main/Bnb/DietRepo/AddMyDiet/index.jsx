@@ -11,10 +11,18 @@ import Typography from '~components/Typography';
 import RefTextInput from '~components/RefTextInput';
 import {useEffect, useRef, useState} from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {extractMonthAndDateFromDate} from '../logic';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddMyDiet';
 
 const Pages = ({route}) => {
+  const navigation = useNavigation();
+
+  console.log('route');
+  console.log(route?.params?.date);
+  console.log(extractMonthAndDateFromDate(route?.params?.date, '-'));
+  console.log(route?.params?.diningType);
+
   const form = useForm({
     mode: 'all',
   });

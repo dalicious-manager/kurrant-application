@@ -33,7 +33,10 @@ const Pages = ({route}) => {
   );
 
   const handlePress = () => {
-    navigation.navigate(DietRepoAddMyDietPageName);
+    navigation.navigate(DietRepoAddMyDietPageName, {
+      date: route?.params?.date,
+      diningType: route?.params?.diningType,
+    });
   };
 
   useEffect(() => {
