@@ -19,11 +19,6 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddMyDiet';
 const Pages = ({route}) => {
   const navigation = useNavigation();
 
-  console.log('route');
-  console.log(route?.params?.date);
-  console.log(extractMonthAndDateFromDate(route?.params?.date, '-'));
-  console.log(route?.params?.diningType);
-
   const {addMeal} = useDietRepoMutation();
 
   const form = useForm({
@@ -46,13 +41,6 @@ const Pages = ({route}) => {
   const [disable, setDisable] = useState(false);
 
   useEffect(() => {
-    // console.log('값 확인하기 ');
-    // console.log(form.watch('mealName'));
-    // console.log(form.watch('cal'));
-    // console.log(form.watch('carbo'));
-    // console.log(form.watch('protein'));
-    // console.log(form.watch('fat'));
-
     if (
       form.watch('mealName') &&
       form.watch('cal') &&
@@ -74,13 +62,6 @@ const Pages = ({route}) => {
   ]);
 
   const handlePress = () => {
-    console.log('제출 값 확인하기 ');
-    console.log(form.watch('mealName'));
-    console.log(form.watch('cal'));
-    console.log(form.watch('carbo'));
-    console.log(form.watch('protein'));
-    console.log(form.watch('fat'));
-
     const data = {
       name: form.watch('mealName'),
       calorie: form.watch('cal'),
@@ -151,7 +132,7 @@ const Pages = ({route}) => {
               ref={calRef}
               returnKeyType="next"
               autoCapitalize="none"
-              onSubmitEditing={() => passwordRef.current?.focus()}
+              onSubmitEditing={() => calRef.current?.focus()}
               // defaultValue={userId && userId}
               blurOnSubmit={false}
               suffix={{
@@ -178,7 +159,7 @@ const Pages = ({route}) => {
               ref={carboRef}
               returnKeyType="next"
               autoCapitalize="none"
-              onSubmitEditing={() => passwordRef.current?.focus()}
+              onSubmitEditing={() => carboRef.current?.focus()}
               // defaultValue={userId && userId}
               blurOnSubmit={false}
               suffix={{
@@ -204,7 +185,7 @@ const Pages = ({route}) => {
               ref={proteinRef}
               returnKeyType="next"
               autoCapitalize="none"
-              onSubmitEditing={() => passwordRef.current?.focus()}
+              onSubmitEditing={() => proteinRef.current?.focus()}
               // defaultValue={userId && userId}
               blurOnSubmit={false}
               suffix={{
@@ -230,7 +211,7 @@ const Pages = ({route}) => {
               ref={fatRef}
               returnKeyType="next"
               autoCapitalize="none"
-              onSubmitEditing={() => passwordRef.current?.focus()}
+              onSubmitEditing={() => fatRef.current?.focus()}
               // defaultValue={userId && userId}
               blurOnSubmit={false}
               suffix={{

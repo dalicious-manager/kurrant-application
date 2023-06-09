@@ -23,8 +23,6 @@ const useDietRepoMutation = () => {
     },
     {
       onSuccess: data => {
-        console.log('상품 추천 수정 success');
-
         Alert.alert('작성 완료', '식단이 추가되었습니다 ', [
           {
             text: '확인',

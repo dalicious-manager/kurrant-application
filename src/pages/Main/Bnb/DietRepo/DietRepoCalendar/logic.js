@@ -1,6 +1,6 @@
 import {toStringByFormatting} from '../../../../../utils/dateFormatter';
 
-const calcWeekArr = date => {
+export const calcWeekArr = date => {
   let yo = [];
   const day = date.getDay();
 

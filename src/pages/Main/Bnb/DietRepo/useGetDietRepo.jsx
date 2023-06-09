@@ -33,12 +33,12 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
     },
   );
 
-  useQuery(
+  const {isFetching: isDietRepoAddRefetchLoading} = useQuery(
     ['dietRepo', 'addMeal'],
     async ({queryKey}) => {
       const response = await fetchJson(
         `/users/me/daily/report/order?date=${addMealDate}&diningType=${addMealDiningType}`,
-        //   `/users/me/daily/report/order?date=2023-05-30&diningType=2`,
+
         'GET',
       );
 
@@ -54,7 +54,7 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
   return {
     dietRepoMainRefetch,
     isDietRepoMainRefetchLoading,
-
+    isDietRepoAddRefetchLoading,
     totalNutrition,
     dietRepoMainList,
     dietRepoAddMealList,

@@ -10,11 +10,40 @@ import {
   GreyArrowLeftInACircle,
   GreyArrowRightInACircle,
 } from '../../../../../components/Icon';
+import {useEffect, useState} from 'react';
+import {calcWeekArr} from '../DietRepoCalendar/logic';
+import {toStringByFormatting} from '../../../../../utils/dateFormatter';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 
-const Pages = () => {
+const Pages = ({route}) => {
   const screenWidth = Dimensions.get('screen').width;
+
+  console.log(route?.params?.date);
+
+  const [date, setDate] = useState(route?.params?.date);
+
+  const [week, setWeek] = useState([]);
+
+  // params에 date가 들어갈때 그 일주일을 계산하기
+
+  useEffect(() => {
+    setDate(route?.params?.date);
+  }, []);
+
+  useEffect(() => {
+    console.log('date');
+    console.log(date);
+  }, [date]);
+
+  // useEffect(() => {
+  //   setWeek(calcWeekArr(date).map(v => toStringByFormatting(v, '-')));
+  // }, [date]);
+
+  useEffect(() => {
+    console.log('주');
+    console.log(week);
+  }, [week]);
 
   const TablesSampleData = [
     {
@@ -68,9 +97,34 @@ const Pages = () => {
         </Pressable>
       </DateSelectorWrap>
 
-      <HistoryStackedBarChart title="영양소 정보" width={'100%'} />
+      <HistoryStackedBarChart
+        data={[
+          {x: '06월', carbo: 120, protein: 240, fat: 60},
+          {x: '07월', carbo: 220, protein: 140, fat: 160},
+          {x: '08월', carbo: 320, protein: 50, fat: 90},
+          {x: '09월', carbo: 100, protein: 30, fat: 190},
+          {x: '10월', carbo: 220, protein: 50, fat: 90},
+          {x: '11월', carbo: 0, protein: 0, fat: 0},
+          {x: '12월', carbo: 520, protein: 75, fat: 0},
+        ]}
+        dataOrder={['carbo', 'protein', 'fat']}
+        title="영양소 정보"
+        width={'100%'}
+      />
 
-      <HistoryLineChart title="칼로리" width={'100%'} />
+      <HistoryLineChart
+        data={[
+          {x: '10일', y: 820},
+          {x: '11일', y: 120},
+          {x: '12일', y: 1220},
+          {x: '13일', y: 220},
+          {x: '14일', y: 1410},
+          {x: '15일', y: 610},
+          {x: '오늘', y: 2100},
+        ]}
+        title="칼로리"
+        width={'100%'}
+      />
       <GreyBlock width={screenWidth} />
 
       <HistoryTables data={TablesSampleData} />

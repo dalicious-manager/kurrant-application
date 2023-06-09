@@ -7,7 +7,7 @@ import {useEffect, useRef, useState} from 'react';
 const HistoryLineChart = ({
   width = '100%',
   height = undefined,
-
+  data = [],
   title,
 }) => {
   // height가 없을 경우 height는 자동적으로 width의 258/327을 곱하기
@@ -40,15 +40,7 @@ const HistoryLineChart = ({
       <Title>{title}</Title>
       {containerHeight > 0 && containerWidth && (
         <LineChart
-          dataBasic={[
-            {x: '10일', y: 820},
-            {x: '11일', y: 120},
-            {x: '12일', y: 1220},
-            {x: '13일', y: 220},
-            {x: '14일', y: 1410},
-            {x: '15일', y: 610},
-            {x: '오늘', y: 2100},
-          ]}
+          dataBasic={data}
           chartWidth={containerWidth}
           chartHeight={containerHeight * 0.8}
           chartConfig={{

@@ -8,7 +8,8 @@ import StackedBarChart from '../../Chart/StackedBarChart';
 const HistoryStackedBarChart = ({
   width = '100%',
   height = undefined,
-
+  data = [],
+  dataOrder,
   title,
 }) => {
   // height가 없을 경우 height는 자동적으로 width의 258/327을 곱하기
@@ -53,22 +54,14 @@ const HistoryStackedBarChart = ({
       {containerHeight > 0 && containerWidth && (
         <StackedBarChart
           dataStackedBar={{
-            dataOrder: ['carbo', 'protein', 'fat'],
+            dataOrder: dataOrder,
             colorSetting: {
               carbo: '#4F6FDF',
               protein: '#819DFF',
               fat: '#C8D4FF',
             },
 
-            data: [
-              {x: '06월', carbo: 120, protein: 240, fat: 60},
-              {x: '07월', carbo: 220, protein: 140, fat: 160},
-              {x: '08월', carbo: 320, protein: 50, fat: 90},
-              {x: '09월', carbo: 100, protein: 30, fat: 190},
-              {x: '10월', carbo: 220, protein: 50, fat: 90},
-              {x: '11월', carbo: 0, protein: 0, fat: 0},
-              {x: '12월', carbo: 520, protein: 75, fat: 0},
-            ],
+            data: data,
           }}
           chartWidth={containerWidth}
           chartHeight={containerHeight * 0.8}

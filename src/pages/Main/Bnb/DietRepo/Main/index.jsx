@@ -104,7 +104,7 @@ const Pages = () => {
   // }, [date]);
 
   const handleHistoryPress = () => {
-    navigation.navigate(DietRepoHistoryPageName);
+    navigation.navigate(DietRepoHistoryPageName, {date: date});
   };
 
   return (
