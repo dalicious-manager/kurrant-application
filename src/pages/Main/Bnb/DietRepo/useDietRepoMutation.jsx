@@ -15,9 +15,6 @@ const useDietRepoMutation = () => {
   // 유저 식단 추가
   const {mutate: addMeal} = useMutation(
     async data => {
-      console.log('우저 식단 데이터 ');
-      console.log(data);
-
       const response = await fetchJson('/users/me/daily/report/me', 'POST', {
         body: JSON.stringify(data),
       });
@@ -40,20 +37,9 @@ const useDietRepoMutation = () => {
                   },
                   {
                     name: DietRepoMainPageName,
-
-                    // params: {
-                    //   from: 'point',
-                    // },
                   },
                 ],
               });
-
-              // navigation.navigate(WrittenReviewPageName, {
-              //     screen: ReviewScreenName,
-              //     params: {
-              //       tabIndex: 1,
-              //     },
-              //   });
             },
             style: 'cancel',
           },
@@ -75,17 +61,28 @@ const useDietRepoMutation = () => {
 
   const {mutate: deleteMeal} = useMutation(
     async data => {
-      //   console.log('데이터 ');
-      //   console.log(data);
-
-      const response = await fetchJson('/users/me/daily/report/140', 'DELETE', {
-        body: JSON.stringify(data),
-      });
+      const response = await fetchJson(
+        `/users/me/daily/report/${data}`,
+        'DELETE',
+        // {
+        //   body: JSON.stringify(data),
+        // },
+      );
 
       return response;
     },
     {
-      onSuccess: data => {},
+      onSuccess: data => {
+        Alert.alert('제거 완료', '식단이 제거되었습니다 ', [
+          {
+            text: '확인',
+            onPress: async () => {
+              queryClient.invalidateQueries(['dietRepo', 'main']);
+            },
+            style: 'cancel',
+          },
+        ]);
+      },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
         console.log(err);
@@ -117,6 +114,8 @@ const useDietRepoMutation = () => {
 
   return {
     addMeal,
+    deleteMeal,
+    saveMeal,
   };
 };
 export default useDietRepoMutation;

@@ -1,12 +1,15 @@
-import {Pressable, Text} from 'react-native';
+import {Alert, Pressable, Text} from 'react-native';
 import styled from 'styled-components';
 import Typography from '~components/Typography';
 
 // import MainLogoPng from '~assets/images/logo/main-logo.png';
 
 import {Line} from 'react-native-svg';
+import useDietRepoMutation from '../../useDietRepoMutation';
 
-const DietRepoCard = ({type, item1 = undefined, item2 = undefined}) => {
+const DietRepoCard = ({item1 = undefined, item2 = undefined}) => {
+  const {deleteMeal} = useDietRepoMutation();
+
   return (
     <Container>
       <CardContentBox>
@@ -67,14 +70,52 @@ const DietRepoCard = ({type, item1 = undefined, item2 = undefined}) => {
               </MainWrap5>
             ) : (
               <AddMealWrap5>
-                {/* <AddMealText6>달리셔스 · 달리셔스</AddMealText6> */}
                 <AddMealText6>{item2?.spotName}</AddMealText6>
                 <MainText6>{item2?.count}개</MainText6>
               </AddMealWrap5>
             )}
 
             <ButtonWrap>
-              <ReviewFormWriteButton onPress={() => {}}>
+              <ReviewFormWriteButton
+                onPress={() => {
+                  if (item1 && item1?.reportId) {
+                    // Alert.alert('', , [
+                    //   {
+                    //     text: '확인',
+                    //     onPress: async () => {
+
+                    //
+
+                    //     },
+                    //     style: 'cancel',
+                    //   },
+                    // ]);
+
+                    Alert.alert(
+                      '식단 제거',
+                      `${item1?.foodName}을 식단에서 제거시키시겠습니까? `,
+                      [
+                        {
+                          text: '취소',
+                          onPress: () => {
+                            console.log('cancel pressed');
+                          },
+                        },
+                        {
+                          text: '제거',
+                          onPress: () => {
+                            try {
+                              deleteMeal(item1?.reportId);
+                            } catch (err) {
+                              console.log(err);
+                            }
+                          },
+                          style: 'destructive',
+                        },
+                      ],
+                    );
+                  }
+                }}>
                 <TextText> {!!item1 && !item2 ? '제거' : '식사 추가'}</TextText>
               </ReviewFormWriteButton>
             </ButtonWrap>
