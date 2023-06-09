@@ -7,9 +7,6 @@ import Typography from '~components/Typography';
 import {Line} from 'react-native-svg';
 
 const DietRepoCard = ({type, item1 = undefined, item2 = undefined}) => {
-  console.log('다이어트');
-  console.log(item1);
-
   return (
     <Container>
       <CardContentBox>

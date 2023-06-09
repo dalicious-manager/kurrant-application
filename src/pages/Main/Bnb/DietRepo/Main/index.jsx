@@ -51,18 +51,22 @@ const Pages = () => {
 
   const [date, setDate] = useState(formattedWeekDate(new Date()));
 
-  // const yo = useGetDietRepo('2023-06-08', undefined, undefined);
-  const yo = useGetDietRepo(undefined, '2023-05-30', 2);
+  const {totalNutrition, dietRepoMainList} = useGetDietRepo(
+    '2023-05-30',
+    undefined,
+    undefined,
+  );
+  // const yo = useGetDietRepo(undefined, '2023-05-30', 2);
+
+  useEffect(() => {
+    console.log('현재 클릭된 날짜');
+    console.log(date);
+  }, [date]);
 
   // useEffect(() => {
-  //   console.log('현재 클릭된 날짜');
-  //   console.log(date);
-  // }, [date]);
-
-  // const onPageScroll2 = e => {
-  //   const {position} = e.nativeEvent;
-  //   setChk(position);
-  // };
+  //   console.log('dietRepoMainList');
+  //   console.log(dietRepoMainList);
+  // }, [dietRepoMainList]);
 
   const dayPress = async selectedDate => {
     try {
@@ -94,97 +98,9 @@ const Pages = () => {
     navigation.navigate(DietRepoHistoryPageName);
   };
 
-  const FlatListSampleData = [
-    {
-      menuTime: '아침',
-
-      menuList: [
-        {
-          dailyFoodId: '',
-          foodId: '',
-          image: '',
-          makersName: '브라운 돈까스',
-          menuName: '정식 돈까스',
-          calTotal: 2200,
-          carbo: 40,
-
-          protein: 40,
-          fat: 40,
-        },
-        {
-          dailyFoodId: '',
-          foodId: '',
-          image: '',
-          makersName: '브라운 돈까스2',
-          menuName: '정식 돈까스',
-          calTotal: 2200,
-          carbo: 40,
-
-          protein: 40,
-          fat: 40,
-        },
-      ],
-    },
-
-    {
-      menuTime: '점심',
-
-      menuList: [],
-    },
-
-    {
-      menuTime: '저녁',
-
-      menuList: [
-        {
-          dailyFoodId: '',
-          foodId: '',
-          image: '',
-          makersName: '김치1',
-          menuName: '김치무침',
-          calTotal: 2000,
-          carbo: 40,
-
-          protein: 40,
-          fat: 40,
-        },
-        {
-          dailyFoodId: '',
-          foodId: '',
-          image: '',
-          makersName: '김치 치즈크림',
-          menuName: '김치 초고바',
-          calTotal: 2200,
-          carbo: 60,
-          protein: 30,
-          fat: 40,
-        },
-      ],
-    },
-  ];
-
   return (
     <Container>
-      {/* <Animated.View style={{height: fadeAnim, overflow: 'hidden'}}>
-        <CalendarButton pager={pager} daily chk={chk} />
-      </Animated.View> */}
       <CalendarWrap>
-        {/* <BuyCalendar
-          BooleanValue={false}
-          type={'grey2'}
-          color={'white'}
-          size={'Body05R'}
-          onPressEvent2={dayPress}
-          daily={daily}
-          // selectDate={date}
-          selectDate={date}
-          margin={'0px 28px'}
-          scrollDir
-          pagerRef={pager}
-          // onPageScroll2={onPageScroll2}
-          sliderValue={sliderValue}
-          isServiceDays={isServiceDays}
-        /> */}
         <DietRepoCalendar
           BooleanValue={false}
           type={'grey2'}
@@ -202,29 +118,26 @@ const Pages = () => {
           isServiceDays={isServiceDays}
         />
       </CalendarWrap>
-      {/* <ScrollViewContainer
-        showsVerticalScrollIndicator={false}></ScrollViewContainer> */}
 
       <FlatList
         ListHeaderComponent={
           <View style={{paddingLeft: 24, paddingRight: 24}}>
             <FlatListBanner
-              todayTotalCal={2200}
+              // todayTotalCal={2200}
+              todayTotalCal={totalNutrition?.totalCalorie}
               nutritionList={[
-                {lable: '탄수화물', amount: 400},
-                {lable: '단백질', amount: 100},
-                {lable: '지방', amount: 130},
+                {lable: '탄수화물', amount: totalNutrition?.totalCarbohydrate},
+                {lable: '단백질', amount: totalNutrition?.totalProtein},
+                {lable: '지방', amount: totalNutrition?.totalFat},
               ]}
             />
           </View>
         }
         contentContainerStyle={{paddingBottom: 190}}
         // data={FlatListSampleData}
-        data={modifyDietRepoMainData()}
+        data={modifyDietRepoMainData(dietRepoMainList, date)}
         scrollEnabled={true}
         renderItem={({item}) => {
-          console.log('item 값 확인하기 ');
-          console.log(item);
           return (
             <FlatListView style={{paddingLeft: 24, paddingRight: 24}}>
               <FlatListView2>
@@ -232,8 +145,11 @@ const Pages = () => {
 
                 <AddMealPressable
                   onPress={() => {
-                    // navigation.navigate(DietRepoAddDietPageName, {date: });
-                    navigation.navigate(DietRepoAddDietPageName);
+                    navigation.navigate(DietRepoAddDietPageName, {
+                      date: date,
+                      diningType: item.diningType,
+                    });
+                    // navigation.navigate(DietRepoAddDietPageName);
                   }}>
                   <AddMealText>식사 추가</AddMealText>
                   <ArrowRightBlue />

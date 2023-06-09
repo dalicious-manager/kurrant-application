@@ -16,6 +16,10 @@ import {sampleData2} from '../logic';
 const Pages = ({route}) => {
   const navigation = useNavigation();
 
+  console.log('route');
+  console.log(route?.params?.date);
+  console.log(route?.params?.diningType);
+
   // const yo = useGetDietRepo(undefined, '2023-05-30', 2);
 
   const handlePress = () => {

@@ -160,9 +160,9 @@ const DietRepoCalendar = ({
 
                   const events = () => {
                     // 클릭콜백 여기
-                    console.log('날짜 누름');
-                    console.log(day);
-                    console.log(propsDay);
+                    // console.log('날짜 누름');
+                    // console.log(day);
+                    // console.log(propsDay);
                     selectedPress(day);
                     onPressEvent2(propsDay);
                   };
