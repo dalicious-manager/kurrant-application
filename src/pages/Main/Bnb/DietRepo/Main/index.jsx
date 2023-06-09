@@ -1,11 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {
-  FlatList,
-  Platform,
-  Text,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native';
+import {FlatList, Platform} from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled, {css} from 'styled-components';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
@@ -31,6 +25,8 @@ import {ArrowRightBlue} from '../../../../../components/Icon';
 import DietRepoCalendar from '../DietRepoCalendar/DietRepoCalendar';
 import useGetDietRepo from '../useGetDietRepo';
 import {modifyDietRepoMainData} from '../logic';
+
+import LoadingScreen from '~components/LoadingScreen';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -68,19 +64,18 @@ const Pages = () => {
     undefined,
     undefined,
   );
-  // const yo = useGetDietRepo(undefined, '2023-05-30', 2);
 
   useEffect(() => {
-    console.log('현재 클릭된 날짜');
-    console.log(date);
+    // console.log('isDietRepoMainRefetchLoading fhfhh');
+    // console.log(isDietRepoMainRefetchLoading);
+  }, [isDietRepoMainRefetchLoading]);
+
+  useEffect(() => {
+    // console.log('현재 클릭된 날짜');
+    // console.log(date);
 
     dietRepoMainRefetch();
   }, [date]);
-
-  // useEffect(() => {
-  //   console.log('dietRepoMainList');
-  //   console.log(dietRepoMainList);
-  // }, [dietRepoMainList]);
 
   const dayPress = async selectedDate => {
     try {
@@ -211,11 +206,7 @@ const Pages = () => {
           />
         </ButtonWrapper>
       </Container>
-      {isDietRepoMainRefetchLoading && (
-        <LoadingScreen>
-          <ActivityIndicator size={'large'} />
-        </LoadingScreen>
-      )}
+      {isDietRepoMainRefetchLoading && <LoadingScreen />}
     </>
   );
 };
@@ -292,17 +283,17 @@ const ButtonWrapper = styled(LinearGradient)`
 
 const ButtonNext = styled(Button)``;
 
-const LoadingScreen = styled.View`
-  flex: 1;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  justify-content: center;
-  align-items: center;
+// const LoadingScreen = styled.View`
+//   flex: 1;
+//   position: absolute;
+//   top: 0;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+//   justify-content: center;
+//   align-items: center;
 
-  background-color: white;
+//   background-color: white;
 
-  opacity: 0.6;
-`;
+//   opacity: 0.6;
+// `;

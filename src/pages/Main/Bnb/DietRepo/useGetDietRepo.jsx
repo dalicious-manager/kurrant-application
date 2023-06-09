@@ -10,7 +10,8 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
 
   const {
     refetch: dietRepoMainRefetch,
-    isLoading: isDietRepoMainRefetchLoading,
+    // isLoading: isDietRepoMainRefetchLoading,
+    isFetching: isDietRepoMainRefetchLoading,
   } = useQuery(
     ['dietRepo', 'main'],
     async ({queryKey}) => {
