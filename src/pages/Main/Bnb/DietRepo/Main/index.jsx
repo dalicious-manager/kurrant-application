@@ -1,5 +1,11 @@
 import {useEffect, useRef, useState} from 'react';
-import {FlatList, Platform, Text, Pressable} from 'react-native';
+import {
+  FlatList,
+  Platform,
+  Text,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled, {css} from 'styled-components';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
@@ -51,8 +57,14 @@ const Pages = () => {
 
   const [date, setDate] = useState(formattedWeekDate(new Date()));
 
-  const {totalNutrition, dietRepoMainList} = useGetDietRepo(
-    '2023-05-30',
+  const {
+    isDietRepoMainRefetchLoading,
+    dietRepoMainRefetch,
+    totalNutrition,
+    dietRepoMainList,
+  } = useGetDietRepo(
+    // '2023-05-30',
+    date,
     undefined,
     undefined,
   );
@@ -61,6 +73,8 @@ const Pages = () => {
   useEffect(() => {
     console.log('현재 클릭된 날짜');
     console.log(date);
+
+    dietRepoMainRefetch();
   }, [date]);
 
   // useEffect(() => {
@@ -99,100 +113,110 @@ const Pages = () => {
   };
 
   return (
-    <Container>
-      <CalendarWrap>
-        <DietRepoCalendar
-          BooleanValue={false}
-          type={'grey2'}
-          color={'white'}
-          size={'Body05R'}
-          onPressEvent2={dayPress}
-          daily={daily}
-          // selectDate={date}
-          selectDate={date}
-          margin={'0px 28px'}
-          scrollDir
-          pagerRef={pager}
-          // onPageScroll2={onPageScroll2}
-          sliderValue={sliderValue}
-          isServiceDays={isServiceDays}
-        />
-      </CalendarWrap>
+    <>
+      <Container>
+        <CalendarWrap>
+          <DietRepoCalendar
+            BooleanValue={false}
+            type={'grey2'}
+            color={'white'}
+            size={'Body05R'}
+            onPressEvent2={dayPress}
+            daily={daily}
+            // selectDate={date}
+            selectDate={date}
+            margin={'0px 28px'}
+            scrollDir
+            pagerRef={pager}
+            // onPageScroll2={onPageScroll2}
+            sliderValue={sliderValue}
+            isServiceDays={isServiceDays}
+          />
+        </CalendarWrap>
 
-      <FlatList
-        ListHeaderComponent={
-          <View style={{paddingLeft: 24, paddingRight: 24}}>
-            <FlatListBanner
-              // todayTotalCal={2200}
-              todayTotalCal={totalNutrition?.totalCalorie}
-              nutritionList={[
-                {lable: '탄수화물', amount: totalNutrition?.totalCarbohydrate},
-                {lable: '단백질', amount: totalNutrition?.totalProtein},
-                {lable: '지방', amount: totalNutrition?.totalFat},
-              ]}
-            />
-          </View>
-        }
-        contentContainerStyle={{paddingBottom: 190}}
-        // data={FlatListSampleData}
-        data={modifyDietRepoMainData(dietRepoMainList, date)}
-        scrollEnabled={true}
-        renderItem={({item}) => {
-          return (
-            <FlatListView style={{paddingLeft: 24, paddingRight: 24}}>
-              <FlatListView2>
-                <MealTimeText>{item.menuTime}</MealTimeText>
+        <FlatList
+          ListHeaderComponent={
+            <View style={{paddingLeft: 24, paddingRight: 24}}>
+              <FlatListBanner
+                // todayTotalCal={2200}
+                todayTotalCal={totalNutrition?.totalCalorie}
+                nutritionList={[
+                  {
+                    lable: '탄수화물',
+                    amount: totalNutrition?.totalCarbohydrate,
+                  },
+                  {lable: '단백질', amount: totalNutrition?.totalProtein},
+                  {lable: '지방', amount: totalNutrition?.totalFat},
+                ]}
+              />
+            </View>
+          }
+          contentContainerStyle={{paddingBottom: 190}}
+          // data={FlatListSampleData}
+          data={modifyDietRepoMainData(dietRepoMainList, date)}
+          scrollEnabled={true}
+          renderItem={({item}) => {
+            return (
+              <FlatListView style={{paddingLeft: 24, paddingRight: 24}}>
+                <FlatListView2>
+                  <MealTimeText>{item.menuTime}</MealTimeText>
 
-                <AddMealPressable
-                  onPress={() => {
-                    navigation.navigate(DietRepoAddDietPageName, {
-                      date: date,
-                      diningType: item.diningType,
-                    });
-                  }}>
-                  <AddMealText>식사 추가</AddMealText>
-                  <ArrowRightBlue />
-                </AddMealPressable>
-              </FlatListView2>
+                  <AddMealPressable
+                    onPress={() => {
+                      navigation.navigate(DietRepoAddDietPageName, {
+                        date: date,
+                        diningType: item.diningType,
+                      });
+                    }}>
+                    <AddMealText>식사 추가</AddMealText>
+                    <ArrowRightBlue />
+                  </AddMealPressable>
+                </FlatListView2>
 
-              {Array.isArray(item.menuList) && item.menuList.length > 0 ? (
-                <View>
-                  {item.menuList.map((v, i) => {
-                    return (
-                      <DietRepoCard key={v.reportId} type="main" item1={v} />
-                    );
-                  })}
-                </View>
-              ) : (
-                <>
-                  <GreyThinLine />
-                </>
-              )}
-            </FlatListView>
-          );
-        }}
-      />
-
-      <ButtonWrapper
-        colors={[
-          'rgba(255, 255, 255, 0)',
-          'rgba(255, 255, 255, 0.3)',
-          'rgba(255, 255, 255, 0.7)',
-          'rgba(255, 255, 255, 0.8048)',
-          'rgba(255, 255, 255, 0.9)',
-          'rgba(255, 255, 255, 0.95)',
-        ]}>
-        <ButtonNext
-          size="full"
-          label="식사 히스토리"
-          text={'BottomButtonSB'}
-          // disabled={!clickAvaliable}
-          onPressEvent={() => {
-            handleHistoryPress();
+                {Array.isArray(item.menuList) && item.menuList.length > 0 ? (
+                  <View>
+                    {item.menuList.map((v, i) => {
+                      return (
+                        <DietRepoCard key={v.reportId} type="main" item1={v} />
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <>
+                    <GreyThinLine />
+                  </>
+                )}
+              </FlatListView>
+            );
           }}
         />
-      </ButtonWrapper>
-    </Container>
+
+        <ButtonWrapper
+          colors={[
+            'rgba(255, 255, 255, 0)',
+            'rgba(255, 255, 255, 0.3)',
+            'rgba(255, 255, 255, 0.7)',
+            'rgba(255, 255, 255, 0.8048)',
+            'rgba(255, 255, 255, 0.9)',
+            'rgba(255, 255, 255, 0.95)',
+          ]}>
+          <ButtonNext
+            size="full"
+            label="식사 히스토리"
+            text={'BottomButtonSB'}
+            // disabled={!clickAvaliable}
+            onPressEvent={() => {
+              handleHistoryPress();
+            }}
+          />
+        </ButtonWrapper>
+      </Container>
+      {isDietRepoMainRefetchLoading && (
+        <LoadingScreen>
+          <ActivityIndicator size={'large'} />
+        </LoadingScreen>
+      )}
+    </>
   );
 };
 
@@ -201,6 +225,7 @@ export default Pages;
 const Container = styled.View`
   flex: 1;
   background-color: #ffffff;
+  /* position: absolute; */
 `;
 
 const CalendarWrap = styled.View`
@@ -266,3 +291,18 @@ const ButtonWrapper = styled(LinearGradient)`
 `;
 
 const ButtonNext = styled(Button)``;
+
+const LoadingScreen = styled.View`
+  flex: 1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+
+  background-color: white;
+
+  opacity: 0.6;
+`;

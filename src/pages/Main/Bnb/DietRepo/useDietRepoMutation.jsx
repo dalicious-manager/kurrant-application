@@ -68,6 +68,50 @@ const useDietRepoMutation = () => {
     },
   );
 
+  // 리포트 삭제
+
+  const {mutate: deleteMeal} = useMutation(
+    async data => {
+      //   console.log('데이터 ');
+      //   console.log(data);
+
+      const response = await fetchJson('/users/me/daily/report/140', 'DELETE', {
+        body: JSON.stringify(data),
+      });
+
+      return response;
+    },
+    {
+      onSuccess: data => {},
+      onError: err => {
+        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
+        console.log(err);
+      },
+    },
+  );
+
+  // 특정기간 주문내역 리포트로 저장
+
+  const {mutate: saveMeal} = useMutation(
+    async data => {
+      //   console.log('데이터 ');
+      //   console.log(data);
+
+      const response = await fetchJson('/users/me/daily/report/140', 'DELETE', {
+        body: JSON.stringify(data),
+      });
+
+      return response;
+    },
+    {
+      onSuccess: data => {},
+      onError: err => {
+        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
+        console.log(err);
+      },
+    },
+  );
+
   return {
     addMeal,
   };

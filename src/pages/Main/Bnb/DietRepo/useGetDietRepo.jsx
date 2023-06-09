@@ -8,7 +8,10 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
 
   const [dietRepoAddMealList, setDietRepoAddMealList] = useState([]);
 
-  useQuery(
+  const {
+    refetch: dietRepoMainRefetch,
+    isLoading: isDietRepoMainRefetchLoading,
+  } = useQuery(
     ['dietRepo', 'main'],
     async ({queryKey}) => {
       const response = await fetchJson(
@@ -48,6 +51,9 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
   );
 
   return {
+    dietRepoMainRefetch,
+    isDietRepoMainRefetchLoading,
+
     totalNutrition,
     dietRepoMainList,
     dietRepoAddMealList,
