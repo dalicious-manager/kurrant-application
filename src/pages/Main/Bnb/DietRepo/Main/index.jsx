@@ -244,7 +244,7 @@ const Pages = () => {
                 <View>
                   {item.menuList.map((v, i) => {
                     return (
-                      <DietRepoCard key={v.reportId} type="main" item1={item} />
+                      <DietRepoCard key={v.reportId} type="main" item1={v} />
                     );
                   })}
                 </View>

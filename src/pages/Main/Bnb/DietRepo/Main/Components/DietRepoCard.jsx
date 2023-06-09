@@ -7,6 +7,9 @@ import Typography from '~components/Typography';
 import {Line} from 'react-native-svg';
 
 const DietRepoCard = ({type, item1 = undefined, item2 = undefined}) => {
+  console.log('다이어트');
+  console.log(item1);
+
   return (
     <Container>
       <CardContentBox>
@@ -29,19 +32,28 @@ const DietRepoCard = ({type, item1 = undefined, item2 = undefined}) => {
           <SmallRowWrap>
             <RestaurentNameText>
               {'['}
-              {item1?.title || item2?.title}
+              {item1?.title || item2?.makersName}
               {']'}
             </RestaurentNameText>
             <MenuNameWrap>
-              <MenuNameText numberOfLines={1} ellipsizeMode="tail">
-                {item1?.foodName}
-              </MenuNameText>
-              <TotalCalText> · {item1?.calorie}kcal</TotalCalText>
+              {!!item1 && !item2 ? (
+                <MenuNameText numberOfLines={1} ellipsizeMode="tail">
+                  {item1?.foodName || item2?.foodName}
+                </MenuNameText>
+              ) : (
+                <MenuNameText>
+                  {item1?.foodName || item2?.foodName}
+                </MenuNameText>
+              )}
+
+              {!!item1 && !item2 && (
+                <TotalCalText> · {item1?.calorie}kcal</TotalCalText>
+              )}
             </MenuNameWrap>
           </SmallRowWrap>
 
           <MainWrap4>
-            {type === 'main' ? (
+            {!!item1 && !item2 ? (
               <MainWrap5>
                 <MainWrap6>
                   <MainText6>탄수화물</MainText6>
@@ -58,14 +70,15 @@ const DietRepoCard = ({type, item1 = undefined, item2 = undefined}) => {
               </MainWrap5>
             ) : (
               <AddMealWrap5>
-                <AddMealText6>달리셔스 · 달리셔스</AddMealText6>
-                <MainText6>1개</MainText6>
+                {/* <AddMealText6>달리셔스 · 달리셔스</AddMealText6> */}
+                <AddMealText6>{item2?.spotName}</AddMealText6>
+                <MainText6>{item2?.count}개</MainText6>
               </AddMealWrap5>
             )}
 
             <ButtonWrap>
               <ReviewFormWriteButton onPress={() => {}}>
-                <TextText> {type === 'main' ? '제거' : '식사 추가'}</TextText>
+                <TextText> {!!item1 && !item2 ? '제거' : '식사 추가'}</TextText>
               </ReviewFormWriteButton>
             </ButtonWrap>
           </MainWrap4>

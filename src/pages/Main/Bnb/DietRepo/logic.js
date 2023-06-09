@@ -1,3 +1,5 @@
+import {toStringByFormatting} from '../../../../utils/dateFormatter';
+
 const sampleData = [
   {
     reportId: 1,
@@ -56,7 +58,7 @@ const sampleData = [
   },
 ];
 
-const sampleData2 = [
+export const sampleData2 = [
   {
     makersName: '후레쉬빌',
     foodName: '수비드닭가슴살샐러드',
@@ -75,7 +77,10 @@ const sampleData2 = [
   },
 ];
 
-export const modifyDietRepoMainData = (data = sampleData, date) => {
+export const modifyDietRepoMainData = (
+  data = sampleData,
+  date = toStringByFormatting(new Date(Date.now())),
+) => {
   let breakfastArr = [];
   let lunchArr = [];
   let dinnerArr = [];

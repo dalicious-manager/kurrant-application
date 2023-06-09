@@ -11,6 +11,7 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddDiet';
 
 import {PAGE_NAME as DietRepoAddMyDietPageName} from '~pages/Main/Bnb/DietRepo/AddMyDiet';
 import useGetDietRepo from '../useGetDietRepo';
+import {sampleData2} from '../logic';
 
 const Pages = ({route}) => {
   const navigation = useNavigation();
@@ -30,12 +31,12 @@ const Pages = ({route}) => {
           <View style={{paddingLeft: 24, paddingRight: 24}}></View>
         }
         contentContainerStyle={{paddingBottom: 190}}
-        data={[1, 2, 3, 4]}
+        data={sampleData2}
         scrollEnabled={true}
         renderItem={({item}) => {
           return (
             <>
-              <DietRepoCard type="" />
+              <DietRepoCard item2={item} />
             </>
           );
         }}
