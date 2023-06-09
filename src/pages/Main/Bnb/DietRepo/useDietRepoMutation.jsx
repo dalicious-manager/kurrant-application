@@ -1,19 +1,22 @@
 import {useMutation, useQueryClient} from 'react-query';
 import {fetchJson} from '../../../../utils/fetch';
+import {Alert, View} from 'react-native';
 
-// import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
 import {SCREEN_NAME as MainScreenName} from '~screens/Main/Bnb';
 
 import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
+import {useNavigation} from '@react-navigation/core';
 
 const useDietRepoMutation = () => {
+  const navigation = useNavigation();
+
   const queryClient = useQueryClient();
 
   // 유저 식단 추가
   const {mutate: addMeal} = useMutation(
     async data => {
-      //   console.log('데이터 ');
-      //   console.log(data);
+      console.log('우저 식단 데이터 ');
+      console.log(data);
 
       const response = await fetchJson('/users/me/daily/report/me', 'POST', {
         body: JSON.stringify(data),

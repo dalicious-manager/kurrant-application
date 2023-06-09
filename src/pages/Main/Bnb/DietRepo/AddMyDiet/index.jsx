@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import {FlatList, Platform, Text, Pressable, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled, {css} from 'styled-components';
@@ -80,6 +80,36 @@ const Pages = ({route}) => {
     console.log(form.watch('carbo'));
     console.log(form.watch('protein'));
     console.log(form.watch('fat'));
+
+    const data = {
+      name: form.watch('mealName'),
+      calorie: form.watch('cal'),
+      carbohydrate: form.watch('carbo'),
+      protein: form.watch('protein'),
+      fat: form.watch('fat'),
+      eatDate: route?.params?.date,
+      diningType: route?.params?.diningType,
+    };
+
+    Alert.alert('내 음식 추가', '식사를 추가하시겠습니까?', [
+      {
+        text: '취소',
+        onPress: () => {
+          console.log('cancel pressed');
+        },
+        style: 'destructive',
+      },
+      {
+        text: '추가',
+        onPress: () => {
+          try {
+            addMeal(data);
+          } catch (err) {
+            console.log(err);
+          }
+        },
+      },
+    ]);
   };
 
   return (
