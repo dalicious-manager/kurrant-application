@@ -3,9 +3,10 @@ import {useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Keyboard, Text, TextInput} from 'react-native';
+import {Alert, Keyboard, Text, TextInput} from 'react-native';
 import styled from 'styled-components';
 
+import {garbageList, hotStorageList, settingList} from './Option/option';
 import useCorporationApplication from '../../../../../biz/useCorporationApplication/hook';
 import {
   corpApplicationSpotsAtom,
@@ -25,7 +26,6 @@ import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as GroupCompletePageName} from '../../../GroupCreate/CreateComplete';
 import {Title} from '../ThirdPage';
-import {garbageList, hotStorageList, settingList} from './Option/option';
 
 export const PAGE_NAME = 'P__GROUP__CREATE__COR__APPLICATION__LAST';
 const Pages = () => {
@@ -119,7 +119,10 @@ const Pages = () => {
       removeStorage();
       navigation.navigate(GroupCompletePageName, {name: 'corporation'});
     } catch (err) {
-      console.log(err);
+      Alert.alert(
+        '프라이빗스팟 가입신청',
+        err?.toString()?.replace('error: ', ''),
+      );
     }
   };
 

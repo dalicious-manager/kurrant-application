@@ -32,7 +32,6 @@ const useGetOneAnnouncements = () => {
 
       // 데이터가 없거나 이상하면 아예 함수종료하기
       if (!Array.isArray(res.data) || res.data.length <= 0) {
-        console.log('공지사항 없어요 모달 끕니다');
         return;
       }
 
@@ -59,24 +58,15 @@ const useGetOneAnnouncements = () => {
 
           setOneAnnouncement(dataFromDb[0]);
           setIsOneAnnouncementModalVisible(true);
-          console.log('7일이 지났음');
         } else {
           // undefine d넣어주면 됨
 
           setOneAnnouncement(undefined);
           setIsOneAnnouncementModalVisible(false);
-
-          console.log(`7일이 아직 안 지났음 `);
-          console.log(
-            toStringByFormatting(new Date(timeObject[dataFromDb[0].id])),
-          );
         }
       } else {
         setOneAnnouncement(dataFromDb[0]);
         setIsOneAnnouncementModalVisible(true);
-        console.log(
-          '로컬스토리지에 클릭한 기록이 없어서 받은데이터 그대로 넣어줌',
-        );
       }
 
       //

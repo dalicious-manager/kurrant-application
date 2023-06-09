@@ -86,19 +86,14 @@ const useUserMe = () => {
     try {
       setMyInfoLoading(true);
       const res = await Fetch.userMe();
-      // console.log(res.data, '123123123');
       setMyInfo(res.data);
     } catch (err) {
-      console.log(
-        err.toString()?.replace('Error:', '')?.replace('error:', ''),
-        '123456',
-      );
       if (
         err.toString()?.replace('Error:', '').trim()?.replace('error:', '') ===
         '403'
       ) {
         AsyncStorage.clear();
-        navigation.reset({
+        return navigation.reset({
           index: 0,
           routes: [
             {
@@ -110,6 +105,10 @@ const useUserMe = () => {
           ],
         });
       }
+      return Alert.alert(
+        '일일 지원금',
+        err?.toString()?.replace('error: ', ''),
+      );
     } finally {
       setMyInfoLoading(false);
     }
@@ -354,7 +353,6 @@ const useUserMe = () => {
     try {
       setCardListLoading(true);
       const res = await Fetch.getCardList();
-      console.log(res, '카드');
       setCardList(res.data);
       setCardSimpleList(
         res.data.map((v, idx) => {

@@ -40,7 +40,6 @@ export default () => {
       if (social === 'NAVER') {
         const {successResponse} = await NaverLogin.login(naverData());
         if (successResponse) {
-          console.log(successResponse);
           Clipboard.setString(successResponse.accessToken);
           const res = await snsConnect(
             {
@@ -80,7 +79,6 @@ export default () => {
           // Start the sign-in request
           if (Platform.OS === 'android') {
             const appleData = await appleAuthAndroid.signIn();
-            console.log(appleData);
             const res = await snsConnect(
               {
                 ...appleData,
@@ -126,7 +124,6 @@ export default () => {
             ['public_profile', 'email'],
             nonce,
           );
-          console.log(result);
 
           if (Platform.OS === 'ios') {
             const result =

@@ -12,6 +12,7 @@ export function useGetDailyfood(spotId, selectedDate, userRole) {
     },
     {
       enabled: !!spotId,
+      retry: false,
     },
   );
 }

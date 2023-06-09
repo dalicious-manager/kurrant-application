@@ -1,6 +1,7 @@
 import {atomWithReset} from 'jotai/utils';
 
 export const isDailyFoodAtom = atomWithReset([]);
+export const diningTimeFoodAtom = atomWithReset([]);
 export const isMorningFoodAtom = atomWithReset([]);
 export const foodAtom = atomWithReset([]);
 export const isLunchFoodAtom = atomWithReset([]);

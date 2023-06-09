@@ -161,7 +161,6 @@ export function isBlank(url, mainDocumentUrl, orderItems, setUrls, token) {
   if (url.includes('admin.dalicious.co')) {
     if (!url.includes('orderItems')) {
       const reqUrl = url + `&orderItems=${orderItems}&token=${token}`;
-      console.log(reqUrl, 'testset');
       setUrls({uri: reqUrl});
       return (
         reqUrl.startsWith('about:blank') &&
@@ -178,7 +177,6 @@ export function isBlank(url, mainDocumentUrl, orderItems, setUrls, token) {
 }
 
 export async function openPGApp(url) {
-  console.log(url);
   let splittedUrl = url?.replace('://', ' ').split(' ');
   let scheme = splittedUrl[0];
 

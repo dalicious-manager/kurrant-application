@@ -33,9 +33,6 @@ const useBoard = () => {
       if (type === 1 || type === 2) setGetNoticeLoading(true);
       if (type === 3) setGetSpotNoticeLoading(true);
 
-      console.log('타입확인하기');
-      console.log(type);
-
       const res = await Fetch.getNotice(type);
       if (type === 1 || type === 2) setNotice(res.data);
       if (type === 3) setSpotNotice(res.data);

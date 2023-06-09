@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 
+import {PAGE_NAME as corpApplicationPostcodePageName} from './Pages';
 import Arrow from '../../../../../assets/icons/Group/arrowDown.svg';
 import {
   corpApplicationDate,
@@ -36,7 +37,6 @@ import {
   formattedDate,
 } from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as corpApplicationThirdPageName} from '../ThirdPage';
-import {PAGE_NAME as corpApplicationPostcodePageName} from './Pages';
 
 export const PAGE_NAME = 'P__GROUP__CREATE__COR__APPLICATION__SECOND';
 const Pages = () => {
@@ -146,8 +146,6 @@ const Pages = () => {
         setValue('address2', get.address2);
         setValue('employeeCount', get.employeeCount);
         setValue('startDate', get.startDate);
-      } else {
-        console.log('no');
       }
     };
 

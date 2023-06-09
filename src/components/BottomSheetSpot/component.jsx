@@ -3,6 +3,7 @@ import BottomSheet, {
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
   Modal,
@@ -11,10 +12,14 @@ import {
   Dimensions,
   View,
   PanResponder,
+  Text,
 } from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
+import {mainDimAtom} from '../../utils/store';
+import BalloonMessage from '../BalloonMessage';
 import Label from '../Label';
 import Typography from '../Typography';
 
@@ -35,7 +40,7 @@ const BottomSheetSpot = props => {
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
-
+  const [showDim, setShowDim] = useAtom(mainDimAtom);
   const onSelect = useCallback(
     id => {
       //멀티 셀렉터시 이용
@@ -50,7 +55,7 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['35%', '90%'], []);
+  const snapPoints = useMemo(() => ['60%', '90%'], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
@@ -65,49 +70,13 @@ const BottomSheetSpot = props => {
     duration: 50,
     useNativeDriver: true,
   });
-  const list = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => false,
-      onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > 0 && gestureState.vy > 1.5) {
-          closeModal();
-        } else {
-          resetBottomSheet.start();
-        }
-      },
-    }),
-  );
+
   const handleSheetChange = useCallback(index => {
     setSnap(index);
   }, []);
   const handleSnapPress = useCallback(index => {
-    list.current?.snapToIndex(index);
+    setSnap(index);
   }, []);
-  const pressOutUp = e => {
-    e.stopPropagation();
-    const {pageY} = e.nativeEvent;
-    if (pageY > y + 50) {
-      if (snap === 0) {
-        closeModal();
-      } else {
-        if (contentScroll && scrollStart == 0) {
-          handleSnapPress(0);
-        }
-      }
-    } else if (pageY < y - 50) {
-      handleSnapPress(1);
-    } else {
-      if (contentScroll && scrollStart == 0) {
-        handleSnapPress(0);
-      }
-    }
-  };
-  const pressInUp = e => {
-    e.stopPropagation();
-    const {pageY} = e.nativeEvent;
-    setY(pageY);
-  };
 
   useEffect(() => {
     if (props.modalVisible) {
@@ -122,98 +91,100 @@ const BottomSheetSpot = props => {
   };
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
-      <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <Background />
-        </TouchableWithoutFeedback>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <Overlay>
+          {snap === 0 && !showDim && (
+            <BalloonMessage
+              location={{top: '200px'}}
+              vertical="down"
+              message={`배송받으실 스팟을 선택해주세요.${'\n'}추후 변경 가능합니다.`}
+            />
+          )}
 
-        <BottomSheet
-          ref={list}
-          snapPoints={snapPoints}
-          onChange={handleSheetChange}
-          style={{
-            marginBottom: 50,
-          }}>
-          <BottomSheetTitleView>
-            <BottomSheetTitle>{title}</BottomSheetTitle>
-            {description !== '' && (
-              <BottomSheetDecs>{description}</BottomSheetDecs>
-            )}
-          </BottomSheetTitleView>
-          <BottomSheetFlatList
-            data={data}
-            scrollEnabled={snap === 1}
-            onScrollBeginDrag={e => {
-              setScrollStart(e.nativeEvent.contentOffset.y);
-            }}
-            onMomentumScrollBegin={() => {
-              if (scrollEnd === 0) {
-                handleSnapPress(0);
-              }
-            }}
-            onScrollEndDrag={e => {
-              setContentScroll(e.nativeEvent.contentOffset.y === 0);
-              setScrollEnd(e.nativeEvent.contentOffset.y);
-              if (e.nativeEvent.contentOffset.y === 0) {
-                if (contentScroll) {
+          <TouchableWithoutFeedback onPress={closeModal}>
+            <Background />
+          </TouchableWithoutFeedback>
+
+          <BottomSheet snapPoints={snapPoints} onChange={handleSheetChange}>
+            <BottomSheetTitleView>
+              <BottomSheetTitle>{title}</BottomSheetTitle>
+              {description !== '' && (
+                <BottomSheetDecs>{description}</BottomSheetDecs>
+              )}
+            </BottomSheetTitleView>
+            <BottomSheetFlatList
+              data={data}
+              scrollEnabled={snap === 1}
+              onScrollBeginDrag={e => {
+                setScrollStart(e.nativeEvent.contentOffset.y);
+              }}
+              onMomentumScrollBegin={() => {
+                if (scrollEnd === 0) {
                   handleSnapPress(0);
                 }
-              }
-            }}
-            renderItem={({item}) => (
-              <>
-                <ItemContainer>
-                  <GroupView>
-                    <GroupName>{item.clientName}</GroupName>
-                    <View style={{marginLeft: 8}}>
-                      <Label
-                        label={
-                          item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
-                        }
-                        type={item.spotType === 0 ? 'red' : 'green'}
-                      />
-                    </View>
-                  </GroupView>
-                  <Border />
-                </ItemContainer>
+              }}
+              onScrollEndDrag={e => {
+                setContentScroll(e.nativeEvent.contentOffset.y === 0);
+                setScrollEnd(e.nativeEvent.contentOffset.y);
+                if (e.nativeEvent.contentOffset.y === 0) {
+                  if (contentScroll) {
+                    handleSnapPress(0);
+                  }
+                }
+              }}
+              renderItem={({item}) => (
+                <>
+                  <ItemContainer>
+                    <GroupView>
+                      <GroupName>{item.clientName}</GroupName>
+                      <View style={{marginLeft: 8}}>
+                        <Label
+                          label={
+                            item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
+                          }
+                          type={item.spotType === 0 ? 'red' : 'green'}
+                        />
+                      </View>
+                    </GroupView>
+                    <Border />
+                  </ItemContainer>
 
-                {item.spots.map(el => {
-                  return (
-                    <ContentItemContainer
-                      onPressIn={pressInUp}
-                      onPressOut={pressOutUp}
-                      onPress={() => {
-                        onSelect(el.spotId);
-                        onPressEvent(el.spotId);
-                      }}
-                      key={el.spotId}>
-                      {el.spotId === userSpotId ? (
-                        <ContentItemBox>
+                  {item.spots.map(el => {
+                    return (
+                      <ContentItemContainer
+                        onPress={() => {
+                          onSelect(el.spotId);
+                          onPressEvent(el.spotId);
+                        }}
+                        key={el.spotId}>
+                        {el.spotId === userSpotId ? (
+                          <ContentItemBox>
+                            <ContentItemText>{el.spotName}</ContentItemText>
+                            <CheckedIcon />
+                          </ContentItemBox>
+                        ) : (
                           <ContentItemText>{el.spotName}</ContentItemText>
-                          <CheckedIcon />
-                        </ContentItemBox>
-                      ) : (
-                        <ContentItemText>{el.spotName}</ContentItemText>
-                      )}
-                    </ContentItemContainer>
-                  );
-                })}
-              </>
-            )}
-            keyExtractor={item => item.clientId.toString()}
-          />
-          <ManagePressView />
-        </BottomSheet>
+                        )}
+                      </ContentItemContainer>
+                    );
+                  })}
+                </>
+              )}
+              // keyExtractor={item => item.clientId.toString()}
+            />
+            <ManagePressView />
+          </BottomSheet>
 
-        {booleanValue && (
-          <ManagePressView
-            onPress={() => {
-              onPressEvent2(setModalVisible(false));
-            }}>
-            <ContentItemText>스팟 관리하기</ContentItemText>
-          </ManagePressView>
-        )}
-      </Overlay>
+          {booleanValue && (
+            <ManagePressView
+              onPress={() => {
+                onPressEvent2(setModalVisible(false));
+              }}>
+              <ContentItemText>스팟 관리하기</ContentItemText>
+            </ManagePressView>
+          )}
+        </Overlay>
+      </GestureHandlerRootView>
     </Modal>
   );
 };
@@ -276,7 +247,6 @@ const Border = styled.View`
 
 const ManagePressView = styled.Pressable`
   width: ${Dimensions.get('screen').width}px;
-  height: 100px;
   padding: 19px 24px 55px 24px;
   background-color: white;
 `;
@@ -287,3 +257,7 @@ const GroupView = styled.View`
 `;
 
 export default BottomSheetSpot;
+
+const MessageWrap = styled.View`
+  position: absolute;
+`;

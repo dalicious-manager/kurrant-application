@@ -1,10 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const setStorage = async (
-  key,
-  value,
-  callback = () => console.log('저장'),
-) => {
+export const setStorage = async (key, value, callback = () => {}) => {
   return await AsyncStorage.setItem(key, value, callback);
 };
 
@@ -17,7 +13,7 @@ export const getStorage = async (key, callback = () => {}) => {
 export const removeItemFromStorage = async (
   key,
 
-  callback = () => console.log('저장'),
+  callback = () => {},
 ) => {
   return await AsyncStorage.removeItem(key, callback);
 };

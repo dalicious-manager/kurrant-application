@@ -68,6 +68,7 @@ const App = () => {
     </QueryClientProvider>
   );
 };
+
 export default codePush(App);
 
 const IsDevelop = styled.Text`

@@ -23,7 +23,6 @@ const useFoodDetail = () => {
   const foodDetail = async foodId => {
     try {
       setFoodDetailLoading(true);
-      console.log(userRole);
       const res = await Fetch.FoodDetail(foodId, userRole);
       //console.log(res, '12312937');
       setFoodDetail(res.data);

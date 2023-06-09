@@ -60,19 +60,18 @@ const Pages = () => {
           </SubtractView>
           <SubtractView>
             <SubtractBox
-              text={'정기식사, 마켓 상품 리뷰 등록 시\n추가 포인트 적립'}
-              disabled={true}>
+              text={'정기식사, 마켓 상품 리뷰 등록 시\n추가 포인트 적립'}>
               <CommentsIcon />
             </SubtractBox>
           </SubtractView>
-          <SubtractView>
+          {/* <SubtractView>
             <SubtractBox text={'마켓 상품 구매 시 포인트 적립'} disabled={true}>
               <PointIcon />
             </SubtractBox>
-          </SubtractView>
+          </SubtractView> */}
           <SubtractView>
-            <SubtractBox text={'메뉴 추천 기능 오픈'} disabled={true}>
-              <ThumbsUpWithThreeStarsIcon />
+            <SubtractBox text={'메뉴 추천 기능 오픈'} beta={true}>
+              <ThumbsUpWithThreeStarsIcon additionalCss={`margin-right: 5px`} />
             </SubtractBox>
           </SubtractView>
         </SubtractWrapper>

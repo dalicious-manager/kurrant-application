@@ -4,7 +4,6 @@ import {useEffect} from 'react';
 import {useState} from 'react';
 import {ActivityIndicator} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import Button from '~components/Button';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
@@ -18,7 +17,6 @@ const Pages = ({route}) => {
   const {alarm} = params;
   const {alarmLookup, alarmSetting, setAlarm, setAgree} = useUserMe();
   const navigation = useNavigation();
-  console.log(alarm);
   const onSetAlarm = async () => {
     await alarmSetting({
       isMarketingAlarmAgree: !(

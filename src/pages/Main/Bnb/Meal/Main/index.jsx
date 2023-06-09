@@ -106,7 +106,7 @@ const Pages = ({route}) => {
                 setShow(false);
               }, 2000);
             } catch (err) {
-              console.log(err);
+              Alert.alert('메뉴 취소', err?.toString()?.replace('error: ', ''));
             }
           },
           style: 'destructive',
@@ -211,7 +211,6 @@ const Pages = ({route}) => {
           {touchDate ? (
             <>
               {selectDate?.map((s, index) => {
-                console.log(s);
                 return (
                   <View key={index}>
                     <DiningTimeWrap>
@@ -220,7 +219,6 @@ const Pages = ({route}) => {
                       </DiningTime>
                     </DiningTimeWrap>
                     {s.orderItemDtoList?.map((sm, idx) => {
-                      console.log(sm, 'sm');
                       return (
                         <MealContentWrap key={idx}>
                           {sm.dailyFoodStatus === 6 && <BlurView />}
@@ -265,7 +263,9 @@ const Pages = ({route}) => {
                               <CancelBtnWrap status={sm.orderStatus}>
                                 <LabelButton
                                   label={'취소'}
-                                  onPressEvent={() => cancelMealPress(sm.id)}
+                                  onPressEvent={() =>
+                                    cancelMealPress(sm.id, s.serviceDate)
+                                  }
                                   disabled={sm.orderStatus === 7}
                                 />
                               </CancelBtnWrap>
@@ -277,7 +277,9 @@ const Pages = ({route}) => {
                               <MealChangeWrap>
                                 <LabelButton
                                   label={'메뉴변경'}
-                                  onPressEvent={() => changeMealPress(sm.id)}
+                                  onPressEvent={() =>
+                                    changeMealPress(sm.id, s.serviceDate)
+                                  }
                                 />
                               </MealChangeWrap>
                             )}

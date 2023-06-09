@@ -69,7 +69,6 @@ export default () => {
           },
           'NAVER',
         );
-        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -79,7 +78,7 @@ export default () => {
           ],
         });
       } else {
-        console.log(failureResponse);
+        // console.log(failureResponse);
       }
     } catch (error) {
       Alert.alert('네이버 로그인 에러', error.toString());
@@ -109,7 +108,6 @@ export default () => {
         },
         'GOOGLE',
       );
-      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [
@@ -119,7 +117,7 @@ export default () => {
         ],
       });
     } catch (error) {
-      console.log('err', error.toString());
+      // console.log('err', error.toString());
     }
   };
   const appleLogin = async (name = '') => {
@@ -143,7 +141,6 @@ export default () => {
           },
           'APPLE',
         );
-        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -189,8 +186,6 @@ export default () => {
           },
           'APPLE',
         );
-        const userData = await userInfo();
-        // console.log(userCredential.additionalUserInfo.isNewUser);
         if (!userCredential.additionalUserInfo.isNewUser) {
           navigation.reset({
             index: 0,
@@ -252,7 +247,6 @@ export default () => {
   const kakaoLogin = async () => {
     const token = await login();
     // Clipboard.setString(token.accessToken);
-    console.log(token.accessToken);
 
     await snsLogin(
       {
@@ -261,7 +255,6 @@ export default () => {
       },
       'KAKAO',
     );
-    const userData = await userInfo();
     navigation.reset({
       index: 0,
       routes: [
@@ -290,7 +283,6 @@ export default () => {
           },
           'FACEBOOK',
         );
-        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -309,7 +301,6 @@ export default () => {
           },
           'FACEBOOK',
         );
-        const userData = await userInfo();
         navigation.reset({
           index: 0,
           routes: [
@@ -320,7 +311,7 @@ export default () => {
         });
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

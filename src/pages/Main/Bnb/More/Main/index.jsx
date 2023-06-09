@@ -1,10 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useEffect, useState} from 'react';
+import {useCallback} from 'react';
 import {Alert, Pressable, ScrollView, StatusBar} from 'react-native';
+import VersionCheck from 'react-native-version-check';
 import styled, {useTheme} from 'styled-components/native';
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import useUserMe from '~biz/useUserMe';
 import {SettingIcon} from '~components/Icon';
@@ -12,41 +15,34 @@ import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 import {PAGE_NAME as TermOfServicePageName} from '~pages/Main/MyPage/TermOfService';
 
-import {PAGE_NAME as CompanyInfoPageName} from '../../../MyPage/CompanyInfo';
-import {PAGE_NAME as CreditPageName} from '../../../MyPage/Credit';
-
-import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
-import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
-import {PAGE_NAME as FAQPageName} from '../../../MyPage/FAQ';
-import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
-import {PAGE_NAME as MealPageName} from '../../Meal/Main';
-import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
-import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
-import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
-import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
+import PointBox from './PointBox';
 import SkeletonUI from './SkeletonUI';
-import VersionCheck from 'react-native-version-check';
-import {useCallback} from 'react';
-import useUserInfo from '../../../../../biz/useUserInfo';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
-import PointBox from './PointBox';
-import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
-
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-
-import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
+import useReviewWait from '../../../../../biz/useReview/useReviewWait';
 import {
   redeemablePointsAtom,
   totalReviewWaitListAtom,
 } from '../../../../../biz/useReview/useReviewWait/store';
-import {useAtom} from 'jotai';
-import useReviewWait from '../../../../../biz/useReview/useReviewWait';
+import useUserInfo from '../../../../../biz/useUserInfo';
+import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
+import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
+import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
+import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
+import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
+import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
+import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
+import {PAGE_NAME as CompanyInfoPageName} from '../../../MyPage/CompanyInfo';
+import {PAGE_NAME as CreditPageName} from '../../../MyPage/Credit';
+import {PAGE_NAME as FAQPageName} from '../../../MyPage/FAQ';
+import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
+import {PAGE_NAME as MealPageName} from '../../Meal/Main';
+import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -87,13 +83,12 @@ const Pages = () => {
   const currentVersion = VersionCheck.getCurrentVersion();
   const {isUserInfo, userInfo} = useUserInfo();
   const getData = async () => {
+    await userMe();
+    await userMePersonal();
     VersionCheck.getLatestVersion().then(latestVersion => {
-      console.log(latestVersion, currentVersion);
       if (currentVersion === latestVersion) setVersionChecked(true);
       else setVersionChecked(false);
     });
-    await userMe();
-    userMePersonal();
   };
   useFocusEffect(
     useCallback(() => {
@@ -132,17 +127,12 @@ const Pages = () => {
     }, []),
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      // Do something when the screen is focused
-      console.log('포커싱');
-      userInfo();
-      return () => {
-        // Do something when the screen is unfocused
-        // Useful for cleanup functions
-      };
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     // Do something when the screen is focused
+  //     userInfo();
+  //   }, []),
+  // );
 
   useEffect(() => {
     if (userRole !== 'ROLE_GUEST') {
@@ -152,7 +142,7 @@ const Pages = () => {
       getData();
     }
   }, []);
-  if (isMyInfoLoading && !myInfo) {
+  if (!isUserInfo) {
     return <SkeletonUI />;
   }
   return (
@@ -163,7 +153,7 @@ const Pages = () => {
             <Typography text='CaptionSB' textColor={themeApp.colors.blue[500]}>나의 미식타입 테스트 </Typography>
             <ArrowRight/>
           </GourmetTestButton> */}
-          {myInfo ? (
+          {isUserInfo ? (
             <LoginBox>
               <LoginIdBox>
                 {/* <AvatarBackground source={AvatarNon} resizeMode={'stretch'}>

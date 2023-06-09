@@ -31,7 +31,6 @@ const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
       test: 'test',
     });
   };
-
   return (
     <>
       <MealInfoWrapper>
@@ -134,23 +133,6 @@ const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
 };
 
 export default MealInfoComponent;
-
-const styles = StyleSheet.create({
-  shadow: {
-    zIndex: 80,
-    // ios
-    shadowColor: '#5A1EFF',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-
-    // android
-    elevation: 10,
-  },
-});
 
 const Display = css`
   flex-direction: row;

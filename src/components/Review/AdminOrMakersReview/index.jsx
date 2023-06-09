@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import styled, {css} from 'styled-components';
+import {GreyLockerIcon} from '~components/Icon';
+import {DefaultHumanIcon} from '~components/Icon';
 
-import {GreyLockerIcon} from '../../../../../../components/Icon';
-import {DefaultHumanIcon} from '../../../../../../components/Icon';
-import Typography from '../../../../../../components/Typography';
+import Typography from '~components/Typography';
 
 // const sampleOnlyForReviewers = true;
 const sampleOnlyForReviewers = false;
@@ -11,7 +11,6 @@ const sampleOnlyForReviewers = false;
 const Component = ({
   makersName,
   pngLink,
-
   writtenDate: createDate,
   message: content,
 }) => {
@@ -19,10 +18,6 @@ const Component = ({
 
   const getWidth = e => {
     const {width, height, x, y} = e.nativeEvent.layout;
-
-    // console.log('댓글 width');
-    // console.log(width);
-    // console.log(width * 0.052279);
 
     setCalcFontSize(width * 0.052279);
   };

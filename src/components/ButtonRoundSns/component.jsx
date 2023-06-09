@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Platform} from 'react-native';
 import styled from 'styled-components/native';
-import Balloon from '~components/Balloon';
+import BalloonLastLogin from '~components/BalloonLastLogin';
 
 import {getSnsButtonColor, getSnsButtonBorder} from './style';
 import {
@@ -26,7 +26,7 @@ const Component = ({
   },
   isLast = false,
 }) => {
-  const {balloonEvent, BalloonWrap, balloonEventNotOut} = Balloon();
+  const {balloonEvent, BalloonWrap, balloonEventNotOut} = BalloonLastLogin();
   const osLocation = () => {
     if (Platform.OS === 'ios') {
       switch (type_sns) {

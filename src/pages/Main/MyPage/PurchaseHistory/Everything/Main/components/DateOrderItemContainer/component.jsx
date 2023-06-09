@@ -28,17 +28,16 @@ import {PAGE_NAME as BuyMealPageName} from '../../../../../../Bnb/BuyMeal/Main';
 import {PurchaseDetailPageName} from '../../../../Detail';
 
 const {width} = Dimensions.get('screen');
-const Component = ({purchaseId, date, itemIndex}) => {
+const Component = ({purchaseId, date, itemIndex, data}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
   const {refundItem} = useOrderMeal();
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
-  const {
-    setAllPurchase,
-    readAbleAtom: {allPurchase},
-  } = usePurchaseHistory();
-  const {mutateAsync: orderState} = useConfirmOrderState();
+  const {setAllPurchase} = usePurchaseHistory();
+
+  const {mutateAsync: orderState, isLoading: isStatusLoading} =
+    useConfirmOrderState();
 
   const deliveryConfirmPress = async id => {
     try {
@@ -47,7 +46,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
       Alert.alert('상태변경', error.toString()?.replace('error: '));
     }
   };
-  const purchase = allPurchase.filter(v => v.id === purchaseId)[0];
+  const purchase = data.filter(v => v.id === purchaseId)[0];
   const cancelItem = async id => {
     try {
       const req = {
@@ -55,7 +54,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
         id: id,
       };
       await refundItem(req);
-      const refund = allPurchase.map(o => {
+      const refund = data.map(o => {
         return {
           ...o,
           orderItems: [
@@ -81,7 +80,7 @@ const Component = ({purchaseId, date, itemIndex}) => {
         id: id,
       };
       await refundItem(req);
-      const refund = allPurchase.map(o => {
+      const refund = data.map(o => {
         return {
           ...o,
           orderItems: [
@@ -156,6 +155,18 @@ const Component = ({purchaseId, date, itemIndex}) => {
                       <Typography text="Title04SB" textColor={statusColor()}>
                         {formattedMealFoodStatus(order.orderStatus)}
                       </Typography>
+                      {order.orderStatus !== 5 &&
+                        !(
+                          order.dailyFoodStatus === 1 ||
+                          order.dailyFoodStatus === 2
+                        ) && (
+                          <Typography
+                            style={{marginLeft: 5, alignSelf: 'center'}}
+                            text="CaptionR"
+                            textColor={themeApp.colors.grey[5]}>
+                            주문 마감 • 취소 불가
+                          </Typography>
+                        )}
                     </StatusText>
                     {order?.cancelDate && (
                       <Typography
@@ -184,13 +195,16 @@ const Component = ({purchaseId, date, itemIndex}) => {
                           식사일 : {formattedDateAndDay(order.serviceDate)}{' '}
                           {formattedDateType(order.diningType)}
                         </ServiceDate>
-                        <Body06R19 textColor={themeApp.colors.grey[2]}>
+                        <Body06R19
+                          textColor={themeApp.colors.grey[2]}
+                          numberOfLines={1}
+                          ellipsizeMode="tail">
                           [{order.makersName}]{order.name}
                         </Body06R19>
                         <PriceBox>
-                          <Body06R19 textColor={themeApp.colors.grey[4]}>
+                          <Body06R19Count textColor={themeApp.colors.grey[4]}>
                             {order.count}개
-                          </Body06R19>
+                          </Body06R19Count>
                           <Typography
                             text="Body06SB"
                             textColor={themeApp.colors.grey[2]}>
@@ -279,15 +293,16 @@ const Component = ({purchaseId, date, itemIndex}) => {
                         <ButtonContainer>
                           <ButtonMeal
                             label={'수령확인'}
+                            disabled={isStatusLoading}
                             onPressEvent={() => deliveryConfirmPress(order.id)}
                           />
                         </ButtonContainer>
                       )}
-                      {order.dailyFoodStatus === 6 && (
+                      {/* {order.dailyFoodStatus === 6 && (
                         <ButtonContainer>
                           <ButtonMealCancel label={'취소불가'} />
                         </ButtonContainer>
-                      )}
+                      )} */}
                     </DateOrderItemContent>
                   </DateOrderItemContentBox>
                 </DateOrderItemBox>
@@ -367,6 +382,9 @@ const ButtonContainer = styled.View`
 const TextBox = styled.View``;
 const Body06R19 = styled(Typography).attrs({text: 'Body06R'})`
   line-height: 19px;
+`;
+const Body06R19Count = styled(Typography).attrs({text: 'Body06R'})`
+  line-height: 19px;
   margin-right: 6px;
 `;
 const ServiceDate = styled(Typography)`
@@ -378,7 +396,9 @@ const StatusBox = styled.View`
   align-items: center;
 `;
 const StatusText = styled.View`
+  flex-direction: row;
   margin-right: 5px;
+  align-items: center;
 `;
 
 const DateDetailBox = styled.View`

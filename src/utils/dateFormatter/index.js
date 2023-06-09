@@ -39,7 +39,6 @@ export function formattedMealTime(data) {
   return `${hour < 12 ? '오전' : '오후'} ${
     hour > 12 ? hour - 12 : hour
   }:${minute}`;
-  // return `${hour}:${minute}`;
 }
 
 export function formattedDate(data, delimiter = '.') {
@@ -146,7 +145,6 @@ export function formattedSameDate(startData, endDate) {
 
   const diffMSec = dateTime1.getTime() - dateTime2.getTime();
   const diffHour = diffMSec / (60 * 60 * 1000 * 24);
-  console.log(Math.round(diffHour));
   return Math.round(diffHour);
 }
 

@@ -12,14 +12,16 @@
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>45.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.5</string>
+	<string>1.4.8</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>48.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -63,8 +65,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>1</string>
 	<key>CodePushDeploymentKey</key>
 	<string>uQ7c0E2jif9dzbaVWp8NM4F45GmUcv05V4rlV</string>
 	<key>CodePushPublicKey</key>
@@ -133,8 +133,8 @@ LwIDAQAB
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSUserNotificationsUsageDescription</key>
-	<string>알림 받기 위해서 권한 허용이 필요 합니다.</string>
+	<key>NMFClientId</key>
+	<string>frbi51gn4o</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -150,11 +150,14 @@ LwIDAQAB
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is accessed for the first time</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>지도를 사용해서 배달 받을 장소를 
+설정할 수 있어요!</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The microphone is accessed for the first time</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Your message to user when the photo library is accessed for the first time</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>알림 받기 위해서 권한 허용이 필요 합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-SemiBold.otf</string>

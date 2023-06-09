@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
+import Toast from '~components/Toast';
 
 import useAuth from '../../biz/useAuth';
 import useUserInfo from '../../biz/useUserInfo';
@@ -26,10 +27,11 @@ import Typography from '../Typography';
 
 const {StatusBarManager} = NativeModules;
 
-const Component = ({userId}) => {
+const Component = ({userId, isPassword, setPassword}) => {
   const navigation = useNavigation();
   const {userInfo} = useUserInfo();
-  const [emailId, setEmailId] = useState(userId);
+  const [emailId, setEmailId] = useState((userId && userId) || emailId);
+  const ToastMessage = Toast();
   const labelItems = [
     {label: '아이디'},
     {label: '/'},
@@ -50,7 +52,6 @@ const Component = ({userId}) => {
   };
   const onSubmit = async datas => {
     try {
-      console.log(datas);
       await login(datas);
       setStorage('userId', datas.email);
       const userData = await userInfo();
@@ -65,7 +66,6 @@ const Component = ({userId}) => {
       //navigation.reset({routes:[{ name:GroupCreateMainPageName}]});
       //await userInfo();
     } catch (err) {
-      console.log(err);
       Alert.alert('로그인 실패', err.toString()?.replace('error: ', ''), [
         {
           text: '확인',
@@ -103,13 +103,25 @@ const Component = ({userId}) => {
     const getUserId = async () => {
       const userIds = await getStorage('userId');
       if (userIds) {
-        console.log(userIds);
         setEmailId(userIds);
       }
     };
+
     getUserId();
   }, [navigation]);
   useEffect(() => {
+    if (isPassword) {
+      ToastMessage.toastEvent();
+      setTimeout(() => {
+        setPassword(false);
+        navigation.setParams({
+          isPassword: false,
+        });
+      }, 3000);
+    }
+  }, [ToastMessage, isPassword, navigation, setPassword]);
+  useEffect(() => {
+    console.log(emailId);
     setValue('email', emailId);
   }, [emailId, setValue, userId]);
   return (
@@ -126,7 +138,7 @@ const Component = ({userId}) => {
               returnKeyType="next"
               autoCapitalize="none"
               onSubmitEditing={() => passwordRef.current?.focus()}
-              defaultValue={emailId}
+              defaultValue={emailId && emailId}
               blurOnSubmit={false}
               suffix={{
                 isNeedDelete: true,
@@ -140,7 +152,7 @@ const Component = ({userId}) => {
                 required: '필수 입력 항목 입니다.',
                 pattern: {
                   value:
-                    /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\.,;:\s@#$%^&+/*?'"]+)*)|(".-+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\,;:\s@#$%^&+/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                   message: '올바른 이메일 주소를 입력해주세요.',
                 },
               }}
@@ -197,6 +209,12 @@ const Component = ({userId}) => {
           />
         </KeyContainer>
       </KeyDismiss>
+      {isPassword && (
+        <ToastMessage.ToastWrap
+          message="비밀번호가 변경됐어요"
+          icon="checked"
+        />
+      )}
     </SafeContainer>
   );
 };

@@ -20,7 +20,6 @@ import {v4 as uuid} from 'uuid';
 import LoginMain from './LoginMain';
 import {LogoBackground} from '../../../../assets';
 import CsIcon from '../../../../assets/icons/Home/cs.svg';
-import Balloon from '../../../../components/Balloon';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
 import Toast from '../../../../components/Toast';
@@ -56,7 +55,6 @@ const Pages = ({route}) => {
   const navigation = useNavigation();
   const toast = Toast();
 
-  const {balloonEvent, BalloonWrap, balloonEventNotOut} = Balloon();
   const [lastLogin, setLastLogin] = useState();
 
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
@@ -97,7 +95,6 @@ const Pages = ({route}) => {
       if (last) setLastLogin(last);
     };
     if (!lastLogin) getLogin();
-    else balloonEventNotOut();
   }, [lastLogin]);
   useEffect(() => {
     let timeout;

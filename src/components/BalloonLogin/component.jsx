@@ -73,7 +73,7 @@ const Component = () => {
   }, [fadeBalloon]);
   const BalloonWrap = useCallback(
     ({
-      message = '메세지 입니다.',
+      message = '메세지 입니다3.',
       vertical = 'up',
       horizontal = 'left',
       location = {},

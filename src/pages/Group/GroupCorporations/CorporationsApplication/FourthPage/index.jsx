@@ -52,8 +52,6 @@ const Pages = () => {
 
         if (get.length !== 0) {
           SetTotalSpot(get);
-        } else {
-          console.log('no');
         }
       }
     };

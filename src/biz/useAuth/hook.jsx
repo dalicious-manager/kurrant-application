@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
+import {useResetAtom} from 'jotai/utils';
 import jwtDecode from 'jwt-decode';
 import {Alert} from 'react-native';
 
@@ -19,7 +20,7 @@ import {
 } from './store';
 import {PAGE_NAME as LoginPageName} from '../../pages/Main/Login/Login';
 import {setStorage} from '../../utils/asyncStorage';
-import {isUserSpotStatusAtom} from '../useUserInfo/store';
+import {isUserInfoAtom, isUserSpotStatusAtom} from '../useUserInfo/store';
 
 const useAuth = () => {
   const [isEmailAuthLoading, setEmailAuthLoading] = useAtom(
@@ -40,6 +41,7 @@ const useAuth = () => {
   const [isChangePasswordLoading, setChangePasswordLoading] = useAtom(
     isChangePasswordLoadingAtom,
   );
+  const resetAtom = useResetAtom(isUserInfoAtom);
   const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
   const [fcmToken, setFcmToken] = useAtom(fcmTokenAtom);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
@@ -237,7 +239,6 @@ const useAuth = () => {
 
       const res = await Fetch.autoLogin();
       if (res?.data?.isActive) {
-        console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
@@ -302,7 +303,6 @@ const useAuth = () => {
         type,
         option,
       );
-      console.log(res?.data);
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
@@ -435,6 +435,7 @@ const useAuth = () => {
       },
       option,
     );
+    resetAtom();
     return res;
   };
   const saveFcmToken = async (body, option = {}) => {

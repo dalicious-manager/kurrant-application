@@ -23,6 +23,7 @@ import {purchaseAtom} from '../../../../../../biz/usePurchaseHistory/store';
 import {CalendarIcon} from '../../../../../../components/Icon';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
+import {useGetAllPurchaseHistory} from '../../../../../../hook/usePurchaseHistory';
 import {formattedWeekDate} from '../../../../../../utils/dateFormatter';
 import Skeleton from '../../Skeleton';
 
@@ -33,7 +34,9 @@ const Pages = () => {
   const themeApp = useTheme();
   const form = useForm();
   const [, setAllPurchase] = useAtom(purchaseAtom);
-  const [startDate, setStartDate] = useState(startDate || new Date());
+  const [startDate, setStartDate] = useState(
+    startDate || new Date().setDate(new Date().getDate() - 7),
+  );
   const [showDateModal, setShowDateModal] = useState(false);
   const [endDate, setEndDate] = useState(endDate || new Date());
   const [showDateModal2, setShowDateModal2] = useState(false);
@@ -56,8 +59,15 @@ const Pages = () => {
   ]);
   const {
     getPurchaseHistory,
-    readAbleAtom: {allPurchase, isAllPurchaseLoading},
+    readAbleAtom: {isAllPurchaseLoading},
   } = usePurchaseHistory();
+  const body = {
+    startDate: formattedWeekDate(startDate),
+    endDate: formattedWeekDate(endDate),
+    orderType: 1,
+  };
+  const {data: allPurchase, refetch: allPurchaceRefetch} =
+    useGetAllPurchaseHistory(body);
   const selectDate = date => {
     const setDate = searchDate.map(item =>
       item.id === date.id
@@ -114,50 +124,41 @@ const Pages = () => {
     );
   };
   const onPressCondition = async () => {
-    const body = {
+    const bodys = {
       startDate: formattedWeekDate(startDate),
       endDate: formattedWeekDate(endDate),
       orderType: 1,
     };
-    await getPurchaseHistory(body);
+    await getPurchaseHistory(bodys);
   };
   useEffect(() => {
-    const purchaseHistory = async date => {
-      if (date.startDate) {
-        await getPurchaseHistory(date);
-      }
-    };
-    const selectDate = searchDate.filter(v => v.isActive === true);
+    allPurchaceRefetch();
+  }, [startDate, endDate, allPurchaceRefetch]);
+  useEffect(() => {
+    const selectDates = searchDate.filter(v => v.isActive === true);
     const dateArray = () => {
       var now = new Date();
-      if (selectDate[0].id === 0) {
+      if (selectDates[0].id === 0) {
         const starts = new Date(now.setDate(now.getDate() - 7));
         const ends = new Date();
         return [starts, ends];
       }
 
-      if (selectDate[0].id === 1) {
+      if (selectDates[0].id === 1) {
         const starts = new Date(now.setMonth(now.getMonth() - 1));
         const ends = new Date();
         return [starts, ends];
       }
-      if (selectDate[0].id === 2) {
+      if (selectDates[0].id === 2) {
         const starts = new Date(now.setMonth(now.getMonth() - 3));
         const ends = new Date();
         return [starts, ends];
       }
     };
-    if (selectDate[0].id !== 3) {
+    if (selectDates[0].id !== 3) {
       const [start, end] = dateArray();
-      console.log(start, end, 'test1231241');
-      const req = {
-        startDate: formattedWeekDate(start),
-        endDate: formattedWeekDate(end),
-        orderType: 0,
-      };
-      purchaseHistory(req);
-    } else {
-      setAllPurchase([]);
+      setStartDate(start);
+      setEndDate(end);
     }
   }, [searchDate]);
   return (
@@ -230,18 +231,20 @@ const Pages = () => {
           <Skeleton />
         ) : (
           <Wrapper>
-            {allPurchase ? (
+            {allPurchase?.data ? (
               <ScrollViewBox>
-                {allPurchase?.map((v, i) => {
+                {allPurchase?.data?.map((v, i) => {
                   return (
                     <DateOrderItemContainer
                       key={`${v.orderDate}${i}`}
                       itemIndex={i}
+                      data={allPurchase?.data}
                       purchaseId={v.id}
                       date={v.orderDate}
                     />
                   );
                 })}
+                <BottomView />
               </ScrollViewBox>
             ) : (
               <NothingContainer>
@@ -255,36 +258,22 @@ const Pages = () => {
           </Wrapper>
         )}
       </Wrapper>
-      <ModalCalendar
-        modalVisible={showDateModal}
-        setModalVisible={setShowDateModal}
-        calendarProps={{
-          selected: startDate,
-
-          onChange: onChangeDate,
-
-          confirm: confirmPress,
-
-          setModal: setShowDateModal,
-
-          setSelected: setStartDate,
-        }}
-      />
-      <ModalCalendar
-        modalVisible={showDateModal2}
-        setModalVisible={setShowDateModal2}
-        calendarProps={{
-          selected: endDate,
-
-          onChange: onChangeDate,
-
-          confirm: confirmPress,
-
-          setModal: setShowDateModal2,
-
-          setSelected: setEndDate,
-        }}
-      />
+      {showDateModal &&
+        ShowCalendar(
+          startDate,
+          onChangeDate,
+          confirmPress,
+          setShowDateModal,
+          setStartDate,
+        )}
+      {showDateModal2 &&
+        ShowCalendar(
+          endDate,
+          onChangeDate,
+          confirmPress,
+          setShowDateModal2,
+          setEndDate,
+        )}
     </Container>
   );
 };
@@ -355,7 +344,10 @@ const Container = styled.View`
 `;
 const ScrollViewBox = styled(ScrollView)`
   flex: 1;
-  margin-bottom: 50px;
+`;
+const BottomView = styled.View`
+  width: 100%;
+  height: 28px;
 `;
 const Bridge = styled.View`
   margin: 0px 4px;

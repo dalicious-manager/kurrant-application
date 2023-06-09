@@ -214,7 +214,6 @@ const Pages = ({route}) => {
   const supportPriceValue = text => {
     setValue('supportPrice', text);
   };
-  console.log(selected);
   useEffect(() => {
     const getData = async () => {
       const data1 = await getStorage('corpPage3-1');

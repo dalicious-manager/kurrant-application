@@ -14,6 +14,9 @@ export function useConfirmOrderState() {
   return useMutation(data => orderApis.confirmOrder(data), {
     onSuccess: () => {
       queryClient.invalidateQueries('orderMeal');
+      queryClient.invalidateQueries('allPurchaseHistory');
+      queryClient.invalidateQueries('purchaseDetail');
+      queryClient.invalidateQueries('mealPurchaseHistory');
     },
   });
 }

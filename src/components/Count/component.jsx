@@ -12,6 +12,7 @@ const Component = ({
   onPressEvent,
   count,
   quantity,
+  data,
   id,
   status,
   capacity,
@@ -20,7 +21,7 @@ const Component = ({
     <View>
       <InnerView>
         <PressableView
-          onPress={() => decreasePress(id)}
+          onPress={() => decreasePress(data, id)}
           disabled={
             count === 1 || status === 0 || status === 2 || quantity === 0
           }>
@@ -33,7 +34,7 @@ const Component = ({
           </CountText>
         </Pressable>
         <PressableView
-          onPress={() => increasePress(id)}
+          onPress={() => increasePress(data, id)}
           disabled={status === 0 || status === 2}>
           <PlusIcon status={status} />
         </PressableView>

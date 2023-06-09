@@ -209,4 +209,9 @@ export const textStyles = {
     line-height: 19px;
     font-family: 'Pretendard-Regular';
   `,
+  BalloonSpot: css`
+    font-size: 13px;
+    line-height: 21px;
+    font-family: 'Pretendard-Regular';
+  `,
 };

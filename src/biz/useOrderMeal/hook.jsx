@@ -112,7 +112,11 @@ const useOrderMeal = () => {
         },
         option,
       );
+
       queryClient.invalidateQueries('orderMeal');
+      queryClient.invalidateQueries('allPurchaseHistory');
+      queryClient.invalidateQueries('purchaseDetail');
+      queryClient.invalidateQueries('mealPurchaseHistory');
       return res;
     } catch (err) {
       if (err.toString()?.replace('Error:', '').trim() === '403') {
@@ -141,6 +145,9 @@ const useOrderMeal = () => {
         option,
       );
       queryClient.invalidateQueries('orderMeal');
+      queryClient.invalidateQueries('allPurchaseHistory');
+      queryClient.invalidateQueries('purchaseDetail');
+      queryClient.invalidateQueries('mealPurchaseHistory');
       return res;
     } catch (err) {
       if (err.toString()?.replace('Error:', '').trim() === '403') {
