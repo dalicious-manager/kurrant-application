@@ -4,7 +4,7 @@ import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useEffect, useRef, useState} from 'react';
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {useTheme} from 'styled-components';
 import styled, {css} from 'styled-components/native';
@@ -143,13 +143,14 @@ const Component = ({
                     onPressEvent2(propsDay);
                   };
                   const getDates = () => {
-                    if (day.getDate().length > 1) {
-                      return day.getDate();
-                    }
+                    // if (day.getDate().toString().length > 1) {
+                    //   return day.getDate();
+                    // }
                     if (day.getDate() === 1) {
                       return day.getMonth() + '.' + day.getDate();
                     }
-                    return ' ' + day.getDate() + ' ';
+                    // if(Platform.OS === 'android')
+                    return day.getDate();
                   };
                   return (
                     <DaysWrap
@@ -215,6 +216,11 @@ const Component = ({
                         type={type}
                         currentPress={currentPress}
                         day={day}>
+                        {(lastDay || !(morning || lunch || dinner)) && (
+                          <MidLineBox>
+                            <MidLine />
+                          </MidLineBox>
+                        )}
                         <Day
                           morning={morning}
                           lunch={lunch}
@@ -228,8 +234,10 @@ const Component = ({
                           {getDates()}
                         </Day>
                       </TodayCircle>
-                      {formattedDate(currentPress) === formattedDate(day) && (
+                      {formattedDate(currentPress) === formattedDate(day) ? (
                         <SelectLine />
+                      ) : (
+                        <SelectDisabledLine />
                       )}
                     </DaysWrap>
                   );
@@ -258,9 +266,8 @@ const Wrap = styled.View`
 const DaysWrap = styled.Pressable`
   /* padding-left: 10px;
 padding-right: 10px; */
-  padding-left: ${({idx}) => (idx === 0 ? '0px' : '6px')};
-  padding-right: ${({idx}) => (idx === 6 ? '0px' : '6px')};
   align-items: center;
+  justify-content: center;
 `;
 const SelectLine = styled.View`
   width: 16px;
@@ -270,14 +277,35 @@ const SelectLine = styled.View`
   margin-top: 5.5px;
   background-color: ${({theme}) => theme.colors.grey[2]};
 `;
+const SelectDisabledLine = styled.View`
+  width: 16px;
+  height: 1.5px;
+  justify-self: center;
+  align-self: center;
+  margin-top: 5.5px;
+`;
 const TodayCircle = styled.View`
-  width: 24px;
+  overflow: hidden;
   height: 24px;
   margin-top: 3px;
   align-items: center;
   justify-content: center;
 `;
+const MidLineBox = styled.View`
+  position: absolute;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+`;
 
+const MidLine = styled.View`
+  background-color: ${({theme}) => theme.colors.grey[6]};
+  height: 1px;
+  width: 16px;
+`;
 const DotWrap = styled.View`
   flex-direction: row;
   justify-content: center;
@@ -301,18 +329,17 @@ const Day = styled(Typography)`
       : morning || lunch || dinner
       ? theme.colors.grey[2]
       : theme.colors.grey[5]};
-  text-decoration: ${({lastDay, morning, lunch, dinner}) =>
-    lastDay
-      ? 'line-through;'
-      : morning || lunch || dinner
-      ? 'none;'
-      : 'line-through;'};
+
   ${({currentPress, day, size}) => {
     if (formattedDate(currentPress) === formattedDate(day)) {
       return getFontStyle('Body05SB');
     }
     return getFontStyle(size);
   }}
+  min-width: 40px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 `;
 const DayWeek = styled(Typography)`

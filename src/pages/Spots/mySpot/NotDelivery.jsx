@@ -39,7 +39,7 @@ const NotDelivery = ({route}) => {
         !isUserInfo.isMembership &&
         isAlarm === true &&
         'alramNoMembership';
-
+  console.log(buttonType);
   const NoAlarm = () => {
     if (spot !== null) {
       navigation.navigate(CompletePage, {
@@ -64,6 +64,11 @@ const NotDelivery = ({route}) => {
     });
   };
 
+  const goMembershipInfoPage = () => {
+    navigation.navigate(CompletePage, {
+      type: 'noSpot',
+    });
+  };
   const settingAlarm = async () => {
     await setAlram({
       code: 4001,
@@ -93,10 +98,12 @@ const NotDelivery = ({route}) => {
             {isUserInfo?.name}님의 스팟 개설에 최선을 다할게요
           </Title2>
         )}
-        <Image
-          source={buttonType === 'alramMembership' ? SpotOpen : NotDeliveryIcon}
-          style={{width: 162, height: 149}}
-        />
+        {buttonType === 'alramMembership' ? (
+          <Image source={SpotOpen} style={{width: 339, height: 215}} />
+        ) : (
+          <Image source={NotDeliveryIcon} style={{width: 162, height: 149}} />
+        )}
+
         {isAlarm ? notDeliveryAlarm(buttonType) : notDeliveryNoAlarm(isAlarm)}
       </Contents>
       <ButtonWrap>
@@ -121,14 +128,14 @@ const NotDelivery = ({route}) => {
         {buttonType !== 'alramMembership' && (
           <Pressable
             onPress={() => {
-              if (
-                buttonType === 'alramNoMembership' ||
-                buttonType === 'noSpot'
-              ) {
+              if (buttonType === 'alramNoMembership') {
                 navigation.navigate(SCREEN_NAME);
               }
               if (!isAlarm) {
                 NoAlarm();
+              }
+              if (buttonType === 'noSpot') {
+                goMembershipInfoPage();
               }
             }}>
             <ButtonText>괜찮아요</ButtonText>

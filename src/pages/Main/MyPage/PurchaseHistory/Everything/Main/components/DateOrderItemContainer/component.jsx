@@ -36,7 +36,8 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
   const queryClient = useQueryClient();
   const {setAllPurchase} = usePurchaseHistory();
 
-  const {mutateAsync: orderState} = useConfirmOrderState();
+  const {mutateAsync: orderState, isLoading: isStatusLoading} =
+    useConfirmOrderState();
 
   const deliveryConfirmPress = async id => {
     try {
@@ -154,6 +155,18 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                       <Typography text="Title04SB" textColor={statusColor()}>
                         {formattedMealFoodStatus(order.orderStatus)}
                       </Typography>
+                      {order.orderStatus !== 5 &&
+                        !(
+                          order.dailyFoodStatus === 1 ||
+                          order.dailyFoodStatus === 2
+                        ) && (
+                          <Typography
+                            style={{marginLeft: 5, alignSelf: 'center'}}
+                            text="CaptionR"
+                            textColor={themeApp.colors.grey[5]}>
+                            주문 마감 • 취소 불가
+                          </Typography>
+                        )}
                     </StatusText>
                     {order?.cancelDate && (
                       <Typography
@@ -280,6 +293,7 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                         <ButtonContainer>
                           <ButtonMeal
                             label={'수령확인'}
+                            disabled={isStatusLoading}
                             onPressEvent={() => deliveryConfirmPress(order.id)}
                           />
                         </ButtonContainer>
@@ -382,7 +396,9 @@ const StatusBox = styled.View`
   align-items: center;
 `;
 const StatusText = styled.View`
+  flex-direction: row;
   margin-right: 5px;
+  align-items: center;
 `;
 
 const DateDetailBox = styled.View`

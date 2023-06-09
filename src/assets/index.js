@@ -69,3 +69,7 @@ export const DeliveryImage = require('../assets/images/spot/deliveryMenu.png');
 export const SpotComplete = require('../assets/images/spot/spotComplete.png');
 export const SongE = require('../assets/images/spot/SongE.png');
 export const SpotOpen = require('../assets/images/spot/spotOpen.png');
+export const SpotTypeMySpot = require('../assets/images/spot/spotTypeMySpot.png');
+export const SpotTypeShareSpot = require('../assets/images/spot/spotTypeShareSpot.png');
+export const SpotTypePrivateSpot = require('../assets/images/spot/spotTypePrivateSpot.png');
+export const MembershipSongE = require('../assets/images/spot/membershipSongE.png');
