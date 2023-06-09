@@ -6,6 +6,8 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
   const [dietRepoMainList, setDietRepoMainList] = useState([]);
   const [totalNutrition, setTotalList] = useState({});
 
+  const [dietRepoAddMealList, setDietRepoAddMealList] = useState([]);
+
   useQuery(
     ['dietRepo', 'main'],
     async ({queryKey}) => {
@@ -13,9 +15,6 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
         `/users/me/daily/report?date=${mainDate}`,
         'GET',
       );
-
-      console.log('확인');
-      console.log(response.data);
 
       setDietRepoMainList(response?.data?.dailyReportResDtoList);
       setTotalList({
@@ -38,11 +37,10 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
         //   `/users/me/daily/report/order?date=2023-05-30&diningType=2`,
         'GET',
       );
-      console.log('shlfhslhfls');
-      console.log(addMealDate);
-      console.log(addMealDiningType);
 
-      console.log(response.data);
+      setDietRepoAddMealList(
+        typeof response.data === 'object' ? response.data : [],
+      );
     },
     {
       enabled: !!addMealDate && !!addMealDiningType,
@@ -52,6 +50,7 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
   return {
     totalNutrition,
     dietRepoMainList,
+    dietRepoAddMealList,
   };
 };
 

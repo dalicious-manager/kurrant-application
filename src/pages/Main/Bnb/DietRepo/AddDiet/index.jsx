@@ -15,6 +15,7 @@ import {PAGE_NAME as DietRepoAddMyDietPageName} from '~pages/Main/Bnb/DietRepo/A
 import useGetDietRepo from '../useGetDietRepo';
 import {extractMonthAndDateFromDate, sampleData2} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
+import {useEffect} from 'react';
 
 const Pages = ({route}) => {
   const navigation = useNavigation();
@@ -24,11 +25,21 @@ const Pages = ({route}) => {
   console.log(extractMonthAndDateFromDate(route?.params?.date, '-'));
   console.log(route?.params?.diningType);
 
-  // const yo = useGetDietRepo(undefined, '2023-05-30', 2);
+  const {dietRepoAddMealList} = useGetDietRepo(
+    undefined,
+    route?.params?.date,
+    // '2023-05-30',
+    route?.params?.diningType,
+  );
 
   const handlePress = () => {
     navigation.navigate(DietRepoAddMyDietPageName);
   };
+
+  useEffect(() => {
+    console.log('fhfhfh');
+    console.log(dietRepoAddMealList);
+  }, [dietRepoAddMealList]);
 
   return (
     <Container>
@@ -38,24 +49,39 @@ const Pages = ({route}) => {
         {format(stringDateToJavascriptDate(route?.params?.date, '-'), 'EEE', {
           locale: ko,
         })}
-        ) 아침에 주문한 식사 목록
+        ){' '}
+        {route?.params?.diningType === 1
+          ? '아침'
+          : route?.params?.diningType === 2
+          ? '점심'
+          : '저녁'}
+        에 주문한 식사 목록
       </TitleText>
 
-      <FlatList
-        ListHeaderComponent={
-          <View style={{paddingLeft: 24, paddingRight: 24}}></View>
-        }
-        contentContainerStyle={{paddingBottom: 190}}
-        data={sampleData2}
-        scrollEnabled={true}
-        renderItem={({item}) => {
-          return (
-            <>
-              <DietRepoCard item2={item} />
-            </>
-          );
-        }}
-      />
+      {dietRepoAddMealList.length > 0 ? (
+        <FlatList
+          ListHeaderComponent={
+            <View style={{paddingLeft: 24, paddingRight: 24}}></View>
+          }
+          contentContainerStyle={{paddingBottom: 190}}
+          data={dietRepoAddMealList}
+          scrollEnabled={true}
+          renderItem={({item}) => {
+            return (
+              <>
+                <DietRepoCard item2={item} />
+              </>
+            );
+          }}
+        />
+      ) : (
+        <Wrap1>
+          <FlexFiller flex={45} />
+
+          <NoData>해당 날짜에 주문 내역이 없습니다.</NoData>
+          <FlexFiller flex={50} />
+        </Wrap1>
+      )}
 
       <ButtonWrapper
         colors={[
@@ -117,3 +143,18 @@ const ButtonWrapper = styled(LinearGradient)`
 `;
 
 const ButtonNext = styled(Button)``;
+
+const Wrap1 = styled.View`
+  flex: 1;
+`;
+
+const FlexFiller = styled.View`
+  flex: ${({flex}) => flex};
+
+  background-color: '#ffffff';
+`;
+
+const NoData = styled(Typography).attrs({text: 'Title04SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  /* margin-bottom: 24px; */
+`;

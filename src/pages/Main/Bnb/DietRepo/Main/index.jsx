@@ -149,7 +149,6 @@ const Pages = () => {
                       date: date,
                       diningType: item.diningType,
                     });
-                    // navigation.navigate(DietRepoAddDietPageName);
                   }}>
                   <AddMealText>식사 추가</AddMealText>
                   <ArrowRightBlue />
