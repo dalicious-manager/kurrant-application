@@ -34,8 +34,11 @@ const useDietRepoMutation = date => {
                     name: MainScreenName,
                   },
                   {
-                    // name: DietRepoMainPageName,{date: date}
                     name: DietRepoMainPageName,
+                    params: {
+                      date: date,
+                      fromMyAdd: 'fromMyAdd',
+                    },
                   },
                 ],
               });
