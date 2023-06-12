@@ -12,7 +12,10 @@ import {
 } from '../../../../../components/Icon';
 import {useEffect, useState} from 'react';
 
-import {toStringByFormatting} from '../../../../../utils/dateFormatter';
+import {
+  calcDate,
+  toStringByFormatting,
+} from '../../../../../utils/dateFormatter';
 import {calcWeekArr, extractMonthAndDateFromDate2} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 
@@ -22,6 +25,15 @@ const Pages = ({route}) => {
   const screenWidth = Dimensions.get('screen').width;
 
   const [date, setDate] = useState(route?.params?.date);
+
+  // week 값은 이렇습니다
+  // [월요일 자바스크립트 date객체,
+  // 화요일 자바스크립트 date객체,
+  // 수요일 자바스크립트 date객체,
+  // 목요일 자바스크립트 date객체,
+  // 금요일 자바스크립트 date객체,
+  // 토요일 자바스크립트 date객체,
+  // 일요일 자바스크립트 date객체]
 
   const [week, setWeek] = useState(
     route?.params?.date
@@ -36,15 +48,15 @@ const Pages = ({route}) => {
   //   console.log(date);
   // }, [date]);
 
-  useEffect(() => {
-    console.log('주');
-    console.log(week);
+  // useEffect(() => {
+  //   console.log('주');
+  //   console.log(week);
 
-    console.log(toStringByFormatting(week[0]));
-    console.log(
-      extractMonthAndDateFromDate2(toStringByFormatting(week[0]), '-'),
-    );
-  }, [week]);
+  //   console.log(toStringByFormatting(week[0]));
+  //   console.log(
+  //     extractMonthAndDateFromDate2(toStringByFormatting(week[0]), '-'),
+  //   );
+  // }, [week]);
 
   const TablesSampleData = [
     {
@@ -87,7 +99,11 @@ const Pages = ({route}) => {
         alignItems: 'center',
       }}>
       <DateSelectorWrap>
-        <Pressable onPress={() => {}}>
+        <Pressable
+          onPress={() => {
+            console.log(calcDate(-7, week[0]));
+            setWeek(calcWeekArr(calcDate(-7, week[0])));
+          }}>
           <GreyArrowLeftInACircle />
         </Pressable>
         <DateSelectorText>
@@ -103,7 +119,10 @@ const Pages = ({route}) => {
             extractMonthAndDateFromDate2(toStringByFormatting(week[6]), '-')[1]
           }`}
         </DateSelectorText>
-        <Pressable onPress={() => {}}>
+        <Pressable
+          onPress={() => {
+            setWeek(calcWeekArr(calcDate(7, week[0])));
+          }}>
           <GreyArrowRightInACircle />
         </Pressable>
       </DateSelectorWrap>
