@@ -13,7 +13,7 @@ import {
 import {useEffect, useState} from 'react';
 
 import {toStringByFormatting} from '../../../../../utils/dateFormatter';
-import {calcWeekArr} from '../logic';
+import {calcWeekArr, extractMonthAndDateFromDate2} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
@@ -39,6 +39,11 @@ const Pages = ({route}) => {
   useEffect(() => {
     console.log('주');
     console.log(week);
+
+    console.log(toStringByFormatting(week[0]));
+    console.log(
+      extractMonthAndDateFromDate2(toStringByFormatting(week[0]), '-'),
+    );
   }, [week]);
 
   const TablesSampleData = [
@@ -86,7 +91,17 @@ const Pages = ({route}) => {
           <GreyArrowLeftInACircle />
         </Pressable>
         <DateSelectorText>
-          {'05.08'} ~ {'05.14'}
+          {`${
+            extractMonthAndDateFromDate2(toStringByFormatting(week[0]), '-')[0]
+          }.${
+            extractMonthAndDateFromDate2(toStringByFormatting(week[0]), '-')[1]
+          }`}
+          ~
+          {`${
+            extractMonthAndDateFromDate2(toStringByFormatting(week[6]), '-')[0]
+          }.${
+            extractMonthAndDateFromDate2(toStringByFormatting(week[6]), '-')[1]
+          }`}
         </DateSelectorText>
         <Pressable onPress={() => {}}>
           <GreyArrowRightInACircle />

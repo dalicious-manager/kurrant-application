@@ -102,9 +102,9 @@ export const modifyDietRepoMainData = (
   ];
 };
 
-// 2023-05-02 -> [5,2]
+// 2023-05-02 -> [5,2] : 0이 없는 버젼
 
-export const extractMonthAndDateFromDate = (date, seperator) => {
+export const extractMonthAndDateFromDate1 = (date, seperator) => {
   const arr1 = date.split(seperator);
   let month = arr1[1];
   let date2 = arr1[2];
@@ -119,9 +119,30 @@ export const extractMonthAndDateFromDate = (date, seperator) => {
   return [month, date2];
 };
 
-// 2023-05-05 -> []
+// 2023-05-02 -> [05,02] : 0이 없는 버젼
+export const extractMonthAndDateFromDate2 = (date, seperator) => {
+  const arr1 = date.split(seperator);
+  let month = arr1[1];
+  let date2 = arr1[2];
 
-export const modifyHistoryDateWeek = date => {};
+  // if (month[0] === '0') {
+  //   month = month.substring(1);
+  // }
+  // if (date2[0] === '0') {
+  //   date2 = date2.substring(1);
+  // }
+
+  return [month, date2];
+};
+
+// 2023-05-05 ->
+// [월요일 자바스크립트 date객체,
+// 화요일 자바스크립트 date객체,
+// 수요일 자바스크립트 date객체,
+// 목요일 자바스크립트 date객체,
+// 금요일 자바스크립트 date객체,
+// 토요일 자바스크립트 date객체,
+// 일요일 자바스크립트 date객체]
 
 export const calcWeekArr = date => {
   let yo = [];
