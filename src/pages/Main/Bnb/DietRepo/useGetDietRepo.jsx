@@ -15,9 +15,6 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
   } = useQuery(
     ['dietRepo', 'main'],
     async ({queryKey}) => {
-      console.log('딱 보낼떄 mainDate값 확인하기 ');
-      console.log(mainDate);
-
       const response = await fetchJson(
         `/users/me/daily/report?date=${mainDate}`,
         'GET',

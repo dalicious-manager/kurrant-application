@@ -12,7 +12,7 @@ import {ko} from 'date-fns/locale';
 
 import {PAGE_NAME as DietRepoAddMyDietPageName} from '~pages/Main/Bnb/DietRepo/AddMyDiet';
 import useGetDietRepo from '../useGetDietRepo';
-import {extractMonthAndDateFromDate, sampleData2} from '../logic';
+import {extractMonthAndDateFromDate1} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 import {useEffect} from 'react';
 import LoadingScreen from '~components/LoadingScreen';
@@ -26,6 +26,11 @@ const Pages = ({route}) => {
   // console.log(route?.params?.date);
   // console.log(extractMonthAndDateFromDate(route?.params?.date, '-'));
   // console.log(route?.params?.diningType);
+
+  // useEffect(() => {
+  //   console.log('확인해라');
+  //   console.log(route?.params?.date);
+  // }, [route?.params?.date]);
 
   const {dietRepoAddMealList, isDietRepoAddRefetchLoading} = useGetDietRepo(
     undefined,
@@ -50,8 +55,8 @@ const Pages = ({route}) => {
     <>
       <Container>
         <TitleText>
-          {extractMonthAndDateFromDate(route?.params?.date, '-')[0]}월{' '}
-          {extractMonthAndDateFromDate(route?.params?.date, '-')[1]}일 (
+          {extractMonthAndDateFromDate1(route?.params?.date, '-')[0]}월{' '}
+          {extractMonthAndDateFromDate1(route?.params?.date, '-')[1]}일 (
           {format(stringDateToJavascriptDate(route?.params?.date, '-'), 'EEE', {
             locale: ko,
           })}
