@@ -14,12 +14,16 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {extractMonthAndDateFromDate} from '../logic';
 import useDietRepoMutation from '../useDietRepoMutation';
 
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
+import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
+
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddMyDiet';
 
 const Pages = ({route}) => {
   const navigation = useNavigation();
 
-  const {addMeal} = useDietRepoMutation();
+  const {addMeal} = useDietRepoMutation(route?.params?.date);
 
   const form = useForm({
     mode: 'all',
@@ -96,7 +100,20 @@ const Pages = ({route}) => {
   return (
     <FormProvider {...form}>
       <Container>
-        <TitleText>5월 8일 (월) 아침 식사 추가</TitleText>
+        <TitleText>
+          {extractMonthAndDateFromDate(route?.params?.date, '-')[0]}월{' '}
+          {extractMonthAndDateFromDate(route?.params?.date, '-')[1]}일 (
+          {format(stringDateToJavascriptDate(route?.params?.date, '-'), 'EEE', {
+            locale: ko,
+          })}
+          ){' '}
+          {route?.params?.diningType === 1
+            ? '아침'
+            : route?.params?.diningType === 2
+            ? '점심'
+            : '저녁'}
+          아침 식사 추가
+        </TitleText>
 
         <KeyboardViewContainer
           showsVerticalScrollIndicator={false}

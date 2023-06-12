@@ -7,7 +7,7 @@ import {SCREEN_NAME as MainScreenName} from '~screens/Main/Bnb';
 import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 import {useNavigation} from '@react-navigation/core';
 
-const useDietRepoMutation = () => {
+const useDietRepoMutation = date => {
   const navigation = useNavigation();
 
   const queryClient = useQueryClient();
@@ -34,6 +34,7 @@ const useDietRepoMutation = () => {
                     name: MainScreenName,
                   },
                   {
+                    // name: DietRepoMainPageName,{date: date}
                     name: DietRepoMainPageName,
                   },
                 ],

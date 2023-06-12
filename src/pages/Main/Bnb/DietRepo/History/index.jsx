@@ -28,10 +28,6 @@ const Pages = ({route}) => {
   // params에 date가 들어갈때 그 일주일을 계산하기
 
   useEffect(() => {
-    setDate(route?.params?.date);
-  }, []);
-
-  useEffect(() => {
     console.log('date');
     console.log(date);
   }, [date]);

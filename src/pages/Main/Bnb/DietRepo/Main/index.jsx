@@ -30,8 +30,12 @@ import LoadingScreen from '~components/LoadingScreen';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
-const Pages = () => {
+const Pages = ({route}) => {
   const navigation = useNavigation();
+
+  const addedDate = route?.params?.date;
+
+  console.log(addedDate);
 
   const {
     readableAtom: {userRole},
