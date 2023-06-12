@@ -1,31 +1,16 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled, {useTheme} from 'styled-components';
-import Typography from '~components/Typography';
-import ArrowRightGrey4 from '~assets/icons/Arrow/ArrowRightGrey4.svg';
-import StarRating from '~components/StarRating/StarRating';
-
+import {css} from 'styled-components/native';
+import {SkinnyArrowDown} from '~components/Icon';
 import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
 import ImageModal from '~components/Review/ImageModal/ImageModal';
-import {useNavigation} from '@react-navigation/native';
-// import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
-
-// import OnlyForMakers from './OnlyForMakers';
-// // import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
-
-// import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-// import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-// import {getStorage} from '../../../../../utils/asyncStorage';
-// import {
-//   deleteReview,
-//   deleteReview2,
-// } from '../../../../../biz/useReview/useWrittenReview/Fetch';
-// import ImageModal from './ImageModal/ImageModal';
-// import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+import StarRating from '~components/StarRating/StarRating';
+import Typography from '~components/Typography';
 import {changeSeperator} from '~utils/dateFormatter';
-import {SkinnyArrowDown} from '~components/Icon';
-import {css} from 'styled-components/native';
+
 import {ThumbsUp} from '../../../../../../../../components/Icon';
 import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
 import useMealDetailReviewMutation from '../useMealDetailReviewMutation';
