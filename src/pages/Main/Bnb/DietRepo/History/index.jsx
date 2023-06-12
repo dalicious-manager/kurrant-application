@@ -11,29 +11,29 @@ import {
   GreyArrowRightInACircle,
 } from '../../../../../components/Icon';
 import {useEffect, useState} from 'react';
-import {calcWeekArr} from '../DietRepoCalendar/logic';
+
 import {toStringByFormatting} from '../../../../../utils/dateFormatter';
+import {calcWeekArr} from '../logic';
+import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 
 const Pages = ({route}) => {
   const screenWidth = Dimensions.get('screen').width;
 
-  console.log(route?.params?.date);
-
   const [date, setDate] = useState(route?.params?.date);
 
-  const [week, setWeek] = useState([]);
+  const [week, setWeek] = useState(
+    route?.params?.date
+      ? calcWeekArr(stringDateToJavascriptDate(route?.params?.date, '-'))
+      : calcWeekArr(new Date()),
+  );
 
   // params에 date가 들어갈때 그 일주일을 계산하기
 
-  useEffect(() => {
-    console.log('date');
-    console.log(date);
-  }, [date]);
-
   // useEffect(() => {
-  //   setWeek(calcWeekArr(date).map(v => toStringByFormatting(v, '-')));
+  //   console.log('date');
+  //   console.log(date);
   // }, [date]);
 
   useEffect(() => {

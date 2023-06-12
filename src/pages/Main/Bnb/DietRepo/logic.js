@@ -118,3 +118,24 @@ export const extractMonthAndDateFromDate = (date, seperator) => {
 
   return [month, date2];
 };
+
+// 2023-05-05 -> []
+
+export const modifyHistoryDateWeek = date => {};
+
+export const calcWeekArr = date => {
+  let yo = [];
+  const day = date.getDay();
+
+  for (let i = 0; i < 7; i++) {
+    const nextDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate() - day + i + 1,
+    );
+
+    // yo.push(toStringByFormatting(nextDate));
+    yo.push(nextDate);
+  }
+  return yo;
+};

@@ -1,21 +1,5 @@
 import {toStringByFormatting} from '../../../../../utils/dateFormatter';
-
-export const calcWeekArr = date => {
-  let yo = [];
-  const day = date.getDay();
-
-  for (let i = 0; i < 7; i++) {
-    const nextDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() - day + i + 1,
-    );
-
-    // yo.push(toStringByFormatting(nextDate));
-    yo.push(nextDate);
-  }
-  return yo;
-};
+import {calcWeekArr} from '../logic';
 
 export const makeDietRepoCalendarDateArr = date => {
   const day = date.getDay();
