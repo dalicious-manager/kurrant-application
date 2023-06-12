@@ -1,23 +1,21 @@
-import { css } from 'styled-components';
+import {css} from 'styled-components';
 
-import { textStyles } from '../Typography/styles';
+import {textStyles} from '../Typography/styles';
 
 export const getLabelSizeStyle = sizeType => {
-    return labelSizeStyle[sizeType];
-}
+  return labelSizeStyle[sizeType];
+};
 
 const labelSizeStyle = {
-    labelM: textStyles.Body06R,
-    labelS: textStyles.SmallLabel,
-
-}
+  labelM: textStyles.Body06R,
+  labelS: textStyles.SmallLabel,
+};
 
 export const getLabelWrapColor = type => {
-    return labelWrapColor[type];
-}
+  return labelWrapColor[type];
+};
 
 const labelWrapColor = {
-
     grey2: css`
         background-color: ${({ theme }) => theme.colors.grey[2]};
     `,
@@ -45,13 +43,18 @@ const labelWrapColor = {
     `,
     soldOut: css`
         background-color: ${({ theme }) => theme.colors.grey[6]};
-    `
+    `,
+      grey: css`
+    background-color: ${({theme}) => theme.colors.grey[8]};
+  `
 
 }
+
+
 
 export const getLabelColor = type => {
-    return labelColor[type];
-}
+  return labelColor[type];
+};
 const labelColor = {
 
     grey2: css`
@@ -80,6 +83,10 @@ const labelColor = {
     `,
     vegan: css`
         color: ${({ theme }) => theme.colors.grey[0]};
-    `
+    `,
+      grey: css`
+    color: ${({theme}) => theme.colors.grey[3]};
+  `,
 
 }
+

@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import analytics from '@react-native-firebase/analytics';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useState, useRef, useEffect, useLayoutEffect} from 'react';
 import {
@@ -9,13 +11,18 @@ import {
   Pressable,
   Platform,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
-import styled from 'styled-components';
-import analytics from '@react-native-firebase/analytics';
-import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
+import LinearGradient from 'react-native-linear-gradient';
+import styled from 'styled-components';
+
+import MealDetailReview from './Review/MealDetailReview';
+import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
+import useAuth from '../../../../../biz/useAuth';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
+import useUserInfo from '../../../../../biz/useUserInfo';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
@@ -25,16 +32,19 @@ import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import Typography from '../../../../../components/Typography';
+import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import withCommas from '../../../../../utils/withCommas';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
-import Skeleton from '../Skeleton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import useAuth from '../../../../../biz/useAuth';
-import useUserInfo from '../../../../../biz/useUserInfo';
-import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import CarouselImage from '../components/CarouselImage';
-import MealDetailReview from './Review/MealDetailReview';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
+import {
+  fetchNextPageReviewDetailAtom,
+  hasNextPageReviewDetailAtom,
+} from './Review/MealDetailReview/store';
+import {useAtom} from 'jotai';
+import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
+import Skeleton from '../Skeleton';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -52,11 +62,15 @@ const Pages = ({route}) => {
   const {
     readableAtom: {userRole},
   } = useAuth();
-  const {addMeal, loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
+  const {loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
+  const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {isUserInfo} = useUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
+  const time = route.params.deliveryTime;
 
+  const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
+  const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
   const closeModal = () => {
@@ -153,8 +167,6 @@ const Pages = ({route}) => {
           </View>
         ),
     });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTitle, navigation, scroll]);
 
   const addCartPress = async () => {
@@ -199,26 +211,23 @@ const Pages = ({route}) => {
       try {
         await addToCart();
       } catch (err) {
-        console.log(err);
+        Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
       }
     }
   };
   const addToCart = async () => {
     try {
-      const data = await addMeal([
+      await addMeal([
         {
           dailyFoodId: dailyFoodId,
           count: count,
           spotId: isUserInfo?.spotId,
+          deliveryTime: time,
         },
       ]);
-      //console.log(data);
       balloonEvent();
-      // await loadMeal();
     } catch (err) {
-      alert(err.toString().replace('error:', '').trim());
-      console.log(err);
-      //  throw err
+      Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
     }
     closeModal();
   };
@@ -233,6 +242,15 @@ const Pages = ({route}) => {
   const handleScroll = e => {
     const scrollY = e.nativeEvent.contentOffset.y;
     setScroll(scrollY);
+
+    // 상세페이지 리뷰
+    if (isCloseToBottomOfScrollView(e.nativeEvent)) {
+      //'바닥에 도달함 '
+
+      if (hasNextPageReviewDetail) {
+        fetchNextPageReviewDetail.fetchNextPage();
+      }
+    }
   };
 
   const focusPress = () => {
@@ -267,6 +285,9 @@ const Pages = ({route}) => {
     }
     detail();
   }, []);
+
+  // 상세페이지 리뷰 로직
+
   if (isFoodDetailLoading) {
     return <Skeleton />;
   }
@@ -420,16 +441,12 @@ const Pages = ({route}) => {
                 </InfoTextView>
               </InfoWrap>
             </Content>
-
-            {/* <MealDetailReview /> */}
-
             {/* 리뷰자리 */}
-            {/* <Content >
-                    <View>
-                    <ReviewPage/>
-                    </View>
-                </Content>
-                <MoreButton/> */}
+            <MealDetailReview
+              foodName={isFoodDetail?.name}
+              imageLocation={isFoodDetail?.imageList}
+              dailyFoodId={dailyFoodId}
+            />
           </View>
         </ScrollViewWrap>
 
@@ -469,7 +486,7 @@ const Pages = ({route}) => {
           message={'장바구니에 담았어요'}
           horizontal={'right'}
           size={'B'}
-          location={{top: '96px', right: '14px'}}
+          location={{top: '11.5%', right: '16px'}}
         />
         <BottomModal
           modalVisible={modalVisible}

@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Dimensions, Image} from 'react-native';
-
 import Carousel from 'react-native-reanimated-carousel';
 import styled from 'styled-components';
 
@@ -19,6 +18,7 @@ const ReviewCarouselImage = ({
 
   // 1. promise
   const getImageSize = imageUrl => {
+    let imageStyle;
     return new Promise((resolve, reject) => {
       Image.getSize(
         imageUrl,

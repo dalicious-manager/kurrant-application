@@ -1,5 +1,4 @@
 import React from 'react';
-
 import CommentsIcon from '~assets/icons/comments.svg';
 
 import IconWrapper from '../component';

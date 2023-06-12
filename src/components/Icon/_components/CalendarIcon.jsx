@@ -1,6 +1,6 @@
 import React from 'react';
-
 import CalendarIcon from '~assets/icons/Home/calendar16.svg';
+
 import IconWrapper from '../component';
 /**
  *
@@ -11,7 +11,7 @@ import IconWrapper from '../component';
 const Component = ({name, size = 16, color}) => {
   return (
     <IconWrapper>
-       <CalendarIcon name={name} size={size} color={color} />
+      <CalendarIcon name={name} size={size} color={color} />
     </IconWrapper>
   );
 };

@@ -1,4 +1,5 @@
 import {useAtom} from 'jotai';
+import {Alert} from 'react-native';
 
 import * as Fetch from './Fetch';
 import {supportPriceAtom} from './store';
@@ -12,7 +13,7 @@ const useSupportPrices = () => {
 
       setSupportPrices(res.data.supportPrice);
     } catch (err) {
-      console.log(err);
+      // Alert.alert('일일 지원금', err?.toString()?.replace('error: ', ''));
     }
   };
 

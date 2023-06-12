@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+
 import Payment from './Payments';
 
 const PaymentContainer = ({
@@ -13,7 +14,6 @@ const PaymentContainer = ({
   const onWebViewMessageReceived = useCallback(
     async e => {
       const tossPaymentMessageFromWeb = JSON.parse(e.nativeEvent.data);
-      console.log(tossPaymentMessageFromWeb);
       // 웹뷰로 부터 성공 및 실패 둘중 아무것도 받지못했을떄.
       if (!tossPaymentMessageFromWeb.type) {
         onApproveError();

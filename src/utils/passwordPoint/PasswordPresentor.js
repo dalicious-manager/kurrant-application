@@ -4,7 +4,6 @@ export default class PasswordPresentor {
     const name = e.target._internalFiberInstanceHandleDEV.memoizedProps.name;
     const value = e.nativeEvent.text.trim();
     const modifiedValue = value.substring(0, 1); // input maxlength: 1 지정
-    console.log(name, modifiedValue);
     update({
       ...state,
       [name]: modifiedValue,
@@ -14,7 +13,6 @@ export default class PasswordPresentor {
   // value 입력 시, 다음 Index로 focus 이동
   handleNextFocus(ref) {
     for (let i = 0; i < ref.current.length - 1; i++) {
-      console.log(ref.current[i]);
       if (ref.current[i].value) {
         ref.current[i + 1].focus();
       }

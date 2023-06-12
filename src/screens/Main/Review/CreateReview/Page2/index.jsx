@@ -1,9 +1,18 @@
+import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-
+import {ActivityIndicator, Alert, Text, View} from 'react-native';
+import Config from 'react-native-config';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useQueryClient} from 'react-query';
+import RNFetchBlob from 'rn-fetch-blob';
 import styled, {useTheme} from 'styled-components/native';
 
+import ReviewInput from './ReviewInput';
+import {starRatingAtom} from './store';
+import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
+import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import Button from '../../../../../components/Button';
 import {
   CheckIcon,
@@ -11,36 +20,21 @@ import {
   XCircleIcon,
 } from '../../../../../components/Icon';
 import RateStars from '../../../../../components/RateStars';
-
 import Typography from '../../../../../components/Typography';
 import UploadPhoto from '../../../../../components/UploadPhoto';
-import ReviewInput from './ReviewInput';
-import {starRatingAtom} from './store';
-import {useNavigation} from '@react-navigation/native';
-import RNFetchBlob from 'rn-fetch-blob';
-
-import Config from 'react-native-config';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 import {getStorage} from '../../../../../utils/asyncStorage';
-import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
-
-import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
 import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
+import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
 
 // 수정후 여기로 오게 하기
 // import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
-
-import {ActivityIndicator, Alert, Text, View} from 'react-native';
-import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
-import {useQueryClient} from 'react-query';
-
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 // import MoreMainPage, {
 //   PAGE_NAME as MoreMainPageName,
 // } from '../../../pages/Main/Bnb/More/Main';
-import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
 export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
@@ -200,17 +194,6 @@ const Screen = ({route}) => {
         Authorization: `Bearer ${token}`,
       };
 
-      console.log('크리에이트 리뷰');
-
-      console.log([
-        ...photosArray,
-        {
-          name: 'reviewDto',
-          data: JSON.stringify(sendCreateData),
-          type: 'application/json',
-        },
-      ]);
-
       return RNFetchBlob.fetch('POST', url, headers, [
         ...photosArray,
         {
@@ -229,9 +212,6 @@ const Screen = ({route}) => {
       const token = await getToken();
 
       // photosArray에서 웹에있는 데이터, 로컬인 데이터 배열 둘로 나눠야됨
-
-      console.log('보내는 데이터임');
-      console.log(data);
 
       // editItem && editItem.reviewText
       // ? editItem.reviewText
@@ -291,7 +271,6 @@ const Screen = ({route}) => {
       createReview(photoDataArray)
         .then(response => response.json())
         .then(data => {
-          console.log('Success:', data);
           setIsLoading(true);
           if (data.statusCode === 200) {
             Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
@@ -357,14 +336,9 @@ const Screen = ({route}) => {
           setIsLoading(false);
         });
     } else if (status === 'edit') {
-      console.log('edit 이여');
-      console.log(photosArray);
-
       editReview(id, photosArray)
         .then(response => response.json())
         .then(data => {
-          console.log('Success:', data);
-
           if (data.statusCode === 200) {
             Alert.alert('수정 완료', '리뷰가 수정되었습니다 ', [
               {
@@ -399,8 +373,6 @@ const Screen = ({route}) => {
           setIsLoading(false);
         });
     }
-
-    console.log('input registered');
   };
 
   // isLoading중이면 다시 클릭했을때 alert 뜨게 하기
@@ -439,9 +411,8 @@ const Screen = ({route}) => {
                 )}
               </ReviewPointInfoTop>
               <ReviewPointInfoBottom
-                active={
-                  input?.review?.length > 0 && isText
-                }></ReviewPointInfoBottom>
+                active={input?.review?.length > 0 && isText}
+              />
             </ReviewPointInfo>
             <ReviewPointInfo>
               <ReviewPointInfoTop>
@@ -465,7 +436,7 @@ const Screen = ({route}) => {
                   </View>
                 )}
               </ReviewPointInfoTop>
-              <ReviewPointInfoBottom active={isPhoto}></ReviewPointInfoBottom>
+              <ReviewPointInfoBottom active={isPhoto} />
             </ReviewPointInfo>
           </ReviewPointInfoContainer>
           <KeyboardViewContainer extraHeight={120}>
@@ -525,8 +496,6 @@ const Screen = ({route}) => {
                 }}
               />
             </UploadPhotosWrap>
-
-            {isLoading && <Text>로딩중이여...</Text>}
 
             <ReviewWrap>
               <Title3>

@@ -1,21 +1,19 @@
 import {Alert} from 'react-native';
 import Config from 'react-native-config';
+
 import {DefaultProfile} from '../../../assets';
 import mSleep from '../../../helpers/mSleep';
-
 import {fetchJson} from '../../../utils/fetch';
 
 const apiHostUrl =
   Config.NODE_ENV === 'dev'
     ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.NODE_ENV === 'rel'
+    ? Config.API_RELEASE_URL + '/' + Config.API_VERSION
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 export async function getReviewOrderMeal() {
-  const fetchRes = await fetchJson(
-    `/users/me/reviews`,
-
-    'GET',
-  );
+  const fetchRes = await fetchJson(`/users/me/reviews`, 'GET');
 
   return fetchRes;
 }
@@ -59,9 +57,6 @@ export async function deleteReview(body, token, successCallback) {
       }
     })
     .catch(error => {
-      console.log('삭제 에러뜸');
-      console.log(error);
-
       Alert.alert('작성 실패', '', [
         {
           text: '확인',

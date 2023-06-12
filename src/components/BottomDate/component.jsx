@@ -1,31 +1,37 @@
-import React, { useEffect, useRef, useState,useCallback } from 'react';
+import React, {useEffect, useRef, useState, useCallback} from 'react';
 import {
   Modal,
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
   FlatList,
-  View
+  View,
 } from 'react-native';
 import styled from 'styled-components/native';
 
-import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg'
+import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
 import Typography from '../Typography';
 
-
 const BottomSheet = props => {
-  const { modalVisible, setModalVisible ,title='옵션 선택', description='', data={},selected ,setSelected} = props;
+  const {
+    modalVisible,
+    setModalVisible,
+    title = '옵션 선택',
+    description = '',
+    data = {},
+    selected,
+    setSelected,
+  } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
 
-
   const onSelect = useCallback(
-    (id) => {
+    id => {
       //멀티 셀렉터시 이용
       // const newSelected = new Map(selected);
       // newSelected.set(id, !selected.get(id));
       setSelected(id);
-      setModalVisible(false)
+      setModalVisible(false);
     },
     [setModalVisible, setSelected],
   );
@@ -49,28 +55,28 @@ const BottomSheet = props => {
     duration: 300,
     useNativeDriver: true,
   });
-//   const pressOutUp = e => {
-//     const { pageY } = e.nativeEvent;
-//     console.log('test : ' + pageY);
-//     if (pageY > y + 30) {
-//       if (up < 500) {
-//         closeModal();
-//       } else {
-//         downSheet.start();
-//         list.current.scrollToOffset({ animated: false, y: 0 });
-//       }
-//     } else if (pageY < y - 30) {
-//       upSheet.start();
-//     } else {
-//       downSheet.start();
-//       list.current.scrollToOffset({ animated: false, y: 0 });
-//     }
-//   };
-//   const pressInUp = e => {
-//     const { pageY } = e.nativeEvent;
-//     console.log('test2 : ' + pageY);
-//     setY(pageY);
-//   };
+  //   const pressOutUp = e => {
+  //     const { pageY } = e.nativeEvent;
+  //     console.log('test : ' + pageY);
+  //     if (pageY > y + 30) {
+  //       if (up < 500) {
+  //         closeModal();
+  //       } else {
+  //         downSheet.start();
+  //         list.current.scrollToOffset({ animated: false, y: 0 });
+  //       }
+  //     } else if (pageY < y - 30) {
+  //       upSheet.start();
+  //     } else {
+  //       downSheet.start();
+  //       list.current.scrollToOffset({ animated: false, y: 0 });
+  //     }
+  //   };
+  //   const pressInUp = e => {
+  //     const { pageY } = e.nativeEvent;
+  //     console.log('test2 : ' + pageY);
+  //     setY(pageY);
+  //   };
   const upSheet = Animated.timing(upY, {
     toValue: 700,
     duration: 300,
@@ -107,7 +113,7 @@ const BottomSheet = props => {
         </TouchableWithoutFeedback>
         <AnimatedView
           style={{
-            transform: [{ translateY: translateY }],
+            transform: [{translateY: translateY}],
             height: up,
             width: Dimensions.get('screen').width,
           }}>
@@ -117,34 +123,43 @@ const BottomSheet = props => {
             <DragButtonView/>
           </DragButton> */}
           <BottomSheetTitleView>
-            <BottomSheetTitle>
-              {title}
-            </BottomSheetTitle>
-            {description !== '' && <BottomSheetDecs>
-              {description}
-            </BottomSheetDecs>}
+            <BottomSheetTitle>{title}</BottomSheetTitle>
+            {description !== '' && (
+              <BottomSheetDecs>{description}</BottomSheetDecs>
+            )}
           </BottomSheetTitleView>
           <FlatList
             data={data}
             ref={list}
             scrollEnabled={true}
-            renderItem={({ item }) => (
-              <ContentItemContainer onPress={()=>onSelect(item.clientType.toString() + item.id.toString(), item.date)}>
-                {selected === item.clientType.toString() + item.id.toString() ?
+            renderItem={({item}) => (
+              <ContentItemContainer
+                onPress={() =>
+                  onSelect(
+                    item.clientType.toString() + item.id.toString(),
+                    item.date,
+                  )
+                }>
+                {selected ===
+                item.clientType.toString() + item.id.toString() ? (
                   <ContentItemBox>
                     <ContentItemText>{item.date}</ContentItemText>
                     <CheckedView>
                       <ContentNameText>{item.name}</ContentNameText>
                       <CheckedIcon />
                     </CheckedView>
-                  </ContentItemBox> :
+                  </ContentItemBox>
+                ) : (
                   <ContentItemBox>
-                  <ContentItemText>{item.date}</ContentItemText>
-                  <ContentNameText>{item.name}</ContentNameText>
-                  </ContentItemBox>}
+                    <ContentItemText>{item.date}</ContentItemText>
+                    <ContentNameText>{item.name}</ContentNameText>
+                  </ContentItemBox>
+                )}
               </ContentItemContainer>
             )}
-            keyExtractor={item => item.clientType.toString() + item.id.toString()}
+            keyExtractor={item =>
+              item.clientType.toString() + item.id.toString()
+            }
           />
         </AnimatedView>
       </Overlay>
@@ -152,7 +167,7 @@ const BottomSheet = props => {
   );
 };
 
-const Overlay =styled.View`
+const Overlay = styled.View`
   position: relative;
   flex: 1;
   justify-content: flex-end;
@@ -193,39 +208,36 @@ const AnimatedView = styled(Animated.View)`
 
 const BottomSheetTitleView = styled.View`
   width: 100%;
-  padding:0px 28px;
+  padding: 0px 28px;
 `;
 
-const BottomSheetTitle = styled(Typography).attrs({text : 'Title03SB'})`
+const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
   margin-bottom: 6px;
 `;
 
-const BottomSheetDecs = styled(Typography).attrs({text : 'Body06R'})`
-
-`;
+const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})``;
 
 const ContentItemContainer = styled.TouchableOpacity`
   width: ${Dimensions.get('screen').width}px;
   height: 60px;
   padding: 19px 24px;
   /* background-color:gold; */
-`
+`;
 
 const ContentItemBox = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 `;
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})`
-`
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
 
 const ContentNameText = styled(Typography).attrs({text: 'Body06R'})`
-color:${({theme}) => theme.colors.grey[4]};
-margin-right:4px;
-`
+  color: ${({theme}) => theme.colors.grey[4]};
+  margin-right: 4px;
+`;
 
 const CheckedView = styled.View`
-flex-direction:row;
-align-items:center
+  flex-direction: row;
+  align-items: center;
 `;
 export default BottomSheet;

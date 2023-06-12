@@ -1,4 +1,4 @@
-import { atomWithReset } from 'jotai/utils';
+import {atomWithReset} from 'jotai/utils';
 
 export const isFoodDetailAtom = atomWithReset({});
 export const isFoodDetailDiscountAtom = atomWithReset({});

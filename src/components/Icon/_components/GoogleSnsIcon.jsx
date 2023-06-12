@@ -1,5 +1,4 @@
 import React from 'react';
-
 import GoogleSnsIcon from '~assets/icons/GoogleSnsIcon.svg';
 
 import IconWrapper from '../component';

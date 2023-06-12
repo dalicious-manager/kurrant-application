@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
-
 import styled from 'styled-components';
+
 import Typography from '../../../../../components/Typography';
 
 const Component = ({redeemablePoints}) => {

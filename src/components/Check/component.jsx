@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
-import styled, { css } from 'styled-components/native';
+import React, {useState} from 'react';
+import {Controller, useFormContext} from 'react-hook-form';
+import styled, {css} from 'styled-components/native';
 
 import Checkicon from '../../assets/icons/check.svg';
 import Typography from '../Typography';
 
-
 /** 예시 */
-// <Check 
-//   name='signUpCheck1' 
-//   label='모두 확인하였으며 동의합니다.(선택사항 포함)' 
-//   labelDetail='모두 확인하였으며 동의합니다.(선택사항 포함)' 
-//   onPressEventViewDetail={() => {console.log('더보기를 누르셨습니다.')}} 
+// <Check
+//   name='signUpCheck1'
+//   label='모두 확인하였으며 동의합니다.(선택사항 포함)'
+//   labelDetail='모두 확인하였으며 동의합니다.(선택사항 포함)'
+//   onPressEventViewDetail={() => {console.log('더보기를 누르셨습니다.')}}
 // />
 
 /**
@@ -26,36 +25,36 @@ import Typography from '../Typography';
  */
 
 const Component = ({
-  type='grey',
+  type = 'grey',
   name,
   label,
   onPressEventViewDetail,
   labelDetail,
   children,
   value,
-  onPressEvents=()=>{}
+  onPressEvents = () => {},
 }) => {
-  const { control } = useFormContext();
+  const {control} = useFormContext();
   const [checked, setChecked] = useState(value || false);
-  
+
   return (
     <React.Fragment>
       <Controller
         name={name}
         control={control}
         defaultValue={value || false}
-        render={({ field: { onChange ,value} }) => {
+        render={({field: {onChange, value}}) => {
           const onPressEvent = () => {
             onChange(!checked);
             setChecked(!checked);
             onPressEvents(!checked);
-          }
+          };
           return (
             <Wrap>
               <Wrapper>
                 <CheckboxWrap onPress={onPressEvent}>
                   <Checkbox checked={value} type={type}>
-                    <CheckIcon  checked={value} type={type} />
+                    <CheckIcon checked={value} type={type} />
                     {/* <FeatherIcon
                       name="check"
                       color={checked ? '#fff' : '#d4d8dd'}
@@ -63,9 +62,7 @@ const Component = ({
                     /> */}
                   </Checkbox>
                 </CheckboxWrap>
-                <LabelWrap>
-                  {children}
-                </LabelWrap>
+                <LabelWrap>{children}</LabelWrap>
                 {onPressEventViewDetail && (
                   <DetailWrap onPress={onPressEventViewDetail}>
                     <Detail>보기</Detail>
@@ -78,11 +75,10 @@ const Component = ({
                 </LabelDetailWrap>
               )}
             </Wrap>
-          )
-        }
-        }
+          );
+        }}
       />
-    </React.Fragment >
+    </React.Fragment>
   );
 };
 
@@ -99,20 +95,24 @@ const CheckboxWrap = styled.Pressable`
   margin-right: 8px;
 `;
 const Checkbox = styled.View`
-  width: ${({ type }) =>type ==='login' ? '18.33px':'24px'};
-  height: ${({ type }) =>type ==='login' ? '18.33px':'24px'};
-  border-radius: ${({ type }) =>type ==='login' ? '20px':'7px'};
-  background-color:
-        ${({ checked }) =>
+  width: ${({type}) => (type === 'login' ? '18.33px' : '24px')};
+  height: ${({type}) => (type === 'login' ? '18.33px' : '24px')};
+  border-radius: ${({type}) => (type === 'login' ? '20px' : '7px')};
+  background-color: ${({checked}) =>
     checked
       ? css`
-          ${({ type,theme }) => type === 'yellow' 
-          ? theme.colors.yellow[500] 
-          : type ==='grey' ? theme.colors.grey[2] 
-          : type ==='login' ? theme.colors.green[500] :theme.colors.grey[0]};
+          ${({type, theme}) =>
+            type === 'yellow'
+              ? theme.colors.yellow[500]
+              : type === 'grey'
+              ? theme.colors.grey[2]
+              : type === 'login'
+              ? theme.colors.green[500]
+              : theme.colors.grey[0]};
         `
       : css`
-          ${({ type,theme }) => type === 'white' ? theme.colors.grey[0] : theme.colors.grey[7]};
+          ${({type, theme}) =>
+            type === 'white' ? theme.colors.grey[0] : theme.colors.grey[7]};
         `};
   align-items: center;
   justify-content: center;
@@ -125,30 +125,33 @@ const DetailWrap = styled.Pressable`
   margin-left: auto;
   justify-content: center;
 `;
-const Detail = styled(Typography).attrs({ variant: 'h500', weight: 'R' })`
-  color: ${({ theme }) => theme.colors.neutral[500]};
+const Detail = styled(Typography).attrs({variant: 'h500', weight: 'R'})`
+  color: ${({theme}) => theme.colors.neutral[500]};
 `;
 
 const LabelDetailWrap = styled.View`
   padding-left: 32px;
   margin-top: 4px;
 `;
-const LabelDetail = styled(Typography).attrs({ variant: 'h500', weight: 'R' })`
-  color: ${({ theme }) => theme.colors.neutral[900]};
+const LabelDetail = styled(Typography).attrs({variant: 'h500', weight: 'R'})`
+  color: ${({theme}) => theme.colors.neutral[900]};
 `;
 
 const CheckIcon = styled(Checkicon)`
-  color: ${({ checked }) =>
-      checked
-        ? css`
-             ${({ type,theme }) => type === 'yellow' 
-          ? theme.colors.grey[1] 
-          : type === 'grey' ? theme.colors.grey[0] 
-          : type ==='login' ? theme.colors.neutral[0] :theme.colors.grey[2]};
-          `
-        : css`
-            ${({ type,theme }) => type === 'white' ? theme.colors.grey[7] : theme.colors.grey[0]};
-          `};
-         
-
-  `;
+  color: ${({checked}) =>
+    checked
+      ? css`
+          ${({type, theme}) =>
+            type === 'yellow'
+              ? theme.colors.grey[1]
+              : type === 'grey'
+              ? theme.colors.grey[0]
+              : type === 'login'
+              ? theme.colors.neutral[0]
+              : theme.colors.grey[2]};
+        `
+      : css`
+          ${({type, theme}) =>
+            type === 'white' ? theme.colors.grey[7] : theme.colors.grey[0]};
+        `};
+`;

@@ -1,44 +1,38 @@
+/* eslint-disable import/order */
+import {appleAuthAndroid} from '@invertase/react-native-apple-authentication';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useCallback} from 'react';
 import {
-  ActivityIndicator,
   Alert,
   BackHandler,
   Dimensions,
   Platform,
   Pressable,
-  SafeAreaView,
-  TouchableOpacity,
-  View,
   Linking,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import styled, {css} from 'styled-components/native';
+import Config from 'react-native-config';
 import {Settings} from 'react-native-fbsdk-next';
+import VersionCheck from 'react-native-version-check';
+import styled, {css} from 'styled-components/native';
+import {v4 as uuid} from 'uuid';
 
+import LoginMain from './LoginMain';
 import {LogoBackground} from '../../../../assets';
+import CsIcon from '../../../../assets/icons/Home/cs.svg';
 import ButtonRoundSns from '../../../../components/ButtonRoundSns';
 import HorizonLine from '../../../../components/HorizonLine';
-import Balloon from '../../../../components/Balloon';
 import Toast from '../../../../components/Toast';
 import Wrapper from '../../../../components/Wrapper';
-import {appleAuthAndroid} from '@invertase/react-native-apple-authentication';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {getStorage} from '../../../../utils/asyncStorage';
 import snsLogin from '../../../../utils/snsLogin';
-import LoginMain from './LoginMain';
-import CsIcon from '../../../../assets/icons/Home/cs.svg';
+
 import 'react-native-get-random-values';
-import {v4 as uuid} from 'uuid';
 
 import LogoImageSvg from '../../../../assets/icons/Logo.svg';
 import useAuth from '../../../../biz/useAuth';
-import Config from 'react-native-config';
-import useUserMe from '../../../../biz/useUserMe';
 import {PAGE_NAME as FAQListPageName} from '../../MyPage/FAQ';
-import VersionCheck from 'react-native-version-check';
-import { formattedLogin } from '../../../../utils/statusFormatter';
 
 export const PAGE_NAME = 'P_LOGIN__MAIN_LOGIN';
 
@@ -57,26 +51,24 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 const Pages = ({route}) => {
   const params = route?.params;
+  const currentVersion = VersionCheck.getCurrentVersion();
   const navigation = useNavigation();
   const toast = Toast();
-  const toast2 = Toast();
-  const toast3 = Toast();
-  const {balloonEvent, BalloonWrap,balloonEventNotOut} = Balloon();
-  const [lastLogin,setLastLogin] = useState();
+
+  const [lastLogin, setLastLogin] = useState();
+
   const {googleLogin, appleLogin, facebookLogin, kakaoLogin, naverLogin} =
     snsLogin();
 
-  const osLocation =()=>{
-    if(Platform.OS === 'ios'){
-      return {bottom : '105px', left:'80px'};
+  const osLocation = () => {
+    if (Platform.OS === 'ios') {
+      return {bottom: '105px', left: '80px'};
     }
-    if(Platform.OS === 'android'){
-      return {bottom : '40px', left:'65px'};
+    if (Platform.OS === 'android') {
+      return {bottom: '40px', left: '65px'};
     }
-  }
-  const {
-    login,
-  } = useAuth();
+  };
+  const {login} = useAuth();
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
@@ -97,16 +89,13 @@ const Pages = ({route}) => {
     Settings.setAppID(Config.FACEBOOK_APP_ID);
     Settings.initializeSDK();
   };
-  useEffect(()=>{
-    const getLogin = async()=>{
+  useEffect(() => {
+    const getLogin = async () => {
       const last = await getStorage('lastLogin');
-      if(last)
-        setLastLogin(last)
-    }
-    if(!lastLogin)
-      getLogin();
-    else balloonEventNotOut()
-  },[lastLogin])
+      if (last) setLastLogin(last);
+    };
+    if (!lastLogin) getLogin();
+  }, [lastLogin]);
   useEffect(() => {
     let timeout;
     let exitApp = false;
@@ -146,13 +135,26 @@ const Pages = ({route}) => {
     googleSigninConfigure();
     facebookConfiguration();
   }, []);
-  
+  const handlePress = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
         await VersionCheck.getLatestVersion().then(latestVersion => {
-          console.log(currentVersion, latestVersion);
-          if (currentVersion !== latestVersion) {
+          const regex = /[^0-9]/g;
+          const result = currentVersion?.replace(regex, '');
+          const result2 = latestVersion?.replace(regex, '');
+          if (Number(result) < Number(result2)) {
             Alert.alert(
               '앱 업데이트',
               '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
@@ -179,7 +181,7 @@ const Pages = ({route}) => {
           }
         });
       };
-      // getData();
+      getData();
     }, []),
   );
 
@@ -203,7 +205,7 @@ const Pages = ({route}) => {
             <LogoImageSvg />
           </LogoBox>
           <BackgroundImageBox source={LogoBackground} resizeMode="cover" />
-          <LoginMain isLast={lastLogin}/>
+          <LoginMain isLast={lastLogin} />
           <EtcSNSContainer>
             <HorizonLine text={`그외 SNS로 로그인`} />
 
@@ -257,10 +259,6 @@ const Pages = ({route}) => {
           </Pressable>
         </LoginContainer>
         <toast.ToastWrap message={'뒤로버튼 한번 더 누르시면 종료됩니다.'} />
-        <toast2.ToastWrap message={`마지막 로그인 ${formattedLogin(lastLogin)}`} isBottom={true} onPress={()=>console.log("test")}/>
-        <toast3.ToastWrap message={`마지막 로그인 ${formattedLogin(lastLogin)}`}  isBottom={true} absoluteStyle={"bottom: 85px;"} isCenter={false} onPress={()=>console.log("test")}/>
-        {/* <BalloonWrap message={`최근 로그인한 방법이에요`}  size={'B'}
-          location={osLocation()} onPress={()=>console.log("test")}/> */}
       </WrapperBox>
     </SafeView>
   );

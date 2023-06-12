@@ -1,12 +1,13 @@
 import {Linking, Platform} from 'react-native';
 import WebView from 'react-native-webview';
-import {getStorage} from '../../../../../../utils/asyncStorage';
+
 import {
   ANDROID_APPSCHEME,
   ANDROID_MARKET_PREFIX,
   ANDROID_PACKAGE,
   IOS_MARKET_PREFIX,
 } from './constant';
+import {getStorage} from '../../../../../../utils/asyncStorage';
 
 export function getMarketUrl(url, scheme, packageName) {
   if (Platform.OS === 'ios') {
@@ -160,7 +161,6 @@ export function isBlank(url, mainDocumentUrl, orderItems, setUrls, token) {
   if (url.includes('admin.dalicious.co')) {
     if (!url.includes('orderItems')) {
       const reqUrl = url + `&orderItems=${orderItems}&token=${token}`;
-      console.log(reqUrl, 'testset');
       setUrls({uri: reqUrl});
       return (
         reqUrl.startsWith('about:blank') &&
@@ -177,8 +177,7 @@ export function isBlank(url, mainDocumentUrl, orderItems, setUrls, token) {
 }
 
 export async function openPGApp(url) {
-  console.log(url);
-  let splittedUrl = url.replace('://', ' ').split(' ');
+  let splittedUrl = url?.replace('://', ' ').split(' ');
   let scheme = splittedUrl[0];
 
   if (scheme === undefined) {

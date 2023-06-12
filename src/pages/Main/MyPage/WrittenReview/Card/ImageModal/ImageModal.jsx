@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 
+import DotPagination from './DotPagination';
 import ReviewCarouselImage from './ReviewCarouselImage';
 import {SmallXVectorIcon} from '../../../../../../components/Icon';
-import DotPagination from './DotPagination';
 
 // https://www.youtube.com/watch?v=Nw1St1h5Ylc&t=81s 여기서 베낌
 

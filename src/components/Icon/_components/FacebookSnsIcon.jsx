@@ -1,5 +1,4 @@
 import React from 'react';
-
 import FacebookSnsIcon from '~assets/icons/FacebookSnsIcon.svg';
 
 import IconWrapper from '../component';

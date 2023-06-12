@@ -1,7 +1,6 @@
 import React from 'react';
 
 import XCircleIcon from '../../../assets/icons/XCircle.svg';
-
 import IconWrapper from '../component';
 /**
  *

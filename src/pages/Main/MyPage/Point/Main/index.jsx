@@ -1,16 +1,17 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Pressable, FlatList, Alert} from 'react-native';
 import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
-import Button from './components/Button';
 import Toast from '~components/Toast';
-import TextLable from '../../../../../components/TextButton';
+
+import Button from './components/Button';
 import ArrowRight from '../../../../../assets/icons/Arrow/arrowRight.svg';
-import {useGetPointList, useGetPointList2} from '../../../../../hook/usePoint';
-import withCommas from '../../../../../utils/withCommas';
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {useNavigation} from '@react-navigation/native';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+import TextLable from '../../../../../components/TextButton';
+import Typography from '../../../../../components/Typography';
+import {useGetPointList, useGetPointList2} from '../../../../../hook/usePoint';
+import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as purchaseHistory} from '../../PurchaseHistory/Detail/Main';
 
 export const PAGE_NAME = 'P__MY_PAGE__POINT';
@@ -29,7 +30,6 @@ const Pages = () => {
     if (status === 0) {
       const review = reviewList?.filter(el => el.reviewId === id);
       if (review?.length === 0) {
-        
         Alert.alert('리뷰 삭제', '작성한 리뷰가 삭제되었습니다.', [
           {
             text: '확인',
@@ -111,6 +111,12 @@ const Pages = () => {
                       ? '사용'
                       : el.pointStatus === 4
                       ? '운영자 적립'
+                      : el.pointStatus === 5
+                      ? '운영자 차감'
+                      : el.pointStatus === 6
+                      ? '파운더스 적립'
+                      : el.pointStatus === 7
+                      ? '파운더스 적립'
                       : '운영자 차감';
                   return (
                     <Contents key={idx}>
@@ -142,6 +148,14 @@ const Pages = () => {
                             <TitleText>
                               운영자에 의해 포인트가 차감되었어요
                             </TitleText>
+                          ) : el.pointStatus === 6 ? (
+                            <TitleText>
+                              파운더스 포인트가 적립되었어요
+                            </TitleText>
+                          ) : el.pointStatus === 7 ? (
+                            <TitleText>
+                              적립되지 않은 파운더스 포인트가 적립되었어요
+                            </TitleText>
                           ) : (
                             <TitleText numberOfLines={2} ellipsizeMode="tail">
                               [{el.makersName}] {el.name}
@@ -154,14 +168,14 @@ const Pages = () => {
                           }}>
                           {el.pointStatus === 3 || el.pointStatus === 5 ? (
                             <PriceText status={el.pointStatus}>
-                              -{withCommas(el.point)}원
+                              -{withCommas(el.point)}P
                             </PriceText>
                           ) : (
                             <PriceText status={el.pointStatus}>
-                              +{withCommas(el.point)}원
+                              +{withCommas(el.point)}P
                             </PriceText>
                           )}
-                          <Balance>잔액 {withCommas(el.leftPoint)}원</Balance>
+                          <Balance>잔액 {withCommas(el.leftPoint)}P</Balance>
                         </BalanceWrap>
                       </InnerContents>
                     </Contents>
@@ -171,7 +185,6 @@ const Pages = () => {
             );
           }}
         />
-       
       </Wrapper>
     </>
   );

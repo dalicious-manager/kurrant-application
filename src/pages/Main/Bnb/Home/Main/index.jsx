@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
@@ -9,66 +11,64 @@ import {
   StatusBar,
   AppState,
   Platform,
+  Linking,
+  Pressable,
+  Text,
 } from 'react-native';
+import Sound from 'react-native-sound';
+import VersionCheck from 'react-native-version-check';
 import styled, {css} from 'styled-components/native';
 
-import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
+import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
+import {BespinMembers, FoundersMembers} from '../../../../../assets';
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
+import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
+import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
+import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
-import useOrderMeal from '../../../../../biz/useOrderMeal';
+import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
+import useMembership from '../../../../../biz/useMembership';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
+import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
+import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
+import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
-import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
-import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
+import {mainDimATom, mainDimAtom} from '../../../../../utils/store';
+import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
+import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
+import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
+import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
+import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import MainDim from '../../../../Spots/spotGuide/MainDim';
+import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
+import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
+import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {
-  getStorage,
-  setStorage,
-  removeItemFromStorage,
-} from '../../../../../utils/asyncStorage';
-import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
-import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
-import Toast from '../../../../../components/Toast';
-import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
-import {BespinMembers, FoundersMembers} from '../../../../../assets';
-import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
-import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
-import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
-import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import FastImage from 'react-native-fast-image';
-import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useAuth from '../../../../../biz/useAuth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSseContext} from '../../../../../utils/sse/seeContextApi/sseContext';
-import useSse from '../../../../../utils/sse/seeContextApi/sseLogics/useSse';
-import {sendDone} from '../../../../../utils/sse/seeContextApi/restApis/getRestApis';
-import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
-import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
 
-import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
-import useMembership from '../../../../../biz/useMembership';
-import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
-import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
-
-import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
-import {useGetOrderMeal} from '../../../../../hook/useOrder';
-import Sound from 'react-native-sound';
-import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
+// 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
+const GOOGLE_PLAY_STORE_WEB_LINK =
+  'https://play.google.com/store/apps/details?id=com.dalicious.kurrant';
+// 애플 앱 스토어 링크
+const APPLE_APP_STORE_LINK = 'itms-apps://itunes.apple.com/us/app/id1663407738';
+// 애플 앱 스토어가 설치되어 있지 않을 때 웹 링크
+const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
@@ -79,9 +79,8 @@ const Pages = () => {
 
   const [isVisible, setIsVisible] = useState(true);
   const weekly = useAtomValue(weekAtom);
-  const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
-    useUserInfo();
-
+  const {isUserInfo, userInfo} = useUserInfo();
+  const currentVersion = VersionCheck.getCurrentVersion();
   const userName = isUserInfo?.name;
   const userSpot = isUserInfo?.spot;
   const userGroupName = isUserInfo?.group;
@@ -89,7 +88,7 @@ const Pages = () => {
   const clientId = isUserInfo?.groupId;
   const {
     saveFcmToken,
-    readableAtom: {userRole, fcmToken},
+    readableAtom: {userRole},
   } = useAuth();
   const {
     userGroupSpotCheck,
@@ -108,7 +107,6 @@ const Pages = () => {
         : Sound.MAIN_BUNDLE.bundlePath,
       error => {
         if (error) {
-          console.log('failed to load the sound', error);
           return;
         }
       },
@@ -120,13 +118,12 @@ const Pages = () => {
     readableAtom: {membershipHistory},
   } = useMembership();
 
-  const {
-    data: dailyfoodData,
-    refetch: dailyfoodRefetch,
-    isLoading: dailyLoading,
-    isFetching: dailyFetching,
-  } = useGetDailyfood(userSpotId, formattedWeekDate(new Date()));
+  const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
+    userSpotId,
+    formattedWeekDate(new Date()),
+  );
   const [modalVisible, setModalVisible] = useState(false);
+  const [showDim, setShowDim] = useAtom(mainDimAtom);
 
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
@@ -140,15 +137,6 @@ const Pages = () => {
 
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
-  // const start = weekly.map(s => {
-  //   const startData = formattedWeekDate(s[0]);
-  //   return startData;
-  // });
-
-  // const end = weekly.map(e => {
-  //   const endData = formattedWeekDate(e.slice(-1)[0]);
-  //   return endData;
-  // });
   const date = formattedWeekDate(new Date());
   const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
@@ -159,8 +147,27 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await userInfo();
+      if (user.spotId) dailyfoodRefetch();
+      else setShowDim(true);
+    };
+    getUser();
+  }, []);
   // 홈 전체 공지사항
+  const handlePress = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
 
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
   // const {getAnnouncements, announcements, announcementModalVisible} =
   //   useGetAnnouncements();
 
@@ -265,7 +272,7 @@ const Pages = () => {
       try {
         orderMealRefetch();
       } catch (e) {
-        alert(e.toString().replace('error:'));
+        Alert.alert(e.toString()?.replace('error:'));
       }
     }, [isCancelSpot, appState]),
   );
@@ -279,9 +286,7 @@ const Pages = () => {
           requestPermission();
         }
       })
-      .catch(error => {
-        console.log('error checking permisions ' + error);
-      });
+      .catch(error => {});
   };
 
   //2
@@ -291,9 +296,7 @@ const Pages = () => {
       .then(() => {
         getToken();
       })
-      .catch(error => {
-        console.log('permission rejected ' + error);
-      });
+      .catch(error => {});
   };
 
   //3
@@ -301,27 +304,19 @@ const Pages = () => {
     messaging()
       .getToken()
       .then(token => {
-        console.log('push token ' + token);
+        if (token) {
+          saveFcmToken({
+            token: token,
+          });
+        }
       })
-      .catch(error => {
-        console.log('error getting push token ' + error);
-      });
+      .catch(error => {});
   };
   useEffect(() => {
     checkPermission();
     // Check whether an initial notification is available
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       if (remoteMessage) {
-        console.log(
-          'Notification caused app to open from quit state:',
-          remoteMessage.data,
-        );
-        console.log(
-          remoteMessage.data.page,
-          remoteMessage.data.page === 'S_MAIN__REVIEW',
-          remoteMessage.data.page.toString() === 'S_MAIN__REVIEW',
-          'data',
-        );
         if (remoteMessage.data.page !== 'Home') {
           if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
             return navigation.navigate(remoteMessage.data.page, {
@@ -347,7 +342,6 @@ const Pages = () => {
               from: 'spot',
             });
           }
-
           navigation.navigate(remoteMessage.data.page);
         }
       }
@@ -356,16 +350,6 @@ const Pages = () => {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.data,
-          );
-          console.log(
-            remoteMessage.data.page,
-            remoteMessage.data.page === 'S_MAIN__REVIEW',
-            remoteMessage.data.page.toString() === 'S_MAIN__REVIEW',
-            'data',
-          );
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
@@ -420,21 +404,10 @@ const Pages = () => {
         }, 2000);
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('스팟', err?.toString()?.replace('error: ', ''));
     }
   };
 
-  // useEffect(() => {
-  //   async function dailys() {
-  //     try {
-  //       if (userSpotId)
-  //         await dailyFood(userSpotId, formattedWeekDate(new Date()));
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  //   dailys();
-  // }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
@@ -477,20 +450,63 @@ const Pages = () => {
         id: userSpotId,
         clientId: clientId,
       });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const handleStatus = e => {
     setAppState(e);
   };
-  const mockStatus = 10;
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
+
     return () => {
       listener.remove();
     };
-  }, []);
+  }, [isUserGroupSpotCheck]);
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        await userGroupSpotCheck();
+        await VersionCheck.getLatestVersion().then(latestVersion => {
+          const regex = /[^0-9]/g;
+          const result = currentVersion?.replace(regex, '');
+          const result2 = latestVersion?.replace(regex, '');
+          if (Number(result) < Number(result2)) {
+            Alert.alert(
+              '앱 업데이트',
+              '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
+              [
+                {
+                  text: '확인',
+                  onPress: async () => {
+                    if (Platform.OS === 'android') {
+                      handlePress(
+                        GOOGLE_PLAY_STORE_LINK,
+                        GOOGLE_PLAY_STORE_WEB_LINK,
+                      );
+                    } else {
+                      handlePress(
+                        APPLE_APP_STORE_LINK,
+                        APPLE_APP_STORE_WEB_LINK,
+                      );
+                    }
+                  },
+                  style: 'destructive',
+                },
+              ],
+            );
+          }
+        });
+      };
+      getData();
+    }, []),
+  );
+
+  useEffect(() => {
+    if (isUserInfo?.spotId === null && !showDim) {
+      setModalVisible(true);
+    }
+  }, [showDim]);
+
   if (!isUserInfo) {
     return <SkeletonUI />;
   }
@@ -571,7 +587,7 @@ const Pages = () => {
               if (m.serviceDate === date)
                 return (
                   <React.Fragment key={`${m.id} ${idx}`}>
-                    {m.orderItemDtoList.map((meal, i) => {
+                    {m.orderItemDtoList.map(meal => {
                       return (
                         <MealInfoComponent
                           m={m}
@@ -610,16 +626,7 @@ const Pages = () => {
               <CountText>건</CountText>
             </CountWrap>
           </CatorWrap> */}
-            {/* {isUserInfo?.isMembership && <MembershipWrap>
-            <Membership>
-              <MembershipIcon/>
-              <TitleText>멤버십</TitleText>
-            </Membership>
-            <CountWrap>
-              <Count>2</Count>
-              <CountText>건</CountText>
-            </CountWrap>
-          </MembershipWrap>} */}
+
             {isUserInfo?.isMembership ? (
               <MembershipWrap
                 onPress={() => navigation.navigate(MembershipInfoPageName)}>
@@ -679,6 +686,10 @@ const Pages = () => {
                 </MembershipText>
               </MenbershipBanner>
             )}
+
+            <Pressable onPress={() => navigation.navigate(SpotGuidePageName)}>
+              <Text>스팟 선택 임시 버튼</Text>
+            </Pressable>
             {/* <MarketWrap>
             <Market>
               <MarketIcon/>
@@ -727,8 +738,8 @@ const Pages = () => {
       <BottomSheetSpot
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        title="상세스팟 선택"
-        data={isUserGroupSpotCheck}
+        title="배송 스팟 선택"
+        data={isUserGroupSpotCheck?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}
@@ -802,7 +813,6 @@ const Icons = styled.View`
 
 const MainWrap = styled.View`
   align-items: center;
-  /* padding:24px 0px; */
   margin: 0px 24px;
 `;
 
@@ -820,7 +830,6 @@ const MealCalendar = styled.View`
   padding: 16px;
   min-height: 130px;
   padding-bottom: 10px;
-  //padding:15px 16px;
 `;
 
 const MealCalendarTitle = styled.View`
@@ -847,8 +856,6 @@ const MenbershipBanner = styled.Pressable`
   margin-left: 24px;
   margin-right: 24px;
   margin-bottom: 16px;
-  /* justify-content:center;
-align-items:center; */
 `;
 
 const MembershipImage = styled.Image`
@@ -863,47 +870,15 @@ const MembershipImages = styled.Image`
   border-radius: 14px;
 `;
 
-const CatorWrap = styled.View`
-  ${BoxWrap};
-  ${Display};
-  justify-content: space-between;
-`;
-
-const Cator = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const MarketWrap = styled.View`
-  ${BoxWrap};
-  ${Display};
-  justify-content: space-between;
-`;
-
-const Market = styled.View`
-  flex-direction: row;
-`;
-
 const TitleText = styled(Typography).attrs({text: 'Body05SB'})`
   margin-left: 14px;
   color: ${props => props.theme.colors.grey[2]};
 `;
 
-const CountWrap = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
 const ButtonWrap = styled.View`
   position: absolute;
   bottom: 17px;
-  /* margin:0px 24px; */
   width: 100%;
-`;
-
-const MealCheckWrap = styled.View`
-  justify-content: center;
-  align-items: center;
 `;
 
 // text
@@ -915,10 +890,6 @@ const LargeTitle = styled(Typography).attrs({text: 'LargeTitle'})`
 `;
 
 const SemiBoldTxt = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
-const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[2]};
 `;
 
@@ -936,14 +907,6 @@ const SpotNameText = styled(Typography).attrs({text: 'BottomButtonSB'})`
   margin-right: 6px;
 `;
 
-const DiningType = styled(Typography).attrs({text: 'CaptionSB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
-const Count = styled(Typography).attrs({text: 'Title03SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-`;
-
 const CountText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-left: 4px;
@@ -956,15 +919,6 @@ const MembershipText = styled(SemiBoldTxt)`
   position: absolute;
   left: 24px;
   top: 20px;
-`;
-
-const MealCheckText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-  margin-bottom: 4px;
-`;
-
-const MealCheckButtonText = styled(Typography).attrs({text: 'Button09SB'})`
-  color: ${props => props.theme.colors.grey[0]};
 `;
 
 const Button = styled.Pressable`

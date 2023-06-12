@@ -1,31 +1,40 @@
+/* eslint-disable import/order */
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
-import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
-import StarRating from '../../../../../components/StarRating/StarRating';
+import {css} from 'styled-components/native';
+import ArrowRightGrey4 from '~assets/icons/Arrow/ArrowRightGrey4.svg';
+// import AdminOrMakersReview from './AdminOrMakersReview';
 
-import AdminOrMakersReview from './AdminOrMakersReview';
-import {useNavigation} from '@react-navigation/native';
-import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
+import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
+import {isOverThreeLines} from '~components/Review/WrittenReviewCard/logic';
+// import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
 import OnlyForMakers from './OnlyForMakers';
 // import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-import {getStorage} from '../../../../../utils/asyncStorage';
+// import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+// import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
+// import {getStorage} from '../../../../../utils/asyncStorage';
 import {
   deleteReview,
   deleteReview2,
-} from '../../../../../biz/useReview/useWrittenReview/Fetch';
+} from '~biz/useReview/useWrittenReview/Fetch';
+import useWrittenReview from '~biz/useReview/useWrittenReview/hook';
+import {SkinnyArrowDown} from '~components/Icon';
+import StarRating from '~components/StarRating/StarRating';
+import Typography from '~components/Typography';
+// import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
+// import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
+import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '~screens/Main/Review/CreateReview/Page2';
+// import {deleteReview} from '~biz/useReview/useWrittenReview/Fetch';
 
 import ImageModal from './ImageModal/ImageModal';
-import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+// import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import {changeSeperator} from '../../../../../utils/dateFormatter';
-import {SkinnyArrowDown} from '../../../../../components/Icon';
-import {css} from 'styled-components/native';
+// import {SkinnyArrowDown} from '../../../../../components/Icon';
 
 // '../../../pages/Main/MyPage/Review';
 const onlyForMakers = true;
@@ -104,46 +113,8 @@ const Component = ({
               } else {
                 toast.toastEvent();
                 await getWrittenReview();
-                // Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-                //   {
-                //     text: '확인',
-                //     onPress: async () => {
-                //       await getWrittenReview();
-                //       // await getReviewWait();
-                //       navigation.navigate(WrittenReviewPageName, {
-                //         screen: ReviewScreenName,
-                //         params: {
-                //           tabIndex: 1,
-                //         },
-                //       });
-
-                //       // navigation.reset({
-                //       //   routes: [
-                //       //     {
-                //       //       name: ReviewScreenName,
-
-                //       //       state: {
-                //       //         index: 1,
-                //       //         routes: [
-                //       //           {
-                //       //             name: ReviewPageName,
-                //       //           },
-                //       //           {
-                //       //             name: WrittenReviewPageName,
-                //       //           },
-                //       //         ],
-                //       //       },
-                //       //     },
-                //       //   ],
-                //       // });
-                //     },
-                //     style: 'cancel',
-                //   },
-                // ]);
               }
             } catch (err) {
-              console.log('리뷰 삭제 에러뜸');
-              console.log(err);
               Alert.alert('리뷰 삭제 실패', '', [
                 {
                   text: '확인',
@@ -161,7 +132,6 @@ const Component = ({
       ],
     );
   };
-  const [numLines, setNumLines] = useState(1);
 
   const handlePressReviewText = () => {
     setElaborateComment(!elaborateComment);
@@ -180,34 +150,6 @@ const Component = ({
   // /n이 하나일떄 24*24
   // /n이 두개일떄 24
   // /n 이 세개일떄 0
-
-  const isOverThreeLines = text => {
-    const numberOfLineChange = (text.match(/\n/g) || []).length;
-    if (numberOfLineChange === 0) {
-      // 0개일떄
-      if (text.length / 24 > 3) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (numberOfLineChange == 1) {
-      if (text.length / 24 > 2) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (numberOfLineChange == 2) {
-      if (text.length / 24 > 1) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (numberOfLineChange >= 3) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   return (
     <Container focusId={focusId} id={id}>
@@ -344,11 +286,6 @@ const Component = ({
           </ReviewText>
         )}
       </ReviewPressable>
-      {/* <ReviewText>{reviewText}</ReviewText> */}
-      {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}
-      {/* <ReviewText numberOfLines={3} ellipsizeMode="tail">
-            {reviewText}
-          </ReviewText> */}
 
       {commentList &&
         commentList.length > 0 &&
