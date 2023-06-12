@@ -23,6 +23,11 @@ const ChartBasic = ({
 
   const yMaxValueAmongData = Math.max(...dataBasic.map(v => v.y));
 
+  useEffect(() => {
+    console.log('최댓값 ');
+    console.log(yMaxValueAmongData);
+  }, [yMaxValueAmongData]);
+
   const M = decideTopValueAndDividend(yMaxValueAmongData)[0];
 
   const rate = decideTopValueAndDividend(yMaxValueAmongData)[1];
@@ -61,6 +66,11 @@ const ChartBasic = ({
       });
     }
   }
+
+  useEffect(() => {
+    console.log('yAxisLableArr 값 확인하기 ');
+    console.log(yAxisLableArr);
+  }, [yAxisLableArr]);
 
   // y축 label배열 값
 
