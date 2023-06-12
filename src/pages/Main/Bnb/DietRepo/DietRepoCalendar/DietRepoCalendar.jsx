@@ -41,13 +41,13 @@ import {makeDietRepoCalendarDateArr} from './logic';
  */
 
 const DietRepoCalendar = ({
+  initialDate,
   BooleanValue,
   type = 'grey7',
   color = 'grey2',
   size = 'Body06R',
   onPressEvent2,
   selectDate,
-
   pagerRef,
   margin = '0px',
   sliderValue,
@@ -61,13 +61,12 @@ const DietRepoCalendar = ({
   const isOrderMeal = undefined;
 
   const [currentPress, setCurrentPress] = useState(selectDate);
+  const [calendarDate, setCalendarDate] = useState(new Date());
   const [chk, setChk] = useState(0);
 
   const morningServiceDays = isServiceDays?.morningServiceDays;
   const lunchServiceDays = isServiceDays?.lunchServiceDays;
   const dinnerServiceDays = isServiceDays?.dinnerServiceDays;
-
-  const [calendarDate, setCalendarDate] = useState(new Date());
 
   // 스크롤 되면 데이터 새로 만들게하기
 
@@ -79,6 +78,18 @@ const DietRepoCalendar = ({
 
   useEffect(() => {
     setTimeout(() => {
+      /// initialDate 가 존재할 경우
+
+      if (initialDate) {
+        // console.log('이니셜데이트 ok');
+        // console.log(initialDate);
+        // console.log(stringDateToJavascriptDate(initialDate, '-'));
+        setCalendarDate(stringDateToJavascriptDate(initialDate, '-'));
+        setCurrentPress(initialDate);
+      } else {
+        console.log('이니셜데이트 없음');
+      }
+
       pager.current.setPage(2);
       setChk(2);
       setIsMount(false);

@@ -41,11 +41,6 @@ const Pages = ({route}) => {
     });
   };
 
-  useEffect(() => {
-    console.log('fhfhfh');
-    console.log(dietRepoAddMealList);
-  }, [dietRepoAddMealList]);
-
   return (
     <>
       <Container>

@@ -2,7 +2,10 @@ import {useEffect, useRef, useState} from 'react';
 import {FlatList, Platform} from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled, {css} from 'styled-components';
-import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {
+  formattedWeekDate,
+  stringDateToJavascriptDate,
+} from '../../../../../utils/dateFormatter';
 
 import Typography from '~components/Typography';
 
@@ -51,7 +54,9 @@ const Pages = ({route}) => {
   // const [chk, setChk] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(
+    route?.params?.date ? route?.params?.date : new Date(),
+  );
 
   const {
     isDietRepoMainRefetchLoading,
@@ -64,14 +69,8 @@ const Pages = ({route}) => {
     dietRepoMainRefetch();
   }, [date]);
 
-  const dayPress = async selectedDate => {
-    try {
-      setDate(selectedDate);
-      // dailyFood(spotId,selectedDate);
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
+  const dayPress = selectedDate => {
+    setDate(stringDateToJavascriptDate(selectedDate, '-'));
   };
 
   // 이거 서버에서 받아와야됨 useFoodDaily()에서 isServiceDays값 확인 할 수 잇음
@@ -80,8 +79,6 @@ const Pages = ({route}) => {
     lunchServiceDays: ['월', '화', '수', '목', '금'],
     morningServiceDays: ['월', '화', '수', '목', '금'],
   };
-
-  const daily = true;
 
   const handleHistoryPress = () => {
     navigation.navigate(DietRepoHistoryPageName, {
@@ -94,6 +91,7 @@ const Pages = ({route}) => {
       <Container>
         <CalendarWrap>
           <DietRepoCalendar
+            initialDate={route?.params?.date}
             BooleanValue={false}
             type={'grey2'}
             color={'white'}
