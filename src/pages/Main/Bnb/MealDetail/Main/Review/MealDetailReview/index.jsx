@@ -150,7 +150,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const [showSelectList, setShowSelectList] = useState(false);
 
   // useEffect(() => {
-  //   console.log(foodId);
+  //   console.log(foodId);//
   // }, [foodId]);
 
   // best, latest, photo, rating, like
