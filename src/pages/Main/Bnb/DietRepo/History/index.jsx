@@ -18,6 +18,7 @@ import {
 } from '../../../../../utils/dateFormatter';
 import {calcWeekArr, extractMonthAndDateFromDate2} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
+import {modifyStackedBarData, sampleStackedBarData1} from './logic';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 
@@ -128,16 +129,22 @@ const Pages = ({route}) => {
       </DateSelectorWrap>
 
       <HistoryStackedBarChart
-        data={[
-          {x: '06월', carbo: 120, protein: 240, fat: 60},
-          {x: '07월', carbo: 220, protein: 140, fat: 160},
-          {x: '08월', carbo: 320, protein: 50, fat: 90},
-          {x: '09월', carbo: 100, protein: 30, fat: 190},
-          {x: '10월', carbo: 220, protein: 50, fat: 90},
-          {x: '11월', carbo: 0, protein: 0, fat: 0},
-          {x: '12월', carbo: 520, protein: 75, fat: 0},
-        ]}
-        dataOrder={['carbo', 'protein', 'fat']}
+        // data={[
+        //   {x: '06월', carbohydrate: 120, protein: 240, fat: 60},
+        //   {x: '07월', carbohydrate: 220, protein: 140, fat: 160},
+        //   {x: '08월', carbohydrate: 320, protein: 50, fat: 90},
+        //   {x: '09월', carbohydrate: 100, protein: 30, fat: 190},
+        //   {x: '10월', carbohydrate: 220, protein: 50, fat: 90},
+        //   {x: '11월', carbohydrate: 0, protein: 0, fat: 0},
+        //   {x: '12월', carbohydrate: 520, protein: 75, fat: 0},
+        // ]}
+        data={modifyStackedBarData(sampleStackedBarData1)}
+        dataOrder={['carbohydrate', 'protein', 'fat']}
+        colorSetting={{
+          carbohydrate: '#4F6FDF',
+          protein: '#819DFF',
+          fat: '#C8D4FF',
+        }}
         title="영양소 정보"
         width={'100%'}
       />
