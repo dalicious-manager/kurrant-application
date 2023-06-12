@@ -58,17 +58,9 @@ const Pages = ({route}) => {
     dietRepoMainRefetch,
     totalNutrition,
     dietRepoMainList,
-  } = useGetDietRepo(
-    // '2023-05-30',
-    formattedWeekDate(date),
-    undefined,
-    undefined,
-  );
+  } = useGetDietRepo(formattedWeekDate(date), undefined, undefined);
 
   useEffect(() => {
-    // console.log('현재 클릭된 날짜');
-    // console.log(date);
-
     dietRepoMainRefetch();
   }, [date]);
 
@@ -91,13 +83,6 @@ const Pages = ({route}) => {
 
   const daily = true;
 
-  // useEffect(() => {
-  //   console.log('date 값');
-  //   console.log(date);
-  //   console.log('spotId 값');
-  //   console.log(spotId);
-  // }, [date]);
-
   const handleHistoryPress = () => {
     navigation.navigate(DietRepoHistoryPageName, {
       date: formattedWeekDate(date),
@@ -114,8 +99,7 @@ const Pages = ({route}) => {
             color={'white'}
             size={'Body05R'}
             onPressEvent2={dayPress}
-            daily={daily}
-            // selectDate={date}
+            // daily={daily}
             selectDate={formattedWeekDate(date)}
             margin={'0px 28px'}
             scrollDir

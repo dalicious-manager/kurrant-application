@@ -45,12 +45,9 @@ const DietRepoCalendar = ({
   type = 'grey7',
   color = 'grey2',
   size = 'Body06R',
-  onPressEvent,
   onPressEvent2,
-
-  onPageScroll2,
   selectDate,
-  meal,
+
   pagerRef,
   margin = '0px',
   sliderValue,
@@ -60,13 +57,6 @@ const DietRepoCalendar = ({
   const pager = pagerRef ? pagerRef : useRef();
   const today = new Date();
   const weekly = useAtomValue(weekAtom);
-  // const {isOrderMeal, orderMeal} = useOrderMeal();
-  //   const {data: isOrderMeal, refetch: orderMealRefetch} = useGetOrderMeal(
-  //     formattedWeekDate(weekly[0][0]),
-  //     formattedWeekDate(
-  //       weekly[weekly.length - 1][weekly[weekly.length - 1].length - 1],
-  //     ),
-  //   );
 
   const isOrderMeal = undefined;
 
