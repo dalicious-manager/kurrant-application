@@ -93,7 +93,7 @@ const BottomSheetSpot = props => {
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <GestureHandlerRootView style={{flex: 1}}>
         <Overlay>
-          {snap === 0 && !showDim && (
+          {snap === 0 && !showDim && userSpotId === null && (
             <BalloonMessage
               location={{top: '200px'}}
               vertical="down"
@@ -107,7 +107,17 @@ const BottomSheetSpot = props => {
 
           <BottomSheet snapPoints={snapPoints} onChange={handleSheetChange}>
             <BottomSheetTitleView>
-              <BottomSheetTitle>{title}</BottomSheetTitle>
+              <TitleWrap>
+                <BottomSheetTitle>{title}</BottomSheetTitle>
+                {booleanValue && (
+                  <ManagePressView
+                    onPress={() => {
+                      onPressEvent2(setModalVisible(false));
+                    }}>
+                    <ManageText>스팟/관리</ManageText>
+                  </ManagePressView>
+                )}
+              </TitleWrap>
               {description !== '' && (
                 <BottomSheetDecs>{description}</BottomSheetDecs>
               )}
@@ -136,34 +146,50 @@ const BottomSheetSpot = props => {
                 <>
                   <ItemContainer>
                     <GroupView>
-                      <GroupName>{item.clientName}</GroupName>
-                      <View style={{marginLeft: 8}}>
+                      <View style={{marginRight: 8}}>
                         <Label
                           label={
-                            item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
+                            item.spotType === 0
+                              ? '프라이빗 스팟'
+                              : item.spotType === 2
+                              ? '공유 스팟'
+                              : '마이 스팟'
                           }
-                          type={item.spotType === 0 ? 'red' : 'green'}
+                          type={
+                            item.spotType === 0
+                              ? 'blue'
+                              : item.spotType === 2
+                              ? 'green'
+                              : 'pink'
+                          }
                         />
                       </View>
+                      <GroupName>{item.clientName}</GroupName>
                     </GroupView>
                     <Border />
                   </ItemContainer>
 
                   {item.spots.map(el => {
+                    const spotNameCut = el.spotName?.includes(null);
+
+                    const useSpotName = spotNameCut
+                      ? el.spotName.split('null')[0]
+                      : el.spotName;
+
                     return (
                       <ContentItemContainer
                         onPress={() => {
                           onSelect(el.spotId);
-                          onPressEvent(el.spotId);
+                          onPressEvent(el.spotId, item.spotType);
                         }}
                         key={el.spotId}>
                         {el.spotId === userSpotId ? (
                           <ContentItemBox>
-                            <ContentItemText>{el.spotName}</ContentItemText>
+                            <ContentItemText>{useSpotName}</ContentItemText>
                             <CheckedIcon />
                           </ContentItemBox>
                         ) : (
-                          <ContentItemText>{el.spotName}</ContentItemText>
+                          <ContentItemText>{useSpotName}</ContentItemText>
                         )}
                       </ContentItemContainer>
                     );
@@ -174,15 +200,6 @@ const BottomSheetSpot = props => {
             />
             <ManagePressView />
           </BottomSheet>
-
-          {booleanValue && (
-            <ManagePressView
-              onPress={() => {
-                onPressEvent2(setModalVisible(false));
-              }}>
-              <ContentItemText>스팟 관리하기</ContentItemText>
-            </ManagePressView>
-          )}
         </Overlay>
       </GestureHandlerRootView>
     </Modal>
@@ -206,7 +223,7 @@ const BottomSheetTitleView = styled.View`
 `;
 
 const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 `;
 
 const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
@@ -232,9 +249,14 @@ const ContentItemBox = styled.View`
   align-items: center;
 `;
 
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
+const ContentItemText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+const ManageText = styled(Typography).attrs({text: 'Button09R'})`
+  color: ${({theme}) => theme.colors.grey[3]};
+`;
 
-const GroupName = styled(Typography).attrs({text: 'Body06R'})`
+const GroupName = styled(Typography).attrs({text: 'Body06SB'})`
   color: ${({theme}) => theme.colors.grey[4]};
 `;
 
@@ -246,9 +268,9 @@ const Border = styled.View`
 `;
 
 const ManagePressView = styled.Pressable`
-  width: ${Dimensions.get('screen').width}px;
+  /* width: ${Dimensions.get('screen').width}px;
   padding: 19px 24px 55px 24px;
-  background-color: white;
+  background-color: white; */
 `;
 
 const GroupView = styled.View`
@@ -260,4 +282,9 @@ export default BottomSheetSpot;
 
 const MessageWrap = styled.View`
   position: absolute;
+`;
+
+const TitleWrap = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
 `;

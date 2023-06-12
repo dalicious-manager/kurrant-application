@@ -27,7 +27,7 @@ const SearchResult = ({route}) => {
   const [initCenter, setInitCenter] = useAtom(userLocationAtom);
   const [focus, setFocus] = useState(false);
   const [text, setText] = useState('');
-
+  console.log(data);
   const searchPress = async () => {
     if (type === 'mySpot' || type === 'registerSpot') {
       const res = await mapApis.searchObject(text);

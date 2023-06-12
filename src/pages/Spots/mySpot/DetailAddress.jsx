@@ -26,6 +26,7 @@ const DetailAddress = ({route}) => {
   const zipcode = route?.params?.zipcode;
   const jibunAddress = route?.params.jibunAddress;
   const [show, setShow] = useState(true);
+
   const {mutateAsync: applySpot, data: res, isSuccess} = useApplyMySpot();
   const form = useForm({
     mode: 'all',
@@ -37,7 +38,7 @@ const DetailAddress = ({route}) => {
     handleSubmit,
     setValue,
   } = form;
-  console.log(roadAddress);
+
   const detailAddress = watch('detailAddress');
   const nickNameAddress = watch('nickNameAddress');
   const phoneNumber = watch('phoneNumber');
@@ -85,7 +86,7 @@ const DetailAddress = ({route}) => {
         Keyboard.dismiss();
       }}>
       <KeyboardAwareScrollView
-        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         style={{flex: 1}}
         extraScrollHeight={120}
         enableOnAndroid={true}
@@ -112,16 +113,12 @@ const DetailAddress = ({route}) => {
               label="상세 주소 입력"
               name="detailAddress"
               placeholder="예. 3층 / 302호"
-              onFocus={() => setShow(false)}
-              onBlur={() => setShow(true)}
             />
             <SpotTextInput
               label="주소 별명 입력"
               name="nickNameAddress"
               placeholder="예. 우리 집 / 회사"
               style={{paddingTop: 24}}
-              onFocus={() => setShow(false)}
-              onBlur={() => setShow(true)}
             />
             <SpotTextInput
               label="휴대폰번호 입력"
@@ -129,13 +126,11 @@ const DetailAddress = ({route}) => {
               placeholder="예. 010-1234-1234"
               style={{paddingTop: 24}}
               value={withHyphenNumber(phoneNumber)}
-              onFocus={() => setShow(false)}
-              onBlur={() => setShow(true)}
             />
           </FormProvider>
         </InputWrap>
       </KeyboardAwareScrollView>
-      {show && !keyboardStatus.isKeyboardActivate && (
+      {!keyboardStatus.isKeyboardActivate && (
         <ButtonWrap>
           <Button
             label="주소 저장"

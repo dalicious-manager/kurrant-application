@@ -1,16 +1,18 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React from 'react';
 import {Text, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import styled from 'styled-components';
 
 import {mapApis} from '../../../api/map';
 import Typography from '../../../components/Typography';
+import {mySpotRootAtom} from '../../../utils/store';
 import {PAGE_NAME as DetailAddressPage} from '../../Spots/mySpot/DetailAddress';
 import {PAGE_NAME as ApplySpot} from '../../Spots/shareSpot/ApplySpot';
 
 const AddressList = ({setFocus, data, type}) => {
   const navigation = useNavigation();
-
+  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom);
   const onPress = async (name, address, x, y) => {
     const res = await mapApis.getRoadAddress(x, y);
     const jibunRes = await mapApis.getAddress(address);
@@ -56,6 +58,7 @@ const AddressList = ({setFocus, data, type}) => {
               lastArr={lastArr}
               onPress={() => {
                 onPress(el.place_name, el.road_address_name, el.x, el.y);
+                setFromRoot(1);
               }}>
               <Name>{el.place_name}</Name>
               <Address>

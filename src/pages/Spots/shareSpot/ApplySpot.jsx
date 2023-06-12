@@ -6,14 +6,16 @@ import {View, Text, Keyboard, Platform, Pressable} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components';
 
+import {mapApis} from '../../../api/map';
 import Icon from '../../../assets/icons/Map/map.svg';
 import Button from '../../../components/Button';
 import SpotTextInput from '../../../components/SpotTextInput';
 import Typography from '../../../components/Typography';
+import {useApplyShareSpot} from '../../../hook/useShareSpot';
 import {formattedMealTime, formattedTime} from '../../../utils/dateFormatter';
 import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
 import {PAGE_NAME as NotDeliveryPage} from '../../Spots/mySpot/NotDelivery';
-
+import {PAGE_NAME as CompletePage} from '../components/Complete';
 export const PAGE_NAME = 'SHARE_SPOT_APPLY';
 const ApplySpot = ({route}) => {
   const navigation = useNavigation();
@@ -22,13 +24,15 @@ const ApplySpot = ({route}) => {
   const roadAddress = route?.params?.roadAddress; // 도로명 주소
   const showAddress = route?.params?.showAddress; // true면 지번주소로 넘어온거
   const zipcode = route?.params?.zipcode;
-  const type = route?.params?.params?.type;
-  console.log(route.params);
+  const type = route?.params?.type;
+  const name = route?.params?.name;
+  const id = route?.params?.groupId;
   const [use, setUse] = useState();
   const [show, setShow] = useState(false);
   const [time, setTime] = useState(new Date());
   const [text, setText] = useState('');
-  console.log(formattedTime(time));
+  const {mutateAsync: applyShareSpot} = useApplyShareSpot();
+  console.log(typeof formattedTime(time));
   const form = useForm({
     mode: 'all',
   });
@@ -63,6 +67,29 @@ const ApplySpot = ({route}) => {
     setText(formattedMealTime(selectedTime));
     setValue('deliveryTime', formattedMealTime(selectedTime));
   };
+
+  const applyAddSpotButton = async () => {
+    const res = await mapApis.getRoadAddress(center.longitude, center.latitude);
+    console.log(res.zipcode);
+    const data = {
+      address: {
+        zipCode: res.zipcode,
+        address1: roadAddress,
+        address2: detailAddress,
+        latitude: center.latitude.toString(),
+        longitude: center.longitude.toString(),
+      },
+      groupId: id,
+      deliveryTime: formattedTime(time),
+      entranceOption: use === 0 ? true : false,
+      memo: memo === undefined ? null : memo,
+    };
+    console.log(data);
+    await applyShareSpot(data);
+    navigation.navigate(CompletePage, {
+      type: 'sharSpotAppication',
+    });
+  };
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle:
@@ -82,7 +109,13 @@ const ApplySpot = ({route}) => {
           extraScrollHeight={120}
           enableOnAndroid={true}
           resetScrollToCoords={{x: 0, y: 0}}>
-          <SpotName>{showAddress ? address : roadAddress}</SpotName>
+          <SpotName>
+            {type === 'registerSpot' && showAddress
+              ? address
+              : type === 'registerSpot' && !showAddress
+              ? roadAddress
+              : name}
+          </SpotName>
           {/* <SpotName>{showAddress ? address : roadAddress}</SpotName> */}
           <AddressWrap>
             <Label>
@@ -151,10 +184,7 @@ const ApplySpot = ({route}) => {
 
         {!show && (
           <ButtonWrap>
-            <Button
-              label="신청하기"
-              onPressEvent={form.handleSubmit(onSaveAddress)}
-            />
+            <Button label="신청하기" onPressEvent={applyAddSpotButton} />
           </ButtonWrap>
         )}
       </Wrap>

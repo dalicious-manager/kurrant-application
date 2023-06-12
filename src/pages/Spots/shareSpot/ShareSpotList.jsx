@@ -25,8 +25,8 @@ const ShareSpotList = ({setShowList, showList}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [touch, setTouch] = useState([0, 1, 2]);
-  const [touchInfo, setTouchInfo] = useState([0, 1]);
+  const [mealTouch, setMealTouch] = useState([1, 2, 3]);
+  const [touchInfo, setTouchInfo] = useState([1]);
 
   const [myLocation, setMyLocation] = useAtom(myLocationAtom); // 기초 좌표 강남역
 
@@ -40,9 +40,17 @@ const ShareSpotList = ({setShowList, showList}) => {
     data: groupList,
     hasNextPage,
     fetchNextPage,
-  } = useGetShareSpotList(myLocation.latitude, myLocation.longitude);
+    refetch,
+  } = useGetShareSpotList(
+    myLocation.latitude,
+    myLocation.longitude,
+    mealTouch,
+    touchInfo,
+  );
 
   const dataList = groupList?.pages;
+
+  console.log(dataList);
   const onEndReached = () => {
     if (hasNextPage) {
       fetchNextPage();
@@ -74,10 +82,10 @@ const ShareSpotList = ({setShowList, showList}) => {
         showsVerticalScrollIndicator={false}
         onEndReached={onEndReached}
         data={dataList}
-        renderItem={({item}) => {
+        renderItem={({item: {items}}) => {
           return (
             <View>
-              {item?.items?.map(el => {
+              {items?.map(el => {
                 const diningType = [1, 2, 3];
 
                 return (
@@ -89,6 +97,7 @@ const ShareSpotList = ({setShowList, showList}) => {
                       <MealIcon />
                       {diningType.map(v => (
                         <DiningTypeText
+                          key={v}
                           type={el.diningType.includes(v)}
                           value={v}>
                           {diningTypeString(v)}
@@ -121,8 +130,8 @@ const ShareSpotList = ({setShowList, showList}) => {
         </ListButton>
       </ListButtonWrap>
       <BottomSheetFilter
-        touch={touch}
-        setTouch={setTouch}
+        touch={mealTouch}
+        setTouch={setMealTouch}
         touchInfo={touchInfo}
         setTouchInfo={setTouchInfo}
         modalVisible={modalVisible}

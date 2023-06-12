@@ -23,7 +23,7 @@ const MainDim = () => {
       </SpotButton>
       <BalloonMessage
         location={{top: '24px'}}
-        message={`배송받으실  스팟을 선택해주세요.${'\n'}초대 받으신 스팟 중${'\n'}주문하실 곳은 어디신가요?`}
+        message={`배송받으실  스팟을 선택해주세요.${'\n'}주문하실 곳은 어디신가요?`}
       />
     </Wrap>
   );
