@@ -51,7 +51,7 @@ const Pages = ({route}) => {
   // const [chk, setChk] = useState(0);
   const [sliderValue, setSliderValue] = useState(1);
 
-  const [date, setDate] = useState(formattedWeekDate(new Date()));
+  const [date, setDate] = useState(new Date());
 
   const {
     isDietRepoMainRefetchLoading,
@@ -60,15 +60,10 @@ const Pages = ({route}) => {
     dietRepoMainList,
   } = useGetDietRepo(
     // '2023-05-30',
-    date,
+    formattedWeekDate(date),
     undefined,
     undefined,
   );
-
-  useEffect(() => {
-    // console.log('isDietRepoMainRefetchLoading fhfhh');
-    // console.log(isDietRepoMainRefetchLoading);
-  }, [isDietRepoMainRefetchLoading]);
 
   useEffect(() => {
     // console.log('현재 클릭된 날짜');
@@ -104,7 +99,9 @@ const Pages = ({route}) => {
   // }, [date]);
 
   const handleHistoryPress = () => {
-    navigation.navigate(DietRepoHistoryPageName, {date: date});
+    navigation.navigate(DietRepoHistoryPageName, {
+      date: formattedWeekDate(date),
+    });
   };
 
   return (
@@ -119,7 +116,7 @@ const Pages = ({route}) => {
             onPressEvent2={dayPress}
             daily={daily}
             // selectDate={date}
-            selectDate={date}
+            selectDate={formattedWeekDate(date)}
             margin={'0px 28px'}
             scrollDir
             pagerRef={pager}
@@ -148,7 +145,10 @@ const Pages = ({route}) => {
           }
           contentContainerStyle={{paddingBottom: 190}}
           // data={FlatListSampleData}
-          data={modifyDietRepoMainData(dietRepoMainList, date)}
+          data={modifyDietRepoMainData(
+            dietRepoMainList,
+            formattedWeekDate(date),
+          )}
           scrollEnabled={true}
           renderItem={({item}) => {
             return (
@@ -159,7 +159,7 @@ const Pages = ({route}) => {
                   <AddMealPressable
                     onPress={() => {
                       navigation.navigate(DietRepoAddDietPageName, {
-                        date: date,
+                        date: formattedWeekDate(date),
                         diningType: item.diningType,
                       });
                     }}>
