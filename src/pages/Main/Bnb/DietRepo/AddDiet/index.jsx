@@ -46,11 +46,6 @@ const Pages = ({route}) => {
     });
   };
 
-  useEffect(() => {
-    console.log('다이어트 레포 확인');
-    console.log(dietRepoAddMealList);
-  }, [dietRepoAddMealList]);
-
   return (
     <>
       <Container>

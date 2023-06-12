@@ -4,7 +4,7 @@ export const sampleStackedBarData1 = [
   {
     date: '2023-06-12',
     calorie: 150,
-    protein: 150,
+    protein: 90,
     fat: 150,
     carbohydrate: 40,
   },

@@ -66,10 +66,11 @@ export const decideTopValueAndDividend = num => {
     }
   }
 
-  // process 2 : 3등분
+  // process 2 : 3등분 (포기)
 
   const secondAverage = getAverage(firstAverage, firstTwoNumbers[1]);
 
+  // if (secondAverage < num) return [firstAverage, 3];
   if (secondAverage < num) return [firstAverage, 5];
 
   if (secondAverage === num) {
