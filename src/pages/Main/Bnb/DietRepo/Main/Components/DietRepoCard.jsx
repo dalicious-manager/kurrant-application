@@ -125,7 +125,7 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
                               console.log(err);
                             }
                           },
-                          style: 'cancel',
+                          // style: 'cancel',
                         },
                       ],
                     );
