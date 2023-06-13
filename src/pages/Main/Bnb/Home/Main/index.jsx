@@ -82,7 +82,7 @@ const Pages = () => {
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
-  const spotType = isUserInfo?.spotType;
+
   const spotNameCut = userSpot?.includes(null);
   const useSpotName = spotNameCut ? userSpot.split('null')[0] : userSpot;
   const {
@@ -387,14 +387,11 @@ const Pages = () => {
     return unsubscribe;
   }, [navigation]);
 
-  const anotherSpot = async (id, type) => {
+  const anotherSpot = async id => {
     try {
-      const res = await userSpotRegister(
-        {
-          id: id,
-        },
-        type,
-      );
+      const res = await userSpotRegister({
+        id: id,
+      });
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
@@ -447,7 +444,7 @@ const Pages = () => {
 
   const groupManagePress = async () => {
     try {
-      await groupSpotDetail(userSpotId, spotType);
+      await groupSpotDetail(userSpotId);
       navigation.navigate(GroupManagePageName, {
         id: userSpotId,
         clientId: clientId,
@@ -464,6 +461,7 @@ const Pages = () => {
       : userGroupName === null
       ? useSpotName
       : userGroupName + '\u00a0' + userSpot;
+
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
 
@@ -737,8 +735,8 @@ const Pages = () => {
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}
-        onPressEvent={(id, type) => {
-          anotherSpot(id, type);
+        onPressEvent={id => {
+          anotherSpot(id);
         }}
         onPressEvent2={() => {
           groupManagePress();

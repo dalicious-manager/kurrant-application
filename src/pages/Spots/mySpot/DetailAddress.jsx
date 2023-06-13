@@ -123,9 +123,10 @@ const DetailAddress = ({route}) => {
             <SpotTextInput
               label="휴대폰번호 입력"
               name="phoneNumber"
-              placeholder="예. 010-1234-1234"
+              placeholder="예. 01012341234"
               style={{paddingTop: 24}}
               value={withHyphenNumber(phoneNumber)}
+              keyboardType="numeric"
             />
           </FormProvider>
         </InputWrap>

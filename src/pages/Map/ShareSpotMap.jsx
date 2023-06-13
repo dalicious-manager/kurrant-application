@@ -70,8 +70,7 @@ const ShareSpotMap = ({route}) => {
   const [showAddress, setShowAddress] = useState(false);
   const [zoom, setZoom] = useState(18);
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
-  const [myLocation, setMyLocation] = useAtom(myLocationAtom); // 기초 좌표 강남역
-
+  const [myLocation, setMyLocation] = useAtom(myLocationAtom);
   const {
     data: groupList,
     hasNextPage,
@@ -112,10 +111,6 @@ const ShareSpotMap = ({route}) => {
     balloonEvent();
   }, []);
 
-  // useEffect(() => {
-  //   refetch();
-  // }, [mealTouch, refetch, touchInfo]);
-
   useFocusEffect(
     useCallback(() => {
       if (paramsLocation !== undefined) {
@@ -140,8 +135,8 @@ const ShareSpotMap = ({route}) => {
         </Search>
       </Pressable>
 
-      {groupList === undefined ? (
-        <View style={{flex: 1}}>
+      {!isSuccess ? (
+        <View style={{flex: 1, justifyContent: 'center'}}>
           <ActivityIndicator size={'large'} />
         </View>
       ) : (
@@ -217,7 +212,7 @@ const ShareSpotMap = ({route}) => {
                         setModalVisible(true);
                       }}
                       key={el.id}
-                      coordinate={{...center}}
+                      coordinate={center}
                       width={43}
                       height={43}
                       image={

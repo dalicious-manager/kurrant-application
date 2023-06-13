@@ -14,7 +14,7 @@ import {PAGE_NAME as ModalPage} from '../components/Complete';
 export const PAGE_NAME = 'MY_SPOT_DELIVERY';
 const Delivery = ({route}) => {
   //console.log(route, 'route');
-  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom);
+  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom); // 어느 경로로 왔는지 0 : 지도에서 1: 검색 리스트에서
   const navigation = useNavigation();
   const mySpotName = route?.params?.mySpotName;
   const address = route?.params?.address;

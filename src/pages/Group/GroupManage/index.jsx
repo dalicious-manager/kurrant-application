@@ -39,14 +39,11 @@ const Pages = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const goSpotRegisterPage = async (id, type) => {
+  const goSpotRegisterPage = async id => {
     try {
-      const res = await userSpotRegister(
-        {
-          id: id,
-        },
-        type,
-      );
+      const res = await userSpotRegister({
+        id: id,
+      });
 
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
@@ -83,8 +80,8 @@ const Pages = () => {
         data={isUserGroupSpotCheck.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
-        onPressEvent={(id, type) => {
-          goSpotRegisterPage(id, type);
+        onPressEvent={id => {
+          goSpotRegisterPage(id);
         }}
       />
     </SafeView>

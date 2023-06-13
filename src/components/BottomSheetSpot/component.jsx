@@ -55,7 +55,7 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['60%', '90%'], []);
+  const snapPoints = useMemo(() => ['70%', '90%'], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
@@ -95,7 +95,7 @@ const BottomSheetSpot = props => {
         <Overlay>
           {snap === 0 && !showDim && userSpotId === null && (
             <BalloonMessage
-              location={{top: '200px'}}
+              location={{top: '150px'}}
               vertical="down"
               message={`배송받으실 스팟을 선택해주세요.${'\n'}추후 변경 가능합니다.`}
             />
@@ -171,13 +171,14 @@ const BottomSheetSpot = props => {
 
                   {item.spots.map(el => {
                     const spotNameCut = el.spotName?.includes(null);
-
                     const useSpotName = spotNameCut
                       ? el.spotName.split('null')[0]
                       : el.spotName;
-
+                    const arrs = data[data.length - 1];
+                    console.log();
                     return (
                       <ContentItemContainer
+                        lastArr={arrs === item}
                         onPress={() => {
                           onSelect(el.spotId);
                           onPressEvent(el.spotId, item.spotType);
@@ -185,11 +186,25 @@ const BottomSheetSpot = props => {
                         key={el.spotId}>
                         {el.spotId === userSpotId ? (
                           <ContentItemBox>
-                            <ContentItemText>{useSpotName}</ContentItemText>
+                            <TextView>
+                              <ContentItemText>{useSpotName}</ContentItemText>
+                              {el.isRestriction && (
+                                <Restriction>외부인 출입 제한</Restriction>
+                              )}
+                            </TextView>
                             <CheckedIcon />
                           </ContentItemBox>
                         ) : (
-                          <ContentItemText>{useSpotName}</ContentItemText>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <ContentItemText>{useSpotName}</ContentItemText>
+                            {el.isRestriction && (
+                              <Restriction>외부인 출입 제한</Restriction>
+                            )}
+                          </View>
                         )}
                       </ContentItemContainer>
                     );
@@ -198,7 +213,6 @@ const BottomSheetSpot = props => {
               )}
               // keyExtractor={item => item.clientId.toString()}
             />
-            <ManagePressView />
           </BottomSheet>
         </Overlay>
       </GestureHandlerRootView>
@@ -235,6 +249,7 @@ const ContentItemContainer = styled.Pressable`
   height: 60px;
   padding: 19px 24px;
   padding-left: 40px;
+  //margin-bottom: ${({lastArr}) => (lastArr ? '50px' : '0px')};
 `;
 
 const ItemContainer = styled.View`
@@ -287,4 +302,15 @@ const MessageWrap = styled.View`
 const TitleWrap = styled.View`
   flex-direction: row;
   justify-content: space-between;
+`;
+
+const Restriction = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+  margin-left: 8px;
+`;
+
+const TextView = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;

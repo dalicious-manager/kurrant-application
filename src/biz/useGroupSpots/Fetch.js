@@ -24,24 +24,17 @@ export async function UserGroupAdd(body) {
 }
 
 // 그룹별 스팟 상세 조회
-export async function GroupDetail(id, type) {
-  const fetchRes = await fetchJson(
-    `/users/me/groups/spots/${id}?spotType=${type}`,
-    'GET',
-  );
+export async function GroupDetail(id) {
+  const fetchRes = await fetchJson(`/users/me/groups/spots/${id}`, 'GET');
 
   return fetchRes;
 }
 
 // 유저 스팟 등록
-export async function SpotRegister(body, type) {
-  const fetchRes = await fetchJson(
-    `/users/me/groups/spots?spotType=${type}`,
-    'POST',
-    {
-      body: JSON.stringify(body),
-    },
-  );
+export async function SpotRegister(body) {
+  const fetchRes = await fetchJson(`/users/me/groups/spots`, 'POST', {
+    body: JSON.stringify(body),
+  });
 
   return fetchRes;
 }

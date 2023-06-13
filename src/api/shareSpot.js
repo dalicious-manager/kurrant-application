@@ -8,9 +8,8 @@ export const shareSpotApis = {
       ? `&isRestriction=${false}`
       : null;
 
-    console.log(type, 'sksk');
     const res = await fetchJson(
-      `/users/me/groups/spots/share?lat=${lat}&long=${long}&limit=5&page=${pageParam}&diningType=${2}`,
+      `/users/me/groups/spots/share?lat=${lat}&long=${long}&limit=10&page=${pageParam}&diningType=${2}`,
       'GET',
     );
 
@@ -25,10 +24,10 @@ export const shareSpotApis = {
     }),
   applicationShareSpot: async data =>
     await fetchJson(
-      `/application-forms/spots/share/types/${data.groupId}`,
+      `/application-forms/spots/share/types/${data.param}`,
       'POST',
       {
-        body: JSON.stringify(data),
+        body: JSON.stringify(data.body),
       },
     ),
 };

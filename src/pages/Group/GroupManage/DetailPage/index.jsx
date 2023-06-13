@@ -37,7 +37,7 @@ const Pages = ({route}) => {
     userSpotRegister,
   } = useGroupSpots();
   const {userInfo, isUserInfo} = useUserInfo();
-  console.log(isUserInfo, 'sksk');
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState();
   //const [groupState,setGroupState] = useState();
@@ -52,20 +52,19 @@ const Pages = ({route}) => {
   const spotId = isUserInfo?.spotId;
   const spotType = isUserInfo?.spotType;
 
-  console.log(groupId, spotId, spotType, '디테일 유저 인포');
   const myGroupList = isUserGroupSpotCheck?.spotListResponseDtoList?.filter(
     el => el.clientId !== groupId,
   );
 
-  const anotherSpot = async (id, type) => {
+  const anotherSpot = async id => {
     try {
-      const res = await userSpotRegister({id: id}, type);
+      const res = await userSpotRegister({id: id});
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         toast.toastEvent();
 
-        await groupSpotDetail(id, type);
+        await groupSpotDetail(id);
       }
     } catch (error) {
       Alert.alert('유저 스팟 가입', error?.toString()?.replace('error: ', ''));
@@ -130,7 +129,7 @@ const Pages = ({route}) => {
   useEffect(() => {
     async function LoadGroupDetail() {
       try {
-        await groupSpotDetail(spotId, spotType);
+        await groupSpotDetail(spotId);
         await userGroupSpotCheck();
       } catch (err) {
         Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
@@ -229,8 +228,8 @@ const Pages = ({route}) => {
         data={isUserGroupSpotCheck?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
-        onPressEvent={(id, type) => {
-          anotherSpot(id, type);
+        onPressEvent={id => {
+          anotherSpot(id);
         }}
       />
 

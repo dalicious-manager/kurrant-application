@@ -27,12 +27,14 @@ const ApplySpot = ({route}) => {
   const type = route?.params?.type;
   const name = route?.params?.name;
   const id = route?.params?.groupId;
+  const from = route?.params?.from;
+
   const [use, setUse] = useState();
   const [show, setShow] = useState(false);
   const [time, setTime] = useState(new Date());
   const [text, setText] = useState('');
   const {mutateAsync: applyShareSpot} = useApplyShareSpot();
-  console.log(typeof formattedTime(time));
+  console.log(from);
   const form = useForm({
     mode: 'all',
   });
@@ -70,8 +72,8 @@ const ApplySpot = ({route}) => {
 
   const applyAddSpotButton = async () => {
     const res = await mapApis.getRoadAddress(center.longitude, center.latitude);
-    console.log(res.zipcode);
-    const data = {
+    const param = from === 'application' ? 1 : from === 'spot' ? 2 : 3;
+    const body = {
       address: {
         zipCode: res.zipcode,
         address1: roadAddress,
@@ -84,8 +86,8 @@ const ApplySpot = ({route}) => {
       entranceOption: use === 0 ? true : false,
       memo: memo === undefined ? null : memo,
     };
-    console.log(data);
-    await applyShareSpot(data);
+
+    await applyShareSpot({body, param});
     navigation.navigate(CompletePage, {
       type: 'sharSpotAppication',
     });

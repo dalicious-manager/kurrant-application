@@ -12,7 +12,7 @@ import {PAGE_NAME as ApplySpot} from '../../Spots/shareSpot/ApplySpot';
 
 const AddressList = ({setFocus, data, type}) => {
   const navigation = useNavigation();
-  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom);
+  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom); // 어느 경로로 왔는지 0 : 지도에서 1: 검색 리스트에서
   const onPress = async (name, address, x, y) => {
     const res = await mapApis.getRoadAddress(x, y);
     const jibunRes = await mapApis.getAddress(address);
@@ -25,6 +25,8 @@ const AddressList = ({setFocus, data, type}) => {
         center: {latitude: Number(y), longitude: Number(x)},
         zipcode: res.zipcode,
         showAddress: true,
+        type: 'registerSpot',
+        from: 'application',
       });
     } else {
       navigation.navigate(DetailAddressPage, {
@@ -47,8 +49,6 @@ const AddressList = ({setFocus, data, type}) => {
       }}>
       <Wrap>
         {data?.map((el, idx) => {
-          // const nameChart = el.title.split('<b>')[1].split('</b>');
-          // const name = nameChart[0] + nameChart[1];
           const last = data[data.length - 1];
           const lastArr = el === last;
 

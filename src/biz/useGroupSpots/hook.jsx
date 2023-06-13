@@ -70,10 +70,10 @@ const useGroupSpots = () => {
 
   // 그룹별 스팟 상세 조회
 
-  const groupSpotDetail = async (id, type) => {
+  const groupSpotDetail = async id => {
     try {
       setDetailSpot();
-      const res = await Fetch.GroupDetail(id, type);
+      const res = await Fetch.GroupDetail(id);
 
       setDetailSpot(res.data);
     } catch (err) {
@@ -83,14 +83,11 @@ const useGroupSpots = () => {
 
   // 유저 스팟 등록
 
-  const userSpotRegister = async (body, type) => {
+  const userSpotRegister = async body => {
     try {
-      const res = await Fetch.SpotRegister(
-        {
-          ...body,
-        },
-        type,
-      );
+      const res = await Fetch.SpotRegister({
+        ...body,
+      });
       queryClient.invalidateQueries('dailyfood');
       return res;
     } catch (err) {

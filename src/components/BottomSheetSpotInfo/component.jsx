@@ -60,7 +60,7 @@ const Component = props => {
   const handleSheetChanges = useCallback(index => {
     setSnap(index);
   }, []);
-  console.log(data[0]);
+
   const detailButton = () => {
     bottomSheetRef.current?.snapToIndex(2);
   };
@@ -74,7 +74,7 @@ const Component = props => {
     navigation.navigate(SCREEN_NAME);
   };
 
-  const goToApplyPage = () => {
+  const goToApplyPage = from => {
     navigation.navigate(ApplySpotPage, {
       center: {
         latitude: Number(data[0].latitude),
@@ -83,6 +83,7 @@ const Component = props => {
       roadAddress: data[0].address,
       groupId: data[0].id,
       name: data[0].name,
+      from: from,
     });
   };
 
@@ -183,7 +184,7 @@ const Component = props => {
                   />
                   <Body06RText style={{marginLeft: 16}}>배송 시간</Body06RText>
                 </Delivery>
-                <ApplyButton onPress={goToApplyPage}>
+                <ApplyButton onPress={() => goToApplyPage('time')}>
                   <PlusIcon />
                   <ApplyText>시간 추가 신청</ApplyText>
                 </ApplyButton>
@@ -229,7 +230,7 @@ const Component = props => {
                   <Image source={TimeIcon} style={{width: 20, height: 20}} />
                   <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
                 </Delivery>
-                <ApplyButton onPress={goToApplyPage}>
+                <ApplyButton onPress={() => goToApplyPage('spot')}>
                   <PlusIcon />
                   <ApplyText>스팟 추가 신청</ApplyText>
                 </ApplyButton>

@@ -34,7 +34,7 @@ const MySpotMap = ({route}) => {
   const paramLocation = route?.params?.center;
   const mapRef = useRef(null);
   const toast = Toast();
-  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom);
+  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom); // 어느 경로로 왔는지 0 : 지도에서 1: 검색 리스트에서
   const [mapHeight, setMapHeight] = useState(0);
   const navigation = useNavigation();
   const [tab, setTab] = useState(false);
