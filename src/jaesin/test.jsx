@@ -13,7 +13,6 @@ import Button from '../components/Button';
 
 // import ModalSample from './ModalSample';
 // import ModalSample2 from './ModalSample2';
-import SseTestOnSpring from './SseSample';
 
 export const PAGE_NAME = 'P_JAESIN';
 
