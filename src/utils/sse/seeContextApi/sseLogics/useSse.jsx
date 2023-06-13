@@ -34,63 +34,6 @@ const useSse = () => {
 
   // sse 구독
 
-  const {
-    data,
-    status,
-    isLoading,
-    refetch: getSseType5Refetch,
-  } = useQuery(
-    ['sse', 'type5'],
-
-    async ({queryKey}) => {
-      const response = await fetchJson('/notification/subscribe', 'GET');
-      // console.log('리뷰 받아왔다 확인해라');
-      // console.log(response.data.items);
-
-      console.log('sse get ㄹㅇ 됨 ㅋㅋ');
-      console.log(response.data);
-
-      return response.data;
-    },
-    {
-      onError: () => {
-        console.log('이런 에러가 떳습니다 아쉽습니다');
-      },
-
-      enabled: false,
-      retry: 1,
-      retryDelay: 800,
-    },
-  );
-
-  //  const {
-  //     data,
-  //     status,
-  //     isLoading,
-  //     refetch: reviewQueryRefetch,
-  //   } = useQuery(
-  //     ['sse'],
-
-  //     async ({queryKey}) => {
-  //       const response = await instance.get(url);
-
-  //       // 메이커스 목록
-
-  //       setMakersList(response.data.items.makersInfoList);
-  //       // 리뷰 리스트 목록
-  //       setReviewList(response.data.items.reviewList);
-  //       // 미답변 갯수
-  //       setUnansweredCount(response.data.items.unansweredCount);
-  //       setTotalPage(response.data.total);
-  //       return response.data;
-  //     },
-  //     {
-  //       enabled: enable,
-  //       retry: 1,
-  //       retryDelay: 800,
-  //     },
-  //   );
-
   const getToken = useCallback(async () => {
     const token = await getStorage('token');
 
@@ -249,7 +192,6 @@ const useSse = () => {
     sseType3,
     sseType4,
     sseType5,
-    getSseType5Refetch,
   };
 };
 

@@ -15,7 +15,7 @@ import {
   sseType5Atom,
 } from './store';
 import {useAtom} from 'jotai';
-import {useQuery} from 'react-query';
+import {useMutation, useQuery} from 'react-query';
 import {fetchJson} from '../../fetch';
 
 const apiHostUrl =
@@ -24,8 +24,6 @@ const apiHostUrl =
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 const useSse = () => {
-  //
-
   const [sseType1, setSseType1] = useAtom(sseType1Atom);
   const [sseType2, setSseType2] = useAtom(sseType2Atom);
   const [sseType3, setSseType3] = useAtom(sseType3Atom);
@@ -107,6 +105,26 @@ const useSse = () => {
       });
     };
   }, []);
+
+  // sse 알림 읽기
+  const {mutate: confirmSseIsRead} = useMutation(
+    async data => {
+      const response = await fetchJson('/notification/read', 'POST', {
+        body: JSON.stringify(data),
+      });
+
+      return response;
+    },
+    {
+      onSuccess: data => {
+        console.log('sse 알림 읽기 success');
+      },
+      onError: err => {
+        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
+        console.log(err);
+      },
+    },
+  );
 
   //////////////////////////////////////////////////////////////////////////////
 
@@ -192,7 +210,8 @@ const useSse = () => {
     sseType3,
     sseType4,
     sseType5,
-    getSseType5Refetch,
+
+    confirmSseIsRead,
   };
 };
 

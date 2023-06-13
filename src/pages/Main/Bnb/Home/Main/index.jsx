@@ -710,7 +710,7 @@ const Pages = () => {
         <BalloonPressable
           onPress={() => {
             console.log('sse 랄랄라');
-            getSseType5Refetch();
+
             // confirmBalloonClicked();
           }}>
           <Balloon label={sseType5.content} />
