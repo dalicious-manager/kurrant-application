@@ -8,6 +8,8 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
 
   const [dietRepoAddMealList, setDietRepoAddMealList] = useState([]);
 
+  const [historyDataList, setHistoryDataList] = useState([]);
+
   const {
     refetch: dietRepoMainRefetch,
     // isLoading: isDietRepoMainRefetchLoading,
@@ -51,10 +53,29 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
     },
   );
 
+  const {isFetching: isDietRepoHistoryRefetchLoading} = useQuery(
+    ['dietRepo', 'history'],
+    async ({queryKey}) => {
+      const response = await fetchJson(
+        `/users/me/daily/report/history?startDate=2023-05-01&endDate=2023-06-08`,
+        'GET',
+      );
+
+      setHistoryDataList(
+        response.data?.dailyReportList ? response.data?.dailyReportList : [],
+      );
+    },
+    {
+      // enabled: !!addMealDate && !!addMealDiningType,
+    },
+  );
+
   return {
     dietRepoMainRefetch,
     isDietRepoMainRefetchLoading,
     isDietRepoAddRefetchLoading,
+    isDietRepoHistoryRefetchLoading,
+    historyDataList,
     totalNutrition,
     dietRepoMainList,
     dietRepoAddMealList,

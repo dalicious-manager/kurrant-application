@@ -55,7 +55,7 @@ export const sampleStackedBarData1 = [
 export const modifyStackedBarData = inputData => {
   return inputData.map(v => {
     return {
-      x: `${extractMonthAndDateFromDate2(v.date, '-')[1]}일`,
+      x: `${extractMonthAndDateFromDate2(v.eatDate, '-')[1]}일`,
       ...v,
     };
   });
@@ -64,7 +64,17 @@ export const modifyStackedBarData = inputData => {
 export const modifyHistoryLineChartData = inputData =>
   inputData.map(v => {
     return {
-      x: `${extractMonthAndDateFromDate2(v.date, '-')[1]}일`,
+      x: `${extractMonthAndDateFromDate2(v.eatDate, '-')[1]}일`,
       y: v.calorie,
     };
   });
+
+export const modifyHistoryDataList = data => {
+  if (!Array.isArray(data) || data.length <= 0) return;
+
+  const startDate = data[0].eatDate;
+
+  const endDate = data[data.length - 1].eatDate;
+
+  return {};
+};

@@ -10,8 +10,8 @@ const HistoryTables = ({data}) => {
         return (
           <TableSingle key={i}>
             {/* <DateText>05.08</DateText> */}
-            <DateText>{`${extractMonthAndDateFromDate2(v.date, '-')[0]}.${
-              extractMonthAndDateFromDate2(v.date, '-')[1]
+            <DateText>{`${extractMonthAndDateFromDate2(v.eatDate, '-')[0]}.${
+              extractMonthAndDateFromDate2(v.eatDate, '-')[1]
             }`}</DateText>
             <Wrap1>
               <Wrap2>

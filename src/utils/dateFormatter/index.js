@@ -316,3 +316,17 @@ export const calcDate = (daysPassed = 0, date = new Date()) => {
 
   return nextDate;
 };
+
+// 두 날짜 사이에 며칠 차이인가 계산하기
+
+// 예1) 2023-05-24(자바스크립트 date객체), 2023-05-26(자바스크립트 date객체) -> 2
+// 예2) 2023-05-24(자바스크립트 date객체), 2023-06-07(자바스크립트 date객체) -> 14(2주일 차이)
+
+export const calcTimeBetweenTwoDates = (date1, date2) => {
+  const difference = Math.abs(
+    stringDateToJavascriptDate(date2, '-').getTime() -
+      stringDateToJavascriptDate(date1, '-').getTime(),
+  );
+
+  return difference / (1000 * 60 * 60 * 24);
+};

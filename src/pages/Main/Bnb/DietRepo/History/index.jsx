@@ -23,11 +23,19 @@ import {
   modifyStackedBarData,
   sampleStackedBarData1,
 } from './logic';
+import useGetDietRepo from '../useGetDietRepo';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 
 const Pages = ({route}) => {
   const screenWidth = Dimensions.get('screen').width;
+
+  const {isDietRepoHistoryRefetchLoading, historyDataList} = useGetDietRepo();
+
+  useEffect(() => {
+    console.log('historyDataList');
+    console.log(historyDataList);
+  }, [historyDataList]);
 
   // week 값은 이렇습니다
   // [월요일 자바스크립트 date객체,
@@ -125,7 +133,8 @@ const Pages = ({route}) => {
         //   {x: '11월', carbohydrate: 0, protein: 0, fat: 0},
         //   {x: '12월', carbohydrate: 520, protein: 75, fat: 0},
         // ]}
-        data={modifyStackedBarData(sampleStackedBarData1)}
+        // data={modifyStackedBarData(sampleStackedBarData1)}
+        data={modifyStackedBarData(historyDataList)}
         dataOrder={['carbohydrate', 'protein', 'fat']}
         colorSetting={{
           carbohydrate: '#4F6FDF',
@@ -146,13 +155,15 @@ const Pages = ({route}) => {
         //   {x: '15일', y: 610},
         //   {x: '오늘', y: 2100},
         // ]}
-        data={modifyHistoryLineChartData(sampleStackedBarData1)}
+        // data={modifyHistoryLineChartData(sampleStackedBarData1)}
+        data={modifyStackedBarData(historyDataList)}
         title="칼로리"
         width={'100%'}
       />
       <GreyBlock width={screenWidth} />
 
-      <HistoryTables data={sampleStackedBarData1} />
+      {/* <HistoryTables data={sampleStackedBarData1} /> */}
+      <HistoryTables data={historyDataList} />
       <Filler />
     </ContainerScrollView>
   );
