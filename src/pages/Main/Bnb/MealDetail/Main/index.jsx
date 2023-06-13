@@ -11,6 +11,7 @@ import {
   Pressable,
   Platform,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
@@ -37,6 +38,12 @@ import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
+import {
+  fetchNextPageReviewDetailAtom,
+  hasNextPageReviewDetailAtom,
+} from './Review/MealDetailReview/store';
+import {useAtom} from 'jotai';
+import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
 import Skeleton from '../Skeleton';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
@@ -62,6 +69,8 @@ const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
 
+  const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
+  const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
   const closeModal = () => {
@@ -233,6 +242,15 @@ const Pages = ({route}) => {
   const handleScroll = e => {
     const scrollY = e.nativeEvent.contentOffset.y;
     setScroll(scrollY);
+
+    // 상세페이지 리뷰
+    if (isCloseToBottomOfScrollView(e.nativeEvent)) {
+      //'바닥에 도달함 '
+
+      if (hasNextPageReviewDetail) {
+        fetchNextPageReviewDetail.fetchNextPage();
+      }
+    }
   };
 
   const focusPress = () => {
@@ -267,6 +285,9 @@ const Pages = ({route}) => {
     }
     detail();
   }, []);
+
+  // 상세페이지 리뷰 로직
+
   if (isFoodDetailLoading) {
     return <Skeleton />;
   }
@@ -420,16 +441,12 @@ const Pages = ({route}) => {
                 </InfoTextView>
               </InfoWrap>
             </Content>
-
-            {/* <MealDetailReview /> */}
-
             {/* 리뷰자리 */}
-            {/* <Content >
-                    <View>
-                    <ReviewPage/>
-                    </View>
-                </Content>
-                <MoreButton/> */}
+            <MealDetailReview
+              foodName={isFoodDetail?.name}
+              imageLocation={isFoodDetail?.imageList}
+              dailyFoodId={dailyFoodId}
+            />
           </View>
         </ScrollViewWrap>
 

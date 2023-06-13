@@ -34,7 +34,8 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
   const {refundItem} = useOrderMeal();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(true);
-  const {mutateAsync: orderState} = useConfirmOrderState();
+  const {mutateAsync: orderState, isLoading: isStatusLoading} =
+    useConfirmOrderState();
 
   const deliveryConfirmPress = async id => {
     try {
@@ -122,12 +123,18 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                       <Typography text="Title04SB" textColor={statusColor()}>
                         {formattedMealFoodStatus(order.orderStatus)}
                       </Typography>
-                      <Typography
-                        style={{marginLeft: 5, alignSelf: 'center'}}
-                        text="CaptionR"
-                        textColor={themeApp.colors.grey[5]}>
-                        주문 마감 • 취소 불가
-                      </Typography>
+                      {order.orderStatus !== 5 &&
+                        !(
+                          order.dailyFoodStatus === 1 ||
+                          order.dailyFoodStatus === 2
+                        ) && (
+                          <Typography
+                            style={{marginLeft: 5, alignSelf: 'center'}}
+                            text="CaptionR"
+                            textColor={themeApp.colors.grey[5]}>
+                            주문 마감 • 취소 불가
+                          </Typography>
+                        )}
                     </StatusText>
                     {order?.cancelDate && (
                       <Typography
@@ -254,6 +261,7 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                         <ButtonContainer>
                           <ButtonMeal
                             label={'수령확인'}
+                            disabled={isStatusLoading}
                             onPressEvent={() => deliveryConfirmPress(order.id)}
                           />
                         </ButtonContainer>
@@ -356,7 +364,6 @@ const StatusText = styled.View`
   flex-direction: row;
   margin-right: 5px;
   align-items: center;
-  background-color: red;
 `;
 
 const DateDetailBox = styled.View`

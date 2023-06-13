@@ -2,7 +2,7 @@ import {fetchJson} from '../../utils/fetch';
 
 // 그룹/스팟 신청 목록 (프라이빗 스팟 + 아파트)
 export async function applicationList() {
-  const fetchRes = await fetchJson('/application-form/clients', 'GET');
+  const fetchRes = await fetchJson('/application-forms/clients', 'GET');
 
   return fetchRes;
 }

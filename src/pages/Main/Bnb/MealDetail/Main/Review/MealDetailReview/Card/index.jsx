@@ -1,67 +1,45 @@
-/* eslint-disable import/order */
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 import {css} from 'styled-components/native';
-import ArrowRightGrey4 from '~assets/icons/Arrow/ArrowRightGrey4.svg';
-// import AdminOrMakersReview from './AdminOrMakersReview';
-
-import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
-import {isOverThreeLines} from '~components/Review/WrittenReviewCard/logic';
-// import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
-
-import OnlyForMakers from './OnlyForMakers';
-// import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
-
-// import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-// import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-// import {getStorage} from '../../../../../utils/asyncStorage';
-import {
-  deleteReview,
-  deleteReview2,
-} from '~biz/useReview/useWrittenReview/Fetch';
-import useWrittenReview from '~biz/useReview/useWrittenReview/hook';
 import {SkinnyArrowDown} from '~components/Icon';
+import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
+import ImageModal from '~components/Review/ImageModal/ImageModal';
 import StarRating from '~components/StarRating/StarRating';
 import Typography from '~components/Typography';
-// import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
-// import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
-import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '~screens/Main/Review/CreateReview/Page2';
-// import {deleteReview} from '~biz/useReview/useWrittenReview/Fetch';
+import {changeSeperator} from '~utils/dateFormatter';
 
-import ImageModal from './ImageModal/ImageModal';
-// import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
-import {changeSeperator} from '../../../../../utils/dateFormatter';
-// import {SkinnyArrowDown} from '../../../../../components/Icon';
+import {ThumbsUp} from '../../../../../../../../components/Icon';
+import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
+import useMealDetailReviewMutation from '../useMealDetailReviewMutation';
 
-// '../../../pages/Main/MyPage/Review';
-const onlyForMakers = true;
-// const onlyForMakers = false;
+// 상세페이지 카드
 
 const Component = ({
   id,
-  editItem,
-  makersName,
-  foodName,
+  dailyFoodId,
+  item,
+  userName,
   writtenDate,
   option,
   rating,
   reviewText,
   focusId,
-  forMakers,
+  likeNum,
   imageLocation,
   createDate,
   updateDate,
   commentList,
-  toast,
 }) => {
   const navigation = useNavigation();
 
+  const theme = useTheme();
+
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
-  const {getWrittenReview} = useWrittenReview();
+  const {pressLike} = useMealDetailReviewMutation();
 
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
@@ -81,57 +59,7 @@ const Component = ({
 
   // 운영자 메이커스 댓글 늦게 작성한 댓글이 위에 있게 sorting해야됨
 
-  const handleDelete = async () => {
-    // const token = await getToken();
-
-    Alert.alert(
-      `리뷰 삭제`,
-      `리뷰를 삭제하면 재작성이 불가해요. \n정말 삭제하시겠어요?`,
-      [
-        {
-          text: '취소',
-          onPress: () => {
-            return;
-          },
-          style: 'cancel',
-        },
-        {
-          text: `삭제`,
-          onPress: async () => {
-            try {
-              const response = await deleteReview2({id: id});
-
-              if (response.statusCode !== 200) {
-                console.log(response);
-                Alert.alert('리뷰 삭제 실패', `${response.message}`, [
-                  {
-                    text: '확인',
-                    onPress: () => {},
-                    style: 'cancel',
-                  },
-                ]);
-              } else {
-                toast.toastEvent();
-                await getWrittenReview();
-              }
-            } catch (err) {
-              Alert.alert('리뷰 삭제 실패', '', [
-                {
-                  text: '확인',
-                  onPress: () => {},
-                  style: 'cancel',
-                },
-              ]);
-            }
-
-            return;
-          },
-
-          style: 'destructive',
-        },
-      ],
-    );
-  };
+  const [numLines, setNumLines] = useState(1);
 
   const handlePressReviewText = () => {
     setElaborateComment(!elaborateComment);
@@ -145,43 +73,14 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
-  // '\n'개수 파악하기
-
-  // /n이 하나일떄 24*24
-  // /n이 두개일떄 24
-  // /n 이 세개일떄 0
-
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
-            {'['}
-            {makersName}
-            {'] '}
-            {foodName}
+            {userName}
           </RestaurentNameText>
-          <ArrowRightGrey4 />
         </TitleWrap>
-
-        <EditWrap>
-          <Pressable
-            onPress={() => {
-              navigation.navigate(EditReviewPage2ScreenName, {
-                id: id,
-                status: 'edit',
-                editItem,
-              });
-            }}>
-            <EditText>수정</EditText>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              handleDelete();
-            }}>
-            <DeleteText>삭제</DeleteText>
-          </Pressable>
-        </EditWrap>
       </TopWrap>
 
       {option ? (
@@ -193,18 +92,38 @@ const Component = ({
         <></>
       )}
 
-      <RowWrap>
-        <StarsWrap>
-          <StarRating rating={rating} width="66px" margin="1px" />
-        </StarsWrap>
+      <Wrap3>
+        <RowWrap>
+          <StarsWrap>
+            <StarRating rating={rating} width="66px" margin="1px" />
+          </StarsWrap>
 
-        <PostDateText>
-          {changeSeperator(writtenDate, '-', '. ')}{' '}
-          {createDate === updateDate ? '작성' : '수정'}
-        </PostDateText>
-      </RowWrap>
+          <PostDateText>
+            {changeSeperator(writtenDate, '-', '. ')}{' '}
+            {createDate === updateDate ? '작성' : '수정'}
+          </PostDateText>
+        </RowWrap>
 
-      {forMakers && <OnlyForMakers />}
+        <EditWrap>
+          <LikePressable
+            onPress={() => {
+              pressLike({
+                dailyFoodId,
+                reviewId: id,
+              });
+            }}>
+            <EditText isLike={likeNum}>도움이 돼요</EditText>
+            <ThumbsUp
+              width="14px"
+              height="15px"
+              color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
+            />
+            <LikeNumber>{likeNum}</LikeNumber>
+          </LikePressable>
+        </EditWrap>
+      </Wrap3>
+
+      {/* {forMakers && <OnlyForMakers />} */}
 
       {imageLocation && imageLocation.length > 0 && (
         <ImagesWrapper>
@@ -269,23 +188,25 @@ const Component = ({
             numberOfLines={3}
             ellipsizeMode="tail"
             // textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}
-            textBreakStrategy={
-              Platform.OS === 'android' ? 'balanced' : undefined
-            }
+            // textBreakStrategy={
+            //   Platform.OS === 'android' ? 'balanced' : undefined
+            // }
             calcFontSize={calcFontSize}>
             {reviewText}
           </ReviewText>
         ) : (
           <ReviewText
             // textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}
-            textBreakStrategy={
-              Platform.OS === 'android' ? 'balanced' : undefined
-            }
+            // textBreakStrategy={
+            //   Platform.OS === 'android' ? 'balanced' : undefined
+            // }
             calcFontSize={calcFontSize}>
             {reviewText}
           </ReviewText>
         )}
       </ReviewPressable>
+
+      {/* 신고하기 버튼 자리 */}
 
       {commentList &&
         commentList.length > 0 &&
@@ -321,9 +242,7 @@ export default Component;
 
 const Container = styled.View`
   width: 100%;
-  //margin: 12px 0;
-  //margin-bottom: 40px;
-  padding: 24px;
+
   ${({focusId, id}) => {
     // console.log(focusId, id, 'focusId === id');
     if (focusId === id) {
@@ -332,6 +251,8 @@ const Container = styled.View`
       `;
     }
   }}
+
+  margin-bottom: 40px;
 `;
 
 const TopWrap = styled.View`
@@ -357,12 +278,26 @@ const EditWrap = styled.View`
 `;
 
 const EditText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${props => props.theme.colors.blue[500]};
+  color: ${({theme, isLike}) =>
+    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
   margin-right: 6px;
 `;
+
+const LikeNumber = styled(Typography).attrs({text: 'Button10R'})`
+  color: ${props => props.theme.colors.grey[5]};
+
+  margin-left: 3px;
+`;
+
 const DeleteText = styled(Typography).attrs({text: 'Button10R'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
+`;
+
+const Wrap3 = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const RowWrap = styled.View`
@@ -378,11 +313,16 @@ const PostDateText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-left: 6px;
 `;
+
+const LikePressable = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+`;
+
 const ImagesWrapper = styled.Pressable`
   flex-direction: row;
   padding-top: 11px;
   padding-bottom: 4px;
-  /* border: 1px solid black; */
 `;
 
 const ImagePressable = styled.Pressable`
@@ -412,11 +352,10 @@ const DefaultImage = styled.View`
 
 const ReviewPressable = styled.Pressable`
   /* width: 278px; */
-  width: 86%;
+  width: 90%;
   margin: auto;
   position: relative;
   /* border: 1px solid black; */
-  margin-top: 4px;
   /* padding: 0 11px; */
 `;
 const ReviewText = styled(Typography).attrs({text: 'Body06R'})`

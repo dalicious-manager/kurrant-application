@@ -127,12 +127,12 @@ const Pages = () => {
     }, []),
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      // Do something when the screen is focused
-      userInfo();
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     // Do something when the screen is focused
+  //     userInfo();
+  //   }, []),
+  // );
 
   useEffect(() => {
     if (userRole !== 'ROLE_GUEST') {

@@ -50,3 +50,7 @@ export {default as DefaultHumanIcon} from './_components/DefaultHumanIcon';
 export {default as YellowStar} from './_components/YellowStar';
 export {default as RightSkinnyArrow} from './_components/RightSkinnyArrow';
 export {default as SkinnyArrowDown} from './_components/SkinnyArrowDown';
+export {default as ThumbsUp} from './_components/ThumbsUp';
+export {default as ArrowUpAndDown} from './_components/ArrowUpAndDown';
+export {default as Picture} from './_components/Picture';
+export {default as Settings} from './_components/Settings';
