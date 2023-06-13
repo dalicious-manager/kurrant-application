@@ -75,7 +75,7 @@ const Pages = ({route}) => {
             renderItem={({item}) => {
               return (
                 <>
-                  <DietRepoCard item2={item} />
+                  <DietRepoCard date={route?.params?.date} item2={item} />
                 </>
               );
             }}

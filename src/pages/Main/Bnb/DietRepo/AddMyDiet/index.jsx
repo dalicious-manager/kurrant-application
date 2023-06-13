@@ -23,7 +23,7 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddMyDiet';
 const Pages = ({route}) => {
   const navigation = useNavigation();
 
-  const {addMeal} = useDietRepoMutation(route?.params?.date);
+  const {addCustomMeal} = useDietRepoMutation(route?.params?.date);
 
   const form = useForm({
     mode: 'all',
@@ -88,7 +88,7 @@ const Pages = ({route}) => {
         text: '추가',
         onPress: () => {
           try {
-            addMeal(data);
+            addCustomMeal(data);
           } catch (err) {
             console.log(err);
           }

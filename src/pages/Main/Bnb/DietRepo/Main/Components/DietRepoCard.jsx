@@ -7,8 +7,11 @@ import Typography from '~components/Typography';
 import {Line} from 'react-native-svg';
 import useDietRepoMutation from '../../useDietRepoMutation';
 
-const DietRepoCard = ({item1 = undefined, item2 = undefined}) => {
-  const {deleteMeal} = useDietRepoMutation();
+const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
+  // console.log('아이템 2');
+  // console.log(item2);
+
+  const {deleteMeal, addMeal} = useDietRepoMutation(date);
 
   return (
     <Container>
@@ -79,18 +82,6 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined}) => {
               <ReviewFormWriteButton
                 onPress={() => {
                   if (item1 && item1?.reportId) {
-                    // Alert.alert('', , [
-                    //   {
-                    //     text: '확인',
-                    //     onPress: async () => {
-
-                    //
-
-                    //     },
-                    //     style: 'cancel',
-                    //   },
-                    // ]);
-
                     Alert.alert(
                       '식단 제거',
                       `${item1?.foodName}을 식단에서 제거시키시겠습니까? `,
@@ -111,6 +102,30 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined}) => {
                             }
                           },
                           style: 'destructive',
+                        },
+                      ],
+                    );
+                  } else if (item2 && item2?.dailyFoodId) {
+                    Alert.alert(
+                      '식단 추가',
+                      `${item2?.foodName}을(를) 식단에서 추가하시겠습니까? `,
+                      [
+                        {
+                          text: '취소',
+                          onPress: () => {
+                            console.log('cancel pressed');
+                          },
+                        },
+                        {
+                          text: '추가',
+                          onPress: () => {
+                            try {
+                              addMeal({dailyFoodId: item2?.dailyFoodId});
+                            } catch (err) {
+                              console.log(err);
+                            }
+                          },
+                          style: 'cancel',
                         },
                       ],
                     );

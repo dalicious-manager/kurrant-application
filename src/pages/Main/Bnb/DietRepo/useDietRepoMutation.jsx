@@ -12,8 +12,9 @@ const useDietRepoMutation = date => {
 
   const queryClient = useQueryClient();
 
-  // 유저 식단 추가
-  const {mutate: addMeal} = useMutation(
+  // 유저 커스텀 식단 추가
+
+  const {mutate: addCustomMeal} = useMutation(
     async data => {
       const response = await fetchJson('/users/me/daily/report/me', 'POST', {
         body: JSON.stringify(data),
@@ -91,6 +92,49 @@ const useDietRepoMutation = date => {
     },
   );
 
+  // 식단 추가
+
+  const {mutate: addMeal} = useMutation(
+    async data => {
+      const response = await fetchJson(`/users/me/daily/report`, 'POST', {
+        body: JSON.stringify(data),
+      });
+
+      return response;
+    },
+    {
+      onSuccess: data => {
+        Alert.alert('식단 추가', '식단이 추가되었습니다 ', [
+          {
+            text: '확인',
+            onPress: async () => {
+              queryClient.invalidateQueries(['dietRepo', 'main']);
+              navigation.reset({
+                index: 1,
+                routes: [
+                  {
+                    name: MainScreenName,
+                  },
+                  {
+                    name: DietRepoMainPageName,
+                    params: {
+                      date: date,
+                    },
+                  },
+                ],
+              });
+            },
+            style: 'cancel',
+          },
+        ]);
+      },
+      onError: err => {
+        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
+        console.log(err);
+      },
+    },
+  );
+
   // 특정기간 주문내역 리포트로 저장
 
   const {mutate: saveMeal} = useMutation(
@@ -114,6 +158,7 @@ const useDietRepoMutation = date => {
   );
 
   return {
+    addCustomMeal,
     addMeal,
     deleteMeal,
     saveMeal,
