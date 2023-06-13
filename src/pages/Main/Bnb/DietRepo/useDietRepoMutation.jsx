@@ -108,7 +108,7 @@ const useDietRepoMutation = date => {
           {
             text: '확인',
             onPress: async () => {
-              queryClient.invalidateQueries(['dietRepo', 'main']);
+              // queryClient.invalidateQueries(['dietRepo', 'main']);
               navigation.reset({
                 index: 1,
                 routes: [
