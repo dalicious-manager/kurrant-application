@@ -93,6 +93,28 @@ const useSse = () => {
     });
   }, [getSseServiceInstance]);
 
+  // sse 알림 읽기
+  const {mutate: confirmSseIsRead} = useMutation(
+    async data => {
+      const response = await fetchJson('/notification/read', 'PUT', {
+        body: JSON.stringify(data),
+      });
+
+      return response;
+    },
+    {
+      onSuccess: data => {
+        console.log('sse 알림 읽기 success');
+
+        console.log(data);
+      },
+      onError: err => {
+        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
+        console.log(err);
+      },
+    },
+  );
+
   // 뭔가 에러터지면 끊기
 
   useEffect(() => {
@@ -102,26 +124,6 @@ const useSse = () => {
       });
     };
   }, []);
-
-  // sse 알림 읽기
-  const {mutate: confirmSseIsRead} = useMutation(
-    async data => {
-      const response = await fetchJson('/notification/read', 'POST', {
-        body: JSON.stringify(data),
-      });
-
-      return response;
-    },
-    {
-      onSuccess: data => {
-        console.log('sse 알림 읽기 success');
-      },
-      onError: err => {
-        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
-        console.log(err);
-      },
-    },
-  );
 
   return {
     sseType1,

@@ -74,7 +74,8 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
-  const {sseType1, sseType2, sseType3, sseType4, sseType5} = useSse();
+  const {sseType1, sseType2, sseType3, sseType4, sseType5, confirmSseIsRead} =
+    useSse();
 
   const navigation = useNavigation();
 
@@ -709,7 +710,7 @@ const Pages = () => {
         <BalloonPressable
           onPress={() => {
             console.log('sse 랄랄라');
-
+            confirmSseIsRead({type: 5});
             // confirmBalloonClicked();
           }}>
           <Balloon label={sseType5.content} />
