@@ -18,7 +18,11 @@ import {
 } from '../../../../../utils/dateFormatter';
 import {calcWeekArr, extractMonthAndDateFromDate2} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
-import {modifyStackedBarData, sampleStackedBarData1} from './logic';
+import {
+  modifyHistoryLineChartData,
+  modifyStackedBarData,
+  sampleStackedBarData1,
+} from './logic';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 
@@ -150,15 +154,16 @@ const Pages = ({route}) => {
       />
 
       <HistoryLineChart
-        data={[
-          {x: '10일', y: 820},
-          {x: '11일', y: 120},
-          {x: '12일', y: 1220},
-          {x: '13일', y: 220},
-          {x: '14일', y: 1410},
-          {x: '15일', y: 610},
-          {x: '오늘', y: 2100},
-        ]}
+        // data={[
+        //   {x: '10일', y: 820},
+        //   {x: '11일', y: 120},
+        //   {x: '12일', y: 1220},
+        //   {x: '13일', y: 220},
+        //   {x: '14일', y: 1410},
+        //   {x: '15일', y: 610},
+        //   {x: '오늘', y: 2100},
+        // ]}
+        data={modifyHistoryLineChartData(sampleStackedBarData1)}
         title="칼로리"
         width={'100%'}
       />
