@@ -18,7 +18,7 @@ import {PAGE_NAME as TermOfServicePageName} from '~pages/Main/MyPage/TermOfServi
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
-import PointBox from './PointBox';
+
 import SkeletonUI from './SkeletonUI';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
@@ -42,9 +42,7 @@ import useUserInfo from '../../../../../biz/useUserInfo';
 import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
 import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
 import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
-import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
+
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';

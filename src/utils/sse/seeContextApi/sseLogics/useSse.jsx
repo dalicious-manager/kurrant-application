@@ -106,6 +106,9 @@ const useSse = () => {
     const tokenYo = await getToken();
     const yoyoyo = new SseService(apiHostUrl, tokenYo);
 
+    console.log('setEventSourceMsg url확인');
+    console.log(apiHostUrl);
+
     return yoyoyo;
   }, [apiHostUrl, getToken]);
 
@@ -124,9 +127,11 @@ const useSse = () => {
             switch (messageType) {
               case 1:
                 // type: 1 전체공지
+
                 break;
               case 2:
                 // type: 2 스팟공지
+
                 break;
               case 3:
                 // type: 3 구매후기

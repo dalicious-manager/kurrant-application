@@ -60,6 +60,8 @@ import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
+import useSse from '../../../../../utils/sse/seeContextApi/sseLogics/useSse';
+import {sendDone} from '../../../../../utils/sse/seeContextApi/restApis/getRestApis';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -707,7 +709,7 @@ const Pages = () => {
       {sseType5.userId && !sseType5.read && (
         <BalloonPressable
           onPress={() => {
-            console.log('랄랄라');
+            console.log('sse 랄랄라');
             getSseType5Refetch();
             // confirmBalloonClicked();
           }}>
@@ -718,11 +720,7 @@ const Pages = () => {
       <ButtonWrap>
         <Button
           onPress={async () => {
-            await sendDone(5, setEventSourceMsg);
-            // 임시 재신
-            // const lalala = await getData();
-            // console.log(lalala)
-            // removeItemFromStorage('announcementsClickedOneDate');
+            // await sendDone(5, setEventSourceMsg);
 
             if (userSpotId) {
               navigation.navigate(BuyMealPageName);
