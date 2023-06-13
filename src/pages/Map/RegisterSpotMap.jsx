@@ -206,11 +206,12 @@ const RegisterSpotMap = ({route}) => {
                   showAddress: showAddress,
                   center: initCenter,
                   type: 'registerSpot',
+                  from: 'application',
                 })
               }
               label="이 위치에 신청"
-              disabled={move}
-              type={move ? 'map' : 'yellow'}
+              disabled={move || !tab}
+              type={move || !tab ? 'map' : 'yellow'}
             />
           </ButtonWrap>
         </AddressView>

@@ -39,20 +39,19 @@ const Pages = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const goSpotRegisterPage = async (id, clientId) => {
+  const goSpotRegisterPage = async id => {
     try {
       const res = await userSpotRegister({
         id: id,
       });
+
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         await setStorage('spotStatus', '0');
         await userInfo();
-        navigation.navigate(GroupManageDetailPageName, {
-          id: id,
-          clientId: clientId,
-        });
+
+        navigation.navigate(GroupManageDetailPageName);
       }
     } catch (err) {
       Alert.alert('스팟 가입', err?.toString()?.replace('error: ', ''));
@@ -65,7 +64,7 @@ const Pages = () => {
         <Contents showsVerticalScrollIndicator={false}>
           <GroupNameView>
             {isUserGroupSpotCheck.length !== 0 &&
-              isUserGroupSpotCheck.map((el, idx) => (
+              isUserGroupSpotCheck?.spotListResponseDtoList?.map((el, idx) => (
                 <GroupName key={el.clientId}>{el.clientName}</GroupName>
               ))}
           </GroupNameView>
@@ -78,11 +77,11 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="스팟 선택"
-        data={isUserGroupSpotCheck}
+        data={isUserGroupSpotCheck.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
-        onPressEvent={(id, clientId) => {
-          goSpotRegisterPage(id, clientId);
+        onPressEvent={id => {
+          goSpotRegisterPage(id);
         }}
       />
     </SafeView>

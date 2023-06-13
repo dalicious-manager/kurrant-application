@@ -13,3 +13,5 @@ export const myLocationAtom = atomWithReset({
 });
 
 export const mainDimAtom = atomWithReset(false);
+
+export const mySpotRootAtom = atomWithReset();

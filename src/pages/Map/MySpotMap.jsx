@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Geolocation from 'react-native-geolocation-service';
-import NaverMapView from 'react-native-nmap';
+import NaverMapView, {Marker} from 'react-native-nmap';
 import styled from 'styled-components/native';
 
 import Info from './components/Info';
@@ -23,7 +23,7 @@ import Toast from '../../components/Toast';
 import Typography from '../../components/Typography';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {height} from '../../theme';
-import {userLocationAtom} from '../../utils/store';
+import {mySpotRootAtom, userLocationAtom} from '../../utils/store';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 
 const WIDTH = Dimensions.get('screen').width;
@@ -34,6 +34,7 @@ const MySpotMap = ({route}) => {
   const paramLocation = route?.params?.center;
   const mapRef = useRef(null);
   const toast = Toast();
+  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom); // 어느 경로로 왔는지 0 : 지도에서 1: 검색 리스트에서
   const [mapHeight, setMapHeight] = useState(0);
   const navigation = useNavigation();
   const [tab, setTab] = useState(false);
@@ -65,10 +66,10 @@ const MySpotMap = ({route}) => {
 
   useEffect(() => {
     roadAddressRefetch();
-  }, [initCenter, roadAddressRefetch]);
+  }, [initCenter, roadAddressRefetch, showAddress]);
   useEffect(() => {
     addressRefetch();
-  }, [roadAddress, initCenter, addressRefetch]);
+  }, [roadAddress, initCenter, addressRefetch, showAddress]);
 
   useFocusEffect(
     useCallback(() => {
@@ -158,7 +159,7 @@ const MySpotMap = ({route}) => {
             alignSelf: 'center',
             justifyContent: 'center',
             zIndex: 1,
-            top: (mapHeight - 49 / 2) / 2,
+            top: (mapHeight - 49 - 35) / 2,
           }}>
           <FastImage
             source={
@@ -179,17 +180,21 @@ const MySpotMap = ({route}) => {
           ) : (
             <AddressText>{roadAddress?.roadAddress}</AddressText>
           )}
-          <ChangeAddressWrap onPress={changAddress} move={move}>
-            <Arrow move={move} />
+          <ChangeAddressWrap onPress={changAddress} move={move} tab={tab}>
+            <Arrow move={move} tab={tab} />
             {showAddress ? (
-              <ChangeAddressText move={move}>도로명으로 보기</ChangeAddressText>
+              <ChangeAddressText move={move} tab={tab}>
+                도로명으로 보기
+              </ChangeAddressText>
             ) : (
-              <ChangeAddressText move={move}>지번으로 보기</ChangeAddressText>
+              <ChangeAddressText move={move} tab={tab}>
+                지번으로 보기
+              </ChangeAddressText>
             )}
           </ChangeAddressWrap>
           <ButtonWrap>
             <Button
-              onPressEvent={() =>
+              onPressEvent={() => {
                 navigation.navigate(MySpotDetailPage, {
                   address: address,
                   roadAddress: roadAddress?.roadAddress,
@@ -197,11 +202,12 @@ const MySpotMap = ({route}) => {
                   center: initCenter,
                   zipcode: roadAddress?.zipcode,
                   jibunAddress: address,
-                })
-              }
+                });
+                setFromRoot(0);
+              }}
               label="이 위치로 주소 설정"
-              disabled={move}
-              type={move ? 'map' : 'yellow'}
+              disabled={move || !tab}
+              type={move || !tab ? 'map' : 'yellow'}
             />
           </ButtonWrap>
         </AddressView>
@@ -252,14 +258,14 @@ const ChangeAddressWrap = styled.Pressable`
 `;
 
 const ChangeAddressText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme, move}) =>
-    move ? theme.colors.grey[5] : theme.colors.grey[2]};
+  color: ${({theme, move, tab}) =>
+    move || !tab ? theme.colors.grey[5] : theme.colors.grey[2]};
 `;
 
 const Arrow = styled(ArrowIcon)`
   margin-right: 8px;
-  color: ${({move, theme}) =>
-    move ? theme.colors.grey[5] : theme.colors.grey[2]};
+  color: ${({move, theme, tab}) =>
+    move || !tab ? theme.colors.grey[5] : theme.colors.grey[2]};
 `;
 
 const ButtonWrap = styled.View`

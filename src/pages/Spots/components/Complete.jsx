@@ -91,7 +91,10 @@ const Complete = ({route}) => {
             if (type === 'mySpotCompleteMembership') {
               buyMealButton();
             }
-            if (type === 'noDeliveryNoSpot' && !press) {
+            if (
+              (type === 'noDeliveryNoSpot' || type === 'sharSpotAppication') &&
+              !press
+            ) {
               navigation.navigate(SpotTypePage);
             }
           }}
