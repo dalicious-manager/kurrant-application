@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import Typography from '~components/Typography';
+import {extractMonthAndDateFromDate2} from '../../logic';
+import {toStringByFormatting} from '../../../../../../utils/dateFormatter';
 
 const HistoryTables = ({data}) => {
   return (
@@ -7,21 +9,24 @@ const HistoryTables = ({data}) => {
       {data.map((v, i) => {
         return (
           <TableSingle key={i}>
-            <DateText>05.08</DateText>
+            {/* <DateText>05.08</DateText> */}
+            <DateText>{`${extractMonthAndDateFromDate2(v.date, '-')[0]}.${
+              extractMonthAndDateFromDate2(v.date, '-')[1]
+            }`}</DateText>
             <Wrap1>
               <Wrap2>
                 <Wrap3>
                   <Label>칼로리</Label>
                   <ValueWrap>
-                    <Value>2100</Value>
-                    <Label>kcal</Label>
+                    <Value>{v.calorie}</Value>
+                    <Unit>kcal</Unit>
                   </ValueWrap>
                 </Wrap3>
                 <Wrap3>
                   <Label>단백질</Label>
                   <ValueWrap>
-                    <Value>100</Value>
-                    <Label>g</Label>
+                    <Value>{v.protein}</Value>
+                    <Unit>g</Unit>
                   </ValueWrap>
                 </Wrap3>
               </Wrap2>
@@ -29,15 +34,15 @@ const HistoryTables = ({data}) => {
                 <Wrap3>
                   <Label>탄수화물</Label>
                   <ValueWrap>
-                    <Value>400</Value>
-                    <Label>g</Label>
+                    <Value>{v.carbohydrate}</Value>
+                    <Unit>g</Unit>
                   </ValueWrap>
                 </Wrap3>
                 <Wrap3>
                   <Label>지방</Label>
                   <ValueWrap>
-                    <Value>100</Value>
-                    <Label>g</Label>
+                    <Value>{v.fat}</Value>
+                    <Unit>g</Unit>
                   </ValueWrap>
                 </Wrap3>
               </Wrap2>

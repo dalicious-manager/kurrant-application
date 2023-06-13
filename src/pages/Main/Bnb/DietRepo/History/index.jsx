@@ -169,7 +169,7 @@ const Pages = ({route}) => {
       />
       <GreyBlock width={screenWidth} />
 
-      <HistoryTables data={TablesSampleData} />
+      <HistoryTables data={sampleStackedBarData1} />
       <Filler />
     </ContainerScrollView>
   );
