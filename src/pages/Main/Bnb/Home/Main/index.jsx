@@ -60,8 +60,8 @@ import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import useSse from '../../../../../utils/sse/seeContextApi/sseLogics/useSse';
-import {sendDone} from '../../../../../utils/sse/seeContextApi/restApis/getRestApis';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
+// import useSse from '../../../../../utils/sse/seeContextApi/sseLogics/useSse';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -74,8 +74,7 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
-  const {sseType1, sseType2, sseType3, sseType4, sseType5, getSseType5Refetch} =
-    useSse();
+  const {sseType1, sseType2, sseType3, sseType4, sseType5} = useSse();
 
   const navigation = useNavigation();
 
