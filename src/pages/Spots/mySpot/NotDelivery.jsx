@@ -30,15 +30,13 @@ const NotDelivery = ({route}) => {
 
   const {mutateAsync: setAlram} = useSetAlramSetting();
 
-  const buttonType =
-    spot === null && isAlarm === true
-      ? 'noSpot'
-      : spot !== null && isUserInfo.isMembership && isAlarm === true
-      ? 'alramMembership'
-      : spot !== null &&
-        !isUserInfo.isMembership &&
-        isAlarm === true &&
-        'alramNoMembership';
+  const buttonType = !type
+    ? 'noDelivery'
+    : spot === null
+    ? 'noSpot'
+    : spot !== null && isUserInfo.isMembership
+    ? 'alramMembership'
+    : spot !== null && !isUserInfo.isMembership && 'alramNoMembership';
   console.log(buttonType);
   const NoAlarm = () => {
     if (spot !== null) {
@@ -92,25 +90,26 @@ const NotDelivery = ({route}) => {
       </CloseButton>
       <Contents>
         <Title>아직 배송 가능 지역이 아니에요</Title>
-        {buttonType !== 'noSpot' && (
+        {/* 아래 내용 없앨수도 */}
+        {/* {buttonType !== 'noSpot' && (
           <Title2>
             알려 주신 곳으로{'\n'}
             {isUserInfo?.name}님의 스팟 개설에 최선을 다할게요
           </Title2>
-        )}
+        )} */}
         {buttonType === 'alramMembership' ? (
           <Image source={SpotOpen} style={{width: 339, height: 215}} />
         ) : (
           <Image source={NotDeliveryIcon} style={{width: 162, height: 149}} />
         )}
 
-        {isAlarm ? notDeliveryAlarm(buttonType) : notDeliveryNoAlarm(isAlarm)}
+        {notDeliveryNoAlarm(buttonType)}
       </Contents>
       <ButtonWrap>
         <Button
           label={notDeliveryNoAlarmButton(buttonType)}
           onPressEvent={() => {
-            if (!isAlarm) {
+            if (buttonType === 'noDelivery') {
               settingAlarm();
             }
             if (buttonType === 'alramMembership') {
@@ -131,7 +130,7 @@ const NotDelivery = ({route}) => {
               if (buttonType === 'alramNoMembership') {
                 navigation.navigate(SCREEN_NAME);
               }
-              if (!isAlarm) {
+              if (buttonType === 'noDelivery') {
                 NoAlarm();
               }
               if (buttonType === 'noSpot') {

@@ -17,6 +17,7 @@ import styled from 'styled-components/native';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
 import Button from '../../components/Button';
+import ButtonInfoType from '../../components/ButtonInfoType';
 import ButtonMealType from '../../components/ButtonMealType';
 import {width} from '../../theme';
 import Typography from '../Typography';
@@ -142,8 +143,8 @@ const BottomSheetSpot = props => {
                 <BottomSheetTitle>{title}</BottomSheetTitle>
                 <Pressable
                   onPress={() => {
-                    setTouch([0, 1, 2]);
-                    setTouchInfo([0, 1]);
+                    setTouch([1, 2, 3]);
+                    setTouchInfo([1]);
                   }}>
                   <BottomSheetDecs>초기화</BottomSheetDecs>
                 </Pressable>
@@ -158,23 +159,23 @@ const BottomSheetSpot = props => {
                 <TitleText style={{marginTop: 24}}>출입 정보</TitleText>
 
                 <ButtonTypeWrap style={{justifyContent: 'flex-start'}}>
-                  <ButtonMealType
+                  <ButtonInfoType
                     margin={((screenWidth - 48 - width * 103 * 3) / 2).toFixed(
                       1,
                     )}
                     touch={touchInfo}
                     setTouch={setTouchInfo}
-                    title={['모두 보기', '제한 없음', '제한 있음']}
                   />
                 </ButtonTypeWrap>
               </View>
             </Content>
 
-            <ManagePressView
-              onPress={() => {
-                onPressEvent2(setModalVisible(false));
-              }}>
-              <Button label="적용" text="Button09SB" />
+            <ManagePressView>
+              <Button
+                label="적용"
+                text="Button09SB"
+                onPressEvent={onPressEvent}
+              />
             </ManagePressView>
           </BottomSheet>
         </GestureHandlerRootView>

@@ -13,9 +13,11 @@ const SpotGuide = () => {
   const navigation = useNavigation();
   return (
     <Wrap>
-      <ImageWrap>
+      {/* <ImageWrap> */}
+      <ContentWrap>
         <Image source={GuideSpot} style={{width: 229, height: 434}} />
-      </ImageWrap>
+        {/* </ImageWrap> */}
+      </ContentWrap>
       <ButtonWrap>
         <Button
           label="스팟 설정하기"
@@ -40,8 +42,6 @@ const ButtonWrap = styled.View`
   bottom: ${height * 94}px;
 `;
 
-const ImageWrap = styled.View`
-  align-items: center;
-  position: absolute;
-  bottom: ${height * 246}px;
+const ContentWrap = styled.View`
+  margin-top: ${height * 100}px;
 `;

@@ -25,24 +25,24 @@ const useGroupSpots = () => {
 
       setApplicationList(res.data);
     } catch (err) {
-      Alert.alert(
-        '그룹/스팟 신청 목록 조회',
-        err.toString()?.replace('error: ', ''),
-        [
-          {
-            text: '확인',
-            onPress: () => {},
-            style: 'cancel',
-          },
-        ],
-      );
+      // Alert.alert(
+      //   '그룹/스팟 신청 목록 조회',
+      //   err.toString()?.replace('error: ', ''),
+      //   [
+      //     {
+      //       text: '확인',
+      //       onPress: () => {},
+      //       style: 'cancel',
+      //     },
+      //   ],
+      // );
     }
   };
   // 유저가 속한 그룹 스팟 조회
   const userGroupSpotCheck = async () => {
     try {
       const res = await Fetch.GroupSpotCheck();
-      console.log(res);
+
       setUserGroupSpotCheck(res.data);
       return res;
     } catch (err) {
