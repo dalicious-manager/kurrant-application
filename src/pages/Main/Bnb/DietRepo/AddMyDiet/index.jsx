@@ -11,17 +11,23 @@ import Typography from '~components/Typography';
 import RefTextInput from '~components/RefTextInput';
 import {useEffect, useRef, useState} from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {extractMonthAndDateFromDate} from '../logic';
+// import {extractMonthAndDateFromDate} from '../logic';
 import useDietRepoMutation from '../useDietRepoMutation';
 
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
+import {extractMonthAndDateFromDate1} from '../logic';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddMyDiet';
 
 const Pages = ({route}) => {
   const navigation = useNavigation();
+
+  useEffect(() => {
+    console.log('확인해라');
+    console.log(route?.params?.date);
+  }, [route?.params?.date]);
 
   const {addCustomMeal} = useDietRepoMutation(route?.params?.date);
 
@@ -101,8 +107,8 @@ const Pages = ({route}) => {
     <FormProvider {...form}>
       <Container>
         <TitleText>
-          {extractMonthAndDateFromDate(route?.params?.date, '-')[0]}월{' '}
-          {extractMonthAndDateFromDate(route?.params?.date, '-')[1]}일 (
+          {extractMonthAndDateFromDate1(route?.params?.date, '-')[0]}월{' '}
+          {extractMonthAndDateFromDate1(route?.params?.date, '-')[1]}일 (
           {format(stringDateToJavascriptDate(route?.params?.date, '-'), 'EEE', {
             locale: ko,
           })}

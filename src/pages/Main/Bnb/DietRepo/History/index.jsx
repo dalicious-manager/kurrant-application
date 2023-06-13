@@ -29,8 +29,6 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 const Pages = ({route}) => {
   const screenWidth = Dimensions.get('screen').width;
 
-  const [date, setDate] = useState(route?.params?.date);
-
   // week 값은 이렇습니다
   // [월요일 자바스크립트 date객체,
   // 화요일 자바스크립트 date객체,
@@ -47,21 +45,6 @@ const Pages = ({route}) => {
   );
 
   // params에 date가 들어갈때 그 일주일을 계산하기
-
-  // useEffect(() => {
-  //   console.log('date');
-  //   console.log(date);
-  // }, [date]);
-
-  // useEffect(() => {
-  //   console.log('주');
-  //   console.log(week);
-
-  //   console.log(toStringByFormatting(week[0]));
-  //   console.log(
-  //     extractMonthAndDateFromDate2(toStringByFormatting(week[0]), '-'),
-  //   );
-  // }, [week]);
 
   const TablesSampleData = [
     {
