@@ -112,7 +112,7 @@ const Component = ({
                 reviewId: id,
               });
             }}>
-            <EditText isLike={likeNum}>도움이 되요 </EditText>
+            <EditText isLike={likeNum}>도움이 돼요</EditText>
             <ThumbsUp
               width="14px"
               height="15px"
