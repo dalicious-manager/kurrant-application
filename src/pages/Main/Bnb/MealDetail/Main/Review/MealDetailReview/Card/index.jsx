@@ -118,7 +118,7 @@ const Component = ({
               height="15px"
               color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
             />
-            <LikeNumber>{likeNum}</LikeNumber>
+            <LikeNumber isLike={likeNum}>{likeNum}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>
@@ -284,7 +284,8 @@ const EditText = styled(Typography).attrs({text: 'Button10R'})`
 `;
 
 const LikeNumber = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${props => props.theme.colors.grey[5]};
+  color: ${({theme, isLike}) =>
+    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
 
   margin-left: 3px;
 `;
