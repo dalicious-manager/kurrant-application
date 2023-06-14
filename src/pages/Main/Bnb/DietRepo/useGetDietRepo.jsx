@@ -2,7 +2,13 @@ import {useQuery} from 'react-query';
 import {fetchJson} from '../../../../utils/fetch';
 import {useEffect, useState} from 'react';
 
-const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
+const useGetDietRepo = (
+  mainDate,
+  addMealDate,
+  addMealDiningType,
+  historyStartDate,
+  historyEndDate,
+) => {
   const [dietRepoMainList, setDietRepoMainList] = useState([]);
   const [totalNutrition, setTotalList] = useState({});
 
@@ -54,10 +60,10 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
   );
 
   const {isFetching: isDietRepoHistoryRefetchLoading} = useQuery(
-    ['dietRepo', 'history'],
+    ['dietRepo', 'history', historyStartDate, historyEndDate],
     async ({queryKey}) => {
       const response = await fetchJson(
-        `/users/me/daily/report/history?startDate=2023-06-05&endDate=2023-06-11`,
+        `/users/me/daily/report/history?startDate=${historyStartDate}&endDate=${historyEndDate}`,
         'GET',
       );
 

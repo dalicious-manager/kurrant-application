@@ -31,12 +31,18 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 const Pages = ({route}) => {
   const screenWidth = Dimensions.get('screen').width;
 
-  const {isDietRepoHistoryRefetchLoading, historyDataList} = useGetDietRepo();
-
   const [week, setWeek] = useState(
     route?.params?.date
       ? calcWeekArr(stringDateToJavascriptDate(route?.params?.date, '-'))
       : calcWeekArr(new Date()),
+  );
+  const {isDietRepoHistoryRefetchLoading, historyDataList} = useGetDietRepo(
+    undefined,
+    undefined,
+    undefined,
+
+    toStringByFormatting(week[0]),
+    toStringByFormatting(week[6]),
   );
 
   useEffect(() => {
@@ -136,7 +142,8 @@ const Pages = ({route}) => {
         //   {x: '12월', carbohydrate: 520, protein: 75, fat: 0},
         // ]}
         // data={modifyStackedBarData(sampleStackedBarData1)}
-        data={modifyStackedBarData(historyDataList)}
+        // data={modifyStackedBarData(historyDataList)}
+        data={modifyHistoryList(historyDataList, week)}
         dataOrder={['carbohydrate', 'protein', 'fat']}
         colorSetting={{
           carbohydrate: '#4F6FDF',
