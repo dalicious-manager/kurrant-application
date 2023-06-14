@@ -16,7 +16,11 @@ import Typography from '../../../components/Typography';
 import {useGetShareSpotList} from '../../../hook/useShareSpot';
 import {width, height} from '../../../theme';
 import {diningTypeString} from '../../../utils/diningType';
-import {myLocationAtom} from '../../../utils/store';
+import {
+  mealTouchAtom,
+  myLocationAtom,
+  touchInfoAtom,
+} from '../../../utils/store';
 import {PAGE_NAME as ShareSpotMapPage} from '../../Map/ShareSpotMap';
 
 export const PAGE_NAME = 'SHARE_SPOT_LIST';
@@ -25,8 +29,8 @@ const ShareSpotList = ({setShowList, showList}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [mealTouch, setMealTouch] = useState([1, 2, 3]);
-  const [touchInfo, setTouchInfo] = useState([1]);
+  const [mealTouch, setMealTouch] = useAtom(mealTouchAtom);
+  const [touchInfo, setTouchInfo] = useAtom(touchInfoAtom);
 
   const [myLocation, setMyLocation] = useAtom(myLocationAtom); // 기초 좌표 강남역
 
@@ -50,11 +54,15 @@ const ShareSpotList = ({setShowList, showList}) => {
 
   const dataList = groupList?.pages;
 
-  console.log(dataList);
   const onEndReached = () => {
     if (hasNextPage) {
       fetchNextPage();
     }
+  };
+
+  const filterButton = () => {
+    refetch();
+    setModalVisible(false);
   };
 
   return (
@@ -137,9 +145,7 @@ const ShareSpotList = ({setShowList, showList}) => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="필터"
-        // onPressEvent2={() => {
-        //   groupManagePress();
-        // }}
+        onPressEvent={filterButton}
       />
     </Wrap>
   );

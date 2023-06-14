@@ -34,7 +34,7 @@ const ApplySpot = ({route}) => {
   const [time, setTime] = useState(new Date());
   const [text, setText] = useState('');
   const {mutateAsync: applyShareSpot} = useApplyShareSpot();
-  console.log(from);
+
   const form = useForm({
     mode: 'all',
   });
