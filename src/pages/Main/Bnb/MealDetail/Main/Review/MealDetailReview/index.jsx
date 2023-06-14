@@ -150,8 +150,14 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const [showSelectList, setShowSelectList] = useState(false);
 
   // useEffect(() => {
-  //   console.log(foodId);//
+  //   console.log('푸드아이딩~');
+  //   console.log(foodId); //
   // }, [foodId]);
+
+  // useEffect(() => {
+  //   console.log('데일리푸드아이딩~');
+  //   console.log(dailyFoodId); //
+  // });
 
   // best, latest, photo, rating, like
 
