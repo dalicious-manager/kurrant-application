@@ -11,6 +11,7 @@ import {
 import styled from 'styled-components';
 
 import AddressList from './components/AddressList';
+import AddressShareSpotList from './components/AddressShareSpotList';
 import NoResult from './components/NoResult';
 import Location from './Location';
 import Search from './Search';
@@ -89,8 +90,10 @@ const SearchResult = ({route}) => {
           {/* 검색 결과 있음 */}
           {!screen && data?.length === 0 ? (
             <NoResult />
-          ) : (
+          ) : type === 'mySpot' || type === 'registerSpot' ? (
             <AddressList setFocus={setFocus} data={data} type={type} />
+          ) : (
+            <AddressShareSpotList />
           )}
         </View>
       </TouchableWithoutFeedback>

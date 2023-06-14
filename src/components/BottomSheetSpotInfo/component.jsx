@@ -27,73 +27,36 @@ import {
 import PlusIcon from '../../assets/icons/Map/plus.svg';
 import MealIcon from '../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../assets/icons/Spot/user.svg';
+import {
+  useGetShareSpotDetail,
+  useSelectShareSpot,
+} from '../../hook/useShareSpot';
 import {PAGE_NAME as ApplySpotPage} from '../../pages/Spots/shareSpot/ApplySpot';
+import {SCREEN_NAME} from '../../screens/Main/Bnb';
+import {diningTypeString} from '../../utils/diningType';
 import Button from '../Button';
 import Typography from '../Typography';
 
 const Component = props => {
-  const {title = '옵션 선택', snap, setSnap, bottomSheetRef} = props;
+  const {
+    title = '옵션 선택',
+    snap,
+    setSnap,
+    bottomSheetRef,
+    data,
+    setInitCenter,
+  } = props;
 
   const navigation = useNavigation();
-  const data2 = {
-    time: {
-      morning: ['09:00', '09:00'],
-      lunch: ['09:00', '09:00', '09:00'],
-      dinner: ['09:00', '09:00'],
-    },
-  };
-  const data = [
-    {
-      name: '13F 라운지',
-      key: true,
-    },
-    {
-      name: '14F 라운지',
-      time: ['09:00', '09:00', '09:00', '09:00', '09:00', '09:00', '09:00'],
-      key: false,
-    },
-    {
-      name: '17F 라운지',
-      time: [
-        '09:00',
-        '09:00',
-        '09:00',
-        '09:00',
-        '09:00',
-        '09:00',
-        '09:00',
-        '09:00',
-        '09:00',
-      ],
-      key: true,
-    },
-    {
-      name: '15F 라운지',
-      time: ['09:00', '09:00', '09:00', '09:00'],
-      key: true,
-    },
-    {
-      name: '16F 라운지',
-      time: ['09:00', '09:00', '09:00', '09:00', '09:00', '09:00', '09:00'],
-      key: false,
-    },
-    {
-      name: '17F 라운지',
-      time: ['09:00', '09:00', '09:00'],
-      key: true,
-    },
-    {
-      name: '17F 라운지',
-      time: ['09:00', '09:00', '09:00'],
-      key: true,
-    },
-  ];
+  const {data: detailData, refetch: detailDataRefech} = useGetShareSpotDetail(
+    data[0].id,
+  );
+  const {mutateAsync: selectSpot} = useSelectShareSpot();
 
-  // variables
+  const detail = detailData?.data;
 
   const snapPoints = useMemo(() => ['6%', '30%', '100%'], []);
 
-  // callbacks
   const handleSheetChanges = useCallback(index => {
     setSnap(index);
   }, []);
@@ -101,8 +64,32 @@ const Component = props => {
   const detailButton = () => {
     bottomSheetRef.current?.snapToIndex(2);
   };
+  const diningType = [1, 2, 3];
 
-  // renders
+  const onSelectButton = async () => {
+    const body = {
+      id: data[0].id,
+    };
+    await selectSpot(body);
+    navigation.navigate(SCREEN_NAME);
+  };
+
+  const goToApplyPage = from => {
+    navigation.navigate(ApplySpotPage, {
+      center: {
+        latitude: Number(data[0].latitude),
+        longitude: Number(data[0].longitude),
+      },
+      roadAddress: data[0].address,
+      groupId: data[0].id,
+      name: data[0].name,
+      from: from,
+    });
+  };
+
+  useEffect(() => {
+    detailDataRefech();
+  }, [detailDataRefech, data[0].id]);
   return (
     <BottomSheet
       handleStyle={{height: 20}}
@@ -117,18 +104,34 @@ const Component = props => {
       onChange={handleSheetChanges}>
       {(snap === 0 || snap === 1) && (
         <Contents>
-          <SpotNameText>{title}</SpotNameText>
-          <SpotPickWrap>
+          <SpotNameText>{data[0].name}</SpotNameText>
+          <SpotPickWrap
+            onPress={() => {
+              setInitCenter({
+                latitude: Number(data[0].latitude),
+                longitude: Number(data[0].longitude),
+              });
+            }}>
             <Image source={SharePickSpot} style={{width: 20, height: 24}} />
           </SpotPickWrap>
           <DiningTypeWrap>
             <MealIcon />
-            <DiningTypeText>아침・점심・저녁</DiningTypeText>
+            {diningType.map(v => (
+              <DiningTypeText
+                key={v}
+                type={data[0].diningType.includes(v)}
+                value={v}>
+                {diningTypeString(v)}
+                {v !== 3 && <DiningTypeDisabledText>・</DiningTypeDisabledText>}
+              </DiningTypeText>
+            ))}
             <Body06RText>운영중</Body06RText>
           </DiningTypeWrap>
           <UserViewWrap>
             <UserIcon />
-            <Body06RText style={{marginLeft: 12}}>152명</Body06RText>
+            <Body06RText style={{marginLeft: 12}}>
+              {data[0].userCount}명
+            </Body06RText>
           </UserViewWrap>
           <Button
             label="상세보기"
@@ -140,25 +143,36 @@ const Component = props => {
       {snap === 2 && (
         <Content>
           <Contents>
-            <Title>{title}</Title>
+            <Title>{detail.name}</Title>
             <ScrollView
               style={{marginTop: 24, paddingBottom: 200}}
               showsVerticalScrollIndicator={false}>
               <Address>
                 <Image source={PickGrey} style={{width: 20, height: 20}} />
-                <Body06RText style={{marginLeft: 16}}>
-                  서울 강남구 선릉로93길 40 1층
-                  스파크플러스(역삼동,나라키움역삼A빌딩)
-                  {'\n'}
+                <View style={{marginLeft: 16}}>
+                  <Name>
+                    <Body06RText>{detail.address}</Body06RText>
+                  </Name>
                   <Body06RText style={{color: '#BDBAC1'}}>
                     역삼동 704-45
                   </Body06RText>
-                </Body06RText>
+                </View>
               </Address>
               <Border />
               <DiningTypeWrap snap={snap}>
                 <MealIcon width={20} height={20} />
-                <DiningTypeText snap={snap}>아침・점심・저녁</DiningTypeText>
+                {diningType.map(v => (
+                  <DiningTypeText
+                    key={v}
+                    type={detail.diningTypes.includes(v)}
+                    value={v}>
+                    {diningTypeString(v)}
+                    {v !== 3 && (
+                      <DiningTypeDisabledText>・</DiningTypeDisabledText>
+                    )}
+                  </DiningTypeText>
+                ))}
+
                 <Body06RText>운영중</Body06RText>
               </DiningTypeWrap>
 
@@ -171,30 +185,45 @@ const Component = props => {
                   />
                   <Body06RText style={{marginLeft: 16}}>배송 시간</Body06RText>
                 </Delivery>
-                <ApplyButton onPress={() => navigation.navigate(ApplySpotPage)}>
+                <ApplyButton onPress={() => goToApplyPage('time')}>
                   <PlusIcon />
                   <ApplyText>시간 추가 신청</ApplyText>
                 </ApplyButton>
               </DeliveryWrap>
               <InnerView>
-                <DetailSpotWrap>
-                  <DetailSpotName style={{marginRight: 8}}>아침</DetailSpotName>
-                  <VerticalBorder />
-                  <ApplyText>09:30</ApplyText>
-                  <ApplyText>09:30</ApplyText>
-                </DetailSpotWrap>
-                <DetailSpotWrap>
-                  <DetailSpotName style={{marginRight: 8}}>아침</DetailSpotName>
-                  <VerticalBorder />
-                  <ApplyText>09:30</ApplyText>
-                  <ApplyText>09:30</ApplyText>
-                </DetailSpotWrap>
-                <DetailSpotWrap>
-                  <DetailSpotName style={{marginRight: 8}}>아침</DetailSpotName>
-                  <VerticalBorder />
-                  <ApplyText>09:30</ApplyText>
-                  <ApplyText>09:30</ApplyText>
-                </DetailSpotWrap>
+                {detail?.breakfastDeliveryTime !== null && (
+                  <DetailSpotWrap>
+                    <DetailSpotName style={{marginRight: 8}}>
+                      아침
+                    </DetailSpotName>
+                    <VerticalBorder />
+                    {detail?.breakfastDeliveryTime?.map(el => {
+                      return <ApplyText key={el}>{el}</ApplyText>;
+                    })}
+                  </DetailSpotWrap>
+                )}
+                {detail?.lunchDeliveryTime !== null && (
+                  <DetailSpotWrap>
+                    <DetailSpotName style={{marginRight: 8}}>
+                      점심
+                    </DetailSpotName>
+                    <VerticalBorder />
+                    {detail?.lunchDeliveryTime?.map(el => {
+                      return <ApplyText key={el}>{el}</ApplyText>;
+                    })}
+                  </DetailSpotWrap>
+                )}
+                {detail?.dinnerDeliveryTime !== null && (
+                  <DetailSpotWrap>
+                    <DetailSpotName style={{marginRight: 8}}>
+                      저녁
+                    </DetailSpotName>
+                    <VerticalBorder />
+                    {detail?.dinnerDeliveryTime?.map(el => {
+                      return <ApplyText key={el}>{el}</ApplyText>;
+                    })}
+                  </DetailSpotWrap>
+                )}
               </InnerView>
               <Border />
               <DeliveryWrap>
@@ -202,17 +231,17 @@ const Component = props => {
                   <Image source={TimeIcon} style={{width: 20, height: 20}} />
                   <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
                 </Delivery>
-                <ApplyButton onPress={() => navigation.navigate(ApplySpotPage)}>
+                <ApplyButton onPress={() => goToApplyPage('spot')}>
                   <PlusIcon />
                   <ApplyText>스팟 추가 신청</ApplyText>
                 </ApplyButton>
               </DeliveryWrap>
               <InnerView>
-                {data.map((el, idx) => {
+                {detail.spotDetailDtos.map((el, idx) => {
                   return (
-                    <DetailSpotWrap>
+                    <DetailSpotWrap key={el.name}>
                       <DetailSpotName>{el.name}</DetailSpotName>
-                      {el.key && (
+                      {el.isRestriction && (
                         <CardBoolean>
                           <VerticalBorder />
 
@@ -226,42 +255,10 @@ const Component = props => {
               <Border />
               <UserViewWrap snap={snap}>
                 <UserIcon width={20} height={20} />
-                <Body06RText style={{marginLeft: 16}}>152명</Body06RText>
+                <Body06RText style={{marginLeft: 16}}>
+                  {detail.userCount}명
+                </Body06RText>
               </UserViewWrap>
-              {/* <InnerView>
-                {data.map((el, idx) => {
-                  const lastArr = data[data.length - 1];
-
-                  return (
-                    <DetailSpotTimeWrap key={idx} last={el === lastArr}>
-                      <DetailSpotWrap>
-                        <DetailSpotName>{el.name}</DetailSpotName>
-                        {el.key && (
-                          <CardBoolean>
-                            <VerticalBorder />
-                            <Image
-                              source={Card}
-                              style={{width: 14, height: 14}}
-                            />
-                            <NeedCardText>카드키 필요</NeedCardText>
-                          </CardBoolean>
-                        )}
-                      </DetailSpotWrap>
-                      <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}>
-                        {el.time.map((v, i) => {
-                          return (
-                            <Label key={i}>
-                              <LabelText>{v}</LabelText>
-                            </Label>
-                          );
-                        })}
-                      </ScrollView>
-                    </DetailSpotTimeWrap>
-                  );
-                })}
-              </InnerView> */}
             </ScrollView>
           </Contents>
           <ButtonWrap
@@ -278,7 +275,7 @@ const Component = props => {
             ]}
             useAngle={true}
             angle={180}>
-            <Button label="이 스팟 사용하기" />
+            <Button label="이 스팟 사용하기" onPressEvent={onSelectButton} />
           </ButtonWrap>
         </Content>
       )}
@@ -294,6 +291,7 @@ const Contents = styled.View`
 const Content = styled.View`
   // padding: 12px 24px 35px 24px;
   position: relative;
+  flex: 1;
 `;
 
 const SpotNameText = styled(Typography).attrs({text: 'Title04SB'})`
@@ -302,9 +300,13 @@ const SpotNameText = styled(Typography).attrs({text: 'Title04SB'})`
 `;
 
 const DiningTypeText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.blue[500]};
-  margin-left: ${({snap}) => (snap === 2 ? '16px' : '12px')};
-  margin-right: 8px;
+  color: ${({theme, type}) =>
+    type ? theme.colors.blue[500] : theme.colors.grey[6]};
+  //margin-left: ${({snap}) => (snap === 2 ? '16px' : '12px')};
+  //margin-right: 8px;
+  margin-left: ${({value, snap}) =>
+    value === 1 && snap !== 2 ? '12px' : '0px'};
+  margin-right: ${({value}) => (value === 3 ? '8px' : '0px')};
 `;
 
 const DiningTypeWrap = styled.View`
@@ -348,6 +350,8 @@ const Border = styled.View`
 
 const Address = styled.View`
   flex-direction: row;
+  align-items: flex-start;
+  background-color: olive;
 `;
 
 const DeliveryWrap = styled.View`
@@ -424,15 +428,24 @@ const DetailSpotTimeWrap = styled.View`
 
 const ButtonWrap = styled(LinearGradient)`
   position: absolute;
-  bottom: 0;
-  /* padding: 0px 48px;
-  padding-top: 20px;
-  width: 100%; */
   padding: 0px 20px;
-  height: 124px;
+  height: 100px;
   bottom: 0px;
   width: 100%;
   justify-content: flex-start;
 `;
 
 const TimeWrap = styled(LinearGradient)``;
+const DiningTypeDisabledText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[6]};
+  margin-left: 12px;
+  margin-right: 8px;
+`;
+
+const Name = styled.View`
+  word-break: break-all;
+  background-color: gold;
+  /* width: 90%; */
+`;
+
+const AddressWrap = styled.View``;

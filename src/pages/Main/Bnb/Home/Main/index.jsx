@@ -45,7 +45,7 @@ import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
-import {mainDimATom, mainDimAtom} from '../../../../../utils/store';
+import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
@@ -84,6 +84,9 @@ const Pages = () => {
   const userGroupName = isUserInfo?.group;
   const userSpotId = isUserInfo?.spotId;
   const clientId = isUserInfo?.groupId;
+
+  const spotNameCut = userSpot?.includes(null);
+  const useSpotName = spotNameCut ? userSpot.split('null')[0] : userSpot;
   const {
     saveFcmToken,
     readableAtom: {userRole},
@@ -457,6 +460,14 @@ const Pages = () => {
   const handleStatus = e => {
     setAppState(e);
   };
+
+  const spotName =
+    userGroupName?.length + userSpot?.length + 1 > 11 && userGroupName !== null
+      ? userGroupName + '\n' + userSpot
+      : userGroupName === null
+      ? useSpotName
+      : userGroupName + '\u00a0' + userSpot;
+
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
 
@@ -549,11 +560,7 @@ const Pages = () => {
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
             <SpotNameText>
-              {!userGroupName
-                ? '스팟을 선택해 주세요'
-                : userGroupName?.length + userSpot?.length + 1 > 11
-                ? userGroupName + '\n' + userSpot
-                : userGroupName + '\u00a0' + userSpot}
+              {!userSpotId ? '스팟을 선택해 주세요' : spotName}
             </SpotNameText>
 
             <ArrowIcon />

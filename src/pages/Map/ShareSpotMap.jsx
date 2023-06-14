@@ -7,7 +7,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {Dimensions, Pressable, View, Text, Image, Platform} from 'react-native';
+import {
+  Dimensions,
+  Pressable,
+  View,
+  Text,
+  Image,
+  Platform,
+  ActivityIndicator,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NaverMapView, {Marker, Circle} from 'react-native-nmap';
@@ -33,7 +41,12 @@ import Typography from '../../components/Typography';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {useGetShareSpotList} from '../../hook/useShareSpot';
 import {width, height} from '../../theme';
-import {myLocationAtom, userLocationAtom} from '../../utils/store';
+import {
+  mealTouchAtom,
+  myLocationAtom,
+  touchInfoAtom,
+  userLocationAtom,
+} from '../../utils/store';
 import {PAGE_NAME as RegisterSpotMapPage} from '../Map/RegisterSpotMap';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 import {PAGE_NAME as ShareSpotListPage} from '../Spots/shareSpot/ShareSpotList';
@@ -50,8 +63,8 @@ const ShareSpotMap = ({route}) => {
   const bottomSheetRef = useRef(null);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [snap, setSnap] = useState(0);
-  const [mealTouch, setMealTouch] = useState([0, 1, 2]);
-  const [touchInfo, setTouchInfo] = useState([0, 1]);
+  const [mealTouch, setMealTouch] = useAtom(mealTouchAtom);
+  const [touchInfo, setTouchInfo] = useAtom(touchInfoAtom);
   const {balloonEvent, BalloonWrap, balloonEventNotOut} = BalloonSpot();
   const [modalVisible, setModalVisible] = useState(false);
   const [showList, setShowList] = useState(false);
@@ -62,15 +75,19 @@ const ShareSpotMap = ({route}) => {
   const [showAddress, setShowAddress] = useState(false);
   const [zoom, setZoom] = useState(18);
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
-  const [myLocation, setMyLocation] = useAtom(myLocationAtom); // 기초 좌표 강남역
-
+  const [myLocation, setMyLocation] = useAtom(myLocationAtom);
   const {
     data: groupList,
     hasNextPage,
     fetchNextPage,
     refetch,
-    isFetching,
-  } = useGetShareSpotList(myLocation.latitude, myLocation.longitude);
+    isSuccess,
+  } = useGetShareSpotList(
+    myLocation.latitude,
+    myLocation.longitude,
+    mealTouch,
+    touchInfo,
+  );
 
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
@@ -82,22 +99,17 @@ const ShareSpotMap = ({route}) => {
     setMove(false);
   };
 
-  const spot0 = [
-    {
-      latitude: 37.504624,
-      longitude: 127.045503,
-      name: '스파크플러스 선릉점',
-    },
-    {latitude: 37.505607, longitude: 127.05154, name: '스파크플러스 선릉3호점'},
-    {latitude: 37.505102, longitude: 127.045989, name: '달리셔스'},
-  ];
-
   const bottomSheetDown = () => {
     bottomSheetRef.current?.snapToIndex(0);
   };
 
   const markerPress = () => {
     bottomSheetRef.current?.snapToIndex(1);
+  };
+
+  const filterButton = () => {
+    refetch();
+    setModalVisible2(false);
   };
 
   useEffect(() => {
@@ -110,6 +122,7 @@ const ShareSpotMap = ({route}) => {
         setTab(paramsId);
         setInitCenter(paramsLocation);
         setModalVisible(true);
+        bottomSheetRef.current?.snapToIndex(1);
       }
     }, [paramsLocation, setInitCenter, paramsId]),
   );
@@ -127,115 +140,118 @@ const ShareSpotMap = ({route}) => {
         </Search>
       </Pressable>
 
-      <MapView>
-        <LocationButtonWrap snap={snap}>
-          <Location
-            initCenter={initCenter}
-            setInitCenter={setInitCenter}
-            setMyLocation={setMyLocation}
-            setShow={setShow}
-            toast={toast}
-          />
-        </LocationButtonWrap>
-        <ListButtonWrap>
-          <ListButton onPress={() => navigation.navigate(ShareSpotListPage)}>
-            <ListIcon />
-            <ListButtonText>목록보기</ListButtonText>
-          </ListButton>
-        </ListButtonWrap>
-        <CategoryWrap onPress={() => setModalVisible2(true)}>
-          <CategoryButton distance={6}>
-            <CategoryIcon />
-          </CategoryButton>
-        </CategoryWrap>
-        <BalloonWrapper>
-          <BalloonWrap
-            message={'원하시는 스팟이 없나요?'}
-            vertical="down"
-            size="B"
-            location={{bottom: '56px', left: '24px'}}
-          />
-        </BalloonWrapper>
-        <AddSpotWrap onPress={() => navigation.navigate(RegisterSpotMapPage)}>
-          <AddSpotButton distance={6}>
-            <Image source={SpotIcon} style={{width: 30, height: 29}} />
-          </AddSpotButton>
-        </AddSpotWrap>
-
-        <Pressable
-          style={{flex: 1}}
-          onPressIn={() => {
-            if (Platform.OS === 'ios') setMove(true);
-          }}>
-          <NaverMapView
-            onMapClick={() => bottomSheetDown()}
-            onTouch={() => {
-              if (Platform.OS === 'android') setMove(true);
-            }}
-            scaleBar={false}
-            zoomControl={false}
-            center={{...initCenter, zoom: 18}}
-            style={{width: '100%', height: '100%'}}
-            onCameraChange={handleCameraChange}>
-            {groupList?.pages?.map(v =>
-              v.items.map(el => {
-                const center = {
-                  latitude: Number(el.latitude),
-                  longitude: Number(el.longitude),
-                };
-
-                return (
-                  <Marker
-                    onClick={e => {
-                      e.stopPropagation();
-                      setTab(el.id);
-                      markerPress();
-                      setModalVisible(true);
-                    }}
-                    onPress={e => {
-                      e.stopPropagation();
-                      setTab(el.id);
-                      markerPress();
-                      setModalVisible(true);
-                    }}
-                    key={el.id}
-                    coordinate={{...center}}
-                    width={43}
-                    height={43}
-                    image={
-                      tab === el.id
-                        ? require('./icons/selectSpot.png')
-                        : require('./icons/shareSpotMarker.png')
-                    }
-                  />
-                );
-              }),
-            )}
-
-            <Marker
-              image={MarkerIcon}
-              coordinate={myLocation}
-              style={{width: 36, height: 36}}
+      {!isSuccess ? (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size={'large'} />
+        </View>
+      ) : (
+        <MapView>
+          <LocationButtonWrap snap={snap}>
+            <Location
+              initCenter={initCenter}
+              setInitCenter={setInitCenter}
+              setMyLocation={setMyLocation}
+              setShow={setShow}
+              toast={toast}
             />
-          </NaverMapView>
-        </Pressable>
-      </MapView>
+          </LocationButtonWrap>
+          <ListButtonWrap>
+            <ListButton onPress={() => navigation.navigate(ShareSpotListPage)}>
+              <ListIcon />
+              <ListButtonText>목록보기</ListButtonText>
+            </ListButton>
+          </ListButtonWrap>
+          <CategoryWrap onPress={() => setModalVisible2(true)}>
+            <CategoryButton distance={6}>
+              <CategoryIcon />
+            </CategoryButton>
+          </CategoryWrap>
+          <BalloonWrapper>
+            <BalloonWrap
+              message={'원하시는 스팟이 없나요?'}
+              vertical="down"
+              size="B"
+              location={{bottom: '56px', left: '24px'}}
+            />
+          </BalloonWrapper>
+          <AddSpotWrap onPress={() => navigation.navigate(RegisterSpotMapPage)}>
+            <AddSpotButton distance={6}>
+              <Image source={SpotIcon} style={{width: 30, height: 29}} />
+            </AddSpotButton>
+          </AddSpotWrap>
+
+          <Pressable
+            style={{flex: 1}}
+            onPressIn={() => {
+              if (Platform.OS === 'ios') setMove(true);
+            }}>
+            <NaverMapView
+              onMapClick={() => bottomSheetDown()}
+              onTouch={() => {
+                if (Platform.OS === 'android') setMove(true);
+              }}
+              scaleBar={false}
+              zoomControl={false}
+              center={{...initCenter, zoom: 18}}
+              style={{width: '100%', height: '100%'}}
+              onCameraChange={handleCameraChange}>
+              {groupList?.pages?.map(v =>
+                v.items.map(el => {
+                  const center = {
+                    latitude: Number(el.latitude),
+                    longitude: Number(el.longitude),
+                  };
+
+                  return (
+                    <Marker
+                      onClick={e => {
+                        e.stopPropagation();
+                        setTab(el.id);
+                        markerPress();
+                        setModalVisible(true);
+                      }}
+                      onPress={e => {
+                        e.stopPropagation();
+                        setTab(el.id);
+                        markerPress();
+                        setModalVisible(true);
+                      }}
+                      key={el.id}
+                      coordinate={center}
+                      width={43}
+                      height={43}
+                      image={
+                        tab === el.id
+                          ? require('./icons/selectSpot.png')
+                          : require('./icons/shareSpotMarker.png')
+                      }
+                    />
+                  );
+                }),
+              )}
+
+              <Marker
+                image={MarkerIcon}
+                coordinate={myLocation}
+                style={{width: 36, height: 36}}
+              />
+            </NaverMapView>
+          </Pressable>
+        </MapView>
+      )}
 
       {modalVisible && (
         <BottomSheetSpot
           snap={snap}
+          setInitCenter={setInitCenter}
           setSnap={setSnap}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           bottomSheetRef={bottomSheetRef}
           title={tab}
-          data={[]}
-          // onPressEvent={id => {
-          //   anotherSpot(id);
-          // }}
-          // onPressEvent2={() => {
-          //   groupManagePress();
-          // }}
+          data={groupList?.pages
+            ?.map(v => v.items.filter(el => el.id === tab))
+            .flat()}
         />
       )}
 
@@ -253,9 +269,7 @@ const ShareSpotMap = ({route}) => {
         modalVisible={modalVisible2}
         setModalVisible={setModalVisible2}
         title="필터"
-        // onPressEvent2={() => {
-        //   groupManagePress();
-        // }}
+        onPressEvent={filterButton}
       />
     </Wrap>
   );

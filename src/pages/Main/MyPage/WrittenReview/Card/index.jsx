@@ -5,11 +5,11 @@ import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
 import {css} from 'styled-components/native';
-
+import ArrowRightGrey4 from '~assets/icons/Arrow/ArrowRightGrey4.svg';
 // import AdminOrMakersReview from './AdminOrMakersReview';
 
 import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
-
+import {isOverThreeLines} from '~components/Review/WrittenReviewCard/logic';
 // import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
 import OnlyForMakers from './OnlyForMakers';

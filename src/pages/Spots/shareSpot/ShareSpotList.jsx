@@ -16,7 +16,11 @@ import Typography from '../../../components/Typography';
 import {useGetShareSpotList} from '../../../hook/useShareSpot';
 import {width, height} from '../../../theme';
 import {diningTypeString} from '../../../utils/diningType';
-import {myLocationAtom} from '../../../utils/store';
+import {
+  mealTouchAtom,
+  myLocationAtom,
+  touchInfoAtom,
+} from '../../../utils/store';
 import {PAGE_NAME as ShareSpotMapPage} from '../../Map/ShareSpotMap';
 
 export const PAGE_NAME = 'SHARE_SPOT_LIST';
@@ -25,8 +29,8 @@ const ShareSpotList = ({setShowList, showList}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [touch, setTouch] = useState([0, 1, 2]);
-  const [touchInfo, setTouchInfo] = useState([0, 1]);
+  const [mealTouch, setMealTouch] = useAtom(mealTouchAtom);
+  const [touchInfo, setTouchInfo] = useAtom(touchInfoAtom);
 
   const [myLocation, setMyLocation] = useAtom(myLocationAtom); // 기초 좌표 강남역
 
@@ -40,13 +44,25 @@ const ShareSpotList = ({setShowList, showList}) => {
     data: groupList,
     hasNextPage,
     fetchNextPage,
-  } = useGetShareSpotList(myLocation.latitude, myLocation.longitude);
+    refetch,
+  } = useGetShareSpotList(
+    myLocation.latitude,
+    myLocation.longitude,
+    mealTouch,
+    touchInfo,
+  );
 
   const dataList = groupList?.pages;
+
   const onEndReached = () => {
     if (hasNextPage) {
       fetchNextPage();
     }
+  };
+
+  const filterButton = () => {
+    refetch();
+    setModalVisible(false);
   };
 
   return (
@@ -74,10 +90,10 @@ const ShareSpotList = ({setShowList, showList}) => {
         showsVerticalScrollIndicator={false}
         onEndReached={onEndReached}
         data={dataList}
-        renderItem={({item}) => {
+        renderItem={({item: {items}}) => {
           return (
             <View>
-              {item?.items?.map(el => {
+              {items?.map(el => {
                 const diningType = [1, 2, 3];
 
                 return (
@@ -89,6 +105,7 @@ const ShareSpotList = ({setShowList, showList}) => {
                       <MealIcon />
                       {diningType.map(v => (
                         <DiningTypeText
+                          key={v}
                           type={el.diningType.includes(v)}
                           value={v}>
                           {diningTypeString(v)}
@@ -121,16 +138,14 @@ const ShareSpotList = ({setShowList, showList}) => {
         </ListButton>
       </ListButtonWrap>
       <BottomSheetFilter
-        touch={touch}
-        setTouch={setTouch}
+        touch={mealTouch}
+        setTouch={setMealTouch}
         touchInfo={touchInfo}
         setTouchInfo={setTouchInfo}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="필터"
-        // onPressEvent2={() => {
-        //   groupManagePress();
-        // }}
+        onPressEvent={filterButton}
       />
     </Wrap>
   );

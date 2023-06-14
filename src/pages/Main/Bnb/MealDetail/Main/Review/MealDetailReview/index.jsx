@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Dimensions, View} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styled, {useTheme} from 'styled-components';
@@ -79,9 +79,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     dailyFoodId,
     orderFilter,
     isOnlyPhoto,
-    // rateSelected,
     selectedKeyword,
     setUrl,
+    rateSelected,
   ]);
 
   const {
@@ -136,7 +136,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
 
   useEffect(() => {
     if (data?.pages) {
-      const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
+      const {starAverage, isLast, foodId, totalReview, reviewWrite} =
         data?.pages[0];
 
       setStarAverage(starAverage);
@@ -150,8 +150,14 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const [showSelectList, setShowSelectList] = useState(false);
 
   // useEffect(() => {
-  //   console.log(foodId);
+  //   console.log('푸드아이딩~');
+  //   console.log(foodId); //
   // }, [foodId]);
+
+  // useEffect(() => {
+  //   console.log('데일리푸드아이딩~');
+  //   console.log(dailyFoodId); //
+  // });
 
   // best, latest, photo, rating, like
 
@@ -353,7 +359,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         {data?.pages.map((v, i) => {
           return (
             <View key={i}>
-              {v.items.map((item, i2) => {
+              {v.items.map(item => {
                 return (
                   <Card
                     key={item.reviewId}
@@ -612,28 +618,6 @@ const ReviewListWrap = styled.View`
   background-color: #ffffff;
 `;
 
-const CardsWrap = styled.View`
-  /* margin-bottom: 40px; */
-  /* border: 1px solid black; */
-`;
-
-const MoreReviewPressable = styled.Pressable`
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-
-  padding: 17px 0px;
-
-  border: 1px solid ${({theme}) => theme.colors.grey[7]};
-  border-radius: 7px;
-`;
-
-const MoreReviewText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[3]};
-  margin-right: 10px;
-`;
-
 const LoadingPage = styled.View`
   background-color: white;
   opacity: 0.5;
@@ -647,16 +631,6 @@ const LoadingPage = styled.View`
 
 const LoadingPage1 = styled.View`
   margin-bottom: 18px;
-`;
-
-const IconWrap = styled.View`
-  width: 12px;
-  height: 12px;
-
-  /* border: 1px solid black; */
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
 `;
 
 const BottomModalSelecterComponent = ({selected, item}) => {

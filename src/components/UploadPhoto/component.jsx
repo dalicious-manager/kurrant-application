@@ -46,7 +46,7 @@ const Component = ({photosArray, setPhotosArray}) => {
 
       const fileSize = res.assets[0].fileSize;
       if (fileSize > 4900 * 1000) {
-        Alert.alert('용량초과', '사진은 5MB이하 크리고 업로드해주세요', [
+        Alert.alert('용량초과', '사진은 5MB 이하 크기로 업로드해 주세요', [
           {
             text: '확인',
             onPress: () => {
