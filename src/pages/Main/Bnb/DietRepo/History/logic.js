@@ -81,23 +81,20 @@ export const modifyHistoryList = (data, week) => {
 
   // 일주일로 만들기
 
-  let yo = [];
+  let arr = [];
 
   week.map(vWeek => {
-    // console.log('값 확인 ' + vWeek);
-    // console.log(data.map(vData => vData.eatDate));
-    // console.log(toStringByFormatting(vWeek));
     if (
       data.map(vData => vData.eatDate).includes(toStringByFormatting(vWeek))
     ) {
       // yo.push(true);
 
-      yo.push(
+      arr.push(
         data.find(vData => vData.eatDate === toStringByFormatting(vWeek)),
       );
     } else {
       // yo.push(false);
-      yo.push({
+      arr.push({
         eatDate: toStringByFormatting(vWeek),
         calorie: 0,
         protein: 0,
@@ -107,5 +104,5 @@ export const modifyHistoryList = (data, week) => {
     }
   });
 
-  return yo;
+  return arr;
 };

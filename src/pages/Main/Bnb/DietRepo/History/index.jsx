@@ -36,19 +36,13 @@ const Pages = ({route}) => {
       ? calcWeekArr(stringDateToJavascriptDate(route?.params?.date, '-'))
       : calcWeekArr(new Date()),
   );
-  const {isDietRepoHistoryRefetchLoading, historyDataList} = useGetDietRepo(
+  const {historyDataList} = useGetDietRepo(
     undefined,
     undefined,
     undefined,
     toStringByFormatting(week[0]),
     toStringByFormatting(week[6]),
   );
-
-  useEffect(() => {
-    console.log('historyDataList');
-    console.log(historyDataList);
-    console.log(modifyHistoryList(historyDataList, week));
-  }, [historyDataList]);
 
   // week 값은 이렇습니다
   // [월요일 자바스크립트 date객체,
@@ -60,40 +54,6 @@ const Pages = ({route}) => {
   // 일요일 자바스크립트 date객체]
 
   // params에 date가 들어갈때 그 일주일을 계산하기
-
-  const TablesSampleData = [
-    {
-      date: '05.08',
-      cal: 2100,
-      carbo: 400,
-      protein: 40,
-      fat: 45,
-    },
-
-    {
-      date: '05.09',
-      cal: 2100,
-      carbo: 400,
-      protein: 40,
-      fat: 45,
-    },
-
-    {
-      date: '05.10',
-      cal: 2100,
-      carbo: 400,
-      protein: 40,
-      fat: 45,
-    },
-
-    {
-      date: '05.11',
-      cal: 2000,
-      carbo: 300,
-      protein: 30,
-      fat: 45,
-    },
-  ];
 
   return (
     <ContainerScrollView
@@ -140,8 +100,7 @@ const Pages = ({route}) => {
         //   {x: '11월', carbohydrate: 0, protein: 0, fat: 0},
         //   {x: '12월', carbohydrate: 520, protein: 75, fat: 0},
         // ]}
-        // data={modifyStackedBarData(sampleStackedBarData1)}
-        // data={modifyStackedBarData(historyDataList)}
+
         data={modifyStackedBarData(modifyHistoryList(historyDataList, week))}
         dataOrder={['carbohydrate', 'protein', 'fat']}
         colorSetting={{
@@ -163,7 +122,7 @@ const Pages = ({route}) => {
         //   {x: '15일', y: 610},
         //   {x: '오늘', y: 2100},
         // ]}
-        // data={modifyHistoryLineChartData(sampleStackedBarData1)}
+
         data={modifyHistoryLineChartData(
           modifyHistoryList(historyDataList, week),
         )}
@@ -172,7 +131,6 @@ const Pages = ({route}) => {
       />
       <GreyBlock width={screenWidth} />
 
-      {/* <HistoryTables data={sampleStackedBarData1} /> */}
       <HistoryTables data={historyDataList} />
       <Filler />
     </ContainerScrollView>
