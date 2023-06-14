@@ -15,6 +15,11 @@ const HistoryStackedBarChart = ({
 }) => {
   // height가 없을 경우 height는 자동적으로 width의 258/327을 곱하기
 
+  useEffect(() => {
+    console.log('data 라라라라ㅏ라라라');
+    console.log(data);
+  }, [data]);
+
   const theme = useTheme();
 
   const viewRef = useRef(null);

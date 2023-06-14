@@ -57,6 +57,9 @@ export const sampleStackedBarData1 = [
 ];
 
 export const modifyStackedBarData = inputData => {
+  console.log('가가가가ㅏ가가가가ㅏ가가가ㅏㄱ');
+  console.log(inputData);
+
   return inputData.map(v => {
     return {
       x: `${extractMonthAndDateFromDate2(v.eatDate, '-')[1]}일`,
@@ -76,33 +79,40 @@ export const modifyHistoryLineChartData = inputData =>
 // 서버 데이터랑, week 랑
 
 export const modifyHistoryList = (data, week) => {
-  // data가 없을 경우 빈 배열을 리턴한다
-  if (!Array.isArray(data) || data.length <= 0) return [];
-
-  // 일주일로 만들기
-
-  let arr = [];
-
-  week.map(vWeek => {
-    if (
-      data.map(vData => vData.eatDate).includes(toStringByFormatting(vWeek))
-    ) {
-      // yo.push(true);
-
-      arr.push(
-        data.find(vData => vData.eatDate === toStringByFormatting(vWeek)),
-      );
-    } else {
-      // yo.push(false);
-      arr.push({
+  // data가 없을 경우 week 날짜 입력
+  if (!Array.isArray(data) || data.length <= 0) {
+    return week.map(vWeek => {
+      return {
         eatDate: toStringByFormatting(vWeek),
         calorie: 0,
         protein: 0,
         fat: 0,
         carbohydrate: 0,
-      });
-    }
-  });
+      };
+    });
+  } else {
+    // 일주일로 만들기
 
-  return arr;
+    let arr = [];
+
+    week.map(vWeek => {
+      if (
+        data.map(vData => vData.eatDate).includes(toStringByFormatting(vWeek))
+      ) {
+        arr.push(
+          data.find(vData => vData.eatDate === toStringByFormatting(vWeek)),
+        );
+      } else {
+        arr.push({
+          eatDate: toStringByFormatting(vWeek),
+          calorie: 0,
+          protein: 0,
+          fat: 0,
+          carbohydrate: 0,
+        });
+      }
+    });
+
+    return arr;
+  }
 };
