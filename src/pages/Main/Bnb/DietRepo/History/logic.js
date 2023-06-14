@@ -57,9 +57,6 @@ export const sampleStackedBarData1 = [
 ];
 
 export const modifyStackedBarData = inputData => {
-  console.log('가가가가ㅏ가가가가ㅏ가가가ㅏㄱ');
-  console.log(inputData);
-
   return inputData.map(v => {
     return {
       x: `${extractMonthAndDateFromDate2(v.eatDate, '-')[1]}일`,

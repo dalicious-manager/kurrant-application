@@ -289,10 +289,6 @@ const ChartBasic = ({dataBasic, width = 300, height = 200, chartConfig}) => {
   // y축 끝 마무리 다듬기 추가
 
   // 주요 값 확인하기
-  useEffect(() => {
-    console.log('xAxisLabels 랄랄라');
-    console.log(xAxisLabels);
-  }, [xAxisLabels]);
 
   return (
     <G key={'chartBasic'}>
