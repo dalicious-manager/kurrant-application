@@ -19,6 +19,7 @@ import {
 import {calcWeekArr, extractMonthAndDateFromDate2} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 import {
+  modifyHistoryList,
   modifyHistoryLineChartData,
   modifyStackedBarData,
   sampleStackedBarData1,
@@ -32,9 +33,16 @@ const Pages = ({route}) => {
 
   const {isDietRepoHistoryRefetchLoading, historyDataList} = useGetDietRepo();
 
+  const [week, setWeek] = useState(
+    route?.params?.date
+      ? calcWeekArr(stringDateToJavascriptDate(route?.params?.date, '-'))
+      : calcWeekArr(new Date()),
+  );
+
   useEffect(() => {
     console.log('historyDataList');
     console.log(historyDataList);
+    console.log(modifyHistoryList(historyDataList, week));
   }, [historyDataList]);
 
   // week 값은 이렇습니다
@@ -45,12 +53,6 @@ const Pages = ({route}) => {
   // 금요일 자바스크립트 date객체,
   // 토요일 자바스크립트 date객체,
   // 일요일 자바스크립트 date객체]
-
-  const [week, setWeek] = useState(
-    route?.params?.date
-      ? calcWeekArr(stringDateToJavascriptDate(route?.params?.date, '-'))
-      : calcWeekArr(new Date()),
-  );
 
   // params에 date가 들어갈때 그 일주일을 계산하기
 

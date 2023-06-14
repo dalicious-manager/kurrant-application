@@ -57,7 +57,7 @@ const useGetDietRepo = (mainDate, addMealDate, addMealDiningType) => {
     ['dietRepo', 'history'],
     async ({queryKey}) => {
       const response = await fetchJson(
-        `/users/me/daily/report/history?startDate=2023-05-01&endDate=2023-06-08`,
+        `/users/me/daily/report/history?startDate=2023-06-05&endDate=2023-06-11`,
         'GET',
       );
 

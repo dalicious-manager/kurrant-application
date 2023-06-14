@@ -1,3 +1,7 @@
+import {
+  calcTimeBetweenTwoDates,
+  toStringByFormatting,
+} from '../../../../../utils/dateFormatter';
 import {extractMonthAndDateFromDate2} from '../logic';
 
 export const sampleStackedBarData1 = [
@@ -69,12 +73,33 @@ export const modifyHistoryLineChartData = inputData =>
     };
   });
 
-export const modifyHistoryDataList = data => {
-  if (!Array.isArray(data) || data.length <= 0) return;
+// 서버 데이터랑, week 랑
 
-  const startDate = data[0].eatDate;
+export const modifyHistoryList = (data, week) => {
+  // data가 없을 경우 빈 배열을 리턴한다
+  if (!Array.isArray(data) || data.length <= 0) return [];
 
-  const endDate = data[data.length - 1].eatDate;
+  // 일주일로 만들기
 
-  return {};
+  let yo = [];
+
+  week.map(vWeek => {
+    if (
+      data.map(vData => vData.eatDate).includes(toStringByFormatting(vWeek))
+    ) {
+      yo.push(
+        data.find(vData => vData.eatDate === toStringByFormatting(vWeek)),
+      );
+    } else {
+      yo.push({
+        eatDate: toStringByFormatting(vWeek),
+        calorie: 0,
+        protein: 0,
+        fat: 0,
+        carbohydrate: 0,
+      });
+    }
+  });
+
+  return yo;
 };
