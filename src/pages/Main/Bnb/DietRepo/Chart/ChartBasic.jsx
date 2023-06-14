@@ -60,7 +60,12 @@ const ChartBasic = ({dataBasic, width = 300, height = 200, chartConfig}) => {
         yAxisLableArr.push({
           i: i,
 
-          value: dataBasic.length !== 0 ? 0 + (i * M) / rate : undefined,
+          value:
+            dataBasic.length !== 0
+              ? 0 + (i * M) / rate !== 0
+                ? 0 + (i * M) / rate
+                : undefined
+              : undefined,
 
           y: four + ((rate - i) * (height - four - two)) / rate,
         });
@@ -69,7 +74,12 @@ const ChartBasic = ({dataBasic, width = 300, height = 200, chartConfig}) => {
       yAxisLableArr.push({
         i: i,
 
-        value: dataBasic.length !== 0 ? 0 + (i * M) / rate : undefined,
+        value:
+          dataBasic.length !== 0
+            ? 0 + (i * M) / rate !== 0
+              ? 0 + (i * M) / rate
+              : undefined
+            : undefined,
 
         y: four + ((rate - i) * (height - four - two)) / rate,
       });

@@ -125,7 +125,6 @@ const Pages = ({route}) => {
         data={modifyHistoryLineChartData(
           modifyHistoryList(historyDataList, week),
         )}
-        // data={undefined}
         title="칼로리"
         width={'100%'}
       />
