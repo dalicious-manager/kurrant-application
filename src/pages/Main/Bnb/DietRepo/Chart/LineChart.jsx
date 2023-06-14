@@ -24,6 +24,11 @@ const LineChart = ({
 }) => {
   //// 1. 필요한 데이터
 
+  // useEffect(() => {
+  //   console.log('데이터베이직 ');
+  //   console.log(dataBasic);
+  // }, [dataBasic]);
+
   const {one, two, three, four, five} = chartConfig;
 
   // (0,0)점
@@ -62,10 +67,14 @@ const LineChart = ({
 
   // 점 좌표
   const dotsCoordinateArr = dataBasic.map((v, i) => {
-    return {
-      x: one + five + i * xTickWidth,
-      y: zeroY - ((chartHeight - two - four) * v.y) / M,
-    };
+    if (Number.isNaN(zeroY - ((chartHeight - two - four) * v.y) / M)) {
+      return {};
+    } else {
+      return {
+        x: one + five + i * xTickWidth,
+        y: zeroY - ((chartHeight - two - four) * v.y) / M,
+      };
+    }
   });
 
   // 그래프 그리기
@@ -74,10 +83,10 @@ const LineChart = ({
 
   for (let i = 0; i < dataBasic.length - 1; i++) {
     chartCoordinateArr.push({
-      x1: dotsCoordinateArr[i].x,
-      y1: dotsCoordinateArr[i].y,
-      x2: dotsCoordinateArr[i + 1].x,
-      y2: dotsCoordinateArr[i + 1].y,
+      x1: dotsCoordinateArr[i]?.x,
+      y1: dotsCoordinateArr[i]?.y,
+      x2: dotsCoordinateArr[i + 1]?.x,
+      y2: dotsCoordinateArr[i + 1]?.y,
     });
   }
 
@@ -112,6 +121,17 @@ const LineChart = ({
     );
   };
 
+  // chartCoordinateArr = [];
+
+  useEffect(() => {
+    console.log('dotsCoordinateArr');
+    console.log(dotsCoordinateArr);
+  }, [dotsCoordinateArr]);
+  useEffect(() => {
+    console.log('chartCoordinateArr');
+    console.log(chartCoordinateArr);
+  }, [chartCoordinateArr]);
+
   return (
     <Container width={chartWidth} height={chartHeight}>
       <Svg height="100%" width="100%">
@@ -123,17 +143,33 @@ const LineChart = ({
         />
 
         {/* 점 */}
-        {dotsCoordinateArr.map((v, i) => {
-          return <Dot key={i} x={v.x} y={v.y} />;
-        })}
+        {dotsCoordinateArr.length > 0 &&
+          dotsCoordinateArr.map((v, i) => {
+            return <Dot key={i} x={v.x} y={v.y} />;
+          })}
 
         {/* 선 */}
 
-        {chartCoordinateArr.map((v, i) => {
-          return (
-            <ChartLine key={i} x1={v.x1} y1={v.y1} x2={v.x2} y2={v.y2} i={i} />
-          );
-        })}
+        {chartCoordinateArr.length > 0 &&
+          chartCoordinateArr.map((v, i) => {
+            if (i === 0) {
+              console.log('----------------------------');
+            }
+
+            console.log(`${i}번째 값`);
+            console.log(v);
+
+            return (
+              <ChartLine
+                key={i}
+                x1={v.x1}
+                y1={v.y1}
+                x2={v.x2}
+                y2={v.y2}
+                i={i}
+              />
+            );
+          })}
       </Svg>
     </Container>
   );
