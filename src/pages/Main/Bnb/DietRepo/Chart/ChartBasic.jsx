@@ -1,18 +1,29 @@
-import {useEffect, useRef} from 'react';
+import {Circle, G, Line, Text as SvgText} from 'react-native-svg';
 
-import {Circle, G, Line, Svg, Text as SvgText} from 'react-native-svg';
-import styled from 'styled-components';
 import {decideTopValueAndDividend} from './ChartLogic';
-import {Text} from 'react-native';
 
-const ChartBasic = ({
-  dataBasic,
+const filterStrangeValue = value => {
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    typeof value === 'bigint'
+  ) {
+    if (!Number.isNaN(value)) {
+      // -Infinity, +Infinity
+      if (value == '-Infinity' || value == '+Infinity') {
+        return;
+      } else {
+        return value;
+      }
+    }
+  }
+};
 
-  width = 300,
-  height = 200,
-  chartConfig,
-}) => {
+const ChartBasic = ({dataBasic, width = 300, height = 200, chartConfig}) => {
   const {one, two, three, four, five, six, unit, showUnit} = chartConfig;
+
+  // 데이터가 아예 없는 경우 databasic === []
 
   //// 1. 길이 계산
 
@@ -48,7 +59,8 @@ const ChartBasic = ({
         yAxisLableArr.push({
           i: i,
 
-          value: 0 + (i * M) / rate,
+          value: dataBasic.length !== 0 ? 0 + (i * M) / rate : undefined,
+
           y: four + ((rate - i) * (height - four - two)) / rate,
         });
       }
@@ -56,16 +68,12 @@ const ChartBasic = ({
       yAxisLableArr.push({
         i: i,
 
-        value: 0 + (i * M) / rate,
+        value: dataBasic.length !== 0 ? 0 + (i * M) / rate : undefined,
+
         y: four + ((rate - i) * (height - four - two)) / rate,
       });
     }
   }
-
-  // useEffect(() => {
-  //   console.log('yAxisLableArr 값 확인하기 ');
-  //   console.log(yAxisLableArr);
-  // }, [yAxisLableArr]);
 
   // y축 label배열 값
 
