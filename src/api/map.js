@@ -67,14 +67,20 @@ export const mapApis = {
       },
     });
     const result = await res.json();
-    return result.documents;
-    //return result.items;
-    // .then(response => response.json())
-    // .then(responseJson => {
-    //   return responseJson;
-    // })
-    // .catch(error => {
-    //   console.error(error);
-    // });
+
+    if (result.documents.length > 0) {
+      return result.documents;
+    }
+    const addrApiUrl = `https://dapi.kakao.com/v2/local/search/address.json?query=${query}&x=${lat}&y=${lng}&sort=${sort}`;
+
+    const addrRes = await fetch(addrApiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `KakaoAK ${key}`,
+      },
+    });
+    const addrResult = await addrRes.json();
+
+    return addrResult.documents;
   },
 };

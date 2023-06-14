@@ -13,6 +13,7 @@ import {PAGE_NAME as ApplySpot} from '../../Spots/shareSpot/ApplySpot';
 const AddressList = ({setFocus, data, type}) => {
   const navigation = useNavigation();
   const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom); // 어느 경로로 왔는지 0 : 지도에서 1: 검색 리스트에서
+
   const onPress = async (name, address, x, y) => {
     const res = await mapApis.getRoadAddress(x, y);
     const jibunRes = await mapApis.getAddress(address);
@@ -57,12 +58,20 @@ const AddressList = ({setFocus, data, type}) => {
               key={idx}
               lastArr={lastArr}
               onPress={() => {
-                onPress(el.place_name, el.road_address_name, el.x, el.y);
+                onPress(
+                  el.place_name ? el.place_name : el.address_name,
+                  el.road_address_name
+                    ? el.road_address_name
+                    : el.road_address.address_name,
+                  el.x,
+                  el.y,
+                );
                 setFromRoot(1);
               }}>
-              <Name>{el.place_name}</Name>
+              <Name>{el.place_name ?? el.address_name}</Name>
               <Address>
-                {el.road_address_name} {el.place_name}
+                {el.road_address_name ?? el.road_address.address_name}{' '}
+                {el.place_name}
               </Address>
             </Contents>
           );

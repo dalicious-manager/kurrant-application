@@ -149,13 +149,14 @@ const Component = props => {
               showsVerticalScrollIndicator={false}>
               <Address>
                 <Image source={PickGrey} style={{width: 20, height: 20}} />
-                <Body06RText style={{marginLeft: 16}}>
-                  {detail.address}
-                  {'\n'}
+                <View style={{marginLeft: 16}}>
+                  <Name>
+                    <Body06RText>{detail.address}</Body06RText>
+                  </Name>
                   <Body06RText style={{color: '#BDBAC1'}}>
                     역삼동 704-45
                   </Body06RText>
-                </Body06RText>
+                </View>
               </Address>
               <Border />
               <DiningTypeWrap snap={snap}>
@@ -349,6 +350,8 @@ const Border = styled.View`
 
 const Address = styled.View`
   flex-direction: row;
+  align-items: flex-start;
+  background-color: olive;
 `;
 
 const DeliveryWrap = styled.View`
@@ -438,3 +441,11 @@ const DiningTypeDisabledText = styled(Typography).attrs({text: 'Body06R'})`
   margin-left: 12px;
   margin-right: 8px;
 `;
+
+const Name = styled.View`
+  word-break: break-all;
+  background-color: gold;
+  /* width: 90%; */
+`;
+
+const AddressWrap = styled.View``;

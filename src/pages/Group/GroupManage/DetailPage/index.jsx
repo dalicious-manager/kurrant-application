@@ -18,11 +18,11 @@ import Typography from '../../../../components/Typography';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {setStorage} from '../../../../utils/asyncStorage';
 import withCommas from '../../../../utils/withCommas';
+import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as ApartModifyAddressHoPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailHo';
 import {PAGE_NAME as CreateGroupPageName} from '../../GroupCreate';
 import {PAGE_NAME as SelectSpotPageName} from '../../GroupManage';
-
 const WIDTH = Dimensions.get('screen').width;
 export const PAGE_NAME = 'P__GROUP__MANAGE__DETAIL';
 const Pages = ({route}) => {
@@ -250,7 +250,7 @@ const Pages = ({route}) => {
             }}
           />
         </ButtonBox>
-        <AddSpotWrap onPress={() => navigation.navigate(CreateGroupPageName)}>
+        <AddSpotWrap onPress={() => navigation.navigate(SpotTypePage)}>
           <AddSpotText>다른 스팟 신청/추가</AddSpotText>
         </AddSpotWrap>
       </BottomContainer>

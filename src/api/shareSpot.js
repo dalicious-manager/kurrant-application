@@ -2,16 +2,15 @@ import {fetchJson} from '../utils/fetch';
 
 export const shareSpotApis = {
   loadSpotList: async (lat, long, pageParam, mealTouch, touchInfo) => {
-    const type = touchInfo.includes(2)
-      ? `&isRestriction=${true}`
-      : touchInfo.includes(3)
-      ? `&isRestriction=${false}`
-      : null;
+    let url = `/users/me/groups/spots/share?lat=${lat}&long=${long}&limit=10&page=${pageParam}&diningType=${mealTouch}`;
 
-    const res = await fetchJson(
-      `/users/me/groups/spots/share?lat=${lat}&long=${long}&limit=10&page=${pageParam}&diningType=${2}`,
-      'GET',
-    );
+    if (touchInfo.includes(2)) {
+      url += '&isRestriction=false';
+    } else if (touchInfo.includes(3)) {
+      url += '&isRestriction=true';
+    }
+
+    const res = await fetchJson(url, 'GET');
 
     const {items, isLast} = res.data;
     return {items, currentPage: pageParam, isLast};

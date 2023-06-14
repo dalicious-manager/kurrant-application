@@ -41,7 +41,12 @@ import Typography from '../../components/Typography';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {useGetShareSpotList} from '../../hook/useShareSpot';
 import {width, height} from '../../theme';
-import {myLocationAtom, userLocationAtom} from '../../utils/store';
+import {
+  mealTouchAtom,
+  myLocationAtom,
+  touchInfoAtom,
+  userLocationAtom,
+} from '../../utils/store';
 import {PAGE_NAME as RegisterSpotMapPage} from '../Map/RegisterSpotMap';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 import {PAGE_NAME as ShareSpotListPage} from '../Spots/shareSpot/ShareSpotList';
@@ -58,8 +63,8 @@ const ShareSpotMap = ({route}) => {
   const bottomSheetRef = useRef(null);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [snap, setSnap] = useState(0);
-  const [mealTouch, setMealTouch] = useState([1, 2, 3]);
-  const [touchInfo, setTouchInfo] = useState([1]);
+  const [mealTouch, setMealTouch] = useAtom(mealTouchAtom);
+  const [touchInfo, setTouchInfo] = useAtom(touchInfoAtom);
   const {balloonEvent, BalloonWrap, balloonEventNotOut} = BalloonSpot();
   const [modalVisible, setModalVisible] = useState(false);
   const [showList, setShowList] = useState(false);
@@ -265,9 +270,6 @@ const ShareSpotMap = ({route}) => {
         setModalVisible={setModalVisible2}
         title="필터"
         onPressEvent={filterButton}
-        // onPressEvent2={() => {
-        //   groupManagePress();
-        // }}
       />
     </Wrap>
   );
