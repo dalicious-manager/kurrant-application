@@ -121,17 +121,6 @@ const LineChart = ({
     );
   };
 
-  // chartCoordinateArr = [];
-
-  useEffect(() => {
-    console.log('dotsCoordinateArr');
-    console.log(dotsCoordinateArr);
-  }, [dotsCoordinateArr]);
-  useEffect(() => {
-    console.log('chartCoordinateArr');
-    console.log(chartCoordinateArr);
-  }, [chartCoordinateArr]);
-
   return (
     <Container width={chartWidth} height={chartHeight}>
       <Svg height="100%" width="100%">
@@ -152,13 +141,6 @@ const LineChart = ({
 
         {chartCoordinateArr.length > 0 &&
           chartCoordinateArr.map((v, i) => {
-            if (i === 0) {
-              console.log('----------------------------');
-            }
-
-            console.log(`${i}번째 값`);
-            console.log(v);
-
             return (
               <ChartLine
                 key={i}

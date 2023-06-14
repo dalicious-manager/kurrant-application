@@ -1,6 +1,7 @@
 import {Circle, G, Line, Text as SvgText} from 'react-native-svg';
 
 import {decideTopValueAndDividend} from './ChartLogic';
+import {useEffect} from 'react';
 
 const filterStrangeValue = value => {
   if (
@@ -278,6 +279,11 @@ const ChartBasic = ({dataBasic, width = 300, height = 200, chartConfig}) => {
   // y축 끝 마무리 다듬기 추가
 
   // 주요 값 확인하기
+
+  useEffect(() => {
+    console.log('yAxisLableArr 값 확인');
+    console.log(yAxisLableArr);
+  }, [yAxisLableArr]);
 
   return (
     <G key={'chartBasic'}>
