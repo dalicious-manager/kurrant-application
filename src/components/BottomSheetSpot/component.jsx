@@ -175,7 +175,7 @@ const BottomSheetSpot = props => {
                       ? el.spotName.split('null')[0]
                       : el.spotName;
                     const arrs = data[data.length - 1];
-                    console.log();
+
                     return (
                       <ContentItemContainer
                         lastArr={arrs === item}
