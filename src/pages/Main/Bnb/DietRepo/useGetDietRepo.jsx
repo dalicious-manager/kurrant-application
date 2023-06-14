@@ -72,7 +72,7 @@ const useGetDietRepo = (
       );
     },
     {
-      // enabled: !!addMealDate && !!addMealDiningType,
+      enabled: !!historyStartDate && !!historyEndDate,
     },
   );
 

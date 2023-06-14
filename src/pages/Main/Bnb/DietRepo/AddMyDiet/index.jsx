@@ -24,11 +24,6 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddMyDiet';
 const Pages = ({route}) => {
   const navigation = useNavigation();
 
-  useEffect(() => {
-    console.log('확인해라');
-    console.log(route?.params?.date);
-  }, [route?.params?.date]);
-
   const {addCustomMeal} = useDietRepoMutation(route?.params?.date);
 
   const form = useForm({

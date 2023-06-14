@@ -27,11 +27,6 @@ const Pages = ({route}) => {
   // console.log(extractMonthAndDateFromDate(route?.params?.date, '-'));
   // console.log(route?.params?.diningType);
 
-  useEffect(() => {
-    console.log('확인해라');
-    console.log(route?.params?.date);
-  }, [route?.params?.date]);
-
   const {dietRepoAddMealList, isDietRepoAddRefetchLoading} = useGetDietRepo(
     undefined,
     route?.params?.date,
