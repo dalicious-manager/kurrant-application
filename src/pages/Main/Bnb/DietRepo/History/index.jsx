@@ -64,7 +64,6 @@ const Pages = ({route}) => {
       <DateSelectorWrap>
         <Pressable
           onPress={() => {
-            console.log(calcDate(-7, week[0]));
             setWeek(calcWeekArr(calcDate(-7, week[0])));
           }}>
           <GreyArrowLeftInACircle />
