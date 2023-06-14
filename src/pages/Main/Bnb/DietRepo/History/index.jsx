@@ -40,7 +40,6 @@ const Pages = ({route}) => {
     undefined,
     undefined,
     undefined,
-
     toStringByFormatting(week[0]),
     toStringByFormatting(week[6]),
   );
@@ -143,7 +142,7 @@ const Pages = ({route}) => {
         // ]}
         // data={modifyStackedBarData(sampleStackedBarData1)}
         // data={modifyStackedBarData(historyDataList)}
-        data={modifyHistoryList(historyDataList, week)}
+        data={modifyStackedBarData(modifyHistoryList(historyDataList, week))}
         dataOrder={['carbohydrate', 'protein', 'fat']}
         colorSetting={{
           carbohydrate: '#4F6FDF',
@@ -165,7 +164,9 @@ const Pages = ({route}) => {
         //   {x: '오늘', y: 2100},
         // ]}
         // data={modifyHistoryLineChartData(sampleStackedBarData1)}
-        data={modifyStackedBarData(historyDataList)}
+        data={modifyHistoryLineChartData(
+          modifyHistoryList(historyDataList, week),
+        )}
         title="칼로리"
         width={'100%'}
       />
