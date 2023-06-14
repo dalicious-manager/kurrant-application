@@ -134,7 +134,7 @@ const DietRepoCalendar = ({
               <Wrap>
                 {week.map((day, idx) => {
                   const txt = format(day, 'EEE', {locale: ko});
-                  //ㄱconsole.log(txt, 'day');
+
                   const now = formattedDate(day) === formattedDate(today);
                   const pressDay = formattedDate(day);
                   const propsDay = formattedWeekDate(day);
@@ -219,98 +219,6 @@ const DietRepoCalendar = ({
             </View>
           );
         })}
-
-        {/* <View>
-          <Wrap>
-            {[
-              stringDateToJavascriptDate('2023-05-14', '-'),
-              stringDateToJavascriptDate('2023-05-15', '-'),
-              stringDateToJavascriptDate('2023-05-16', '-'),
-              stringDateToJavascriptDate('2023-05-17', '-'),
-              stringDateToJavascriptDate('2023-05-18', '-'),
-              stringDateToJavascriptDate('2023-05-19', '-'),
-              stringDateToJavascriptDate('2023-05-20', '-'),
-            ].map((day, idx) => {
-              console.log('day 데이터 확인');
-              console.log(day);
-
-              const txt = format(day, 'EEE', {locale: ko});
-              //ㄱconsole.log(txt, 'day');
-              const now = formattedDate(day) === formattedDate(today);
-              const propsDay = formattedWeekDate(day);
-              const lastDay =
-                formattedDate(day, '/') < formattedDate(today, '/');
-              const order = isOrderMeal?.data?.filter(
-                x => x.serviceDate === propsDay,
-              );
-              const set = new Set(order?.map(x => x.diningType));
-
-              const orderCount = [...set].length;
-
-              // 서비스일
-              const morning =
-                (sliderValue === 0 && morningServiceDays?.includes(txt)) ||
-                morningServiceDays?.includes(txt);
-              const lunch =
-                (sliderValue === 1 && lunchServiceDays?.includes(txt)) ||
-                lunchServiceDays?.includes(txt);
-              const dinner =
-                (sliderValue === 2 && dinnerServiceDays?.includes(txt)) ||
-                dinnerServiceDays?.includes(txt);
-
-              const events = () => {
-                selectedPress(day);
-                onPressEvent2(propsDay);
-              };
-              return (
-                <DaysWrap
-                  key={day}
-                  idx={idx}
-                  disabled={
-                    (lastDay && true) ||
-                    morning === false ||
-                    lunch === false ||
-                    dinner === false
-                  }
-                  onPress={() => {}}>
-                  <DayWeek
-                    lastDay={lastDay}
-                    color={color}
-                    size={size}
-                    morning={morning}
-                    lunch={lunch}
-                    now={now}
-                    dinner={dinner}>
-                    {now ? '오늘' : txt}
-                  </DayWeek>
-                  <TodayCircle
-                    now={now}
-                    type={type}
-                    currentPress={currentPress}
-                    day={day}>
-                    <Day
-                      morning={morning}
-                      lunch={lunch}
-                      dinner={dinner}
-                      color={color}
-                      lastDay={lastDay}
-                      now={now}
-                      size={size}>
-                      {day.getDate()}
-                    </Day>
-                  </TodayCircle>
-                  {order && (
-                    <DotWrap>
-                      {Array.from(Array(orderCount), (x, idx) => (
-                        <Dot key={idx} lastDay={lastDay} />
-                      ))}
-                    </DotWrap>
-                  )}
-                </DaysWrap>
-              );
-            })}
-          </Wrap>
-        </View> */}
       </PagerViewWrap>
     </React.Fragment>
   );

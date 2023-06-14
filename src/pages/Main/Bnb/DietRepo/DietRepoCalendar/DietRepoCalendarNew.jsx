@@ -40,7 +40,7 @@ const DietRepoCalendarNew = ({
   type = 'grey7',
   color = 'grey2',
   size = 'Body06R',
-
+  disableTemporarly,
   onPressEvent2,
 
   onPageScroll2,
@@ -91,29 +91,11 @@ const DietRepoCalendarNew = ({
         console.log('이니셜데이트 없음');
       }
 
-      pager.current.setPage(2);
-      setChk(2);
+      pager.current.setPage(3);
+      setChk(3);
       setIsMount(false);
     }, 100);
   }, []);
-
-  //   useEffect(() => {
-  //     setIsMount(true);
-  //   }, []);
-
-  //   useEffect(() => {
-  //     // '첫 렌더시 해당 날짜로 위치하게 하기'
-  //     if (selectDate && isMount) {
-  //       setTimeout(() => {
-  //         pager.current.setPage(calculateSelectDatePosition(selectDate, weekly));
-  //       }, 100);
-  //       setChk(calculateSelectDatePosition(selectDate, weekly));
-  //       setIsMount(false);
-  //     }
-  //     setCurrentPress(selectDate);
-  //   }, [selectDate, weekly, isMount, setIsMount]);
-
-  /////// 끝
 
   return (
     <React.Fragment>
@@ -121,7 +103,7 @@ const DietRepoCalendarNew = ({
 
       <PagerViewWrap
         ref={pager}
-        initialPage={0}
+        initialPage={3}
         pageMargin={22}
         onPageScroll={e => {
           //   if (onPageScroll2) onPageScroll2(e);
@@ -183,6 +165,9 @@ const DietRepoCalendarNew = ({
                     dinnerServiceDays?.includes(txt);
 
                   const events = () => {
+                    // console.log('날짜 누름');
+                    // console.log(day);
+                    // console.log(propsDay);
                     selectedPress(day);
                     onPressEvent2(propsDay);
                   };
@@ -209,7 +194,7 @@ const DietRepoCalendarNew = ({
                       onPress={() => {
                         events();
                       }}>
-                      {order && (
+                      {order ? (
                         <DotWrap>
                           {isMorning?.length > 0 && (
                             <Morning>
@@ -233,6 +218,8 @@ const DietRepoCalendarNew = ({
                             </Dinner>
                           )}
                         </DotWrap>
+                      ) : (
+                        <DotWrap />
                       )}
                       <DayWeek
                         lastDay={lastDay}
