@@ -121,14 +121,14 @@ const DietRepoCalendarNew = ({
             //뒤로가기
 
             setCalendarDate(calcDate(-7, calendarDate));
-            pager.current.setPageWithoutAnimation(2);
-            setChk(2);
+            pager.current.setPageWithoutAnimation(3);
+            setChk(3);
           } else if (chk < position) {
             // 앞으로 가기
 
             setCalendarDate(calcDate(7, calendarDate));
-            pager.current.setPageWithoutAnimation(2);
-            setChk(2);
+            pager.current.setPageWithoutAnimation(3);
+            setChk(3);
           } else {
           }
         }}
