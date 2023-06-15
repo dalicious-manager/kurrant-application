@@ -31,6 +31,7 @@ import {modifyDietRepoMainData} from '../logic';
 
 import LoadingScreen from '~components/LoadingScreen';
 import DietRepoCalendarNew from '../DietRepoCalendar/DietRepoCalendarNew';
+import {getStorage} from '../../../../../utils/asyncStorage';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -87,26 +88,21 @@ const Pages = ({route}) => {
     });
   };
 
+  // const getUserId = async () => {
+  //   const userId = await getStorage('userId');
+
+  //   return userId;
+  // };
+
+  // useEffect(() => {
+  //   console.log('랄랄라');
+  //   console.log(getUserId());
+  // }, []);
+
   return (
     <>
       <Container>
         <CalendarWrap>
-          {/* <DietRepoCalendar
-            initialDate={route?.params?.date}
-            BooleanValue={false}
-            type={'grey2'}
-            color={'white'}
-            size={'Body05R'}
-            onPressEvent2={dayPress}
-            // daily={daily}
-            selectDate={formattedWeekDate(date)}
-            margin={'0px 28px'}
-            scrollDir
-            pagerRef={pager}
-            // onPageScroll2={onPageScroll2}
-            sliderValue={sliderValue}
-            isServiceDays={isServiceDays}
-          /> */}
           <DietRepoCalendarNew
             initialDate={route?.params?.date}
             BooleanValue={false}

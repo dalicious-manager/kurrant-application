@@ -219,11 +219,6 @@ const Pages = () => {
   //   removeItemFromStorage('announcementsClickedOneDate');
   // }, []);
 
-  // useEffect(() => {
-  //   console.log('아나운스먼트 여기여');
-  //   console.log(oneAnnouncement);
-  // }, [oneAnnouncement]);
-
   useEffect(() => {
     navigation.navigate(DietRepoMainPageName);
   }, []);
