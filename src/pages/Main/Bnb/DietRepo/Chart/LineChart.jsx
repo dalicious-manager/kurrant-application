@@ -105,6 +105,10 @@ const LineChart = ({
       </G>
     );
   };
+  useEffect(() => {
+    console.log('dotsCoordinateArr 랄라라');
+    console.log(dotsCoordinateArr);
+  }, [dotsCoordinateArr]);
 
   const ChartLine = ({x1, y1, x2, y2, i}) => {
     return (
@@ -134,7 +138,9 @@ const LineChart = ({
         {/* 점 */}
         {dotsCoordinateArr.length > 0 &&
           dotsCoordinateArr.map((v, i) => {
-            return <Dot key={i} x={v.x} y={v.y} />;
+            if (v.x && v.y) {
+              return <Dot key={i} x={v.x} y={v.y} />;
+            }
           })}
 
         {/* 선 */}
