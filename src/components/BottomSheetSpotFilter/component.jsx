@@ -1,5 +1,4 @@
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
   Modal,
@@ -10,7 +9,6 @@ import {
   Pressable,
   PanResponder,
   View,
-  Text,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
@@ -29,19 +27,11 @@ const BottomSheetSpot = props => {
     setTouch,
     touchInfo,
     setTouchInfo,
-
     modalVisible,
     setModalVisible,
     title = '옵션 선택',
-    description = '',
-    data = {},
-    selected,
-    setSelected,
+
     onPressEvent = () => {},
-    userSpotId,
-    booleanValue,
-    onPressEvent2 = () => {},
-    setValue = () => {},
   } = props;
 
   const panY = useRef(new Animated.Value(screenHeight)).current;

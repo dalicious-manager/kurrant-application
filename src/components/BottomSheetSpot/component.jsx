@@ -114,7 +114,7 @@ const BottomSheetSpot = props => {
                     onPress={() => {
                       onPressEvent2(setModalVisible(false));
                     }}>
-                    <ManageText>스팟/관리</ManageText>
+                    <ManageText>설정/관리</ManageText>
                   </ManagePressView>
                 )}
               </TitleWrap>
@@ -170,6 +170,7 @@ const BottomSheetSpot = props => {
                   </ItemContainer>
 
                   {item.spots.map(el => {
+                    console.log(el.spotId, userSpotId, 'sidfjiosfj ');
                     const spotNameCut = el.spotName?.includes(null);
                     const useSpotName = spotNameCut
                       ? el.spotName.split('null')[0]
@@ -181,7 +182,7 @@ const BottomSheetSpot = props => {
                         lastArr={arrs === item}
                         onPress={() => {
                           onSelect(el.spotId);
-                          onPressEvent(el.spotId, item.spotType);
+                          onPressEvent(el.spotId);
                         }}
                         key={el.spotId}>
                         {el.spotId === userSpotId ? (

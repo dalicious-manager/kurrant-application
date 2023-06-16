@@ -52,11 +52,11 @@ const DetailAddress = ({route}) => {
         zipCode: zipcode,
         address1: roadAddress,
         address2: detailAddress,
+        address3: jibunAddress,
         latitude: center.latitude,
         longitude: center.longitude,
       },
       mySpotName: nickNameAddress,
-      jibunAddress: jibunAddress,
       phone: phone?.join(''),
     };
 
@@ -76,6 +76,7 @@ const DetailAddress = ({route}) => {
         navigation.navigate(NotDeliveryPage, {
           isExist: res.data.isExist,
           isAlarm: res.data.isAlarm,
+          registerSpotId: res.data.id,
         });
       }
     }

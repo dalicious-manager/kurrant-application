@@ -56,6 +56,11 @@ const Pages = ({route}) => {
     el => el.clientId !== groupId,
   );
 
+  const cutName = isDetailSpot?.address?.includes(null);
+  const useName = cutName
+    ? isDetailSpot?.address?.split('null')[0]
+    : isDetailSpot?.address;
+
   const anotherSpot = async id => {
     try {
       const res = await userSpotRegister({id: id});
@@ -63,7 +68,7 @@ const Pages = ({route}) => {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         toast.toastEvent();
-
+        await userInfo();
         await groupSpotDetail(id);
       }
     } catch (error) {
@@ -132,10 +137,10 @@ const Pages = ({route}) => {
         await groupSpotDetail(spotId);
         await userGroupSpotCheck();
       } catch (err) {
-        Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
+        // Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
       }
     }
-    LoadGroupDetail();
+    if (spotId) LoadGroupDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spotId]);
 
@@ -146,14 +151,14 @@ const Pages = ({route}) => {
         <SpotSelect>스팟 선택</SpotSelect>
       </TitleWrap>
       <SpotView onPress={modalOpen}>
-        <SpotName>{isDetailSpot?.spotName}</SpotName>
+        <SpotName>{useName}</SpotName>
         <Arrow />
       </SpotView>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ContentView>
           <TextView>
             <Title>배송지</Title>
-            <ContentText>{isDetailSpot?.address}</ContentText>
+            <ContentText>{useName}</ContentText>
           </TextView>
           {/* {isDetailSpot?.ho !== null && (
             <TextView>
@@ -222,6 +227,7 @@ const Pages = ({route}) => {
       </ScrollView>
 
       <BottomSheetSpot
+        userSpotId={spotId}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="스팟 선택"

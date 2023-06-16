@@ -2,6 +2,7 @@ const id = 'frbi51gn4o';
 const key = 'QwC8dsoAGD8XBDYV1ykHflWQp0b7KbIRd1Hzr97P';
 
 export const mapApis = {
+  // 네이버 지도 도로명 주소 , 우편 번호
   getRoadAddress: async (longitude, latitude) => {
     const output = 'json';
     const orders = 'roadaddr,addr';
@@ -38,6 +39,7 @@ export const mapApis = {
 
     return {roadAddress: roadAddress, zipcode: zipcode};
   },
+  // 네이버 지도 도로명 -> 지번 주소 변환
   getAddress: async roadAddress => {
     const res = await fetch(
       `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${roadAddress}&X-NCP-APIGW-API-KEY-ID=${id}&X-NCP-APIGW-API-KEY=${key}`,
@@ -52,6 +54,7 @@ export const mapApis = {
       return jibunAddress;
     } else if (result.addresses.length === 0) return roadAddress;
   },
+  // 카카오 주소 검색
   searchObject: async query => {
     const key = 'ecca029eb4635c04980ca7e0906fd87c';
     const lat = 37.49703;

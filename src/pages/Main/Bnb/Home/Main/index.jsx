@@ -435,10 +435,10 @@ const Pages = () => {
         ],
       );
     }
-    if (isUserGroupSpotCheck.length !== 0) {
+    if (isUserGroupSpotCheck?.length !== 0) {
       setModalVisible(true);
     } else {
-      navigation.navigate(CreateGroupPageName);
+      navigation.navigate(SpotTypePageName);
     }
   };
 

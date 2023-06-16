@@ -63,10 +63,14 @@ const Pages = () => {
         <MyGroup>내 스팟</MyGroup>
         <Contents showsVerticalScrollIndicator={false}>
           <GroupNameView>
-            {isUserGroupSpotCheck.length !== 0 &&
-              isUserGroupSpotCheck?.spotListResponseDtoList?.map((el, idx) => (
-                <GroupName key={el.clientId}>{el.clientName}</GroupName>
-              ))}
+            {isUserGroupSpotCheck?.spotListResponseDtoList?.length !== 0 &&
+              isUserGroupSpotCheck?.spotListResponseDtoList?.map((el, idx) =>
+                el.spots.map(v => (
+                  <View key={v.spotId}>
+                    <GroupName>{el.clientName ?? v.spotName}</GroupName>
+                  </View>
+                )),
+              )}
           </GroupNameView>
         </Contents>
       </Wrap>

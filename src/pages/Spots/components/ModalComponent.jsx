@@ -17,30 +17,31 @@ import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
 import {PAGE_NAME as ShareSpotMapPage} from '../../Map/ShareSpotMap';
 import {PAGE_NAME as PriveSpot} from '../privateSpot/PrivateInfo';
 
-const ModalComponent = ({title}) => {
-  const [modalVisible, setModalVisible] = useState(false);
+const ModalComponent = ({title, myspotButton}) => {
+  const [modal, setModal] = useState(false);
   const navigation = useNavigation();
 
   const useButton = () => {
     if (title === 1) {
-      navigation.navigate(MySpotMapPage);
-      setModalVisible(false);
+      myspotButton();
+      // navigation.navigate(MySpotMapPage);
+      setModal(false);
     }
     if (title === 2) {
       navigation.navigate(ShareSpotMapPage);
-      setModalVisible(false);
+      setModal(false);
     }
     if (title === 3) {
       navigation.navigate(PriveSpot);
-      setModalVisible(false);
+      setModal(false);
     }
   };
   return (
     <View>
-      <Modal presentationStyle={'fullScreen'} visible={modalVisible}>
+      <Modal presentationStyle={'fullScreen'} visible={modal}>
         <ModalWrap>
           <ModalContentWrap>
-            <CloseWrap onPress={() => setModalVisible(!modalVisible)}>
+            <CloseWrap onPress={() => setModal(!modal)}>
               <Image source={CloseButton} style={{width: 24, height: 24}} />
             </CloseWrap>
             <InnerWrap>
@@ -58,14 +59,14 @@ const ModalComponent = ({title}) => {
                 text="Button09SB"
                 onPressEvent={useButton}
               />
-              <Pressable onPress={() => setModalVisible(!modalVisible)}>
+              <Pressable onPress={() => setModal(!modal)}>
                 <CloseText>닫기</CloseText>
               </Pressable>
             </ButtonWrap>
           </ModalContentWrap>
         </ModalWrap>
       </Modal>
-      <MoreButton onPress={() => setModalVisible(true)}>
+      <MoreButton onPress={() => setModal(true)}>
         <MoreText>더 알아보기</MoreText>
         <QuestionIcon />
       </MoreButton>

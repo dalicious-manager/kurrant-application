@@ -319,6 +319,7 @@ const Pages = ({route}) => {
       deliveryFee: deliveryFee,
       userPoint: watch('point'),
     };
+
     setIsPay(true);
     try {
       // const res = await orderMeal(spotId,data);

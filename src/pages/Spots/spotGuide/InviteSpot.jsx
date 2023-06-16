@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import {useAtomValue} from 'jotai';
+import React, {useEffect, useState} from 'react';
 import {Pressable, Text, View, Image, ScrollView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import NaverMapView, {Marker} from 'react-native-nmap';
@@ -12,8 +13,10 @@ import {
   SelectSpotIcon,
   UnSelectSpotIcon,
 } from '../../../assets';
+import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGetPrivateSpot} from '../../../hook/usePrivateSpot';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height, width} from '../../../theme';
 import {PAGE_NAME as SpotTypePage} from '../SpotType';
@@ -21,27 +24,44 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'INVITE_SPOT';
 const InviteSpot = () => {
   const navigation = useNavigation();
+  const isUserInfo = useAtomValue(isUserInfoAtom);
+  const {data: privateSpotList} = useGetPrivateSpot();
   const [tab, setTab] = useState(0);
-  const center = {latitude: 37.505102, longitude: 127.045989};
-  const spot = [
-    {
-      latitude: 37.504624,
-      longitude: 127.045503,
-      name: '스파크플러스 선릉점',
-    },
+  const [center, setCenter] = useState();
 
-    {latitude: 37.505102, longitude: 127.045989, name: '달리셔스'},
-  ];
+  const spotList = privateSpotList?.data;
+
+  useEffect(() => {
+    if (privateSpotList) {
+      const data = {
+        latitude: Number(privateSpotList?.data[0]?.latitude),
+        longitude: Number(privateSpotList?.data[0]?.longitude),
+      };
+      setCenter(data);
+    }
+  }, [privateSpotList, privateSpotList?.data]);
+
   return (
     <Wrap>
       <Content>
-        <TitleText>김달리님이{'\n'}초대받은 스팟이에요(2개)</TitleText>
+        <TitleText>
+          {isUserInfo?.name}님이{'\n'}초대받은 스팟이에요({spotList?.length}개)
+        </TitleText>
         <SemiTitle>초대받은 스팟 정보를 확인해주세요</SemiTitle>
         <View>
           <SpotButtonScroll horizontal>
-            {spot.map((v, i) => {
+            {spotList?.map((v, i) => {
+              const center = {
+                latitude: Number(v.latitude),
+                longitude: Number(v.longitude),
+              };
               return (
-                <SpotButtonWrap key={v.name} onPress={() => setTab(i)}>
+                <SpotButtonWrap
+                  key={v.name}
+                  onPress={() => {
+                    setTab(i);
+                    setCenter(center);
+                  }}>
                   <SpotButton tab={tab === i} distance={2} offset={[0, 2]}>
                     <Image
                       source={tab === i ? SelectSpotIcon : UnSelectSpotIcon}
@@ -55,11 +75,16 @@ const InviteSpot = () => {
           </SpotButtonScroll>
           <MapWrap>
             <NaverMapView
-              center={{...center, zoom: 16}}
+              center={{...center, zoom: 18}}
               zoomControl={false}
               scaleBar={false}
               style={{flex: 1, borderRadius: 14, overflow: 'hidden'}}>
-              {spot.map((el, idx) => {
+              {spotList?.map((el, idx) => {
+                const center = {
+                  latitude: Number(el.latitude),
+                  longitude: Number(el.longitude),
+                };
+
                 return (
                   <Marker
                     key={idx}
@@ -71,7 +96,7 @@ const InviteSpot = () => {
                       e.stopPropagation();
                       setTab(idx);
                     }}
-                    coordinate={el}
+                    coordinate={center}
                     width={43}
                     height={43}
                     image={tab === idx ? SelectSpot : UnSelectSpot}
