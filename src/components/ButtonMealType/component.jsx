@@ -28,7 +28,7 @@ const Component = ({
 
     setTouch([...touch, id]);
   };
-  console.log(touch);
+
   return (
     <>
       {title.map((t, idx) => {

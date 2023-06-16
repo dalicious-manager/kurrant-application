@@ -9,21 +9,21 @@ import PrivateIcon from '../../../assets/icons/Map/private.svg';
 import BottomModal from '../../../components/BottomModal';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useSetAlramSetting} from '../../../hook/useAlram';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
-import {PAGE_NAME as CompletePage} from '../../Spots/components/Complete';
 
 export const PAGE_NAME = 'PRIVATE_INFO_PAGE';
 const PrivateInfo = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const {mutateAsync: setAlram} = useSetAlramSetting();
 
-  const openModal = () => {
-    setModalVisible(true);
-  };
-  const alarmButton = () => {
-    navigation.navigate(CompletePage, {
-      data: 'private',
+  const alarmButton = async () => {
+    await setAlram({
+      code: 4001,
+      isActive: true,
     });
+    setModalVisible(true);
   };
   return (
     <Wrap>
@@ -50,7 +50,7 @@ const PrivateInfo = () => {
         <Button
           label="담당자가 초대하면 알림 받기"
           text="BottomButtonSB"
-          onPressEvent={openModal}
+          onPressEvent={alarmButton}
         />
         <Pressable onPress={() => navigation.goBack()}>
           <ButtonText>뒤로가기</ButtonText>

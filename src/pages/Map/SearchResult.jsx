@@ -16,6 +16,7 @@ import NoResult from './components/NoResult';
 import Location from './Location';
 import Search from './Search';
 import {mapApis} from '../../api/map';
+import {shareSpotApis} from '../../api/shareSpot';
 import Typography from '../../components/Typography';
 import {userLocationAtom} from '../../utils/store';
 
@@ -34,6 +35,15 @@ const SearchResult = ({route}) => {
       const res = await mapApis.searchObject(text);
       setScreen(false);
       setData(res);
+    } else {
+      const res = await shareSpotApis.searchShareSpot();
+      const filterData = res.data.filter(
+        el =>
+          el.address.replace(/ /g, '').includes(text.replace(/ /g, '')) ||
+          el.jibunAddress.replace(/ /g, '').includes(text.replace(/ /g, '')),
+      );
+      setScreen(false);
+      setData(filterData);
     }
     setFocus(false);
   };
@@ -93,7 +103,7 @@ const SearchResult = ({route}) => {
           ) : type === 'mySpot' || type === 'registerSpot' ? (
             <AddressList setFocus={setFocus} data={data} type={type} />
           ) : (
-            <AddressShareSpotList />
+            <AddressShareSpotList setFocus={setFocus} data={data} text={text} />
           )}
         </View>
       </TouchableWithoutFeedback>

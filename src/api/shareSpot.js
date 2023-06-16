@@ -1,6 +1,7 @@
 import {fetchJson} from '../utils/fetch';
 
 export const shareSpotApis = {
+  // 공유스팟 지도,목록 조회 데이터
   loadSpotList: async (lat, long, pageParam, mealTouch, touchInfo) => {
     let url = `/users/me/groups/spots/share?lat=${lat}&long=${long}&limit=10&page=${pageParam}&diningType=${mealTouch}`;
 
@@ -15,12 +16,15 @@ export const shareSpotApis = {
     const {items, isLast} = res.data;
     return {items, currentPage: pageParam, isLast};
   },
+  // 공유스팟 상세 조회
   loadSpotDetail: async id =>
     await fetchJson(`/users/me/groups/spots/share/${id}`, 'GET'),
+  // 공유스팟 사용
   selectSpot: async body =>
     await fetchJson(`/users/me/groups/spots/share`, 'POST', {
       body: JSON.stringify(body),
     }),
+  // 공유스팟/시간 신청
   applicationShareSpot: async data =>
     await fetchJson(
       `/application-forms/spots/share/types/${data.param}`,
@@ -29,4 +33,7 @@ export const shareSpotApis = {
         body: JSON.stringify(data.body),
       },
     ),
+  // 공유스팟 검색 데이터
+  searchShareSpot: async () =>
+    await fetchJson('/users/me/groups/spots/share/keyword'),
 };

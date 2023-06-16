@@ -58,6 +58,7 @@ export default () => {
       );
 
       if (successResponse) {
+        console.log(successResponse.accessToken);
         // console.log(successResponse)
         // Clipboard.setString(successResponse.accessToken)
         // const data = await NaverLogin.getProfile(successResponse.accessToken);
