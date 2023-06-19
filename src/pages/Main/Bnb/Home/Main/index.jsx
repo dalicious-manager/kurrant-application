@@ -148,9 +148,14 @@ const Pages = () => {
   });
   useEffect(() => {
     const getUser = async () => {
-      const user = await userInfo();
-      if (user.spotId) dailyfoodRefetch();
-      else setShowDim(true);
+      try {
+        const user = await userInfo();
+        // console.log(user, 'user');
+        if (user?.spotId) dailyfoodRefetch();
+        else setShowDim(true);
+      } catch (error) {
+        console.log(error, 'user');
+      }
     };
     getUser();
   }, []);

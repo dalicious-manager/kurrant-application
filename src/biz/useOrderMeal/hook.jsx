@@ -48,6 +48,7 @@ const useOrderMeal = () => {
   };
   const orderNice = async (body, option = {}) => {
     try {
+      console.log(body);
       const res = await Fetch.orderNice(
         {
           ...body,
