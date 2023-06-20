@@ -118,6 +118,7 @@ const Component = forwardRef(
                 focus={focus}>
                 {/* <InputContainer> */}
                 <StyledTextInput
+                  placeholderTextColor="#D5D4D9"
                   additionalCssOnTextInput={additionalCssOnTextInput}
                   ref={ref && ref}
                   {...textInputProps}

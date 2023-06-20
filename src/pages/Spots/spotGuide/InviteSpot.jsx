@@ -27,19 +27,22 @@ const InviteSpot = () => {
   const isUserInfo = useAtomValue(isUserInfoAtom);
   const {data: privateSpotList} = useGetPrivateSpot();
   const [tab, setTab] = useState(0);
-  const [center, setCenter] = useState();
+  const [center, setCenter] = useState({
+    latitude: Number(privateSpotList?.data[0]?.latitude),
+    longitude: Number(privateSpotList?.data[0]?.longitude),
+  });
 
   const spotList = privateSpotList?.data;
 
-  useEffect(() => {
-    if (privateSpotList) {
-      const data = {
-        latitude: Number(privateSpotList?.data[0]?.latitude),
-        longitude: Number(privateSpotList?.data[0]?.longitude),
-      };
-      setCenter(data);
-    }
-  }, [privateSpotList, privateSpotList?.data]);
+  // useEffect(() => {
+  //   if (privateSpotList) {
+  //     const data = {
+  //       latitude: Number(privateSpotList?.data[0]?.latitude),
+  //       longitude: Number(privateSpotList?.data[0]?.longitude),
+  //     };
+  //     setCenter(data);
+  //   }
+  // }, [privateSpotList, privateSpotList?.data]);
 
   return (
     <Wrap>
@@ -49,7 +52,7 @@ const InviteSpot = () => {
         </TitleText>
         <SemiTitle>초대받은 스팟 정보를 확인해주세요</SemiTitle>
         <View>
-          <SpotButtonScroll horizontal>
+          <SpotButtonScroll horizontal showsHorizontalScrollIndicator={false}>
             {spotList?.map((v, i) => {
               const center = {
                 latitude: Number(v.latitude),
@@ -160,6 +163,7 @@ const SpotButton = styled(Shadow)`
   align-items: center;
   padding: 8px 12px;
   margin-right: 8px;
+  margin-bottom: 10px;
 `;
 
 const SpotButtonScroll = styled.ScrollView`

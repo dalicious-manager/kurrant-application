@@ -58,7 +58,7 @@ const Component = props => {
     data[0]?.id,
   );
   const {mutateAsync: selectSpot} = useSelectShareSpot();
-  console.log(isUserGroupSpotCheck);
+
   const detail = detailData?.data;
 
   const snapPoints = useMemo(() => ['6%', '30%', '90%'], []);
@@ -100,7 +100,7 @@ const Component = props => {
 
   useEffect(() => {
     detailDataRefech();
-  }, [detailDataRefech, data[0]?.id]);
+  }, [detailDataRefech, data]);
   return (
     <BottomSheet
       style={styles.container}
@@ -155,7 +155,7 @@ const Component = props => {
       {snap === 2 && (
         <Content>
           <Contents>
-            <Title>{detail.name}</Title>
+            <Title>{detail?.name}</Title>
             <ScrollView
               style={{marginTop: 24, paddingBottom: 200}}
               showsVerticalScrollIndicator={false}>
@@ -163,10 +163,10 @@ const Component = props => {
                 <Image source={PickGrey} style={{width: 20, height: 20}} />
                 <View style={{marginLeft: 16}}>
                   <Name>
-                    <Body06RText>{detail.address}</Body06RText>
+                    <Body06RText>{detail?.address}</Body06RText>
                   </Name>
                   <Body06RText style={{color: '#BDBAC1'}}>
-                    {detail.jibun}
+                    {detail?.jibun}
                   </Body06RText>
                 </View>
               </Address>
@@ -176,7 +176,7 @@ const Component = props => {
                 {diningType.map(v => (
                   <DiningTypeText
                     key={v}
-                    type={detail.diningTypes.includes(v)}
+                    type={detail?.diningTypes.includes(v)}
                     value={v}>
                     {diningTypeString(v)}
                     {v !== 3 && (
@@ -249,7 +249,7 @@ const Component = props => {
                 </ApplyButton>
               </DeliveryWrap>
               <InnerView>
-                {detail.spotDetailDtos.map((el, idx) => {
+                {detail?.spotDetailDtos.map((el, idx) => {
                   return (
                     <DetailSpotWrap key={el.name}>
                       <DetailSpotName>{el.name}</DetailSpotName>
@@ -268,7 +268,7 @@ const Component = props => {
               <UserViewWrap snap={snap}>
                 <UserIcon width={20} height={20} />
                 <Body06RText style={{marginLeft: 16}}>
-                  {detail.userCount}명
+                  {detail?.userCount}명
                 </Body06RText>
               </UserViewWrap>
             </ScrollView>

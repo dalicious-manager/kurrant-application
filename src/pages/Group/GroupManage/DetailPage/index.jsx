@@ -27,6 +27,7 @@ const WIDTH = Dimensions.get('screen').width;
 export const PAGE_NAME = 'P__GROUP__MANAGE__DETAIL';
 const Pages = ({route}) => {
   const toast = Toast();
+  const from = route?.params?.from;
   const navigation = useNavigation();
   const {
     groupSpotDetail,
@@ -96,7 +97,7 @@ const Pages = ({route}) => {
               await setStorage('spotStatus', res.data.toString());
               await userGroupSpotCheck();
               if (myGroupList.length === 0) {
-                navigation.navigate(CreateGroupPageName);
+                navigation.navigate(SpotTypePage);
               } else {
                 navigation.navigate(SelectSpotPageName);
               }
@@ -144,6 +145,12 @@ const Pages = ({route}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spotId]);
 
+  useEffect(() => {
+    if (from === 'shareSpotMap') {
+      setModalVisible(true);
+    }
+  }, [from]);
+
   return (
     // <SafeView>
     <Wrap>
@@ -151,7 +158,7 @@ const Pages = ({route}) => {
         <SpotSelect>스팟 선택</SpotSelect>
       </TitleWrap>
       <SpotView onPress={modalOpen}>
-        <SpotName>{useName}</SpotName>
+        <SpotName>{isDetailSpot?.spotName}</SpotName>
         <Arrow />
       </SpotView>
       <ScrollView showsVerticalScrollIndicator={false}>

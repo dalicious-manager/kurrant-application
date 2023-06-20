@@ -170,7 +170,6 @@ const BottomSheetSpot = props => {
                   </ItemContainer>
 
                   {item.spots.map(el => {
-                    console.log(el.spotId, userSpotId, 'sidfjiosfj ');
                     const spotNameCut = el.spotName?.includes(null);
                     const useSpotName = spotNameCut
                       ? el.spotName.split('null')[0]

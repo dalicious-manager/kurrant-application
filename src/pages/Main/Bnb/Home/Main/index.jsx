@@ -150,10 +150,23 @@ const Pages = () => {
     const getUser = async () => {
       const user = await userInfo();
       if (user.spotId) dailyfoodRefetch();
-      else setShowDim(true);
     };
     getUser();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const getUser = async () => {
+        const user = await userInfo();
+        if (user.spotId) {
+          dailyfoodRefetch();
+        } else {
+          setShowDim(true);
+        }
+      };
+      getUser();
+    }, []),
+  );
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
@@ -266,6 +279,7 @@ const Pages = () => {
     };
     getHistory();
   }, [isUserInfo]);
+
   useFocusEffect(
     useCallback(() => {
       try {
@@ -553,7 +567,9 @@ const Pages = () => {
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
-            <SpotNameText>
+            <SpotNameText
+              numberOfLines={userGroupName !== null ? 2 : 1}
+              ellipsizeMode="tail">
               {!userSpotId ? '스팟을 선택해 주세요' : spotName}
             </SpotNameText>
 
@@ -794,6 +810,7 @@ const BarWrap = styled.View`
 
 const SpotName = styled.Pressable`
   ${Display};
+  max-width: 220px;
 `;
 
 const Icons = styled.View`

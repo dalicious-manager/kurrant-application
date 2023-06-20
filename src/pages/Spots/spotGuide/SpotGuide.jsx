@@ -8,6 +8,7 @@ import {GuideSpot} from '../../../assets';
 import useGroupSpots from '../../../biz/useGroupSpots/hook';
 import useUserInfo from '../../../biz/useUserInfo/hook';
 import Button from '../../../components/Button';
+import {useGetPrivateSpot} from '../../../hook/usePrivateSpot';
 import {height} from '../../../theme';
 import {PAGE_NAME as SpotTypePage} from '../SpotType';
 
@@ -15,9 +16,10 @@ export const PAGE_NAME = 'SPOT_GUIDE_PAGE';
 const SpotGuide = () => {
   const navigation = useNavigation();
   const {isUserGroupSpotCheck} = useGroupSpots();
+  const {data: privateSpotList} = useGetPrivateSpot();
 
   const goToPage = () => {
-    if (isUserGroupSpotCheck?.privateCount > 0) {
+    if (privateSpotList?.data?.length > 0) {
       navigation.navigate(InviteSpotPage);
     } else {
       navigation.navigate(SpotTypePage);

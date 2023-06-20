@@ -11,7 +11,7 @@ export function useGetDailyfood(spotId, selectedDate, userRole) {
       return dailyfoodApis.dailyfood(spotId, selectedDate, userRole);
     },
     {
-      enabled: !!spotId,
+      enabled: false,
       retry: false,
     },
   );
