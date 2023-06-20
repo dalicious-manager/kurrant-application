@@ -44,13 +44,15 @@ const Pages = () => {
     setLoadMeal,
     updateMeal,
     allDeleteMeal,
-    mealCartSpot,
+    // mealCartSpot,
     loadSoldOutMeal,
     soldOutMeal,
-    clientStatus,
+    // clientStatus,
   } = useShoppingBasket();
   const {data: isLoadMeal, isFetching} = useGetShoppingBasket();
   const [spotCartData, setSpotCartData] = useState();
+  const [mealCartSpot, setMealCartSpot] = useState();
+  const [clientStatus, setClientStatus] = useState([]);
   const [time, setTime] = useState('11:00');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -74,8 +76,23 @@ const Pages = () => {
     setModalVisible(true);
   };
   useEffect(() => {
-    if (isLoadMeal?.data?.spotCarts)
+    if (isLoadMeal?.data?.spotCarts) {
+      const spot = isLoadMeal?.data?.spotCarts.map(m => {
+        return {
+          id: m.spotId,
+          text: m.groupName + '\u00a0' + m.spotName,
+        };
+      });
+      const clientType = isLoadMeal?.data?.spotCarts.map(el => {
+        return {
+          spotId: el.spotId,
+          clientStatus: el.clientStatus,
+        };
+      });
+      setClientStatus(clientType);
+      setMealCartSpot(spot);
       setSpotCartData(isLoadMeal?.data?.spotCarts);
+    }
 
     const getTime = async () => {
       const localTime = JSON.parse(await getStorage('diningTime'));
@@ -310,12 +327,27 @@ const Pages = () => {
       .reduce((acc, cur) => {
         return acc + cur;
       }, 0);
+    const discountedPrice = v.cartDailyFoods
+      ?.map(p => p.discountedPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+
+    const supportPrice =
+      discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
     const dailyDiscountPrice =
       membershipDateDiscountPrice +
       makersDateDiscountPrice +
       periodDateDiscountPrice;
     const totalDatePrice =
-      totalDateMealPrice - dailyDiscountPrice - v.supportPrice + v.deliveryFee;
+      totalDateMealPrice - dailyDiscountPrice - supportPrice + v.deliveryFee;
+    console.log(
+      totalDateMealPrice,
+      dailyDiscountPrice,
+      supportPrice,
+      v.deliveryFee,
+      '토탈',
+    );
     return totalDatePrice > 0 ? totalDatePrice : 0;
   });
   const useDateSupportPrice = lastArr?.map(v => {
@@ -343,15 +375,21 @@ const Pages = () => {
       .reduce((acc, cur) => {
         return acc + cur;
       }, 0);
+    const discountedPrice = v.cartDailyFoods
+      ?.map(p => p.discountedPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+
+    const supportPrice =
+      discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
     const dailyDiscountPrice =
       membershipDateDiscountPrice +
       makersDateDiscountPrice +
       periodDateDiscountPrice;
     const totalDatePrice =
-      totalDateMealPrice - dailyDiscountPrice - v.supportPrice + v.deliveryFee;
-    return totalDatePrice > 0
-      ? v.supportPrice
-      : v.supportPrice + totalDatePrice;
+      totalDateMealPrice - dailyDiscountPrice - supportPrice + v.deliveryFee;
+    return totalDatePrice > 0 ? supportPrice : supportPrice + totalDatePrice;
   });
 
   const totalPrice = totals?.reduce((acc, cur) => {
@@ -550,16 +588,16 @@ const Pages = () => {
       console.log(err);
     }
   };
-  const selectSpotName = mealCartSpot.filter(el => el.id === selected);
+  const selectSpotName = mealCartSpot?.filter(el => el.id === selected);
 
   return (
     <SafeView>
       <SpotView>
         <SpotPress onPress={PressSpotButton}>
           <SpotName>
-            {spotName[0]?.text === undefined
+            {spotName?.length > 0 && spotName[0]?.text === undefined
               ? '스팟 없음'
-              : selectSpotName[0].text}
+              : selectSpotName?.length > 0 && selectSpotName[0].text}
           </SpotName>
           <ArrowIcon />
         </SpotPress>
@@ -757,7 +795,7 @@ const Pages = () => {
                 <PaymentText>총 상품금액</PaymentText>
                 <PaymentText>{withCommas(totalMealPrice)} 원</PaymentText>
               </PaymentView>
-              {clientType[0]?.clientStatus === 1 && (
+              {clientType[0]?.clientStatus === 0 && (
                 <PaymentView>
                   <PressableView onPress={fundButton}>
                     <PaymentText>식사 지원금 사용 금액</PaymentText>

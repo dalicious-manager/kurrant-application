@@ -278,6 +278,8 @@ const Pages = ({route}) => {
         : totalPrice - Number(points),
       supportPrice: medtronicSupportArr.includes(62471004)
         ? medtronicPrice
+        : discountPrice < usedSupportPrice
+        ? discountPrice
         : usedSupportPrice,
       deliveryFee: deliveryFee,
       userPoint: watch('point'),
@@ -492,7 +494,7 @@ const Pages = ({route}) => {
                 <PaymentText>총 상품금액</PaymentText>
                 <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
               </PaymentView>
-              {clientType[0]?.clientStatus === 1 && (
+              {clientType[0]?.clientStatus === 0 && (
                 <PaymentView>
                   <PressableView onPress={fundButton}>
                     <PaymentText>식사 지원금 사용 금액</PaymentText>
