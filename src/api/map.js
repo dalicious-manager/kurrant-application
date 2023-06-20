@@ -36,8 +36,21 @@ export const mapApis = {
     const zipcode = data.results[0]?.land
       ? data.results[0].land.addition1.value
       : '';
-
-    return {roadAddress: roadAddress, zipcode: zipcode};
+    const ress = await fetch(
+      `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${roadAddress}&X-NCP-APIGW-API-KEY-ID=${id}&X-NCP-APIGW-API-KEY=${key}`,
+    );
+    const result = await ress.json();
+    console.log(result.addresses, 'testes');
+    if (result.addresses.length > 0) {
+      const addressParts = result.addresses[0].jibunAddress.split(' ');
+      const jibunAddress = addressParts.slice(0, 4).join(' ');
+      return {
+        roadAddress: roadAddress,
+        zipcode: zipcode,
+        address: jibunAddress,
+      };
+    }
+    return {roadAddress: roadAddress, zipcode: zipcode, address: roadAddress};
   },
   // 네이버 지도 도로명 -> 지번 주소 변환
   getAddress: async roadAddress => {

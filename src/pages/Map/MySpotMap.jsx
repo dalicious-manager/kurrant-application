@@ -11,6 +11,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import Geolocation from 'react-native-geolocation-service';
 import NaverMapView, {Marker} from 'react-native-nmap';
+import {useQueryClient} from 'react-query';
 import styled from 'styled-components/native';
 
 import Info from './components/Info';
@@ -32,6 +33,7 @@ const WIDTH = Dimensions.get('screen').width;
 export const PAGE_NAME = 'MAP';
 const MySpotMap = ({route}) => {
   const paramLocation = route?.params?.center;
+  const queryClient = useQueryClient();
   const mapRef = useRef(null);
   const toast = Toast();
   const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom); // 어느 경로로 왔는지 0 : 지도에서 1: 검색 리스트에서
@@ -48,11 +50,11 @@ const MySpotMap = ({route}) => {
     initCenter ? initCenter.longitude : 0,
     initCenter ? initCenter.latitude : 0,
   );
-  const {
-    data: address,
-    refetch: addressRefetch,
-    isSuccess,
-  } = useGetAddress(roadAddress && roadAddress.roadAddress);
+  // const {
+  //   data: address,
+  //   refetch: addressRefetch,
+  //   isSuccess,
+  // } = useGetAddress(roadAddress && roadAddress.roadAddress);
 
   const changAddress = () => {
     setShowAddress(prev => !prev);
@@ -60,7 +62,6 @@ const MySpotMap = ({route}) => {
 
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
-
     setZoom(event.zoom);
     if (move) {
       setInitCenter(newCenter);
@@ -69,33 +70,25 @@ const MySpotMap = ({route}) => {
   };
 
   const saveAddress = () => {
-    addressRefetch();
-
-    if (isSuccess) {
-      navigation.navigate(MySpotDetailPage, {
-        address: address,
-        roadAddress: roadAddress?.roadAddress,
-        showAddress: showAddress,
-        center: initCenter,
-        zipcode: roadAddress?.zipcode,
-        jibunAddress: address,
-      });
-      setFromRoot(0);
-    }
+    navigation.navigate(MySpotDetailPage, {
+      address: roadAddress?.address,
+      roadAddress: roadAddress?.roadAddress,
+      showAddress: showAddress,
+      center: initCenter,
+      zipcode: roadAddress?.zipcode,
+      jibunAddress: roadAddress?.address,
+    });
+    setFromRoot(0);
   };
 
   useEffect(() => {
     roadAddressRefetch();
-  }, [initCenter, roadAddressRefetch, showAddress]);
-  useEffect(() => {
-    addressRefetch();
-  }, [
-    roadAddress?.roadAddress,
-    initCenter,
-    addressRefetch,
-    showAddress,
-    address,
-  ]);
+    // queryClient.invalidateQueries('address');
+    // queryClient.invalidateQueries('roadAddress');
+  }, [initCenter, queryClient, roadAddressRefetch, showAddress]);
+  // useEffect(() => {
+  //   addressRefetch();
+  // }, [roadAddress, initCenter, addressRefetch, showAddress]);
 
   useFocusEffect(
     useCallback(() => {
@@ -205,7 +198,7 @@ const MySpotMap = ({route}) => {
       {roadAddress?.roadAddress && (
         <AddressView>
           {showAddress ? (
-            <AddressText>{address}</AddressText>
+            <AddressText>{roadAddress?.address}</AddressText>
           ) : (
             <AddressText>{roadAddress?.roadAddress}</AddressText>
           )}
