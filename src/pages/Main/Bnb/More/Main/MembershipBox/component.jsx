@@ -3,15 +3,13 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import {MembershipBadge} from '~components/Icon';
 import Typography from '~components/Typography';
 
 import {MembershipJoin, NewMembers} from '../../../../../../assets';
-import useUserInfo from '../../../../../../biz/useUserInfo';
 import {ArrowRightBoxIcon} from '../../../../../../components/Icon';
+import {useGetUserInfo} from '../../../../../../hook/useUserInfo';
 import withCommas from '../../../../../../utils/withCommas';
-
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../../../Membership/MembershipIntro';
 
@@ -24,7 +22,9 @@ import {PAGE_NAME as MembershipIntroPageName} from '../../../../../Membership/Me
 const Component = ({point, isMembership, membershipPeriod = 0}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   return (
     <>
       {!isMembership ? (

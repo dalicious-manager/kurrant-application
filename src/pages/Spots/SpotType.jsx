@@ -8,10 +8,10 @@ import Toast from '~components/Toast';
 import ModalComponent from './components/ModalComponent';
 import {MySpot, ShareSpot, PrivateSpot} from '../../assets';
 import {userGroupSpotListAtom} from '../../biz/useGroupSpots/store';
-import useUserInfo from '../../biz/useUserInfo';
 import BottomModal from '../../components/BottomModal';
 import Typography from '../../components/Typography';
 import {useDeleteApplyMySpot} from '../../hook/useSpot';
+import {useGetUserInfo} from '../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
 import {PAGE_NAME as GroupManagePageName} from '../Group/GroupManage/DetailPage';
 import {PAGE_NAME as MySpotMap} from '../Map/MySpotMap';
@@ -25,7 +25,9 @@ const SpotType = () => {
   const [modalVisible2, setModalVisible2] = useState(false);
   const toast = Toast();
   const {mutateAsync: deleteBtn} = useDeleteApplyMySpot();
-  const {isUserInfo, userInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [isUserGroupSpotCheck] = useAtom(userGroupSpotListAtom);
   const alreadyRegister = isUserInfo?.requestedMySpotDto?.isRequested;
   const myspotAddress = isUserInfo?.requestedMySpotDto?.address;

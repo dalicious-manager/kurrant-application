@@ -1,10 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {WebView, Linking} from 'react-native-webview';
-import useUserInfo from '../../../../../../biz/useUserInfo';
-import {getStorage} from '../../../../../../utils/asyncStorage';
 
 import {isAppUrl, isBlank, openPGApp} from './lib';
+import {getStorage} from '../../../../../../utils/asyncStorage';
 
 const Payment = ({
   clientKey,

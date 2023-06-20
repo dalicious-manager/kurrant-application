@@ -1,4 +1,9 @@
-import {useInfiniteQuery, useMutation, useQuery} from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 
 import {shareSpotApis} from '../api/shareSpot';
 
@@ -28,13 +33,20 @@ export function useGetShareSpotDetail(id) {
 
 // 공유스팟 사용하기
 export function useSelectShareSpot() {
-  return useMutation(id => shareSpotApis.selectSpot(id));
+  const queryClient = useQueryClient();
+  return useMutation(id => shareSpotApis.selectSpot(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('userInfo');
+    },
+  });
 }
 
 // 공유 스팟 / 시간 신청
 export function useApplyShareSpot() {
+  const queryClient = useQueryClient();
   return useMutation(data => shareSpotApis.applicationShareSpot(data), {
     onSuccess(res) {
+      queryClient.invalidateQueries('userInfo');
       console.log(res);
     },
   });

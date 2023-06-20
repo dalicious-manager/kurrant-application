@@ -20,13 +20,13 @@ import ArrowUpIcon from '../../../../../assets/icons/Payment/arrow.svg';
 import ArrowDownIcon from '../../../../../assets/icons/Payment/arrowDown.svg';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import useUserInfo from '../../../../../biz/useUserInfo';
 import useUserMe from '../../../../../biz/useUserMe';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
 import Typography from '../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {PurchaseDetailPageName} from '../../../../../pages/Main/MyPage/PurchaseHistory/Detail';
 import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
 import {
@@ -70,7 +70,9 @@ const Pages = ({route}) => {
   const {loadMeal} = useShoppingBasket();
   const {data: isLoadMeal} = useGetShoppingBasket();
   const {orderNice, orderLoading} = useOrderMeal();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const {
     getCardList,
     readableAtom: {selectDefaultCard},
@@ -269,6 +271,7 @@ const Pages = ({route}) => {
       );
       return;
     }
+    console.log(discountPrice, usedSupportPrice, totalPrice, '지원금');
     const data = {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
@@ -278,6 +281,8 @@ const Pages = ({route}) => {
         : totalPrice - Number(points),
       supportPrice: medtronicSupportArr.includes(62471004)
         ? medtronicPrice
+        : discountPrice < usedSupportPrice
+        ? discountPrice
         : usedSupportPrice,
       deliveryFee: deliveryFee,
       userPoint: watch('point'),
@@ -492,7 +497,7 @@ const Pages = ({route}) => {
                 <PaymentText>총 상품금액</PaymentText>
                 <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
               </PaymentView>
-              {clientType[0]?.clientStatus === 1 && (
+              {clientType[0]?.clientStatus === 0 && (
                 <PaymentView>
                   <PressableView onPress={fundButton}>
                     <PaymentText>식사 지원금 사용 금액</PaymentText>

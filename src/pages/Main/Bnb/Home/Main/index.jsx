@@ -33,7 +33,6 @@ import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJus
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useMembership from '../../../../../biz/useMembership';
-import useUserInfo from '../../../../../biz/useUserInfo';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
@@ -42,6 +41,7 @@ import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
@@ -75,13 +75,13 @@ const Pages = () => {
 
   const [isVisible, setIsVisible] = useState(true);
   const weekly = useAtomValue(weekAtom);
-  const {isUserInfo, userInfo} = useUserInfo();
+  const {data: isUserInfo} = useGetUserInfo();
   const currentVersion = VersionCheck.getCurrentVersion();
-  const userName = isUserInfo?.name;
-  const userSpot = isUserInfo?.spot;
-  const userGroupName = isUserInfo?.group;
-  const userSpotId = isUserInfo?.spotId;
-  const clientId = isUserInfo?.groupId;
+  const userName = isUserInfo?.data?.name;
+  const userSpot = isUserInfo?.data?.spot;
+  const userGroupName = isUserInfo?.data?.group;
+  const userSpotId = isUserInfo?.data?.spotId;
+  const clientId = isUserInfo?.data?.groupId;
 
   const spotNameCut = userSpot?.includes(null);
   const useSpotName = spotNameCut ? userSpot.split('null')[0] : userSpot;
@@ -149,16 +149,17 @@ const Pages = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const user = await userInfo();
         // console.log(user, 'user');
-        if (user?.spotId) dailyfoodRefetch();
-        else setShowDim(true);
+        if (isUserInfo?.data) {
+          if (isUserInfo?.data?.spotId) dailyfoodRefetch();
+          else setShowDim(true);
+        }
       } catch (error) {
         console.log(error, 'user');
       }
     };
     getUser();
-  }, []);
+  }, [isUserInfo?.data]);
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
@@ -270,7 +271,7 @@ const Pages = () => {
       await getMembershipHistory();
     };
     getHistory();
-  }, [isUserInfo]);
+  }, [isUserInfo?.data]);
   useFocusEffect(
     useCallback(() => {
       try {
@@ -400,7 +401,6 @@ const Pages = () => {
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
-        await userInfo();
         setShow(true);
         toast.toastEvent();
         setTimeout(() => {
@@ -514,12 +514,12 @@ const Pages = () => {
   );
 
   useEffect(() => {
-    if (isUserInfo?.spotId === null && !showDim) {
+    if (isUserInfo?.data?.spotId === null && !showDim) {
       setModalVisible(true);
     }
   }, [showDim]);
 
-  if (!isUserInfo) {
+  if (!isUserInfo?.data) {
     return <SkeletonUI />;
   }
 
@@ -559,7 +559,9 @@ const Pages = () => {
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
             <SpotNameText>
-              {!userSpotId ? '스팟을 선택해 주세요' : spotName}
+              {isUserInfo?.data && !isUserInfo?.data?.spotId
+                ? '스팟을 선택해 주세요'
+                : spotName}
             </SpotNameText>
 
             <ArrowIcon />
@@ -635,7 +637,7 @@ const Pages = () => {
             </CountWrap>
           </CatorWrap> */}
 
-            {isUserInfo?.isMembership ? (
+            {isUserInfo?.data?.isMembership ? (
               <MembershipWrap
                 onPress={() => navigation.navigate(MembershipInfoPageName)}>
                 <Membership>
@@ -644,33 +646,33 @@ const Pages = () => {
                 </Membership>
                 <View>
                   <MembershipUsing>
-                    {isUserInfo?.membershipUsingPeriod}일째 이용중
+                    {isUserInfo?.data?.membershipUsingPeriod}일째 이용중
                   </MembershipUsing>
-                  {isUserInfo?.foundersNumber < 5000 && (
+                  {isUserInfo?.data?.foundersNumber < 5000 && (
                     <MembersWrap>
                       <MembersIcon />
                       <MembersText>
-                        {isUserInfo?.foundersNumber}번째 커런트파운더스
+                        {isUserInfo?.data?.foundersNumber}번째 커런트파운더스
                       </MembersText>
                     </MembersWrap>
                   )}
                 </View>
               </MembershipWrap>
-            ) : isUserInfo?.email.includes('@bespinglobal.com') &&
+            ) : isUserInfo?.data?.email.includes('@bespinglobal.com') &&
               membershipHistory.length < 1 ? (
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImages source={BespinMembers} resizeMode={'cover'} />
               </MenbershipBanner>
-            ) : isUserInfo?.leftFoundersNumber > 0 ? (
+            ) : isUserInfo?.data?.leftFoundersNumber > 0 ? (
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImages
@@ -682,7 +684,7 @@ const Pages = () => {
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImage
@@ -721,7 +723,7 @@ const Pages = () => {
       <ButtonWrap>
         <Button
           onPress={async () => {
-            if (userSpotId) {
+            if (isUserInfo?.data?.spotId) {
               navigation.navigate(BuyMealPageName);
               closeBalloon();
             } else {

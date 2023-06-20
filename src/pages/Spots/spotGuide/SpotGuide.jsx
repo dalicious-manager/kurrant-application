@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import {PAGE_NAME as InviteSpotPage} from './InviteSpot';
 import {GuideSpot} from '../../../assets';
 import useGroupSpots from '../../../biz/useGroupSpots/hook';
-import useUserInfo from '../../../biz/useUserInfo/hook';
 import Button from '../../../components/Button';
 import {height} from '../../../theme';
 import {PAGE_NAME as SpotTypePage} from '../SpotType';
