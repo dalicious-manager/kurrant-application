@@ -40,6 +40,7 @@ const MySpotMap = ({route}) => {
   const [tab, setTab] = useState(false);
   const [show, setShow] = useState(false);
   const [move, setMove] = useState(false);
+  const [zoom, setZoom] = useState(18);
   const [showAddress, setShowAddress] = useState(false);
   // const [center, setCenter] = useState();
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
@@ -47,9 +48,11 @@ const MySpotMap = ({route}) => {
     initCenter ? initCenter.longitude : 0,
     initCenter ? initCenter.latitude : 0,
   );
-  const {data: address, refetch: addressRefetch} = useGetAddress(
-    roadAddress && roadAddress.roadAddress,
-  );
+  const {
+    data: address,
+    refetch: addressRefetch,
+    isSuccess,
+  } = useGetAddress(roadAddress && roadAddress.roadAddress);
 
   const changAddress = () => {
     setShowAddress(prev => !prev);
@@ -57,11 +60,28 @@ const MySpotMap = ({route}) => {
 
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
-    // setCenter(newCenter);
+
+    setZoom(event.zoom);
     if (move) {
       setInitCenter(newCenter);
     }
     setMove(false);
+  };
+
+  const saveAddress = () => {
+    addressRefetch();
+
+    if (isSuccess) {
+      navigation.navigate(MySpotDetailPage, {
+        address: address,
+        roadAddress: roadAddress?.roadAddress,
+        showAddress: showAddress,
+        center: initCenter,
+        zipcode: roadAddress?.zipcode,
+        jibunAddress: address,
+      });
+      setFromRoot(0);
+    }
   };
 
   useEffect(() => {
@@ -69,13 +89,20 @@ const MySpotMap = ({route}) => {
   }, [initCenter, roadAddressRefetch, showAddress]);
   useEffect(() => {
     addressRefetch();
-  }, [roadAddress, initCenter, addressRefetch, showAddress]);
+  }, [
+    roadAddress?.roadAddress,
+    initCenter,
+    addressRefetch,
+    showAddress,
+    address,
+  ]);
 
   useFocusEffect(
     useCallback(() => {
       if (paramLocation !== undefined) {
         setInitCenter(paramLocation);
       }
+      setZoom(18);
     }, [paramLocation, setInitCenter]),
   );
   const handleLayout = () => {
@@ -134,6 +161,8 @@ const MySpotMap = ({route}) => {
             if (Platform.OS === 'ios') setMove(true);
           }}>
           <NaverMapView
+            minZoomLevel={12}
+            maxZoomLevel={20}
             onTouch={() => {
               if (Platform.OS === 'android') setMove(true);
             }}
@@ -141,11 +170,11 @@ const MySpotMap = ({route}) => {
             zoomControl={false}
             center={
               initCenter
-                ? {...initCenter, zoom: 18}
+                ? {...initCenter, zoom: zoom}
                 : {
                     latitude: 37.49703,
                     longitude: 127.028191,
-                    zoom: 18,
+                    zoom: zoom,
                   }
             }
             style={{flex: 1}}
@@ -194,17 +223,7 @@ const MySpotMap = ({route}) => {
           </ChangeAddressWrap>
           <ButtonWrap>
             <Button
-              onPressEvent={() => {
-                navigation.navigate(MySpotDetailPage, {
-                  address: address,
-                  roadAddress: roadAddress?.roadAddress,
-                  showAddress: showAddress,
-                  center: initCenter,
-                  zipcode: roadAddress?.zipcode,
-                  jibunAddress: address,
-                });
-                setFromRoot(0);
-              }}
+              onPressEvent={saveAddress}
               label="이 위치로 주소 설정"
               disabled={move || !tab}
               type={move || !tab ? 'map' : 'yellow'}

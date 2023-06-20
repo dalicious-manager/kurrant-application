@@ -41,6 +41,7 @@ export const mapApis = {
   },
   // 네이버 지도 도로명 -> 지번 주소 변환
   getAddress: async roadAddress => {
+    console.log(roadAddress, 'road');
     const res = await fetch(
       `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${roadAddress}&X-NCP-APIGW-API-KEY-ID=${id}&X-NCP-APIGW-API-KEY=${key}`,
     );
@@ -50,7 +51,7 @@ export const mapApis = {
     if (result.addresses.length > 0) {
       const addressParts = result.addresses[0].jibunAddress.split(' ');
       const jibunAddress = addressParts.slice(0, 4).join(' ');
-      // console.log(addressParts);
+      console.log(jibunAddress, 'jibun');
       return jibunAddress;
     } else if (result.addresses.length === 0) return roadAddress;
   },
