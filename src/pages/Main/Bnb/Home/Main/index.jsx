@@ -146,25 +146,20 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
-  useEffect(() => {
-    const getUser = async () => {
-      const user = await userInfo();
-      if (user.spotId) dailyfoodRefetch();
-    };
-    getUser();
-  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      const getUser = async () => {
+       const getUser = async () => {
+      try {
         const user = await userInfo();
-        if (user.spotId) {
-          dailyfoodRefetch();
-        } else {
-          setShowDim(true);
-        }
-      };
-      getUser();
+        // console.log(user, 'user');
+        if (user?.spotId) dailyfoodRefetch();
+        else setShowDim(true);
+      } catch (error) {
+        console.log(error, 'user');
+      }
+    };
+    getUser();
     }, []),
   );
   // 홈 전체 공지사항

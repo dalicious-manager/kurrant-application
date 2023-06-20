@@ -1,92 +1,55 @@
-import {
-  StackActions,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  forwardRef,
-  useCallback,
-} from 'react';
+import {StackActions, useNavigation} from '@react-navigation/native';
+import React, {useRef, useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {
   View,
   Alert,
-  Text,
   Platform,
-  TextInput,
-  KeyboardAvoidingView,
   NativeModules,
-  Keyboard,
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import FastImage from 'react-native-fast-image';
-import {KeyboardAccessoryView} from 'react-native-keyboard-accessory';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components/native';
 
-import PaymentsList from './components/PaymentsList';
 import Point from './components/Point/Point';
 import ArrowRightIcon from '../../../../../assets/icons/Arrow/arrowRight.svg';
 import ArrowUpIcon from '../../../../../assets/icons/Payment/arrow.svg';
 import ArrowDownIcon from '../../../../../assets/icons/Payment/arrowDown.svg';
-import PayError from '../../../../../assets/icons/Payment/payError.svg';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import useUserInfo from '../../../../../biz/useUserInfo';
 import useUserMe from '../../../../../biz/useUserMe';
 import BottomModal from '../../../../../components/BottomModal';
-import BottomSheet from '../../../../../components/BottomSheet';
-import BottomSheetCard from '../../../../../components/BottomSheetCard';
 import Button from '../../../../../components/Button';
-import Check from '../../../../../components/Check';
-import Form from '../../../../../components/Form';
 import Typography from '../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {PurchaseDetailPageName} from '../../../../../pages/Main/MyPage/PurchaseHistory/Detail';
 import {SCREEN_NAME as RegisterCardPageName} from '../../../../../screens/Main/RegisterCard';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {
   formattedDate,
   formattedMonthDay,
 } from '../../../../../utils/dateFormatter';
-import {
-  cardListData,
-  formattedCardCode,
-} from '../../../../../utils/statusFormatter';
 import withCommas, {generateOrderCode} from '../../../../../utils/withCommas';
 import {PAGE_NAME as PayCheckPasswordPayPageName} from '../../../MyPage/PersonalInfo/pages/PayCheckPasswordPay';
 import {
   ButtonWrap,
   ContentWrap,
   DiningName,
-  MealImage,
   MealName,
   PaymentText,
   PaymentView,
-  PointBoldText,
-  PointInput,
-  PointInputWrap,
-  PointText,
-  PointUnitText,
-  PointWrap,
   PressableView,
   Price,
   QuestionIcon,
   SalePrice,
-  SalePriceWrap,
   TotalPrice,
   TotalPriceTitle,
-  XIcon,
 } from '../../MealCart/Main';
 import {PAGE_NAME as DefaultPaymentManagePageName} from '../DefaultPaymentManage';
-import {PAGE_NAME as MealPaymentPageName} from '../MealPayment';
 
 export const PAGE_NAME = 'PAYMENT_PAGE';
 
@@ -106,7 +69,7 @@ const Pages = ({route}) => {
   const queryClient = useQueryClient();
   const {loadMeal} = useShoppingBasket();
   const {data: isLoadMeal} = useGetShoppingBasket();
-  const {order, orderLoading} = useOrderMeal();
+  const {orderNice, orderLoading} = useOrderMeal();
   const {isUserInfo} = useUserInfo();
   const {
     getCardList,
@@ -315,6 +278,8 @@ const Pages = ({route}) => {
         : totalPrice - Number(points),
       supportPrice: medtronicSupportArr.includes(62471004)
         ? medtronicPrice
+        : discountPrice < usedSupportPrice
+        ? discountPrice
         : usedSupportPrice,
       deliveryFee: deliveryFee,
       userPoint: watch('point'),
@@ -360,16 +325,14 @@ const Pages = ({route}) => {
           orderData: JSON.stringify(orderData),
         });
       } else {
-        console.log({
+        const orderData = {
+          cardId: selectDefaultCard[0]?.id,
+          orderName: orderName,
           amount: totalPrice - Number(points),
           orderId: orderId,
           orderItems: data,
-        });
-        const result = await order({
-          amount: totalPrice - Number(points),
-          orderId: orderId,
-          orderItems: data,
-        });
+        };
+        const result = await orderNice(orderData);
 
         if (result?.data) {
           const resetAction = StackActions.popToTop();
@@ -379,7 +342,6 @@ const Pages = ({route}) => {
           });
         }
       }
-      queryClient.invalidateQueries('orderMeal');
     } catch (err) {
       Alert.alert('결제', err.toString()?.replace('error: ', ''));
     } finally {
@@ -532,7 +494,7 @@ const Pages = ({route}) => {
                 <PaymentText>총 상품금액</PaymentText>
                 <PaymentText>{withCommas(totalMealPrice)}원</PaymentText>
               </PaymentView>
-              {clientType[0]?.clientStatus === 1 && (
+              {clientType[0]?.clientStatus === 0 && (
                 <PaymentView>
                   <PressableView onPress={fundButton}>
                     <PaymentText>식사 지원금 사용 금액</PaymentText>
