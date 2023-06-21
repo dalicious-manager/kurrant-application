@@ -150,16 +150,41 @@ const Pages = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        // console.log(user, 'user');
+        const spotList = await userGroupSpotCheck();
+        console.log(spotList);
         if (isUserInfo?.data) {
           if (isUserInfo?.data?.spotId) dailyfoodRefetch();
-          else setShowDim(true);
+          else if (
+            isUserInfo?.data?.spotId === null &&
+            spotList.data?.privateCount === 1
+          ) {
+            navigation.navigate(PrivateInvitePageName);
+          } else if (
+            isUserInfo?.data?.spotId === null &&
+            (spotList.data?.shareSpotCount > 0 ||
+              spotList.data?.mySpotCount > 0)
+          ) {
+            setShowDim(true);
+          } else {
+            navigation.navigate(SpotGuidePageName);
+          }
         }
       } catch (error) {
         console.log(error, 'user');
       }
     };
     getUser();
+    // const getUser = async () => {
+    //   try {
+    //     // console.log(user, 'user');
+    //     if (isUserInfo?.data) {
+
+    //     }
+    //   } catch (error) {
+    //     console.log(error, 'user');
+    //   }
+    // };
+    // getUser();
   }, [isUserInfo?.data]);
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
@@ -272,7 +297,6 @@ const Pages = () => {
       await getMembershipHistory();
     };
     getHistory();
-
   }, [isUserInfo?.data]);
   useFocusEffect(
     useCallback(() => {
@@ -559,7 +583,6 @@ const Pages = () => {
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
-
             <SpotNameText
               numberOfLines={userGroupName !== null ? 2 : 1}
               ellipsizeMode="tail">
