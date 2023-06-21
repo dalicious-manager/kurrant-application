@@ -42,7 +42,6 @@ import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
-import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {mainDimAtom} from '../../../../../utils/store';
@@ -146,23 +145,28 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
-
+  useFocusEffect(
+    useCallback(() => {
+      const groupCheck = async () => {
+        await userGroupSpotCheck();
+      };
+      groupCheck();
+    }, []),
+  );
   useEffect(() => {
     const getUser = async () => {
       try {
-        const spotList = await userGroupSpotCheck();
-        console.log(spotList);
         if (isUserInfo?.data) {
           if (isUserInfo?.data?.spotId) dailyfoodRefetch();
           else if (
             isUserInfo?.data?.spotId === null &&
-            spotList.data?.privateCount === 1
+            isUserGroupSpotCheck?.privateCount === 1
           ) {
             navigation.navigate(PrivateInvitePageName);
           } else if (
             isUserInfo?.data?.spotId === null &&
-            (spotList.data?.shareSpotCount > 0 ||
-              spotList.data?.mySpotCount > 0)
+            (isUserGroupSpotCheck?.shareSpotCount > 0 ||
+              isUserGroupSpotCheck?.mySpotCount > 0)
           ) {
             setShowDim(true);
           } else {
@@ -174,18 +178,7 @@ const Pages = () => {
       }
     };
     getUser();
-    // const getUser = async () => {
-    //   try {
-    //     // console.log(user, 'user');
-    //     if (isUserInfo?.data) {
-
-    //     }
-    //   } catch (error) {
-    //     console.log(error, 'user');
-    //   }
-    // };
-    // getUser();
-  }, [isUserInfo?.data]);
+  }, [isUserInfo?.data, isUserGroupSpotCheck]);
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
@@ -723,9 +716,6 @@ const Pages = () => {
               </MenbershipBanner>
             )}
 
-            {/* <Pressable onPress={() => navigation.navigate(SpotGuidePageName)}>
-              <Text>스팟 선택 임시 버튼</Text>
-            </Pressable> */}
             {/* 아래주석 마켓 추가시 사용 */}
             {/* <MarketWrap>
             <Market>

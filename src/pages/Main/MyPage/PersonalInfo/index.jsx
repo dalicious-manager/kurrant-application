@@ -34,9 +34,9 @@ import BottomModal from '../../../../components/BottomModal';
 import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import {SCREEN_NAME as PaymentsManageScreenName} from '../../../../screens/Main/PaymentsManage';
 import {setStorage} from '../../../../utils/asyncStorage';
-import {PAGE_NAME as CreateGroupPageName} from '../../../Group/GroupCreate';
 import {PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/DetailPage';
 import {PAGE_NAME as LoginPageName} from '../../../Main/Login/Login';
+import {PAGE_NAME as SpotTypePageName} from '../../../Spots/SpotType';
 import {PAGE_NAME as NameSettingPageName} from '../../Login/AppleSignup';
 
 export const PAGE_NAME = 'P__MY_PAGE__PERSONAL_INFO';
@@ -294,7 +294,7 @@ const Pages = ({route}) => {
                   clientId: groupId,
                 });
               } else {
-                navigation.navigate(CreateGroupPageName);
+                navigation.navigate(SpotTypePageName);
               }
             }}
           />
