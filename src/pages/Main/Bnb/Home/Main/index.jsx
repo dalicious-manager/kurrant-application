@@ -700,9 +700,10 @@ const Pages = () => {
               </MenbershipBanner>
             )}
 
-            <Pressable onPress={() => navigation.navigate(SpotGuidePageName)}>
+            {/* <Pressable onPress={() => navigation.navigate(SpotGuidePageName)}>
               <Text>스팟 선택 임시 버튼</Text>
-            </Pressable>
+            </Pressable> */}
+            {/* 아래주석 마켓 추가시 사용 */}
             {/* <MarketWrap>
             <Market>
               <MarketIcon/>

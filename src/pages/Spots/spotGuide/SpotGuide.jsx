@@ -18,11 +18,7 @@ const SpotGuide = () => {
   const {data: privateSpotList} = useGetPrivateSpot();
 
   const goToPage = () => {
-    if (privateSpotList?.data?.length > 0) {
-      navigation.navigate(InviteSpotPage);
-    } else {
-      navigation.navigate(SpotTypePage);
-    }
+    navigation.navigate(SpotTypePage);
   };
   return (
     <Wrap>
