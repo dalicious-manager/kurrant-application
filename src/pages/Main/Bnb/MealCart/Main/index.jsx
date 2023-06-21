@@ -346,8 +346,6 @@ const Pages = () => {
       makersDateDiscountPrice +
       periodDateDiscountPrice;
 
-    const supportPrice =
-      discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
     const totalDatePrice =
       totalDateMealPrice - dailyDiscountPrice - supportPrice + v.deliveryFee;
 
