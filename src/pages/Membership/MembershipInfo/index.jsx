@@ -6,11 +6,11 @@ import styled, {useTheme} from 'styled-components/native';
 
 import {PAGE_NAME as MembershipUsagedetailsPageName} from './MembershipUsageDetails';
 import useMembership from '../../../biz/useMembership';
-import useUserInfo from '../../../biz/useUserInfo';
 import useUserMe from '../../../biz/useUserMe';
 import Button from '../../../components/Button';
 import Label from '../../../components/Label';
 import Typography from '../../../components/Typography';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {formattedSameDate} from '../../../utils/dateFormatter';
 import withCommas from '../../../utils/withCommas';
 import {PAGE_NAME as MembershipJoinPageName} from '../MembershipJoin';
@@ -24,7 +24,9 @@ const Pages = () => {
     getMembershipInfo,
     readableAtom: {membershipInfo, isMembershipInfoLoading},
   } = useMembership();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const {getCardList} = useUserMe();
   useEffect(() => {
     const getMembershipBenefit = async () => {

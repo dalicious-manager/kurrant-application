@@ -8,13 +8,12 @@ import Arrow from '../../../../assets/icons/Group/arrowWhite.svg';
 import Close from '../../../../assets/icons/Group/close.svg';
 import Pen from '../../../../assets/icons/Group/pen.svg';
 import useGroupSpots from '../../../../biz/useGroupSpots/hook';
-import useUserInfo from '../../../../biz/useUserInfo/hook';
-import {isUserInfoAtom} from '../../../../biz/useUserInfo/store';
 import BottomSheetSpot from '../../../../components/BottomSheetSpot';
 import Button from '../../../../components/Button';
 import TextButton from '../../../../components/TextButton';
 import Toast from '../../../../components/Toast';
 import Typography from '../../../../components/Typography';
+import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {setStorage} from '../../../../utils/asyncStorage';
 import withCommas from '../../../../utils/withCommas';
@@ -37,8 +36,9 @@ const Pages = ({route}) => {
     userWithdrawGroup,
     userSpotRegister,
   } = useGroupSpots();
-  const {userInfo, isUserInfo} = useUserInfo();
-
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState();
   //const [groupState,setGroupState] = useState();
@@ -69,7 +69,6 @@ const Pages = ({route}) => {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         toast.toastEvent();
-        await userInfo();
         await groupSpotDetail(id);
       }
     } catch (error) {

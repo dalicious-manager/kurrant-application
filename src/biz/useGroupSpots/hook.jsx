@@ -62,6 +62,7 @@ const useGroupSpots = () => {
       const res = await Fetch.UserGroupAdd({
         ...body,
       });
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -89,6 +90,7 @@ const useGroupSpots = () => {
         ...body,
       });
       queryClient.invalidateQueries('dailyfood');
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -102,7 +104,7 @@ const useGroupSpots = () => {
       const res = await Fetch.WithdrawGroup({
         ...body,
       });
-
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       Alert.alert('그룹 탈퇴', err.toString()?.replace('error: ', ''), [

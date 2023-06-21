@@ -1,25 +1,21 @@
 import {useNavigation} from '@react-navigation/native';
-import th from 'date-fns/esm/locale/th/index.js';
-import {useAtomValue} from 'jotai';
 import {View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import Typography from '~components/Typography';
 
 import {
-  RightSkinnyArrow,
-  YellowStar,
-} from '../../../../../../../components/Icon';
-import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
-import {
   ArrowRightBoxIcon2,
   MembershipDiscountBadge,
 } from '../../../../../components/Icon';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
 
 const MembershipDiscountBox = ({isFoodDetail}) => {
   const themeApp = useTheme();
-  const isUserInfo = useAtomValue(isUserInfoAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const realToTalDiscountRate =
     100 -
     (100 - isFoodDetail.membershipDiscountRate) *

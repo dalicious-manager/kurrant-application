@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import {useAtom} from 'jotai';
 import React, {useState} from 'react';
-import {Image, Pressable, Text, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import styled from 'styled-components';
 
 import {
@@ -12,10 +11,9 @@ import {
   subButtonText,
 } from './data';
 import Close from '../../../assets/icons/Map/close20.svg';
-import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
-import {alarmSetting} from '../../../biz/useUserMe/Fetch';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
@@ -26,7 +24,9 @@ export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
 
-  const [isUserInfo] = useAtom(isUserInfoAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const type = route?.params?.type;
   console.log(type, 'type');
   const nextUseButton = () => {

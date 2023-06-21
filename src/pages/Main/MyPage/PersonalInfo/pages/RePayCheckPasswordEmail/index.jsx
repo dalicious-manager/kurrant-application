@@ -1,5 +1,4 @@
-import {StackActions, useNavigation} from '@react-navigation/native';
-import {useAtom} from 'jotai';
+import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {
@@ -8,17 +7,15 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import styled, {css, useTheme} from 'styled-components/native';
+import styled, {useTheme} from 'styled-components/native';
 
-import {registCardAtom} from '../../../../../../atoms/store';
 import useAuth from '../../../../../../biz/useAuth';
-import useUserInfo from '../../../../../../biz/useUserInfo';
-import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
 import RefTextInput from '../../../../../../components/RefTextInput';
 import Typography from '../../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
+import {useGetUserInfo} from '../../../../../../hook/useUserInfo';
 import {PAGE_NAME as RePayCheckPasswordPageName} from '../RePayCheckPassword';
 export const PAGE_NAME =
   'P__MY_PAGE__PAYMENT_MANAGE__RE_PAY_CHECK_PASSWORD_EMAIL';
@@ -34,7 +31,9 @@ export default function PasswordCheck({route}) {
     formState: {errors},
   } = form;
   const auth = useAuth();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [progress, setProgress] = useState(1);
   // 함수들은 Class 를 외부에서 생성하여 import를 하여 사용하였다.
   const [statusBarHeight, setStatusBarHeight] = useState(0);

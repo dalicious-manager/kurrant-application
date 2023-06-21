@@ -22,7 +22,6 @@ import useFoodDaily from '../../biz/useDailyFood/hook';
 import useGroupSpots from '../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../biz/useGroupSpots/store';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
-import useUserInfo from '../../biz/useUserInfo/hook';
 import {SCREEN_NAME as MainScreenName} from '../../screens/Main/Bnb';
 import {getStorage} from '../../utils/asyncStorage';
 import {formattedWeekDate} from '../../utils/dateFormatter';

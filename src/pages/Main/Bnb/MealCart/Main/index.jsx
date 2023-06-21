@@ -12,8 +12,6 @@ import SoldOut from '../../../../../assets/icons/MealCart/soldOut.svg';
 import WarningIcon from '../../../../../assets/icons/MealCart/warning.svg';
 import X from '../../../../../assets/icons/MealCart/x.svg';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import useUserInfo from '../../../../../biz/useUserInfo';
-import useUserMe from '../../../../../biz/useUserMe';
 import BottomModal from '../../../../../components/BottomModal';
 import BottomSheet from '../../../../../components/BottomSheet';
 import BottomMenu from '../../../../../components/BottomSheetMenu';
@@ -25,6 +23,7 @@ import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
 import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import {formattedMonthDay} from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
@@ -58,8 +57,10 @@ const Pages = () => {
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [show, setShow] = useState(false);
-  const {isUserInfo} = useUserInfo();
-  const {getCardList} = useUserMe();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
+  // const {getCardList} = useUserMe();
   const [selected, setSelected] = useState(isUserInfo?.spotId);
   const [name, setName] = useState();
   const [date, setDate] = useState();
@@ -100,6 +101,10 @@ const Pages = () => {
     };
     getTime();
   }, [isLoadMeal?.data]);
+  useEffect(() => {
+    // getCardList();
+    if (isUserInfo?.spotId) setSelected(isUserInfo?.spotId);
+  }, [isUserInfo?.spotId]);
   if (!isLoadMeal?.data) {
     return <ActivityIndicator size={'large'} />;
   }
@@ -335,19 +340,17 @@ const Pages = () => {
 
     const supportPrice =
       discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
+
     const dailyDiscountPrice =
       membershipDateDiscountPrice +
       makersDateDiscountPrice +
       periodDateDiscountPrice;
+
+    const supportPrice =
+      discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
     const totalDatePrice =
       totalDateMealPrice - dailyDiscountPrice - supportPrice + v.deliveryFee;
-    console.log(
-      totalDateMealPrice,
-      dailyDiscountPrice,
-      supportPrice,
-      v.deliveryFee,
-      '토탈',
-    );
+
     return totalDatePrice > 0 ? totalDatePrice : 0;
   });
   const useDateSupportPrice = lastArr?.map(v => {
@@ -414,7 +417,6 @@ const Pages = () => {
 
   // 클라 타입
   const clientType = clientStatus?.filter(p => p.spotId === selected);
-
   // 스팟 이름
 
   const spotName = mealCartSpot?.filter(p => p.id === selected);
@@ -795,24 +797,25 @@ const Pages = () => {
                 <PaymentText>총 상품금액</PaymentText>
                 <PaymentText>{withCommas(totalMealPrice)} 원</PaymentText>
               </PaymentView>
-              {clientType[0]?.clientStatus === 0 && (
-                <PaymentView>
-                  <PressableView onPress={fundButton}>
-                    <PaymentText>식사 지원금 사용 금액</PaymentText>
-                    <QuestionIcon />
-                  </PressableView>
-                  <PaymentText>
-                    {medtronicSupportArr.includes(62471004)
-                      ? `-${withCommas(medtronicPrice)}`
-                      : usedSupportPrice === 0
-                      ? 0
-                      : discountPrice < usedSupportPrice
-                      ? `-${withCommas(discountPrice)}`
-                      : `-${withCommas(usedSupportPrice)}`}{' '}
-                    원
-                  </PaymentText>
-                </PaymentView>
-              )}
+              {isLoadMeal?.data?.spotCarts &&
+                clientType[0]?.clientStatus === 0 && (
+                  <PaymentView>
+                    <PressableView onPress={fundButton}>
+                      <PaymentText>식사 지원금 사용 금액</PaymentText>
+                      <QuestionIcon />
+                    </PressableView>
+                    <PaymentText>
+                      {medtronicSupportArr.includes(62471004)
+                        ? `-${withCommas(medtronicPrice)}`
+                        : usedSupportPrice === 0
+                        ? 0
+                        : discountPrice < usedSupportPrice
+                        ? `-${withCommas(discountPrice)}`
+                        : `-${withCommas(usedSupportPrice)}`}{' '}
+                      원
+                    </PaymentText>
+                  </PaymentView>
+                )}
               <PaymentView>
                 <PaymentText>총 할인금액</PaymentText>
                 <PaymentText>
@@ -843,7 +846,10 @@ const Pages = () => {
                 <UserPointText>
                   보유포인트{' '}
                   <UserHavePoint>
-                    {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
+                    {isUserInfo?.point === 0
+                      ? 0
+                      : withCommas(isUserInfo?.point || 0)}
+                    P
                   </UserHavePoint>
                   (결제시 적용가능)
                 </UserPointText>
