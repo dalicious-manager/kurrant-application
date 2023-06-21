@@ -136,7 +136,7 @@ const RegisterSpotMap = ({route}) => {
               if (Platform.OS === 'ios') setMove(true);
             }}>
             <NaverMapView
-              minZoomLevel={12}
+              minZoomLevel={6}
               maxZoomLevel={20}
               onTouch={() => {
                 if (Platform.OS === 'android') setMove(true);
