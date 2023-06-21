@@ -86,9 +86,7 @@ const SpotType = () => {
               가능해요.
             </HeaderDscText>
           </View>
-          <Pressable onPress={deleteButton}>
-            <Text>신청 내역 삭제 버튼 (임시)</Text>
-          </Pressable>
+
           <BoxWrap>
             <Box onPress={() => myspotButton()}>
               <ImageWrap>
@@ -128,7 +126,11 @@ const SpotType = () => {
           </BoxWrap>
           <BoxWrap>
             <Box
-              onPress={() => navigation.navigate(PrivateInfo)}
+              onPress={() =>
+                navigation.navigate(PrivateInfo, {
+                  list: isUserGroupSpotCheck?.spotListResponseDtoList?.length,
+                })
+              }
               style={{paddingLeft: 52}}>
               <ImageWrap>
                 <Image source={PrivateSpot} style={{width: 60, height: 60}} />
