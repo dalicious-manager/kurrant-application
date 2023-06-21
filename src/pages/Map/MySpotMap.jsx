@@ -92,6 +92,7 @@ const MySpotMap = ({route}) => {
       setZoom(18);
     }, [paramLocation, setInitCenter]),
   );
+  console.log(zoom);
   const handleLayout = () => {
     mapRef.current.measure((x, y, width, height) => {
       setMapHeight(height);
@@ -148,7 +149,7 @@ const MySpotMap = ({route}) => {
             if (Platform.OS === 'ios') setMove(true);
           }}>
           <NaverMapView
-            minZoomLevel={12}
+            minZoomLevel={6}
             maxZoomLevel={20}
             onTouch={() => {
               if (Platform.OS === 'android') setMove(true);

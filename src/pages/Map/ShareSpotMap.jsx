@@ -191,7 +191,7 @@ const ShareSpotMap = ({route}) => {
               if (Platform.OS === 'ios') setMove(true);
             }}>
             <NaverMapView
-              minZoomLevel={12}
+              minZoomLevel={6}
               maxZoomLevel={20}
               onMapClick={() => bottomSheetDown()}
               onTouch={() => {

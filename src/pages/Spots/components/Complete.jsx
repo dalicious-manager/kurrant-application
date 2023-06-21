@@ -12,6 +12,7 @@ import {
   subButtonText,
 } from './data';
 import Close from '../../../assets/icons/Map/close20.svg';
+import useGroupSpots from '../../../biz/useGroupSpots/hook';
 import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
 import {alarmSetting} from '../../../biz/useUserMe/Fetch';
 import Button from '../../../components/Button';
@@ -25,6 +26,9 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
+  const {isUserGroupSpotCheck} = useGroupSpots();
+  const noHasSpots =
+    isUserGroupSpotCheck?.spotListResponseDtoList?.length === 0;
 
   const [isUserInfo] = useAtom(isUserInfoAtom);
   const type = route?.params?.type;
@@ -44,7 +48,11 @@ const Complete = ({route}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      {!(type === 'noAlramNoSpot' || type === 'noDeliveryNoSpot') && (
+      {!(
+        type === 'noAlramNoSpot' ||
+        type === 'noDeliveryNoSpot' ||
+        (type === 'sharSpotAppication' && noHasSpots)
+      ) && (
         <CloseButton onPress={nextUseButton}>
           <Close />
         </CloseButton>
@@ -88,7 +96,10 @@ const Complete = ({route}) => {
           }}
         />
         <Pressable onPress={nextUseButton}>
-          <ButtonText>{subButtonText(type)}</ButtonText>
+          <ButtonText>
+            {!(type === 'sharSpotAppication' && noHasSpots) &&
+              subButtonText(type)}
+          </ButtonText>
         </Pressable>
       </ButtonWrap>
     </View>
