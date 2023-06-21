@@ -337,6 +337,10 @@ const Pages = () => {
       .reduce((acc, cur) => {
         return acc + cur;
       }, 0);
+
+    const supportPrice =
+      discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
+
     const dailyDiscountPrice =
       membershipDateDiscountPrice +
       makersDateDiscountPrice +
@@ -346,6 +350,7 @@ const Pages = () => {
       discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
     const totalDatePrice =
       totalDateMealPrice - dailyDiscountPrice - supportPrice + v.deliveryFee;
+
     return totalDatePrice > 0 ? totalDatePrice : 0;
   });
   const useDateSupportPrice = lastArr?.map(v => {
@@ -373,15 +378,21 @@ const Pages = () => {
       .reduce((acc, cur) => {
         return acc + cur;
       }, 0);
+    const discountedPrice = v.cartDailyFoods
+      ?.map(p => p.discountedPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+
+    const supportPrice =
+      discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
     const dailyDiscountPrice =
       membershipDateDiscountPrice +
       makersDateDiscountPrice +
       periodDateDiscountPrice;
     const totalDatePrice =
-      totalDateMealPrice - dailyDiscountPrice - v.supportPrice + v.deliveryFee;
-    return totalDatePrice > 0
-      ? v.supportPrice
-      : v.supportPrice + totalDatePrice;
+      totalDateMealPrice - dailyDiscountPrice - supportPrice + v.deliveryFee;
+    return totalDatePrice > 0 ? supportPrice : supportPrice + totalDatePrice;
   });
 
   const totalPrice = totals?.reduce((acc, cur) => {

@@ -23,13 +23,12 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
-  const [press, setPress] = useState(false);
 
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
   const type = route?.params?.type;
-  console.log(type);
+  console.log(type, 'type');
   const nextUseButton = () => {
     navigation.navigate(SCREEN_NAME);
   };
@@ -43,45 +42,33 @@ const Complete = ({route}) => {
     });
   };
 
-  const noDeliveryNoSpotNextUseButton = () => {
-    setPress(true);
-  };
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <CloseButton onPress={nextUseButton}>
-        <Close />
-      </CloseButton>
+      {!(type === 'noAlramNoSpot' || type === 'noDeliveryNoSpot') && (
+        <CloseButton onPress={nextUseButton}>
+          <Close />
+        </CloseButton>
+      )}
       <Wrap showsVerticalScrollIndicator={false}>
         <Contents>
-          <Title>
-            {press
-              ? alramTitleText('noDeliveryNoSpotNextUse')
-              : alramTitleText(type)}
-          </Title>
-          {press ? alramImage('noDeliveryNoSpotNextUse') : alramImage(type)}
+          <Title>{alramTitleText(type)}</Title>
+          {alramImage(type)}
           <Desc>
             {type === 'usedMembership' && isUserInfo?.name}
-            {press
-              ? alramDscText('noDeliveryNoSpotNextUse')
-              : alramDscText(type)}
+            {alramDscText(type)}
           </Desc>
         </Contents>
       </Wrap>
       <ButtonWrap>
         <Button
           icon={type === 'mySpotCompleteMembership' && 'plus'}
-          label={
-            press
-              ? alramButtonText('noDeliveryNoSpotNextUse')
-              : alramButtonText(type)
-          }
+          label={alramButtonText(type)}
           onPressEvent={() => {
             if (
               type === 'mySpotCompleteNotMembership' ||
               type === 'noAlarmNotUsedMembership' ||
               type === 'notUsedMembership' ||
-              type === 'noSpot' ||
-              (type === 'noDeliveryNoSpot' && press)
+              type === 'noSpot'
             ) {
               membershipButton();
             }
@@ -92,19 +79,15 @@ const Complete = ({route}) => {
               buyMealButton();
             }
             if (
-              (type === 'noDeliveryNoSpot' || type === 'sharSpotAppication') &&
-              !press
+              type === 'noDeliveryNoSpot' ||
+              type === 'sharSpotAppication' ||
+              type === 'noAlramNoSpot'
             ) {
               navigation.navigate(SpotTypePage);
             }
           }}
         />
-        <Pressable
-          onPress={
-            type === 'noDeliveryNoSpot' && !press
-              ? noDeliveryNoSpotNextUseButton
-              : nextUseButton
-          }>
+        <Pressable onPress={nextUseButton}>
           <ButtonText>{subButtonText(type)}</ButtonText>
         </Pressable>
       </ButtonWrap>

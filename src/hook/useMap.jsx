@@ -17,6 +17,7 @@ export function useGetRoadAddress(longitude, latitude) {
 
 // 지번 주소 변환
 export function useGetAddress(roadAddress) {
+  console.log(roadAddress, 'roadAddress');
   return useQuery(
     'address',
     () => {

@@ -41,6 +41,7 @@ export const PAGE_NAME = 'SHARE_SPOT_MAP';
 const ShareSpotMap = ({route}) => {
   const paramsLocation = route?.params?.location;
   const paramsId = route?.params?.id;
+  const from = route?.params?.from;
 
   const toast = Toast();
   const navigation = useNavigation();
@@ -60,13 +61,12 @@ const ShareSpotMap = ({route}) => {
   const [myLocation, setMyLocation] = useAtom(myLocationAtom);
   const {
     data: groupList,
-    hasNextPage,
-    fetchNextPage,
     refetch,
     isSuccess,
   } = useGetShareSpotList(
-    myLocation.latitude,
-    myLocation.longitude,
+    0,
+    paramsLocation?.latitude ?? initCenter.latitude,
+    paramsLocation?.longitude ?? initCenter.longitude,
     mealTouch,
     touchInfo,
   );
@@ -91,7 +91,9 @@ const ShareSpotMap = ({route}) => {
 
   const filterButton = () => {
     refetch();
+    setTab();
     setModalVisible2(false);
+    setModalVisible(false);
   };
 
   const closeModal = () => {
@@ -100,13 +102,15 @@ const ShareSpotMap = ({route}) => {
   };
   const goTospotManagePage = () => {
     setBottomModal(false);
-    navigation.navigate(GroupManagePageName);
+    navigation.navigate(GroupManagePageName, {
+      from: 'shareSpotMap',
+    });
   };
 
   useEffect(() => {
     balloonEvent();
   }, []);
-
+  console.log(tab, 'doo');
   useFocusEffect(
     useCallback(() => {
       if (paramsLocation !== undefined) {
@@ -115,7 +119,13 @@ const ShareSpotMap = ({route}) => {
         setModalVisible(true);
         bottomSheetRef.current?.snapToIndex(1);
       }
-    }, [paramsLocation, setInitCenter, paramsId]),
+
+      if (paramsId === undefined) {
+        setModalVisible(false);
+      }
+      setZoom(18);
+      refetch();
+    }, [paramsLocation, paramsId, refetch, setInitCenter]),
   );
 
   return (
@@ -147,7 +157,11 @@ const ShareSpotMap = ({route}) => {
             />
           </LocationButtonWrap>
           <ListButtonWrap>
-            <ListButton onPress={() => navigation.navigate(ShareSpotListPage)}>
+            <ListButton
+              onPress={() => {
+                setTab();
+                navigation.navigate(ShareSpotListPage);
+              }}>
               <ListIcon />
               <ListButtonText>목록보기</ListButtonText>
             </ListButton>
@@ -177,13 +191,15 @@ const ShareSpotMap = ({route}) => {
               if (Platform.OS === 'ios') setMove(true);
             }}>
             <NaverMapView
+              minZoomLevel={12}
+              maxZoomLevel={20}
               onMapClick={() => bottomSheetDown()}
               onTouch={() => {
                 if (Platform.OS === 'android') setMove(true);
               }}
               scaleBar={false}
               zoomControl={false}
-              center={{...initCenter, zoom: 18}}
+              center={{...initCenter, zoom: zoom}}
               style={{width: '100%', height: '100%'}}
               onCameraChange={handleCameraChange}>
               {groupList?.pages?.map(v =>

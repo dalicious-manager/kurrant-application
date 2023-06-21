@@ -2,15 +2,17 @@ import {fetchJson} from '../utils/fetch';
 
 export const shareSpotApis = {
   // 공유스팟 지도,목록 조회 데이터
-  loadSpotList: async (lat, long, pageParam, mealTouch, touchInfo) => {
-    let url = `/users/me/groups/spots/share?lat=${lat}&long=${long}&limit=10&page=${pageParam}&diningType=${mealTouch}`;
+  loadSpotList: async (limit, lat, long, pageParam, mealTouch, touchInfo) => {
+    let url = `/users/me/groups/spots/share?lat=${lat}&long=${long}&page=${pageParam}&diningType=${mealTouch}`;
 
     if (touchInfo.includes(2)) {
       url += '&isRestriction=false';
     } else if (touchInfo.includes(3)) {
       url += '&isRestriction=true';
     }
-
+    if (limit === 10) {
+      url += `&limit=${limit}`;
+    }
     const res = await fetchJson(url, 'GET');
 
     const {items, isLast} = res.data;

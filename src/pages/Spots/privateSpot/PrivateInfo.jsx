@@ -13,11 +13,12 @@ import {useSetAlramSetting} from '../../../hook/useAlram';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 
 export const PAGE_NAME = 'PRIVATE_INFO_PAGE';
-const PrivateInfo = () => {
+const PrivateInfo = ({route}) => {
+  const list = route?.params?.list;
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const {mutateAsync: setAlram} = useSetAlramSetting();
-
+  console.log(list);
   const alarmButton = async () => {
     await setAlram({
       code: 4001,
@@ -56,24 +57,40 @@ const PrivateInfo = () => {
           <ButtonText>뒤로가기</ButtonText>
         </Pressable>
       </ButtonWrap>
-      <BottomModal
-        closeType={false}
-        image={<SongE />}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        title={`알림 신청 완료!`}
-        description={`둘러보러 홈으로 이동할까요?${`\n`}아니면 다른 스팟을 사용해보시겠어요?`}
-        buttonTitle1={'둘러보기'}
-        buttonType1="grey7"
-        buttonTitle2={'다른 스팟 타입 신청'}
-        buttonType2="yellow"
-        onPressEvent1={() => {
-          navigation.navigate(SCREEN_NAME);
-        }}
-        onPressEvent2={() => {
-          navigation.goBack();
-        }}
-      />
+      {list > 0 ? (
+        <BottomModal
+          closeType={false}
+          image={<SongE />}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          title={`알림 신청 완료!`}
+          description={`둘러보러 홈으로 이동할까요?${`\n`}아니면 다른 스팟을 사용해보시겠어요?`}
+          buttonTitle1={'둘러보기'}
+          buttonType1="grey7"
+          buttonTitle2={'다른 스팟 타입 신청'}
+          buttonType2="yellow"
+          onPressEvent1={() => {
+            navigation.navigate(SCREEN_NAME);
+          }}
+          onPressEvent2={() => {
+            navigation.goBack();
+          }}
+        />
+      ) : (
+        <BottomModal
+          closeType={false}
+          image={<SongE />}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          title={`알림 신청 완료!`}
+          description={`둘러보러 홈으로 이동할까요?${`\n`}아니면 다른 스팟을 사용해보시겠어요?`}
+          buttonTitle1={'다른 스팟 타입 신청'}
+          buttonType1="yellow"
+          onPressEvent1={() => {
+            navigation.goBack();
+          }}
+        />
+      )}
     </Wrap>
   );
 };

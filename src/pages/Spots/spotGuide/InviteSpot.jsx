@@ -13,6 +13,10 @@ import {
   SelectSpotIcon,
   UnSelectSpotIcon,
 } from '../../../assets';
+import useGroupSpots from '../../../biz/useGroupSpots/hook';
+import useUserInfo from '../../../biz/useUserInfo/hook';
+import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
+import BottomSheetSpot from '../../../components/BottomSheetSpot';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
 import {useGetPrivateSpot} from '../../../hook/usePrivateSpot';
@@ -24,15 +28,28 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'INVITE_SPOT';
 const InviteSpot = () => {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selected, setSelected] = useState();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
   const {data: privateSpotList} = useGetPrivateSpot();
+  const {isUserGroupSpotCheck, userSpotRegister} = useGroupSpots();
+  // const {isUserInfo} = useUserInfo();
   const [tab, setTab] = useState(0);
-  const [center, setCenter] = useState();
+  const [center, setCenter] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
 
   const spotList = privateSpotList?.data;
-
+  const userSpotId = isUserInfo?.spotId;
+  const anotherSpot = async id => {
+    await userSpotRegister({
+      id: id,
+    });
+    navigation.navigate(SCREEN_NAME);
+  };
   useEffect(() => {
     if (privateSpotList) {
       const data = {
@@ -51,7 +68,7 @@ const InviteSpot = () => {
         </TitleText>
         <SemiTitle>초대받은 스팟 정보를 확인해주세요</SemiTitle>
         <View>
-          <SpotButtonScroll horizontal>
+          <SpotButtonScroll horizontal showsHorizontalScrollIndicator={false}>
             {spotList?.map((v, i) => {
               const center = {
                 latitude: Number(v.latitude),
@@ -111,14 +128,26 @@ const InviteSpot = () => {
       </Content>
       <ButtonWrap>
         <Button
-          label="확인했어요"
-          onPressEvent={() => navigation.navigate(SCREEN_NAME)}
+          label="초대받은 스팟 사용하기"
+          onPressEvent={() => setModalVisible(true)}
         />
         <AnotherSpotButtonText
           onPress={() => navigation.navigate(SpotTypePage)}>
           다른 타입 스팟 고르기
         </AnotherSpotButtonText>
       </ButtonWrap>
+      <BottomSheetSpot
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        title="배송 스팟 선택"
+        data={isUserGroupSpotCheck?.spotListResponseDtoList}
+        selected={selected}
+        setSelected={setSelected}
+        userSpotId={userSpotId}
+        onPressEvent={id => {
+          anotherSpot(id);
+        }}
+      />
     </Wrap>
   );
 };
@@ -162,6 +191,7 @@ const SpotButton = styled(Shadow)`
   align-items: center;
   padding: 8px 12px;
   margin-right: 8px;
+  margin-bottom: 10px;
 `;
 
 const SpotButtonScroll = styled.ScrollView`

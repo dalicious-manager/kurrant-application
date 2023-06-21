@@ -1,15 +1,21 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React from 'react';
 import {TouchableWithoutFeedback, Keyboard} from 'react-native';
 import styled from 'styled-components';
 
 import Typography from '../../../components/Typography';
+import {mealTouchAtom, touchInfoAtom} from '../../../utils/store';
 import {PAGE_NAME as ShareSpotMapPage} from '../ShareSpotMap';
 
 const AddressShareSpotList = ({data, setFocus, text}) => {
   const navigation = useNavigation();
+  const [mealTouch, setMealTouch] = useAtom(mealTouchAtom);
+  const [touchInfo, setTouchInfo] = useAtom(touchInfoAtom);
 
   const onPress = (lat, long, id) => {
+    setMealTouch([1, 2, 3]);
+    setTouchInfo([1]);
     navigation.navigate(ShareSpotMapPage, {
       location: {
         latitude: lat,

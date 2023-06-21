@@ -17,6 +17,8 @@ import {PAGE_NAME as GroupManagePageName} from '../Group/GroupManage/DetailPage'
 import {PAGE_NAME as MySpotMap} from '../Map/MySpotMap';
 import {PAGE_NAME as ShareSpotMap} from '../Map/ShareSpotMap';
 import {PAGE_NAME as PrivateInfo} from '../Spots/privateSpot/PrivateInfo';
+import {PAGE_NAME as SpotGuidePage} from '../Spots/spotGuide/SpotGuide';
+
 export const PAGE_NAME = 'SPOT_TYPE';
 const SpotType = () => {
   const navigation = useNavigation();
@@ -41,7 +43,9 @@ const SpotType = () => {
   };
   const deleteButton = async () => {
     await deleteBtn();
+    await userInfo();
   };
+
   const myspotButton = () => {
     if (isUserGroupSpotCheck.mySpotCount === 1) {
       setModalVisible(true);
@@ -64,6 +68,14 @@ const SpotType = () => {
     setModalVisible2(false);
     navigation.navigate(MySpotMap);
   };
+
+  const nextButton = () => {
+    if (isUserGroupSpotCheck?.spotListResponseDtoList?.length > 0) {
+      navigation.navigate(SCREEN_NAME);
+    } else {
+      navigation.navigate(SpotGuidePage);
+    }
+  };
   return (
     <Wrap showsVerticalScrollIndicator={false}>
       <ContentsWrap>
@@ -76,9 +88,7 @@ const SpotType = () => {
               가능해요.
             </HeaderDscText>
           </View>
-          <Pressable onPress={deleteButton}>
-            <Text>삭제</Text>
-          </Pressable>
+
           <BoxWrap>
             <Box onPress={() => myspotButton()}>
               <ImageWrap>
@@ -118,7 +128,11 @@ const SpotType = () => {
           </BoxWrap>
           <BoxWrap>
             <Box
-              onPress={() => navigation.navigate(PrivateInfo)}
+              onPress={() =>
+                navigation.navigate(PrivateInfo, {
+                  list: isUserGroupSpotCheck?.spotListResponseDtoList?.length,
+                })
+              }
               style={{paddingLeft: 52}}>
               <ImageWrap>
                 <Image source={PrivateSpot} style={{width: 60, height: 60}} />
@@ -145,7 +159,7 @@ const SpotType = () => {
               isHeader={false}
             />
           )}
-          <Pressable onPress={() => navigation.navigate(SCREEN_NAME)}>
+          <Pressable onPress={nextButton}>
             <NextText>다음에 설정하기</NextText>
           </Pressable>
         </View>

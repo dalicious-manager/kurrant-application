@@ -21,6 +21,7 @@ import {
   myLocationAtom,
   touchInfoAtom,
 } from '../../../utils/store';
+import {PAGE_NAME as MapSearchResult} from '../../Map/SearchResult';
 import {PAGE_NAME as ShareSpotMapPage} from '../../Map/ShareSpotMap';
 
 export const PAGE_NAME = 'SHARE_SPOT_LIST';
@@ -46,6 +47,7 @@ const ShareSpotList = ({setShowList, showList}) => {
     fetchNextPage,
     refetch,
   } = useGetShareSpotList(
+    10,
     myLocation.latitude,
     myLocation.longitude,
     mealTouch,
@@ -69,10 +71,9 @@ const ShareSpotList = ({setShowList, showList}) => {
     <Wrap>
       <Pressable
         style={{position: 'relative', marginTop: 8, marginBottom: 12}}
-        // onPress={() => {
-        //   navigation.navigate(MapSearchResult);
-        // }}
-      >
+        onPress={() => {
+          navigation.navigate(MapSearchResult);
+        }}>
         <Icon />
         <Search>
           <PlaceHolderText>지번, 도로명, 건물명으로 검색</PlaceHolderText>
@@ -132,7 +133,7 @@ const ShareSpotList = ({setShowList, showList}) => {
         }}
       />
       <ListButtonWrap>
-        <ListButton onPress={() => navigation.goBack()}>
+        <ListButton onPress={() => navigation.navigate(ShareSpotMapPage)}>
           <MapIcon />
           <ListButtonText>지도보기</ListButtonText>
         </ListButton>

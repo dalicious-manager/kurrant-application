@@ -51,6 +51,7 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/De
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
 import MainDim from '../../../../Spots/spotGuide/MainDim';
 import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
@@ -59,7 +60,6 @@ import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
@@ -146,6 +146,7 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -271,6 +272,7 @@ const Pages = () => {
       await getMembershipHistory();
     };
     getHistory();
+
   }, [isUserInfo?.data]);
   useFocusEffect(
     useCallback(() => {
@@ -477,7 +479,6 @@ const Pages = () => {
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
-        await userGroupSpotCheck();
         await VersionCheck.getLatestVersion().then(latestVersion => {
           const regex = /[^0-9]/g;
           const result = currentVersion?.replace(regex, '');
@@ -558,12 +559,14 @@ const Pages = () => {
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
-            <SpotNameText>
+
+            <SpotNameText
+              numberOfLines={userGroupName !== null ? 2 : 1}
+              ellipsizeMode="tail">
               {isUserInfo?.data && !isUserInfo?.data?.spotId
                 ? '스팟을 선택해 주세요'
                 : spotName}
             </SpotNameText>
-
             <ArrowIcon />
           </SpotName>
           <Icons>
@@ -801,6 +804,7 @@ const BarWrap = styled.View`
 
 const SpotName = styled.Pressable`
   ${Display};
+  max-width: 220px;
 `;
 
 const Icons = styled.View`
