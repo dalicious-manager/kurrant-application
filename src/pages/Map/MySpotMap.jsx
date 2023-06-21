@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Geolocation from 'react-native-geolocation-service';
 import NaverMapView, {Marker} from 'react-native-nmap';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components/native';
@@ -83,12 +82,7 @@ const MySpotMap = ({route}) => {
 
   useEffect(() => {
     roadAddressRefetch();
-    // queryClient.invalidateQueries('address');
-    // queryClient.invalidateQueries('roadAddress');
   }, [initCenter, queryClient, roadAddressRefetch, showAddress]);
-  // useEffect(() => {
-  //   addressRefetch();
-  // }, [roadAddress, initCenter, addressRefetch, showAddress]);
 
   useFocusEffect(
     useCallback(() => {

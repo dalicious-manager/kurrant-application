@@ -61,7 +61,7 @@ const DetailAddress = ({route}) => {
       phone: phone?.join(''),
     };
     console.log(data);
-    await applySpot(data);
+    //await applySpot(data);
   };
 
   useEffect(() => {

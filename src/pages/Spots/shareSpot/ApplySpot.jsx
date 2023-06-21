@@ -14,7 +14,7 @@ import Typography from '../../../components/Typography';
 import useKeyboardEvent from '../../../hook/useKeyboardEvent';
 import {useApplyShareSpot} from '../../../hook/useShareSpot';
 import {formattedMealTime, formattedTime} from '../../../utils/dateFormatter';
-import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
+import {PAGE_NAME as RegisterSpotMapPage} from '../../Map/RegisterSpotMap';
 import {PAGE_NAME as ShareSpotMapPage} from '../../Map/ShareSpotMap';
 import {PAGE_NAME as CompletePage} from '../components/Complete';
 import {PAGE_NAME as SpotTypePage} from '../SpotType';
@@ -72,7 +72,7 @@ const ApplySpot = ({route}) => {
 
   const checkMapLocation = () => {
     if (type === 'registerSpot') {
-      navigation.navigate(MySpotMapPage);
+      navigation.navigate(RegisterSpotMapPage);
     } else {
       navigation.navigate(ShareSpotMapPage, {
         location: center,
