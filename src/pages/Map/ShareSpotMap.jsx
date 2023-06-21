@@ -110,7 +110,7 @@ const ShareSpotMap = ({route}) => {
   useEffect(() => {
     balloonEvent();
   }, []);
-  console.log(tab, 'doo');
+
   useFocusEffect(
     useCallback(() => {
       if (paramsLocation !== undefined) {
