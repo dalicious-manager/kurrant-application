@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import {useAtom} from 'jotai';
 import React, {useState} from 'react';
-import {Image, Pressable, Text, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import styled from 'styled-components';
 
 import {
@@ -17,6 +16,7 @@ import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
 import {alarmSetting} from '../../../biz/useUserMe/Fetch';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
@@ -30,7 +30,9 @@ const Complete = ({route}) => {
   const noHasSpots =
     isUserGroupSpotCheck?.spotListResponseDtoList?.length === 0;
 
-  const [isUserInfo] = useAtom(isUserInfoAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const type = route?.params?.type;
   console.log(type, 'type');
   const nextUseButton = () => {

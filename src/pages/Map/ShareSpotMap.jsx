@@ -203,7 +203,7 @@ const ShareSpotMap = ({route}) => {
               style={{width: '100%', height: '100%'}}
               onCameraChange={handleCameraChange}>
               {groupList?.pages?.map(v =>
-                v.items.map(el => {
+                v?.items?.map(el => {
                   const center = {
                     latitude: Number(el.latitude),
                     longitude: Number(el.longitude),

@@ -14,7 +14,7 @@ import styled from 'styled-components/native';
 
 import WarningIcon from '../../assets/icons/MealCart/warning.svg';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
-import useUserInfo from '../../biz/useUserInfo';
+import {useGetUserInfo} from '../../hook/useUserInfo';
 import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
 import withCommas from '../../utils/withCommas';
 import Count from '../Count';
@@ -38,7 +38,9 @@ const BottomSheet = props => {
 
   const navigation = useNavigation();
   const {addMeal, setSoldOutMeal, loadMeal} = useShoppingBasket();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const upY = useRef(new Animated.Value(0)).current;
@@ -128,7 +130,9 @@ const BottomSheet = props => {
     });
     setSoldOutMeal(decrease);
   };
-
+  useEffect(() => {
+    console.log(isUserInfo, 'tests');
+  }, [isUserInfo]);
   const addCart = async () => {
     const meal = data
       .filter(el => el.count !== 0)

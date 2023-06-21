@@ -5,11 +5,11 @@ import styled from 'styled-components';
 
 import {NotDeliveryIcon, SpotOpen} from '../../../assets';
 import Close from '../../../assets/icons/Map/close20.svg';
-import useUserInfo from '../../../biz/useUserInfo/hook';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
 import {useSetAlramSetting} from '../../../hook/useAlram';
 import {useSettingAlarmMySpot} from '../../../hook/useSpot';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {PAGE_NAME as MembershipPage} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
@@ -27,7 +27,9 @@ const NotDelivery = ({route}) => {
   const type = route?.params?.isExist;
   const isAlarm = route?.params?.isAlarm;
   const registerSpotId = route?.params?.registerSpotId;
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const spot = isUserInfo?.spotId;
 
   const {mutateAsync: setAlram} = useSettingAlarmMySpot();

@@ -20,6 +20,7 @@ import BottomSheetSpot from '../../../components/BottomSheetSpot';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
 import {useGetPrivateSpot} from '../../../hook/usePrivateSpot';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height, width} from '../../../theme';
 import {PAGE_NAME as SpotTypePage} from '../SpotType';
@@ -27,9 +28,11 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'INVITE_SPOT';
 const InviteSpot = () => {
   const navigation = useNavigation();
-  const isUserInfo = useAtomValue(isUserInfoAtom);
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const {data: privateSpotList} = useGetPrivateSpot();
   const {isUserGroupSpotCheck, userSpotRegister} = useGroupSpots();
   // const {isUserInfo} = useUserInfo();

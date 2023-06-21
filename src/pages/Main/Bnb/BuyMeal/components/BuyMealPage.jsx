@@ -9,8 +9,8 @@ import BottomModal from '~components/BottomModal';
 import Typography from '~components/Typography';
 
 import MealImage from './MealImage';
-import useUserInfo from '../../../../../biz/useUserInfo/hook';
 import {Label} from '../../../../../components/Button/component';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 
@@ -47,7 +47,9 @@ const BuyMealPage = props => {
     },
   } = props;
 
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [startScroll, setStartScroll] = useState(0);
 
   const setModal = type => {

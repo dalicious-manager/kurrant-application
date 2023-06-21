@@ -12,10 +12,8 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 
-import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
 import {registCardAtom} from '../../../../../../atoms/store';
 import useAuth from '../../../../../../biz/useAuth';
-import useUserInfo from '../../../../../../biz/useUserInfo/hook';
 import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
@@ -41,7 +39,7 @@ const Pages = ({route}) => {
   const params = route?.params;
   const auth = useAuth();
   const {cardRegistedNice} = useUserMe();
-  const {isUserInfo} = useUserInfo();
+
   const navigation = useNavigation();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [progress, setProgress] = useState(1);

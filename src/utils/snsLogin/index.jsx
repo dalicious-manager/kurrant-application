@@ -28,8 +28,6 @@ import {PAGE_NAME as AppleLoginPageName} from '../../pages/Main/Login/AppleSignu
 
 import Config from 'react-native-config';
 
-import useUserInfo from '../../biz/useUserInfo/hook';
-
 const nonce = uuid();
 
 const naverData = () => {
@@ -47,7 +45,6 @@ const naverData = () => {
   return data;
 };
 export default () => {
-  const {userInfo} = useUserInfo();
   const {snsLogin, snsAppleLogin} = useAuth();
   const navigation = useNavigation();
   const naverLogin = async () => {
