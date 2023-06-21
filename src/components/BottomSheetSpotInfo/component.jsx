@@ -30,6 +30,7 @@ import {
 import PlusIcon from '../../assets/icons/Map/plus.svg';
 import MealIcon from '../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../assets/icons/Spot/user.svg';
+import useGroupSpots from '../../biz/useGroupSpots/hook';
 import {userGroupSpotListAtom} from '../../biz/useGroupSpots/store';
 import {
   useGetShareSpotDetail,
@@ -53,10 +54,15 @@ const Component = props => {
   } = props;
 
   const navigation = useNavigation();
-  const [isUserGroupSpotCheck] = useAtom(userGroupSpotListAtom);
   const {data: detailData, refetch: detailDataRefech} = useGetShareSpotDetail(
     data[0]?.id,
   );
+  const {
+    userGroupSpotCheck,
+    isUserGroupSpotCheck,
+    userSpotRegister,
+    groupSpotDetail,
+  } = useGroupSpots();
   const {mutateAsync: selectSpot} = useSelectShareSpot();
 
   const detail = detailData?.data;
@@ -81,6 +87,7 @@ const Component = props => {
         id: data[0].id,
       };
       await selectSpot(body);
+      await userGroupSpotCheck();
       navigation.navigate(SCREEN_NAME);
     }
   };

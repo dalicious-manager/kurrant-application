@@ -41,10 +41,6 @@ const SpotType = () => {
     setModalVisible(false);
     setModalVisible2(false);
   };
-  const deleteButton = async () => {
-    await deleteBtn();
-    await userInfo();
-  };
 
   const myspotButton = () => {
     if (isUserGroupSpotCheck.mySpotCount === 1) {
