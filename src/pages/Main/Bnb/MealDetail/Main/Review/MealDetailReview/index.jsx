@@ -81,7 +81,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     isOnlyPhoto,
     selectedKeyword,
     setUrl,
-    rateSelected,
+    // rateSelected,
   ]);
 
   const {
@@ -140,9 +140,6 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         items: {starAverage, isLast, foodId, totalReview, reviewWrite},
       } = data?.pages[0];
 
-      // const {starAverage, isLast, foodId, totalReview, reviewWrite} =
-      //   data?.pages[0];
-
       setStarAverage(starAverage);
       setIsLast(isLast);
       setFoodId(foodId);
@@ -186,6 +183,15 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     }
   };
 
+  // useEffect(() => {
+  //   console.log('data여');
+  //   console.log(data);
+  //   console.log(data?.pages);
+  //   console.log(data?.pages[0]);
+  //   console.log(data?.pages[0].items);
+  //   console.log(data?.pages[0].items?.reviewList);
+  //   console.log(data?.pages[0].items?.starAverage);
+  // }, [data]);
   const handleConfirmPress = () => {
     setUrl(
       buildCustomUrl(
