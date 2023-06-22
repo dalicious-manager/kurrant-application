@@ -96,9 +96,11 @@ const useSse = () => {
   // sse 알림 읽기
   const {mutate: confirmSseIsRead} = useMutation(
     async data => {
-      const response = await fetchJson('/notification/read', 'PUT', {
-        body: JSON.stringify(data),
-      });
+      const response = await fetchJson(
+        '/notification/read',
+        'PUT',
+        JSON.stringify(data),
+      );
 
       return response;
     },
