@@ -138,8 +138,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
 
   useEffect(() => {
     if (data?.pages) {
-      const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
-        data?.pages[0];
+      const {
+        items: {starAverage, isLast, foodId, totalReview, reviewWrite},
+      } = data?.pages[0];
 
       setStarAverage(starAverage);
       setIsLast(isLast);
@@ -177,6 +178,16 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
       return '리뷰 추천순';
     }
   };
+
+  // useEffect(() => {
+  //   console.log('data여');
+  //   console.log(data);
+  //   console.log(data?.pages);
+  //   console.log(data?.pages[0]);
+  //   console.log(data?.pages[0].items);
+  //   console.log(data?.pages[0].items?.reviewList);
+  //   console.log(data?.pages[0].items?.starAverage);
+  // }, [data]);
 
   return (
     <Container>
@@ -343,7 +354,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         {data?.pages.map((v, i) => {
           return (
             <View key={i}>
-              {v.items.map((item, i2) => {
+              {v.items?.reviewList.map((item, i2) => {
                 return (
                   <Card
                     key={item.reviewId}
