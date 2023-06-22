@@ -1,0 +1,60 @@
+import Config from 'react-native-config';
+
+import RNEventSource from 'react-native-event-source';
+
+import EventSource from 'react-native-sse';
+class SseService3 {
+  token;
+  baseUrl;
+  eventSource;
+  constructor(baseUrl, token) {
+    this.baseUrl = baseUrl;
+    this.token = token;
+
+    this.eventSource = new EventSource(
+      `${this.baseUrl}/notification/subscribe`,
+
+      this.token && {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+        // withCredentials: true,
+        pollingInterval: 1000 * 60 * 10,
+        // retry: 3000,
+      },
+    );
+  }
+
+  onMessage = callback => {
+    this.eventSource.addEventListener('message', e => {
+      callback(e.data);
+    });
+  };
+
+  // 일단 만들었는데 아마 잘 안될듯
+
+  onOpen = (callback = () => {}) => {
+    // this.eventSource.onopen = e => {
+    //   console.log(e);
+    //   console.log(' sse onOpen');
+    // };
+    this.eventSource.addEventListener('open', e => {
+      callback(e.data);
+    });
+  };
+
+  onError = () => {
+    this.eventSource.onerror = () => {
+      console.log('error occured closing connection');
+      //  에러가 뜨면 프론트에서 닫아준다
+      this.onDisconnect();
+    };
+  };
+
+  onDisconnect = () => {
+    console.log('onDisconnect! closing connection');
+    this.eventSource.removeAllListeners();
+    this.eventSource.close();
+  };
+}
+export default SseService3;

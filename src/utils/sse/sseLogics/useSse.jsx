@@ -14,6 +14,7 @@ import {
 import {useAtom} from 'jotai';
 import {useMutation, useQuery} from 'react-query';
 import {fetchJson} from '../../fetch';
+import SseService3 from '../SseService/SseService3';
 
 const apiHostUrl =
   Config.NODE_ENV === 'dev'
@@ -44,7 +45,8 @@ const useSse = () => {
 
   const getSseServiceInstance = useCallback(async () => {
     const tokenYo = await getToken();
-    const yoyoyo = new SseService(apiHostUrl, tokenYo);
+    // const yoyoyo = new SseService(apiHostUrl, tokenYo);
+    const yoyoyo = new SseService3(apiHostUrl, tokenYo);
 
     console.log('setEventSourceMsg url확인');
     console.log(apiHostUrl);
@@ -56,36 +58,36 @@ const useSse = () => {
     getSseServiceInstance().then(sseServiceInstance => {
       sseServiceInstance.onOpen();
       sseServiceInstance.onMessage(message => {
-        // if (typeof message === 'string') {
-        //   if (message.includes('EventStream')) {
-        //     console.log(1);
-        //     console.log('EventStream 연결 되었답니다');
-        //   } else {
-        //     const messageType = JSON.parse(message).type;
-        //     switch (messageType) {
-        //       case 1:
-        //         // type: 1 전체공지
-        //         break;
-        //       case 2:
-        //         // type: 2 스팟공지
-        //         break;
-        //       case 3:
-        //         // type: 3 구매후기
-        //         break;
-        //       case 4:
-        //         // type: 4 마감시간
-        //         break;
-        //       case 5:
-        //         // type: 5 다음주 식사 구매하셨나요?
-        //         console.log('message type 5');
-        //         console.log({...JSON.parse(message)});
-        //         setSseType5({...JSON.parse(message)});
-        //         break;
-        //       default:
-        //         break;
-        //     }
-        //   }
-        // }
+        if (typeof message === 'string') {
+          if (message.includes('EventStream')) {
+            console.log(1);
+            console.log('EventStream 연결 되었답니다');
+          } else {
+            const messageType = JSON.parse(message).type;
+            switch (messageType) {
+              case 1:
+                // type: 1 전체공지
+                break;
+              case 2:
+                // type: 2 스팟공지
+                break;
+              case 3:
+                // type: 3 구매후기
+                break;
+              case 4:
+                // type: 4 마감시간
+                break;
+              case 5:
+                // type: 5 다음주 식사 구매하셨나요?
+                console.log('message type 5');
+                console.log({...JSON.parse(message)});
+                setSseType5({...JSON.parse(message)});
+                break;
+              default:
+                break;
+            }
+          }
+        }
       });
     });
   }, []);

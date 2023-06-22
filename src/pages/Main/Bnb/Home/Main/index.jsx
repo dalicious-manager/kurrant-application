@@ -85,7 +85,7 @@ const Pages = () => {
     disconnectSse,
   } = useSse();
 
-  useSse2();
+  // useSse2();
 
   const navigation = useNavigation();
 

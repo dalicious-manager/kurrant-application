@@ -1,7 +1,14 @@
 import EventSource from 'react-native-sse';
 
 class SseService2 {
-  constructor() {
+  token;
+  baseUrl;
+  eventSource;
+
+  constructor(baseUrl, token) {
+    this.baseUrl = baseUrl;
+    this.token = token;
+
     this.eventSource = new EventSource(`http://localhost:3000`, {
       method: 'GET', // Request method. Default: GET
       timeout: 0, // Time after which the connection will expire without any activity: Default: 0 (no timeout)
@@ -12,16 +19,6 @@ class SseService2 {
       // 10분에 한번씩만 폴링하게끔
     });
   }
-
-  onMessage = callback => {
-    this.eventSource.addEventListener('message', e => {
-      console.log('온메세지');
-      console.log(e.data);
-      callback(e.data);
-    });
-  };
-
-  // 일단 만들었는데 아마 잘 안될듯
 
   onOpen = (callback = () => {}) => {
     // this.eventSource.onopen = e => {
@@ -34,6 +31,16 @@ class SseService2 {
       callback(e.data);
     });
   };
+
+  onMessage = callback => {
+    this.eventSource.addEventListener('message', e => {
+      console.log('온메세지');
+      console.log(e.data);
+      callback(e.data);
+    });
+  };
+
+  // 일단 만들었는데 아마 잘 안될듯
 
   onError = () => {
     this.eventSource.onerror = () => {
