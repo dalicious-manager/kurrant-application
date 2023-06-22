@@ -6,6 +6,7 @@ import {SCREEN_NAME as MainScreenName} from '~screens/Main/Bnb';
 
 import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 import {useNavigation} from '@react-navigation/core';
+import {toStringByFormatting} from '../../../../utils/dateFormatter';
 
 const useDietRepoMutation = date => {
   const navigation = useNavigation();
@@ -142,8 +143,11 @@ const useDietRepoMutation = date => {
       //   console.log('데이터 ');
       //   console.log(data);
 
-      const response = await fetchJson('/users/me/daily/report/140', 'DELETE', {
-        body: JSON.stringify(data),
+      const response = await fetchJson('/users/me/daily/report/food', 'POST', {
+        body: JSON.stringify({
+          startDate: '2022-01-01',
+          endDate: toStringByFormatting(new Date()),
+        }),
       });
 
       return response;

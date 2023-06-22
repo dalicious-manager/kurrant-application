@@ -32,6 +32,7 @@ import {modifyDietRepoMainData} from '../logic';
 import LoadingScreen from '~components/LoadingScreen';
 import DietRepoCalendarNew from '../DietRepoCalendar/DietRepoCalendarNew';
 import {getStorage} from '../../../../../utils/asyncStorage';
+import useDietRepoMutation from '../useDietRepoMutation';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -67,6 +68,8 @@ const Pages = ({route}) => {
     dietRepoMainList,
   } = useGetDietRepo(formattedWeekDate(date), undefined, undefined);
 
+  const {saveMeal} = useDietRepoMutation();
+
   useEffect(() => {
     dietRepoMainRefetch();
   }, [date]);
@@ -87,6 +90,12 @@ const Pages = ({route}) => {
       date: formattedWeekDate(date),
     });
   };
+
+  // 특정기간 주문내역 래포트로 저장
+
+  useEffect(() => {
+    saveMeal();
+  }, []);
 
   // const getUserId = async () => {
   //   const userId = await getStorage('userId');
