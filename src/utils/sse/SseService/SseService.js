@@ -18,6 +18,7 @@ class SseService {
           Authorization: `Bearer ${this.token}`,
         },
         withCredentials: true,
+        // pollingInterval: 1000,
         // retry: 3000,
       },
     );
@@ -31,20 +32,28 @@ class SseService {
 
   // 일단 만들었는데 아마 잘 안될듯
 
-  onOpen = () => {
-    this.eventSource.onopen = e => {
-      console.log(e);
-      console.log(' sse onOpen');
-    };
+  onOpen = (callback = () => {}) => {
+    // this.eventSource.onopen = e => {
+    //   console.log(e);
+    //   console.log(' sse onOpen');
+    // };
+    this.eventSource.addEventListener('open', e => {
+      callback(e.data);
+    });
   };
 
-  onDisconnect = () => {
+  onError = () => {
     this.eventSource.onerror = () => {
       console.log('server closed connection');
       //  에러가 뜨면 프론트에서 닫아준다
       this.eventSource.removeAllListeners();
       this.eventSource.close();
     };
+  };
+
+  onDisconnect = () => {
+    this.eventSource.removeAllListeners();
+    this.eventSource.close();
   };
 }
 export default SseService;

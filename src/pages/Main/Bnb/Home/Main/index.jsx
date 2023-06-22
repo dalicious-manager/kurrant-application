@@ -61,6 +61,7 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import useSse2 from '../../../../../utils/sse/sseLogics/useSse2';
 // import useSse from '../../../../../utils/sse/seeContextApi/sseLogics/useSse';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
@@ -74,8 +75,17 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
-  const {sseType1, sseType2, sseType3, sseType4, sseType5, confirmSseIsRead} =
-    useSse();
+  const {
+    sseType1,
+    sseType2,
+    sseType3,
+    sseType4,
+    sseType5,
+    confirmSseIsRead,
+    disconnectSse,
+  } = useSse();
+
+  useSse2();
 
   const navigation = useNavigation();
 
@@ -710,7 +720,8 @@ const Pages = () => {
         <BalloonPressable
           onPress={() => {
             console.log('sse 랄랄라');
-            confirmSseIsRead({type: 5});
+            confirmSseIsRead(5);
+
             // confirmBalloonClicked();
           }}>
           <Balloon label={sseType5.content} />
@@ -728,6 +739,8 @@ const Pages = () => {
             } else {
               Alert.alert('식사구매', '스팟선택 후 식사를 구매해주세요');
             }
+
+            disconnectSse();
           }}>
           <PlusIcon />
           <ButtonText>식사 구매하기</ButtonText>
