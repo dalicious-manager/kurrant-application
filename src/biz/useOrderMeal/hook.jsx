@@ -210,7 +210,6 @@ const useOrderMeal = () => {
     refundItem,
     refundAll,
     setOrderMeal,
-    order,
     orderNice,
     isOrderMeal,
     todayMeal,

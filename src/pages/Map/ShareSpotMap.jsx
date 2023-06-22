@@ -108,10 +108,12 @@ const ShareSpotMap = ({route}) => {
     });
   };
 
+
   useEffect(() => {
     balloonEvent();
     setZoom(18);
   }, []);
+
 
   useFocusEffect(
     useCallback(() => {
@@ -128,6 +130,11 @@ const ShareSpotMap = ({route}) => {
 
       refetch();
     }, [paramsLocation, paramsId, refetch, setInitCenter]),
+  );
+  useFocusEffect(
+    useCallback(() => {
+      balloonEvent();
+    }, []),
   );
 
   return (
@@ -178,7 +185,7 @@ const ShareSpotMap = ({route}) => {
               message={'원하시는 스팟이 없나요?'}
               vertical="down"
               size="B"
-              location={{bottom: '56px', left: '24px'}}
+              location={{bottom: '0px', left: '0px'}}
             />
           </BalloonWrapper>
           <AddSpotWrap onPress={() => navigation.navigate(RegisterSpotMapPage)}>
@@ -387,6 +394,6 @@ const AddSpotWrap = styled.Pressable`
 const BalloonWrapper = styled.View`
   z-index: 99;
   position: absolute;
-  left: 80px;
-  bottom: 104px;
+  left: 30px;
+  bottom: 130px;
 `;

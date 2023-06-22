@@ -37,7 +37,8 @@ const Pages = ({route}) => {
     userWithdrawGroup,
     userSpotRegister,
   } = useGroupSpots();
-  const {data: isUserGroupSpotCheck} = useGroupSpotList();
+  const {data: isUserGroupSpotCheck, refetch: groupRefetch} =
+    useGroupSpotList();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
@@ -138,7 +139,6 @@ const Pages = ({route}) => {
     async function LoadGroupDetail() {
       try {
         await groupSpotDetail(spotId);
-        await userGroupSpotCheck();
       } catch (err) {
         // Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
       }

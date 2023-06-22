@@ -17,6 +17,12 @@ export function useSettingAlarmMySpot() {
   return useMutation(data => spotApis.alarmSettingMySpot(data));
 }
 
+export function useGetPrivateSpots() {
+  return useQuery('groupSpotLists', () => {
+    return spotApis.groupSpotList();
+  });
+}
+
 export function useGroupSpotList() {
   return useQuery('groupSpotList', () => {
     return spotApis.groupSpotList();

@@ -81,7 +81,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     isOnlyPhoto,
     selectedKeyword,
     setUrl,
-    rateSelected,
+    // rateSelected,
   ]);
 
   const {
@@ -136,8 +136,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
 
   useEffect(() => {
     if (data?.pages) {
-      const {starAverage, isLast, foodId, totalReview, reviewWrite} =
-        data?.pages[0];
+      const {
+        items: {starAverage, isLast, foodId, totalReview, reviewWrite},
+      } = data?.pages[0];
 
       setStarAverage(starAverage);
       setIsLast(isLast);
@@ -182,6 +183,15 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     }
   };
 
+  // useEffect(() => {
+  //   console.log('data여');
+  //   console.log(data);
+  //   console.log(data?.pages);
+  //   console.log(data?.pages[0]);
+  //   console.log(data?.pages[0].items);
+  //   console.log(data?.pages[0].items?.reviewList);
+  //   console.log(data?.pages[0].items?.starAverage);
+  // }, [data]);
   const handleConfirmPress = () => {
     setUrl(
       buildCustomUrl(
@@ -359,29 +369,28 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         {data?.pages.map((v, i) => {
           return (
             <View key={i}>
-              {v?.items?.length > 0 &&
-                v?.items?.map(item => {
-                  return (
-                    <Card
-                      key={item.reviewId}
-                      dailyFoodId={dailyFoodId}
-                      id={item.reviewId}
-                      userName={item.userName}
-                      item={item}
-                      likeNum={item.good}
-                      isLike={item.isGood}
-                      createDate={item.createDate}
-                      updateDate={item.updateDate}
-                      writtenDate={convertDateFormat1(item.createDate)}
-                      option={item.option}
-                      rating={item.satisfaction}
-                      reviewText={item.content}
-                      imageLocation={item.imageLocation}
-                      forMakers={item.forMakers}
-                      commentList={item.commentList}
-                    />
-                  );
-                })}
+              {v.items?.reviewList.map((item, i2) => {
+                return (
+                  <Card
+                    key={item.reviewId}
+                    dailyFoodId={dailyFoodId}
+                    id={item.reviewId}
+                    userName={item.userName}
+                    item={item}
+                    likeNum={item.good}
+                    isLike={item.isGood}
+                    createDate={item.createDate}
+                    updateDate={item.updateDate}
+                    writtenDate={convertDateFormat1(item.createDate)}
+                    option={item.option}
+                    rating={item.satisfaction}
+                    reviewText={item.content}
+                    imageLocation={item.imageLocation}
+                    forMakers={item.forMakers}
+                    commentList={item.commentList}
+                  />
+                );
+              })}
             </View>
           );
         })}
