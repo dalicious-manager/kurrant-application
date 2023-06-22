@@ -60,22 +60,33 @@ const useSse = () => {
       sseServiceInstance.onMessage(message => {
         if (typeof message === 'string') {
           if (message.includes('EventStream')) {
-            console.log(1);
+            console.log('-----');
             console.log('EventStream 연결 되었답니다');
+
+            // sseType12345 전부 초기화
+            setSseType1({});
+            setSseType2({});
+            setSseType3({});
+            setSseType4({});
+            setSseType5({});
           } else {
             const messageType = JSON.parse(message).type;
             switch (messageType) {
               case 1:
                 // type: 1 전체공지
+                setSseType1({...JSON.parse(message)});
                 break;
               case 2:
                 // type: 2 스팟공지
+                setSseType2({...JSON.parse(message)});
                 break;
               case 3:
                 // type: 3 구매후기
+                setSseType3({...JSON.parse(message)});
                 break;
               case 4:
                 // type: 4 마감시간
+                setSseType4({...JSON.parse(message)});
                 break;
               case 5:
                 // type: 5 다음주 식사 구매하셨나요?

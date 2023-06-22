@@ -19,7 +19,7 @@ class SseService3 {
           Authorization: `Bearer ${this.token}`,
         },
         // withCredentials: true,
-        pollingInterval: 1000 * 60 * 10,
+        pollingInterval: 1000 * 60 * 15,
         // retry: 3000,
       },
     );

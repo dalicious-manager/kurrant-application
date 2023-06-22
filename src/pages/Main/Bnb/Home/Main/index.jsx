@@ -715,9 +715,6 @@ const Pages = () => {
       {sseType5.userId && !sseType5.read && (
         <BalloonPressable
           onPress={() => {
-            console.log('sse 랄랄라');
-            confirmSseIsRead(5);
-
             // confirmBalloonClicked();
           }}>
           <Balloon label={sseType5.content} />
@@ -730,6 +727,8 @@ const Pages = () => {
             // await sendDone(5, setEventSourceMsg);
 
             if (userSpotId) {
+              // sse type 5번
+              confirmSseIsRead(5);
               navigation.navigate(BuyMealPageName);
               closeBalloon();
             } else {
