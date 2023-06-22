@@ -61,8 +61,6 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import useSse from '../../../../../utils/sse/sseLogics/useSse';
-import useSse2 from '../../../../../utils/sse/sseLogics/useSse2';
-// import useSse from '../../../../../utils/sse/seeContextApi/sseLogics/useSse';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -84,8 +82,6 @@ const Pages = () => {
     confirmSseIsRead,
     disconnectSse,
   } = useSse();
-
-  // useSse2();
 
   const navigation = useNavigation();
 
