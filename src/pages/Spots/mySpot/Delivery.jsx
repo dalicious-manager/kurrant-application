@@ -9,7 +9,7 @@ import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
 import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {mySpotRootAtom} from '../../../utils/store';
-import {PAGE_NAME as ModalPage} from '../components/Complete';
+import {PAGE_NAME as CompletePageName} from '../components/Complete';
 
 export const PAGE_NAME = 'MY_SPOT_DELIVERY';
 const Delivery = ({route}) => {
@@ -28,11 +28,11 @@ const Delivery = ({route}) => {
 
   const confirmButton = () => {
     if (isUserInfo?.isMembership) {
-      navigation.navigate(ModalPage, {
+      navigation.navigate(CompletePageName, {
         type: 'mySpotCompleteMembership',
       });
     } else {
-      navigation.navigate(ModalPage, {
+      navigation.navigate(CompletePageName, {
         type: 'mySpotCompleteNotMembership',
       });
     }

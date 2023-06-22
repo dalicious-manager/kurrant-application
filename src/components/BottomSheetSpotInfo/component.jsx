@@ -213,34 +213,57 @@ const Component = props => {
               <InnerView>
                 {detail?.breakfastDeliveryTime !== null && (
                   <DetailSpotWrap>
-                    <DetailSpotName style={{marginRight: 8}}>
-                      아침
-                    </DetailSpotName>
+                    <DiningType style={{marginRight: 8}}>아침 )</DiningType>
                     <VerticalBorder />
                     {detail?.breakfastDeliveryTime?.map(el => {
-                      return <ApplyText key={el}>{el}</ApplyText>;
+                      const lastTime =
+                        detail?.breakfastDeliveryTime[
+                          detail?.breakfastDeliveryTime?.length - 1
+                        ];
+
+                      return (
+                        <React.Fragment key={el}>
+                          <TimeText>{el}</TimeText>
+                          {lastTime !== el && <VerticalBorder />}
+                        </React.Fragment>
+                      );
                     })}
                   </DetailSpotWrap>
                 )}
                 {detail?.lunchDeliveryTime !== null && (
                   <DetailSpotWrap>
-                    <DetailSpotName style={{marginRight: 8}}>
-                      점심
-                    </DetailSpotName>
-                    <VerticalBorder />
+                    <DiningType style={{marginRight: 8}}>점심 )</DiningType>
+
                     {detail?.lunchDeliveryTime?.map(el => {
-                      return <ApplyText key={el}>{el}</ApplyText>;
+                      const lastTime =
+                        detail?.lunchDeliveryTime[
+                          detail?.lunchDeliveryTime?.length - 1
+                        ];
+
+                      return (
+                        <React.Fragment key={el}>
+                          <TimeText>{el}</TimeText>
+                          {lastTime !== el && <VerticalBorder />}
+                        </React.Fragment>
+                      );
                     })}
                   </DetailSpotWrap>
                 )}
                 {detail?.dinnerDeliveryTime !== null && (
                   <DetailSpotWrap>
-                    <DetailSpotName style={{marginRight: 8}}>
-                      저녁
-                    </DetailSpotName>
+                    <DiningType style={{marginRight: 8}}>저녁 )</DiningType>
                     <VerticalBorder />
                     {detail?.dinnerDeliveryTime?.map(el => {
-                      return <ApplyText key={el}>{el}</ApplyText>;
+                      const lastTime =
+                        detail?.dinnerDeliveryTime[
+                          detail?.dinnerDeliveryTime?.length - 1
+                        ];
+                      return (
+                        <React.Fragment key={el}>
+                          <TimeText>{el}</TimeText>
+                          {lastTime !== el && <VerticalBorder />}
+                        </React.Fragment>
+                      );
                     })}
                   </DetailSpotWrap>
                 )}
@@ -406,6 +429,10 @@ const ApplyText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme}) => theme.colors.grey[2]};
   margin-left: 4px;
 `;
+const TimeText = styled(Typography).attrs({text: 'Button10R'})`
+  color: ${({theme}) => theme.colors.grey[3]};
+  margin-right: 8px;
+`;
 
 const ApplyButton = styled.Pressable`
   border: 1px solid ${({theme}) => theme.colors.grey[7]};
@@ -430,8 +457,8 @@ const Label = styled.Pressable`
   margin-right: 8px;
 `;
 
-const LabelText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[3]};
+const DiningType = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[2]};
 `;
 
 const DetailSpotName = styled(Typography).attrs({text: 'CaptionR'})`

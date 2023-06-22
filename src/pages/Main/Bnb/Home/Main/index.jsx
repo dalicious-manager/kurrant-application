@@ -1,7 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
@@ -77,6 +81,8 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   const navigation = useNavigation();
+
+  const routeName = useRoute();
 
   const [isVisible, setIsVisible] = useState(true);
   const [userGroupSpot, setUserGroupSpot] = useState();
@@ -180,11 +186,11 @@ const Pages = () => {
         userGroupSpot?.privateCount === 0
       ) {
         navigation.navigate(SpotGuidePageName);
-      }
     }
   }, [isUserInfo?.data, userGroupSpot]);
 
   // 홈 전체 공지사항
+
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
     const supported = await Linking.canOpenURL(url);
