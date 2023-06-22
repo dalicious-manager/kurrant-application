@@ -60,7 +60,7 @@ const Pages = ({route}) => {
     isUserGroupSpotCheck?.data?.spotListResponseDtoList?.filter(
       el => el.clientId !== groupId,
     );
-  console.log(myGroupList, isUserGroupSpotCheck?.data, 'ii');
+
   const cutName = isDetailSpot?.address?.includes(null);
   const useName = cutName
     ? isDetailSpot?.address?.split('null')[0]
