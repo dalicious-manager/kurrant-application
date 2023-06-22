@@ -30,7 +30,7 @@ const Complete = ({route}) => {
   // const {isUserGroupSpotCheck} = useGroupSpots();
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const noHasSpots =
-    isUserGroupSpotCheck?.spotListResponseDtoList?.length === 0;
+    isUserGroupSpotCheck?.data?.spotListResponseDtoList?.length === 0;
 
   const {
     data: {data: isUserInfo},

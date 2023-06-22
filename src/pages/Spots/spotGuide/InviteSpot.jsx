@@ -142,7 +142,7 @@ const InviteSpot = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
-        data={isUserGroupSpotCheck?.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.data?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}

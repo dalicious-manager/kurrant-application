@@ -80,7 +80,7 @@ const Component = props => {
   const diningType = [1, 2, 3];
 
   const onSelectButton = async () => {
-    if (isUserGroupSpotCheck?.shareSpotCount === 2) {
+    if (isUserGroupSpotCheck?.data?.shareSpotCount === 2) {
       setModalVisible(false);
       setBottomModal(true);
     } else {
