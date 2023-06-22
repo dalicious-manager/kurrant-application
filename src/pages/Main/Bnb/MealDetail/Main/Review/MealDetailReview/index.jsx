@@ -81,7 +81,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     isOnlyPhoto,
     selectedKeyword,
     setUrl,
-    rateSelected,
+    // rateSelected,
   ]);
 
   const {
