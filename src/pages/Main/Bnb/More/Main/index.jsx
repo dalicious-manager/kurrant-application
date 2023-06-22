@@ -23,7 +23,7 @@ import SkeletonUI from './SkeletonUI';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
 
-import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot';
+// import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
 
@@ -52,6 +52,8 @@ import {PAGE_NAME as FAQPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -67,6 +69,8 @@ const Pages = () => {
   const {
     readableAtom: {userRole},
   } = useAuth();
+
+  const {sseType3, confirmSseIsRead} = useSse();
 
   const {getReviewWait} = useReviewWait();
 
@@ -208,19 +212,24 @@ const Pages = () => {
           <InfomationContainer>
             <InfomationBox
               onPress={() => {
+                confirmSseIsRead(3);
                 navigation.navigate(ReviewScreenName);
               }}>
-              <InfomationText
-                text={'Title02SB'}
-                textColor={themeApp.colors.grey[2]}>
-                {total}
-              </InfomationText>
+              <SseRedDot isSse={sseType3.userId && !sseType3.read}>
+                <InfomationText
+                  text={'Title02SB'}
+                  textColor={themeApp.colors.grey[2]}>
+                  {total}
+                </InfomationText>
+              </SseRedDot>
+
               <InfomationLabel
                 text={'CaptionR'}
                 textColor={themeApp.colors.grey[2]}>
                 구매후기
               </InfomationLabel>
             </InfomationBox>
+
             <InfomationBox>
               <InfomationText
                 text={'Title02SB'}

@@ -11,16 +11,16 @@ import styled from 'styled-components/native';
  * @returns
  */
 
-const Component = ({children, sseReceive = undefined}) => {
+const SseRedDot = ({children, isSse = undefined}) => {
   return (
     <Container>
-      <RedDot />
+      {isSse && <RedDot />}
       {children}
     </Container>
   );
 };
 
-export default Component;
+export default SseRedDot;
 
 const Container = styled.View``;
 

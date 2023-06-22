@@ -109,13 +109,48 @@ const useSse = () => {
         body: JSON.stringify(data),
       });
 
-      return [response, data, 'ㅋㅋㅋ테스트'];
+      return [response, data];
     },
     {
       onSuccess: data => {
         console.log('sse 알림 읽기 success');
 
-        console.log(data[2]);
+        console.log(data[1]);
+
+        const message = data[0];
+
+        const messageType = data[1];
+
+        switch (messageType) {
+          case 1:
+            // type: 1 전체공지
+            console.log('sse 알림읽기 성공 message type 1');
+            setSseType1({});
+            break;
+          case 2:
+            // type: 2 스팟공지
+            console.log('sse 알림읽기 성공 message type 2');
+            setSseType2({});
+            break;
+          case 3:
+            // type: 3 구매후기
+            console.log('sse 알림읽기 성공 message type 3');
+            setSseType3({});
+            break;
+          case 4:
+            // type: 4 마감시간
+            console.log('sse 알림읽기 성공 message type 4');
+            setSseType4({});
+            break;
+          case 5:
+            // type: 5 다음주 식사 구매하셨나요?
+            console.log('sse 알림읽기 성공 message type 5');
+            // console.log({});
+            setSseType5({});
+            break;
+          default:
+            break;
+        }
       },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
