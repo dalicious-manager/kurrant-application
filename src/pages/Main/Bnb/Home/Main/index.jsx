@@ -762,7 +762,8 @@ const Pages = () => {
         <Button
           onPress={async () => {
             if (isUserInfo?.data?.spotId) {
-              confirmSseIsRead(5);
+              sseType5.userId && !sseType5.read && confirmSseIsRead(5);
+
               navigation.navigate(BuyMealPageName);
               closeBalloon();
             } else {

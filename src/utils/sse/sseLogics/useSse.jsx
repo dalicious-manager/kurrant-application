@@ -117,8 +117,6 @@ const useSse = () => {
 
         console.log(data[1]);
 
-        const message = data[0];
-
         const messageType = data[1];
 
         switch (messageType) {
