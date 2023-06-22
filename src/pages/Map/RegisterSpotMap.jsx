@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Geolocation from 'react-native-geolocation-service';
 import NaverMapView from 'react-native-nmap';
+import {useQueryClient} from 'react-query';
 import styled from 'styled-components/native';
 
 import Info from './components/Info';
@@ -31,6 +31,7 @@ import {PAGE_NAME as ApplySpotPage} from '../Spots/shareSpot/ApplySpot';
 export const PAGE_NAME = 'REGISTER_SPOT_MAP';
 const RegisterSpotMap = ({route}) => {
   const paramLocation = route?.params?.center;
+  const queryClient = useQueryClient();
   const mapRef = useRef(null);
   const toast = Toast();
   const [mapHeight, setMapHeight] = useState(0);
@@ -38,6 +39,7 @@ const RegisterSpotMap = ({route}) => {
   const [tab, setTab] = useState(false);
   const [show, setShow] = useState(false);
   const [move, setMove] = useState(false);
+  const [zoom, setZoom] = useState(18);
   const [showAddress, setShowAddress] = useState(false);
   // const [center, setCenter] = useState();
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
@@ -46,9 +48,9 @@ const RegisterSpotMap = ({route}) => {
     initCenter ? initCenter.longitude : 0,
     initCenter ? initCenter.latitude : 0,
   );
-  const {data: address, refetch: addressRefetch} = useGetAddress(
-    roadAddress && roadAddress.roadAddress,
-  );
+  // const {data: address, refetch: addressRefetch} = useGetAddress(
+  //   roadAddress && roadAddress.roadAddress,
+  // );
 
   const changAddress = () => {
     setShowAddress(prev => !prev);
@@ -56,43 +58,26 @@ const RegisterSpotMap = ({route}) => {
 
   const handleCameraChange = event => {
     const newCenter = {latitude: event.latitude, longitude: event.longitude};
-    // setCenter(newCenter);
+    setZoom(event.zoom);
     if (move) {
       setInitCenter(newCenter);
     }
     setMove(false);
   };
 
-  // const getLocation = useCallback(() => {
-  //   setInitCenter();
-  //   Geolocation.getCurrentPosition(
-  //     position => {
-  //       const {latitude, longitude} = position.coords;
-  //       setInitCenter({latitude: latitude, longitude: longitude});
-  //     },
-  //     error => {
-  //       console.error(error.code, error.message, '에러');
-  //     },
-  //     {enableHighAccuracy: true, timeout: 5000, maximumAge: 100},
-  //   );
-  // }, [setInitCenter]);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     getLocation();
-  //   }, 100);
-  // }, [getLocation, setInitCenter]);
   useEffect(() => {
     roadAddressRefetch();
-  }, [initCenter, roadAddressRefetch]);
-  useEffect(() => {
-    addressRefetch();
-  }, [roadAddress, initCenter, addressRefetch]);
+  }, [initCenter, queryClient, roadAddressRefetch, showAddress]);
+  // useEffect(() => {
+  //   addressRefetch();
+  // }, [roadAddress, initCenter, addressRefetch]);
 
   useFocusEffect(
     useCallback(() => {
       if (paramLocation !== undefined) {
         setInitCenter(paramLocation);
       }
+      setZoom(18);
     }, [paramLocation, setInitCenter]),
   );
   const handleLayout = () => {
@@ -151,6 +136,8 @@ const RegisterSpotMap = ({route}) => {
               if (Platform.OS === 'ios') setMove(true);
             }}>
             <NaverMapView
+              minZoomLevel={6}
+              maxZoomLevel={20}
               onTouch={() => {
                 if (Platform.OS === 'android') setMove(true);
               }}
@@ -185,7 +172,7 @@ const RegisterSpotMap = ({route}) => {
       {roadAddress?.roadAddress && (
         <AddressView>
           {showAddress ? (
-            <AddressText>{address}</AddressText>
+            <AddressText>{roadAddress?.address}</AddressText>
           ) : (
             <AddressText>{roadAddress?.roadAddress}</AddressText>
           )}
@@ -201,7 +188,7 @@ const RegisterSpotMap = ({route}) => {
             <Button
               onPressEvent={() =>
                 navigation.navigate(ApplySpotPage, {
-                  address: address,
+                  address: roadAddress?.address,
                   roadAddress: roadAddress?.roadAddress,
                   showAddress: showAddress,
                   center: initCenter,

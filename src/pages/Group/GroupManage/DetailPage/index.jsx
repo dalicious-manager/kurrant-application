@@ -8,13 +8,12 @@ import Arrow from '../../../../assets/icons/Group/arrowWhite.svg';
 import Close from '../../../../assets/icons/Group/close.svg';
 import Pen from '../../../../assets/icons/Group/pen.svg';
 import useGroupSpots from '../../../../biz/useGroupSpots/hook';
-import useUserInfo from '../../../../biz/useUserInfo/hook';
-import {isUserInfoAtom} from '../../../../biz/useUserInfo/store';
 import BottomSheetSpot from '../../../../components/BottomSheetSpot';
 import Button from '../../../../components/Button';
 import TextButton from '../../../../components/TextButton';
 import Toast from '../../../../components/Toast';
 import Typography from '../../../../components/Typography';
+import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {setStorage} from '../../../../utils/asyncStorage';
 import withCommas from '../../../../utils/withCommas';
@@ -27,6 +26,7 @@ const WIDTH = Dimensions.get('screen').width;
 export const PAGE_NAME = 'P__GROUP__MANAGE__DETAIL';
 const Pages = ({route}) => {
   const toast = Toast();
+  const from = route?.params?.from;
   const navigation = useNavigation();
   const {
     groupSpotDetail,
@@ -36,8 +36,9 @@ const Pages = ({route}) => {
     userWithdrawGroup,
     userSpotRegister,
   } = useGroupSpots();
-  const {userInfo, isUserInfo} = useUserInfo();
-
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState();
   //const [groupState,setGroupState] = useState();
@@ -56,6 +57,11 @@ const Pages = ({route}) => {
     el => el.clientId !== groupId,
   );
 
+  const cutName = isDetailSpot?.address?.includes(null);
+  const useName = cutName
+    ? isDetailSpot?.address?.split('null')[0]
+    : isDetailSpot?.address;
+
   const anotherSpot = async id => {
     try {
       const res = await userSpotRegister({id: id});
@@ -63,7 +69,6 @@ const Pages = ({route}) => {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         toast.toastEvent();
-
         await groupSpotDetail(id);
       }
     } catch (error) {
@@ -91,7 +96,7 @@ const Pages = ({route}) => {
               await setStorage('spotStatus', res.data.toString());
               await userGroupSpotCheck();
               if (myGroupList.length === 0) {
-                navigation.navigate(CreateGroupPageName);
+                navigation.navigate(SpotTypePage);
               } else {
                 navigation.navigate(SelectSpotPageName);
               }
@@ -132,12 +137,18 @@ const Pages = ({route}) => {
         await groupSpotDetail(spotId);
         await userGroupSpotCheck();
       } catch (err) {
-        Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
+        // Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
       }
     }
-    LoadGroupDetail();
+    if (spotId) LoadGroupDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spotId]);
+
+  useEffect(() => {
+    if (from === 'shareSpotMap') {
+      setModalVisible(true);
+    }
+  }, [from]);
 
   return (
     // <SafeView>
@@ -153,7 +164,7 @@ const Pages = ({route}) => {
         <ContentView>
           <TextView>
             <Title>배송지</Title>
-            <ContentText>{isDetailSpot?.address}</ContentText>
+            <ContentText>{useName}</ContentText>
           </TextView>
           {/* {isDetailSpot?.ho !== null && (
             <TextView>
@@ -222,6 +233,7 @@ const Pages = ({route}) => {
       </ScrollView>
 
       <BottomSheetSpot
+        userSpotId={spotId}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="스팟 선택"

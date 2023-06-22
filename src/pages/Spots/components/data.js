@@ -209,6 +209,10 @@ export function subButtonText(data) {
       return;
     case 'sharSpotAppication':
       return '홈으로 가기';
+    case 'noAlramNoSpot':
+      return;
+    case 'noDeliveryNoSpot':
+      return;
   }
   return '다음에 할게요';
 }

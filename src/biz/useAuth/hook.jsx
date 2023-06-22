@@ -4,6 +4,7 @@ import {useAtom} from 'jotai';
 import {useResetAtom} from 'jotai/utils';
 import jwtDecode from 'jwt-decode';
 import {Alert} from 'react-native';
+import {useQueryClient} from 'react-query';
 
 import * as Fetch from './Fetch';
 import {
@@ -23,6 +24,7 @@ import {setStorage} from '../../utils/asyncStorage';
 import {isUserInfoAtom, isUserSpotStatusAtom} from '../useUserInfo/store';
 
 const useAuth = () => {
+  const queryClient = useQueryClient();
   const [isEmailAuthLoading, setEmailAuthLoading] = useAtom(
     isEmailAuthLoadingAtom,
   );
@@ -52,7 +54,6 @@ const useAuth = () => {
       setEmailAuthLoading(true);
 
       const res = await Fetch.requestEmailAuth(body, type, option);
-
       return res;
     } catch (err) {
       throw err;
@@ -65,7 +66,7 @@ const useAuth = () => {
       setConfirmEmailLoading(true);
 
       const res = await Fetch.confirmEmailAuth(auth, type);
-
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -77,7 +78,6 @@ const useAuth = () => {
     try {
       setPhoneAuthLoading(true);
       const res = await Fetch.requestPhoneAuth(body, type, option);
-
       return res;
     } catch (err) {
       throw err;
@@ -88,7 +88,7 @@ const useAuth = () => {
   const confirmPhoneAuth = async (auth, type) => {
     try {
       setConfirmPhoneLoading(true);
-
+      queryClient.invalidateQueries('userInfo');
       const res = await Fetch.confirmPhoneAuth(auth, type);
 
       return res;
@@ -108,7 +108,7 @@ const useAuth = () => {
         },
         option,
       );
-
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -125,7 +125,7 @@ const useAuth = () => {
         },
         option,
       );
-
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -435,6 +435,7 @@ const useAuth = () => {
       },
       option,
     );
+    queryClient.invalidateQueries('userInfo');
     resetAtom();
     return res;
   };
@@ -445,6 +446,7 @@ const useAuth = () => {
       },
       option,
     );
+
     return res;
   };
   const nameSetting = async (body, option = {}) => {
@@ -454,14 +456,17 @@ const useAuth = () => {
       },
       option,
     );
+    queryClient.invalidateQueries('userInfo');
     return res;
   };
   const terminateUser = async (body, option = {}) => {
     const res = await Fetch.terminateUser(option);
+    queryClient.invalidateQueries('userInfo');
     return res;
   };
   const cancelTerminateUser = async (body, option = {}) => {
     const res = await Fetch.cancelTerminateUser(option);
+    queryClient.invalidateQueries('userInfo');
     return res;
   };
   return {

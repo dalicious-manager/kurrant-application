@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import useApartApplication from '../../../biz/useApartApplication/hook';
 import useGroupSpots from '../../../biz/useGroupSpots/hook';
-import useUserInfo from '../../../biz/useUserInfo';
 import BottomSheetSpot from '../../../components/BottomSheetSpot';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
@@ -23,7 +22,6 @@ const Pages = () => {
     groupSpotDetail,
     userSpotRegister,
   } = useGroupSpots();
-  const {userInfo} = useUserInfo();
 
   const [selected, setSelected] = useState();
 
@@ -49,7 +47,6 @@ const Pages = () => {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         await setStorage('spotStatus', '0');
-        await userInfo();
 
         navigation.navigate(GroupManageDetailPageName);
       }
@@ -63,10 +60,14 @@ const Pages = () => {
         <MyGroup>내 스팟</MyGroup>
         <Contents showsVerticalScrollIndicator={false}>
           <GroupNameView>
-            {isUserGroupSpotCheck.length !== 0 &&
-              isUserGroupSpotCheck?.spotListResponseDtoList?.map((el, idx) => (
-                <GroupName key={el.clientId}>{el.clientName}</GroupName>
-              ))}
+            {isUserGroupSpotCheck?.spotListResponseDtoList?.length !== 0 &&
+              isUserGroupSpotCheck?.spotListResponseDtoList?.map((el, idx) =>
+                el.spots.map(v => (
+                  <View key={v.spotId}>
+                    <GroupName>{el.clientName ?? v.spotName}</GroupName>
+                  </View>
+                )),
+              )}
           </GroupNameView>
         </Contents>
       </Wrap>

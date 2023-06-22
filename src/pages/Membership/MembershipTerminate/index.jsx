@@ -5,7 +5,6 @@ import styled, {useTheme} from 'styled-components/native';
 
 import {PAGE_NAME as MembershipTerminateComplatePageName} from './MembershipTerminateComplate';
 import useMembership from '../../../biz/useMembership';
-import useUserInfo from '../../../biz/useUserInfo';
 import Button from '../../../components/Button';
 import {
   CommentsIcon,
@@ -16,6 +15,7 @@ import {
 } from '../../../components/Icon';
 import Typography from '../../../components/Typography';
 import Wrapper from '../../../components/Wrapper';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {formattedSameDate} from '../../../utils/dateFormatter';
 import withCommas from '../../../utils/withCommas';
 import SubtractBox from '../MembershipJoin/SubtractBox';
@@ -25,7 +25,9 @@ export const PAGE_NAME = 'P__MEMBERSHIP__TERMINATE';
 const Pages = () => {
   const themeApp = useTheme();
   const navigation = useNavigation();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const {
     membershipTerminate,
     readableAtom: {membershipInfo},

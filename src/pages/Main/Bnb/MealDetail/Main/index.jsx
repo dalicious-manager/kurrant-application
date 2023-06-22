@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import analytics from '@react-native-firebase/analytics';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useState, useRef, useEffect, useLayoutEffect} from 'react';
 import {
   View,
@@ -18,11 +19,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components';
 
 import MealDetailReview from './Review/MealDetailReview';
+import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
+import {
+  fetchNextPageReviewDetailAtom,
+  hasNextPageReviewDetailAtom,
+} from './Review/MealDetailReview/store';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import useUserInfo from '../../../../../biz/useUserInfo';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
@@ -33,17 +38,12 @@ import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import Typography from '../../../../../components/Typography';
 import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
-import {
-  fetchNextPageReviewDetailAtom,
-  hasNextPageReviewDetailAtom,
-} from './Review/MealDetailReview/store';
-import {useAtom} from 'jotai';
-import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
 import Skeleton from '../Skeleton';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
@@ -64,7 +64,9 @@ const Pages = ({route}) => {
   } = useAuth();
   const {loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
   const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;

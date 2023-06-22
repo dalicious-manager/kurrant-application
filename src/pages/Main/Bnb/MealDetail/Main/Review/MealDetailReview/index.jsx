@@ -359,28 +359,29 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         {data?.pages.map((v, i) => {
           return (
             <View key={i}>
-              {v.items.map(item => {
-                return (
-                  <Card
-                    key={item.reviewId}
-                    dailyFoodId={dailyFoodId}
-                    id={item.reviewId}
-                    userName={item.userName}
-                    item={item}
-                    likeNum={item.good}
-                    isLike={item.isGood}
-                    createDate={item.createDate}
-                    updateDate={item.updateDate}
-                    writtenDate={convertDateFormat1(item.createDate)}
-                    option={item.option}
-                    rating={item.satisfaction}
-                    reviewText={item.content}
-                    imageLocation={item.imageLocation}
-                    forMakers={item.forMakers}
-                    commentList={item.commentList}
-                  />
-                );
-              })}
+              {v?.items?.length > 0 &&
+                v?.items?.map(item => {
+                  return (
+                    <Card
+                      key={item.reviewId}
+                      dailyFoodId={dailyFoodId}
+                      id={item.reviewId}
+                      userName={item.userName}
+                      item={item}
+                      likeNum={item.good}
+                      isLike={item.isGood}
+                      createDate={item.createDate}
+                      updateDate={item.updateDate}
+                      writtenDate={convertDateFormat1(item.createDate)}
+                      option={item.option}
+                      rating={item.satisfaction}
+                      reviewText={item.content}
+                      imageLocation={item.imageLocation}
+                      forMakers={item.forMakers}
+                      commentList={item.commentList}
+                    />
+                  );
+                })}
             </View>
           );
         })}

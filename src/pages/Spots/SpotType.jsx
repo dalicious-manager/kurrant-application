@@ -1,41 +1,77 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {
-  View,
-  Image,
-  Text,
-  Alert,
-  Platform,
-  Linking,
-  PermissionsAndroid,
-  Pressable,
-} from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+import {useAtom} from 'jotai';
+import React, {useEffect, useState} from 'react';
+import {View, Image, Alert, Pressable, Text} from 'react-native';
 import styled from 'styled-components';
 import Toast from '~components/Toast';
 
 import ModalComponent from './components/ModalComponent';
-import {
-  MySpot,
-  ShareSpot,
-  PrivateSpot,
-  DisabledMySpot,
-  DisabledPrivateSpot,
-  DisabledShareSpot,
-} from '../../assets';
+import {MySpot, ShareSpot, PrivateSpot} from '../../assets';
+import {userGroupSpotListAtom} from '../../biz/useGroupSpots/store';
+import BottomModal from '../../components/BottomModal';
 import Typography from '../../components/Typography';
+import {useDeleteApplyMySpot} from '../../hook/useSpot';
+import {useGetUserInfo} from '../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
+import {PAGE_NAME as GroupManagePageName} from '../Group/GroupManage/DetailPage';
 import {PAGE_NAME as MySpotMap} from '../Map/MySpotMap';
 import {PAGE_NAME as ShareSpotMap} from '../Map/ShareSpotMap';
 import {PAGE_NAME as PrivateInfo} from '../Spots/privateSpot/PrivateInfo';
+import {PAGE_NAME as SpotGuidePage} from '../Spots/spotGuide/SpotGuide';
+
 export const PAGE_NAME = 'SPOT_TYPE';
 const SpotType = () => {
   const navigation = useNavigation();
   const [show, setShow] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const toast = Toast();
+  const {mutateAsync: deleteBtn} = useDeleteApplyMySpot();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
+  const [isUserGroupSpotCheck] = useAtom(userGroupSpotListAtom);
+  const alreadyRegister = isUserInfo?.requestedMySpotDto?.isRequested;
+  const myspotAddress = isUserInfo?.requestedMySpotDto?.address;
+  const address = myspotAddress?.includes(null)
+    ? myspotAddress.split('null')[0]
+    : myspotAddress;
 
-  const usedSpot = false;
+  const closeModal = () => {
+    setModalVisible(false);
+    setModalVisible2(false);
+  };
 
+  const myspotButton = () => {
+    if (isUserGroupSpotCheck.mySpotCount === 1) {
+      setModalVisible(true);
+    } else if (
+      (isUserGroupSpotCheck.mySpotCount > 0 && alreadyRegister) ||
+      alreadyRegister
+    ) {
+      setModalVisible2(true);
+    } else {
+      navigation.navigate(MySpotMap);
+    }
+  };
+
+  const goTospotManagePage = () => {
+    setModalVisible(false);
+    navigation.navigate(GroupManagePageName);
+  };
+
+  const alreadyRegisterMySpot = async () => {
+    setModalVisible2(false);
+    navigation.navigate(MySpotMap);
+  };
+
+  const nextButton = () => {
+    if (isUserGroupSpotCheck?.spotListResponseDtoList?.length > 0) {
+      navigation.navigate(SCREEN_NAME);
+    } else {
+      navigation.navigate(SpotGuidePage);
+    }
+  };
   return (
     <Wrap showsVerticalScrollIndicator={false}>
       <ContentsWrap>
@@ -50,71 +86,63 @@ const SpotType = () => {
           </View>
 
           <BoxWrap>
-            <Box
-              onPress={() => navigation.navigate(MySpotMap)}
-              disabled={usedSpot}>
+            <Box onPress={() => myspotButton()}>
               <ImageWrap>
-                <Image
-                  source={usedSpot ? DisabledMySpot : MySpot}
-                  style={{width: 70, height: 60}}
-                />
+                <Image source={MySpot} style={{width: 70, height: 60}} />
                 <ImageDscText>
-                  <UsedSpotCountDsc usedSpot={usedSpot}>0</UsedSpotCountDsc>/1
-                  이용중
+                  <UsedSpotCountDsc>
+                    {isUserGroupSpotCheck.mySpotCount}
+                  </UsedSpotCountDsc>
+                  /1 이용중
                 </ImageDscText>
               </ImageWrap>
               <TextWrap>
-                <Title usedSpot={usedSpot}>마이스팟</Title>
-                <Contents usedSpot={usedSpot}>
-                  문 앞으로 개인배송{`\n`}받고 싶어요
-                </Contents>
+                <Title>마이스팟</Title>
+                <Contents>문 앞으로 개인배송{`\n`}받고 싶어요</Contents>
               </TextWrap>
             </Box>
-            <ModalComponent title={1} />
+            <ModalComponent title={1} myspotButton={myspotButton} />
           </BoxWrap>
           <BoxWrap>
-            <Box
-              onPress={() => navigation.navigate(ShareSpotMap)}
-              disabled={usedSpot}>
+            <Box onPress={() => navigation.navigate(ShareSpotMap)}>
               <ImageWrap>
-                <Image
-                  source={usedSpot ? DisabledShareSpot : ShareSpot}
-                  style={{width: 70, height: 60}}
-                />
+                <Image source={ShareSpot} style={{width: 70, height: 60}} />
                 <ImageDscText>
-                  <UsedSpotCountDsc usedSpot={usedSpot}>0</UsedSpotCountDsc>/2
-                  이용중
+                  <UsedSpotCountDsc>
+                    {isUserGroupSpotCheck.shareSpotCount}
+                  </UsedSpotCountDsc>
+                  /2 이용중
                 </ImageDscText>
               </ImageWrap>
 
               <TextWrap>
-                <Title usedSpot={usedSpot}>공유 스팟</Title>
-                <Contents usedSpot={usedSpot}>
-                  가까운 공유 배송 장소에서{`\n`}가져갈게요
-                </Contents>
+                <Title>공유 스팟</Title>
+                <Contents>가까운 공유 배송 장소에서{`\n`}가져갈게요</Contents>
               </TextWrap>
             </Box>
             <ModalComponent title={2} />
           </BoxWrap>
           <BoxWrap>
             <Box
-              disabled={usedSpot}
-              onPress={() => navigation.navigate(PrivateInfo)}
+              onPress={() =>
+                navigation.navigate(PrivateInfo, {
+                  list: isUserGroupSpotCheck?.spotListResponseDtoList?.length,
+                })
+              }
               style={{paddingLeft: 52}}>
               <ImageWrap>
-                <Image
-                  source={usedSpot ? DisabledPrivateSpot : PrivateSpot}
-                  style={{width: 60, height: 60}}
-                />
+                <Image source={PrivateSpot} style={{width: 60, height: 60}} />
                 <ImageDscText style={{paddingLeft: 0}}>
-                  <UsedSpotCountDsc usedSpot={usedSpot}>0</UsedSpotCountDsc>/1
-                  이용중
+                  <UsedSpotCountDsc>
+                    {isUserGroupSpotCheck.privateCount}
+                  </UsedSpotCountDsc>
+                  {`\u00A0`}이용중
                 </ImageDscText>
               </ImageWrap>
 
               <TextWrap>
-                <Title usedSpot={usedSpot}>프라이빗 스팟</Title>
-                <Contents usedSpot={usedSpot}>
+                <Title>프라이빗 스팟</Title>
+                <Contents>
                   특정 단체 내 사람들끼리{`\n`}함께 배송받을래요
                 </Contents>
               </TextWrap>
@@ -127,11 +155,35 @@ const SpotType = () => {
               isHeader={false}
             />
           )}
-          <Pressable onPress={() => navigation.navigate(SCREEN_NAME)}>
+          <Pressable onPress={nextButton}>
             <NextText>다음에 설정하기</NextText>
           </Pressable>
         </View>
       </ContentsWrap>
+      <BottomModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        title={`마이스팟은 최대 1개만 가질 수 있어요`}
+        description={`기존 스팟을 '스팟관리'에서 탈퇴해야 해요.${`\n`}스팟 관리로 이동 하시겠어요?`}
+        buttonTitle1={'아니요'}
+        buttonType1="grey7"
+        buttonTitle2={'이동'}
+        buttonType2="yellow"
+        onPressEvent1={closeModal}
+        onPressEvent2={() => goTospotManagePage()}
+      />
+      <BottomModal
+        modalVisible={modalVisible2}
+        setModalVisible={setModalVisible2}
+        title={`${address}`}
+        description={`마이스팟은 최대 1개만 가질 수 있어요.${`\n`}신청하셨던 스팟의 주소를 변경하시겠어요?`}
+        buttonTitle1={'아니요'}
+        buttonType1="grey7"
+        buttonTitle2={'예'}
+        buttonType2="yellow"
+        onPressEvent1={closeModal}
+        onPressEvent2={() => alreadyRegisterMySpot()}
+      />
     </Wrap>
   );
 };
@@ -159,13 +211,11 @@ const Box = styled.Pressable`
 `;
 
 const Title = styled(Typography).attrs({text: 'Title03SB'})`
-  color: ${({theme, usedSpot}) =>
-    usedSpot ? theme.colors.grey[6] : theme.colors.grey[2]};
+  color: ${({theme}) => theme.colors.grey[2]};
 `;
 
 const Contents = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme, usedSpot}) =>
-    usedSpot ? theme.colors.grey[6] : theme.colors.grey[2]};
+  color: ${({theme}) => theme.colors.grey[2]};
   margin-top: 8px;
 `;
 
@@ -204,8 +254,7 @@ const ImageDscText = styled(Typography).attrs({text: 'SmallLabel'})`
 `;
 
 const UsedSpotCountDsc = styled(Typography).attrs({text: 'SmallLabel'})`
-  color: ${({theme, usedSpot}) =>
-    usedSpot ? theme.colors.grey[3] : theme.colors.blue[500]};
+  color: ${({theme}) => theme.colors.blue[500]};
 `;
 
 const ContentsWrap = styled.ScrollView`

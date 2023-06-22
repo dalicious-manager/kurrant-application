@@ -12,13 +12,13 @@ import styled, {useTheme} from 'styled-components/native';
 
 import {registCardAtom} from '../../../../../../atoms/store';
 import useAuth from '../../../../../../biz/useAuth';
-import useUserInfo from '../../../../../../biz/useUserInfo';
 import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
 import RefTextInput from '../../../../../../components/RefTextInput';
 import Typography from '../../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
+import {useGetUserInfo} from '../../../../../../hook/useUserInfo';
 import {PAGE_NAME as MemebershipPaymentManage} from '../../../../../Membership/MembershipJoin/MemebershipPaymentManage';
 import {PAGE_NAME as DefaultPaymentManage} from '../../../../Bnb/Payment/DefaultPaymentManage';
 import {PAGE_NAME as EveryCardPageName} from '../PaymentManage/EveryCard';
@@ -36,7 +36,9 @@ export default function PasswordCheck({route}) {
     formState: {errors},
   } = form;
   const auth = useAuth();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [isCard, setIsCard] = useAtom(registCardAtom);
   const [progress, setProgress] = useState(1);
   // 함수들은 Class 를 외부에서 생성하여 import를 하여 사용하였다.

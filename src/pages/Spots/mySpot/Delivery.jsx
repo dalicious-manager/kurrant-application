@@ -5,9 +5,9 @@ import {View, Text, Image} from 'react-native';
 import styled from 'styled-components';
 
 import {DeliveryImage} from '../../../assets';
-import useUserInfo from '../../../biz/useUserInfo/hook';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {mySpotRootAtom} from '../../../utils/store';
 import {PAGE_NAME as ModalPage} from '../components/Complete';
 
@@ -22,7 +22,9 @@ const Delivery = ({route}) => {
   const addressData = address?.includes(null);
   const useAddress = addressData ? address.split('null')[0] : address;
 
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
 
   const confirmButton = () => {
     if (isUserInfo?.isMembership) {

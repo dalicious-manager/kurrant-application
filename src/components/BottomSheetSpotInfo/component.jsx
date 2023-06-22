@@ -1,5 +1,6 @@
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Modal,
@@ -11,6 +12,8 @@ import {
   Dimensions,
   PanResponder,
   Pressable,
+  StyleSheet,
+  Platform,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -27,6 +30,8 @@ import {
 import PlusIcon from '../../assets/icons/Map/plus.svg';
 import MealIcon from '../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../assets/icons/Spot/user.svg';
+import useGroupSpots from '../../biz/useGroupSpots/hook';
+import {userGroupSpotListAtom} from '../../biz/useGroupSpots/store';
 import {
   useGetShareSpotDetail,
   useSelectShareSpot,
@@ -39,23 +44,30 @@ import Typography from '../Typography';
 
 const Component = props => {
   const {
-    title = '옵션 선택',
+    setModalVisible,
     snap,
     setSnap,
     bottomSheetRef,
     data,
     setInitCenter,
+    setBottomModal,
   } = props;
 
   const navigation = useNavigation();
   const {data: detailData, refetch: detailDataRefech} = useGetShareSpotDetail(
-    data[0].id,
+    data[0]?.id,
   );
+  const {
+    userGroupSpotCheck,
+    isUserGroupSpotCheck,
+    userSpotRegister,
+    groupSpotDetail,
+  } = useGroupSpots();
   const {mutateAsync: selectSpot} = useSelectShareSpot();
 
   const detail = detailData?.data;
 
-  const snapPoints = useMemo(() => ['6%', '30%', '100%'], []);
+  const snapPoints = useMemo(() => ['6%', '30%', '90%'], []);
 
   const handleSheetChanges = useCallback(index => {
     setSnap(index);
@@ -67,11 +79,17 @@ const Component = props => {
   const diningType = [1, 2, 3];
 
   const onSelectButton = async () => {
-    const body = {
-      id: data[0].id,
-    };
-    await selectSpot(body);
-    navigation.navigate(SCREEN_NAME);
+    if (isUserGroupSpotCheck?.shareSpotCount === 2) {
+      setModalVisible(false);
+      setBottomModal(true);
+    } else {
+      const body = {
+        id: data[0].id,
+      };
+      await selectSpot(body);
+      await userGroupSpotCheck();
+      navigation.navigate(SCREEN_NAME);
+    }
   };
 
   const goToApplyPage = from => {
@@ -89,9 +107,10 @@ const Component = props => {
 
   useEffect(() => {
     detailDataRefech();
-  }, [detailDataRefech, data[0].id]);
+  }, [detailDataRefech, data]);
   return (
     <BottomSheet
+      style={styles.container}
       handleStyle={{height: 20}}
       handleIndicatorStyle={{
         backgroundColor: '#E4E3E7',
@@ -104,7 +123,7 @@ const Component = props => {
       onChange={handleSheetChanges}>
       {(snap === 0 || snap === 1) && (
         <Contents>
-          <SpotNameText>{data[0].name}</SpotNameText>
+          <SpotNameText>{data[0]?.name}</SpotNameText>
           <SpotPickWrap
             onPress={() => {
               setInitCenter({
@@ -119,7 +138,7 @@ const Component = props => {
             {diningType.map(v => (
               <DiningTypeText
                 key={v}
-                type={data[0].diningType.includes(v)}
+                type={data[0]?.diningType.includes(v)}
                 value={v}>
                 {diningTypeString(v)}
                 {v !== 3 && <DiningTypeDisabledText>・</DiningTypeDisabledText>}
@@ -130,7 +149,7 @@ const Component = props => {
           <UserViewWrap>
             <UserIcon />
             <Body06RText style={{marginLeft: 12}}>
-              {data[0].userCount}명
+              {data[0]?.userCount}명
             </Body06RText>
           </UserViewWrap>
           <Button
@@ -143,7 +162,7 @@ const Component = props => {
       {snap === 2 && (
         <Content>
           <Contents>
-            <Title>{detail.name}</Title>
+            <Title>{detail?.name}</Title>
             <ScrollView
               style={{marginTop: 24, paddingBottom: 200}}
               showsVerticalScrollIndicator={false}>
@@ -151,10 +170,10 @@ const Component = props => {
                 <Image source={PickGrey} style={{width: 20, height: 20}} />
                 <View style={{marginLeft: 16}}>
                   <Name>
-                    <Body06RText>{detail.address}</Body06RText>
+                    <Body06RText>{detail?.address}</Body06RText>
                   </Name>
                   <Body06RText style={{color: '#BDBAC1'}}>
-                    역삼동 704-45
+                    {detail?.jibun}
                   </Body06RText>
                 </View>
               </Address>
@@ -164,7 +183,7 @@ const Component = props => {
                 {diningType.map(v => (
                   <DiningTypeText
                     key={v}
-                    type={detail.diningTypes.includes(v)}
+                    type={detail?.diningTypes.includes(v)}
                     value={v}>
                     {diningTypeString(v)}
                     {v !== 3 && (
@@ -237,7 +256,7 @@ const Component = props => {
                 </ApplyButton>
               </DeliveryWrap>
               <InnerView>
-                {detail.spotDetailDtos.map((el, idx) => {
+                {detail?.spotDetailDtos.map((el, idx) => {
                   return (
                     <DetailSpotWrap key={el.name}>
                       <DetailSpotName>{el.name}</DetailSpotName>
@@ -256,7 +275,7 @@ const Component = props => {
               <UserViewWrap snap={snap}>
                 <UserIcon width={20} height={20} />
                 <Body06RText style={{marginLeft: 16}}>
-                  {detail.userCount}명
+                  {detail?.userCount}명
                 </Body06RText>
               </UserViewWrap>
             </ScrollView>
@@ -282,6 +301,25 @@ const Component = props => {
     </BottomSheet>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+      },
+      android: {
+        elevation: 20,
+      },
+    }),
+  },
+});
 
 export default Component;
 const Contents = styled.View`
@@ -351,7 +389,6 @@ const Border = styled.View`
 const Address = styled.View`
   flex-direction: row;
   align-items: flex-start;
-  background-color: olive;
 `;
 
 const DeliveryWrap = styled.View`
@@ -444,8 +481,8 @@ const DiningTypeDisabledText = styled(Typography).attrs({text: 'Body06R'})`
 
 const Name = styled.View`
   word-break: break-all;
-  background-color: gold;
-  /* width: 90%; */
+
+  padding-right: 24px;
 `;
 
 const AddressWrap = styled.View``;
