@@ -42,8 +42,12 @@ import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
-import {useGroupSpotList} from '../../../../../hook/useSpot';
+import {
+  useGetPrivateSpots,
+  useGroupSpotList,
+} from '../../../../../hook/useSpot';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {SCREEN_NAME} from '../../../../../screens/Main/Bnb';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {mainDimAtom} from '../../../../../utils/store';
@@ -75,6 +79,7 @@ const Pages = () => {
   const navigation = useNavigation();
 
   const [isVisible, setIsVisible] = useState(true);
+  const [userGroupSpot, setUserGroupSpot] = useState();
   const weekly = useAtomValue(weekAtom);
   const {data: isUserInfo} = useGetUserInfo();
   const currentVersion = VersionCheck.getCurrentVersion();
@@ -96,7 +101,8 @@ const Pages = () => {
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-  const {data: isUserGroupSpotCheck} = useGroupSpotList();
+  const {data: isUserGroupSpotCheck, refetch: groupRefetch} =
+    useGroupSpotList();
   const [coinSound, setCoinSound] = useState(null);
 
   const loadCoinSound = () => {
@@ -147,43 +153,37 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
-  useFocusEffect(
-    useCallback(() => {
-      const groupCheck = async () => {
-        queryClient.invalidateQueries('userInfo');
-        queryClient.invalidateQueries('groupSpotList');
-      };
-      groupCheck();
-    }, []),
-  );
+
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        // const spotList = await userGroupSpotCheck();
-        if (isUserInfo?.data && isUserGroupSpotCheck?.data) {
-          if (isUserInfo?.data?.spotId) dailyfoodRefetch();
-          else if (
-            isUserInfo?.data?.spotId === null &&
-            isUserGroupSpotCheck?.data?.privateCount === 1
-          ) {
-            navigation.navigate(PrivateInvitePageName);
-          } else if (
-            isUserInfo?.data?.spotId === null &&
-            (isUserGroupSpotCheck?.data?.shareSpotCount > 0 ||
-              isUserGroupSpotCheck?.data?.mySpotCount > 0 ||
-              isUserGroupSpotCheck?.data?.privateCount > 1)
-          ) {
-            setShowDim(true);
-          } else {
-            navigation.navigate(SpotGuidePageName);
-          }
-        }
-      } catch (error) {
-        console.log(error, 'user');
+    if (isUserGroupSpotCheck?.data && navigation.isFocused())
+      setUserGroupSpot(isUserGroupSpotCheck?.data);
+  }, [isUserGroupSpotCheck?.data]);
+  useEffect(() => {
+    if (isUserInfo?.data && userGroupSpot && navigation.isFocused()) {
+      if (isUserInfo?.data?.spotId) dailyfoodRefetch();
+      else if (
+        isUserInfo?.data?.spotId === null &&
+        userGroupSpot?.privateCount === 1
+      ) {
+        navigation.navigate(PrivateInvitePageName);
+      } else if (
+        isUserInfo?.data?.spotId === null &&
+        (userGroupSpot?.shareSpotCount > 0 ||
+          userGroupSpot?.mySpotCount > 0 ||
+          userGroupSpot?.privateCount > 1)
+      ) {
+        setShowDim(true);
+      } else if (
+        isUserInfo?.data?.spotId === null &&
+        userGroupSpot?.shareSpotCount === 0 &&
+        userGroupSpot?.mySpotCount === 0 &&
+        userGroupSpot?.privateCount === 0
+      ) {
+        navigation.navigate(SpotGuidePageName);
       }
-    };
-    getUser();
-  }, [isUserInfo?.data, isUserGroupSpotCheck]);
+    }
+  }, [isUserInfo?.data, userGroupSpot]);
+
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
@@ -464,7 +464,7 @@ const Pages = () => {
         ],
       );
     }
-    if (isUserGroupSpotCheck?.data?.length !== 0) {
+    if (userGroupSpot?.length !== 0) {
       setModalVisible(true);
     } else {
       navigation.navigate(SpotTypePageName);
@@ -760,7 +760,7 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
-        data={isUserGroupSpotCheck?.data?.spotListResponseDtoList}
+        data={userGroupSpot?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}
