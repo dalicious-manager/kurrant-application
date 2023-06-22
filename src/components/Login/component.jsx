@@ -14,7 +14,6 @@ import Toast from '~components/Toast';
 
 import useAuth from '../../biz/useAuth';
 import useKeyboardEvent from '../../hook/useKeyboardEvent';
-import {PAGE_NAME as GroupCreateMainPageName} from '../../pages/Group/GroupCreate';
 import {PAGE_NAME as FindUserPageName} from '../../pages/Main/Login/FindUser';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
 import {getStorage, setStorage} from '../../utils/asyncStorage';

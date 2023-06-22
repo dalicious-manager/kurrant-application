@@ -1,32 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import messaging from '@react-native-firebase/messaging';
 import {useNavigation} from '@react-navigation/native';
-import {useAtom, useAtomValue} from 'jotai';
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Animated, Platform, View} from 'react-native';
+import {Animated, Platform, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {
-  check,
-  openSettings,
-  PERMISSIONS,
-  request,
-  requestNotifications,
-  RESULTS,
-} from 'react-native-permissions';
+import {requestNotifications, RESULTS} from 'react-native-permissions';
 import styled from 'styled-components/native';
 
 import {CompanyLogo, SplashLogo, Kurrant} from '../../assets';
 import useAuth from '../../biz/useAuth/hook';
-import {weekAtom} from '../../biz/useBanner/store';
-import useFoodDaily from '../../biz/useDailyFood/hook';
-import useGroupSpots from '../../biz/useGroupSpots/hook';
-import {isCancelSpotAtom} from '../../biz/useGroupSpots/store';
-import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import {SCREEN_NAME as MainScreenName} from '../../screens/Main/Bnb';
 import {getStorage} from '../../utils/asyncStorage';
-import {formattedWeekDate} from '../../utils/dateFormatter';
-import {PAGE_NAME as GroupCreateMainPageName} from '../Group/GroupCreate';
-import {PAGE_NAME as GroupSelectPageName} from '../Group/GroupManage';
 import {PAGE_NAME as LoginPageName} from '../Main/Login/Login';
 
 export const PAGE_NAME = 'P__SPLASH';
