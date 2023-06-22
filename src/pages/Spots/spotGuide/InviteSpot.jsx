@@ -20,6 +20,7 @@ import BottomSheetSpot from '../../../components/BottomSheetSpot';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
 import {useGetPrivateSpot} from '../../../hook/usePrivateSpot';
+import {useGroupSpotList} from '../../../hook/useSpot';
 import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height, width} from '../../../theme';
@@ -34,7 +35,8 @@ const InviteSpot = () => {
     data: {data: isUserInfo},
   } = useGetUserInfo();
   const {data: privateSpotList} = useGetPrivateSpot();
-  const {isUserGroupSpotCheck, userSpotRegister} = useGroupSpots();
+  const {userSpotRegister} = useGroupSpots();
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   // const {isUserInfo} = useUserInfo();
   const [tab, setTab] = useState(0);
   const [center, setCenter] = useState({

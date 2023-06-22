@@ -41,6 +41,7 @@ import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {useGroupSpotList} from '../../../../../hook/useSpot';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
@@ -89,12 +90,12 @@ const Pages = () => {
     readableAtom: {userRole},
   } = useAuth();
   const {
-    userGroupSpotCheck,
-    isUserGroupSpotCheck,
+    // userGroupSpotCheck,
+    // isUserGroupSpotCheck,
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const [coinSound, setCoinSound] = useState(null);
 
   const loadCoinSound = () => {
@@ -156,17 +157,18 @@ const Pages = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        if (isUserInfo?.data) {
+        // const spotList = await userGroupSpotCheck();
+        if (isUserInfo?.data && isUserGroupSpotCheck?.data) {
           if (isUserInfo?.data?.spotId) dailyfoodRefetch();
           else if (
             isUserInfo?.data?.spotId === null &&
-            isUserGroupSpotCheck?.privateCount === 1
+            isUserGroupSpotCheck?.data?.privateCount === 1
           ) {
             navigation.navigate(PrivateInvitePageName);
           } else if (
             isUserInfo?.data?.spotId === null &&
-            (isUserGroupSpotCheck?.shareSpotCount > 0 ||
-              isUserGroupSpotCheck?.mySpotCount > 0)
+            (isUserGroupSpotCheck?.data?.shareSpotCount > 0 ||
+              isUserGroupSpotCheck?.data?.mySpotCount > 0)
           ) {
             setShowDim(true);
           } else {
@@ -178,6 +180,7 @@ const Pages = () => {
       }
     };
     getUser();
+
   }, [isUserInfo?.data, isUserGroupSpotCheck]);
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
@@ -755,7 +758,7 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
-        data={isUserGroupSpotCheck?.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.data?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}

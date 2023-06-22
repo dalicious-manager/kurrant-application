@@ -13,6 +13,7 @@ import Button from '../../../../components/Button';
 import TextButton from '../../../../components/TextButton';
 import Toast from '../../../../components/Toast';
 import Typography from '../../../../components/Typography';
+import {useGroupSpotList} from '../../../../hook/useSpot';
 import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {setStorage} from '../../../../utils/asyncStorage';
@@ -32,10 +33,11 @@ const Pages = ({route}) => {
     groupSpotDetail,
     isDetailSpot,
     userGroupSpotCheck,
-    isUserGroupSpotCheck,
+    // isUserGroupSpotCheck,
     userWithdrawGroup,
     userSpotRegister,
   } = useGroupSpots();
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
@@ -53,9 +55,10 @@ const Pages = ({route}) => {
   const spotId = isUserInfo?.spotId;
   const spotType = isUserInfo?.spotType;
 
-  const myGroupList = isUserGroupSpotCheck?.spotListResponseDtoList?.filter(
-    el => el.clientId !== groupId,
-  );
+  const myGroupList =
+    isUserGroupSpotCheck?.data?.spotListResponseDtoList?.filter(
+      el => el.clientId !== groupId,
+    );
 
   const cutName = isDetailSpot?.address?.includes(null);
   const useName = cutName
@@ -94,7 +97,7 @@ const Pages = ({route}) => {
                 id: groupId,
               });
               await setStorage('spotStatus', res.data.toString());
-              await userGroupSpotCheck();
+              // await userGroupSpotCheck();
               if (myGroupList.length === 0) {
                 navigation.navigate(SpotTypePage);
               } else {
@@ -237,7 +240,7 @@ const Pages = ({route}) => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="스팟 선택"
-        data={isUserGroupSpotCheck?.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.data?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         onPressEvent={id => {

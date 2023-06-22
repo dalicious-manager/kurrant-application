@@ -16,6 +16,7 @@ import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
 import {alarmSetting} from '../../../biz/useUserMe/Fetch';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGroupSpotList} from '../../../hook/useSpot';
 import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
@@ -26,7 +27,8 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
-  const {isUserGroupSpotCheck} = useGroupSpots();
+  // const {isUserGroupSpotCheck} = useGroupSpots();
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const noHasSpots =
     isUserGroupSpotCheck?.spotListResponseDtoList?.length === 0;
 

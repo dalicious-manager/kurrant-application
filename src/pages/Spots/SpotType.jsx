@@ -7,10 +7,10 @@ import Toast from '~components/Toast';
 
 import ModalComponent from './components/ModalComponent';
 import {MySpot, ShareSpot, PrivateSpot} from '../../assets';
-import {userGroupSpotListAtom} from '../../biz/useGroupSpots/store';
+import useGroupSpots from '../../biz/useGroupSpots/hook';
 import BottomModal from '../../components/BottomModal';
 import Typography from '../../components/Typography';
-import {useDeleteApplyMySpot} from '../../hook/useSpot';
+import {useDeleteApplyMySpot, useGroupSpotList} from '../../hook/useSpot';
 import {useGetUserInfo} from '../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
 import {PAGE_NAME as GroupManagePageName} from '../Group/GroupManage/DetailPage';
@@ -30,7 +30,8 @@ const SpotType = () => {
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
-  const [isUserGroupSpotCheck] = useAtom(userGroupSpotListAtom);
+  // const {isUserGroupSpotCheck} = useGroupSpots();
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const alreadyRegister = isUserInfo?.requestedMySpotDto?.isRequested;
   const myspotAddress = isUserInfo?.requestedMySpotDto?.address;
   const address = myspotAddress?.includes(null)
@@ -43,10 +44,10 @@ const SpotType = () => {
   };
 
   const myspotButton = () => {
-    if (isUserGroupSpotCheck.mySpotCount === 1) {
+    if (isUserGroupSpotCheck?.data.mySpotCount === 1) {
       setModalVisible(true);
     } else if (
-      (isUserGroupSpotCheck.mySpotCount > 0 && alreadyRegister) ||
+      (isUserGroupSpotCheck?.data.mySpotCount > 0 && alreadyRegister) ||
       alreadyRegister
     ) {
       setModalVisible2(true);
@@ -66,7 +67,7 @@ const SpotType = () => {
   };
 
   const nextButton = () => {
-    if (isUserGroupSpotCheck?.spotListResponseDtoList?.length > 0) {
+    if (isUserGroupSpotCheck?.data?.spotListResponseDtoList?.length > 0) {
       navigation.navigate(SCREEN_NAME);
     } else {
       navigation.navigate(SpotGuidePage);
@@ -91,7 +92,7 @@ const SpotType = () => {
                 <Image source={MySpot} style={{width: 70, height: 60}} />
                 <ImageDscText>
                   <UsedSpotCountDsc>
-                    {isUserGroupSpotCheck.mySpotCount}
+                    {isUserGroupSpotCheck?.data.mySpotCount}
                   </UsedSpotCountDsc>
                   /1 이용중
                 </ImageDscText>
@@ -109,7 +110,7 @@ const SpotType = () => {
                 <Image source={ShareSpot} style={{width: 70, height: 60}} />
                 <ImageDscText>
                   <UsedSpotCountDsc>
-                    {isUserGroupSpotCheck.shareSpotCount}
+                    {isUserGroupSpotCheck?.data.shareSpotCount}
                   </UsedSpotCountDsc>
                   /2 이용중
                 </ImageDscText>
@@ -134,7 +135,7 @@ const SpotType = () => {
                 <Image source={PrivateSpot} style={{width: 60, height: 60}} />
                 <ImageDscText style={{paddingLeft: 0}}>
                   <UsedSpotCountDsc>
-                    {isUserGroupSpotCheck.privateCount}
+                    {isUserGroupSpotCheck?.data.privateCount}
                   </UsedSpotCountDsc>
                   {`\u00A0`}이용중
                 </ImageDscText>
@@ -236,13 +237,6 @@ const HeaderDscText = styled(Typography).attrs({text: 'Body05R'})`
 const NextText = styled(Typography).attrs({text: 'BottomButtonR'})`
   color: ${({theme}) => theme.colors.grey[5]};
   text-align: center;
-`;
-
-const MoreButton = styled.Pressable`
-  flex-direction: row;
-  align-items: center;
-  margin-top: 6px;
-  align-self: flex-end;
 `;
 
 const ImageWrap = styled.View``;
