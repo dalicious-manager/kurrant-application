@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
+import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
@@ -82,7 +83,7 @@ const Pages = () => {
   const userGroupName = isUserInfo?.data?.group;
   const userSpotId = isUserInfo?.data?.spotId;
   const clientId = isUserInfo?.data?.groupId;
-
+  const queryClient = useQueryClient();
   const spotNameCut = userSpot?.includes(null);
   const useSpotName = spotNameCut ? userSpot.split('null')[0] : userSpot;
   const {
@@ -149,7 +150,8 @@ const Pages = () => {
   useFocusEffect(
     useCallback(() => {
       const groupCheck = async () => {
-        await userGroupSpotCheck();
+        queryClient.invalidateQueries('userInfo');
+        queryClient.invalidateQueries('groupSpotList');
       };
       groupCheck();
     }, []),
@@ -180,7 +182,6 @@ const Pages = () => {
       }
     };
     getUser();
-
   }, [isUserInfo?.data, isUserGroupSpotCheck]);
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
@@ -462,7 +463,7 @@ const Pages = () => {
         ],
       );
     }
-    if (isUserGroupSpotCheck?.length !== 0) {
+    if (isUserGroupSpotCheck?.data?.length !== 0) {
       setModalVisible(true);
     } else {
       navigation.navigate(SpotTypePageName);
