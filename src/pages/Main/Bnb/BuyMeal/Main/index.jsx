@@ -616,7 +616,7 @@ const Pages = ({route}) => {
                   return (
                     <DiningPress
                       key={i}
-                      disabled={!typeBoolean && true}
+                      disabled={!isDailyFoodLoading && !typeBoolean && true}
                       onPress={() => {
                         diningRef.current.setPage(i);
                         setSliderValue(i);
