@@ -170,7 +170,8 @@ const Pages = () => {
           } else if (
             isUserInfo?.data?.spotId === null &&
             (isUserGroupSpotCheck?.data?.shareSpotCount > 0 ||
-              isUserGroupSpotCheck?.data?.mySpotCount > 0)
+              isUserGroupSpotCheck?.data?.mySpotCount > 0 ||
+              isUserGroupSpotCheck?.data?.privateCount > 1)
           ) {
             setShowDim(true);
           } else {
