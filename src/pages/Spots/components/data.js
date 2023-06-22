@@ -72,13 +72,13 @@ export function alramImage(data) {
     data === 'noDeliveryNoSpot' ||
     data === 'noAlarmNotUsedMembership' ||
     data === 'noAlarmNotUsedMembership' ||
-    data === 'noAlramNoSpot'
+    data === 'noAlramNoSpot' ||
+    data === 'noAlarmUsedMembership' ||
+    data === 'sharSpotAppication'
   ) {
     return <Image source={SongE} style={{width: 178, height: 149}} />;
   }
-  if (data === 'noAlarmUsedMembership') {
-    return <Image source={SpotOpen} style={{width: 339, height: 215}} />;
-  }
+
   if (
     data === 'mySpotCompleteNotMembership' ||
     data === 'mySpotCompleteMembership'
@@ -116,6 +116,9 @@ export function alramTitleText(data) {
 
   if (data === 'noSpot' || data === 'noDeliveryNoSpotNextUse') {
     return `최소 주문 금액 없이${`\n`}한 달 동안 배송비 무료!`;
+  }
+  if (data === 'sharSpotAppication') {
+    return `스팟 신청 완료!${`\n`}최선을 다해 곧 오픈 해드릴게요`;
   }
 }
 
@@ -157,14 +160,7 @@ export function alramDscText(data) {
   }
 
   if (data === 'noAlarmUsedMembership') {
-    return (
-      <Desc>
-        개설 상황은<EmphasisDesc> '마이페이지'</EmphasisDesc>에서 확인 가능해요
-        {`\n`}
-        {`\n`}개설 되면<EmphasisDesc> 배송 스팟 선택시</EmphasisDesc>
-        {`\n`}확인 할 수 있어요
-      </Desc>
-    );
+    return <Desc>스팟 개설시 자동으로{`\n`}스팟이 등록돼요</Desc>;
   }
 
   if (data === 'mySpotCompleteMembership') {
@@ -187,7 +183,11 @@ export function alramButtonText(data) {
     return `배송비 절약해볼래요`;
   }
 
-  if (data === 'noDeliveryNoSpot' || data === 'noAlramNoSpot') {
+  if (
+    data === 'noDeliveryNoSpot' ||
+    data === 'noAlramNoSpot' ||
+    data === 'sharSpotAppication'
+  ) {
     return `다른 타입 스팟 사용하기`;
   }
 
@@ -206,6 +206,12 @@ export function subButtonText(data) {
     case 'noAlarmUsedMembership':
       return;
     case 'usedMembership':
+      return;
+    case 'sharSpotAppication':
+      return '홈으로 가기';
+    case 'noAlramNoSpot':
+      return;
+    case 'noDeliveryNoSpot':
       return;
   }
   return '다음에 할게요';
@@ -242,16 +248,16 @@ export function notDeliveryAlarm(data) {
 
 export function notDeliveryNoAlarm(data) {
   switch (data) {
-    case false:
+    case 'noDelivery':
       return (
-        <Desc>하지만 곧 오픈해드릴게요.{`\n`}오픈시 알림 보내드릴까요?</Desc>
+        <Desc>하지만 곧 오픈해드릴게요.{`\n`}오픈될 때 알림 보내드릴까요?</Desc>
       );
   }
 }
 
 export function notDeliveryNoAlarmButton(data) {
   switch (data) {
-    case false:
+    case 'noDelivery':
       return '알림 받기';
     case 'noSpot':
       return '다른 타입 스팟 사용하기';

@@ -22,7 +22,6 @@ import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMo
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom, weekServiceAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useUserInfo from '../../../../../biz/useUserInfo/hook';
 import Balloon from '../../../../../components/Balloon';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
@@ -49,6 +48,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {goNextPage, goPrevPage} from '../util/movePage';
 import {foodDeliveryTimeFilter, getTime} from '../util/time';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -106,7 +106,7 @@ const Pages = ({route}) => {
   const {data: isLoadMeal} = useGetShoppingBasket();
   const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-  const {isUserInfo} = useUserInfo();
+  const {data: isUserInfo} = useGetUserInfo();
   const timeRef = useRef(null);
 
   const DININGTYPE = ['아침', '점심', '저녁'];
@@ -114,7 +114,6 @@ const Pages = ({route}) => {
   const [date, setDate] = useState(
     params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
   );
-
   useEffect(() => {
     if (params?.date) {
       setDate(params.date);
@@ -191,6 +190,7 @@ const Pages = ({route}) => {
           .flat();
       })
       .flat();
+
     setCartDailyFoodId(cart);
   }, [isLoadMeal?.data?.spotCarts]);
   useEffect(() => {
@@ -207,7 +207,7 @@ const Pages = ({route}) => {
   }, [isOrderMeal?.data]);
   const daily = true;
 
-  const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.spotId;
+  const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.data?.spotId;
   // console.log(userRole);
   const {
     data: dailyfoodData,
@@ -422,8 +422,8 @@ const Pages = ({route}) => {
   };
 
   useEffect(() => {
-    if (date) dailyfoodRefetch();
-  }, [dailyfoodRefetch, date, isUserInfo]);
+    if (date && isUserInfo?.data) dailyfoodRefetch();
+  }, [dailyfoodRefetch, date, isUserInfo?.data]);
 
   useEffect(() => {
     let price = null;
@@ -446,8 +446,9 @@ const Pages = ({route}) => {
       v => v.diningType === sliderValue + 1,
     );
     const timeSetting = async () => {
+      if (!dailyfoodData?.data) return;
       const times = await getTime(
-        isUserInfo,
+        isUserInfo?.data,
         dailyfoodData?.data.diningTypes,
         sliderValue,
       );
@@ -464,7 +465,7 @@ const Pages = ({route}) => {
   }, [
     dailyfoodData?.data.diningTypes,
     dailyfoodData?.data.supportPrice,
-    isUserInfo,
+    isUserInfo?.data,
     setDiningTime,
     sliderValue,
     time.diningType,
@@ -545,7 +546,7 @@ const Pages = ({route}) => {
         {
           dailyFoodId: id,
           count: 1,
-          spotId: isUserInfo?.spotId,
+          spotId: isUserInfo?.data?.spotId,
           deliveryTime: time,
         },
       ]);
@@ -604,7 +605,7 @@ const Pages = ({route}) => {
           isServiceDays={dailyfoodData?.data.serviceDays}
         />
       </CalendarWrap>
-      <PagerViewWrap isMembership={isUserInfo?.isMembership}>
+      <PagerViewWrap isMembership={isUserInfo?.data?.isMembership}>
         {!isDailyFoodLoading && (
           <StatusWrap>
             <ProgressWrap>
@@ -615,7 +616,7 @@ const Pages = ({route}) => {
                   return (
                     <DiningPress
                       key={i}
-                      disabled={!typeBoolean && true}
+                      disabled={!isDailyFoodLoading && !typeBoolean && true}
                       onPress={() => {
                         diningRef.current.setPage(i);
                         setSliderValue(i);
@@ -681,7 +682,7 @@ const Pages = ({route}) => {
                       isSelect={time === item.value}
                       onPress={async () => {
                         const selectTime = await getTime(
-                          isUserInfo,
+                          isUserInfo?.data,
                           dailyfoodData?.data.diningTypes,
                           sliderValue,
                           item.value,
@@ -710,7 +711,7 @@ const Pages = ({route}) => {
                     isSelect={time === item.value}
                     onPress={async () => {
                       const selectTime = await getTime(
-                        isUserInfo,
+                        isUserInfo?.data,
                         dailyfoodData?.data.diningTypes,
                         sliderValue,
                         item.value,
@@ -755,12 +756,12 @@ const Pages = ({route}) => {
             )}
           </MiniWrap>
         )}
-        {!isUserInfo?.isMembership && (
+        {!isUserInfo?.data?.isMembership && (
           <View>
             <Modal hideModal={hideModal} setHideModal={setHideModal} />
           </View>
         )}
-        {dailyFetching ? (
+        {!isUserInfo?.data || dailyFetching ? (
           <LoadingPage>
             <ActivityIndicator size={'large'} />
           </LoadingPage>

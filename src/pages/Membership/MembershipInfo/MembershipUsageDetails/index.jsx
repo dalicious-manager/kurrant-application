@@ -5,15 +5,17 @@ import styled, {useTheme} from 'styled-components/native';
 import Typography from '~components/Typography';
 
 import useMembership from '../../../../biz/useMembership';
-import useUserInfo from '../../../../biz/useUserInfo';
 import Label from '../../../../components/Label';
+import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import withCommas from '../../../../utils/withCommas';
 
 export const PAGE_NAME = 'P__MEMBERSHIP__USAGE__DETAIL';
 const Pages = () => {
   const themeApp = useTheme();
   const {getMembershipHistory} = useMembership();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [membershipHistory, setMebershipHistory] = useState();
   const getData = async () => {
     const {statusCode, data} = await getMembershipHistory();

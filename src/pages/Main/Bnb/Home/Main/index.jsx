@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
+import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
@@ -34,7 +35,6 @@ import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJus
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useMembership from '../../../../../biz/useMembership';
-import useUserInfo from '../../../../../biz/useUserInfo';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
@@ -43,15 +43,17 @@ import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
-import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
+import {useGroupSpotList} from '../../../../../hook/useSpot';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
-import {mainDimATom, mainDimAtom} from '../../../../../utils/store';
+import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
 import MainDim from '../../../../Spots/spotGuide/MainDim';
 import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
@@ -87,24 +89,27 @@ const Pages = () => {
 
   const [isVisible, setIsVisible] = useState(true);
   const weekly = useAtomValue(weekAtom);
-  const {isUserInfo, userInfo} = useUserInfo();
+  const {data: isUserInfo} = useGetUserInfo();
   const currentVersion = VersionCheck.getCurrentVersion();
-  const userName = isUserInfo?.name;
-  const userSpot = isUserInfo?.spot;
-  const userGroupName = isUserInfo?.group;
-  const userSpotId = isUserInfo?.spotId;
-  const clientId = isUserInfo?.groupId;
+  const userName = isUserInfo?.data?.name;
+  const userSpot = isUserInfo?.data?.spot;
+  const userGroupName = isUserInfo?.data?.group;
+  const userSpotId = isUserInfo?.data?.spotId;
+  const clientId = isUserInfo?.data?.groupId;
+  const queryClient = useQueryClient();
+  const spotNameCut = userSpot?.includes(null);
+  const useSpotName = spotNameCut ? userSpot.split('null')[0] : userSpot;
   const {
     saveFcmToken,
     readableAtom: {userRole},
   } = useAuth();
   const {
-    userGroupSpotCheck,
-    isUserGroupSpotCheck,
+    // userGroupSpotCheck,
+    // isUserGroupSpotCheck,
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const [coinSound, setCoinSound] = useState(null);
 
   const loadCoinSound = () => {
@@ -155,14 +160,43 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
+  useFocusEffect(
+    useCallback(() => {
+      const groupCheck = async () => {
+        queryClient.invalidateQueries('userInfo');
+        queryClient.invalidateQueries('groupSpotList');
+      };
+      groupCheck();
+    }, []),
+  );
   useEffect(() => {
     const getUser = async () => {
-      const user = await userInfo();
-      if (user.spotId) dailyfoodRefetch();
-      else setShowDim(true);
+      try {
+        // const spotList = await userGroupSpotCheck();
+        if (isUserInfo?.data && isUserGroupSpotCheck?.data) {
+          if (isUserInfo?.data?.spotId) dailyfoodRefetch();
+          else if (
+            isUserInfo?.data?.spotId === null &&
+            isUserGroupSpotCheck?.data?.privateCount === 1
+          ) {
+            navigation.navigate(PrivateInvitePageName);
+          } else if (
+            isUserInfo?.data?.spotId === null &&
+            (isUserGroupSpotCheck?.data?.shareSpotCount > 0 ||
+              isUserGroupSpotCheck?.data?.mySpotCount > 0 ||
+              isUserGroupSpotCheck?.data?.privateCount > 1)
+          ) {
+            setShowDim(true);
+          } else {
+            navigation.navigate(SpotGuidePageName);
+          }
+        }
+      } catch (error) {
+        console.log(error, 'user');
+      }
     };
     getUser();
-  }, []);
+  }, [isUserInfo?.data, isUserGroupSpotCheck]);
   // 홈 전체 공지사항
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
@@ -274,7 +308,7 @@ const Pages = () => {
       await getMembershipHistory();
     };
     getHistory();
-  }, [isUserInfo]);
+  }, [isUserInfo?.data]);
   useFocusEffect(
     useCallback(() => {
       try {
@@ -404,7 +438,6 @@ const Pages = () => {
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
-        await userInfo();
         setShow(true);
         toast.toastEvent();
         setTimeout(() => {
@@ -444,10 +477,10 @@ const Pages = () => {
         ],
       );
     }
-    if (isUserGroupSpotCheck.length !== 0) {
+    if (isUserGroupSpotCheck?.data?.length !== 0) {
       setModalVisible(true);
     } else {
-      navigation.navigate(CreateGroupPageName);
+      navigation.navigate(SpotTypePageName);
     }
   };
 
@@ -463,6 +496,14 @@ const Pages = () => {
   const handleStatus = e => {
     setAppState(e);
   };
+
+  const spotName =
+    userGroupName?.length + userSpot?.length + 1 > 11 && userGroupName !== null
+      ? userGroupName + '\n' + userSpot
+      : userGroupName === null
+      ? useSpotName
+      : userGroupName + '\u00a0' + userSpot;
+
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
 
@@ -473,7 +514,6 @@ const Pages = () => {
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
-        await userGroupSpotCheck();
         await VersionCheck.getLatestVersion().then(latestVersion => {
           const regex = /[^0-9]/g;
           const result = currentVersion?.replace(regex, '');
@@ -510,12 +550,12 @@ const Pages = () => {
   );
 
   useEffect(() => {
-    if (isUserInfo?.spotId === null && !showDim) {
+    if (isUserInfo?.data?.spotId === null && !showDim) {
       setModalVisible(true);
     }
   }, [showDim]);
 
-  if (!isUserInfo) {
+  if (!isUserInfo?.data) {
     return <SkeletonUI />;
   }
 
@@ -554,14 +594,13 @@ const Pages = () => {
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
-            <SpotNameText>
-              {!userGroupName
+            <SpotNameText
+              numberOfLines={userGroupName !== null ? 2 : 1}
+              ellipsizeMode="tail">
+              {isUserInfo?.data && !isUserInfo?.data?.spotId
                 ? '스팟을 선택해 주세요'
-                : userGroupName?.length + userSpot?.length + 1 > 11
-                ? userGroupName + '\n' + userSpot
-                : userGroupName + '\u00a0' + userSpot}
+                : spotName}
             </SpotNameText>
-
             <ArrowIcon />
           </SpotName>
           <Icons>
@@ -635,7 +674,7 @@ const Pages = () => {
             </CountWrap>
           </CatorWrap> */}
 
-            {isUserInfo?.isMembership ? (
+            {isUserInfo?.data?.isMembership ? (
               <MembershipWrap
                 onPress={() => navigation.navigate(MembershipInfoPageName)}>
                 <Membership>
@@ -644,33 +683,33 @@ const Pages = () => {
                 </Membership>
                 <View>
                   <MembershipUsing>
-                    {isUserInfo?.membershipUsingPeriod}일째 이용중
+                    {isUserInfo?.data?.membershipUsingPeriod}일째 이용중
                   </MembershipUsing>
-                  {isUserInfo?.foundersNumber < 5000 && (
+                  {isUserInfo?.data?.foundersNumber < 5000 && (
                     <MembersWrap>
                       <MembersIcon />
                       <MembersText>
-                        {isUserInfo?.foundersNumber}번째 커런트파운더스
+                        {isUserInfo?.data?.foundersNumber}번째 커런트파운더스
                       </MembersText>
                     </MembersWrap>
                   )}
                 </View>
               </MembershipWrap>
-            ) : isUserInfo?.email.includes('@bespinglobal.com') &&
+            ) : isUserInfo?.data?.email.includes('@bespinglobal.com') &&
               membershipHistory.length < 1 ? (
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImages source={BespinMembers} resizeMode={'cover'} />
               </MenbershipBanner>
-            ) : isUserInfo?.leftFoundersNumber > 0 ? (
+            ) : isUserInfo?.data?.leftFoundersNumber > 0 ? (
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImages
@@ -682,7 +721,7 @@ const Pages = () => {
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImage
@@ -695,9 +734,7 @@ const Pages = () => {
               </MenbershipBanner>
             )}
 
-            <Pressable onPress={() => navigation.navigate(SpotGuidePageName)}>
-              <Text>스팟 선택 임시 버튼</Text>
-            </Pressable>
+            {/* 아래주석 마켓 추가시 사용 */}
             {/* <MarketWrap>
             <Market>
               <MarketIcon/>
@@ -724,10 +761,7 @@ const Pages = () => {
       <ButtonWrap>
         <Button
           onPress={async () => {
-            // await sendDone(5, setEventSourceMsg);
-
-            if (userSpotId) {
-              // sse type 5번
+            if (isUserInfo?.data?.spotId) {
               confirmSseIsRead(5);
               navigation.navigate(BuyMealPageName);
               closeBalloon();
@@ -745,7 +779,7 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
-        data={isUserGroupSpotCheck?.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.data?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}
@@ -808,6 +842,7 @@ const BarWrap = styled.View`
 
 const SpotName = styled.Pressable`
   ${Display};
+  max-width: 220px;
 `;
 
 const Icons = styled.View`

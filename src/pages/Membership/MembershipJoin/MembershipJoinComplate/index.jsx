@@ -1,18 +1,13 @@
 import {StackActions, useNavigation} from '@react-navigation/native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Dimensions} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
 import Button from '~components/Button';
-import Image from '~components/Image';
 import Typography from '~components/Typography';
 
-import useUserInfo from '../../../../biz/useUserInfo';
-import {SCREEN_NAME as BnbScreenName} from '../../../../screens/Main/Bnb';
-import {PAGE_NAME as MainPageName} from '../../../Main/Bnb/Home';
-import {PAGE_NAME as MoreMainPageName} from '../../../Main/Bnb/More';
-import {PAGE_NAME as MembershipInfoPage} from '../../../Membership/MembershipInfo';
+import {useGetUserInfo} from '../../../../hook/useUserInfo';
 
 import {MembershipJoinComplateImage} from '~assets';
 
@@ -20,14 +15,11 @@ export const PAGE_NAME = 'P__MEMBERSHIP__JOIN_COMPLATE';
 const screenHeight = Dimensions.get('screen').height;
 const Pages = () => {
   const themeApp = useTheme();
-  const {userInfo, isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const navigation = useNavigation();
-  useEffect(() => {
-    const getUser = async () => {
-      await userInfo();
-    };
-    getUser();
-  }, []);
+
   return (
     <Conotainer>
       <FastImage

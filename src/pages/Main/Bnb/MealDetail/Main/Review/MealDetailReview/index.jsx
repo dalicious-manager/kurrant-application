@@ -81,7 +81,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     isOnlyPhoto,
     selectedKeyword,
     setUrl,
-    rateSelected,
+    // rateSelected,
   ]);
 
   const {
@@ -136,8 +136,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
 
   useEffect(() => {
     if (data?.pages) {
-      const {starAverage, isLast, foodId, totalReview, reviewWrite} =
-        data?.pages[0];
+      const {
+        items: {starAverage, isLast, foodId, totalReview, reviewWrite},
+      } = data?.pages[0];
 
       setStarAverage(starAverage);
       setIsLast(isLast);
@@ -150,8 +151,14 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const [showSelectList, setShowSelectList] = useState(false);
 
   // useEffect(() => {
-  //   console.log(foodId);//
+  //   console.log('푸드아이딩~');
+  //   console.log(foodId); //
   // }, [foodId]);
+
+  // useEffect(() => {
+  //   console.log('데일리푸드아이딩~');
+  //   console.log(dailyFoodId); //
+  // });
 
   // best, latest, photo, rating, like
 
@@ -176,6 +183,15 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     }
   };
 
+  // useEffect(() => {
+  //   console.log('data여');
+  //   console.log(data);
+  //   console.log(data?.pages);
+  //   console.log(data?.pages[0]);
+  //   console.log(data?.pages[0].items);
+  //   console.log(data?.pages[0].items?.reviewList);
+  //   console.log(data?.pages[0].items?.starAverage);
+  // }, [data]);
   const handleConfirmPress = () => {
     setUrl(
       buildCustomUrl(
@@ -353,7 +369,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         {data?.pages.map((v, i) => {
           return (
             <View key={i}>
-              {v.items.map(item => {
+              {v.items?.reviewList.map((item, i2) => {
                 return (
                   <Card
                     key={item.reviewId}

@@ -112,13 +112,13 @@ const Component = ({
                 reviewId: id,
               });
             }}>
-            <EditText isLike={likeNum}>도움이 되요 </EditText>
+            <EditText isLike={likeNum}>도움이 돼요</EditText>
             <ThumbsUp
               width="14px"
               height="15px"
               color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
             />
-            <LikeNumber>{likeNum}</LikeNumber>
+            <LikeNumber isLike={likeNum}>{likeNum}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>
@@ -284,7 +284,8 @@ const EditText = styled(Typography).attrs({text: 'Button10R'})`
 `;
 
 const LikeNumber = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${props => props.theme.colors.grey[5]};
+  color: ${({theme, isLike}) =>
+    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
 
   margin-left: 3px;
 `;
