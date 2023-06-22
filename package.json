@@ -49,7 +49,6 @@
     "react-native-config": "^1.4.6",
     "react-native-document-picker": "^8.1.1",
     "react-native-dotenv": "^3.3.1",
-    "react-native-event-source": "^1.1.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-fbsdk-next": "^11.1.0",
     "react-native-geolocation-service": "^5.3.1",

@@ -14,7 +14,6 @@ import {
 import {useAtom} from 'jotai';
 import {useMutation, useQuery} from 'react-query';
 import {fetchJson} from '../../fetch';
-import SseService3 from '../SseService/SseService3';
 
 const apiHostUrl =
   Config.NODE_ENV === 'dev'
@@ -45,8 +44,8 @@ const useSse = () => {
 
   const getSseServiceInstance = useCallback(async () => {
     const tokenYo = await getToken();
-    // const yoyoyo = new SseService(apiHostUrl, tokenYo);
-    const yoyoyo = new SseService3(apiHostUrl, tokenYo);
+    const yoyoyo = new SseService(apiHostUrl, tokenYo);
+    // const yoyoyo = new SseService3(apiHostUrl, tokenYo);
 
     console.log('setEventSourceMsg url확인');
     console.log(apiHostUrl);

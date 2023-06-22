@@ -1,7 +1,6 @@
 import Config from 'react-native-config';
 
-import RNEventSource from 'react-native-event-source';
-
+import EventSource from 'react-native-sse';
 class SseService {
   token;
   baseUrl;
@@ -10,15 +9,15 @@ class SseService {
     this.baseUrl = baseUrl;
     this.token = token;
 
-    this.eventSource = new RNEventSource(
+    this.eventSource = new EventSource(
       `${this.baseUrl}/notification/subscribe`,
 
       this.token && {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
-        withCredentials: true,
-        // pollingInterval: 1000,
+        // withCredentials: true,
+        pollingInterval: 1000 * 60 * 15,
         // retry: 3000,
       },
     );
@@ -44,14 +43,14 @@ class SseService {
 
   onError = () => {
     this.eventSource.onerror = () => {
-      console.log('server closed connection');
+      console.log('error occured closing connection');
       //  에러가 뜨면 프론트에서 닫아준다
-      this.eventSource.removeAllListeners();
-      this.eventSource.close();
+      this.onDisconnect();
     };
   };
 
   onDisconnect = () => {
+    console.log('onDisconnect! closing connection');
     this.eventSource.removeAllListeners();
     this.eventSource.close();
   };
