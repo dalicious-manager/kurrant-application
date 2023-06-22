@@ -109,13 +109,13 @@ const useSse = () => {
         body: JSON.stringify(data),
       });
 
-      return response;
+      return [response, data, 'ㅋㅋㅋ테스트'];
     },
     {
       onSuccess: data => {
         console.log('sse 알림 읽기 success');
 
-        console.log(data);
+        console.log(data[2]);
       },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
