@@ -14,4 +14,5 @@ export const spotApis = {
     await fetchJson('/application-forms/spots/setting/alarm', 'PATCH', {
       body: JSON.stringify(data),
     }),
+  groupSpotList: async () => await fetchJson('/users/me/groups', 'GET'),
 };

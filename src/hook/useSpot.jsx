@@ -1,4 +1,4 @@
-import {useMutation, useQueryClient} from 'react-query';
+import {useMutation, useQuery, useQueryClient} from 'react-query';
 
 import {spotApis} from '../api/spot';
 
@@ -15,4 +15,10 @@ export function useDeleteApplyMySpot() {
 // 마이스팟 신청 후 알림 설정
 export function useSettingAlarmMySpot() {
   return useMutation(data => spotApis.alarmSettingMySpot(data));
+}
+
+export function useGroupSpotList() {
+  return useQuery('groupSpotList', () => {
+    return spotApis.groupSpotList();
+  });
 }

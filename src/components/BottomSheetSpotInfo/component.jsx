@@ -31,11 +31,11 @@ import PlusIcon from '../../assets/icons/Map/plus.svg';
 import MealIcon from '../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../assets/icons/Spot/user.svg';
 import useGroupSpots from '../../biz/useGroupSpots/hook';
-import {userGroupSpotListAtom} from '../../biz/useGroupSpots/store';
 import {
   useGetShareSpotDetail,
   useSelectShareSpot,
 } from '../../hook/useShareSpot';
+import {useGroupSpotList} from '../../hook/useSpot';
 import {PAGE_NAME as ApplySpotPage} from '../../pages/Spots/shareSpot/ApplySpot';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
 import {diningTypeString} from '../../utils/diningType';
@@ -57,12 +57,13 @@ const Component = props => {
   const {data: detailData, refetch: detailDataRefech} = useGetShareSpotDetail(
     data[0]?.id,
   );
-  const {
-    userGroupSpotCheck,
-    isUserGroupSpotCheck,
-    userSpotRegister,
-    groupSpotDetail,
-  } = useGroupSpots();
+  // const {
+  //   userGroupSpotCheck,
+  //   isUserGroupSpotCheck,
+  //   userSpotRegister,
+  //   groupSpotDetail,
+  // } = useGroupSpots();
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const {mutateAsync: selectSpot} = useSelectShareSpot();
 
   const detail = detailData?.data;
@@ -79,7 +80,7 @@ const Component = props => {
   const diningType = [1, 2, 3];
 
   const onSelectButton = async () => {
-    if (isUserGroupSpotCheck?.shareSpotCount === 2) {
+    if (isUserGroupSpotCheck?.data?.shareSpotCount === 2) {
       setModalVisible(false);
       setBottomModal(true);
     } else {
@@ -87,7 +88,7 @@ const Component = props => {
         id: data[0].id,
       };
       await selectSpot(body);
-      await userGroupSpotCheck();
+      // await userGroupSpotCheck();
       navigation.navigate(SCREEN_NAME);
     }
   };

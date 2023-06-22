@@ -1,18 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Linking,
-  NativeModules,
-  Platform,
-  PermissionsAndroid,
-  Alert,
-  View,
-} from 'react-native';
+import React, {useEffect} from 'react';
+import {Linking, Platform, PermissionsAndroid, Alert} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {Shadow} from 'react-native-shadow-2';
 import styled from 'styled-components';
 
 import Icon from '../../assets/icons/Map/locationCircle.svg';
-import Arrow from '../../assets/icons/Map/rightArrow.svg';
 import Typography from '../../components/Typography';
 
 const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {

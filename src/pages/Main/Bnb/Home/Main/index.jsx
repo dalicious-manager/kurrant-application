@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
+import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
@@ -41,6 +42,7 @@ import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {useGroupSpotList} from '../../../../../hook/useSpot';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
@@ -81,7 +83,7 @@ const Pages = () => {
   const userGroupName = isUserInfo?.data?.group;
   const userSpotId = isUserInfo?.data?.spotId;
   const clientId = isUserInfo?.data?.groupId;
-
+  const queryClient = useQueryClient();
   const spotNameCut = userSpot?.includes(null);
   const useSpotName = spotNameCut ? userSpot.split('null')[0] : userSpot;
   const {
@@ -89,12 +91,12 @@ const Pages = () => {
     readableAtom: {userRole},
   } = useAuth();
   const {
-    userGroupSpotCheck,
-    isUserGroupSpotCheck,
+    // userGroupSpotCheck,
+    // isUserGroupSpotCheck,
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const [coinSound, setCoinSound] = useState(null);
 
   const loadCoinSound = () => {
@@ -148,7 +150,8 @@ const Pages = () => {
   useFocusEffect(
     useCallback(() => {
       const groupCheck = async () => {
-        await userGroupSpotCheck();
+        queryClient.invalidateQueries('userInfo');
+        queryClient.invalidateQueries('groupSpotList');
       };
       groupCheck();
     }, []),
@@ -156,17 +159,19 @@ const Pages = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        if (isUserInfo?.data) {
+        // const spotList = await userGroupSpotCheck();
+        if (isUserInfo?.data && isUserGroupSpotCheck?.data) {
           if (isUserInfo?.data?.spotId) dailyfoodRefetch();
           else if (
             isUserInfo?.data?.spotId === null &&
-            isUserGroupSpotCheck?.privateCount === 1
+            isUserGroupSpotCheck?.data?.privateCount === 1
           ) {
             navigation.navigate(PrivateInvitePageName);
           } else if (
             isUserInfo?.data?.spotId === null &&
-            (isUserGroupSpotCheck?.shareSpotCount > 0 ||
-              isUserGroupSpotCheck?.mySpotCount > 0)
+            (isUserGroupSpotCheck?.data?.shareSpotCount > 0 ||
+              isUserGroupSpotCheck?.data?.mySpotCount > 0 ||
+              isUserGroupSpotCheck?.data?.privateCount > 1)
           ) {
             setShowDim(true);
           } else {
@@ -459,7 +464,7 @@ const Pages = () => {
         ],
       );
     }
-    if (isUserGroupSpotCheck?.length !== 0) {
+    if (isUserGroupSpotCheck?.data?.length !== 0) {
       setModalVisible(true);
     } else {
       navigation.navigate(SpotTypePageName);
@@ -755,7 +760,7 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
-        data={isUserGroupSpotCheck?.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.data?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}
