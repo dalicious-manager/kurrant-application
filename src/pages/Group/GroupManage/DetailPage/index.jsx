@@ -59,7 +59,7 @@ const Pages = ({route}) => {
     isUserGroupSpotCheck?.data?.spotListResponseDtoList?.filter(
       el => el.clientId !== groupId,
     );
-
+  console.log(myGroupList, isUserGroupSpotCheck?.data, 'ii');
   const cutName = isDetailSpot?.address?.includes(null);
   const useName = cutName
     ? isDetailSpot?.address?.split('null')[0]
@@ -97,7 +97,7 @@ const Pages = ({route}) => {
                 id: groupId,
               });
               await setStorage('spotStatus', res.data.toString());
-              // await userGroupSpotCheck();
+
               if (myGroupList.length === 0) {
                 navigation.navigate(SpotTypePage);
               } else {

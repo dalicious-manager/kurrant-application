@@ -11,11 +11,13 @@ import SpotTextInput from '../../../components/SpotTextInput';
 import Typography from '../../../components/Typography';
 import useKeyboardEvent from '../../../hook/useKeyboardEvent';
 import {useApplyMySpot} from '../../../hook/useSpot';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import withHyphenNumber from '../../../utils/phoneNumber';
 import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
 import {PAGE_NAME as DeliveryPage} from '../../Spots/mySpot/Delivery';
 import {PAGE_NAME as NotDeliveryPage} from '../../Spots/mySpot/NotDelivery';
 import {PAGE_NAME as SpotTypePage} from '../../Spots/SpotType';
+import {PAGE_NAME as CompletePage} from '../components/Complete';
 
 export const PAGE_NAME = 'MY_SPOT_DETAIL';
 const DetailAddress = ({route}) => {
@@ -27,7 +29,9 @@ const DetailAddress = ({route}) => {
   const zipcode = route?.params?.zipcode;
   const jibunAddress = route?.params.jibunAddress;
   const [show, setShow] = useState(true);
-  console.log(jibunAddress);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const {mutateAsync: applySpot, data: res, isSuccess} = useApplyMySpot();
   const form = useForm({
     mode: 'all',
@@ -67,23 +71,37 @@ const DetailAddress = ({route}) => {
   useEffect(() => {
     if (isSuccess) {
       if (res.data.isExist) {
-        navigation.reset({
-          index: 1,
-          routes: [
-            {
-              name: SpotTypePage,
-            },
-            {
-              name: DeliveryPage,
-              params: {
-                mySpotName: res.data.name,
-                address: res.data.address,
-                isAlarm: res.data.isAlarm,
-                name: name, // 검색시 건물이름  Or 지번주소
+        if (isUserInfo?.isMembership) {
+          navigation.reset({
+            index: 1,
+            routes: [
+              {
+                name: SpotTypePage,
               },
-            },
-          ],
-        });
+              {
+                name: CompletePage,
+                params: {
+                  type: 'mySpotCompleteMembership',
+                },
+              },
+            ],
+          });
+        } else {
+          navigation.reset({
+            index: 1,
+            routes: [
+              {
+                name: SpotTypePage,
+              },
+              {
+                name: CompletePage,
+                params: {
+                  type: 'mySpotCompleteNotMembership',
+                },
+              },
+            ],
+          });
+        }
       } else {
         navigation.reset({
           index: 1,

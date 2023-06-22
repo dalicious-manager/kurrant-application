@@ -30,6 +30,7 @@ import {width, height} from '../../theme';
 import {
   mealTouchAtom,
   myLocationAtom,
+  shareMapZoomAtom,
   touchInfoAtom,
   userLocationAtom,
 } from '../../utils/store';
@@ -56,7 +57,7 @@ const ShareSpotMap = ({route}) => {
   const [tab, setTab] = useState();
   const [show, setShow] = useState(false);
   const [move, setMove] = useState(false);
-  const [zoom, setZoom] = useState(18);
+  const [zoom, setZoom] = useAtom(shareMapZoomAtom);
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역
   const [myLocation, setMyLocation] = useAtom(myLocationAtom);
   const {
@@ -109,6 +110,7 @@ const ShareSpotMap = ({route}) => {
 
   useEffect(() => {
     balloonEvent();
+    setZoom(18);
   }, []);
 
   useFocusEffect(
@@ -123,7 +125,7 @@ const ShareSpotMap = ({route}) => {
       if (paramsId === undefined) {
         setModalVisible(false);
       }
-      setZoom(18);
+
       refetch();
     }, [paramsLocation, paramsId, refetch, setInitCenter]),
   );
