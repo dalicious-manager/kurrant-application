@@ -5,14 +5,16 @@ import {View, Text, Image} from 'react-native';
 import styled from 'styled-components';
 
 import {DeliveryImage} from '../../../assets';
-import useUserInfo from '../../../biz/useUserInfo/hook';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
+import {mySpotRootAtom} from '../../../utils/store';
 import {PAGE_NAME as ModalPage} from '../components/Complete';
 
 export const PAGE_NAME = 'MY_SPOT_DELIVERY';
 const Delivery = ({route}) => {
   //console.log(route, 'route');
+  const [fromRoot, setFromRoot] = useAtom(mySpotRootAtom); // 어느 경로로 왔는지 0 : 지도에서 1: 검색 리스트에서
   const navigation = useNavigation();
   const mySpotName = route?.params?.mySpotName;
   const address = route?.params?.address;
@@ -20,8 +22,9 @@ const Delivery = ({route}) => {
   const addressData = address?.includes(null);
   const useAddress = addressData ? address.split('null')[0] : address;
 
-  const {isUserInfo} = useUserInfo();
-  console.log(isUserInfo, 'dfdf');
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
 
   const confirmButton = () => {
     if (isUserInfo?.isMembership) {
@@ -34,11 +37,14 @@ const Delivery = ({route}) => {
       });
     }
   };
+
+  const spotName =
+    mySpotName !== null ? mySpotName : fromRoot === 0 ? useAddress : name;
   return (
     <Wrap>
       <HeaderView>
         <Title>스팟 주소</Title>
-        <SpotName>{mySpotName ?? useAddress}</SpotName>
+        <SpotName>{spotName}</SpotName>
         <SpotAddress>{useAddress}</SpotAddress>
       </HeaderView>
       <Border />

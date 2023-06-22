@@ -8,25 +8,25 @@ import Arrow from '../../../../assets/icons/Group/arrowWhite.svg';
 import Close from '../../../../assets/icons/Group/close.svg';
 import Pen from '../../../../assets/icons/Group/pen.svg';
 import useGroupSpots from '../../../../biz/useGroupSpots/hook';
-import {isUserInfoAtom} from '../../../../biz/useUserInfo/store';
 import BottomSheetSpot from '../../../../components/BottomSheetSpot';
 import Button from '../../../../components/Button';
 import TextButton from '../../../../components/TextButton';
 import Toast from '../../../../components/Toast';
 import Typography from '../../../../components/Typography';
+import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {setStorage} from '../../../../utils/asyncStorage';
 import withCommas from '../../../../utils/withCommas';
+import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as ApartModifyAddressHoPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailHo';
 import {PAGE_NAME as CreateGroupPageName} from '../../GroupCreate';
 import {PAGE_NAME as SelectSpotPageName} from '../../GroupManage';
-
 const WIDTH = Dimensions.get('screen').width;
 export const PAGE_NAME = 'P__GROUP__MANAGE__DETAIL';
 const Pages = ({route}) => {
-  const routeId = route.params.id;
   const toast = Toast();
+  const from = route?.params?.from;
   const navigation = useNavigation();
   const {
     groupSpotDetail,
@@ -36,7 +36,9 @@ const Pages = ({route}) => {
     userWithdrawGroup,
     userSpotRegister,
   } = useGroupSpots();
-  const userInfo = useAtomValue(isUserInfoAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState();
   //const [groupState,setGroupState] = useState();
@@ -46,42 +48,28 @@ const Pages = ({route}) => {
   const supportPrice = isDetailSpot?.mealTypeInfoList?.map(
     el => el.supportPrice,
   );
-  const {groupId, spotId} = userInfo;
+
+  const groupId = isUserInfo?.groupId;
+  const spotId = isUserInfo?.spotId;
+  const spotType = isUserInfo?.spotType;
+
   const myGroupList = isUserGroupSpotCheck?.spotListResponseDtoList?.filter(
     el => el.clientId !== groupId,
   );
 
+  const cutName = isDetailSpot?.address?.includes(null);
+  const useName = cutName
+    ? isDetailSpot?.address?.split('null')[0]
+    : isDetailSpot?.address;
+
   const anotherSpot = async id => {
-    // setGroupState(groupId);
-    // try {
-    //   await groupSpotDetail(id);
-    //   toast.toastEvent();
-    // } catch (err) {
-    //   console.log(err, '-');
-    //   if (err) {
-    //     try {
-    //       const res = await userSpotRegister({
-    //         id: id,
-    //       });
-    //       console.log(res, 'dkdkdkd');
-    //       if (res.data === null) {
-    //         navigation.navigate(ApartRegisterSpotPageName, {id: id});
-    //       } else {
-    //         toast.toastEvent();
-    //         groupSpotDetail(id);
-    //       }
-    //     } catch (error) {
-    //       console.log(error, 'sisis');
-    //     }
-    //   }
-    // }
     try {
       const res = await userSpotRegister({id: id});
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         toast.toastEvent();
-        groupSpotDetail(id);
+        await groupSpotDetail(id);
       }
     } catch (error) {
       Alert.alert('유저 스팟 가입', error?.toString()?.replace('error: ', ''));
@@ -108,7 +96,7 @@ const Pages = ({route}) => {
               await setStorage('spotStatus', res.data.toString());
               await userGroupSpotCheck();
               if (myGroupList.length === 0) {
-                navigation.navigate(CreateGroupPageName);
+                navigation.navigate(SpotTypePage);
               } else {
                 navigation.navigate(SelectSpotPageName);
               }
@@ -149,12 +137,18 @@ const Pages = ({route}) => {
         await groupSpotDetail(spotId);
         await userGroupSpotCheck();
       } catch (err) {
-        Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
+        // Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
       }
     }
-    LoadGroupDetail();
+    if (spotId) LoadGroupDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spotId]);
+
+  useEffect(() => {
+    if (from === 'shareSpotMap') {
+      setModalVisible(true);
+    }
+  }, [from]);
 
   return (
     // <SafeView>
@@ -170,9 +164,9 @@ const Pages = ({route}) => {
         <ContentView>
           <TextView>
             <Title>배송지</Title>
-            <ContentText>{isDetailSpot?.address}</ContentText>
+            <ContentText>{useName}</ContentText>
           </TextView>
-          {isDetailSpot?.ho !== null && (
+          {/* {isDetailSpot?.ho !== null && (
             <TextView>
               <Title>세부 주소</Title>
               <HoView
@@ -185,7 +179,7 @@ const Pages = ({route}) => {
                 <PenIcon />
               </HoView>
             </TextView>
-          )}
+          )} */}
           <TextView>
             <Title>멤버십 할인 마감 / 주문 마감 / 배송 시간</Title>
             {isDetailSpot?.mealTypeInfoList?.map((el, idx) => {
@@ -239,10 +233,11 @@ const Pages = ({route}) => {
       </ScrollView>
 
       <BottomSheetSpot
+        userSpotId={spotId}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="스팟 선택"
-        data={isUserGroupSpotCheck}
+        data={isUserGroupSpotCheck?.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         onPressEvent={id => {
@@ -267,7 +262,7 @@ const Pages = ({route}) => {
             }}
           />
         </ButtonBox>
-        <AddSpotWrap onPress={() => navigation.navigate(CreateGroupPageName)}>
+        <AddSpotWrap onPress={() => navigation.navigate(SpotTypePage)}>
           <AddSpotText>다른 스팟 신청/추가</AddSpotText>
         </AddSpotWrap>
       </BottomContainer>

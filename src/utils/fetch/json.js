@@ -56,6 +56,11 @@ async function json(url, method, options = {}) {
   if (options.accessToken !== undefined) {
     headers.Authorization = 'Bearer ' + options.accessToken;
   }
+  // if (Config.NODE_ENV === 'dev') {
+  //   console.log('fetching to:', reqUrl);
+  //   console.log('fetching method:', method);
+  //   console.log('fetching option:', options.body);
+  // }
 
   // console.log('fetching to:', reqUrl);
   // console.log('fetching method:', method);

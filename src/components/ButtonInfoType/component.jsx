@@ -13,9 +13,9 @@ const Component = ({
 
   margin = '0',
   title = [
-    {id: 1, type: '아침'},
-    {id: 2, type: '점심'},
-    {id: 3, type: '저녁'},
+    {id: 1, type: '모두 보기'},
+    {id: 2, type: '제한 없음'},
+    {id: 3, type: '제한 있음'},
   ],
 }) => {
   const onPressButton = id => {
@@ -26,7 +26,7 @@ const Component = ({
       return;
     }
 
-    setTouch([...touch, id]);
+    setTouch([id]);
   };
 
   return (

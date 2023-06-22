@@ -1,31 +1,29 @@
+import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Dimensions, View} from 'react-native';
+import {Shadow} from 'react-native-shadow-2';
 import styled, {useTheme} from 'styled-components';
+import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
+import RateStars from '~components//RateStars';
+import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
+import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+
+import Card from './Card';
+import {buildCustomUrl, modifyStarRatingCount} from './logic';
+import {
+  fetchNextPageReviewDetailAtom,
+  hasNextPageReviewDetailAtom,
+} from './store';
+import useGetMealDetailReview from './useGetMealDetailReview';
 import {
   ArrowUpAndDown,
   Picture,
   Settings,
 } from '../../../../../../../components/Icon';
-import {useEffect, useState} from 'react';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
-
-import RateStars from '~components//RateStars';
-import {RightSkinnyArrow} from '~components/Icon';
-import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
-import {Shadow} from 'react-native-shadow-2';
-import useGetMealDetailReview from './useGetMealDetailReview';
-import {buildCustomUrl, modifyStarRatingCount} from './logic';
-import {useAtom} from 'jotai';
-import {
-  fetchNextPageReviewDetailAtom,
-  hasNextPageReviewDetailAtom,
-} from './store';
-import {useNavigation} from '@react-navigation/native';
-import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
-
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
-
-import Card from './Card';
 
 const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const theme = useTheme();
@@ -81,9 +79,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     dailyFoodId,
     orderFilter,
     isOnlyPhoto,
-    rateSelected,
     selectedKeyword,
     setUrl,
+    rateSelected,
   ]);
 
   const {
@@ -153,8 +151,14 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const [showSelectList, setShowSelectList] = useState(false);
 
   // useEffect(() => {
-  //   console.log(foodId);
+  //   console.log('푸드아이딩~');
+  //   console.log(foodId); //
   // }, [foodId]);
+
+  // useEffect(() => {
+  //   console.log('데일리푸드아이딩~');
+  //   console.log(dailyFoodId); //
+  // });
 
   // best, latest, photo, rating, like
 
@@ -188,6 +192,17 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   //   console.log(data?.pages[0].items?.reviewList);
   //   console.log(data?.pages[0].items?.starAverage);
   // }, [data]);
+  const handleConfirmPress = () => {
+    setUrl(
+      buildCustomUrl(
+        dailyFoodId,
+        orderFilter,
+        isOnlyPhoto,
+        selectedKeyword,
+        rateSelected,
+      ),
+    );
+  };
 
   return (
     <Container>
@@ -388,6 +403,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
       </ReviewListWrap>
 
       <BottomModalMultipleSelect
+        onConfirmPress={handleConfirmPress}
         modalVisible={bottomModalOpen}
         setModalVisible={setBottomModalOpen}
         title="별점 필터"
@@ -612,28 +628,6 @@ const ReviewListWrap = styled.View`
   background-color: #ffffff;
 `;
 
-const CardsWrap = styled.View`
-  /* margin-bottom: 40px; */
-  /* border: 1px solid black; */
-`;
-
-const MoreReviewPressable = styled.Pressable`
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-
-  padding: 17px 0px;
-
-  border: 1px solid ${({theme}) => theme.colors.grey[7]};
-  border-radius: 7px;
-`;
-
-const MoreReviewText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[3]};
-  margin-right: 10px;
-`;
-
 const LoadingPage = styled.View`
   background-color: white;
   opacity: 0.5;
@@ -647,16 +641,6 @@ const LoadingPage = styled.View`
 
 const LoadingPage1 = styled.View`
   margin-bottom: 18px;
-`;
-
-const IconWrap = styled.View`
-  width: 12px;
-  height: 12px;
-
-  /* border: 1px solid black; */
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
 `;
 
 const BottomModalSelecterComponent = ({selected, item}) => {

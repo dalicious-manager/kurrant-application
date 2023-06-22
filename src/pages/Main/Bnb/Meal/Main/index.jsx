@@ -11,13 +11,13 @@ import Plus from '../../../../../assets/icons/Home/plus.svg';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
-import useUserInfo from '../../../../../biz/useUserInfo';
 import LabelButton from '../../../../../components/ButtonMeal';
 import BuyCalendar from '../../../../../components/BuyCalendar';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {
   formattedDate,
   formattedMonthDay,
@@ -38,7 +38,9 @@ const Pages = ({route}) => {
   const meal = true;
   // console.log(data);
   const {dailyFood, isServiceDays} = useFoodDaily();
-  const {isUserInfo, userInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
 
   const queryClient = useQueryClient();
   const [touchDate, setTouchDate] = useState(data);
@@ -172,12 +174,10 @@ const Pages = ({route}) => {
   //   }
   //   loadUser();
   // }, []);
-  useEffect(() => {
-    userInfo();
-  }, []);
+
   useEffect(() => {
     dailyfoodRefetch();
-  }, [isUserInfo]);
+  }, [dailyfoodRefetch, isUserInfo]);
   useFocusEffect(
     useCallback(() => {
       if (isToday) {
@@ -185,7 +185,7 @@ const Pages = ({route}) => {
         pagerRef.current.setPage(0);
       }
       setTouchDate(data);
-    }, [isToday, data]),
+    }, [isToday, data, pressDay]),
   );
   return (
     <SafeView>

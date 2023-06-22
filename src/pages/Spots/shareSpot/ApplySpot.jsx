@@ -6,14 +6,18 @@ import {View, Text, Keyboard, Platform, Pressable} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components';
 
+import {mapApis} from '../../../api/map';
 import Icon from '../../../assets/icons/Map/map.svg';
 import Button from '../../../components/Button';
 import SpotTextInput from '../../../components/SpotTextInput';
 import Typography from '../../../components/Typography';
+import useKeyboardEvent from '../../../hook/useKeyboardEvent';
+import {useApplyShareSpot} from '../../../hook/useShareSpot';
 import {formattedMealTime, formattedTime} from '../../../utils/dateFormatter';
-import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
-import {PAGE_NAME as NotDeliveryPage} from '../../Spots/mySpot/NotDelivery';
-
+import {PAGE_NAME as RegisterSpotMapPage} from '../../Map/RegisterSpotMap';
+import {PAGE_NAME as ShareSpotMapPage} from '../../Map/ShareSpotMap';
+import {PAGE_NAME as CompletePage} from '../components/Complete';
+import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'SHARE_SPOT_APPLY';
 const ApplySpot = ({route}) => {
   const navigation = useNavigation();
@@ -22,13 +26,17 @@ const ApplySpot = ({route}) => {
   const roadAddress = route?.params?.roadAddress; // 도로명 주소
   const showAddress = route?.params?.showAddress; // true면 지번주소로 넘어온거
   const zipcode = route?.params?.zipcode;
-  const type = route?.params?.params?.type;
-  console.log(route.params);
+  const type = route?.params?.type;
+  const name = route?.params?.name;
+  const id = route?.params?.groupId;
+  const from = route?.params?.from;
+  console.log(center);
   const [use, setUse] = useState();
   const [show, setShow] = useState(false);
   const [time, setTime] = useState(new Date());
   const [text, setText] = useState('');
-  console.log(formattedTime(time));
+  const {mutateAsync: applyShareSpot} = useApplyShareSpot();
+  console.log(type, 'dodo');
   const form = useForm({
     mode: 'all',
   });
@@ -44,12 +52,10 @@ const ApplySpot = ({route}) => {
   const deliveryTime = watch('deliveryTime');
   const memo = watch('memo');
 
-  const onSaveAddress = () => {
-    //navigation.navigate(NotDeliveryPage);
-  };
+  const validation = detailAddress && deliveryTime && use !== undefined;
 
   const data = ['예', '아니요'];
-
+  const keyboardStatus = useKeyboardEvent();
   const showTimePicker = () => {
     setShow(true);
   };
@@ -62,6 +68,54 @@ const ApplySpot = ({route}) => {
     setTime(selectedTime);
     setText(formattedMealTime(selectedTime));
     setValue('deliveryTime', formattedMealTime(selectedTime));
+  };
+
+  const checkMapLocation = () => {
+    if (type === 'registerSpot') {
+      navigation.navigate(RegisterSpotMapPage);
+    } else {
+      navigation.navigate(ShareSpotMapPage, {
+        location: center,
+        id: id,
+      });
+    }
+  };
+
+  const applyAddSpotButton = async () => {
+    const res = await mapApis.getRoadAddress(center.longitude, center.latitude);
+    const param = from === 'application' ? 1 : from === 'spot' ? 2 : 3;
+    const body = {
+      address: {
+        zipCode: res.zipcode,
+        address1: roadAddress,
+        address2: detailAddress,
+        latitude: center.latitude.toString(),
+        longitude: center.longitude.toString(),
+      },
+      groupId: id,
+      deliveryTime: formattedTime(time),
+      entranceOption: use === 0 ? true : false,
+      memo: memo === undefined ? null : memo,
+    };
+
+    await applyShareSpot({body, param});
+    navigation.reset({
+      index: 1,
+      routes: [
+        {
+          name: SpotTypePage,
+        },
+        {
+          name: CompletePage,
+          params: {
+            type: 'sharSpotAppication',
+          },
+        },
+      ],
+    });
+    navigation.navigate(CompletePage, {
+      type: 'sharSpotAppication',
+    });
   };
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -77,26 +131,24 @@ const ApplySpot = ({route}) => {
           setShow(false);
         }}>
         <KeyboardAwareScrollView
-          showsHorizontalScrollIndicator={false}
-          style={{flex: 1}}
-          extraScrollHeight={120}
-          enableOnAndroid={true}
+          showsVerticalScrollIndicator={false}
+          extraHeight={180}
           resetScrollToCoords={{x: 0, y: 0}}>
-          <SpotName>{showAddress ? address : roadAddress}</SpotName>
-          {/* <SpotName>{showAddress ? address : roadAddress}</SpotName> */}
+          <SpotName>
+            {type === 'registerSpot' && showAddress
+              ? address
+              : type === 'registerSpot' && !showAddress
+              ? roadAddress
+              : name}
+          </SpotName>
+
           <AddressWrap>
             <Label>
               <LabelText>도로명</LabelText>
             </Label>
             <Address>{roadAddress}</Address>
-            {/* <Address>{roadAddress}</Address> */}
           </AddressWrap>
-          <CheckMapWrap
-            onPress={() =>
-              navigation.navigate(MySpotMapPage, {
-                center: center,
-              })
-            }>
+          <CheckMapWrap onPress={checkMapLocation}>
             <Icon />
             <CheckMapText>지도에서 위치 확인</CheckMapText>
           </CheckMapWrap>
@@ -149,11 +201,12 @@ const ApplySpot = ({route}) => {
           </InputWrap>
         </KeyboardAwareScrollView>
 
-        {!show && (
+        {!show && !keyboardStatus.isKeyboardActivate && (
           <ButtonWrap>
             <Button
               label="신청하기"
-              onPressEvent={form.handleSubmit(onSaveAddress)}
+              onPressEvent={applyAddSpotButton}
+              disabled={!validation}
             />
           </ButtonWrap>
         )}

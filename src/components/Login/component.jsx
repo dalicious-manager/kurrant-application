@@ -13,9 +13,7 @@ import styled, {useTheme} from 'styled-components/native';
 import Toast from '~components/Toast';
 
 import useAuth from '../../biz/useAuth';
-import useUserInfo from '../../biz/useUserInfo';
 import useKeyboardEvent from '../../hook/useKeyboardEvent';
-import {PAGE_NAME as GroupCreateMainPageName} from '../../pages/Group/GroupCreate';
 import {PAGE_NAME as FindUserPageName} from '../../pages/Main/Login/FindUser';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
 import {getStorage, setStorage} from '../../utils/asyncStorage';
@@ -29,7 +27,6 @@ const {StatusBarManager} = NativeModules;
 
 const Component = ({userId, isPassword, setPassword}) => {
   const navigation = useNavigation();
-  const {userInfo} = useUserInfo();
   const [emailId, setEmailId] = useState((userId && userId) || emailId);
   const ToastMessage = Toast();
   const labelItems = [
@@ -54,7 +51,6 @@ const Component = ({userId, isPassword, setPassword}) => {
     try {
       await login(datas);
       setStorage('userId', datas.email);
-      const userData = await userInfo();
       navigation.reset({
         index: 0,
         routes: [

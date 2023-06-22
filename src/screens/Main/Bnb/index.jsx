@@ -2,7 +2,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useRoute} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {useEffect} from 'react';
-import {back} from 'react-native/Libraries/Animated/Easing';
 import styled, {useTheme} from 'styled-components/native';
 import ActiveHome from '~assets/icons/TabBarIcon/activeHome.svg';
 import ActiveMeal from '~assets/icons/TabBarIcon/activeMeal.svg';
@@ -32,13 +31,6 @@ const BottomTab = createBottomTabNavigator();
 const Screen = () => {
   const theme = useTheme();
   const [showDim, setShowDim] = useAtom(mainDimAtom);
-  const route = useRoute();
-  // console.log(route, showDim, 'si');
-  // useEffect(() => {
-  //   if (route === 'S_MAIN__BNB') {
-  //     setShowDim(true);
-  //   }
-  // }, []);
 
   return (
     <React.Fragment>

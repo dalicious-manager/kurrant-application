@@ -55,7 +55,7 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['60%', '90%'], []);
+  const snapPoints = useMemo(() => ['70%', '90%'], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
@@ -93,9 +93,9 @@ const BottomSheetSpot = props => {
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <GestureHandlerRootView style={{flex: 1}}>
         <Overlay>
-          {snap === 0 && !showDim && (
+          {snap === 0 && !showDim && userSpotId === null && (
             <BalloonMessage
-              location={{top: '200px'}}
+              location={{top: '150px'}}
               vertical="down"
               message={`배송받으실 스팟을 선택해주세요.${'\n'}추후 변경 가능합니다.`}
             />
@@ -107,7 +107,17 @@ const BottomSheetSpot = props => {
 
           <BottomSheet snapPoints={snapPoints} onChange={handleSheetChange}>
             <BottomSheetTitleView>
-              <BottomSheetTitle>{title}</BottomSheetTitle>
+              <TitleWrap>
+                <BottomSheetTitle>{title}</BottomSheetTitle>
+                {booleanValue && (
+                  <ManagePressView
+                    onPress={() => {
+                      onPressEvent2(setModalVisible(false));
+                    }}>
+                    <ManageText>설정/관리</ManageText>
+                  </ManagePressView>
+                )}
+              </TitleWrap>
               {description !== '' && (
                 <BottomSheetDecs>{description}</BottomSheetDecs>
               )}
@@ -136,22 +146,39 @@ const BottomSheetSpot = props => {
                 <>
                   <ItemContainer>
                     <GroupView>
-                      <GroupName>{item.clientName}</GroupName>
-                      <View style={{marginLeft: 8}}>
+                      <View style={{marginRight: 8}}>
                         <Label
                           label={
-                            item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
+                            item.spotType === 0
+                              ? '프라이빗 스팟'
+                              : item.spotType === 2
+                              ? '공유 스팟'
+                              : '마이 스팟'
                           }
-                          type={item.spotType === 0 ? 'red' : 'green'}
+                          type={
+                            item.spotType === 0
+                              ? 'blue'
+                              : item.spotType === 2
+                              ? 'green'
+                              : 'pink'
+                          }
                         />
                       </View>
+                      <GroupName>{item.clientName}</GroupName>
                     </GroupView>
                     <Border />
                   </ItemContainer>
 
                   {item.spots.map(el => {
+                    const spotNameCut = el.spotName?.includes(null);
+                    const useSpotName = spotNameCut
+                      ? el.spotName.split('null')[0]
+                      : el.spotName;
+                    const arrs = data[data.length - 1];
+
                     return (
                       <ContentItemContainer
+                        lastArr={arrs === item}
                         onPress={() => {
                           onSelect(el.spotId);
                           onPressEvent(el.spotId);
@@ -159,11 +186,25 @@ const BottomSheetSpot = props => {
                         key={el.spotId}>
                         {el.spotId === userSpotId ? (
                           <ContentItemBox>
-                            <ContentItemText>{el.spotName}</ContentItemText>
+                            <TextView>
+                              <ContentItemText>{useSpotName}</ContentItemText>
+                              {el.isRestriction && (
+                                <Restriction>외부인 출입 제한</Restriction>
+                              )}
+                            </TextView>
                             <CheckedIcon />
                           </ContentItemBox>
                         ) : (
-                          <ContentItemText>{el.spotName}</ContentItemText>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <ContentItemText>{useSpotName}</ContentItemText>
+                            {el.isRestriction && (
+                              <Restriction>외부인 출입 제한</Restriction>
+                            )}
+                          </View>
                         )}
                       </ContentItemContainer>
                     );
@@ -172,17 +213,7 @@ const BottomSheetSpot = props => {
               )}
               // keyExtractor={item => item.clientId.toString()}
             />
-            <ManagePressView />
           </BottomSheet>
-
-          {booleanValue && (
-            <ManagePressView
-              onPress={() => {
-                onPressEvent2(setModalVisible(false));
-              }}>
-              <ContentItemText>스팟 관리하기</ContentItemText>
-            </ManagePressView>
-          )}
         </Overlay>
       </GestureHandlerRootView>
     </Modal>
@@ -206,7 +237,7 @@ const BottomSheetTitleView = styled.View`
 `;
 
 const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 `;
 
 const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
@@ -218,6 +249,7 @@ const ContentItemContainer = styled.Pressable`
   height: 60px;
   padding: 19px 24px;
   padding-left: 40px;
+  //margin-bottom: ${({lastArr}) => (lastArr ? '50px' : '0px')};
 `;
 
 const ItemContainer = styled.View`
@@ -232,9 +264,14 @@ const ContentItemBox = styled.View`
   align-items: center;
 `;
 
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
+const ContentItemText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+const ManageText = styled(Typography).attrs({text: 'Button09R'})`
+  color: ${({theme}) => theme.colors.grey[3]};
+`;
 
-const GroupName = styled(Typography).attrs({text: 'Body06R'})`
+const GroupName = styled(Typography).attrs({text: 'Body06SB'})`
   color: ${({theme}) => theme.colors.grey[4]};
 `;
 
@@ -246,9 +283,9 @@ const Border = styled.View`
 `;
 
 const ManagePressView = styled.Pressable`
-  width: ${Dimensions.get('screen').width}px;
+  /* width: ${Dimensions.get('screen').width}px;
   padding: 19px 24px 55px 24px;
-  background-color: white;
+  background-color: white; */
 `;
 
 const GroupView = styled.View`
@@ -260,4 +297,20 @@ export default BottomSheetSpot;
 
 const MessageWrap = styled.View`
   position: absolute;
+`;
+
+const TitleWrap = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const Restriction = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+  margin-left: 8px;
+`;
+
+const TextView = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;

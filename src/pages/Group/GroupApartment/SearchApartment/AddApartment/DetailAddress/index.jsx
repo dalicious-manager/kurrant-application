@@ -5,7 +5,6 @@ import {Text, View, NativeModules, Platform, Keyboard} from 'react-native';
 import styled from 'styled-components';
 
 import useApartApplication from '../../../../../../biz/useApartApplication/hook';
-import useUserInfo from '../../../../../../biz/useUserInfo';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
 import RefTextInput from '../../../../../../components/RefTextInput';
@@ -23,7 +22,6 @@ const Pages = ({route}) => {
   const navigation = useNavigation();
   const keyboardStatus = useKeyboardEvent();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
-  const {userInfo} = useUserInfo();
   const {apartmentRegisterSpot} = useApartApplication();
   const {
     formState: {errors},
@@ -47,7 +45,6 @@ const Pages = ({route}) => {
         ho: hosuCheck,
       });
       await setStorage('spotStatus', '0');
-      userInfo();
       navigation.navigate(GroupManageDetailPageName, {id: id});
     } catch (err) {
       throw err;

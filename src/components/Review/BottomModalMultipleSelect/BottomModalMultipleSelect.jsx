@@ -1,3 +1,4 @@
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
@@ -7,12 +8,9 @@ import {
   Dimensions,
   PanResponder,
 } from 'react-native';
-import styled from 'styled-components/native';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
-
-import Typography from '~components/Typography';
-
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import styled from 'styled-components/native';
+import Typography from '~components/Typography';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -21,6 +19,7 @@ const BottomModalMultipleSelect = props => {
   const {
     modalVisible,
     setModalVisible,
+    onConfirmPress = () => {},
     title = '옵션 선택',
     description = '',
     data = {},
@@ -30,7 +29,6 @@ const BottomModalMultipleSelect = props => {
     onPressEvent = () => {},
     userSpotId,
     SelecterComponent = undefined,
-
     booleanValue,
     onPressEvent2 = () => {},
     setValue = () => {},
@@ -121,6 +119,7 @@ const BottomModalMultipleSelect = props => {
   }, [props.modalVisible, resetBottomSheet]);
 
   const closeModal = () => {
+    onConfirmPress();
     closeBottomSheet.start(() => {
       setModalVisible(false);
     });
@@ -152,6 +151,7 @@ const BottomModalMultipleSelect = props => {
 
               <ConfirmPressable
                 onPress={() => {
+                  onConfirmPress();
                   setModalVisible(false);
                 }}>
                 <ConfirmText>확인</ConfirmText>
@@ -190,7 +190,7 @@ const BottomModalMultipleSelect = props => {
               )}
               keyExtractor={item => item.id.toString()}
             />
-            <ManagePressView></ManagePressView>
+            <ManagePressView />
           </BottomSheet>
         </GestureHandlerRootView>
       </Overlay>

@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import {useAtom} from 'jotai';
 import React, {useState} from 'react';
-import {Image, Pressable, Text, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import styled from 'styled-components';
 
 import {
@@ -12,10 +11,12 @@ import {
   subButtonText,
 } from './data';
 import Close from '../../../assets/icons/Map/close20.svg';
+import useGroupSpots from '../../../biz/useGroupSpots/hook';
 import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
 import {alarmSetting} from '../../../biz/useUserMe/Fetch';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
@@ -25,11 +26,15 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
-  const [press, setPress] = useState(false);
+  const {isUserGroupSpotCheck} = useGroupSpots();
+  const noHasSpots =
+    isUserGroupSpotCheck?.spotListResponseDtoList?.length === 0;
 
-  const [isUserInfo] = useAtom(isUserInfoAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const type = route?.params?.type;
-  console.log(type);
+  console.log(type, 'type');
   const nextUseButton = () => {
     navigation.navigate(SCREEN_NAME);
   };
@@ -43,45 +48,37 @@ const Complete = ({route}) => {
     });
   };
 
-  const noDeliveryNoSpotNextUseButton = () => {
-    setPress(true);
-  };
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <CloseButton onPress={nextUseButton}>
-        <Close />
-      </CloseButton>
+      {!(
+        type === 'noAlramNoSpot' ||
+        type === 'noDeliveryNoSpot' ||
+        (type === 'sharSpotAppication' && noHasSpots)
+      ) && (
+        <CloseButton onPress={nextUseButton}>
+          <Close />
+        </CloseButton>
+      )}
       <Wrap showsVerticalScrollIndicator={false}>
         <Contents>
-          <Title>
-            {press
-              ? alramTitleText('noDeliveryNoSpotNextUse')
-              : alramTitleText(type)}
-          </Title>
-          {press ? alramImage('noDeliveryNoSpotNextUse') : alramImage(type)}
+          <Title>{alramTitleText(type)}</Title>
+          {alramImage(type)}
           <Desc>
             {type === 'usedMembership' && isUserInfo?.name}
-            {press
-              ? alramDscText('noDeliveryNoSpotNextUse')
-              : alramDscText(type)}
+            {alramDscText(type)}
           </Desc>
         </Contents>
       </Wrap>
       <ButtonWrap>
         <Button
           icon={type === 'mySpotCompleteMembership' && 'plus'}
-          label={
-            press
-              ? alramButtonText('noDeliveryNoSpotNextUse')
-              : alramButtonText(type)
-          }
+          label={alramButtonText(type)}
           onPressEvent={() => {
             if (
               type === 'mySpotCompleteNotMembership' ||
               type === 'noAlarmNotUsedMembership' ||
               type === 'notUsedMembership' ||
-              type === 'noSpot' ||
-              (type === 'noDeliveryNoSpot' && press)
+              type === 'noSpot'
             ) {
               membershipButton();
             }
@@ -91,18 +88,20 @@ const Complete = ({route}) => {
             if (type === 'mySpotCompleteMembership') {
               buyMealButton();
             }
-            if (type === 'noDeliveryNoSpot' && !press) {
+            if (
+              type === 'noDeliveryNoSpot' ||
+              type === 'sharSpotAppication' ||
+              type === 'noAlramNoSpot'
+            ) {
               navigation.navigate(SpotTypePage);
             }
           }}
         />
-        <Pressable
-          onPress={
-            type === 'noDeliveryNoSpot' && !press
-              ? noDeliveryNoSpotNextUseButton
-              : nextUseButton
-          }>
-          <ButtonText>{subButtonText(type)}</ButtonText>
+        <Pressable onPress={nextUseButton}>
+          <ButtonText>
+            {!(type === 'sharSpotAppication' && noHasSpots) &&
+              subButtonText(type)}
+          </ButtonText>
         </Pressable>
       </ButtonWrap>
     </View>
