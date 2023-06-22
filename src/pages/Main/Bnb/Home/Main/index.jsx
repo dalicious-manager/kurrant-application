@@ -179,6 +179,7 @@ const Pages = () => {
           userGroupSpot?.privateCount > 1)
       ) {
         setShowDim(true);
+        console.log(showDim, '1');
       } else if (
         isUserInfo?.data?.spotId === null &&
         userGroupSpot?.shareSpotCount === 0 &&
@@ -186,8 +187,21 @@ const Pages = () => {
         userGroupSpot?.privateCount === 0
       ) {
         navigation.navigate(SpotGuidePageName);
+      }
     }
   }, [isUserInfo?.data, userGroupSpot]);
+  useEffect(() => {
+    if (
+      isUserInfo?.data?.spotId === null &&
+      (userGroupSpot?.shareSpotCount > 0 ||
+        userGroupSpot?.mySpotCount > 0 ||
+        userGroupSpot?.privateCount > 1) &&
+      showDim === false
+    ) {
+      setModalVisible(true);
+      console.log(showDim, '2');
+    }
+  }, [showDim]);
 
   // 홈 전체 공지사항
 
@@ -541,12 +555,6 @@ const Pages = () => {
       getData();
     }, []),
   );
-
-  useEffect(() => {
-    if (isUserInfo?.data?.spotId === null && !showDim) {
-      setModalVisible(true);
-    }
-  }, [showDim]);
 
   if (!isUserInfo?.data) {
     return <SkeletonUI />;

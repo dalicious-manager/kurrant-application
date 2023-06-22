@@ -52,7 +52,7 @@ const AddressList = ({setFocus, data, type}) => {
         {data?.map((el, idx) => {
           const last = data[data.length - 1];
           const lastArr = el === last;
-
+          console.log(el);
           return (
             <Contents
               key={idx}
@@ -62,6 +62,8 @@ const AddressList = ({setFocus, data, type}) => {
                   el.place_name ? el.place_name : el.address_name,
                   el.road_address_name
                     ? el.road_address_name
+                    : el.address_name
+                    ? el.address_name
                     : el.road_address.address_name,
                   el.x,
                   el.y,
