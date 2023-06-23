@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {useEffect, useState} from 'react';
 import {View, Image, Alert, Pressable, Text} from 'react-native';
+import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 import Toast from '~components/Toast';
 
@@ -26,6 +27,7 @@ import {PAGE_NAME as SpotGuidePage} from '../Spots/spotGuide/SpotGuide';
 export const PAGE_NAME = 'SPOT_TYPE';
 const SpotType = () => {
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
   const [show, setShow] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -63,6 +65,7 @@ const SpotType = () => {
 
   const goTospotManagePage = () => {
     setModalVisible(false);
+    queryClient.invalidateQueries('groupSpotDetail');
     navigation.navigate(GroupManagePageName);
   };
 

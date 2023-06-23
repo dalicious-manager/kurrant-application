@@ -108,12 +108,10 @@ const ShareSpotMap = ({route}) => {
     });
   };
 
-
   useEffect(() => {
     balloonEvent();
     setZoom(18);
   }, []);
-
 
   useFocusEffect(
     useCallback(() => {

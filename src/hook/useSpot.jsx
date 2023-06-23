@@ -28,3 +28,14 @@ export function useGroupSpotList() {
     return spotApis.groupSpotList();
   });
 }
+export function useGroupSpotDetail(id) {
+  return useQuery(
+    'groupSpotDetail',
+    () => {
+      return spotApis.groupSpotDetail(id);
+    },
+    {
+      enabled: false,
+    },
+  );
+}

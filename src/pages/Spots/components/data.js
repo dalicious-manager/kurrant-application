@@ -169,7 +169,7 @@ export function alramDscText(data) {
 }
 
 export function alramButtonText(data) {
-  if (data === 'usedMembership') {
+  if (data === 'usedMembership' || data === 'mySpotCompleteMembership') {
     return `홈으로 가기`;
   }
 
@@ -191,9 +191,6 @@ export function alramButtonText(data) {
     return `다른 타입 스팟 사용하기`;
   }
 
-  if (data === 'mySpotCompleteMembership') {
-    return `식사 구매하기`;
-  }
   if (data === 'noAlarmUsedMembership') {
     return `확인했어요`;
   }

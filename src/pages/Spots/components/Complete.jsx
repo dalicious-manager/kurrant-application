@@ -36,9 +36,16 @@ const Complete = ({route}) => {
     data: {data: isUserInfo},
   } = useGetUserInfo();
   const type = route?.params?.type;
-  console.log(type, 'type');
   const nextUseButton = () => {
-    navigation.navigate(SCREEN_NAME);
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: SCREEN_NAME,
+        },
+      ],
+    });
+    // navigation.navigate(SCREEN_NAME);
   };
 
   const buyMealButton = () => {
@@ -73,7 +80,7 @@ const Complete = ({route}) => {
       </Wrap>
       <ButtonWrap>
         <Button
-          icon={type === 'mySpotCompleteMembership' && 'plus'}
+          // icon={type === 'mySpotCompleteMembership' && 'plus'}
           label={alramButtonText(type)}
           onPressEvent={() => {
             if (
@@ -84,12 +91,15 @@ const Complete = ({route}) => {
             ) {
               membershipButton();
             }
-            if (type === 'noAlarmUsedMembership') {
+            if (
+              type === 'noAlarmUsedMembership' ||
+              type === 'mySpotCompleteMembership'
+            ) {
               nextUseButton();
             }
-            if (type === 'mySpotCompleteMembership') {
-              buyMealButton();
-            }
+            // if (type === 'mySpotCompleteMembership') {
+            //   buyMealButton();
+            // }
             if (
               type === 'noDeliveryNoSpot' ||
               type === 'sharSpotAppication' ||
