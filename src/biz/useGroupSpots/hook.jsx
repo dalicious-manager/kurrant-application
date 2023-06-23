@@ -25,24 +25,24 @@ const useGroupSpots = () => {
 
       setApplicationList(res.data);
     } catch (err) {
-      Alert.alert(
-        '그룹/스팟 신청 목록 조회',
-        err.toString()?.replace('error: ', ''),
-        [
-          {
-            text: '확인',
-            onPress: () => {},
-            style: 'cancel',
-          },
-        ],
-      );
+      // Alert.alert(
+      //   '그룹/스팟 신청 목록 조회',
+      //   err.toString()?.replace('error: ', ''),
+      //   [
+      //     {
+      //       text: '확인',
+      //       onPress: () => {},
+      //       style: 'cancel',
+      //     },
+      //   ],
+      // );
     }
   };
   // 유저가 속한 그룹 스팟 조회
   const userGroupSpotCheck = async () => {
     try {
       const res = await Fetch.GroupSpotCheck();
-      console.log(res);
+
       setUserGroupSpotCheck(res.data);
       return res;
     } catch (err) {
@@ -62,6 +62,7 @@ const useGroupSpots = () => {
       const res = await Fetch.UserGroupAdd({
         ...body,
       });
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -89,6 +90,7 @@ const useGroupSpots = () => {
         ...body,
       });
       queryClient.invalidateQueries('dailyfood');
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -102,7 +104,8 @@ const useGroupSpots = () => {
       const res = await Fetch.WithdrawGroup({
         ...body,
       });
-
+      queryClient.invalidateQueries('userInfo');
+      queryClient.invalidateQueries('groupSpotList');
       return res;
     } catch (err) {
       Alert.alert('그룹 탈퇴', err.toString()?.replace('error: ', ''), [

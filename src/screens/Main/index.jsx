@@ -2361,7 +2361,7 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             //headerTransparent: true,
-            title: '기본 배송 시간 설정',
+            title: '배송지 확인',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',

@@ -11,21 +11,27 @@ import SpotTextInput from '../../../components/SpotTextInput';
 import Typography from '../../../components/Typography';
 import useKeyboardEvent from '../../../hook/useKeyboardEvent';
 import {useApplyMySpot} from '../../../hook/useSpot';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import withHyphenNumber from '../../../utils/phoneNumber';
 import {PAGE_NAME as MySpotMapPage} from '../../Map/MySpotMap';
 import {PAGE_NAME as DeliveryPage} from '../../Spots/mySpot/Delivery';
 import {PAGE_NAME as NotDeliveryPage} from '../../Spots/mySpot/NotDelivery';
+import {PAGE_NAME as SpotTypePage} from '../../Spots/SpotType';
+import {PAGE_NAME as CompletePage} from '../components/Complete';
 
 export const PAGE_NAME = 'MY_SPOT_DETAIL';
 const DetailAddress = ({route}) => {
   const navigation = useNavigation();
   const center = route?.params?.center; // 좌표
-  const name = route?.params?.address; // 지번 주소
+  const name = route?.params?.address; // 지번 주소 or 건물명
   const roadAddress = route?.params?.roadAddress; // 도로명 주소
   const showAddress = route?.params?.showAddress; // true면 지번주소로 넘어온거
   const zipcode = route?.params?.zipcode;
   const jibunAddress = route?.params.jibunAddress;
   const [show, setShow] = useState(true);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const {mutateAsync: applySpot, data: res, isSuccess} = useApplyMySpot();
   const form = useForm({
     mode: 'all',
@@ -37,7 +43,7 @@ const DetailAddress = ({route}) => {
     handleSubmit,
     setValue,
   } = form;
-  console.log(roadAddress);
+
   const detailAddress = watch('detailAddress');
   const nickNameAddress = watch('nickNameAddress');
   const phoneNumber = watch('phoneNumber');
@@ -51,30 +57,67 @@ const DetailAddress = ({route}) => {
         zipCode: zipcode,
         address1: roadAddress,
         address2: detailAddress,
+        address3: jibunAddress,
         latitude: center.latitude,
         longitude: center.longitude,
       },
       mySpotName: nickNameAddress,
-      jibunAddress: jibunAddress,
       phone: phone?.join(''),
     };
-
+    console.log(data);
     await applySpot(data);
   };
 
   useEffect(() => {
     if (isSuccess) {
       if (res.data.isExist) {
-        navigation.navigate(DeliveryPage, {
-          mySpotName: res.data.name,
-          address: res.data.address,
-          isAlarm: res.data.isAlarm,
-          name: name, // 검색시 건물이름  Or 지번주소
-        });
+        if (isUserInfo?.isMembership) {
+          navigation.reset({
+            index: 1,
+            routes: [
+              {
+                name: SpotTypePage,
+              },
+              {
+                name: CompletePage,
+                params: {
+                  type: 'mySpotCompleteMembership',
+                },
+              },
+            ],
+          });
+        } else {
+          navigation.reset({
+            index: 1,
+            routes: [
+              {
+                name: SpotTypePage,
+              },
+              {
+                name: CompletePage,
+                params: {
+                  type: 'mySpotCompleteNotMembership',
+                },
+              },
+            ],
+          });
+        }
       } else {
-        navigation.navigate(NotDeliveryPage, {
-          isExist: res.data.isExist,
-          isAlarm: res.data.isAlarm,
+        navigation.reset({
+          index: 1,
+          routes: [
+            {
+              name: SpotTypePage,
+            },
+            {
+              name: NotDeliveryPage,
+              params: {
+                isExist: res.data.isExist,
+                isAlarm: res.data.isAlarm,
+                registerSpotId: res.data.id,
+              },
+            },
+          ],
         });
       }
     }
@@ -85,10 +128,9 @@ const DetailAddress = ({route}) => {
         Keyboard.dismiss();
       }}>
       <KeyboardAwareScrollView
-        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         style={{flex: 1}}
-        extraScrollHeight={120}
-        enableOnAndroid={true}
+        extraHeight={120}
         resetScrollToCoords={{x: 0, y: 0}}>
         <SpotName>{showAddress ? name : roadAddress}</SpotName>
         <AddressWrap>
@@ -112,16 +154,12 @@ const DetailAddress = ({route}) => {
               label="상세 주소 입력"
               name="detailAddress"
               placeholder="예. 3층 / 302호"
-              onFocus={() => setShow(false)}
-              onBlur={() => setShow(true)}
             />
             <SpotTextInput
               label="주소 별명 입력"
               name="nickNameAddress"
               placeholder="예. 우리 집 / 회사"
               style={{paddingTop: 24}}
-              onFocus={() => setShow(false)}
-              onBlur={() => setShow(true)}
             />
             <SpotTextInput
               label="휴대폰번호 입력"
@@ -129,13 +167,12 @@ const DetailAddress = ({route}) => {
               placeholder="예. 01012341234"
               style={{paddingTop: 24}}
               value={withHyphenNumber(phoneNumber)}
-              onFocus={() => setShow(false)}
-              onBlur={() => setShow(true)}
+              keyboardType="numeric"
             />
           </FormProvider>
         </InputWrap>
       </KeyboardAwareScrollView>
-      {show && !keyboardStatus.isKeyboardActivate && (
+      {!keyboardStatus.isKeyboardActivate && (
         <ButtonWrap>
           <Button
             label="주소 저장"

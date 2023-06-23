@@ -12,12 +12,12 @@ import {SCREEN_NAME as RegisterCardScreenName} from '~screens/Main/RegisterCard'
 
 import {MembershipIconImage} from '../../../../assets';
 import useMembership from '../../../../biz/useMembership';
-import useUserInfo from '../../../../biz/useUserInfo';
 import useUserMe from '../../../../biz/useUserMe';
 import BottomModal from '../../../../components/BottomModal';
 import Check from '../../../../components/Check';
 import Form from '../../../../components/Form';
 import Image from '../../../../components/Image';
+import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import withCommas from '../../../../utils/withCommas';
 import {PAGE_NAME as MembershipJoinComplatePageName} from '../MembershipJoinComplate';
 import {PAGE_NAME as MemebershipPaymentManagePageName} from '../MemebershipPaymentManage';
@@ -34,7 +34,9 @@ const Pages = ({route}) => {
     new Animated.Value(period === 'month' ? 86 : 108),
   ).current;
   const membershipProduct = useMembership();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const rotateAnim = useRef(new Animated.Value(1)).current;
   const themeApp = useTheme();
   const {getMembershipType, membershipJoin} = useMembership();

@@ -1,9 +1,10 @@
 import React, {useCallback, useRef} from 'react';
 import {Animated} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 import UpArrowIcon from '../../assets/icons/Balloon/BalloonUpArrow.svg';
-import DownArrowIcon from '../../assets/icons/Spot/arrowDown.svg';
+import DownArrowIcon from '../../assets/icons/Spot/BalloonDownArrow.svg';
 import Typography from '../Typography';
 
 /** 예시 */
@@ -48,6 +49,7 @@ const Component = () => {
       }),
     ]).start();
   }, [fadeBalloon]);
+
   const balloonEventNotOut = useCallback(() => {
     Animated.sequence([
       Animated.timing(fadeBalloon, {
@@ -113,7 +115,7 @@ const Component = () => {
 export default Component;
 
 const Wrapper = styled(Animated.View)`
-  position: relative;
+  position: absolute;
   align-items: center;
   ${({location}) => {
     let retSpot = location?.top ? `top :${location.top}; ` : '';
@@ -124,8 +126,9 @@ const Wrapper = styled(Animated.View)`
     return retSpot;
   }}
 `;
+
 const Container = styled.View`
-  position: absolute;
+  position: relative;
   flex-direction: row;
   align-items: center;
   padding: ${({size}) => (size === 'B' ? '3.5px 12px' : '3.5px 12px')};

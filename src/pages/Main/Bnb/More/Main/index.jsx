@@ -27,7 +27,7 @@ import {
   redeemablePointsAtom,
   totalReviewWaitListAtom,
 } from '../../../../../biz/useReview/useReviewWait/store';
-import useUserInfo from '../../../../../biz/useUserInfo';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
 import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
 import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
@@ -81,7 +81,9 @@ const Pages = () => {
 
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
-  const {isUserInfo, userInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const getData = async () => {
     await userMe();
     await userMePersonal();

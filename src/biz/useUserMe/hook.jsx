@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import {Alert} from 'react-native';
+import {useQueryClient} from 'react-query';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
 
 import * as Fetch from './Fetch';
@@ -31,6 +32,7 @@ import {
 } from './store';
 
 const useUserMe = () => {
+  const queryClient = useQueryClient();
   const [myInfo, setMyInfo] = useAtom(isMyInfoAtom);
   const [myInfoPerson, setMyInfoPerson] = useAtom(isMyInfoPersonAtom);
   const [isConnected, setConnected] = useAtom(isSNSConnectAtom);
@@ -183,6 +185,7 @@ const useUserMe = () => {
       //         "isOrderAlarmAgree": res.data.orderAlarm,
       //     }
       // );
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -201,6 +204,7 @@ const useUserMe = () => {
       //     isMarketingAlarmAgree: res.data.marketingAlarm,
       //     isOrderAlarmAgree: res.data.orderAlarm,
       //   });
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -218,6 +222,7 @@ const useUserMe = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -229,6 +234,7 @@ const useUserMe = () => {
   const payCheckPassword = async (body, option = {}) => {
     try {
       const res = await Fetch.payCheckPassword();
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -237,6 +243,7 @@ const useUserMe = () => {
   const payCheckEmail = async (body, option = {}) => {
     try {
       const res = await Fetch.payCheckEmail();
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -251,6 +258,7 @@ const useUserMe = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -267,6 +275,7 @@ const useUserMe = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -283,6 +292,7 @@ const useUserMe = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -298,6 +308,7 @@ const useUserMe = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -311,6 +322,7 @@ const useUserMe = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;

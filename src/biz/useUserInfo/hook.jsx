@@ -22,8 +22,6 @@ const useUserInfo = () => {
       setUserInfo();
       setUserInfoLoading(true);
       const res = await Fetch.userInfomation();
-
-      // console.log(res.data);
       setUserInfo(res.data);
       queryClient.invalidateQueries('dailyfood');
       return res.data;

@@ -7,15 +7,17 @@ import styled from 'styled-components';
 import CloseIcon from '../../../../../assets/icons/BuyMeal/close.svg';
 import AIicon from '../../../../../assets/icons/BuyMeal/modalAI.svg';
 import XIcon from '../../../../../assets/icons/BuyMeal/modalX.svg';
-import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import Typography from '../../../../../components/Typography';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedDate} from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 
 const Modal = ({hideModal, setHideModal}) => {
   const navigation = useNavigation();
-  const isUserInfo = useAtomValue(isUserInfoAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   // const [hideModal, setHideModal] = useState(true);
 
   const today = new Date();

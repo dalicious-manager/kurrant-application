@@ -11,11 +11,9 @@ import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 
 import {BespinMembershipImage} from '../../../assets';
-import useGroupSpots from '../../../biz/useGroupSpots';
 import useMembership from '../../../biz/useMembership';
-import useUserInfo from '../../../biz/useUserInfo';
 import Button from '../../../components/Button';
-import Images from '../../../components/Image';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {PAGE_NAME as MembershipJoinPageName} from '../MembershipJoin';
 
 export const PAGE_NAME = 'P__MEMBERSHIP__INTRO';
@@ -25,7 +23,10 @@ const Pages = ({route}) => {
   const [height, setHeight] = useState(0);
   const [isImageLoading, setImageLoading] = useState(false);
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
-  const {isUserInfo, isUserInfoLoading} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+    isLoading: isUserInfoLoading,
+  } = useGetUserInfo();
   const {
     getMembershipHistory,
     readableAtom: {membershipHistory},
