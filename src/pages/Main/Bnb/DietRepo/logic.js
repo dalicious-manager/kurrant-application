@@ -1,4 +1,7 @@
-import {toStringByFormatting} from '../../../../utils/dateFormatter';
+import {
+  stringDateToJavascriptDate,
+  toStringByFormatting,
+} from '../../../../utils/dateFormatter';
 
 const sampleData = [
   {
@@ -146,17 +149,39 @@ export const extractMonthAndDateFromDate2 = (date, seperator) => {
 
 export const calcWeekArr = date => {
   let yo = [];
-  const day = date.getDay();
 
-  for (let i = 0; i < 7; i++) {
-    const nextDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() - day + i + 1,
-    );
+  const dateYo = stringDateToJavascriptDate(toStringByFormatting(date), '-');
 
-    // yo.push(toStringByFormatting(nextDate));
-    yo.push(nextDate);
+  const day = dateYo.getDay();
+
+  // 일요일은 0
+  // 월요일은 1
+
+  // const day = date.getDay();
+
+  if (day === 0) {
+    for (let i = 0; i < 7; i++) {
+      const nextDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate() - day + i - 6,
+      );
+
+      // yo.push(toStringByFormatting(nextDate));
+      yo.push(nextDate);
+    }
+    return yo;
+  } else {
+    for (let i = 0; i < 7; i++) {
+      const nextDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate() - day + i + 1,
+      );
+
+      // yo.push(toStringByFormatting(nextDate));
+      yo.push(nextDate);
+    }
+    return yo;
   }
-  return yo;
 };
