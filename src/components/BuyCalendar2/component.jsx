@@ -147,7 +147,8 @@ const Component = ({
                     //   return day.getDate();
                     // }
                     if (day.getDate() === 1) {
-                      return day.getMonth() + '.' + day.getDate();
+                      // console.log(day.getMonth(), 'month');
+                      return day.getMonth() + 1 + '.' + day.getDate();
                     }
                     // if(Platform.OS === 'android')
                     return day.getDate();
