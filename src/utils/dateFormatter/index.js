@@ -330,3 +330,37 @@ export const calcTimeBetweenTwoDates = (date1, date2) => {
 
   return difference / (1000 * 60 * 60 * 24);
 };
+
+export const getDayOfTheSameWeekOfADay = (date, dayNum) => {
+  const dayOfDate = date.getDay();
+  // 해당
+  // 해당 몇요일인가 구하기
+  const result = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() - dayOfDate + dayNum,
+  );
+
+  return result;
+};
+
+export const calculateHowManyWeeksBetweenTwoDates = (startDate, endDate) => {
+  // startDate -> 그 주의 금요일
+
+  const startDate1 = getDayOfTheSameWeekOfADay(startDate, 5);
+
+  // endDate -> 그 주의 토요일
+  const endDate1 = getDayOfTheSameWeekOfADay(endDate, 6);
+
+  const startMillis = startDate1.getTime();
+  const endMillis = endDate1.getTime();
+
+  // Calculate the difference in milliseconds between the two dates
+  const diffMillis = Math.abs(endMillis - startMillis);
+
+  // Calculate the number of weeks
+  const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+  const weeks = Math.ceil(diffMillis / millisecondsPerWeek);
+
+  return weeks;
+};

@@ -1,32 +1,26 @@
+// 그냥 날짜 리미트 걸기
 /* eslint-disable react-hooks/rules-of-hooks */
-import {useNavigation} from '@react-navigation/native';
+
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
-import {useAtom, useAtomValue} from 'jotai';
-import React, {useEffect, useRef, useState} from 'react';
-import {Platform, View} from 'react-native';
+import {useAtomValue} from 'jotai';
+import React, {useRef, useState} from 'react';
+import {View} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {useTheme} from 'styled-components';
 import styled, {css} from 'styled-components/native';
 
 // import {getFontStyle} from './style';
-import {weekAtom, weekServiceAtom} from '~biz/useBanner/store';
-import {calculateSelectDatePosition} from '~biz/useDailyFood/logic';
+import {weekAtom} from '~biz/useBanner/store';
+
 import {useGetOrderMeal} from '~hook/useOrder';
 
 import {formattedDate, formattedWeekDate} from '~utils/dateFormatter';
 import Button from '~components/CalendarButton';
 import Typography from '~components/Typography';
 
-import {
-  calcDate,
-  stringDateToJavascriptDate,
-} from '../../../../../utils/dateFormatter';
 import {getFontStyle} from '../../../../../components/BuyCalendar2/style';
-import {
-  makeDietRepoCalendarDateArr,
-  makeDietRepoCalendarDateArr7,
-} from './logic';
+import {makeUltimateDietRepoCalendar} from './logic';
 
 /**
  *
@@ -37,16 +31,15 @@ import {
  * @returns
  */
 
-const DietRepoCalendarNew = ({
+const DietRepoCalendar2 = ({
   initialDate,
   BooleanValue,
   type = 'grey7',
   color = 'grey2',
   size = 'Body06R',
-  disableTemporarly,
+
   onPressEvent2,
 
-  onPageScroll2,
   selectDate,
 
   pagerRef,
@@ -67,7 +60,7 @@ const DietRepoCalendarNew = ({
   );
   const [currentPress, setCurrentPress] = useState(selectDate);
   const [chk, setChk] = useState(0);
-  const [calendarDate, setCalendarDate] = useState(new Date());
+  //   const [calendarDate, setCalendarDate] = useState(new Date());
 
   const morningServiceDays = isServiceDays?.morningServiceDays;
   const lunchServiceDays = isServiceDays?.lunchServiceDays;
@@ -77,66 +70,18 @@ const DietRepoCalendarNew = ({
     setCurrentPress(day);
   };
 
-  ///// 여기부터 재신 코드
-  const [isMount, setIsMount] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      /// initialDate 가 존재할 경우
-
-      if (initialDate) {
-        // console.log('이니셜데이트 ok');
-        // console.log(initialDate);
-        // console.log(stringDateToJavascriptDate(initialDate, '-'));
-        setCalendarDate(stringDateToJavascriptDate(initialDate, '-'));
-        setCurrentPress(initialDate);
-      } else {
-        console.log('이니셜데이트 없음');
-      }
-
-      pager.current.setPage(3);
-      setChk(3);
-      setIsMount(false);
-    }, 100);
-  }, []);
-
   return (
     <React.Fragment>
       {BooleanValue ? <Button pager={pager} daily chk={chk} /> : <></>}
 
       <PagerViewWrap
         ref={pager}
-        initialPage={3}
+        initialPage={makeUltimateDietRepoCalendar().length - 2}
         pageMargin={22}
-        onPageScroll={e => {
-          //   if (onPageScroll2) onPageScroll2(e);
-          //   onPageScroll(e);
-        }}
-        onPageSelected={e => {
-          const {position} = e.nativeEvent;
-          // console.log('스크롤 중임 ' + position);
-
-          // 뒤로 가기 , 앞으로 가기
-
-          if (isMount) return false;
-
-          if (chk > position) {
-            //뒤로가기
-
-            setCalendarDate(calcDate(-7, calendarDate));
-            pager.current.setPageWithoutAnimation(3);
-            setChk(3);
-          } else if (chk < position) {
-            // 앞으로 가기
-
-            setCalendarDate(calcDate(7, calendarDate));
-            pager.current.setPageWithoutAnimation(3);
-            setChk(3);
-          } else {
-          }
-        }}
+        onPageScroll={e => {}}
+        onPageSelected={e => {}}
         margins={margin}>
-        {[...makeDietRepoCalendarDateArr7(calendarDate)].map((week, i) => {
+        {[...makeUltimateDietRepoCalendar()].map((week, i) => {
           return (
             <View key={i}>
               <Wrap>
@@ -276,7 +221,7 @@ const DietRepoCalendarNew = ({
   );
 };
 
-export default DietRepoCalendarNew;
+export default DietRepoCalendar2;
 
 const PagerViewWrap = styled(PagerView)`
   flex: 1;

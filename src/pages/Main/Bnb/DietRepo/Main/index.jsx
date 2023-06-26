@@ -33,6 +33,7 @@ import LoadingScreen from '~components/LoadingScreen';
 import DietRepoCalendarNew from '../DietRepoCalendar/DietRepoCalendarNew';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import useDietRepoMutation from '../useDietRepoMutation';
+import DietRepoCalendar2 from '../DietRepoCalendar/DietRepoCalendar2';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -128,6 +129,9 @@ const Pages = ({route}) => {
             sliderValue={sliderValue}
             isServiceDays={isServiceDays}
           />
+
+          {/* <DietRepoCalendar2
+            /> */}
         </CalendarWrap>
 
         <FlatList
