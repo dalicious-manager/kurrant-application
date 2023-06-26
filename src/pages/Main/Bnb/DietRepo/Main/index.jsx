@@ -113,7 +113,24 @@ const Pages = ({route}) => {
     <>
       <Container>
         <CalendarWrap>
-          <DietRepoCalendarNew
+          {/* <DietRepoCalendarNew
+            initialDate={route?.params?.date}
+            BooleanValue={false}
+            type={'grey2'}
+            color={'white'}
+            size={'Body05R'}
+            onPressEvent2={dayPress}
+            // daily={daily}
+            selectDate={formattedWeekDate(date)}
+            margin={'0px 28px'}
+            scrollDir
+            pagerRef={pager}
+            // onPageScroll2={onPageScroll2}
+            sliderValue={sliderValue}
+            isServiceDays={isServiceDays}
+          /> */}
+
+          <DietRepoCalendar2
             initialDate={route?.params?.date}
             BooleanValue={false}
             type={'grey2'}
@@ -129,9 +146,6 @@ const Pages = ({route}) => {
             sliderValue={sliderValue}
             isServiceDays={isServiceDays}
           />
-
-          {/* <DietRepoCalendar2
-            /> */}
         </CalendarWrap>
 
         <FlatList
