@@ -94,7 +94,7 @@ const Pages = ({route}) => {
   // 특정기간 주문내역 래포트로 저장
 
   useEffect(() => {
-    // saveMeal();
+    saveMeal();
   }, []);
 
   return (
