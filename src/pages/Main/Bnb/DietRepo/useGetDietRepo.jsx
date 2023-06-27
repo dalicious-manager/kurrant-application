@@ -21,10 +21,10 @@ const useGetDietRepo = (
     // isLoading: isDietRepoMainRefetchLoading,
     isFetching: isDietRepoMainRefetchLoading,
   } = useQuery(
-    ['dietRepo', 'main'],
+    ['dietRepo', 'main', mainDate],
     async ({queryKey}) => {
       const response = await fetchJson(
-        `/users/me/daily/report?date=${mainDate}`,
+        `/users/me/daily/report?date=${queryKey[2]}`,
         'GET',
       );
 
@@ -63,16 +63,21 @@ const useGetDietRepo = (
     ['dietRepo', 'history', historyStartDate, historyEndDate],
     async ({queryKey}) => {
       const response = await fetchJson(
-        `/users/me/daily/report/history?startDate=${historyStartDate}&endDate=${historyEndDate}`,
+        // `/users/me/daily/report/history?startDate=${historyStartDate}&endDate=${historyEndDate}`,
+        `/users/me/daily/report/history?startDate=${queryKey[2]}&endDate=${queryKey[3]}`,
         'GET',
       );
+      console.log('로로로ㅗㄹ로로ㅗ');
+      console.log(!!historyStartDate && !!historyEndDate);
+      console.log(response.data?.dailyReportList);
 
       setHistoryDataList(
         response.data?.dailyReportList ? response.data?.dailyReportList : [],
       );
     },
     {
-      enabled: !!historyStartDate && !!historyEndDate,
+      // enabled: !!historyStartDate && !!historyEndDate,
+      enabled: true,
     },
   );
 

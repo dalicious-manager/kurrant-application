@@ -36,6 +36,22 @@ const Pages = ({route}) => {
       ? calcWeekArr(stringDateToJavascriptDate(route?.params?.date, '-'))
       : calcWeekArr(new Date()),
   );
+
+  useEffect(() => {
+    console.log('콜콜콜');
+    console.log(toStringByFormatting(week[0]));
+  }, [toStringByFormatting(week[0])]);
+  useEffect(() => {
+    console.log('콜콜콜');
+    console.log(toStringByFormatting(week[6]));
+  }, [toStringByFormatting(week[6])]);
+  useEffect(() => {
+    console.log('콜콜콜3');
+    console.log(
+      !!toStringByFormatting(week[6]) && !!toStringByFormatting(week[0]),
+    );
+  }, [toStringByFormatting(week[6]), toStringByFormatting(week[0])]);
+
   const {historyDataList} = useGetDietRepo(
     undefined,
     undefined,
@@ -54,6 +70,11 @@ const Pages = ({route}) => {
   // 일요일 자바스크립트 date객체]
 
   // params에 date가 들어갈때 그 일주일을 계산하기
+
+  // useEffect(() => {
+  //   console.log('historyDataList 라라라라');
+  //   console.log(historyDataList);
+  // }, [historyDataList]);
 
   return (
     <ContainerScrollView

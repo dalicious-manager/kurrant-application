@@ -85,13 +85,6 @@ const Pages = ({route}) => {
     setDate(stringDateToJavascriptDate(selectedDate, '-'));
   };
 
-  // 이거 서버에서 받아와야됨 useFoodDaily()에서 isServiceDays값 확인 할 수 잇음
-  // const isServiceDays = {
-  //   dinnerServiceDays: null,
-  //   lunchServiceDays: ['월', '화', '수', '목', '금'],
-  //   morningServiceDays: ['월', '화', '수', '목', '금'],
-  // };
-
   const handleHistoryPress = () => {
     navigation.navigate(DietRepoHistoryPageName, {
       date: formattedWeekDate(date),
