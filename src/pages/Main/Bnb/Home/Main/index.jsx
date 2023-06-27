@@ -61,6 +61,7 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {BowlIcon} from '~components/Icon';
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
@@ -98,6 +99,16 @@ const Pages = () => {
   } = useGroupSpots();
 
   const [coinSound, setCoinSound] = useState(null);
+
+  const {
+    totalNutrition: {totalCalorie},
+  } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
+
+  // useEffect(() => {
+  //   // console.log(totalNutrition)
+  //   console.log('totalNutrition' + totalNutrition);
+  //   console.log(totalNutrition);
+  // }, [totalNutrition]);
 
   const loadCoinSound = () => {
     const sound = new Sound(
@@ -738,7 +749,7 @@ const Pages = () => {
                 <DietRepoText>식단 리포트</DietRepoText>
               </Wrap1>
 
-              <CalText>오늘 1293 kcal</CalText>
+              <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText>
             </DietRepoPressable>
           </MainWrap>
         </Wrap>
