@@ -34,6 +34,7 @@ import DietRepoCalendarNew from '../DietRepoCalendar/DietRepoCalendarNew';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import useDietRepoMutation from '../useDietRepoMutation';
 import DietRepoCalendar2 from '../DietRepoCalendar/DietRepoCalendar2';
+import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -46,7 +47,12 @@ const Pages = ({route}) => {
 
   // 유저정보에서 현재 스팟 가져오기
   const userInfo = useAtomValue(isUserInfoAtom);
-  const spotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
+  const userSpotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
+
+  const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
+    userSpotId,
+    formattedWeekDate(new Date()),
+  );
 
   // 달력 관련
 
@@ -80,11 +86,11 @@ const Pages = ({route}) => {
   };
 
   // 이거 서버에서 받아와야됨 useFoodDaily()에서 isServiceDays값 확인 할 수 잇음
-  const isServiceDays = {
-    dinnerServiceDays: null,
-    lunchServiceDays: ['월', '화', '수', '목', '금'],
-    morningServiceDays: ['월', '화', '수', '목', '금'],
-  };
+  // const isServiceDays = {
+  //   dinnerServiceDays: null,
+  //   lunchServiceDays: ['월', '화', '수', '목', '금'],
+  //   morningServiceDays: ['월', '화', '수', '목', '금'],
+  // };
 
   const handleHistoryPress = () => {
     navigation.navigate(DietRepoHistoryPageName, {
@@ -97,17 +103,6 @@ const Pages = ({route}) => {
   useEffect(() => {
     saveMeal();
   }, []);
-
-  // const getUserId = async () => {
-  //   const userId = await getStorage('userId');
-
-  //   return userId;
-  // };
-
-  // useEffect(() => {
-  //   console.log('랄랄라');
-  //   console.log(getUserId());
-  // }, []);
 
   return (
     <>
@@ -144,7 +139,8 @@ const Pages = ({route}) => {
             pagerRef={pager}
             // onPageScroll2={onPageScroll2}
             sliderValue={sliderValue}
-            isServiceDays={isServiceDays}
+            // isServiceDays={isServiceDays}
+            isServiceDays={dailyfoodData?.data?.serviceDays}
           />
         </CalendarWrap>
 

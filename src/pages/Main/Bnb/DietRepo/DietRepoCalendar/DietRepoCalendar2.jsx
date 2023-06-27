@@ -113,20 +113,14 @@ const DietRepoCalendar2 = ({
                     dinnerServiceDays?.includes(txt);
 
                   const events = () => {
-                    // console.log('날짜 누름');
-                    // console.log(day);
-                    // console.log(propsDay);
                     selectedPress(day);
                     onPressEvent2(propsDay);
                   };
                   const getDates = () => {
-                    // if (day.getDate().toString().length > 1) {
-                    //   return day.getDate();
-                    // }
                     if (day.getDate() === 1) {
                       return day.getMonth() + 1 + '.' + day.getDate();
                     }
-                    // if(Platform.OS === 'android')
+
                     return day.getDate();
                   };
                   return (

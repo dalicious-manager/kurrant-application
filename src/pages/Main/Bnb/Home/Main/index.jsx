@@ -244,9 +244,9 @@ const Pages = () => {
   //   removeItemFromStorage('announcementsClickedOneDate');
   // }, []);
 
-  useEffect(() => {
-    navigation.navigate(DietRepoMainPageName);
-  }, []);
+  // useEffect(() => {
+  //   navigation.navigate(DietRepoMainPageName);
+  // }, []);
 
   // 로컬스토리지 확인하기
 
