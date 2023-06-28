@@ -15,9 +15,6 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'SPOT_GUIDE_PAGE';
 const SpotGuide = () => {
   const navigation = useNavigation();
-  // const {isUserGroupSpotCheck} = useGroupSpots();
-  const {data: isUserGroupSpotCheck} = useGroupSpotList();
-  const {data: privateSpotList} = useGetPrivateSpot();
 
   const goToPage = () => {
     navigation.navigate(SpotTypePage);

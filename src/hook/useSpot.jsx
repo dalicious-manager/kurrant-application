@@ -1,10 +1,22 @@
+import {Alert} from 'react-native';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 
 import {spotApis} from '../api/spot';
 
 // 마이스팟 신청
 export function useApplyMySpot() {
-  return useMutation(data => spotApis.applyMySpot(data));
+  return useMutation(data => spotApis.applyMySpot(data), {
+    onError: err => {
+      Alert.alert('', err?.toString()?.replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
+      console.log(err, 'err');
+    },
+  });
 }
 
 // 마이스팟 신청 내역 삭제
@@ -17,8 +29,25 @@ export function useSettingAlarmMySpot() {
   return useMutation(data => spotApis.alarmSettingMySpot(data));
 }
 
+export function useGetPrivateSpots() {
+  return useQuery('groupSpotLists', () => {
+    return spotApis.groupSpotList();
+  });
+}
+
 export function useGroupSpotList() {
   return useQuery('groupSpotList', () => {
     return spotApis.groupSpotList();
   });
+}
+export function useGroupSpotDetail(id) {
+  return useQuery(
+    'groupSpotDetail',
+    () => {
+      return spotApis.groupSpotDetail(id);
+    },
+    {
+      enabled: false,
+    },
+  );
 }

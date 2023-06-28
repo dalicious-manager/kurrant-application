@@ -70,7 +70,7 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
-
+  console.log(isFoodDetailLoading, 'oo');
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();

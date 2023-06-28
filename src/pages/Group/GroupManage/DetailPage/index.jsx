@@ -13,7 +13,7 @@ import Button from '../../../../components/Button';
 import TextButton from '../../../../components/TextButton';
 import Toast from '../../../../components/Toast';
 import Typography from '../../../../components/Typography';
-import {useGroupSpotList} from '../../../../hook/useSpot';
+import {useGroupSpotDetail, useGroupSpotList} from '../../../../hook/useSpot';
 import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {setStorage} from '../../../../utils/asyncStorage';
@@ -30,14 +30,16 @@ const Pages = ({route}) => {
   const from = route?.params?.from;
   const navigation = useNavigation();
   const {
-    groupSpotDetail,
+    // groupSpotDetail,
     isDetailSpot,
     userGroupSpotCheck,
     // isUserGroupSpotCheck,
     userWithdrawGroup,
     userSpotRegister,
   } = useGroupSpots();
-  const {data: isUserGroupSpotCheck} = useGroupSpotList();
+  const {data: isUserGroupSpotCheck, refetch: groupRefetch} =
+    useGroupSpotList();
+
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
@@ -47,23 +49,24 @@ const Pages = ({route}) => {
   const modalOpen = () => {
     setModalVisible(true);
   };
-  const supportPrice = isDetailSpot?.mealTypeInfoList?.map(
-    el => el.supportPrice,
-  );
 
   const groupId = isUserInfo?.groupId;
   const spotId = isUserInfo?.spotId;
   const spotType = isUserInfo?.spotType;
-
+  const {data: userGroupSpotDetail, refetch: detailRefetch} =
+    useGroupSpotDetail(spotId);
+  const supportPrice = userGroupSpotDetail?.data?.mealTypeInfoList?.map(
+    el => el.supportPrice,
+  );
   const myGroupList =
     isUserGroupSpotCheck?.data?.spotListResponseDtoList?.filter(
       el => el.clientId !== groupId,
     );
 
-  const cutName = isDetailSpot?.address?.includes(null);
+  const cutName = userGroupSpotDetail?.data?.address?.includes(null);
   const useName = cutName
-    ? isDetailSpot?.address?.split('null')[0]
-    : isDetailSpot?.address;
+    ? userGroupSpotDetail?.data?.address?.split('null')[0]
+    : userGroupSpotDetail?.data?.address;
 
   const anotherSpot = async id => {
     try {
@@ -72,7 +75,6 @@ const Pages = ({route}) => {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         toast.toastEvent();
-        await groupSpotDetail(id);
       }
     } catch (error) {
       Alert.alert('유저 스팟 가입', error?.toString()?.replace('error: ', ''));
@@ -97,7 +99,7 @@ const Pages = ({route}) => {
                 id: groupId,
               });
               await setStorage('spotStatus', res.data.toString());
-              // await userGroupSpotCheck();
+
               if (myGroupList.length === 0) {
                 navigation.navigate(SpotTypePage);
               } else {
@@ -134,25 +136,16 @@ const Pages = ({route}) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    async function LoadGroupDetail() {
-      try {
-        await groupSpotDetail(spotId);
-        await userGroupSpotCheck();
-      } catch (err) {
-        // Alert.alert('상세 그룹 정보', err?.toString()?.replace('error: ', ''));
-      }
-    }
-    if (spotId) LoadGroupDetail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [spotId]);
 
   useEffect(() => {
     if (from === 'shareSpotMap') {
       setModalVisible(true);
     }
   }, [from]);
-
+  useEffect(() => {
+    console.log(userGroupSpotDetail);
+    if (spotId) detailRefetch();
+  }, [detailRefetch, spotId]);
   return (
     // <SafeView>
     <Wrap>
@@ -160,7 +153,9 @@ const Pages = ({route}) => {
         <SpotSelect>스팟 선택</SpotSelect>
       </TitleWrap>
       <SpotView onPress={modalOpen}>
-        <SpotName>{isDetailSpot?.spotName}</SpotName>
+        <SpotName>
+          {userGroupSpotDetail?.data?.spotName || '스팟을 선택해 주세요'}
+        </SpotName>
         <Arrow />
       </SpotView>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -185,7 +180,7 @@ const Pages = ({route}) => {
           )} */}
           <TextView>
             <Title>멤버십 할인 마감 / 주문 마감 / 배송 시간</Title>
-            {isDetailSpot?.mealTypeInfoList?.map((el, idx) => {
+            {userGroupSpotDetail?.data?.mealTypeInfoList?.map((el, idx) => {
               const diningType =
                 el.diningType === 1
                   ? '아침'
@@ -203,7 +198,7 @@ const Pages = ({route}) => {
           {supportPrice?.[0] !== null && (
             <TextView>
               <Title>식사 지원금</Title>
-              {isDetailSpot?.mealTypeInfoList?.map((el, idx) => {
+              {userGroupSpotDetail?.data?.mealTypeInfoList?.map((el, idx) => {
                 const diningType =
                   el.diningType === 1
                     ? '아침'
@@ -220,17 +215,19 @@ const Pages = ({route}) => {
           )}
           <TextView>
             <Title>스팟명</Title>
-            <ContentText>{isDetailSpot?.clientName}</ContentText>
-            <Withdraw>
-              <TextButton
-                size="label13R"
-                type="grey5"
-                label="스팟 탈퇴"
-                onPressEvent={() => {
-                  withdrawPress();
-                }}
-              />
-            </Withdraw>
+            <ContentText>{userGroupSpotDetail?.data?.clientName}</ContentText>
+            {userGroupSpotDetail?.data && (
+              <Withdraw>
+                <TextButton
+                  size="label13R"
+                  type="grey5"
+                  label="스팟 탈퇴"
+                  onPressEvent={() => {
+                    withdrawPress();
+                  }}
+                />
+              </Withdraw>
+            )}
           </TextView>
         </ContentView>
       </ScrollView>

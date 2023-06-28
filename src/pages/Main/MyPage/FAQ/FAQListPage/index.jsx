@@ -27,7 +27,7 @@ const Pages = ({route}) => {
     });
   }, [navigation]);
 
-  console.log(list);
+  // console.log(list);
   return (
     <Wrapper paddingTop={13}>
       <TitleBox>

@@ -30,13 +30,13 @@ const ApplySpot = ({route}) => {
   const name = route?.params?.name;
   const id = route?.params?.groupId;
   const from = route?.params?.from;
-  console.log(center);
+  console.log(center, '신규스팟 좌표');
   const [use, setUse] = useState();
   const [show, setShow] = useState(false);
   const [time, setTime] = useState(new Date());
   const [text, setText] = useState('');
   const {mutateAsync: applyShareSpot} = useApplyShareSpot();
-  console.log(type, 'dodo');
+
   const form = useForm({
     mode: 'all',
   });
@@ -72,7 +72,9 @@ const ApplySpot = ({route}) => {
 
   const checkMapLocation = () => {
     if (type === 'registerSpot') {
-      navigation.navigate(RegisterSpotMapPage);
+      navigation.navigate(RegisterSpotMapPage, {
+        center: center,
+      });
     } else {
       navigation.navigate(ShareSpotMapPage, {
         location: center,

@@ -59,6 +59,7 @@ const BottomSheetSpot = props => {
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
+  const [parentHeight, setParentHeight] = useState(0);
 
   const resetBottomSheet = Animated.timing(panY, {
     toValue: 0,
@@ -88,6 +89,11 @@ const BottomSheetSpot = props => {
     closeBottomSheet.start(() => {
       setModalVisible(false);
     });
+  };
+
+  const onLayout = event => {
+    const {height} = event.nativeEvent.layout;
+    setParentHeight(height);
   };
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
@@ -143,7 +149,7 @@ const BottomSheetSpot = props => {
                 }
               }}
               renderItem={({item}) => (
-                <>
+                <View onLayout={onLayout}>
                   <ItemContainer>
                     <GroupView>
                       <View style={{marginRight: 8}}>
@@ -209,7 +215,7 @@ const BottomSheetSpot = props => {
                       </ContentItemContainer>
                     );
                   })}
-                </>
+                </View>
               )}
               // keyExtractor={item => item.clientId.toString()}
             />
