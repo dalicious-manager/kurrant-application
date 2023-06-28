@@ -73,23 +73,31 @@ const useSse = () => {
             switch (messageType) {
               case 1:
                 // type: 1 전체공지
+                console.log('type: 1 전체공지 Sse 확인');
+                console.log({...JSON.parse(message)});
                 setSseType1({...JSON.parse(message)});
                 break;
               case 2:
                 // type: 2 스팟공지
+                console.log('type: 2 스팟공지 Sse 확인');
+                console.log({...JSON.parse(message)});
                 setSseType2({...JSON.parse(message)});
                 break;
               case 3:
                 // type: 3 구매후기
+                console.log('type: 3 구매후기 Sse 확인');
+                console.log({...JSON.parse(message)});
                 setSseType3({...JSON.parse(message)});
                 break;
               case 4:
                 // type: 4 마감시간
+                console.log('type: 4 마감시간 Sse 확인');
+                console.log({...JSON.parse(message)});
                 setSseType4({...JSON.parse(message)});
                 break;
               case 5:
                 // type: 5 다음주 식사 구매하셨나요?
-                console.log('message type 5');
+                console.log('type: 5 다음주 식사 구매하셨나요? Sse 확인');
                 console.log({...JSON.parse(message)});
                 setSseType5({...JSON.parse(message)});
                 break;
