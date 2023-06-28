@@ -5,6 +5,7 @@ import styled, {css} from 'styled-components';
 import {
   formattedWeekDate,
   stringDateToJavascriptDate,
+  toStringByFormatting,
 } from '../../../../../utils/dateFormatter';
 
 import Typography from '~components/Typography';
@@ -78,10 +79,13 @@ const Pages = ({route}) => {
 
   useEffect(() => {
     dietRepoMainRefetch();
+    // 여기에 특정기간 주문내역 리포트
+    saveMeal(toStringByFormatting(date));
   }, [date]);
 
   const dayPress = selectedDate => {
     setDate(stringDateToJavascriptDate(selectedDate, '-'));
+    // saveMeal();
   };
 
   const handleHistoryPress = () => {
@@ -91,10 +95,6 @@ const Pages = ({route}) => {
   };
 
   // 특정기간 주문내역 래포트로 저장
-
-  useEffect(() => {
-    saveMeal();
-  }, []);
 
   return (
     <>
@@ -126,7 +126,6 @@ const Pages = ({route}) => {
             onPressEvent2={dayPress}
             selectDate={formattedWeekDate(date)}
             margin={'0px 28px'}
-            scrollDir
             pagerRef={pager}
             sliderValue={sliderValue}
             isServiceDays={dailyfoodData?.data?.serviceDays}
