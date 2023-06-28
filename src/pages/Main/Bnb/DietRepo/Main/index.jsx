@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, Platform} from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled, {css} from 'styled-components';
@@ -35,6 +35,7 @@ import LoadingScreen from '~components/LoadingScreen';
 import useDietRepoMutation from '../useDietRepoMutation';
 import DietRepoCalendar2 from '../DietRepoCalendar/DietRepoCalendar2';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -53,6 +54,17 @@ const Pages = ({route}) => {
     userSpotId,
     formattedWeekDate(new Date()),
   );
+
+  const getToken = useCallback(async () => {
+    const token = await getStorage('token');
+
+    let tokenBox;
+    if (token) {
+      tokenBox = JSON.parse(token);
+    }
+
+    return tokenBox?.accessToken;
+  }, []);
 
   // 달력 관련
 
@@ -80,7 +92,33 @@ const Pages = ({route}) => {
   useEffect(() => {
     dietRepoMainRefetch();
     // 여기에 특정기간 주문내역 리포트
-    saveMeal(toStringByFormatting(date));
+
+    const fetchYo = async date => {
+      if (
+        (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
+        toStringByFormatting(date)
+      ) {
+        console.log(
+          await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`),
+        );
+        console.log(`dietRepo_Date_${toStringByFormatting(date)} 이미 있구만`);
+      } else {
+        console.log(
+          await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`),
+        );
+        console.log(
+          `dietRepo_Date_${toStringByFormatting(date)} 없네요 새로 넣어줄게요`,
+        );
+        saveMeal(toStringByFormatting(date));
+        setStorage(
+          `dietRepo_Date_${toStringByFormatting(date)}`,
+          toStringByFormatting(date),
+        );
+      }
+    };
+    fetchYo(date);
+
+    // 여기에 date를 localstorage에 넣어서 반복해서 등록하지 않도록 하기
   }, [date]);
 
   const dayPress = selectedDate => {
