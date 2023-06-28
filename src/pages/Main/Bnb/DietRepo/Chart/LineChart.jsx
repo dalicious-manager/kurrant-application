@@ -105,10 +105,10 @@ const LineChart = ({
       </G>
     );
   };
-  useEffect(() => {
-    console.log('dotsCoordinateArr 랄라라');
-    console.log(dotsCoordinateArr);
-  }, [dotsCoordinateArr]);
+  // useEffect(() => {
+  //   console.log('dotsCoordinateArr 랄라라');
+  //   console.log(dotsCoordinateArr);
+  // }, [dotsCoordinateArr]);
 
   const ChartLine = ({x1, y1, x2, y2, i}) => {
     return (

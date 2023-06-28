@@ -67,17 +67,13 @@ const useGetDietRepo = (
         `/users/me/daily/report/history?startDate=${queryKey[2]}&endDate=${queryKey[3]}`,
         'GET',
       );
-      console.log('로로로ㅗㄹ로로ㅗ');
-      console.log(!!historyStartDate && !!historyEndDate);
-      console.log(response.data?.dailyReportList);
 
       setHistoryDataList(
         response.data?.dailyReportList ? response.data?.dailyReportList : [],
       );
     },
     {
-      // enabled: !!historyStartDate && !!historyEndDate,
-      enabled: true,
+      enabled: !!historyStartDate && !!historyEndDate,
     },
   );
 

@@ -37,20 +37,20 @@ const Pages = ({route}) => {
       : calcWeekArr(new Date()),
   );
 
-  useEffect(() => {
-    console.log('콜콜콜');
-    console.log(toStringByFormatting(week[0]));
-  }, [toStringByFormatting(week[0])]);
-  useEffect(() => {
-    console.log('콜콜콜');
-    console.log(toStringByFormatting(week[6]));
-  }, [toStringByFormatting(week[6])]);
-  useEffect(() => {
-    console.log('콜콜콜3');
-    console.log(
-      !!toStringByFormatting(week[6]) && !!toStringByFormatting(week[0]),
-    );
-  }, [toStringByFormatting(week[6]), toStringByFormatting(week[0])]);
+  // useEffect(() => {
+  //   console.log('콜콜콜');
+  //   console.log(toStringByFormatting(week[0]));
+  // }, [toStringByFormatting(week[0])]);
+  // useEffect(() => {
+  //   console.log('콜콜콜');
+  //   console.log(toStringByFormatting(week[6]));
+  // }, [toStringByFormatting(week[6])]);
+  // useEffect(() => {
+  //   console.log('콜콜콜3');
+  //   console.log(
+  //     !!toStringByFormatting(week[6]) && !!toStringByFormatting(week[0]),
+  //   );
+  // }, [toStringByFormatting(week[6]), toStringByFormatting(week[0])]);
 
   const {historyDataList} = useGetDietRepo(
     undefined,
