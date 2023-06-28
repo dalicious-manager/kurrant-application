@@ -56,7 +56,7 @@ export const sampleStackedBarData1 = [
   },
 ];
 
-export const modifyStackedBarData = inputData => {
+export const modifyDateFormatForStackedBarData = inputData => {
   return inputData.map(v => {
     return {
       x: `${extractMonthAndDateFromDate2(v.eatDate, '-')[1]}일`,
@@ -65,7 +65,7 @@ export const modifyStackedBarData = inputData => {
   });
 };
 
-export const modifyHistoryLineChartData = inputData =>
+export const modifyDateFormatAndValueForHistoryLineChartData = inputData =>
   inputData.map(v => {
     return {
       x: `${extractMonthAndDateFromDate2(v.eatDate, '-')[1]}일`,
@@ -75,7 +75,7 @@ export const modifyHistoryLineChartData = inputData =>
 
 // 서버 데이터랑, week 랑
 
-export const modifyHistoryList = (data, week) => {
+export const modifyEachHistoryListData = (data, week) => {
   // data가 없을 경우 week 날짜 입력
   if (!Array.isArray(data) || data.length <= 0) {
     return week.map(vWeek => {
@@ -88,8 +88,6 @@ export const modifyHistoryList = (data, week) => {
       };
     });
   } else {
-    // 일주일로 만들기
-
     let arr = [];
 
     week.map(vWeek => {

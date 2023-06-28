@@ -25,13 +25,12 @@ import {View} from 'react-native';
 import FlatListBanner from './Components/FlatListBanner';
 import DietRepoCard from './Components/DietRepoCard';
 import {ArrowRightBlue} from '../../../../../components/Icon';
-import DietRepoCalendar from '../DietRepoCalendar/DietRepoCalendar';
+
 import useGetDietRepo from '../useGetDietRepo';
 import {modifyDietRepoMainData} from '../logic';
 
 import LoadingScreen from '~components/LoadingScreen';
-import DietRepoCalendarNew from '../DietRepoCalendar/DietRepoCalendarNew';
-import {getStorage} from '../../../../../utils/asyncStorage';
+
 import useDietRepoMutation from '../useDietRepoMutation';
 import DietRepoCalendar2 from '../DietRepoCalendar/DietRepoCalendar2';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
@@ -61,7 +60,7 @@ const Pages = ({route}) => {
 
   const pager = useRef();
   // const fadeAnim = useRef(new Animated.Value(32)).current;
-  // const [chk, setChk] = useState(0);
+
   const [sliderValue, setSliderValue] = useState(1);
 
   const [date, setDate] = useState(
@@ -125,14 +124,11 @@ const Pages = ({route}) => {
             color={'white'}
             size={'Body05R'}
             onPressEvent2={dayPress}
-            // daily={daily}
             selectDate={formattedWeekDate(date)}
             margin={'0px 28px'}
             scrollDir
             pagerRef={pager}
-            // onPageScroll2={onPageScroll2}
             sliderValue={sliderValue}
-            // isServiceDays={isServiceDays}
             isServiceDays={dailyfoodData?.data?.serviceDays}
           />
         </CalendarWrap>
@@ -141,7 +137,6 @@ const Pages = ({route}) => {
           ListHeaderComponent={
             <View style={{paddingLeft: 24, paddingRight: 24}}>
               <FlatListBanner
-                // todayTotalCal={2200}
                 todayTotalCal={totalNutrition?.totalCalorie}
                 nutritionList={[
                   {
@@ -155,7 +150,6 @@ const Pages = ({route}) => {
             </View>
           }
           contentContainerStyle={{paddingBottom: 190}}
-          // data={FlatListSampleData}
           data={modifyDietRepoMainData(
             dietRepoMainList,
             formattedWeekDate(date),

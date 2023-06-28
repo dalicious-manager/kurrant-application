@@ -19,9 +19,9 @@ import {
 import {calcWeekArr, extractMonthAndDateFromDate2} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 import {
-  modifyHistoryList,
-  modifyHistoryLineChartData,
-  modifyStackedBarData,
+  modifyEachHistoryListData,
+  modifyDateFormatAndValueForHistoryLineChartData,
+  modifyDateFormatForStackedBarData,
   sampleStackedBarData1,
 } from './logic';
 import useGetDietRepo from '../useGetDietRepo';
@@ -36,21 +36,6 @@ const Pages = ({route}) => {
       ? calcWeekArr(stringDateToJavascriptDate(route?.params?.date, '-'))
       : calcWeekArr(new Date()),
   );
-
-  // useEffect(() => {
-  //   console.log('콜콜콜');
-  //   console.log(toStringByFormatting(week[0]));
-  // }, [toStringByFormatting(week[0])]);
-  // useEffect(() => {
-  //   console.log('콜콜콜');
-  //   console.log(toStringByFormatting(week[6]));
-  // }, [toStringByFormatting(week[6])]);
-  // useEffect(() => {
-  //   console.log('콜콜콜3');
-  //   console.log(
-  //     !!toStringByFormatting(week[6]) && !!toStringByFormatting(week[0]),
-  //   );
-  // }, [toStringByFormatting(week[6]), toStringByFormatting(week[0])]);
 
   const {historyDataList} = useGetDietRepo(
     undefined,
@@ -70,11 +55,6 @@ const Pages = ({route}) => {
   // 일요일 자바스크립트 date객체]
 
   // params에 date가 들어갈때 그 일주일을 계산하기
-
-  // useEffect(() => {
-  //   console.log('historyDataList 라라라라');
-  //   console.log(historyDataList);
-  // }, [historyDataList]);
 
   return (
     <ContainerScrollView
@@ -121,7 +101,9 @@ const Pages = ({route}) => {
         //   {x: '12월', carbohydrate: 520, protein: 75, fat: 0},
         // ]}
 
-        data={modifyStackedBarData(modifyHistoryList(historyDataList, week))}
+        data={modifyDateFormatForStackedBarData(
+          modifyEachHistoryListData(historyDataList, week),
+        )}
         dataOrder={['carbohydrate', 'protein', 'fat']}
         colorSetting={{
           carbohydrate: '#4F6FDF',
@@ -143,8 +125,8 @@ const Pages = ({route}) => {
         //   {x: '오늘', y: 2100},
         // ]}
 
-        data={modifyHistoryLineChartData(
-          modifyHistoryList(historyDataList, week),
+        data={modifyDateFormatAndValueForHistoryLineChartData(
+          modifyEachHistoryListData(historyDataList, week),
         )}
         title="칼로리"
         width={'100%'}
@@ -178,7 +160,6 @@ const Filler = styled.View`
 
 const DateSelectorWrap = styled.View`
   flex-direction: row;
-
   align-items: center;
 `;
 

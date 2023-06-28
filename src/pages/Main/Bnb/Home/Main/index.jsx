@@ -104,12 +104,6 @@ const Pages = () => {
     totalNutrition: {totalCalorie},
   } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
 
-  // useEffect(() => {
-  //   // console.log(totalNutrition)
-  //   console.log('totalNutrition' + totalNutrition);
-  //   console.log(totalNutrition);
-  // }, [totalNutrition]);
-
   const loadCoinSound = () => {
     const sound = new Sound(
       require('../../../../../assets/sounds/coin.wav'),
@@ -230,12 +224,6 @@ const Pages = () => {
   //   console.log(yes);
 
   //   setAnnouncementHandle(yes);
-  // }, [announcements]);
-
-  // useEffect(() => {
-  //   console.log('랄랄라1');
-  //   console.log(announcements);
-  //   console.log(announcements.length);
   // }, [announcements]);
 
   // useEffect(() => {
