@@ -98,17 +98,7 @@ const Pages = ({route}) => {
         (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
         toStringByFormatting(date)
       ) {
-        console.log(
-          await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`),
-        );
-        console.log(`dietRepo_Date_${toStringByFormatting(date)} 이미 있구만`);
       } else {
-        console.log(
-          await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`),
-        );
-        console.log(
-          `dietRepo_Date_${toStringByFormatting(date)} 없네요 새로 넣어줄게요`,
-        );
         saveMeal(toStringByFormatting(date));
         setStorage(
           `dietRepo_Date_${toStringByFormatting(date)}`,
