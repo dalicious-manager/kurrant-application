@@ -80,18 +80,24 @@ const Component = ({
 
   return (
     <Container>
-      <SseRedDot isSse={true} />
+      <SseRedDot
+        isSse={true}
+        right={'10px'}
+        top={'-15px'}
+        position={'absolute'}
+      />
+      <DateWrap>
+        <DateText>
+          {serviceDate &&
+            `${formattedMonthDay(
+              serviceDate,
+            )} ${diningType} · ${timePassIndicator(
+              new Date(Date.now()),
 
-      <DateText>
-        {serviceDate &&
-          `${formattedMonthDay(
-            serviceDate,
-          )} ${diningType} · ${timePassIndicator(
-            new Date(Date.now()),
-
-            stringDateToJavascriptDate(serviceDate, '-'),
-          )}`}
-      </DateText>
+              stringDateToJavascriptDate(serviceDate, '-'),
+            )}`}
+        </DateText>
+      </DateWrap>
 
       <CardContentBox>
         <ImagePressable
@@ -153,9 +159,12 @@ const Container = styled.View`
   border-bottom-style: solid;
   border-bottom-color: ${({theme}) => theme.colors.grey[8]};
 
+  border: 1px solid black;
+
   padding-top: 24px;
   padding-bottom: 24px;
   position: relative;
+  /* position: absolute; */
 `;
 
 // 보더 바텀이 안먹는다 이거 나중에 봐야됨
@@ -224,6 +233,11 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-left: 1px;
   margin: 1px 0;
+`;
+
+const DateWrap = styled.View`
+  flex-direction: row;
+  width: 100%;
 `;
 
 const DDayText = styled(Typography).attrs({text: 'CaptionR'})`

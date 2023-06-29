@@ -13,15 +13,24 @@ import styled from 'styled-components/native';
 
 const SseRedDot = ({
   children,
-  right = '0px',
-  top = '0px',
-  left = '0px',
-  bottom = '0px',
+  right,
+  top,
+  left,
+  bottom,
+  position = 'relative',
   isSse = undefined,
 }) => {
   return (
     <Container>
-      {isSse && <RedDot right={right} top={top} left={left} bottom={bottom} />}
+      {isSse && (
+        <RedDot
+          position={position}
+          right={right}
+          top={top}
+          left={left}
+          bottom={bottom}
+        />
+      )}
       {children}
     </Container>
   );
@@ -32,13 +41,13 @@ export default SseRedDot;
 const Container = styled.View``;
 
 const RedDot = styled.View`
-  position: relative;
+  position: ${({position}) => position};
   /* right: -20px;
   top: 6px; */
-  left: ${({left}) => left};
-  right: ${({right}) => right};
-  top: ${({top}) => top};
-  bottom: ${({bottom}) => bottom};
+  ${({left}) => `left: ${left}`}
+  ${({right}) => `right: ${right}`};
+  ${({top}) => `top: ${top}`};
+  ${({bottom}) => `bottom: ${bottom}`};
 
   width: 5px;
   height: 5px;
