@@ -62,6 +62,8 @@ const useBoard = () => {
       const fetchRes2 = await Fetch.getNotice(2);
 
       setGetNoticeLoading(false);
+      console.log('공지 여기여');
+      console.log([...fetchRes1.data, ...fetchRes2.data]);
 
       setNotice([...fetchRes1.data, ...fetchRes2.data]);
     } catch (err) {

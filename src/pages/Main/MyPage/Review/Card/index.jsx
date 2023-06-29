@@ -83,7 +83,7 @@ const Component = ({
       <SseRedDot
         isSse={true}
         right={'10px'}
-        top={'-15px'}
+        top={'5px'}
         position={'absolute'}
       />
       <DateWrap>
@@ -158,8 +158,6 @@ const Container = styled.View`
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: ${({theme}) => theme.colors.grey[8]};
-
-  border: 1px solid black;
 
   padding-top: 24px;
   padding-bottom: 24px;

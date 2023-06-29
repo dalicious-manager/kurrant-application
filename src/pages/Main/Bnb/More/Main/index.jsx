@@ -267,6 +267,7 @@ const Pages = () => {
 
             <ListBox
               title="리뷰 관리"
+              isSse={true}
               description={redeemablePoints > 0 && `모두 작성시 최대 `}
               effect={
                 redeemablePoints > 0 && (
@@ -299,7 +300,11 @@ const Pages = () => {
             )}
           </ListContainer>
           <ListContainer title="알림">
-            <ListBox title="공지사항" routeName={NoticeScreenName} />
+            <ListBox
+              isSse={true}
+              title="공지사항"
+              routeName={NoticeScreenName}
+            />
             <ListBox
               title="조재신 업무파악용(테스트)"
               routeName={testPageName}

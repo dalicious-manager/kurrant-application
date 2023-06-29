@@ -9,6 +9,8 @@ import SpotNotice, {
   PAGE_NAME as SpotNoticePageName,
 } from '~pages/Main/MyPage/Notice/SpotNotice';
 
+import Typography from '~components/Typography';
+import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
 export const SCREEN_NAME = 'S_MAIN__NOTICE';
 
 const Tab = createMaterialTopTabNavigator();
@@ -35,29 +37,76 @@ const Screen = ({route}) => {
       <Tab.Screen
         name={PublicNoticePageName}
         component={PublicNotice}
-        options={{
-          tabBarLabel: '전체 공지',
-          tabBarLabelStyle: {
-            fontSize: 15,
-            lineHeight: 21,
-            fontFamily: 'Pretendard-Regular',
-          },
-        }}
+        options={
+          //   {
+          //   tabBarLabel: '전체 공지',
+          //   tabBarLabelStyle: {
+          //     fontSize: 15,
+          //     lineHeight: 21,
+          //     fontFamily: 'Pretendard-Regular',
+          //   },
+          // }
+
+          ({navigation}) => ({
+            tabBarLabel: ({focused}) => (
+              <SseRedDot
+                // isSse={total > 0}
+                isSse={true}
+                position={'absolute'}
+                top={'0px'}
+                right={'-8px'}>
+                <Titles focused={focused}>전체 공지</Titles>
+              </SseRedDot>
+            ),
+            tabBarLabelStyle: {
+              fontSize: 15,
+              lineHeight: 21,
+              fontFamily: 'Pretendard-Regular',
+            },
+          })
+        }
       />
       <Tab.Screen
         name={SpotNoticePageName}
         component={SpotNotice}
-        options={{
-          tabBarLabel: '스팟 공지',
-          tabBarLabelStyle: {
-            fontSize: 15,
-            lineHeight: 21,
-            fontFamily: 'Pretendard-Regular',
-          },
-        }}
+        options={
+          ({navigation}) => ({
+            tabBarLabel: ({focused}) => (
+              <SseRedDot
+                // isSse={total > 0}
+                isSse={true}
+                position={'absolute'}
+                top={'0px'}
+                right={'-8px'}>
+                <Titles focused={focused}>스팟 공지</Titles>
+              </SseRedDot>
+            ),
+            tabBarLabelStyle: {
+              fontSize: 15,
+              lineHeight: 21,
+              fontFamily: 'Pretendard-Regular',
+            },
+          })
+
+          //   {
+          //   tabBarLabel: '스팟 공지',
+          //   tabBarLabelStyle: {
+          //     fontSize: 15,
+          //     lineHeight: 21,
+          //     fontFamily: 'Pretendard-Regular',
+          //   },
+          // }
+        }
       />
     </Tab.Navigator>
   );
 };
 
 export default Screen;
+
+const Titles = styled(Typography).attrs({text: 'Button09SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  font-weight: ${({focused}) => {
+    return focused ? '600' : '400';
+  }};
+`;
