@@ -11,10 +11,17 @@ import styled from 'styled-components/native';
  * @returns
  */
 
-const SseRedDot = ({children, isSse = undefined}) => {
+const SseRedDot = ({
+  children,
+  right = '0px',
+  top = '0px',
+  left = '0px',
+  bottom = '0px',
+  isSse = undefined,
+}) => {
   return (
     <Container>
-      {isSse && <RedDot />}
+      {isSse && <RedDot right={right} top={top} left={left} bottom={bottom} />}
       {children}
     </Container>
   );
@@ -26,8 +33,13 @@ const Container = styled.View``;
 
 const RedDot = styled.View`
   position: relative;
-  right: -20px;
-  top: 6px;
+  /* right: -20px;
+  top: 6px; */
+  left: ${({left}) => left};
+  right: ${({right}) => right};
+  top: ${({top}) => top};
+  bottom: ${({bottom}) => bottom};
+
   width: 5px;
   height: 5px;
   border-radius: 2.5px;

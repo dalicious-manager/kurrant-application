@@ -16,6 +16,7 @@ import {
   timeLeftIndicator,
   timePassIndicator,
 } from '../../../../../utils/dateFormatter';
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 /**
  * @param {object} props
@@ -79,6 +80,8 @@ const Component = ({
 
   return (
     <Container>
+      <SseRedDot isSse={true} />
+
       <DateText>
         {serviceDate &&
           `${formattedMonthDay(
@@ -152,6 +155,7 @@ const Container = styled.View`
 
   padding-top: 24px;
   padding-bottom: 24px;
+  position: relative;
 `;
 
 // 보더 바텀이 안먹는다 이거 나중에 봐야됨
