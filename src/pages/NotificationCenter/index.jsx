@@ -8,6 +8,7 @@ import {NotificationIcon} from '../../components/Icon';
 import Typography from '../../components/Typography';
 import Wrapper from '../../components/Wrapper';
 import {PAGE_NAME as MainPageName} from '../Main/Bnb/Home/Main';
+import SseRedDot from '../../utils/sse/SseService/SseRedDot/SseRedDot';
 export const PAGE_NAME = 'P__NOTIFICATION_CENTER';
 
 const alramData = [
@@ -17,6 +18,7 @@ const alramData = [
     type: 'promotion',
     description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
     dateTime: '07. 21 13:30',
+    isRead: true,
   },
   {
     id: 1,
@@ -24,6 +26,7 @@ const alramData = [
     type: 'event',
     description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
     dateTime: '07. 21 13:30',
+    isRead: false,
   },
   {
     id: 2,
@@ -31,6 +34,7 @@ const alramData = [
     type: 'coupon',
     description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
     dateTime: '07. 21 13:30',
+    isRead: false,
   },
   {
     id: 3,
@@ -38,6 +42,7 @@ const alramData = [
     type: 'coupon',
     description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
     dateTime: '07. 21 13:30',
+    isRead: true,
   },
   {
     id: 4,
@@ -45,6 +50,7 @@ const alramData = [
     type: 'coupon',
     description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
     dateTime: '07. 21 13:30',
+    isRead: true,
   },
 ];
 
@@ -61,9 +67,11 @@ const Pages = () => {
     };
     getUseAlarm();
   }, []);
+
   return (
     <Wrapper>
-      {!alarm?.length > 0 ? (
+      {/* {!alarm?.length > 0 ? ( */}
+      {!alramData?.length > 0 ? (
         <NonNotice>
           <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>
             알림 내역이 없어요.
@@ -71,9 +79,17 @@ const Pages = () => {
         </NonNotice>
       ) : (
         <ScrollView>
-          {alarm?.map(v => {
+          {/* {alarm?.map(v => { */}
+          {alramData?.map(v => {
             return (
               <NotificationBox key={v.id}>
+                <SseRedDot
+                  isSse={v.isRead}
+                  position={'absolute'}
+                  top={'-8px'}
+                  right={'-1px'}
+                />
+
                 <TitleBox>
                   <TitleBoxFront>
                     <IconBox>

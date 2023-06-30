@@ -71,6 +71,7 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -83,6 +84,7 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
+  //
   const {
     sseType1,
     sseType2,
@@ -616,12 +618,19 @@ const Pages = () => {
             <ArrowIcon />
           </SpotName>
           <Icons>
-            <BellIconPress
-              onPress={() => {
-                navigation.navigate(NotificationCenterName);
-              }}>
-              <BellIcon />
-            </BellIconPress>
+            <SseRedDot
+              isSse={true}
+              position={'absolute'}
+              right={'10px'}
+              top={'4px'}>
+              <BellIconPress
+                onPress={() => {
+                  navigation.navigate(NotificationCenterName);
+                }}>
+                <BellIcon />
+              </BellIconPress>
+            </SseRedDot>
+
             <CsIconPress
               onPress={() => {
                 navigation.navigate(FAQListDetailPageName);

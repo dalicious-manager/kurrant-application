@@ -12,6 +12,7 @@ import styled from 'styled-components/native';
 
 import Screen from './screens';
 import Theme from './theme';
+
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;

@@ -157,6 +157,12 @@ const Pages = () => {
       getData();
     }
   }, []);
+
+  useEffect(() => {
+    console.log('sseType3 값 확인');
+    console.log(sseType3);
+  }, [sseType3]);
+
   if (!isUserInfo) {
     return <SkeletonUI />;
   }
@@ -217,7 +223,11 @@ const Pages = () => {
                 confirmSseIsRead(3);
                 navigation.navigate(ReviewScreenName);
               }}>
-              <SseRedDot isSse={sseType3.userId && !sseType3.read}>
+              <SseRedDot
+                isSse={!sseType3.read}
+                position="absolute"
+                right="-10px"
+                top="0px">
                 <InfomationText
                   text={'Title02SB'}
                   textColor={themeApp.colors.grey[2]}>
@@ -267,7 +277,7 @@ const Pages = () => {
 
             <ListBox
               title="리뷰 관리"
-              isSse={true}
+              isSse={!sseType3.read}
               description={redeemablePoints > 0 && `모두 작성시 최대 `}
               effect={
                 redeemablePoints > 0 && (

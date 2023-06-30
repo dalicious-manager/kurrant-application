@@ -22,6 +22,8 @@ import MoreMainPage, {
 } from '../../../pages/Main/Bnb/More/Main';
 import MainDim from '../../../pages/Spots/spotGuide/MainDim';
 import {mainDimAtom} from '../../../utils/store';
+import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
+import {sseType3Atom} from '../../../utils/sse/sseLogics/store';
 // import BackButton from '../../../components/BackButton';
 
 export const SCREEN_NAME = 'S_MAIN__BNB';
@@ -31,6 +33,8 @@ const BottomTab = createBottomTabNavigator();
 const Screen = () => {
   const theme = useTheme();
   const [showDim, setShowDim] = useAtom(mainDimAtom);
+
+  const [sseType3] = useAtom(sseType3Atom);
 
   return (
     <React.Fragment>
@@ -121,7 +125,14 @@ const Screen = () => {
             // headerTransparent:true,
             tabBarIcon: ({focused}) => (
               <TabBarIconWrap>
-                {focused ? <ActiveMore /> : <More />}
+                <SseRedDot
+                  // 여기에 로직 여러개 들어감
+                  isSse={!!sseType3.type && !sseType3.read}
+                  position="absolute"
+                  right="-6px"
+                  top="-3px">
+                  {focused ? <ActiveMore /> : <More />}
+                </SseRedDot>
               </TabBarIconWrap>
             ),
           }}

@@ -8,10 +8,12 @@ import {Alert} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import Main from './Main';
+import useSse from '../utils/sse/sseLogics/useSse';
 
 const Root = createNativeStackNavigator();
 
 const Screen = () => {
+  // useSse();
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBarStyle('dark-content');

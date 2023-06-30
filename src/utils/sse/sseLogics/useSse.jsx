@@ -20,6 +20,8 @@ const apiHostUrl =
     ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
+let instanceCount = 0;
+
 const useSse = () => {
   const [sseType1, setSseType1] = useAtom(sseType1Atom);
   const [sseType2, setSseType2] = useAtom(sseType2Atom);
@@ -45,10 +47,8 @@ const useSse = () => {
   const getSseServiceInstance = useCallback(async () => {
     const tokenYo = await getToken();
     const yoyoyo = new SseService(apiHostUrl, tokenYo);
-    // const yoyoyo = new SseService3(apiHostUrl, tokenYo);
-
-    console.log('setEventSourceMsg url확인');
-    console.log(apiHostUrl);
+    instanceCount += 1;
+    console.log('인스턴스 만든 횟수 ' + instanceCount);
 
     return yoyoyo;
   }, [apiHostUrl, getToken]);
@@ -61,13 +61,13 @@ const useSse = () => {
           if (message.includes('EventStream')) {
             console.log('-----');
             console.log('EventStream 연결 되었답니다');
-
+            console.log(message);
             // sseType12345 전부 초기화
-            setSseType1({});
-            setSseType2({});
-            setSseType3({});
-            setSseType4({});
-            setSseType5({});
+            // setSseType1({});
+            // setSseType2({});
+            // setSseType3({});
+            // setSseType4({});
+            // setSseType5({});
           } else {
             const messageType = JSON.parse(message).type;
             switch (messageType) {
@@ -110,7 +110,7 @@ const useSse = () => {
     });
   }, []);
 
-  // sse 알림 읽기
+  // sse 알림 읽었다고 서버에 보내주기
   const {mutate: confirmSseIsRead} = useMutation(
     async data => {
       const response = await fetchJson('/notification/read', 'PUT', {
