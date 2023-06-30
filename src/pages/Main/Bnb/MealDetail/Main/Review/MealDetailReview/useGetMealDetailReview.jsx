@@ -41,7 +41,7 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
       'GET',
     );
 
-    setReviewKeyword(response.data);
+    setReviewKeyword(response.data.filter(v => v !== ''));
   });
 
   return {
@@ -57,7 +57,7 @@ export default useGetMealDetailReview;
 const getMealDetailReview = async (pageParam, url) => {
   const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
   // const res = await fetchJson(`${url}&limit=1&page=${page}`);
-  console.log(res);
+  // console.log(res);
   const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
     res.data;
 
