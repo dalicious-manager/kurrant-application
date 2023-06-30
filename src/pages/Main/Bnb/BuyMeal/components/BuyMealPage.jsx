@@ -13,6 +13,7 @@ import {Label} from '../../../../../components/Button/component';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
+import Card from './Card';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -144,90 +145,103 @@ const BuyMealPage = props => {
             m.periodDiscountPrice;
 
           return (
-            <Contents
+            <Card
               key={m.id}
-              spicy={m.spicy}
-              vegan={m.vegan}
-              disabled={
-                m.status === 2 || m.status === 6 || isAddMeal || m.status === 5
-              }
-              onPress={e => {
-                navigation.navigate(MealDetailPageName, {
-                  dailyFoodId: m.id,
-                  deliveryTime: time,
-                });
-                e.stopPropagation();
-              }}>
-              <ContentsText>
-                <MakersName soldOut={m.status}>{m.makersName}</MakersName>
-                <MealName
-                  soldOut={m.status}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {m.foodName}
-                </MealName>
-                <MealDsc
-                  soldOut={m.status}
-                  numberOfLines={2}
-                  ellipsizeMode="tail">
-                  {m.description}
-                </MealDsc>
-                <PriceWrap>
-                  {realToTalDiscountRate !== 0 && (
-                    <PercentText soldOut={m.status}>
-                      {Math.round(realToTalDiscountRate * 100) / 100}%
-                    </PercentText>
-                  )}
-                  <Price soldOut={m.status}>
-                    {withCommas(m.price - totalDiscount)}원
-                  </Price>
-                  {realToTalDiscountRate !== 0 && (
-                    <OriginPrice>{withCommas(m.price)}원</OriginPrice>
-                  )}
-                </PriceWrap>
-                {m.spicy !== null && (
-                  <LabelWrap>
-                    {m.status === 2 || m.status === 6 ? (
-                      <Label label={`${m.spicy}`} type={'soldOut'} />
-                    ) : (
-                      <Label label={`${m.spicy}`} />
-                    )}
-                  </LabelWrap>
-                )}
-                {m.vegan && m.vegan !== null && (
-                  <LabelWrap>
-                    {m.status === 2 || m.status === 6 ? (
-                      <Label label={`${m.vegan}`} type={'soldOut'} />
-                    ) : (
-                      <Label label={`${m.vegan}`} type={'vegan'} />
-                    )}
-                  </LabelWrap>
-                )}
-              </ContentsText>
-              <MealImage
-                status={m.status}
-                image={m.image}
-                dailyFoodId={m.id}
-                orderFoodList={orderDailyFoodId}
-                cartFoodList={cartDailyFoodId}
-                onPressEvent={() => {
-                  addCartPress(m.id, m.serviceDate, m.diningType, m);
-                }}
-                isAddMeal={isAddMeal}
-                rank={m.rank}
-              />
+              m={m}
+              isAddMeal={isAddMeal}
+              realToTalDiscountRate={realToTalDiscountRate}
+              withCommas={withCommas}
+              totalDiscount={totalDiscount}
+              orderDailyFoodId={orderDailyFoodId}
+              cartDailyFoodId={cartDailyFoodId}
+              time={time}
+              addCartPress={addCartPress}
+              navigation={navigation}
+            />
+            // <Contents
+            //   key={m.id}
+            //   spicy={m.spicy}
+            //   vegan={m.vegan}
+            //   disabled={
+            //     m.status === 2 || m.status === 6 || isAddMeal || m.status === 5
+            //   }
+            //   onPress={e => {
+            //     navigation.navigate(MealDetailPageName, {
+            //       dailyFoodId: m.id,
+            //       deliveryTime: time,
+            //     });
+            //     e.stopPropagation();
+            //   }}>
+            //   <ContentsText>
+            //     <MakersName soldOut={m.status}>{m.makersName}</MakersName>
+            //     <MealName
+            //       soldOut={m.status}
+            //       numberOfLines={1}
+            //       ellipsizeMode="tail">
+            //       {m.foodName}
+            //     </MealName>
+            //     <MealDsc
+            //       soldOut={m.status}
+            //       numberOfLines={2}
+            //       ellipsizeMode="tail">
+            //       {m.description}
+            //     </MealDsc>
+            //     <PriceWrap>
+            //       {realToTalDiscountRate !== 0 && (
+            //         <PercentText soldOut={m.status}>
+            //           {Math.round(realToTalDiscountRate * 100) / 100}%
+            //         </PercentText>
+            //       )}
+            //       <Price soldOut={m.status}>
+            //         {withCommas(m.price - totalDiscount)}원
+            //       </Price>
+            //       {realToTalDiscountRate !== 0 && (
+            //         <OriginPrice>{withCommas(m.price)}원</OriginPrice>
+            //       )}
+            //     </PriceWrap>
+            //     {m.spicy !== null && (
+            //       <LabelWrap>
+            //         {m.status === 2 || m.status === 6 ? (
+            //           <Label label={`${m.spicy}`} type={'soldOut'} />
+            //         ) : (
+            //           <Label label={`${m.spicy}`} />
+            //         )}
+            //       </LabelWrap>
+            //     )}
+            //     {m.vegan && m.vegan !== null && (
+            //       <LabelWrap>
+            //         {m.status === 2 || m.status === 6 ? (
+            //           <Label label={`${m.vegan}`} type={'soldOut'} />
+            //         ) : (
+            //           <Label label={`${m.vegan}`} type={'vegan'} />
+            //         )}
+            //       </LabelWrap>
+            //     )}
+            //   </ContentsText>
+            //   <MealImage
+            //     status={m.status}
+            //     image={m.image}
+            //     dailyFoodId={m.id}
+            //     orderFoodList={orderDailyFoodId}
+            //     cartFoodList={cartDailyFoodId}
+            //     onPressEvent={() => {
+            //       addCartPress(m.id, m.serviceDate, m.diningType, m);
+            //     }}
+            //     isAddMeal={isAddMeal}
+            //     rank={m.rank}
+            //   />
 
-              {m.status === 2 && (
-                <SoldOut soldOut={m.status} rank={m.rank}>
-                  품절됐어요
-                </SoldOut>
-              )}
-              {m.status === 6 && (
-                <SoldOut soldOut={m.status} rank={m.rank}>
-                  마감됐어요
-                </SoldOut>
-              )}
-            </Contents>
+            //   {m.status === 2 && (
+            //     <SoldOut soldOut={m.status} rank={m.rank}>
+            //       품절됐어요
+            //     </SoldOut>
+            //   )}
+            //   {m.status === 6 && (
+            //     <SoldOut soldOut={m.status} rank={m.rank}>
+            //       마감됐어요
+            //     </SoldOut>
+            //   )}
+            // </Contents>
           );
         })}
         <BottomModal
