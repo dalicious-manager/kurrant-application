@@ -931,6 +931,7 @@ const Pages = () => {
         onPressEvent1={closeModal}
       />
       <BottomSheet
+        firstSnap="50%"
         modalVisible={modalVisible2}
         setModalVisible={setModalVisible2}
         title="스팟 선택"

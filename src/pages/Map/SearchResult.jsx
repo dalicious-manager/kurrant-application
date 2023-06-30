@@ -15,6 +15,7 @@ import AddressShareSpotList from './components/AddressShareSpotList';
 import NoResult from './components/NoResult';
 import Location from './Location';
 import Search from './Search';
+import {PAGE_NAME as ShareSpotMapPage} from './ShareSpotMap';
 import {mapApis} from '../../api/map';
 import {shareSpotApis} from '../../api/shareSpot';
 import Typography from '../../components/Typography';
@@ -56,6 +57,7 @@ const SearchResult = ({route}) => {
           : '공유 스팟 찾기',
     });
   }, []);
+  console.log(type, 'type');
   return (
     <Wrap>
       <View>
@@ -70,7 +72,9 @@ const SearchResult = ({route}) => {
       <Contents
         onTouchEnd={e => {
           e.stopPropagation();
-          navigation.goBack();
+          type === 'mySpot' || type === 'registerSpot'
+            ? navigation.goBack()
+            : navigation.navigate(ShareSpotMapPage);
         }}>
         <Location setInitCenter={setInitCenter} />
       </Contents>

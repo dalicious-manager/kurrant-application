@@ -36,7 +36,7 @@ const Screen = () => {
     <React.Fragment>
       {showDim && <MainDim />}
       <BottomTab.Navigator
-        initialRouteName={HomeMainPageName}
+        // initialRouteName={HomeMainPageName}
         screenOptions={{
           tabBarActiveTintColor: theme.colors.grey[3],
 

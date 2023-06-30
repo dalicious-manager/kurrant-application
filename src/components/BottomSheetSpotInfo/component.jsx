@@ -31,11 +31,11 @@ import PlusIcon from '../../assets/icons/Map/plus.svg';
 import MealIcon from '../../assets/icons/Spot/meal.svg';
 import UserIcon from '../../assets/icons/Spot/user.svg';
 import useGroupSpots from '../../biz/useGroupSpots/hook';
-import {userGroupSpotListAtom} from '../../biz/useGroupSpots/store';
 import {
   useGetShareSpotDetail,
   useSelectShareSpot,
 } from '../../hook/useShareSpot';
+import {useGroupSpotList} from '../../hook/useSpot';
 import {PAGE_NAME as ApplySpotPage} from '../../pages/Spots/shareSpot/ApplySpot';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
 import {diningTypeString} from '../../utils/diningType';
@@ -57,12 +57,13 @@ const Component = props => {
   const {data: detailData, refetch: detailDataRefech} = useGetShareSpotDetail(
     data[0]?.id,
   );
-  const {
-    userGroupSpotCheck,
-    isUserGroupSpotCheck,
-    userSpotRegister,
-    groupSpotDetail,
-  } = useGroupSpots();
+  // const {
+  //   userGroupSpotCheck,
+  //   isUserGroupSpotCheck,
+  //   userSpotRegister,
+  //   groupSpotDetail,
+  // } = useGroupSpots();
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const {mutateAsync: selectSpot} = useSelectShareSpot();
 
   const detail = detailData?.data;
@@ -79,7 +80,7 @@ const Component = props => {
   const diningType = [1, 2, 3];
 
   const onSelectButton = async () => {
-    if (isUserGroupSpotCheck?.shareSpotCount === 2) {
+    if (isUserGroupSpotCheck?.data?.shareSpotCount === 2) {
       setModalVisible(false);
       setBottomModal(true);
     } else {
@@ -87,7 +88,7 @@ const Component = props => {
         id: data[0].id,
       };
       await selectSpot(body);
-      await userGroupSpotCheck();
+      // await userGroupSpotCheck();
       navigation.navigate(SCREEN_NAME);
     }
   };
@@ -212,34 +213,57 @@ const Component = props => {
               <InnerView>
                 {detail?.breakfastDeliveryTime !== null && (
                   <DetailSpotWrap>
-                    <DetailSpotName style={{marginRight: 8}}>
-                      아침
-                    </DetailSpotName>
+                    <DiningType style={{marginRight: 8}}>아침 )</DiningType>
                     <VerticalBorder />
                     {detail?.breakfastDeliveryTime?.map(el => {
-                      return <ApplyText key={el}>{el}</ApplyText>;
+                      const lastTime =
+                        detail?.breakfastDeliveryTime[
+                          detail?.breakfastDeliveryTime?.length - 1
+                        ];
+
+                      return (
+                        <React.Fragment key={el}>
+                          <TimeText>{el}</TimeText>
+                          {lastTime !== el && <VerticalBorder />}
+                        </React.Fragment>
+                      );
                     })}
                   </DetailSpotWrap>
                 )}
                 {detail?.lunchDeliveryTime !== null && (
                   <DetailSpotWrap>
-                    <DetailSpotName style={{marginRight: 8}}>
-                      점심
-                    </DetailSpotName>
-                    <VerticalBorder />
+                    <DiningType style={{marginRight: 8}}>점심 )</DiningType>
+
                     {detail?.lunchDeliveryTime?.map(el => {
-                      return <ApplyText key={el}>{el}</ApplyText>;
+                      const lastTime =
+                        detail?.lunchDeliveryTime[
+                          detail?.lunchDeliveryTime?.length - 1
+                        ];
+
+                      return (
+                        <React.Fragment key={el}>
+                          <TimeText>{el}</TimeText>
+                          {lastTime !== el && <VerticalBorder />}
+                        </React.Fragment>
+                      );
                     })}
                   </DetailSpotWrap>
                 )}
                 {detail?.dinnerDeliveryTime !== null && (
                   <DetailSpotWrap>
-                    <DetailSpotName style={{marginRight: 8}}>
-                      저녁
-                    </DetailSpotName>
+                    <DiningType style={{marginRight: 8}}>저녁 )</DiningType>
                     <VerticalBorder />
                     {detail?.dinnerDeliveryTime?.map(el => {
-                      return <ApplyText key={el}>{el}</ApplyText>;
+                      const lastTime =
+                        detail?.dinnerDeliveryTime[
+                          detail?.dinnerDeliveryTime?.length - 1
+                        ];
+                      return (
+                        <React.Fragment key={el}>
+                          <TimeText>{el}</TimeText>
+                          {lastTime !== el && <VerticalBorder />}
+                        </React.Fragment>
+                      );
                     })}
                   </DetailSpotWrap>
                 )}
@@ -405,6 +429,10 @@ const ApplyText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme}) => theme.colors.grey[2]};
   margin-left: 4px;
 `;
+const TimeText = styled(Typography).attrs({text: 'Button10R'})`
+  color: ${({theme}) => theme.colors.grey[3]};
+  margin-right: 8px;
+`;
 
 const ApplyButton = styled.Pressable`
   border: 1px solid ${({theme}) => theme.colors.grey[7]};
@@ -429,8 +457,8 @@ const Label = styled.Pressable`
   margin-right: 8px;
 `;
 
-const LabelText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[3]};
+const DiningType = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[2]};
 `;
 
 const DetailSpotName = styled(Typography).attrs({text: 'CaptionR'})`

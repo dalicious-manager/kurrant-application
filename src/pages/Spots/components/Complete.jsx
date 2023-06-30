@@ -16,6 +16,7 @@ import {isUserInfoAtom} from '../../../biz/useUserInfo/store';
 import {alarmSetting} from '../../../biz/useUserMe/Fetch';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGroupSpotList} from '../../../hook/useSpot';
 import {useGetUserInfo} from '../../../hook/useUserInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
@@ -26,17 +27,25 @@ import {PAGE_NAME as SpotTypePage} from '../SpotType';
 export const PAGE_NAME = 'COMPLETE_PAGE';
 const Complete = ({route}) => {
   const navigation = useNavigation();
-  const {isUserGroupSpotCheck} = useGroupSpots();
+  // const {isUserGroupSpotCheck} = useGroupSpots();
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const noHasSpots =
-    isUserGroupSpotCheck?.spotListResponseDtoList?.length === 0;
+    isUserGroupSpotCheck?.data?.spotListResponseDtoList?.length === 0;
 
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
   const type = route?.params?.type;
-  console.log(type, 'type');
   const nextUseButton = () => {
-    navigation.navigate(SCREEN_NAME);
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: SCREEN_NAME,
+        },
+      ],
+    });
+    // navigation.navigate(SCREEN_NAME);
   };
 
   const buyMealButton = () => {
@@ -71,7 +80,7 @@ const Complete = ({route}) => {
       </Wrap>
       <ButtonWrap>
         <Button
-          icon={type === 'mySpotCompleteMembership' && 'plus'}
+          // icon={type === 'mySpotCompleteMembership' && 'plus'}
           label={alramButtonText(type)}
           onPressEvent={() => {
             if (
@@ -82,12 +91,15 @@ const Complete = ({route}) => {
             ) {
               membershipButton();
             }
-            if (type === 'noAlarmUsedMembership') {
+            if (
+              type === 'noAlarmUsedMembership' ||
+              type === 'mySpotCompleteMembership'
+            ) {
               nextUseButton();
             }
-            if (type === 'mySpotCompleteMembership') {
-              buyMealButton();
-            }
+            // if (type === 'mySpotCompleteMembership') {
+            //   buyMealButton();
+            // }
             if (
               type === 'noDeliveryNoSpot' ||
               type === 'sharSpotAppication' ||

@@ -185,7 +185,7 @@ const Pages = ({route}) => {
         pagerRef.current.setPage(0);
       }
       setTouchDate(data);
-    }, [isToday, data, pressDay]),
+    }, [isToday, data]),
   );
   return (
     <SafeView>
