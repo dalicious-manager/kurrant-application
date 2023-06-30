@@ -2,13 +2,9 @@ import {useNavigation} from '@react-navigation/native';
 import {useAtomValue} from 'jotai';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {Alert, Dimensions, Pressable, ScrollView, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
-import {css} from 'styled-components/native';
 
-import SpotBox from './components/SpotBox';
 import {PAGE_NAME as SelectSpotPageName} from '..';
-import {SpotManageMy} from '../../../../assets';
 import Arrow from '../../../../assets/icons/Group/arrowWhite.svg';
 import Close from '../../../../assets/icons/Group/close.svg';
 import Pen from '../../../../assets/icons/Group/pen.svg';
@@ -89,6 +85,7 @@ const Pages = ({route}) => {
     Alert.alert(
       '스팟 탈퇴',
       '이 스팟의 모든 상세스팟에서 로그아웃됩니다.\n정말 탈퇴하시겠어요?',
+
       [
         {
           text: '취소',
@@ -153,7 +150,7 @@ const Pages = ({route}) => {
     // <SafeView>
     <Wrap>
       <TitleWrap>
-        <SpotBox />
+        <SpotSelect>스팟 선택</SpotSelect>
       </TitleWrap>
       <SpotView onPress={modalOpen}>
         <SpotName>
