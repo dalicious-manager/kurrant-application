@@ -1,27 +1,56 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 import styled, {css} from 'styled-components';
+import {useTheme} from 'styled-components/native';
 
-import {SpotManageMy} from '../../../../../assets';
+import {
+  SpotManageMy,
+  SpotManagePrivate,
+  SpotManageShare,
+} from '../../../../../assets';
 import Typography from '../../../../../components/Typography';
-const SpotBox = () => {
-  const SpotImageBox = type => {
-    if (type === 'my') {
+const SpotBox = ({type, count = 0}) => {
+  const themeApp = useTheme();
+  const SpotImageBox = spots => {
+    if (spots === 'my') {
+      return (
+        <IconTitle>
+          <ImageBox source={SpotManageMy} />
+          <Typography text="Body05SB">마이스팟</Typography>
+        </IconTitle>
+      );
     }
-    if (type === 'share') {
+    if (spots === 'share') {
+      return (
+        <IconTitle>
+          <ImageBox source={SpotManageShare} />
+          <Typography text="Body05SB">공유스팟</Typography>
+        </IconTitle>
+      );
     }
-    if (type === 'private') {
+    if (spots === 'private') {
+      return (
+        <IconTitle>
+          <ImageBox source={SpotManagePrivate} />
+          <Typography text="Body05SB">프라이빗 스팟</Typography>
+        </IconTitle>
+      );
     }
   };
   return (
-    <Wrap>
-      <IconTitle>
-        <ImageBox source={SpotManageMy} />
-        <Typography text="Body05SB">마이스팟</Typography>
-      </IconTitle>
+    <Wrap isCenter={type === 'share'}>
+      {SpotImageBox(type)}
       <CurrentSpot>
-        <Typography text="Body06R">0</Typography>
-        <Typography text="Body06R">/1 이용중</Typography>
+        <Typography text="Body06R" textColor={themeApp.colors.blue[500]}>
+          {count}
+        </Typography>
+        {type !== 'private' ? (
+          <Typography text="Body06R">
+            {type === 'share' ? '/2 이용중' : '/1 이용중'}
+          </Typography>
+        ) : (
+          <Typography text="Body06R">{' 이용중'}</Typography>
+        )}
       </CurrentSpot>
     </Wrap>
   );
@@ -32,8 +61,9 @@ export default SpotBox;
 const Wrap = styled.View`
   flex-direction: column;
   ${({isCenter}) => {
+    console.log(isCenter);
     if (isCenter) {
-      css`
+      return css`
         padding-left: 24px;
         padding-right: 24px;
       `;

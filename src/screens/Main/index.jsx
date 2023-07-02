@@ -1925,7 +1925,7 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
-
+            headerLeft: () => <BackButton margin={[10, 0]} />,
             // headerLeft: () => {
             //   <Pressable onPress={()=>navigation.navigate(SCREEN_NAME)}>
             //     <CloseIcon />

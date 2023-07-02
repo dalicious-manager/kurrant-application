@@ -4,12 +4,13 @@ import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {Alert, Dimensions, Pressable, ScrollView, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
-import {css} from 'styled-components/native';
+import {css, useTheme} from 'styled-components/native';
 
 import SpotBox from './components/SpotBox';
+import SpotListBox from './components/SpotListBox';
 import {PAGE_NAME as SelectSpotPageName} from '..';
 import {SpotManageMy} from '../../../../assets';
-import Arrow from '../../../../assets/icons/Group/arrowWhite.svg';
+import Arrow from '../../../../assets/icons/Group/arrowDown.svg';
 import Close from '../../../../assets/icons/Group/close.svg';
 import Pen from '../../../../assets/icons/Group/pen.svg';
 import useGroupSpots from '../../../../biz/useGroupSpots/hook';
@@ -31,6 +32,7 @@ const WIDTH = Dimensions.get('screen').width;
 export const PAGE_NAME = 'P__GROUP__MANAGE__DETAIL';
 const Pages = ({route}) => {
   const toast = Toast();
+  const themeApp = useTheme();
   const from = route?.params?.from;
   const navigation = useNavigation();
   const {
@@ -117,28 +119,6 @@ const Pages = ({route}) => {
       ],
     );
   };
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <Pressable
-          // onPress={() => {
-          //   navigation.reset({
-          //     index: 0,
-          //     routes: [
-          //       {
-          //         name: SCREEN_NAME,
-          //       },
-          //     ],
-          //   });
-          // }}
-          style={{width: 40, height: 20}}>
-          {/* <CloseIcon /> */}
-        </Pressable>
-      ),
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (from === 'shareSpotMap') {
@@ -153,21 +133,34 @@ const Pages = ({route}) => {
     // <SafeView>
     <Wrap>
       <TitleWrap>
-        <SpotBox />
+        <SpotBox type="my" />
+        <SpotBox type="share" />
+        <SpotBox type="private" />
       </TitleWrap>
-      <SpotView onPress={modalOpen}>
-        <SpotName>
-          {userGroupSpotDetail?.data?.spotName || '스팟을 선택해 주세요'}
-        </SpotName>
-        <Arrow />
-      </SpotView>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <Line />
+      <SpotDetailBox>
+        <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
+          스팟 선택
+        </Typography>
+        <SpotView onPress={modalOpen}>
+          <SpotName>
+            {userGroupSpotDetail?.data?.spotName || '스팟을 선택해 주세요'}
+          </SpotName>
+          <Arrow />
+        </SpotView>
+        <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
+          스팟 내역
+        </Typography>
+        <SpotListBox />
+      </SpotDetailBox>
+
+      {/* <ScrollView showsVerticalScrollIndicator={false}>
         <ContentView>
           <TextView>
             <Title>배송지</Title>
             <ContentText>{useName}</ContentText>
           </TextView>
-          {/* {isDetailSpot?.ho !== null && (
+          {isDetailSpot?.ho !== null && (
             <TextView>
               <Title>세부 주소</Title>
               <HoView
@@ -180,7 +173,7 @@ const Pages = ({route}) => {
                 <PenIcon />
               </HoView>
             </TextView>
-          )} */}
+          )}
           <TextView>
             <Title>멤버십 할인 마감 / 주문 마감 / 배송 시간</Title>
             {userGroupSpotDetail?.data?.mealTypeInfoList?.map((el, idx) => {
@@ -233,8 +226,7 @@ const Pages = ({route}) => {
             )}
           </TextView>
         </ContentView>
-      </ScrollView>
-
+      </ScrollView> */}
       <BottomSheetSpot
         userSpotId={spotId}
         modalVisible={modalVisible}
@@ -250,7 +242,7 @@ const Pages = ({route}) => {
 
       <toast.ToastWrap message={'스팟이 설정됐어요'} icon={'checked'} />
       <BottomContainer>
-        <ButtonBox>
+        {/* <ButtonBox>
           <Button
             label="확인"
             onPressEvent={() => {
@@ -264,7 +256,7 @@ const Pages = ({route}) => {
               });
             }}
           />
-        </ButtonBox>
+        </ButtonBox> */}
         <AddSpotWrap onPress={() => navigation.navigate(SpotTypePage)}>
           <AddSpotText>다른 스팟 신청/추가</AddSpotText>
         </AddSpotWrap>
@@ -282,25 +274,34 @@ const SafeView = styled.SafeAreaView`
 const Wrap = styled.View`
   background-color: ${({theme}) => theme.colors.grey[0]};
   flex: 1;
-  padding: 0px 24px;
   //align-items: center;
   width: ${WIDTH}px;
 `;
 
 const TitleWrap = styled.View`
   flex-direction: row;
+  padding-top: 24px;
+  padding-bottom: 18px;
   justify-content: center;
 `;
-
+const Line = styled.View`
+  height: 6px;
+  background-color: ${({theme}) => theme.colors.grey[8]};
+`;
+const SpotDetailBox = styled.View`
+  padding: 24px;
+`;
 const SpotView = styled.Pressable`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  background-color: ${({theme}) => theme.colors.grey[2]};
+  background-color: ${({theme}) => theme.colors.grey[0]};
   border-radius: 14px;
+  border: 1px solid ${({theme}) => theme.colors.grey[7]};
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
+  margin-top: 8px;
 `;
 
 const ContentView = styled.View`
@@ -339,7 +340,7 @@ const BottomContainer = styled.View`
   margin-bottom: 56px;
 `;
 const SpotName = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme}) => theme.colors.grey[0]};
+  color: ${({theme}) => theme.colors.grey[2]};
 `;
 
 const Title = styled(Typography).attrs({text: 'Body06R'})`
