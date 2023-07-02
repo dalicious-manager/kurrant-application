@@ -15,7 +15,7 @@ function transDateType(val) {
   }
   return val;
 }
-
+//
 export function formattedTimer(remainSeconds) {
   const minutes = Math.floor(remainSeconds / 60);
   const seconds = remainSeconds % 60;

@@ -64,7 +64,7 @@ const DetailAddress = ({route}) => {
       mySpotName: nickNameAddress,
       phone: phone?.join(''),
     };
-    console.log(data);
+    //console.log(data);
     await applySpot(data);
   };
 

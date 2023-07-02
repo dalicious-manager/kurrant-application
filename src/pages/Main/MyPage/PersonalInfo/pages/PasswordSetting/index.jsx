@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import KeyboardButton from '~components/KeyboardButton';
 import RefTextInput from '~components/RefTextInput';
 import Typography from '~components/Typography';
@@ -69,7 +68,7 @@ const Pages = () => {
         throw new Error(result.errors);
       }
       await setStorage('isChange', '비밀번호가 변경됐어요');
-      console.log('isChange');
+      // console.log('isChange');
       navigation.goBack(null);
     } catch (error) {
       console.log(error.toString());

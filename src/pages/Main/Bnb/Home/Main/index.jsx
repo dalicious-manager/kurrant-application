@@ -179,7 +179,6 @@ const Pages = () => {
           userGroupSpot?.privateCount > 1)
       ) {
         setShowDim(true);
-        console.log(showDim, '1');
       } else if (
         isUserInfo?.data?.spotId === null &&
         userGroupSpot?.shareSpotCount === 0 &&
@@ -199,7 +198,6 @@ const Pages = () => {
       showDim === false
     ) {
       setModalVisible(true);
-      console.log(showDim, '2');
     }
   }, [showDim]);
 
