@@ -26,6 +26,9 @@ const Card = ({
   // 총 리뷰 수
   // 비건, 신라면 맵기 vegan, spicy
 
+  console.log('m값 확ㄷ인');
+  console.log(m);
+
   return (
     <Contents
       key={m.id}
@@ -47,26 +50,18 @@ const Card = ({
         {/* <MealDsc soldOut={m.status} numberOfLines={2} ellipsizeMode="tail">
           {m.description}
         </MealDsc> */}
-        {/* <PriceWrap>
-          {realToTalDiscountRate !== 0 && (
-            <PercentText soldOut={m.status}>
-              {Math.round(realToTalDiscountRate * 100) / 100}%
-            </PercentText>
-          )}
-          <Price soldOut={m.status}>
-            {withCommas(m.price - totalDiscount)}원
-          </Price>
-          {realToTalDiscountRate !== 0 && (
+
+        <PriceWrap>
+          {Math.round(realToTalDiscountRate * 100) / 100 !== 0 && (
             <OriginPrice>{withCommas(m.price)}원</OriginPrice>
           )}
-        </PriceWrap> */}
-        <PriceWrap>
-          <OriginPrice>{withCommas(m.price)}원</OriginPrice>
 
           <PriceWrap2>
-            <PercentText soldOut={m.status}>
-              {Math.round(realToTalDiscountRate * 100) / 100}%
-            </PercentText>
+            {Math.round(realToTalDiscountRate * 100) / 100 !== 0 && (
+              <PercentText soldOut={m.status}>
+                {Math.round(realToTalDiscountRate * 100) / 100}%
+              </PercentText>
+            )}
 
             <Price soldOut={m.status}>
               {withCommas(m.price - totalDiscount)}원
@@ -76,8 +71,8 @@ const Card = ({
 
         <ReviewWrap>
           <YellowStar width="15px" height="15px" />
-          <ReviewAverage>4.0</ReviewAverage>
-          <TotalReviewCount>리뷰 132</TotalReviewCount>
+          <ReviewAverage>{m.reviewAverage}</ReviewAverage>
+          <TotalReviewCount>리뷰 {m.totalReviewCount}</TotalReviewCount>
         </ReviewWrap>
 
         <LabelWrapper>
@@ -177,6 +172,7 @@ export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
     soldOut === 2 || soldOut === 6
       ? theme.colors.grey[6]
       : theme.colors.grey[4]};
+  margin-bottom: 2px;
 `;
 
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
@@ -187,7 +183,7 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
     soldOut === 2 || soldOut === 6
       ? theme.colors.grey[6]
       : theme.colors.grey[2]};
-  margin-bottom: 16px;
+  margin-bottom: 6px;
 `;
 
 const Price = styled(Typography).attrs({text: 'Body05R'})`
@@ -221,7 +217,7 @@ const OriginPrice = styled(Typography).attrs({text: 'Body06R'})`
     soldOut === 2 || soldOut === 6
       ? theme.colors.grey[6]
       : theme.colors.grey[5]};
-  margin-left: 6px;
+  /* margin-left: 6px; */
 `;
 
 const NoServieceView = styled.View`

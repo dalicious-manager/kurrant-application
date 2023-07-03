@@ -103,6 +103,7 @@ const BuyMealPage = props => {
       handlePress(startScroll > y ? true : false);
     }
   };
+
   return (
     <ScrollView
       ref={refType(diningFood)}
