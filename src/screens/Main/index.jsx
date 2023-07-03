@@ -117,9 +117,12 @@ import RegisterCard, {
   SCREEN_NAME as RegisterCardScreenName,
 } from './RegisterCard';
 import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+// import CreateReviewPage1, {
+//   SCREEN_NAME as CreateReviewPage1ScreenName,
+// } from './Review/CreateReview/Page1';
 import CreateReviewPage1, {
-  SCREEN_NAME as CreateReviewPage1ScreenName,
-} from './Review/CreateReview/Page1';
+  PAGE_NAME as CreateReviewPage1PageName,
+} from '../../pages/Main/MyPage/Review/CreateReview/Page1';
 import CreateReviewPage2, {
   SCREEN_NAME as CreateReviewPage2ScreenName,
   SCREEN_NAME2 as EditReviewPage2ScreenName,
@@ -1988,7 +1991,7 @@ const Screen = () => {
 
       <MainRoot.Group>
         <MainRoot.Screen
-          name={CreateReviewPage1ScreenName}
+          name={CreateReviewPage1PageName}
           component={CreateReviewPage1}
           options={{
             headerShown: true,
