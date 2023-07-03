@@ -12,11 +12,15 @@ import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/Create
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
+// import {
+//   fetchNextPageReviewDetailAtom,
+//   hasNextPageReviewDetailAtom,
+// } from './store';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
-} from './store';
-import useGetMealDetailReview from './useGetMealDetailReview';
+} from '../../../../../../../biz/useReview/useMealDetailReview/store';
+import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import {
   ArrowUpAndDown,
   Picture,
