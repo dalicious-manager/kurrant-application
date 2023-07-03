@@ -2,7 +2,7 @@ import {useAtom} from 'jotai';
 import {useEffect, useState} from 'react';
 import {useInfiniteQuery, useQuery} from 'react-query';
 
-import {fetchJson} from '../../../../../../../utils/fetch';
+import {fetchJson} from '~utils/fetch';
 
 const useGetMealDetailReview = (url, dailyFoodId) => {
   const [isError, setIsError] = useState(false);
