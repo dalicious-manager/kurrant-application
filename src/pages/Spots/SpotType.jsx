@@ -81,9 +81,7 @@ const SpotType = () => {
       navigation.navigate(SpotGuidePage);
     }
   };
-  useEffect(() => {
-    // groupRefetch();
-  }, []);
+
   return (
     <Wrap showsVerticalScrollIndicator={false}>
       <ContentsWrap>

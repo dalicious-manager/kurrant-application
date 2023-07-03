@@ -18,9 +18,7 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
     {
       getNextPageParam: lastPage => {
-        if (!lastPage.isLast) {
-          return lastPage.currentPage + 1;
-        }
+        if (!lastPage.isLast) lastPage.currentPage + 1;
         return undefined;
       },
     },
@@ -57,7 +55,7 @@ export default useGetMealDetailReview;
 const getMealDetailReview = async (pageParam, url) => {
   const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
   // const res = await fetchJson(`${url}&limit=1&page=${page}`);
-  // console.log(res);
+  console.log(res);
   const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
     res.data;
 

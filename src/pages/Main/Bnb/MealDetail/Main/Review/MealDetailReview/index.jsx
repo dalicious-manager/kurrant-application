@@ -90,6 +90,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     reviewKeyword,
   } = useGetMealDetailReview(url, dailyFoodId);
 
+  // const reviewKeyword = ['달퐁이', '참새'];
+
   useEffect(() => {
     // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
 
@@ -150,6 +152,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
 
   const [showSelectList, setShowSelectList] = useState(false);
 
+  // 푸드아이디, 데일리 푸드아이디 확인하기
+
   // useEffect(() => {
   //   console.log('푸드아이딩~');
   //   console.log(foodId); //
@@ -192,6 +196,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   //   console.log(data?.pages[0].items?.reviewList);
   //   console.log(data?.pages[0].items?.starAverage);
   // }, [data]);
+
   const handleConfirmPress = () => {
     setUrl(
       buildCustomUrl(
