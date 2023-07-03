@@ -26,8 +26,7 @@ const Card = ({
   // 총 리뷰 수
   // 비건, 신라면 맵기 vegan, spicy
 
-  console.log('m값 확ㄷ인');
-  console.log(m);
+  // 4.0 일 경우 4.0으로 표기되게 바꾸기
 
   return (
     <Contents
@@ -71,7 +70,11 @@ const Card = ({
 
         <ReviewWrap>
           <YellowStar width="15px" height="15px" />
-          <ReviewAverage>{m.reviewAverage}</ReviewAverage>
+          <ReviewAverage>
+            {m.reviewAverage.toString().length === 1
+              ? m.reviewAverage.toFixed(1)
+              : m.reviewAverage}
+          </ReviewAverage>
           <TotalReviewCount>리뷰 {m.totalReviewCount}</TotalReviewCount>
         </ReviewWrap>
 
