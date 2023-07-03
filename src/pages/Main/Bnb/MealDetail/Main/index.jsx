@@ -400,6 +400,8 @@ const Pages = ({route}) => {
                     )}
                   </PriceWrap>
                 </View>
+
+                {/* 여기서 에러뜨는 것 같음 */}
                 {isFoodDetail?.membershipDiscountedRate &&
                   isfoodDetailDiscount?.membershipDiscountRate &&
                   isfoodDetailDiscount?.membershipDiscountRate !==
