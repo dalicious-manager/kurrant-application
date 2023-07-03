@@ -123,10 +123,14 @@ import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
 import CreateReviewPage1, {
   PAGE_NAME as CreateReviewPage1PageName,
 } from '../../pages/Main/MyPage/Review/CreateReview/Page1';
+// import CreateReviewPage2, {
+//   PAGE_NAME as CreateReviewPage2ScreenName,
+//   PAGE_NAME2 as EditReviewPage2ScreenName,
+// } from './Review/CreateReview/Page2';
 import CreateReviewPage2, {
-  SCREEN_NAME as CreateReviewPage2ScreenName,
-  SCREEN_NAME2 as EditReviewPage2ScreenName,
-} from './Review/CreateReview/Page2';
+  PAGE_NAME as CreateReviewPage2ScreenName,
+  PAGE_NAME2 as EditReviewPage2ScreenName,
+} from '../../pages/Main/MyPage/Review/CreateReview/Page2';
 import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
 } from '../../pages/Main/MyPage/Review/ReportReview';

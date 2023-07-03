@@ -35,8 +35,8 @@ import {SCREEN_NAME as ReviewScreenName} from '../../../../../../screens/Main/Re
 //   PAGE_NAME as MoreMainPageName,
 // } from '../../../pages/Main/Bnb/More/Main';
 
-export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
-export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
+export const PAGE_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
+export const PAGE_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
 
 const apiHostUrl =
   Config.NODE_ENV === 'dev'

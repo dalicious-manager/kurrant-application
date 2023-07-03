@@ -10,7 +10,7 @@ import Typography from '~components/Typography';
 // import mSleep from '~helpers/mSleep';
 import mSleep from '../../../../../../helpers/mSleep';
 
-import {SCREEN_NAME as CreateReviewPage2ScreenName} from '../Page2';
+import {PAGE_NAME as CreateReviewPage2ScreenName} from '../Page2';
 // import {starRatingAtom} from '../Page2/store';
 import {starRatingAtom} from '~biz/useReview/useCreateAndEditReview/store';
 
