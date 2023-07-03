@@ -126,7 +126,7 @@ import CreateReviewPage2, {
 } from './Review/CreateReview/Page2';
 import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
-} from './Review/ReportReview';
+} from '../../pages/Main/MyPage/Review/ReportReview';
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 import useBoard from '../../biz/useBoard';
 import BackButton from '../../components/BackButton';
@@ -300,8 +300,9 @@ import {
   PurchaseDetailPage,
   PurchaseDetailPageName,
 } from '../../pages/Main/MyPage/PurchaseHistory/Detail';
-import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
+
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
+
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import NotificationCenter, {
   PAGE_NAME as NotificationCenterName,
