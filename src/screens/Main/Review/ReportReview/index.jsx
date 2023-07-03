@@ -4,7 +4,8 @@ import {FormProvider, useForm} from 'react-hook-form';
 import {Text, View} from 'react-native';
 import styled from 'styled-components';
 
-import {reportReviewInputAtom} from './store';
+// import {reportReviewInputAtom} from './store';
+import {reportReviewInputAtom} from '~biz/useReview/useReportReview/store';
 import TextAreaInput from './TextAreaInput';
 import Button from '../../../../components/Button';
 import CheckAndText from '../../../../components/CheckAndText';
