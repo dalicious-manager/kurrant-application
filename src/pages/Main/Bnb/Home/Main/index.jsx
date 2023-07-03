@@ -161,9 +161,12 @@ const Pages = () => {
   });
 
   useEffect(() => {
-    if (isUserGroupSpotCheck?.data && navigation.isFocused())
+    if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
       setUserGroupSpot(isUserGroupSpotCheck?.data);
+      console.log(isUserGroupSpotCheck.data);
+    }
   }, [isUserGroupSpotCheck?.data]);
+
   useEffect(() => {
     if (isUserInfo?.data && userGroupSpot && navigation.isFocused()) {
       if (isUserInfo?.data?.spotId) dailyfoodRefetch();

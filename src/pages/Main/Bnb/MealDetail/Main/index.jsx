@@ -125,6 +125,9 @@ const Pages = ({route}) => {
     loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    console.log(isfoodDetailDiscount?.membershipDiscountRate, 'food');
+  }, [isfoodDetailDiscount?.membershipDiscountRate]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTransparent: true,
@@ -290,7 +293,11 @@ const Pages = ({route}) => {
 
   // 상세페이지 리뷰 로직
 
-  if (isFoodDetailLoading) {
+  if (
+    isFoodDetailLoading &&
+    !isFoodDetail?.membershipDiscountedRate &&
+    !isfoodDetailDiscount?.membershipDiscountRate
+  ) {
     return <Skeleton />;
   }
 
@@ -389,10 +396,14 @@ const Pages = ({route}) => {
                     )}
                   </PriceWrap>
                 </View>
-                {isfoodDetailDiscount?.membershipDiscountRate !==
-                  isFoodDetail?.membershipDiscountedRate && (
-                  <MembershipDiscountBox isFoodDetail={isfoodDetailDiscount} />
-                )}
+                {isFoodDetail?.membershipDiscountedRate &&
+                  isfoodDetailDiscount?.membershipDiscountRate &&
+                  isfoodDetailDiscount?.membershipDiscountRate !==
+                    isFoodDetail?.membershipDiscountedRate && (
+                    <MembershipDiscountBox
+                      isFoodDetail={isfoodDetailDiscount}
+                    />
+                  )}
               </Content>
             </TouchableWithoutFeedback>
             <Content>
@@ -444,11 +455,13 @@ const Pages = ({route}) => {
               </InfoWrap>
             </Content>
             {/* 리뷰자리 */}
-            <MealDetailReview
-              foodName={isFoodDetail?.name}
-              imageLocation={isFoodDetail?.imageList}
-              dailyFoodId={dailyFoodId}
-            />
+            {!isFoodDetailLoading && (
+              <MealDetailReview
+                foodName={isFoodDetail?.name}
+                imageLocation={isFoodDetail?.imageList}
+                dailyFoodId={dailyFoodId}
+              />
+            )}
           </View>
         </ScrollViewWrap>
 
