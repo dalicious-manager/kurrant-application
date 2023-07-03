@@ -10,7 +10,8 @@ import RNFetchBlob from 'rn-fetch-blob';
 import styled, {useTheme} from 'styled-components/native';
 
 import ReviewInput from './ReviewInput';
-import {starRatingAtom} from './store';
+// import {starRatingAtom} from './store';
+import {starRatingAtom} from '~biz/useReview/useCreateAndEditReview/store';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import Button from '../../../../../components/Button';

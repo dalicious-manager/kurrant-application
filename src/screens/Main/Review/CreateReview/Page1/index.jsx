@@ -9,7 +9,8 @@ import RateStars from '../../../../../components/RateStars';
 import Typography from '../../../../../components/Typography';
 import mSleep from '../../../../../helpers/mSleep';
 import {SCREEN_NAME as CreateReviewPage2ScreenName} from '../Page2';
-import {starRatingAtom} from '../Page2/store';
+// import {starRatingAtom} from '../Page2/store';
+import {starRatingAtom} from '../../../../../biz/useReview/useCreateAndEditReview/store';
 
 export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_1';
 
