@@ -54,10 +54,31 @@ import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import {checkSseType3Atom} from '../../../../../utils/sse/sseLogics/store';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
-const Pages = () => {
+const Pages = ({route}) => {
+  const {sseType3, confirmSseIsRead} = useSse();
+
+  const [checkSseType3, setCheckSseType3] = useAtom(checkSseType3Atom);
+  const [total] = useAtom(totalReviewWaitListAtom);
+  const [redeemablePoints] = useAtom(redeemablePointsAtom);
+  useEffect(() => {
+    if (!checkSseType3) return;
+
+    console.log('sseType3 보낼지 말지 판단하기 ');
+
+    if (total <= 0) {
+      // 서버에 read했다고보내기
+      // setCheckType3 false로 바꾸기
+      console.log('sseType3 읽었다고 올림 ');
+      confirmSseIsRead(3);
+
+      setCheckSseType3(false);
+    }
+  }, [checkSseType3]);
+
   const themeApp = useTheme();
   const navigation = useNavigation();
   const {
@@ -70,17 +91,11 @@ const Pages = () => {
     readableAtom: {userRole},
   } = useAuth();
 
-  const {sseType3, confirmSseIsRead} = useSse();
-
   const {getReviewWait} = useReviewWait();
 
   useEffect(() => {
     getReviewWait();
   }, []);
-
-  const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
-
-  const [redeemablePoints] = useAtom(redeemablePointsAtom);
 
   // useEffect(() => {
   //   console.log('획득 가능한 포인트 확인');
@@ -158,11 +173,6 @@ const Pages = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('sseType3 값 확인');
-    console.log(sseType3);
-  }, [sseType3]);
-
   if (!isUserInfo) {
     return <SkeletonUI />;
   }
@@ -224,7 +234,7 @@ const Pages = () => {
                 navigation.navigate(ReviewScreenName);
               }}>
               <SseRedDot
-                isSse={!sseType3.read}
+                isSse={total > 0}
                 position="absolute"
                 right="-10px"
                 top="0px">
@@ -277,7 +287,11 @@ const Pages = () => {
 
             <ListBox
               title="리뷰 관리"
-              isSse={!sseType3.read}
+              // sseRedDot 로직
+              // total>0일때
+              //
+              // isSse={!sseType3.read}
+              isSse={total > 0}
               description={redeemablePoints > 0 && `모두 작성시 최대 `}
               effect={
                 redeemablePoints > 0 && (
@@ -315,10 +329,10 @@ const Pages = () => {
               title="공지사항"
               routeName={NoticeScreenName}
             />
-            <ListBox
+            {/* <ListBox
               title="조재신 업무파악용(테스트)"
               routeName={testPageName}
-            />
+            /> */}
             <ListBox
               title="약관 및 개인 정보"
               routeName={TermOfServicePageName}

@@ -14,3 +14,12 @@ export const sseType4Atom = atomWithReset({});
 // type: 5 다음주 식사 구매하셨나요?
 
 export const sseType5Atom = atomWithReset({});
+
+// type: 6
+
+export const sseType6Atom = atomWithReset({});
+
+///////
+
+// 리뷰 작성 후 sseType3 보낼지 말지 확인하기
+export const checkSseType3Atom = atomWithReset(false);

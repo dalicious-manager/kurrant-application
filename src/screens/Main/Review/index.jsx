@@ -31,6 +31,7 @@ const Tab = createMaterialTopTabNavigator();
 const Screen = ({route}) => {
   const point = route?.params?.from;
   const pointId = route?.params?.id;
+
   const [popupShow, setPopupShow] = useAtom(modalStatusAtom);
   const navigation = useNavigation();
   const theme = useTheme();
@@ -56,6 +57,8 @@ const Screen = ({route}) => {
     });
   }, []);
 
+  // 구매후기가 0 으로 돌아가면 sseType3
+
   return (
     <>
       {popupShow && <Popup setPopupShow={setPopupShow} />}
@@ -76,8 +79,8 @@ const Screen = ({route}) => {
           options={({navigation}) => ({
             tabBarLabel: ({focused}) => (
               <SseRedDot
-                // isSse={total > 0}
-                isSse={true}
+                isSse={total > 0}
+                // isSse={true}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>
@@ -101,7 +104,7 @@ const Screen = ({route}) => {
             tabBarLabel: ({focused}) => (
               <SseRedDot
                 // isSse={total > 0}
-                isSse={true}
+                isSse={false}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>

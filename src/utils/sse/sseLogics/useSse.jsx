@@ -28,6 +28,7 @@ const useSse = () => {
   const [sseType3, setSseType3] = useAtom(sseType3Atom);
   const [sseType4, setSseType4] = useAtom(sseType4Atom);
   const [sseType5, setSseType5] = useAtom(sseType5Atom);
+  const [sseType6, setSseType6] = useAtom(sseType5Atom);
 
   // sse 구독
 
@@ -48,7 +49,7 @@ const useSse = () => {
     const tokenYo = await getToken();
     const yoyoyo = new SseService(apiHostUrl, tokenYo);
     instanceCount += 1;
-    console.log('인스턴스 만든 횟수 ' + instanceCount);
+    // console.log('인스턴스 만든 횟수 ' + instanceCount);
 
     return yoyoyo;
   }, [apiHostUrl, getToken]);
@@ -85,6 +86,7 @@ const useSse = () => {
                 break;
               case 3:
                 // type: 3 구매후기
+                //
                 console.log('type: 3 구매후기 Sse 확인');
                 console.log({...JSON.parse(message)});
                 setSseType3({...JSON.parse(message)});
@@ -100,6 +102,12 @@ const useSse = () => {
                 console.log('type: 5 다음주 식사 구매하셨나요? Sse 확인');
                 console.log({...JSON.parse(message)});
                 setSseType5({...JSON.parse(message)});
+                break;
+              case 6:
+                // type: 6 알림 관련
+                console.log('type: 6 Sse 확인');
+                console.log({...JSON.parse(message)});
+                setSseType6({...JSON.parse(message)});
                 break;
               default:
                 break;
@@ -122,7 +130,6 @@ const useSse = () => {
     {
       onSuccess: data => {
         console.log('sse 알림 읽기 success');
-
         console.log(data[1]);
 
         const messageType = data[1];
@@ -153,6 +160,12 @@ const useSse = () => {
             console.log('sse 알림읽기 성공 message type 5');
             // console.log({});
             setSseType5({});
+            break;
+          case 6:
+            // type: 6 알림관련
+            console.log('sse 알림읽기 성공 message type 6');
+            // console.log({});
+            setSseType6({});
             break;
           default:
             break;

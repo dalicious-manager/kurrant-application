@@ -24,6 +24,7 @@ import MainDim from '../../../pages/Spots/spotGuide/MainDim';
 import {mainDimAtom} from '../../../utils/store';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {sseType3Atom} from '../../../utils/sse/sseLogics/store';
+import useSse from '../../../utils/sse/sseLogics/useSse';
 // import BackButton from '../../../components/BackButton';
 
 export const SCREEN_NAME = 'S_MAIN__BNB';
@@ -127,6 +128,7 @@ const Screen = () => {
               <TabBarIconWrap>
                 <SseRedDot
                   // 여기에 로직 여러개 들어감
+                  //
                   isSse={!!sseType3.type && !sseType3.read}
                   position="absolute"
                   right="-6px"
