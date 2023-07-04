@@ -20,10 +20,14 @@ import styled from 'styled-components';
 
 import MealDetailReview from './Review/MealDetailReview';
 import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
+// import {
+//   fetchNextPageReviewDetailAtom,
+//   hasNextPageReviewDetailAtom,
+// } from './Review/MealDetailReview/store';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
-} from './Review/MealDetailReview/store';
+} from '../../../../../biz/useReview/useMealDetailReview/store';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
@@ -70,7 +74,7 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
-  console.log(isFoodDetailLoading, 'oo');
+  // console.log(isFoodDetailLoading, 'oo');
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
@@ -125,6 +129,9 @@ const Pages = ({route}) => {
     loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    console.log(isfoodDetailDiscount?.membershipDiscountRate, 'food');
+  }, [isfoodDetailDiscount?.membershipDiscountRate]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTransparent: true,
@@ -290,7 +297,11 @@ const Pages = ({route}) => {
 
   // 상세페이지 리뷰 로직
 
-  if (isFoodDetailLoading) {
+  if (
+    isFoodDetailLoading &&
+    !isFoodDetail?.membershipDiscountedRate &&
+    !isfoodDetailDiscount?.membershipDiscountRate
+  ) {
     return <Skeleton />;
   }
 
@@ -389,10 +400,16 @@ const Pages = ({route}) => {
                     )}
                   </PriceWrap>
                 </View>
-                {isfoodDetailDiscount?.membershipDiscountRate !==
-                  isFoodDetail?.membershipDiscountedRate && (
-                  <MembershipDiscountBox isFoodDetail={isfoodDetailDiscount} />
-                )}
+
+                {/* 여기서 에러뜨는 것 같음 */}
+                {isFoodDetail?.membershipDiscountedRate &&
+                  isfoodDetailDiscount?.membershipDiscountRate &&
+                  isfoodDetailDiscount?.membershipDiscountRate !==
+                    isFoodDetail?.membershipDiscountedRate && (
+                    <MembershipDiscountBox
+                      isFoodDetail={isfoodDetailDiscount}
+                    />
+                  )}
               </Content>
             </TouchableWithoutFeedback>
             <Content>
@@ -444,11 +461,13 @@ const Pages = ({route}) => {
               </InfoWrap>
             </Content>
             {/* 리뷰자리 */}
-            <MealDetailReview
-              foodName={isFoodDetail?.name}
-              imageLocation={isFoodDetail?.imageList}
-              dailyFoodId={dailyFoodId}
-            />
+            {!isFoodDetailLoading && (
+              <MealDetailReview
+                foodName={isFoodDetail?.name}
+                imageLocation={isFoodDetail?.imageList}
+                dailyFoodId={dailyFoodId}
+              />
+            )}
           </View>
         </ScrollViewWrap>
 

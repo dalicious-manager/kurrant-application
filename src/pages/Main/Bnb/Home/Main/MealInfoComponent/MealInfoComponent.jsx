@@ -8,7 +8,8 @@ import styled, {css} from 'styled-components';
 
 import Typography from '../../../../../../components/Typography';
 import {useConfirmOrderState} from '../../../../../../hook/useOrder';
-import {SCREEN_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
+// import {PAGE_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
+import {PAGE_NAME as reviewPage} from '../../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
 import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
 import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import CoinAnimation from '../../components/CoinAnimation';
