@@ -1,38 +1,128 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {View, Dimensions, Image, ScrollView} from 'react-native';
+import {View, Dimensions, Image, ScrollView, Alert} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
 import PlusIcon from '~assets/icons/Map/plus.svg';
 import MealIcon from '~assets/icons/Spot/meal.svg';
+import PhoneIcon from '~assets/icons/Spot/phone.svg';
 import UserIcon from '~assets/icons/Spot/user.svg';
 import Toast from '~components/Toast';
 import Typography from '~components/Typography';
 import {diningTypeString} from '~utils/diningType';
 
-import {useGetShareSpotDetail} from '../../../../hook/useShareSpot';
-import {useGroupSpotDetail} from '../../../../hook/useSpot';
+import DeliveryTable from './components/DeliveryTable';
+import {PAGE_NAME as SelectSpotPageName} from '..';
+import useGroupSpots from '../../../../biz/useGroupSpots/hook';
+import {useGroupSpotList} from '../../../../hook/useSpot';
+import {setStorage} from '../../../../utils/asyncStorage';
+import {PAGE_NAME as ApplySpotPage} from '../../../Spots/shareSpot/ApplySpot';
+import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
 
-import {SharePickSpot, PickGrey, TimeIcon, Card, DeliverySpot} from '~assets';
+import {PickGrey, TimeIcon, DeliverySpot} from '~assets';
 const WIDTH = Dimensions.get('screen').width;
+
+const detailData = {
+  id: '0b24e5e2-2eab-4bba-9042-fafa1f7fff6a',
+  statusCode: 200,
+  message: '스팟 상세 조회에 성공하셨습니다.',
+  data: {
+    id: 136,
+    name: '달리셔스(카페)',
+    address: '서울특별시 강남구 테헤란로51길 21 3F 달리셔스 (역삼동 704-48)',
+    phone: '01036435850',
+    userCount: 58,
+    diningTypes: [2],
+    mealInfos: [
+      {
+        diningType: 1,
+        lastOrderTime: '0일전 06:00',
+        membershipBenefitTime: '0일전 06:00',
+        deliveryTimes: ['06:30', '07:00', '08:00'],
+      },
+      {
+        diningType: 2,
+        lastOrderTime: '0일전 21:00',
+        membershipBenefitTime: '0일전 21:00',
+        deliveryTimes: ['23:30', '24:00', '01:00'],
+      },
+    ],
+    spots: [
+      {
+        spotId: 138,
+        spotName: '알렉산더',
+        isRestriction: null,
+      },
+    ],
+  },
+  error: null,
+};
+
 export const PAGE_NAME = 'P__GROUP__MANAGE__SPOT_DETAIL';
 const Pages = ({route}) => {
-  const toast = Toast();
-  const themeApp = useTheme();
   const clientId = route?.params?.clientId;
-  const {data: detailData, refetch: detailDataRefech} =
-    useGroupSpotDetail(clientId);
+  const spotType = route?.params?.spotType;
+  const {userWithdrawGroup} = useGroupSpots();
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
+  const myGroupList =
+    isUserGroupSpotCheck?.data?.spotListResponseDtoList?.filter(
+      el => el.clientId !== clientId,
+    );
+  // const {data: detailData, refetch: detailDataRefech} =
+  //   useGroupSpotDetail(clientId);
   const navigation = useNavigation();
   const diningType = [1, 2, 3];
-  useEffect(() => {
-    console.log(detailData?.data, 'clientId');
-  }, [detailData?.data]);
-  const goToApplyPage = from => {};
+
+  const goToApplyPage = from => {
+    navigation.navigate(ApplySpotPage, {
+      center: {
+        latitude: Number(detailData?.data?.latitude),
+        longitude: Number(detailData?.data?.longitude),
+      },
+      roadAddress: detailData?.data?.address,
+      groupId: detailData?.data?.id,
+      name: detailData?.data?.name,
+      from: from,
+    });
+  };
+  const withdrawPress = () => {
+    Alert.alert(
+      '스팟 탈퇴',
+      '이 스팟의 모든 상세스팟에서 로그아웃됩니다.\n정말 탈퇴하시겠어요?',
+
+      [
+        {
+          text: '취소',
+          onPress: () => {},
+        },
+        {
+          text: '스팟 탈퇴',
+          onPress: async () => {
+            try {
+              const res = await userWithdrawGroup({
+                id: clientId,
+              });
+              await setStorage('spotStatus', res.data.toString());
+
+              if (myGroupList.length === 0) {
+                navigation.navigate(SpotTypePage);
+              } else {
+                navigation.navigate(SelectSpotPageName);
+              }
+            } catch (err) {
+              Alert.alert('스팟 탈퇴', err?.toString()?.replace('error: ', ''));
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+    );
+  };
   return (
     <Wrap>
       <Contents>
-        <Title>{detailData?.data?.clientName}</Title>
+        <Title>{detailData?.data?.name}</Title>
         <ScrollView
           style={{marginTop: 24, paddingBottom: 200}}
           showsVerticalScrollIndicator={false}>
@@ -50,125 +140,94 @@ const Pages = ({route}) => {
           <Border />
           <DiningTypeWrap>
             <MealIcon width={20} height={20} />
-            {diningType.map(v => (
-              <DiningTypeText
-                key={v}
-                type={detailData?.data?.mealTypeInfoList
-                  .map(meal => meal.diningType)
-                  .includes(v)}
-                value={v}>
-                {diningTypeString(v)}
-                {v !== 3 && <DiningTypeDisabledText>・</DiningTypeDisabledText>}
-              </DiningTypeText>
-            ))}
-
+            <DiningTypeBox>
+              {diningType.map(v => (
+                <DiningTypeText
+                  key={v}
+                  type={detailData?.data?.diningTypes.includes(v)}
+                  value={v}>
+                  {diningTypeString(v)}
+                  {v !== 3 && (
+                    <DiningTypeDisabledText>・</DiningTypeDisabledText>
+                  )}
+                </DiningTypeText>
+              ))}
+            </DiningTypeBox>
             <Body06RText>운영중</Body06RText>
           </DiningTypeWrap>
-
           <Border />
+          {spotType === 2 && detailData?.data?.userCount && (
+            <>
+              <UserViewWrap>
+                <UserIcon width={20} height={20} />
+                <Body06RText style={{marginLeft: 16}}>
+                  {detailData?.data?.userCount}명
+                </Body06RText>
+              </UserViewWrap>
+              <Border />
+            </>
+          )}
+          {spotType === 1 && detailData?.data?.phone && (
+            <>
+              <UserViewWrap>
+                <PhoneIcon width={20} height={20} />
+                <Body06RText style={{marginLeft: 16}}>
+                  {detailData?.data?.phone}
+                </Body06RText>
+              </UserViewWrap>
+              <Border />
+            </>
+          )}
           <DeliveryWrap>
             <Delivery>
-              <Image source={DeliverySpot} style={{width: 20, height: 20}} />
-              <Body06RText style={{marginLeft: 16}}>배송 시간</Body06RText>
+              <Image source={TimeIcon} style={{width: 20, height: 20}} />
+              <Body06RText style={{marginLeft: 16}}>
+                배송/주문마감 시간
+              </Body06RText>
             </Delivery>
-            <ApplyButton onPress={() => goToApplyPage('time')}>
-              <PlusIcon />
-              <ApplyText>시간 추가 신청</ApplyText>
-            </ApplyButton>
+            {spotType === 2 && (
+              <ApplyButton onPress={() => goToApplyPage('time')}>
+                <PlusIcon />
+                <ApplyText>시간 추가 신청</ApplyText>
+              </ApplyButton>
+            )}
           </DeliveryWrap>
           <InnerView>
-            {detailData?.data?.breakfastDeliveryTime !== null && (
-              <DetailSpotWrap>
-                <DiningType style={{marginRight: 8}}>아침 )</DiningType>
-                <VerticalBorder />
-                {detailData?.data?.breakfastDeliveryTime?.map(el => {
-                  const lastTime =
-                    detailData?.data?.breakfastDeliveryTime[
-                      detailData?.data?.breakfastDeliveryTime?.length - 1
-                    ];
-
-                  return (
-                    <React.Fragment key={el}>
-                      <TimeText>{el}</TimeText>
-                      {lastTime !== el && <VerticalBorder />}
-                    </React.Fragment>
-                  );
-                })}
-              </DetailSpotWrap>
-            )}
-            {detailData?.data?.lunchDeliveryTime !== null && (
-              <DetailSpotWrap>
-                <DiningType style={{marginRight: 8}}>점심 )</DiningType>
-
-                {detailData?.data?.lunchDeliveryTime?.map(el => {
-                  const lastTime =
-                    detailData?.data?.lunchDeliveryTime[
-                      detailData?.data?.lunchDeliveryTime?.length - 1
-                    ];
-
-                  return (
-                    <React.Fragment key={el}>
-                      <TimeText>{el}</TimeText>
-                      {lastTime !== el && <VerticalBorder />}
-                    </React.Fragment>
-                  );
-                })}
-              </DetailSpotWrap>
-            )}
-            {detailData?.data?.dinnerDeliveryTime !== null && (
-              <DetailSpotWrap>
-                <DiningType style={{marginRight: 8}}>저녁 )</DiningType>
-                <VerticalBorder />
-                {detailData?.data?.dinnerDeliveryTime?.map(el => {
-                  const lastTime =
-                    detailData?.data?.dinnerDeliveryTime[
-                      detailData?.data?.dinnerDeliveryTime?.length - 1
-                    ];
-                  return (
-                    <React.Fragment key={el}>
-                      <TimeText>{el}</TimeText>
-                      {lastTime !== el && <VerticalBorder />}
-                    </React.Fragment>
-                  );
-                })}
-              </DetailSpotWrap>
-            )}
+            <DeliveryTable mealInfo={detailData?.data?.mealInfos} />
           </InnerView>
           <Border />
           <DeliveryWrap>
             <Delivery>
-              <Image source={TimeIcon} style={{width: 20, height: 20}} />
+              <Image source={DeliverySpot} style={{width: 20, height: 20}} />
+
               <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
             </Delivery>
-            <ApplyButton onPress={() => goToApplyPage('spot')}>
-              <PlusIcon />
-              <ApplyText>스팟 추가 신청</ApplyText>
-            </ApplyButton>
+            {spotType === 2 && (
+              <ApplyButton onPress={() => goToApplyPage('spot')}>
+                <PlusIcon />
+                <ApplyText>스팟 추가 신청</ApplyText>
+              </ApplyButton>
+            )}
           </DeliveryWrap>
-          {/* <InnerView>
-            {detailData?.data?.spotDetailDtos.map((el, idx) => {
+          <InnerView>
+            {detailData?.data?.spots.map(el => {
               return (
-                <DetailSpotWrap key={el.name}>
-                  <DetailSpotName>{el.name}</DetailSpotName>
+                <DetailSpotWrap key={el.spotName}>
+                  <DetailSpotName>{el.spotName}</DetailSpotName>
                   {el.isRestriction && (
                     <CardBoolean>
                       <VerticalBorder />
-
                       <NeedCardText>외부인 출입 제한</NeedCardText>
                     </CardBoolean>
                   )}
                 </DetailSpotWrap>
               );
             })}
-          </InnerView> */}
-          <Border />
-          <UserViewWrap>
-            <UserIcon width={20} height={20} />
-            <Body06RText style={{marginLeft: 16}}>
-              {detailData?.data?.userCount}명
-            </Body06RText>
-          </UserViewWrap>
+          </InnerView>
         </ScrollView>
+        <AddSpotWrap onPress={withdrawPress}>
+          <AddSpotText>스팟 탈퇴</AddSpotText>
+        </AddSpotWrap>
       </Contents>
     </Wrap>
   );
@@ -179,6 +238,7 @@ export default Pages;
 const Wrap = styled.View`
   background-color: ${({theme}) => theme.colors.grey[0]};
   flex: 1;
+  padding-bottom: 126px;
   //align-items: center;
   width: ${WIDTH}px;
 `;
@@ -187,24 +247,17 @@ const Contents = styled.View`
   padding: 12px 24px 35px 24px;
   position: relative;
 `;
-const Content = styled.View`
-  // padding: 12px 24px 35px 24px;
-  position: relative;
-  flex: 1;
-`;
-
-const SpotNameText = styled(Typography).attrs({text: 'Title04SB'})`
-  color: ${({theme}) => theme.colors.grey[2]};
-  margin-bottom: 8px;
-`;
 
 const DiningTypeText = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme, type}) =>
     type ? theme.colors.blue[500] : theme.colors.grey[6]};
-  margin-left: 12px;
-  margin-right: ${({value}) => (value === 3 ? '8px' : '0px')};
 `;
 
+const DiningTypeBox = styled.View`
+  flex-direction: row;
+  margin-left: 12px;
+  margin-right: 8px;
+`;
 const DiningTypeWrap = styled.View`
   flex-direction: row;
   align-items: center;
@@ -221,19 +274,6 @@ const Body06RText = styled(Typography).attrs({text: 'Body06R'})`
 
 const Title = styled(Typography).attrs({text: 'Title03R'})`
   color: ${({theme}) => theme.colors.grey[2]};
-`;
-
-const SpotPickWrap = styled.Pressable`
-  width: 48px;
-  height: 48px;
-
-  border: 1px solid ${({theme}) => theme.colors.grey[7]};
-  border-radius: 50px;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0px;
-  right: 24px;
 `;
 
 const Border = styled.View`
@@ -261,10 +301,6 @@ const ApplyText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme}) => theme.colors.grey[2]};
   margin-left: 4px;
 `;
-const TimeText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme}) => theme.colors.grey[3]};
-  margin-right: 8px;
-`;
 
 const ApplyButton = styled.Pressable`
   border: 1px solid ${({theme}) => theme.colors.grey[7]};
@@ -279,18 +315,6 @@ const VerticalBorder = styled.View`
   height: 10px;
   background-color: ${({theme}) => theme.colors.grey[7]};
   margin-right: 8px;
-`;
-
-const Label = styled.Pressable`
-  background-color: ${({theme}) => theme.colors.grey[8]};
-  border-radius: 4px;
-  padding: 3px 8px;
-  align-self: flex-start;
-  margin-right: 8px;
-`;
-
-const DiningType = styled(Typography).attrs({text: 'SmallLabel'})`
-  color: ${({theme}) => theme.colors.grey[2]};
 `;
 
 const DetailSpotName = styled(Typography).attrs({text: 'CaptionR'})`
@@ -319,20 +343,6 @@ const InnerView = styled.View`
   padding: 16px 0px 0px 36px;
 `;
 
-const DetailSpotTimeWrap = styled.View`
-  margin-bottom: ${({last}) => (last ? '150px' : '24px')};
-`;
-
-const ButtonWrap = styled(LinearGradient)`
-  position: absolute;
-  padding: 0px 20px;
-  height: 100px;
-  bottom: 0px;
-  width: 100%;
-  justify-content: flex-start;
-`;
-
-const TimeWrap = styled(LinearGradient)``;
 const DiningTypeDisabledText = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[6]};
   margin-left: 12px;
@@ -345,4 +355,13 @@ const Name = styled.View`
   padding-right: 24px;
 `;
 
-const AddressWrap = styled.View``;
+const AddSpotWrap = styled.Pressable`
+  justify-self: center;
+  align-self: center;
+  padding-top: 24px;
+`;
+const AddSpotText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[3]};
+  text-decoration: underline;
+  text-decoration-color: ${({theme}) => theme.colors.grey[3]};
+`;

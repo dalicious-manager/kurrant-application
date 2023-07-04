@@ -32,6 +32,7 @@ const SpotListBox = ({item}) => {
         onPress={() => {
           navigation.navigate(GroupManageSpotDetailPageName, {
             clientId: item.clientId,
+            spotType: item.spotType,
           });
         }}>
         <Typography text="Button10SB" textColor={themeApp.colors.grey[3]}>

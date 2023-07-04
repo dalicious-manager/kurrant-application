@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import {useAtomValue} from 'jotai';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {Alert, Dimensions, Pressable, ScrollView, View} from 'react-native';
+import {Alert, Dimensions, Pressable, ScrollView} from 'react-native';
 import styled from 'styled-components';
 
 import {PAGE_NAME as SelectSpotPageName} from '..';
@@ -21,8 +20,6 @@ import {setStorage} from '../../../../utils/asyncStorage';
 import withCommas from '../../../../utils/withCommas';
 import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as ApartModifyAddressHoPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailHo';
-import {PAGE_NAME as CreateGroupPageName} from '../../GroupCreate';
 const WIDTH = Dimensions.get('screen').width;
 export const PAGE_NAME = 'P__GROUP__MANAGE__DETAIL';
 const Pages = ({route}) => {
