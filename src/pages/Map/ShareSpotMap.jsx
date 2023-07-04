@@ -34,7 +34,7 @@ import {
   touchInfoAtom,
   userLocationAtom,
 } from '../../utils/store';
-import {PAGE_NAME as GroupManagePageName} from '../Group/GroupManage/DetailPage';
+import {PAGE_NAME as GroupManagePageName} from '../Group/GroupManage/SpotManagePage';
 import {PAGE_NAME as RegisterSpotMapPage} from '../Map/RegisterSpotMap';
 import {PAGE_NAME as ShareSpotListPage} from '../Spots/shareSpot/ShareSpotList';
 // latitude : 위도 (y) ,longitude :경도 (x)

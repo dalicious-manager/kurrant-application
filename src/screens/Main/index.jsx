@@ -239,8 +239,11 @@ import GroupCreateComplete, {
 import GroupManage, {
   PAGE_NAME as GroupManagePageName,
 } from '../../pages/Group/GroupManage';
-import GroupManageDetail, {
-  PAGE_NAME as GroupManageDetailPageName,
+import GroupManageSpotManage, {
+  PAGE_NAME as GroupManageSpotManagePageName,
+} from '../../pages/Group/GroupManage/SpotManagePage';
+import GroupManageSpotDetail, {
+  PAGE_NAME as GroupManageSpotDetailPageName,
 } from '../../pages/Group/GroupManage/DetailPage';
 import BuyMeal, {
   PAGE_NAME as BuyMealPageName,
@@ -1921,8 +1924,8 @@ const Screen = () => {
           }}
         />
         <MainRoot.Screen
-          name={GroupManageDetailPageName}
-          component={GroupManageDetail}
+          name={GroupManageSpotManagePageName}
+          component={GroupManageSpotManage}
           options={{
             headerShown: true,
             headerShadowVisible: false,
@@ -1933,7 +1936,28 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
-
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            // headerLeft: () => {
+            //   <Pressable onPress={()=>navigation.navigate(SCREEN_NAME)}>
+            //     <CloseIcon />
+            // </Pressable>
+            // },
+          }}
+        />
+        <MainRoot.Screen
+          name={GroupManageSpotDetailPageName}
+          component={GroupManageSpotDetail}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '상세 정보',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
             // headerLeft: () => {
             //   <Pressable onPress={()=>navigation.navigate(SCREEN_NAME)}>
             //     <CloseIcon />
