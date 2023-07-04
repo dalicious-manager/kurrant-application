@@ -9,7 +9,8 @@ import {isDueDateCloseRenderRed} from '../../../../../biz/useMypageReview';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import Typography from '../../../../../components/Typography';
 import {PAGE_NAME as MealDetailPageName} from '../../../../../pages/Main/Bnb/MealDetail/Main';
-import {SCREEN_NAME as CreateReviewScreenName} from '../../../../../screens/Main/Review/CreateReview/Page1';
+// import {PAGE_NAME as CreateReviewScreenName} from '../../../../../screens/Main/Review/CreateReview/Page1';
+import {PAGE_NAME as CreateReviewScreenName} from '../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
 import {
   formattedMonthDay,
   stringDateToJavascriptDate,

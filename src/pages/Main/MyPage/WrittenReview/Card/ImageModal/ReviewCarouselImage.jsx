@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Dimensions, Image} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Carousel from 'react-native-reanimated-carousel';
 import styled from 'styled-components';
 
@@ -89,46 +90,48 @@ const ReviewCarouselImage = ({
 
   return (
     <View>
-      <Carousel
-        // loop={img?.length !== 1}
-        loop
-        enabled={img.length > 1}
-        // index가 바뀔때 위의 화면을 바꾸게 하고 싶으면 ref의 current scrollTo를 이용하면된다
-        ref={carouselRef}
-        width={phoneWidth}
-        // height={563}
-        height={Dimensions.get('screen').height * heightRate}
-        data={imgHandledArray}
-        scrollAnimationDuration={600}
-        // autoplay={true}, autoPlayInterval={null} : 자동으로 카루셀 되는거 막기
-        // autoplay={img.length < 2 ? true : false}
-        autoplay={true}
-        autoPlayInterval={null}
-        onSnapToItem={index => {
-          // setActiveIndex
+      <GestureHandlerRootView style={{flex: 1}}>
+        <Carousel
+          // loop={img?.length !== 1}
+          loop
+          enabled={img.length > 1}
+          // index가 바뀔때 위의 화면을 바꾸게 하고 싶으면 ref의 current scrollTo를 이용하면된다
+          ref={carouselRef}
+          width={phoneWidth}
+          // height={563}
+          height={Dimensions.get('screen').height * heightRate}
+          data={imgHandledArray}
+          scrollAnimationDuration={600}
+          // autoplay={true}, autoPlayInterval={null} : 자동으로 카루셀 되는거 막기
+          // autoplay={img.length < 2 ? true : false}
+          autoplay={true}
+          autoPlayInterval={null}
+          onSnapToItem={index => {
+            // setActiveIndex
 
-          // 이미지가 한개일때는 카루셀 막기
+            // 이미지가 한개일때는 카루셀 막기
 
-          setIndex(index);
-        }}
-        defaultIndex={firstClickedImageIndex}
-        renderItem={({item}) => {
-          return (
-            <Container>
-              <MyView>
-                <MealImage
-                  heightRate={heightRate}
-                  height={item[1].height}
-                  source={{
-                    uri: `${item[0]}`,
-                  }}
-                  style={item[1]}
-                />
-              </MyView>
-            </Container>
-          );
-        }}
-      />
+            setIndex(index);
+          }}
+          defaultIndex={firstClickedImageIndex}
+          renderItem={({item}) => {
+            return (
+              <Container>
+                <MyView>
+                  <MealImage
+                    heightRate={heightRate}
+                    height={item[1].height}
+                    source={{
+                      uri: `${item[0]}`,
+                    }}
+                    style={item[1]}
+                  />
+                </MyView>
+              </Container>
+            );
+          }}
+        />
+      </GestureHandlerRootView>
     </View>
   );
 };

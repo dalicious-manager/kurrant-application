@@ -587,6 +587,7 @@ const Pages = ({route}) => {
     handlePress: handlePress,
     time: time,
   };
+
   return (
     <SafeView>
       <CalendarWrap>
