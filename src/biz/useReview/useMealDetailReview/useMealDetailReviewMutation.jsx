@@ -1,5 +1,5 @@
 import {useMutation, useQueryClient} from 'react-query';
-import {fetchJson} from '../../../../../../../utils/fetch';
+import {fetchJson} from '~utils/fetch';
 
 const useMealDetailReviewMutation = () => {
   const queryClient = useQueryClient();
