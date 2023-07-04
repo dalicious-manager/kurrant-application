@@ -8,15 +8,20 @@ import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
-import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+// import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
+// import {
+//   fetchNextPageReviewDetailAtom,
+//   hasNextPageReviewDetailAtom,
+// } from './store';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
-} from './store';
-import useGetMealDetailReview from './useGetMealDetailReview';
+} from '../../../../../../../biz/useReview/useMealDetailReview/store';
+import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import {
   ArrowUpAndDown,
   Picture,
@@ -29,6 +34,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const theme = useTheme();
 
   const navigation = useNavigation();
+
+  // console.log(dailyFoodId);
 
   // 샘플 대에터
   // const dailyFoodId = 40827;

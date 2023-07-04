@@ -10,23 +10,22 @@ import RNFetchBlob from 'rn-fetch-blob';
 import styled, {useTheme} from 'styled-components/native';
 
 import ReviewInput from './ReviewInput';
-import {starRatingAtom} from './store';
-import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
-import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
-import Button from '../../../../../components/Button';
-import {
-  CheckIcon,
-  EnabledPoint,
-  XCircleIcon,
-} from '../../../../../components/Icon';
-import RateStars from '../../../../../components/RateStars';
-import Typography from '../../../../../components/Typography';
-import UploadPhoto from '../../../../../components/UploadPhoto';
-import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
-import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-import {getStorage} from '../../../../../utils/asyncStorage';
-import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
-import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
+// import {starRatingAtom} from './store';
+import {starRatingAtom} from '~biz/useReview/useCreateAndEditReview/store';
+import useReviewWait from '~biz/useReview/useReviewWait/hook';
+import useWrittenReview from '~biz/useReview/useWrittenReview/hook';
+import Button from '~components/Button';
+import {CheckIcon, EnabledPoint, XCircleIcon} from '~components/Icon';
+import RateStars from '~components/RateStars';
+import Typography from '~components/Typography';
+import UploadPhoto from '~components/UploadPhoto';
+import useKeyboardEvent from '~hook/useKeyboardEvent';
+import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
+import {getStorage} from '~utils/asyncStorage';
+// import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
+import {SCREEN_NAME as MainScreenName} from '../../../../../../screens/Main/Bnb';
+// import {SCREEN_NAME as ReviewScreenName} from '../../../../Review';
+import {SCREEN_NAME as ReviewScreenName} from '../../../../../../screens/Main/Review';
 
 // 수정후 여기로 오게 하기
 // import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
@@ -36,8 +35,8 @@ import {SCREEN_NAME as ReviewScreenName} from '../../../Review';
 //   PAGE_NAME as MoreMainPageName,
 // } from '../../../pages/Main/Bnb/More/Main';
 
-export const SCREEN_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
-export const SCREEN_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
+export const PAGE_NAME = 'S_MAIN__CREATE_REVIEW_PAGE_2';
+export const PAGE_NAME2 = 'S_MAIN__EDIT_REVIEW_PAGE_2';
 
 const apiHostUrl =
   Config.NODE_ENV === 'dev'

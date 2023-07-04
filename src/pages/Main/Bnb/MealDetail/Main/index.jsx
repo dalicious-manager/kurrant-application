@@ -20,10 +20,14 @@ import styled from 'styled-components';
 
 import MealDetailReview from './Review/MealDetailReview';
 import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
+// import {
+//   fetchNextPageReviewDetailAtom,
+//   hasNextPageReviewDetailAtom,
+// } from './Review/MealDetailReview/store';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
-} from './Review/MealDetailReview/store';
+} from '../../../../../biz/useReview/useMealDetailReview/store';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
@@ -70,7 +74,7 @@ const Pages = ({route}) => {
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
-  console.log(isFoodDetailLoading, 'oo');
+  // console.log(isFoodDetailLoading, 'oo');
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
@@ -396,6 +400,8 @@ const Pages = ({route}) => {
                     )}
                   </PriceWrap>
                 </View>
+
+                {/* 여기서 에러뜨는 것 같음 */}
                 {isFoodDetail?.membershipDiscountedRate &&
                   isfoodDetailDiscount?.membershipDiscountRate &&
                   isfoodDetailDiscount?.membershipDiscountRate !==
