@@ -35,6 +35,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
 
   const navigation = useNavigation();
 
+  // console.log(dailyFoodId);
+
   // 샘플 대에터
   // const dailyFoodId = 40827;
 
