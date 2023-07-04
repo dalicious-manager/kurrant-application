@@ -118,7 +118,7 @@ const BottomSheetSpot = props => {
                 {booleanValue && (
                   <ManagePressView
                     onPress={() => {
-                      onPressEvent2(setModalVisible(false));
+                      onPressEvent2(userSpotId && setModalVisible(false));
                     }}>
                     <ManageText>설정/관리</ManageText>
                   </ManagePressView>
