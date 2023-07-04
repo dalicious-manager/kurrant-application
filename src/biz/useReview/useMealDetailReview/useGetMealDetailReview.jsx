@@ -2,7 +2,7 @@ import {useAtom} from 'jotai';
 import {useEffect, useState} from 'react';
 import {useInfiniteQuery, useQuery} from 'react-query';
 
-import {fetchJson} from '../../../../../../../utils/fetch';
+import {fetchJson} from '~utils/fetch';
 
 const useGetMealDetailReview = (url, dailyFoodId) => {
   const [isError, setIsError] = useState(false);
@@ -18,9 +18,7 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
 
     {
       getNextPageParam: lastPage => {
-        if (!lastPage.isLast) {
-          return lastPage.currentPage + 1;
-        }
+        if (!lastPage.isLast) lastPage.currentPage + 1;
         return undefined;
       },
     },
@@ -41,7 +39,7 @@ const useGetMealDetailReview = (url, dailyFoodId) => {
       'GET',
     );
 
-    setReviewKeyword(response.data);
+    setReviewKeyword(response.data.filter(v => v !== ''));
   });
 
   return {

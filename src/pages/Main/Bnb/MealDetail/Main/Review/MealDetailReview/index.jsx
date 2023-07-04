@@ -8,15 +8,20 @@ import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
-import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+// import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
+// import {
+//   fetchNextPageReviewDetailAtom,
+//   hasNextPageReviewDetailAtom,
+// } from './store';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
-} from './store';
-import useGetMealDetailReview from './useGetMealDetailReview';
+} from '../../../../../../../biz/useReview/useMealDetailReview/store';
+import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import {
   ArrowUpAndDown,
   Picture,
@@ -90,6 +95,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     reviewKeyword,
   } = useGetMealDetailReview(url, dailyFoodId);
 
+  // const reviewKeyword = ['달퐁이', '참새'];
+
   useEffect(() => {
     // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
 
@@ -150,6 +157,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
 
   const [showSelectList, setShowSelectList] = useState(false);
 
+  // 푸드아이디, 데일리 푸드아이디 확인하기
+
   // useEffect(() => {
   //   console.log('푸드아이딩~');
   //   console.log(foodId); //
@@ -192,6 +201,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   //   console.log(data?.pages[0].items?.reviewList);
   //   console.log(data?.pages[0].items?.starAverage);
   // }, [data]);
+
   const handleConfirmPress = () => {
     setUrl(
       buildCustomUrl(

@@ -117,16 +117,23 @@ import RegisterCard, {
   SCREEN_NAME as RegisterCardScreenName,
 } from './RegisterCard';
 import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+// import CreateReviewPage1, {
+//   SCREEN_NAME as CreateReviewPage1ScreenName,
+// } from './Review/CreateReview/Page1';
 import CreateReviewPage1, {
-  SCREEN_NAME as CreateReviewPage1ScreenName,
-} from './Review/CreateReview/Page1';
+  PAGE_NAME as CreateReviewPage1PageName,
+} from '../../pages/Main/MyPage/Review/CreateReview/Page1';
+// import CreateReviewPage2, {
+//   PAGE_NAME as CreateReviewPage2ScreenName,
+//   PAGE_NAME2 as EditReviewPage2ScreenName,
+// } from './Review/CreateReview/Page2';
 import CreateReviewPage2, {
-  SCREEN_NAME as CreateReviewPage2ScreenName,
-  SCREEN_NAME2 as EditReviewPage2ScreenName,
-} from './Review/CreateReview/Page2';
+  PAGE_NAME as CreateReviewPage2ScreenName,
+  PAGE_NAME2 as EditReviewPage2ScreenName,
+} from '../../pages/Main/MyPage/Review/CreateReview/Page2';
 import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
-} from './Review/ReportReview';
+} from '../../pages/Main/MyPage/Review/ReportReview';
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 import useBoard from '../../biz/useBoard';
 import BackButton from '../../components/BackButton';
@@ -300,8 +307,9 @@ import {
   PurchaseDetailPage,
   PurchaseDetailPageName,
 } from '../../pages/Main/MyPage/PurchaseHistory/Detail';
-import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
+
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
+
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import NotificationCenter, {
   PAGE_NAME as NotificationCenterName,
@@ -1987,7 +1995,7 @@ const Screen = () => {
 
       <MainRoot.Group>
         <MainRoot.Screen
-          name={CreateReviewPage1ScreenName}
+          name={CreateReviewPage1PageName}
           component={CreateReviewPage1}
           options={{
             headerShown: true,

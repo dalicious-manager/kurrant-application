@@ -16,6 +16,8 @@ const Component = ({
   useEffect(() => {
     if (ratingInput) {
       setRating(ratingInput);
+    } else if (ratingInput === 0) {
+      setRating(ratingInput);
     }
   }, [ratingInput]);
 
