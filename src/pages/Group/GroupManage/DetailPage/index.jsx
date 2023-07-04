@@ -1,276 +1,181 @@
 import {useNavigation} from '@react-navigation/native';
-import {useAtomValue} from 'jotai';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {Alert, Dimensions, Pressable, ScrollView, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
-import styled from 'styled-components';
-import {css, useTheme} from 'styled-components/native';
+import React, {useEffect} from 'react';
+import {View, Dimensions, Image, ScrollView} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import styled from 'styled-components/native';
+import {useTheme} from 'styled-components/native';
+import PlusIcon from '~assets/icons/Map/plus.svg';
+import MealIcon from '~assets/icons/Spot/meal.svg';
+import UserIcon from '~assets/icons/Spot/user.svg';
+import Toast from '~components/Toast';
+import Typography from '~components/Typography';
+import {diningTypeString} from '~utils/diningType';
 
-import SpotBox from './components/SpotBox';
-import SpotListBox from './components/SpotListBox';
-import {PAGE_NAME as SelectSpotPageName} from '..';
-import {SpotManageMy} from '../../../../assets';
-import Arrow from '../../../../assets/icons/Group/arrowDown.svg';
-import Close from '../../../../assets/icons/Group/close.svg';
-import Pen from '../../../../assets/icons/Group/pen.svg';
-import useGroupSpots from '../../../../biz/useGroupSpots/hook';
-import BottomSheetSpot from '../../../../components/BottomSheetSpot';
-import Button from '../../../../components/Button';
-import TextButton from '../../../../components/TextButton';
-import Toast from '../../../../components/Toast';
-import Typography from '../../../../components/Typography';
-import {useGroupSpotDetail, useGroupSpotList} from '../../../../hook/useSpot';
-import {useGetUserInfo} from '../../../../hook/useUserInfo';
-import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
-import {setStorage} from '../../../../utils/asyncStorage';
-import withCommas from '../../../../utils/withCommas';
-import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
-import {PAGE_NAME as ApartRegisterSpotPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as ApartModifyAddressHoPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailHo';
-import {PAGE_NAME as CreateGroupPageName} from '../../GroupCreate';
+import {useGetShareSpotDetail} from '../../../../hook/useShareSpot';
+import {useGroupSpotDetail} from '../../../../hook/useSpot';
+
+import {SharePickSpot, PickGrey, TimeIcon, Card, DeliverySpot} from '~assets';
 const WIDTH = Dimensions.get('screen').width;
-export const PAGE_NAME = 'P__GROUP__MANAGE__DETAIL';
+export const PAGE_NAME = 'P__GROUP__MANAGE__SPOT_DETAIL';
 const Pages = ({route}) => {
   const toast = Toast();
   const themeApp = useTheme();
-  const from = route?.params?.from;
+  const clientId = route?.params?.clientId;
+  const {data: detailData, refetch: detailDataRefech} =
+    useGroupSpotDetail(clientId);
   const navigation = useNavigation();
-  const {
-    // groupSpotDetail,
-    isDetailSpot,
-    userGroupSpotCheck,
-    // isUserGroupSpotCheck,
-    userWithdrawGroup,
-    userSpotRegister,
-  } = useGroupSpots();
-  const {data: isUserGroupSpotCheck, refetch: groupRefetch} =
-    useGroupSpotList();
-
-  const {
-    data: {data: isUserInfo},
-  } = useGetUserInfo();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selected, setSelected] = useState();
-  //const [groupState,setGroupState] = useState();
-  const modalOpen = () => {
-    setModalVisible(true);
-  };
-
-  const groupId = isUserInfo?.groupId;
-  const spotId = isUserInfo?.spotId;
-  const spotType = isUserInfo?.spotType;
-  const {data: userGroupSpotDetail, refetch: detailRefetch} =
-    useGroupSpotDetail(spotId);
-  const supportPrice = userGroupSpotDetail?.data?.mealTypeInfoList?.map(
-    el => el.supportPrice,
-  );
-  const myGroupList =
-    isUserGroupSpotCheck?.data?.spotListResponseDtoList?.filter(
-      el => el.clientId !== groupId,
-    );
-
-  const cutName = userGroupSpotDetail?.data?.address?.includes(null);
-  const useName = cutName
-    ? userGroupSpotDetail?.data?.address?.split('null')[0]
-    : userGroupSpotDetail?.data?.address;
-
-  const anotherSpot = async id => {
-    try {
-      const res = await userSpotRegister({id: id});
-      if (res.data === null) {
-        navigation.navigate(ApartRegisterSpotPageName, {id: id});
-      } else {
-        toast.toastEvent();
-      }
-    } catch (error) {
-      Alert.alert('유저 스팟 가입', error?.toString()?.replace('error: ', ''));
-    }
-  };
-
-  const withdrawPress = () => {
-    Alert.alert(
-      '스팟 탈퇴',
-      '이 스팟의 모든 상세스팟에서 로그아웃됩니다.\n정말 탈퇴하시겠어요?',
-      [
-        {
-          text: '취소',
-          onPress: () => {},
-        },
-        {
-          text: '스팟 탈퇴',
-          onPress: async () => {
-            try {
-              const res = await userWithdrawGroup({
-                id: groupId,
-              });
-              await setStorage('spotStatus', res.data.toString());
-
-              if (myGroupList.length === 0) {
-                navigation.navigate(SpotTypePage);
-              } else {
-                navigation.navigate(SelectSpotPageName);
-              }
-            } catch (err) {
-              Alert.alert('스팟 탈퇴', err?.toString()?.replace('error: ', ''));
-            }
-          },
-          style: 'destructive',
-        },
-      ],
-    );
-  };
-
+  const diningType = [1, 2, 3];
   useEffect(() => {
-    if (from === 'shareSpotMap') {
-      setModalVisible(true);
-    }
-  }, [from]);
-  useEffect(() => {
-    console.log(userGroupSpotDetail);
-    if (spotId) detailRefetch();
-  }, [detailRefetch, spotId]);
+    console.log(detailData?.data, 'clientId');
+  }, [detailData?.data]);
+  const goToApplyPage = from => {};
   return (
-    // <SafeView>
     <Wrap>
-      <TitleWrap>
-        <SpotBox type="my" />
-        <SpotBox type="share" />
-        <SpotBox type="private" />
-      </TitleWrap>
-      <Line />
-      <SpotDetailBox>
-        <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
-          스팟 선택
-        </Typography>
-        <SpotView onPress={modalOpen}>
-          <SpotName>
-            {userGroupSpotDetail?.data?.spotName || '스팟을 선택해 주세요'}
-          </SpotName>
-          <Arrow />
-        </SpotView>
-        <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
-          스팟 내역
-        </Typography>
-        <SpotListBox />
-      </SpotDetailBox>
+      <Contents>
+        <Title>{detailData?.data?.clientName}</Title>
+        <ScrollView
+          style={{marginTop: 24, paddingBottom: 200}}
+          showsVerticalScrollIndicator={false}>
+          <Address>
+            <Image source={PickGrey} style={{width: 20, height: 20}} />
+            <View style={{marginLeft: 16}}>
+              <Name>
+                <Body06RText>{detailData?.data?.address}</Body06RText>
+              </Name>
+              {/* <Body06RText style={{color: '#BDBAC1'}}>
+                {detailData?.data?.jibun}
+              </Body06RText> */}
+            </View>
+          </Address>
+          <Border />
+          <DiningTypeWrap>
+            <MealIcon width={20} height={20} />
+            {diningType.map(v => (
+              <DiningTypeText
+                key={v}
+                type={detailData?.data?.mealTypeInfoList
+                  .map(meal => meal.diningType)
+                  .includes(v)}
+                value={v}>
+                {diningTypeString(v)}
+                {v !== 3 && <DiningTypeDisabledText>・</DiningTypeDisabledText>}
+              </DiningTypeText>
+            ))}
 
-      {/* <ScrollView showsVerticalScrollIndicator={false}>
-        <ContentView>
-          <TextView>
-            <Title>배송지</Title>
-            <ContentText>{useName}</ContentText>
-          </TextView>
-          {isDetailSpot?.ho !== null && (
-            <TextView>
-              <Title>세부 주소</Title>
-              <HoView
-                onPress={() => {
-                  navigation.navigate(ApartModifyAddressHoPageName, {
-                    id: spotId,
-                  });
-                }}>
-                <ContentText>{isDetailSpot?.ho}호</ContentText>
-                <PenIcon />
-              </HoView>
-            </TextView>
-          )}
-          <TextView>
-            <Title>멤버십 할인 마감 / 주문 마감 / 배송 시간</Title>
-            {userGroupSpotDetail?.data?.mealTypeInfoList?.map((el, idx) => {
-              const diningType =
-                el.diningType === 1
-                  ? '아침'
-                  : el.diningType === 2
-                  ? '점심'
-                  : '저녁';
+            <Body06RText>운영중</Body06RText>
+          </DiningTypeWrap>
+
+          <Border />
+          <DeliveryWrap>
+            <Delivery>
+              <Image source={DeliverySpot} style={{width: 20, height: 20}} />
+              <Body06RText style={{marginLeft: 16}}>배송 시간</Body06RText>
+            </Delivery>
+            <ApplyButton onPress={() => goToApplyPage('time')}>
+              <PlusIcon />
+              <ApplyText>시간 추가 신청</ApplyText>
+            </ApplyButton>
+          </DeliveryWrap>
+          <InnerView>
+            {detailData?.data?.breakfastDeliveryTime !== null && (
+              <DetailSpotWrap>
+                <DiningType style={{marginRight: 8}}>아침 )</DiningType>
+                <VerticalBorder />
+                {detailData?.data?.breakfastDeliveryTime?.map(el => {
+                  const lastTime =
+                    detailData?.data?.breakfastDeliveryTime[
+                      detailData?.data?.breakfastDeliveryTime?.length - 1
+                    ];
+
+                  return (
+                    <React.Fragment key={el}>
+                      <TimeText>{el}</TimeText>
+                      {lastTime !== el && <VerticalBorder />}
+                    </React.Fragment>
+                  );
+                })}
+              </DetailSpotWrap>
+            )}
+            {detailData?.data?.lunchDeliveryTime !== null && (
+              <DetailSpotWrap>
+                <DiningType style={{marginRight: 8}}>점심 )</DiningType>
+
+                {detailData?.data?.lunchDeliveryTime?.map(el => {
+                  const lastTime =
+                    detailData?.data?.lunchDeliveryTime[
+                      detailData?.data?.lunchDeliveryTime?.length - 1
+                    ];
+
+                  return (
+                    <React.Fragment key={el}>
+                      <TimeText>{el}</TimeText>
+                      {lastTime !== el && <VerticalBorder />}
+                    </React.Fragment>
+                  );
+                })}
+              </DetailSpotWrap>
+            )}
+            {detailData?.data?.dinnerDeliveryTime !== null && (
+              <DetailSpotWrap>
+                <DiningType style={{marginRight: 8}}>저녁 )</DiningType>
+                <VerticalBorder />
+                {detailData?.data?.dinnerDeliveryTime?.map(el => {
+                  const lastTime =
+                    detailData?.data?.dinnerDeliveryTime[
+                      detailData?.data?.dinnerDeliveryTime?.length - 1
+                    ];
+                  return (
+                    <React.Fragment key={el}>
+                      <TimeText>{el}</TimeText>
+                      {lastTime !== el && <VerticalBorder />}
+                    </React.Fragment>
+                  );
+                })}
+              </DetailSpotWrap>
+            )}
+          </InnerView>
+          <Border />
+          <DeliveryWrap>
+            <Delivery>
+              <Image source={TimeIcon} style={{width: 20, height: 20}} />
+              <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
+            </Delivery>
+            <ApplyButton onPress={() => goToApplyPage('spot')}>
+              <PlusIcon />
+              <ApplyText>스팟 추가 신청</ApplyText>
+            </ApplyButton>
+          </DeliveryWrap>
+          {/* <InnerView>
+            {detailData?.data?.spotDetailDtos.map((el, idx) => {
               return (
-                <ContentText key={idx}>
-                  {diningType} 식사 {'\n'}({el.membershipBenefitTime} /{' '}
-                  {el.lastOrderTime} / 당일{el.deliveryTime})
-                </ContentText>
+                <DetailSpotWrap key={el.name}>
+                  <DetailSpotName>{el.name}</DetailSpotName>
+                  {el.isRestriction && (
+                    <CardBoolean>
+                      <VerticalBorder />
+
+                      <NeedCardText>외부인 출입 제한</NeedCardText>
+                    </CardBoolean>
+                  )}
+                </DetailSpotWrap>
               );
             })}
-          </TextView>
-          {supportPrice?.[0] !== null && (
-            <TextView>
-              <Title>식사 지원금</Title>
-              {userGroupSpotDetail?.data?.mealTypeInfoList?.map((el, idx) => {
-                const diningType =
-                  el.diningType === 1
-                    ? '아침'
-                    : el.diningType === 2
-                    ? '점심'
-                    : '저녁';
-                return (
-                  <ContentText key={idx}>
-                    {diningType} 식사 ({withCommas(el.supportPrice)}원)
-                  </ContentText>
-                );
-              })}
-            </TextView>
-          )}
-          <TextView>
-            <Title>스팟명</Title>
-            <ContentText>{userGroupSpotDetail?.data?.clientName}</ContentText>
-            {userGroupSpotDetail?.data && (
-              <Withdraw>
-                <TextButton
-                  size="label13R"
-                  type="grey5"
-                  label="스팟 탈퇴"
-                  onPressEvent={() => {
-                    withdrawPress();
-                  }}
-                />
-              </Withdraw>
-            )}
-          </TextView>
-        </ContentView>
-      </ScrollView> */}
-      <BottomSheetSpot
-        userSpotId={spotId}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        title="스팟 선택"
-        data={isUserGroupSpotCheck?.data?.spotListResponseDtoList}
-        selected={selected}
-        setSelected={setSelected}
-        onPressEvent={id => {
-          anotherSpot(id);
-        }}
-      />
-
-      <toast.ToastWrap message={'스팟이 설정됐어요'} icon={'checked'} />
-      <BottomContainer>
-        {/* <ButtonBox>
-          <Button
-            label="확인"
-            onPressEvent={() => {
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              });
-            }}
-          />
-        </ButtonBox> */}
-        <AddSpotWrap onPress={() => navigation.navigate(SpotTypePage)}>
-          <AddSpotText>다른 스팟 신청/추가</AddSpotText>
-        </AddSpotWrap>
-      </BottomContainer>
+          </InnerView> */}
+          <Border />
+          <UserViewWrap>
+            <UserIcon width={20} height={20} />
+            <Body06RText style={{marginLeft: 16}}>
+              {detailData?.data?.userCount}명
+            </Body06RText>
+          </UserViewWrap>
+        </ScrollView>
+      </Contents>
     </Wrap>
-    // </SafeView>
   );
 };
 
 export default Pages;
 
-const SafeView = styled.SafeAreaView`
-  flex: 1;
-`;
 const Wrap = styled.View`
   background-color: ${({theme}) => theme.colors.grey[0]};
   flex: 1;
@@ -278,94 +183,166 @@ const Wrap = styled.View`
   width: ${WIDTH}px;
 `;
 
-const TitleWrap = styled.View`
+const Contents = styled.View`
+  padding: 12px 24px 35px 24px;
+  position: relative;
+`;
+const Content = styled.View`
+  // padding: 12px 24px 35px 24px;
+  position: relative;
+  flex: 1;
+`;
+
+const SpotNameText = styled(Typography).attrs({text: 'Title04SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  margin-bottom: 8px;
+`;
+
+const DiningTypeText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme, type}) =>
+    type ? theme.colors.blue[500] : theme.colors.grey[6]};
+  margin-left: 12px;
+  margin-right: ${({value}) => (value === 3 ? '8px' : '0px')};
+`;
+
+const DiningTypeWrap = styled.View`
   flex-direction: row;
-  padding-top: 24px;
-  padding-bottom: 18px;
+  align-items: center;
+`;
+
+const UserViewWrap = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Body06RText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const Title = styled(Typography).attrs({text: 'Title03R'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const SpotPickWrap = styled.Pressable`
+  width: 48px;
+  height: 48px;
+
+  border: 1px solid ${({theme}) => theme.colors.grey[7]};
+  border-radius: 50px;
+  align-items: center;
   justify-content: center;
+  position: absolute;
+  top: 0px;
+  right: 24px;
 `;
-const Line = styled.View`
-  height: 6px;
+
+const Border = styled.View`
+  height: 1px;
   background-color: ${({theme}) => theme.colors.grey[8]};
+  margin: 16px 0px;
 `;
-const SpotDetailBox = styled.View`
-  padding: 24px;
+
+const Address = styled.View`
+  flex-direction: row;
+  align-items: flex-start;
 `;
-const SpotView = styled.Pressable`
+
+const DeliveryWrap = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
-  background-color: ${({theme}) => theme.colors.grey[0]};
-  border-radius: 14px;
-  border: 1px solid ${({theme}) => theme.colors.grey[7]};
-  width: 100%;
-  margin-bottom: 32px;
-  margin-top: 8px;
 `;
 
-const ContentView = styled.View`
-  width: 100%;
-  padding: 24px 24px 0px 24px;
-  background-color: white;
-  border-radius: 14px;
-  border: 1px solid ${({theme}) => theme.colors.grey[7]};
-  position: relative;
-  margin-bottom: 48px;
-`;
-
-const TextView = styled.View`
-  margin-bottom: 20px;
-`;
-
-const AddSpotWrap = styled.Pressable`
-  margin-top: 24px;
-`;
-
-const Withdraw = styled.View`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-`;
-const ButtonBox = styled.View``;
-const SpotSelect = styled(Typography).attrs({text: 'Title04SB'})`
-  color: ${({theme}) => theme.colors.grey[2]};
-  margin-bottom: 24px;
-  margin-top: 40px;
-`;
-const BottomContainer = styled.View`
-  align-items: center;
-  justify-content: flex-end;
-  margin-top: 12px;
-  margin-bottom: 56px;
-`;
-const SpotName = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme}) => theme.colors.grey[2]};
-`;
-
-const Title = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[4]};
-`;
-
-const ContentText = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme}) => theme.colors.grey[1]};
-`;
-
-const AddSpotText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[3]};
-  text-decoration: underline;
-  text-decoration-color: ${({theme}) => theme.colors.grey[3]};
-`;
-
-const HoView = styled.Pressable`
+const Delivery = styled.View`
   flex-direction: row;
-  align-items: center;
 `;
 
-const PenIcon = styled(Pen)`
+const ApplyText = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[2]};
   margin-left: 4px;
 `;
-
-const CloseIcon = styled(Close)`
-  margin-left: 10px;
+const TimeText = styled(Typography).attrs({text: 'Button10R'})`
+  color: ${({theme}) => theme.colors.grey[3]};
+  margin-right: 8px;
 `;
+
+const ApplyButton = styled.Pressable`
+  border: 1px solid ${({theme}) => theme.colors.grey[7]};
+  border-radius: 100px;
+  flex-direction: row;
+  align-items: center;
+  padding: 5px 8px;
+`;
+
+const VerticalBorder = styled.View`
+  width: 1px;
+  height: 10px;
+  background-color: ${({theme}) => theme.colors.grey[7]};
+  margin-right: 8px;
+`;
+
+const Label = styled.Pressable`
+  background-color: ${({theme}) => theme.colors.grey[8]};
+  border-radius: 4px;
+  padding: 3px 8px;
+  align-self: flex-start;
+  margin-right: 8px;
+`;
+
+const DiningType = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const DetailSpotName = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+
+const NeedCardText = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.blue[500]};
+
+  text-align: center;
+`;
+
+const CardBoolean = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-left: 8px;
+`;
+
+const DetailSpotWrap = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+const InnerView = styled.View`
+  padding: 16px 0px 0px 36px;
+`;
+
+const DetailSpotTimeWrap = styled.View`
+  margin-bottom: ${({last}) => (last ? '150px' : '24px')};
+`;
+
+const ButtonWrap = styled(LinearGradient)`
+  position: absolute;
+  padding: 0px 20px;
+  height: 100px;
+  bottom: 0px;
+  width: 100%;
+  justify-content: flex-start;
+`;
+
+const TimeWrap = styled(LinearGradient)``;
+const DiningTypeDisabledText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[6]};
+  margin-left: 12px;
+  margin-right: 8px;
+`;
+
+const Name = styled.View`
+  word-break: break-all;
+
+  padding-right: 24px;
+`;
+
+const AddressWrap = styled.View``;

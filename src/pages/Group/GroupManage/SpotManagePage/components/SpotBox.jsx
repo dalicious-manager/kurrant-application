@@ -9,7 +9,7 @@ import {
   SpotManageShare,
 } from '../../../../../assets';
 import Typography from '../../../../../components/Typography';
-const SpotBox = ({type, count = 0}) => {
+const SpotBox = ({type, spotCount = 0}) => {
   const themeApp = useTheme();
   const SpotImageBox = spots => {
     if (spots === 'my') {
@@ -42,7 +42,7 @@ const SpotBox = ({type, count = 0}) => {
       {SpotImageBox(type)}
       <CurrentSpot>
         <Typography text="Body06R" textColor={themeApp.colors.blue[500]}>
-          {count}
+          {spotCount}
         </Typography>
         {type !== 'private' ? (
           <Typography text="Body06R">

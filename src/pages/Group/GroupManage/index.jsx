@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Alert} from 'react-native';
 import styled from 'styled-components';
 
-import {PAGE_NAME as GroupManageDetailPageName} from './DetailPage';
+import {PAGE_NAME as GroupManageDetailPageName} from './SpotManagePage';
 import useApartApplication from '../../../biz/useApartApplication/hook';
 import useGroupSpots from '../../../biz/useGroupSpots/hook';
 import BottomSheetSpot from '../../../components/BottomSheetSpot';
