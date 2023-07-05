@@ -252,19 +252,23 @@ import Credit, {
 } from '../../pages/Main/MyPage/Credit';
 
 // 리뷰
+// import CreateReviewPage1, {
+//   PAGE_NAME as CreateReviewPage1PageName,
+// } from './Review/CreateReview/Page1';
 import CreateReviewPage1, {
-  SCREEN_NAME as CreateReviewPage1ScreenName,
-} from './Review/CreateReview/Page1';
+  PAGE_NAME as CreateReviewPage1PageName,
+} from '~pages/Main/MyPage/Review/CreateReview/Page1';
+
 import CreateReviewPage2, {
-  SCREEN_NAME as CreateReviewPage2ScreenName,
-  SCREEN_NAME2 as EditReviewPage2ScreenName,
-} from './Review/CreateReview/Page2';
+  PAGE_NAME as CreateReviewPage2PageName,
+  PAGE_NAME2 as EditReviewPage2PageName,
+} from '~pages/Main/MyPage/Review/CreateReview/Page2';
 
 import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
 
 import ReportReview, {
   PAGE_NAME as ReportReviewPageName,
-} from './Review/ReportReview';
+} from '../../pages/Main/MyPage/Review/ReportReview';
 
 // 식단 리포트
 
@@ -2044,7 +2048,7 @@ const Screen = () => {
         />
 
         <MainRoot.Screen
-          name={CreateReviewPage2ScreenName}
+          name={CreateReviewPage2PageName}
           component={CreateReviewPage2}
           options={{
             headerShown: true,
@@ -2088,7 +2092,7 @@ const Screen = () => {
         />
 
         <MainRoot.Screen
-          name={EditReviewPage2ScreenName}
+          name={EditReviewPage2PageName}
           component={CreateReviewPage2}
           options={{
             headerShown: true,
