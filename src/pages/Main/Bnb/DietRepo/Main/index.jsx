@@ -55,22 +55,6 @@ const Pages = ({route}) => {
     formattedWeekDate(new Date()),
   );
 
-  const getToken = useCallback(async () => {
-    const token = await getStorage('token');
-
-    let tokenBox;
-    if (token) {
-      tokenBox = JSON.parse(token);
-    }
-
-    return tokenBox?.accessToken;
-  }, []);
-
-  // 달력 관련
-
-  // 아마 보내야할 값들 spotId, selectedDate
-  // {{host}}/v1/dailyfoods?spotId=93&selectedDate=2023-05-08
-
   const pager = useRef();
   // const fadeAnim = useRef(new Animated.Value(32)).current;
 
@@ -90,30 +74,36 @@ const Pages = ({route}) => {
   const {saveMeal} = useDietRepoMutation();
 
   useEffect(() => {
-    dietRepoMainRefetch();
     // 여기에 특정기간 주문내역 리포트
 
+    dietRepoMainRefetch();
+
     const fetchYo = async date => {
-      if (
-        (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
-        toStringByFormatting(date)
-      ) {
-      } else {
-        saveMeal(toStringByFormatting(date));
-        setStorage(
-          `dietRepo_Date_${toStringByFormatting(date)}`,
-          toStringByFormatting(date),
-        );
+      if (typeof date === 'object') {
+        if (
+          (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
+          toStringByFormatting(date)
+        ) {
+        } else {
+          saveMeal(toStringByFormatting(date));
+          setStorage(
+            `dietRepo_Date_${toStringByFormatting(date)}`,
+            toStringByFormatting(date),
+          );
+        }
+      } else if (typeof date === 'string') {
+        if ((await getStorage(`dietRepo_Date_${date}`)) === date) {
+        } else {
+          saveMeal(date);
+          setStorage(`dietRepo_Date_${date}`, date);
+        }
       }
     };
     fetchYo(date);
-
-    // 여기에 date를 localstorage에 넣어서 반복해서 등록하지 않도록 하기
   }, [date]);
 
   const dayPress = selectedDate => {
     setDate(stringDateToJavascriptDate(selectedDate, '-'));
-    // saveMeal();
   };
 
   const handleHistoryPress = () => {
