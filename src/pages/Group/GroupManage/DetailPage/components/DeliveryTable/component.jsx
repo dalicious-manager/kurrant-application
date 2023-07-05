@@ -59,7 +59,7 @@ const CellText = styled(Typography)`
 `;
 export default function Component({mealInfo}) {
   const themeApp = useTheme();
-
+  console.log(mealInfo);
   return (
     <Table>
       <Row>
@@ -79,11 +79,11 @@ export default function Component({mealInfo}) {
           </CellText>
         </Cell2>
       </Row>
-      {mealInfo.map((meal, idx) => {
+      {mealInfo?.map((meal, idx) => {
         return (
           <Row key={idx}>
             <Cell isLast={mealInfo?.length - 1 === idx}>
-              {meal.deliveryTimes.map((time, i) => {
+              {meal?.deliveryTimes?.map((time, i) => {
                 return (
                   <Cell22
                     key={i + time}

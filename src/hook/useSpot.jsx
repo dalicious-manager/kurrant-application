@@ -34,6 +34,11 @@ export function useGetPrivateSpots() {
     return spotApis.groupSpotList();
   });
 }
+export function useGetSpotsManageList() {
+  return useQuery('groupSpotManageLists', () => {
+    return spotApis.groupSpotManageList();
+  });
+}
 
 export function useGroupSpotList() {
   return useQuery('groupSpotList', () => {
@@ -45,6 +50,17 @@ export function useGroupSpotDetail(id) {
     'groupSpotDetail',
     () => {
       return spotApis.groupSpotDetail(id);
+    },
+    {
+      enabled: false,
+    },
+  );
+}
+export function useGroupSpotManageDetail(id) {
+  return useQuery(
+    'groupSpotManageDetail',
+    () => {
+      return spotApis.groupSpotManageDetail(id);
     },
     {
       enabled: false,

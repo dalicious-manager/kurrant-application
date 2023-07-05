@@ -15,6 +15,10 @@ export const spotApis = {
       body: JSON.stringify(data),
     }),
   groupSpotList: async () => await fetchJson('/users/me/groups', 'GET'),
+  groupSpotManageList: async () =>
+    await fetchJson('/users/me/groups/management', 'GET'),
   groupSpotDetail: async id =>
     await fetchJson(`/users/me/groups/spots/${id}`, 'GET'),
+  groupSpotManageDetail: async id =>
+    await fetchJson(`/users/me/groups/${id}/details`, 'GET'),
 };
