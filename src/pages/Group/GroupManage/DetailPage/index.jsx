@@ -15,7 +15,11 @@ import {diningTypeString} from '~utils/diningType';
 import DeliveryTable from './components/DeliveryTable';
 import {PAGE_NAME as SelectSpotPageName} from '..';
 import useGroupSpots from '../../../../biz/useGroupSpots/hook';
-import {useGroupSpotList} from '../../../../hook/useSpot';
+import {
+  useGroupSpotDetail,
+  useGroupSpotList,
+  useGroupSpotManageDetail,
+} from '../../../../hook/useSpot';
 import {setStorage} from '../../../../utils/asyncStorage';
 import {PAGE_NAME as ApplySpotPage} from '../../../Spots/shareSpot/ApplySpot';
 import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
@@ -23,57 +27,58 @@ import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
 import {PickGrey, TimeIcon, DeliverySpot} from '~assets';
 const WIDTH = Dimensions.get('screen').width;
 
-const detailData = {
-  id: '0b24e5e2-2eab-4bba-9042-fafa1f7fff6a',
-  statusCode: 200,
-  message: '스팟 상세 조회에 성공하셨습니다.',
-  data: {
-    id: 136,
-    name: '달리셔스(카페)',
-    address: '서울특별시 강남구 테헤란로51길 21 3F 달리셔스 (역삼동 704-48)',
-    phone: '01036435850',
-    userCount: 58,
-    diningTypes: [2],
-    mealInfos: [
-      {
-        diningType: 1,
-        lastOrderTime: '0일전 06:00',
-        membershipBenefitTime: '0일전 06:00',
-        deliveryTimes: ['06:30', '07:00', '08:00'],
-      },
-      {
-        diningType: 2,
-        lastOrderTime: '0일전 21:00',
-        membershipBenefitTime: '0일전 21:00',
-        deliveryTimes: ['23:30', '24:00', '01:00'],
-      },
-    ],
-    spots: [
-      {
-        spotId: 138,
-        spotName: '알렉산더',
-        isRestriction: null,
-      },
-    ],
-  },
-  error: null,
-};
+// const detailData = {
+//   id: '0b24e5e2-2eab-4bba-9042-fafa1f7fff6a',
+//   statusCode: 200,
+//   message: '스팟 상세 조회에 성공하셨습니다.',
+//   data: {
+//     id: 136,
+//     name: '달리셔스(카페)',
+//     address: '서울특별시 강남구 테헤란로51길 21 3F 달리셔스 (역삼동 704-48)',
+//     phone: '01036435850',
+//     userCount: 58,
+//     diningTypes: [2],
+//     mealInfos: [
+//       {
+//         diningType: 1,
+//         lastOrderTime: '0일전 06:00',
+//         membershipBenefitTime: '0일전 06:00',
+//         deliveryTimes: ['06:30', '07:00', '08:00'],
+//       },
+//       {
+//         diningType: 2,
+//         lastOrderTime: '0일전 21:00',
+//         membershipBenefitTime: '0일전 21:00',
+//         deliveryTimes: ['23:30', '24:00', '01:00'],
+//       },
+//     ],
+//     spots: [
+//       {
+//         spotId: 138,
+//         spotName: '알렉산더',
+//         isRestriction: null,
+//       },
+//     ],
+//   },
+//   error: null,
+// };
 
 export const PAGE_NAME = 'P__GROUP__MANAGE__SPOT_DETAIL';
 const Pages = ({route}) => {
-  const clientId = route?.params?.clientId;
-  const spotType = route?.params?.spotType;
+  const groupId = route?.params?.groupId;
+  const groupType = route?.params?.groupType;
   const {userWithdrawGroup} = useGroupSpots();
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const myGroupList =
     isUserGroupSpotCheck?.data?.spotListResponseDtoList?.filter(
-      el => el.clientId !== clientId,
+      el => el.clientId !== groupId,
     );
-  // const {data: detailData, refetch: detailDataRefech} =
-  //   useGroupSpotDetail(clientId);
+  const {data: detailData, refetch: detailDataRefech} =
+    useGroupSpotManageDetail(groupId);
   const navigation = useNavigation();
   const diningType = [1, 2, 3];
-
+  console.log(detailData?.data, 'testset');
+  console.log(groupId, 'testset');
   const goToApplyPage = from => {
     navigation.navigate(ApplySpotPage, {
       center: {
@@ -101,7 +106,7 @@ const Pages = ({route}) => {
           onPress: async () => {
             try {
               const res = await userWithdrawGroup({
-                id: clientId,
+                id: groupId,
               });
               await setStorage('spotStatus', res.data.toString());
 
@@ -119,6 +124,9 @@ const Pages = ({route}) => {
       ],
     );
   };
+  useEffect(() => {
+    if (groupId) detailDataRefech();
+  }, [groupId, detailDataRefech]);
   return (
     <Wrap>
       <Contents>
@@ -132,9 +140,6 @@ const Pages = ({route}) => {
               <Name>
                 <Body06RText>{detailData?.data?.address}</Body06RText>
               </Name>
-              {/* <Body06RText style={{color: '#BDBAC1'}}>
-                {detailData?.data?.jibun}
-              </Body06RText> */}
             </View>
           </Address>
           <Border />
@@ -156,7 +161,7 @@ const Pages = ({route}) => {
             <Body06RText>운영중</Body06RText>
           </DiningTypeWrap>
           <Border />
-          {spotType === 2 && detailData?.data?.userCount && (
+          {groupType === '공유스팟' && detailData?.data?.userCount && (
             <>
               <UserViewWrap>
                 <UserIcon width={20} height={20} />
@@ -167,7 +172,8 @@ const Pages = ({route}) => {
               <Border />
             </>
           )}
-          {spotType === 1 && detailData?.data?.phone && (
+
+          {groupType === '마이스팟' && detailData?.data?.phone && (
             <>
               <UserViewWrap>
                 <PhoneIcon width={20} height={20} />
@@ -185,7 +191,7 @@ const Pages = ({route}) => {
                 배송/주문마감 시간
               </Body06RText>
             </Delivery>
-            {spotType === 2 && (
+            {groupType === '공유스팟' && (
               <ApplyButton onPress={() => goToApplyPage('time')}>
                 <PlusIcon />
                 <ApplyText>시간 추가 신청</ApplyText>
@@ -202,7 +208,7 @@ const Pages = ({route}) => {
 
               <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
             </Delivery>
-            {spotType === 2 && (
+            {groupType === '공유스팟' && (
               <ApplyButton onPress={() => goToApplyPage('spot')}>
                 <PlusIcon />
                 <ApplyText>스팟 추가 신청</ApplyText>

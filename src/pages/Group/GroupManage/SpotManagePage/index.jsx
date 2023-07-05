@@ -11,7 +11,11 @@ import useGroupSpots from '../../../../biz/useGroupSpots/hook';
 import BottomSheetSpot from '../../../../components/BottomSheetSpot';
 import Toast from '../../../../components/Toast';
 import Typography from '../../../../components/Typography';
-import {useGroupSpotDetail, useGroupSpotList} from '../../../../hook/useSpot';
+import {
+  useGetSpotsManageList,
+  useGroupSpotDetail,
+  useGroupSpotList,
+} from '../../../../hook/useSpot';
 import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../GroupApartment/SearchApartment/AddApartment/DetailAddress';
@@ -23,6 +27,7 @@ const Pages = ({route}) => {
   const from = route?.params?.from;
   const navigation = useNavigation();
   const {userSpotRegister} = useGroupSpots();
+  const {data: userSpotManageList} = useGetSpotsManageList();
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
 
   const {
@@ -61,7 +66,7 @@ const Pages = ({route}) => {
   const renderItem = useCallback(({item}) => {
     return <SpotListBox item={item} />;
   }, []);
-  const keyExtractor = useCallback(item => item.clientId.toString(), []);
+  const keyExtractor = useCallback(item => item.groupId.toString(), []);
   useEffect(() => {
     if (spotId) detailRefetch();
   }, [detailRefetch, spotId]);
@@ -69,17 +74,14 @@ const Pages = ({route}) => {
     // <SafeView>
     <Wrap>
       <TitleWrap>
-        <SpotBox
-          type="my"
-          spotCount={isUserGroupSpotCheck?.data?.mySpotCount}
-        />
+        <SpotBox type="my" spotCount={userSpotManageList?.data?.mySpotCount} />
         <SpotBox
           type="share"
-          spotCount={isUserGroupSpotCheck?.data?.shareSpotCount}
+          spotCount={userSpotManageList?.data?.shareSpotCount}
         />
         <SpotBox
           type="private"
-          spotCount={isUserGroupSpotCheck?.data?.privateCount}
+          spotCount={userSpotManageList?.data?.privateSpotCount}
         />
       </TitleWrap>
       <Line />
@@ -97,7 +99,7 @@ const Pages = ({route}) => {
           스팟 내역
         </Typography>
         <SpotListWrap
-          data={isUserGroupSpotCheck?.data?.spotListResponseDtoList}
+          data={userSpotManageList?.data?.groups}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
