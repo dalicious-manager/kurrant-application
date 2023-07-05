@@ -15,24 +15,24 @@ const SpotListBox = ({item}) => {
     <Wrap>
       <TitleBox>
         <Label
-          label={spotText(item.spotType)}
+          label={item.groupType}
           type={
-            item.spotType === 0
+            item.groupType === '프라이빗스팟'
               ? 'blue'
-              : item.spotType === 1
+              : item.groupType === '마이스팟'
               ? 'pink'
               : 'green'
           }
         />
         <Title text="Body05SB" textColor={themeApp.colors.grey[2]}>
-          {item.clientName}
+          {item.groupName}
         </Title>
       </TitleBox>
       <DetailButton
         onPress={() => {
           navigation.navigate(GroupManageSpotDetailPageName, {
-            clientId: item.clientId,
-            spotType: item.spotType,
+            groupId: item.groupId,
+            groupType: item.groupType,
           });
         }}>
         <Typography text="Button10SB" textColor={themeApp.colors.grey[3]}>

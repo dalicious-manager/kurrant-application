@@ -242,6 +242,9 @@ import GroupManage, {
 import GroupManageSpotManage, {
   PAGE_NAME as GroupManageSpotManagePageName,
 } from '../../pages/Group/GroupManage/SpotManagePage';
+import GroupManageUpdateSpot, {
+  PAGE_NAME as GroupManageUpdateSpotPageName,
+} from '../../pages/Group/GroupManage/UpdateSpot';
 import GroupManageSpotDetail, {
   PAGE_NAME as GroupManageSpotDetailPageName,
 } from '../../pages/Group/GroupManage/DetailPage';
@@ -1930,6 +1933,28 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             title: '스팟 관리',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            // headerLeft: () => {
+            //   <Pressable onPress={()=>navigation.navigate(SCREEN_NAME)}>
+            //     <CloseIcon />
+            // </Pressable>
+            // },
+          }}
+        />
+
+        <MainRoot.Screen
+          name={GroupManageUpdateSpotPageName}
+          component={GroupManageUpdateSpot}
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: '주소 별명 설정',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
