@@ -121,38 +121,60 @@ const Pages = ({route}) => {
     }
   }, [dailyfoodRefetch, params, userRole]);
   useEffect(() => {
-    setWeeklyService(
-      weekly
-        .map(week => {
-          const data = week.filter(day => {
+    if (userRole === 'ROLE_GUEST') {
+      return setWeeklyService(
+        weekly
+          .map(week => {
+            const data = week.filter(day => {
+              return ['월', '화', '수', '목', '금'].includes(
+                format(day, 'EEE', {locale: ko}),
+              );
+            });
+            return data;
+          })
+          .reduce(function (acc, cur) {
+            return acc.concat(cur);
+          })
+          .filter(v => {
             return (
-              dailyfoodData?.data?.serviceDays?.lunchServiceDays?.includes(
-                format(day, 'EEE', {locale: ko}),
-              ) ||
-              dailyfoodData?.data?.serviceDays?.morningServiceDays?.includes(
-                format(day, 'EEE', {locale: ko}),
-              ) ||
-              dailyfoodData?.data?.serviceDays?.dinnerServiceDays?.includes(
-                format(day, 'EEE', {locale: ko}),
-              )
+              formattedWeekDate(new Date()) <= formattedWeekDate(new Date(v))
             );
-          });
-          return data;
-        })
-        .reduce(function (acc, cur) {
-          return acc.concat(cur);
-        })
-        .filter(v => {
-          return (
-            formattedWeekDate(new Date()) <= formattedWeekDate(new Date(v))
-          );
-        }),
-    );
+          }),
+      );
+    } else
+      setWeeklyService(
+        weekly
+          .map(week => {
+            const data = week.filter(day => {
+              return (
+                dailyfoodData?.data?.serviceDays?.lunchServiceDays?.includes(
+                  format(day, 'EEE', {locale: ko}),
+                ) ||
+                dailyfoodData?.data?.serviceDays?.morningServiceDays?.includes(
+                  format(day, 'EEE', {locale: ko}),
+                ) ||
+                dailyfoodData?.data?.serviceDays?.dinnerServiceDays?.includes(
+                  format(day, 'EEE', {locale: ko}),
+                )
+              );
+            });
+            return data;
+          })
+          .reduce(function (acc, cur) {
+            return acc.concat(cur);
+          })
+          .filter(v => {
+            return (
+              formattedWeekDate(new Date()) <= formattedWeekDate(new Date(v))
+            );
+          }),
+      );
   }, [
     dailyfoodData?.data?.serviceDays?.dinnerServiceDays,
     dailyfoodData?.data?.serviceDays?.lunchServiceDays,
     dailyfoodData?.data?.serviceDays?.morningServiceDays,
     setWeeklyService,
+    userRole,
     weekly,
   ]);
 

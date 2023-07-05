@@ -264,19 +264,20 @@ const Pages = ({route}) => {
               </DeliveryWrap>
 
               <InnerView>
-                {detailData?.data?.spots.map(el => {
-                  return (
-                    <DetailSpotWrap key={el.spotName}>
-                      <DetailSpotName>{el.spotName}</DetailSpotName>
-                      {el.isRestriction && (
-                        <CardBoolean>
-                          <VerticalBorder />
-                          <NeedCardText>외부인 출입 제한</NeedCardText>
-                        </CardBoolean>
-                      )}
-                    </DetailSpotWrap>
-                  );
-                })}
+                {detailData?.data?.spots?.length > 0 &&
+                  detailData?.data?.spots.map(el => {
+                    return (
+                      <DetailSpotWrap key={el.spotName}>
+                        <DetailSpotName>{el.spotName}</DetailSpotName>
+                        {el.isRestriction && (
+                          <CardBoolean>
+                            <VerticalBorder />
+                            <NeedCardText>외부인 출입 제한</NeedCardText>
+                          </CardBoolean>
+                        )}
+                      </DetailSpotWrap>
+                    );
+                  })}
               </InnerView>
             </>
           )}
