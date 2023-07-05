@@ -23,7 +23,11 @@ import Toast from '../../components/Toast';
 import Typography from '../../components/Typography';
 import {useGetAddress, useGetRoadAddress} from '../../hook/useMap';
 import {height} from '../../theme';
-import {mySpotRootAtom, userLocationAtom} from '../../utils/store';
+import {
+  mySpotMapZoomAtom,
+  mySpotRootAtom,
+  userLocationAtom,
+} from '../../utils/store';
 import {PAGE_NAME as MySpotDetailPage} from '../Spots/mySpot/DetailAddress';
 
 const WIDTH = Dimensions.get('screen').width;
@@ -41,7 +45,7 @@ const MySpotMap = ({route}) => {
   const [tab, setTab] = useState(false);
   const [show, setShow] = useState(false);
   const [move, setMove] = useState(false);
-  const [zoom, setZoom] = useState(18);
+  const [zoom, setZoom] = useAtom(mySpotMapZoomAtom);
   const [showAddress, setShowAddress] = useState(false);
   // const [center, setCenter] = useState();
   const [initCenter, setInitCenter] = useAtom(userLocationAtom); // 기초 좌표 강남역

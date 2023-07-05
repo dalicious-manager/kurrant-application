@@ -13,7 +13,7 @@ import {changeSeperator} from '~utils/dateFormatter';
 
 import {ThumbsUp} from '../../../../../../../../components/Icon';
 import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
-import useMealDetailReviewMutation from '../useMealDetailReviewMutation';
+import useMealDetailReviewMutation from '~biz/useReview/useMealDetailReview/useMealDetailReviewMutation';
 
 // 상세페이지 카드
 

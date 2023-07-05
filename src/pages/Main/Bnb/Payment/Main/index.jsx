@@ -271,7 +271,6 @@ const Pages = ({route}) => {
       );
       return;
     }
-    console.log(discountPrice, usedSupportPrice, totalPrice, '지원금');
     const data = {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
@@ -285,7 +284,7 @@ const Pages = ({route}) => {
         ? discountPrice
         : usedSupportPrice,
       deliveryFee: deliveryFee,
-      userPoint: watch('point'),
+      userPoint: Number(points),
     };
 
     setIsPay(true);
@@ -299,7 +298,6 @@ const Pages = ({route}) => {
           : '';
       const orderName =
         totalCount > 1 ? `${firstName} 외 ${totalCount}건` : firstName;
-      // console.log(isUserInfo?.userId)
       const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
       loadMeal();
       if (totalPrice - Number(points) > 0) {
@@ -336,7 +334,6 @@ const Pages = ({route}) => {
           orderItems: data,
         };
         const result = await orderNice(orderData);
-
         if (result?.data) {
           const resetAction = StackActions.popToTop();
           navigation.dispatch(resetAction);

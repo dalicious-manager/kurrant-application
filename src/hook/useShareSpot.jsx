@@ -46,6 +46,7 @@ export function useSelectShareSpot() {
   return useMutation(id => shareSpotApis.selectSpot(id), {
     onSuccess: () => {
       queryClient.invalidateQueries('userInfo');
+      queryClient.invalidateQueries('groupSpotList');
     },
   });
 }
@@ -56,7 +57,7 @@ export function useApplyShareSpot() {
   return useMutation(data => shareSpotApis.applicationShareSpot(data), {
     onSuccess(res) {
       queryClient.invalidateQueries('userInfo');
-      console.log(res);
+      //console.log(res);
     },
   });
 }

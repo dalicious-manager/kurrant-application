@@ -83,7 +83,7 @@ export default function PasswordCheck({route}) {
       //   payNumber: params?.password,
       //   key: watch('eauth'),
       // });
-      console.log(data);
+      //console.log(data);
 
       // const resetAction = StackActions.pop(5);
       // navigation.dispatch(resetAction);

@@ -8,6 +8,7 @@ import useGroupSpots from '../../../biz/useGroupSpots/hook';
 import BottomSheetSpot from '../../../components/BottomSheetSpot';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGroupSpotList} from '../../../hook/useSpot';
 import {setStorage} from '../../../utils/asyncStorage';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManageDetailPageName} from '../GroupManage/DetailPage';
@@ -18,11 +19,11 @@ const Pages = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const {
     userGroupSpotCheck,
-    isUserGroupSpotCheck,
+    // isUserGroupSpotCheck,
     groupSpotDetail,
     userSpotRegister,
   } = useGroupSpots();
-
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const [selected, setSelected] = useState();
 
   const modalOpen = () => {
@@ -60,13 +61,15 @@ const Pages = () => {
         <MyGroup>내 스팟</MyGroup>
         <Contents showsVerticalScrollIndicator={false}>
           <GroupNameView>
-            {isUserGroupSpotCheck?.spotListResponseDtoList?.length !== 0 &&
-              isUserGroupSpotCheck?.spotListResponseDtoList?.map((el, idx) =>
-                el.spots.map(v => (
-                  <View key={v.spotId}>
-                    <GroupName>{el.clientName ?? v.spotName}</GroupName>
-                  </View>
-                )),
+            {isUserGroupSpotCheck?.data?.spotListResponseDtoList?.length !==
+              0 &&
+              isUserGroupSpotCheck?.data?.spotListResponseDtoList?.map(
+                (el, idx) =>
+                  el.spots.map(v => (
+                    <View key={v.spotId}>
+                      <GroupName>{el.clientName ?? v.spotName}</GroupName>
+                    </View>
+                  )),
               )}
           </GroupNameView>
         </Contents>
@@ -78,7 +81,7 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="스팟 선택"
-        data={isUserGroupSpotCheck.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.data.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         onPressEvent={id => {

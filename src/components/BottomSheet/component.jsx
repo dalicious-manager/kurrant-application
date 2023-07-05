@@ -20,6 +20,7 @@ const screenWidth = Dimensions.get('screen').width;
 
 const BottomSheetSpot = props => {
   const {
+    firstSnap = '35%',
     modalVisible,
     setModalVisible,
     title = '옵션 선택',
@@ -53,7 +54,7 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['35%', '90%'], []);
+  const snapPoints = useMemo(() => [firstSnap, '90%'], [firstSnap]);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);

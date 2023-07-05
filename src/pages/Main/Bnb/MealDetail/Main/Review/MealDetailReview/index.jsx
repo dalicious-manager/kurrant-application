@@ -8,15 +8,20 @@ import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
-import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+// import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
+// import {
+//   fetchNextPageReviewDetailAtom,
+//   hasNextPageReviewDetailAtom,
+// } from './store';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
-} from './store';
-import useGetMealDetailReview from './useGetMealDetailReview';
+} from '../../../../../../../biz/useReview/useMealDetailReview/store';
+import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import {
   ArrowUpAndDown,
   Picture,
@@ -29,6 +34,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const theme = useTheme();
 
   const navigation = useNavigation();
+
+  // console.log(dailyFoodId);
 
   // 샘플 대에터
   // const dailyFoodId = 40827;
@@ -81,7 +88,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     isOnlyPhoto,
     selectedKeyword,
     setUrl,
-    rateSelected,
+    // rateSelected,
   ]);
 
   const {
@@ -89,6 +96,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     starRatingCounts,
     reviewKeyword,
   } = useGetMealDetailReview(url, dailyFoodId);
+
+  // const reviewKeyword = ['달퐁이', '참새'];
 
   useEffect(() => {
     // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
@@ -136,8 +145,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
 
   useEffect(() => {
     if (data?.pages) {
-      const {starAverage, isLast, foodId, totalReview, reviewWrite} =
-        data?.pages[0];
+      const {
+        items: {starAverage, isLast, foodId, totalReview, reviewWrite},
+      } = data?.pages[0];
 
       setStarAverage(starAverage);
       setIsLast(isLast);
@@ -148,6 +158,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   }, [data?.pages]);
 
   const [showSelectList, setShowSelectList] = useState(false);
+
+  // 푸드아이디, 데일리 푸드아이디 확인하기
 
   // useEffect(() => {
   //   console.log('푸드아이딩~');
@@ -181,6 +193,16 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
       return '리뷰 추천순';
     }
   };
+
+  // useEffect(() => {
+  //   console.log('data여');
+  //   console.log(data);
+  //   console.log(data?.pages);
+  //   console.log(data?.pages[0]);
+  //   console.log(data?.pages[0].items);
+  //   console.log(data?.pages[0].items?.reviewList);
+  //   console.log(data?.pages[0].items?.starAverage);
+  // }, [data]);
 
   const handleConfirmPress = () => {
     setUrl(
@@ -359,29 +381,28 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         {data?.pages.map((v, i) => {
           return (
             <View key={i}>
-              {v?.items?.length > 0 &&
-                v?.items?.map(item => {
-                  return (
-                    <Card
-                      key={item.reviewId}
-                      dailyFoodId={dailyFoodId}
-                      id={item.reviewId}
-                      userName={item.userName}
-                      item={item}
-                      likeNum={item.good}
-                      isLike={item.isGood}
-                      createDate={item.createDate}
-                      updateDate={item.updateDate}
-                      writtenDate={convertDateFormat1(item.createDate)}
-                      option={item.option}
-                      rating={item.satisfaction}
-                      reviewText={item.content}
-                      imageLocation={item.imageLocation}
-                      forMakers={item.forMakers}
-                      commentList={item.commentList}
-                    />
-                  );
-                })}
+              {v.items?.reviewList.map((item, i2) => {
+                return (
+                  <Card
+                    key={item.reviewId}
+                    dailyFoodId={dailyFoodId}
+                    id={item.reviewId}
+                    userName={item.userName}
+                    item={item}
+                    likeNum={item.good}
+                    isLike={item.isGood}
+                    createDate={item.createDate}
+                    updateDate={item.updateDate}
+                    writtenDate={convertDateFormat1(item.createDate)}
+                    option={item.option}
+                    rating={item.satisfaction}
+                    reviewText={item.content}
+                    imageLocation={item.imageLocation}
+                    forMakers={item.forMakers}
+                    commentList={item.commentList}
+                  />
+                );
+              })}
             </View>
           );
         })}

@@ -587,6 +587,7 @@ const Pages = ({route}) => {
     handlePress: handlePress,
     time: time,
   };
+
   return (
     <SafeView>
       <CalendarWrap>
@@ -616,7 +617,7 @@ const Pages = ({route}) => {
                   return (
                     <DiningPress
                       key={i}
-                      disabled={!typeBoolean && true}
+                      disabled={!isDailyFoodLoading && !typeBoolean && true}
                       onPress={() => {
                         diningRef.current.setPage(i);
                         setSliderValue(i);

@@ -26,18 +26,14 @@ import useWrittenReview from '~biz/useReview/useWrittenReview/hook';
 import {SkinnyArrowDown} from '~components/Icon';
 import StarRating from '~components/StarRating/StarRating';
 import Typography from '~components/Typography';
-// import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
-// import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
-import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '~screens/Main/Review/CreateReview/Page2';
-// import {deleteReview} from '~biz/useReview/useWrittenReview/Fetch';
+
+import {PAGE_NAME2 as EditReviewPage2ScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page2';
 
 import ImageModal from './ImageModal/ImageModal';
 // import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import {changeSeperator} from '../../../../../utils/dateFormatter';
 // import {SkinnyArrowDown} from '../../../../../components/Icon';
 
-// '../../../pages/Main/MyPage/Review';
-const onlyForMakers = true;
 // const onlyForMakers = false;
 
 const Component = ({

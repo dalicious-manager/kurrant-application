@@ -115,7 +115,6 @@ import PurchaseHistory, {
 import RegisterCard, {
   SCREEN_NAME as RegisterCardScreenName,
 } from './RegisterCard';
-
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 import useBoard from '../../biz/useBoard';
 import BackButton from '../../components/BackButton';
@@ -319,8 +318,9 @@ import {
   PurchaseDetailPage,
   PurchaseDetailPageName,
 } from '../../pages/Main/MyPage/PurchaseHistory/Detail';
-import {PAGE_NAME as ReviewPageName} from '../../pages/Main/MyPage/Review';
+
 import ReviewCloseIcon from '../../pages/Main/MyPage/Review/Component/ReviewCloseIcon';
+
 import {PAGE_NAME as WrittenReviewPageName} from '../../pages/Main/MyPage/WrittenReview';
 import NotificationCenter, {
   PAGE_NAME as NotificationCenterName,
@@ -2006,7 +2006,7 @@ const Screen = () => {
 
       <MainRoot.Group>
         <MainRoot.Screen
-          name={CreateReviewPage1ScreenName}
+          name={CreateReviewPage1PageName}
           component={CreateReviewPage1}
           options={{
             headerShown: true,
@@ -2450,7 +2450,7 @@ const Screen = () => {
             headerShown: true,
             headerShadowVisible: false,
             //headerTransparent: true,
-            title: '기본 배송 시간 설정',
+            title: '배송지 확인',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
