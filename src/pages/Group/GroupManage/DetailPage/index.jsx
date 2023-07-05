@@ -1,10 +1,18 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import {View, Dimensions, Image, ScrollView, Alert} from 'react-native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect} from 'react';
+import {
+  View,
+  Dimensions,
+  Image,
+  ScrollView,
+  Alert,
+  Pressable,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
 import PlusIcon from '~assets/icons/Map/plus.svg';
+import EditIcon from '~assets/icons/Spot/edit.svg';
 import MealIcon from '~assets/icons/Spot/meal.svg';
 import PhoneIcon from '~assets/icons/Spot/phone.svg';
 import UserIcon from '~assets/icons/Spot/user.svg';
@@ -19,10 +27,12 @@ import {
   useGroupSpotDetail,
   useGroupSpotList,
   useGroupSpotManageDetail,
+  useUpdateMySpotInfo,
 } from '../../../../hook/useSpot';
 import {setStorage} from '../../../../utils/asyncStorage';
 import {PAGE_NAME as ApplySpotPage} from '../../../Spots/shareSpot/ApplySpot';
 import {PAGE_NAME as SpotTypePage} from '../../../Spots/SpotType';
+import {PAGE_NAME as UpdateSpotPageName} from '../UpdateSpot';
 
 import {PickGrey, TimeIcon, DeliverySpot} from '~assets';
 const WIDTH = Dimensions.get('screen').width;
@@ -75,10 +85,9 @@ const Pages = ({route}) => {
     );
   const {data: detailData, refetch: detailDataRefech} =
     useGroupSpotManageDetail(groupId);
+
   const navigation = useNavigation();
   const diningType = [1, 2, 3];
-  console.log(detailData?.data, 'testset');
-  console.log(groupId, 'testset');
   const goToApplyPage = from => {
     navigation.navigate(ApplySpotPage, {
       center: {
@@ -124,13 +133,45 @@ const Pages = ({route}) => {
       ],
     );
   };
-  useEffect(() => {
-    if (groupId) detailDataRefech();
-  }, [groupId, detailDataRefech]);
+  const handleChangeName = async type => {
+    if (type === 'name') {
+      navigation.navigate(UpdateSpotPageName, {
+        groupId: groupId,
+        name: detailData?.data?.name,
+        address: detailData?.data?.address,
+        type: type,
+      });
+    }
+    if (type === 'phone') {
+      navigation.navigate(UpdateSpotPageName, {
+        groupId: groupId,
+        name: detailData?.data?.name,
+        address: detailData?.data?.address,
+        type: type,
+      });
+    }
+  };
+  useFocusEffect(
+    useCallback(() => {
+      if (navigation.isFocused()) {
+        if (groupId) detailDataRefech();
+      }
+    }, [navigation, groupId, detailDataRefech]),
+  );
+
   return (
     <Wrap>
       <Contents>
-        <Title>{detailData?.data?.name}</Title>
+        {groupType === '마이스팟' ? (
+          <Pressable
+            style={{flexDirection: 'row', alignItems: 'center'}}
+            onPress={() => handleChangeName('name')}>
+            <Title>{detailData?.data?.name}</Title>
+            <EditIcon style={{marginLeft: 8}} width={16} height={16} />
+          </Pressable>
+        ) : (
+          <Title>{detailData?.data?.name}</Title>
+        )}
         <ScrollView
           style={{marginTop: 24, paddingBottom: 200}}
           showsVerticalScrollIndicator={false}>
@@ -174,15 +215,16 @@ const Pages = ({route}) => {
           )}
 
           {groupType === '마이스팟' && detailData?.data?.phone && (
-            <>
+            <Pressable onPress={() => handleChangeName('phone')}>
               <UserViewWrap>
                 <PhoneIcon width={20} height={20} />
                 <Body06RText style={{marginLeft: 16}}>
                   {detailData?.data?.phone}
                 </Body06RText>
+                <EditIcon style={{marginLeft: 8}} width={16} height={16} />
               </UserViewWrap>
               <Border />
-            </>
+            </Pressable>
           )}
           <DeliveryWrap>
             <Delivery>
@@ -202,34 +244,42 @@ const Pages = ({route}) => {
             <DeliveryTable mealInfo={detailData?.data?.mealInfos} />
           </InnerView>
           <Border />
-          <DeliveryWrap>
-            <Delivery>
-              <Image source={DeliverySpot} style={{width: 20, height: 20}} />
+          {groupType !== '마이스팟' && (
+            <>
+              <DeliveryWrap>
+                <Delivery>
+                  <Image
+                    source={DeliverySpot}
+                    style={{width: 20, height: 20}}
+                  />
 
-              <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
-            </Delivery>
-            {groupType === '공유스팟' && (
-              <ApplyButton onPress={() => goToApplyPage('spot')}>
-                <PlusIcon />
-                <ApplyText>스팟 추가 신청</ApplyText>
-              </ApplyButton>
-            )}
-          </DeliveryWrap>
-          <InnerView>
-            {detailData?.data?.spots.map(el => {
-              return (
-                <DetailSpotWrap key={el.spotName}>
-                  <DetailSpotName>{el.spotName}</DetailSpotName>
-                  {el.isRestriction && (
-                    <CardBoolean>
-                      <VerticalBorder />
-                      <NeedCardText>외부인 출입 제한</NeedCardText>
-                    </CardBoolean>
-                  )}
-                </DetailSpotWrap>
-              );
-            })}
-          </InnerView>
+                  <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
+                </Delivery>
+                {groupType === '공유스팟' && (
+                  <ApplyButton onPress={() => goToApplyPage('spot')}>
+                    <PlusIcon />
+                    <ApplyText>스팟 추가 신청</ApplyText>
+                  </ApplyButton>
+                )}
+              </DeliveryWrap>
+
+              <InnerView>
+                {detailData?.data?.spots.map(el => {
+                  return (
+                    <DetailSpotWrap key={el.spotName}>
+                      <DetailSpotName>{el.spotName}</DetailSpotName>
+                      {el.isRestriction && (
+                        <CardBoolean>
+                          <VerticalBorder />
+                          <NeedCardText>외부인 출입 제한</NeedCardText>
+                        </CardBoolean>
+                      )}
+                    </DetailSpotWrap>
+                  );
+                })}
+              </InnerView>
+            </>
+          )}
         </ScrollView>
         <AddSpotWrap onPress={withdrawPress}>
           <AddSpotText>스팟 탈퇴</AddSpotText>
