@@ -78,7 +78,7 @@ const Screen = ({route}) => {
           component={Review}
           options={({navigation}) => ({
             tabBarLabel: ({focused}) => (
-              <SseRedDot
+              <SseRedDotReview
                 isSse={total > 0}
                 // isSse={true}
                 position={'absolute'}
@@ -87,7 +87,7 @@ const Screen = ({route}) => {
                 <Titles focused={focused}>
                   리뷰 작성({total > 10 ? `9+` : total}){' '}
                 </Titles>
-              </SseRedDot>
+              </SseRedDotReview>
             ),
             tabBarLabelStyle: {
               fontSize: 15,
@@ -133,3 +133,5 @@ const Titles = styled(Typography).attrs({text: 'Button09SB'})`
     return focused ? '600' : '400';
   }};
 `;
+
+const SseRedDotReview = styled(SseRedDot)``;

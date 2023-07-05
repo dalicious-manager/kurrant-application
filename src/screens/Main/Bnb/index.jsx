@@ -126,7 +126,7 @@ const Screen = () => {
             // headerTransparent:true,
             tabBarIcon: ({focused}) => (
               <TabBarIconWrap>
-                <SseRedDot
+                <SseRedDotMyPage
                   // 여기에 로직 여러개 들어감
                   //
                   isSse={!!sseType3.type && !sseType3.read}
@@ -134,7 +134,7 @@ const Screen = () => {
                   right="-6px"
                   top="-3px">
                   {focused ? <ActiveMore /> : <More />}
-                </SseRedDot>
+                </SseRedDotMyPage>
               </TabBarIconWrap>
             ),
           }}
@@ -152,5 +152,7 @@ const TabBarIconWrap = styled.View`
 // const TabBarIcon = styled.Image`
 //   transform: scale(0.85);
 // `;
+
+const SseRedDotMyPage = styled(SseRedDot)``;
 
 export default Screen;

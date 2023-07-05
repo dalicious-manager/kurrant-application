@@ -49,14 +49,14 @@ const Screen = ({route}) => {
 
           ({navigation}) => ({
             tabBarLabel: ({focused}) => (
-              <SseRedDot
+              <SseRedDotType1
                 // isSse={total > 0}
                 isSse={true}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>
                 <Titles focused={focused}>전체 공지</Titles>
-              </SseRedDot>
+              </SseRedDotType1>
             ),
             tabBarLabelStyle: {
               fontSize: 15,
@@ -72,14 +72,14 @@ const Screen = ({route}) => {
         options={
           ({navigation}) => ({
             tabBarLabel: ({focused}) => (
-              <SseRedDot
+              <SseRedDotType2
                 // isSse={total > 0}
                 isSse={true}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>
                 <Titles focused={focused}>스팟 공지</Titles>
-              </SseRedDot>
+              </SseRedDotType2>
             ),
             tabBarLabelStyle: {
               fontSize: 15,
@@ -110,3 +110,6 @@ const Titles = styled(Typography).attrs({text: 'Button09SB'})`
     return focused ? '600' : '400';
   }};
 `;
+
+const SseRedDotType1 = styled(SseRedDot)``;
+const SseRedDotType2 = styled(SseRedDot)``;

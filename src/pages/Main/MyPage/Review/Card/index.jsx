@@ -81,7 +81,8 @@ const Component = ({
 
   return (
     <Container>
-      <SseRedDot
+      <SseRedDotType3
+        // 여기는 무조건 true
         isSse={true}
         right={'10px'}
         top={'5px'}
@@ -94,7 +95,6 @@ const Component = ({
               serviceDate,
             )} ${diningType} · ${timePassIndicator(
               new Date(Date.now()),
-
               stringDateToJavascriptDate(serviceDate, '-'),
             )}`}
         </DateText>
@@ -277,3 +277,5 @@ const ReviewDDayExpired = styled.View`
 const TextText = styled(Typography).attrs({text: 'Button10SB'})`
   color: ${props => props.theme.colors.grey[3]};
 `;
+
+const SseRedDotType3 = styled(SseRedDot)``;
