@@ -233,7 +233,7 @@ const Pages = ({route}) => {
                 confirmSseIsRead(3);
                 navigation.navigate(ReviewScreenName);
               }}>
-              <SseRedDot
+              <SseRedDotType3
                 isSse={total > 0}
                 position="absolute"
                 right="-10px"
@@ -243,7 +243,7 @@ const Pages = ({route}) => {
                   textColor={themeApp.colors.grey[2]}>
                   {total}
                 </InfomationText>
-              </SseRedDot>
+              </SseRedDotType3>
 
               <InfomationLabel
                 text={'CaptionR'}
@@ -432,3 +432,5 @@ const InfomationCaption = styled(Typography)`
   font-size: 10px;
   font-family: 'Pretendard-Regular';
 `;
+
+const SseRedDotType3 = styled(SseRedDot)``;

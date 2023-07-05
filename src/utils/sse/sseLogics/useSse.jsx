@@ -86,7 +86,7 @@ const useSse = () => {
                 break;
               case 3:
                 // type: 3 구매후기
-                //
+                // 발동조건: 새로운 리뷰작성할 상품이 올라왔을떄
                 console.log('type: 3 구매후기 Sse 확인');
                 console.log({...JSON.parse(message)});
                 setSseType3({...JSON.parse(message)});
@@ -105,6 +105,7 @@ const useSse = () => {
                 break;
               case 6:
                 // type: 6 알림 관련
+                // 발동조건: 푸시알림을 받으면 뜸
                 console.log('type: 6 Sse 확인');
                 console.log({...JSON.parse(message)});
                 setSseType6({...JSON.parse(message)});

@@ -70,8 +70,8 @@ const Pages = () => {
 
   return (
     <Wrapper>
-      {/* {!alarm?.length > 0 ? ( */}
-      {!alramData?.length > 0 ? (
+      {!alarm?.length > 0 ? (
+        // {!alramData?.length > 0 ? (
         <NonNotice>
           <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>
             알림 내역이 없어요.
@@ -79,11 +79,13 @@ const Pages = () => {
         </NonNotice>
       ) : (
         <ScrollView>
-          {/* {alarm?.map(v => { */}
-          {alramData?.map(v => {
+          {alarm?.map(v => {
+            {
+              /* {alramData?.map(v => { */
+            }
             return (
               <NotificationBox key={v.id}>
-                <SseRedDot
+                <SseRedDotType6
                   isSse={v.isRead}
                   position={'absolute'}
                   top={'-8px'}
@@ -129,6 +131,8 @@ const Pages = () => {
 };
 
 export default Pages;
+
+const SseRedDotType6 = styled(SseRedDot)``;
 
 const NotificationBox = styled.Pressable`
   padding: 24px;

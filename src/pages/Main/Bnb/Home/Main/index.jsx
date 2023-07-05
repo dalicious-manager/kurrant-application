@@ -621,7 +621,7 @@ const Pages = () => {
             <ArrowIcon />
           </SpotName>
           <Icons>
-            <SseRedDot
+            <SseRedDotType6
               isSse={true}
               position={'absolute'}
               right={'10px'}
@@ -632,7 +632,7 @@ const Pages = () => {
                 }}>
                 <BellIcon />
               </BellIconPress>
-            </SseRedDot>
+            </SseRedDotType6>
 
             <CsIconPress
               onPress={() => {
@@ -1038,3 +1038,5 @@ const CsIconPress = styled.Pressable`
   justify-content: center;
   align-items: center;
 `;
+
+const SseRedDotType6 = styled(SseRedDot)``;
