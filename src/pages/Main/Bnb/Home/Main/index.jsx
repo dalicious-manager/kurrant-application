@@ -502,7 +502,7 @@ const Pages = () => {
         });
       } catch (err) {}
     } else {
-      Alert.alert('스팟을 선택해 주세요', [
+      Alert.alert('', '스팟을 선택해 주세요', [
         {
           text: '확인',
           onPress: () => {},

@@ -10,7 +10,7 @@ import {PAGE_NAME as GroupManageSpotDetailPageName} from '../../DetailPage';
 const SpotListBox = ({item}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
-  console.log(item);
+  //console.log(item);
   return (
     <Wrap>
       <TitleBox>
