@@ -27,7 +27,8 @@ const Component = ({
   rating,
   reviewText,
   focusId,
-  likeNum,
+  good,
+  isGood,
   imageLocation,
   createDate,
   updateDate,
@@ -74,7 +75,17 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
-  const [isLikeLocal, setIsLikeLocal] = useState(likeNum ? likeNum : false);
+  // const [goodLocal, setGoodLocal] = useState(good ? good : 0);
+
+  // const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
+
+  useEffect(() => {
+    console.log('good 입니당 ' + good);
+  }, [good]);
+
+  useEffect(() => {
+    console.log('isGood입니당 ' + isGood);
+  }, [isGood]);
 
   return (
     <Container focusId={focusId} id={id}>
@@ -112,7 +123,7 @@ const Component = ({
             onPress={() => {
               if (isFetching) return;
 
-              setIsLikeLocal(!isLikeLocal);
+              // setGoodLocal(!goodLocal);
 
               pressLike({
                 dailyFoodId,
@@ -126,15 +137,20 @@ const Component = ({
               color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
             />
             <LikeNumber isLike={likeNum}>{likeNum}</LikeNumber> */}
-            <EditText isLike={isLikeLocal}>도움이 돼요</EditText>
+            {/* <EditText isLike={goodLocal}>도움이 돼요</EditText>
             <ThumbsUp
               width="14px"
               height="15px"
-              color={
-                isLikeLocal ? theme.colors.green[500] : theme.colors.grey[5]
-              }
+              color={goodLocal ? theme.colors.green[500] : theme.colors.grey[5]}
             />
-            <LikeNumber isLike={isLikeLocal}>{isLikeLocal}</LikeNumber>
+            <LikeNumber isLike={goodLocal}>{goodLocal}</LikeNumber> */}
+            <EditText isLike={isGood}>도움이 돼요</EditText>
+            <ThumbsUp
+              width="14px"
+              height="15px"
+              color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
+            />
+            <LikeNumber isLike={good}>{good}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>

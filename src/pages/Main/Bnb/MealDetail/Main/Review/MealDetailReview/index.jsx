@@ -389,8 +389,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
                     id={item.reviewId}
                     userName={item.userName}
                     item={item}
-                    likeNum={item.good}
-                    isLike={item.isGood}
+                    good={item.good}
+                    isGood={item.isGood}
                     createDate={item.createDate}
                     updateDate={item.updateDate}
                     writtenDate={convertDateFormat1(item.createDate)}
