@@ -113,7 +113,7 @@ const Pages = ({route}) => {
             : route?.params?.diningType === 2
             ? '점심'
             : '저녁'}
-          아침 식사 추가
+          식사 추가
         </TitleText>
 
         <KeyboardViewContainer

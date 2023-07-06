@@ -76,21 +76,18 @@ const Pages = ({route}) => {
 
   // 리렌더링이 잘 안되서
 
-  const [totalNutritionMain, setTotalNutritionMain] = useState({});
-  const [dietRepoMainListMain, setDietRepoMainListMain] = useState([]);
+  // useEffect(() => {
+  //   console.log('파람 데이트 확인하기 ');
+  //   console.log(route?.params?.date);
 
-  useEffect(() => {
-    setTotalNutritionMain(totalNutrition);
-  }, [totalNutrition]);
+  //   if (!route?.params?.date) return;
 
-  useEffect(() => {
-    setDietRepoMainListMain(dietRepoMainList);
-  }, [dietRepoMainList]);
-
-  useEffect(() => {
-    console.log('파람 데이트 확인하기 ');
-    console.log(route?.params?.date);
-  }, [route?.params?.date]);
+  //   if (typeof route?.params?.date === 'object') {
+  //     setDate(route?.params?.date);
+  //   } else {
+  //     setDate(stringDateToJavascriptDate(route?.params?.date, '-'));
+  //   }
+  // }, [route?.params?.date]);
 
   useEffect(() => {
     console.log('값확인하기 2');
@@ -104,6 +101,7 @@ const Pages = ({route}) => {
 
     const fetchYo = async date => {
       if (typeof date === 'object') {
+        console.log('이거 때문인가 object');
         if (
           (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
           toStringByFormatting(date)
@@ -116,6 +114,8 @@ const Pages = ({route}) => {
           );
         }
       } else if (typeof date === 'string') {
+        console.log('이거 때문인가 string');
+
         if ((await getStorage(`dietRepo_Date_${date}`)) === date) {
         } else {
           saveMeal(date);
@@ -183,37 +183,23 @@ const Pages = ({route}) => {
 
         <FlatList
           ListHeaderComponent={
-            // <View style={{paddingLeft: 24, paddingRight: 24}}>
-            //   <FlatListBanner
-            //     todayTotalCal={totalNutrition?.totalCalorie}
-            //     nutritionList={[
-            //       {
-            //         lable: '탄수화물',
-            //         amount: totalNutrition?.totalCarbohydrate,
-            //       },
-            //       {lable: '단백질', amount: totalNutrition?.totalProtein},
-            //       {lable: '지방', amount: totalNutrition?.totalFat},
-            //     ]}
-            //   />
-            // </View>
             <View style={{paddingLeft: 24, paddingRight: 24}}>
               <FlatListBanner
-                todayTotalCal={totalNutritionMain?.totalCalorie}
+                todayTotalCal={totalNutrition?.totalCalorie}
                 nutritionList={[
                   {
                     lable: '탄수화물',
-                    amount: totalNutritionMain?.totalCarbohydrate,
+                    amount: totalNutrition?.totalCarbohydrate,
                   },
-                  {lable: '단백질', amount: totalNutritionMain?.totalProtein},
-                  {lable: '지방', amount: totalNutritionMain?.totalFat},
+                  {lable: '단백질', amount: totalNutrition?.totalProtein},
+                  {lable: '지방', amount: totalNutrition?.totalFat},
                 ]}
               />
             </View>
           }
           contentContainerStyle={{paddingBottom: 190}}
           data={modifyDietRepoMainData(
-            // dietRepoMainList,
-            dietRepoMainListMain,
+            dietRepoMainList,
             formattedWeekDate(date),
           )}
           scrollEnabled={true}
