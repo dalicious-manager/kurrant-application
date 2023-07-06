@@ -31,10 +31,10 @@ const Pages = ({route}) => {
   const handleUpdateName = async () => {
     try {
       if (type === 'name' && (!groupId || !type || !value)) {
-        throw Error('별명의 입력값이 올바르지 않습니다.');
+        throw new Error('별명의 입력값이 올바르지 않습니다.');
       }
       if (type === 'phone' && (!groupId || !type || !phone)) {
-        throw Error('핸드폰번호의 입력값이 올바르지 않습니다.');
+        throw new Error('핸드폰번호의 입력값이 올바르지 않습니다.');
       }
       await updateMySpotInfo({
         id: groupId,
