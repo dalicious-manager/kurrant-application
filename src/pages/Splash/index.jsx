@@ -133,8 +133,10 @@ const Page = () => {
         }).start();
       }, 300);
       try {
-        await checkPermission();
-        await isAutoLogin();
+        setTimeout(async () => {
+          await checkPermission();
+          await isAutoLogin();
+        }, 2000);
       } catch (error) {
         setTimeout(() => {
           navigation.reset({

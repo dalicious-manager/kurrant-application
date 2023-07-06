@@ -24,13 +24,13 @@ import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
 //   fetchNextPageReviewDetailAtom,
 //   hasNextPageReviewDetailAtom,
 // } from './Review/MealDetailReview/store';
+import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
+import useAuth from '../../../../../biz/useAuth';
+import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from '../../../../../biz/useReview/useMealDetailReview/store';
-import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
-import useAuth from '../../../../../biz/useAuth';
-import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
@@ -460,13 +460,13 @@ const Pages = ({route}) => {
               </InfoWrap>
             </Content>
             {/* 리뷰자리 */}
-            {!isFoodDetailLoading && (
+            {/* {!isFoodDetailLoading && (
               <MealDetailReview
                 foodName={isFoodDetail?.name}
                 imageLocation={isFoodDetail?.imageList}
                 dailyFoodId={dailyFoodId}
               />
-            )}
+            )} */}
           </View>
         </ScrollViewWrap>
 
