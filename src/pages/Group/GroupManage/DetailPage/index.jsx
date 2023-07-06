@@ -85,7 +85,6 @@ const Pages = ({route}) => {
     );
   const {data: detailData, refetch: detailDataRefech} =
     useGroupSpotManageDetail(groupId);
-
   const navigation = useNavigation();
   const diningType = [1, 2, 3];
   const goToApplyPage = from => {
@@ -281,6 +280,7 @@ const Pages = ({route}) => {
               </InnerView>
             </>
           )}
+
         </ScrollView>
         <AddSpotWrap onPress={withdrawPress}>
           <AddSpotText>스팟 탈퇴</AddSpotText>
