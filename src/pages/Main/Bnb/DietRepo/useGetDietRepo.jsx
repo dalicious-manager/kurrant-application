@@ -1,6 +1,6 @@
 import {useQuery} from 'react-query';
 import {fetchJson} from '../../../../utils/fetch';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 const useGetDietRepo = (
   mainDate,
@@ -9,12 +9,17 @@ const useGetDietRepo = (
   historyStartDate,
   historyEndDate,
 ) => {
+  // console.log('useGetDietRepo 아예 새로 리렌더링 되고 있어요');
+
   const [dietRepoMainList, setDietRepoMainList] = useState([]);
   const [totalNutrition, setTotalList] = useState({});
 
   const [dietRepoAddMealList, setDietRepoAddMealList] = useState([]);
 
   const [historyDataList, setHistoryDataList] = useState([]);
+
+  // const [, updateState] = useState({});
+  // const forceUpdate = useCallback(() => updateState({}), []);
 
   useEffect(() => {
     console.log('메인데이트값 확인하기 ');
@@ -28,16 +33,16 @@ const useGetDietRepo = (
   } = useQuery(
     ['dietRepo', 'main', mainDate],
     async ({queryKey}) => {
-      console.log('쿼리 키 값이에요 ' + queryKey[2]);
+      console.log('리펫치 시작이요. 쿼리 키 값이에요 ' + queryKey[2]);
 
       const response = await fetchJson(
         `/users/me/daily/report?date=${queryKey[2]}`,
         'GET',
       );
 
-      console.log('데이터는 잘 받고 있어요');
+      console.log('데이터 받아왔어요');
       console.log(response?.data);
-      setDietRepoMainList(response?.data?.dailyReportResDtoList);
+      setDietRepoMainList([...response?.data?.dailyReportResDtoList]);
       setTotalList({
         totalCalorie: response?.data?.totalCalorie,
         totalCarbohydrate: response?.data?.totalCarbohydrate,
@@ -45,9 +50,9 @@ const useGetDietRepo = (
         totalProtein: response?.data?.totalProtein,
       });
     },
-    // {
-    //   enabled: !!mainDate,
-    // },
+    {
+      enabled: !!mainDate,
+    },
   );
 
   const {isFetching: isDietRepoAddRefetchLoading} = useQuery(
@@ -85,6 +90,10 @@ const useGetDietRepo = (
       enabled: !!historyStartDate && !!historyEndDate,
     },
   );
+  useEffect(() => {
+    console.log('지금 dietRepoMainList가 어디서 자꾸 [] 되었다가 데이터가 ');
+    console.log(dietRepoMainList);
+  }, [dietRepoMainList]);
 
   return {
     dietRepoMainRefetch,
