@@ -56,7 +56,7 @@ import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
+import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
@@ -164,7 +164,6 @@ const Pages = () => {
   useEffect(() => {
     if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
       setUserGroupSpot(isUserGroupSpotCheck?.data);
-      console.log(isUserGroupSpotCheck.data);
     }
   }, [isUserGroupSpotCheck?.data]);
 
@@ -494,13 +493,22 @@ const Pages = () => {
   };
 
   const groupManagePress = async () => {
-    try {
-      await groupSpotDetail(userSpotId);
-      navigation.navigate(GroupManagePageName, {
-        id: userSpotId,
-        clientId: clientId,
-      });
-    } catch (err) {}
+    if (userSpotId) {
+      try {
+        await groupSpotDetail(userSpotId);
+        navigation.navigate(GroupManagePageName, {
+          id: userSpotId,
+          clientId: clientId,
+        });
+      } catch (err) {}
+    } else {
+      Alert.alert('', '스팟을 선택해 주세요', [
+        {
+          text: '확인',
+          onPress: () => {},
+        },
+      ]);
+    }
   };
   const handleStatus = e => {
     setAppState(e);
@@ -776,7 +784,8 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
-        data={userGroupSpot?.spotListResponseDtoList}
+        // data={userGroupSpot?.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.data.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}

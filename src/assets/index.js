@@ -73,3 +73,6 @@ export const SpotTypeMySpot = require('../assets/images/spot/spotTypeMySpot.png'
 export const SpotTypeShareSpot = require('../assets/images/spot/spotTypeShareSpot.png');
 export const SpotTypePrivateSpot = require('../assets/images/spot/spotTypePrivateSpot.png');
 export const MembershipSongE = require('../assets/images/spot/membershipSongE.png');
+export const SpotManageShare = require('../assets/images/spot/manage/share.png');
+export const SpotManagePrivate = require('../assets/images/spot/manage/private.png');
+export const SpotManageMy = require('../assets/images/spot/manage/my.png');

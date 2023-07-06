@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Alert} from 'react-native';
 import styled from 'styled-components';
 
+import {PAGE_NAME as GroupManageDetailPageName} from './SpotManagePage';
 import useApartApplication from '../../../biz/useApartApplication/hook';
 import useGroupSpots from '../../../biz/useGroupSpots/hook';
 import BottomSheetSpot from '../../../components/BottomSheetSpot';
@@ -11,7 +12,6 @@ import Typography from '../../../components/Typography';
 import {useGroupSpotList} from '../../../hook/useSpot';
 import {setStorage} from '../../../utils/asyncStorage';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as GroupManageDetailPageName} from '../GroupManage/DetailPage';
 export const PAGE_NAME = 'P__GROUP__MANAGE';
 const Pages = () => {
   const navigation = useNavigation();

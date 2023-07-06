@@ -106,6 +106,7 @@ const useGroupSpots = () => {
       });
       queryClient.invalidateQueries('userInfo');
       queryClient.invalidateQueries('groupSpotList');
+      queryClient.invalidateQueries('groupSpotManageLists');
       return res;
     } catch (err) {
       Alert.alert('그룹 탈퇴', err.toString()?.replace('error: ', ''), [

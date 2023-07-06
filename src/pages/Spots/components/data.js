@@ -41,6 +41,16 @@ export function modalTitleText(data) {
       return '프라이빗 스팟';
   }
 }
+export function spotText(data) {
+  switch (data) {
+    case 0:
+      return '프라이빗 스팟';
+    case 1:
+      return '마이 스팟';
+    case 2:
+      return '공유 스팟';
+  }
+}
 
 export function modalTitleDscText(data) {
   switch (data) {
