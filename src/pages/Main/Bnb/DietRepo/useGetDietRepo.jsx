@@ -16,6 +16,11 @@ const useGetDietRepo = (
 
   const [historyDataList, setHistoryDataList] = useState([]);
 
+  useEffect(() => {
+    console.log('메인데이트값 확인하기 ');
+    console.log(mainDate);
+  }, [mainDate]);
+
   const {
     refetch: dietRepoMainRefetch,
     // isLoading: isDietRepoMainRefetchLoading,
@@ -23,11 +28,15 @@ const useGetDietRepo = (
   } = useQuery(
     ['dietRepo', 'main', mainDate],
     async ({queryKey}) => {
+      console.log('쿼리 키 값이에요 ' + queryKey[2]);
+
       const response = await fetchJson(
         `/users/me/daily/report?date=${queryKey[2]}`,
         'GET',
       );
 
+      console.log('데이터는 잘 받고 있어요');
+      console.log(response?.data);
       setDietRepoMainList(response?.data?.dailyReportResDtoList);
       setTotalList({
         totalCalorie: response?.data?.totalCalorie,
@@ -36,9 +45,9 @@ const useGetDietRepo = (
         totalProtein: response?.data?.totalProtein,
       });
     },
-    {
-      enabled: !!mainDate,
-    },
+    // {
+    //   enabled: !!mainDate,
+    // },
   );
 
   const {isFetching: isDietRepoAddRefetchLoading} = useQuery(

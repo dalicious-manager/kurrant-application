@@ -261,7 +261,7 @@ export const convertDateFormat1 = stringDate => {
 // 스트링날짜 Date객체로 변환
 // 예) '2022-12-27 -> 2022-12-26T15:00:00.000Z
 
-export const stringDateToJavascriptDate = (stringDate, seperator) => {
+export const stringDateToJavascriptDate = (stringDate, seperator = '-') => {
   const process1 = stringDate.trim();
 
   const process2 = process1.split(seperator);

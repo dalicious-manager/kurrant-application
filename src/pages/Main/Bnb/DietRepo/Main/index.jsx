@@ -61,9 +61,12 @@ const Pages = ({route}) => {
   const [sliderValue, setSliderValue] = useState(1);
 
   const [date, setDate] = useState(
-    route?.params?.date ? route?.params?.date : new Date(),
+    route?.params?.date
+      ? typeof route?.params?.date === 'object'
+        ? route?.params?.date
+        : stringDateToJavascriptDate(route?.params?.date, '-')
+      : new Date(),
   );
-
   const {
     isDietRepoMainRefetchLoading,
     dietRepoMainRefetch,
@@ -71,11 +74,27 @@ const Pages = ({route}) => {
     dietRepoMainList,
   } = useGetDietRepo(formattedWeekDate(date), undefined, undefined);
 
+  useEffect(() => {
+    console.log('파람 데이트 확인하기 ');
+    console.log(route?.params?.date);
+  }, [route?.params?.date]);
+
+  useEffect(() => {
+    console.log('값확인하기 2');
+    console.log(date);
+    console.log(formattedWeekDate(date));
+  }, [date]);
+
+  useEffect(() => {
+    console.log('dietRepoMainList 골골골3');
+    console.log(dietRepoMainList);
+  }, [dietRepoMainList]);
+
   const {saveMeal} = useDietRepoMutation();
 
   useEffect(() => {
     // 여기에 특정기간 주문내역 리포트
-
+    console.log('리펫치 잘 되고있어요');
     dietRepoMainRefetch();
 
     const fetchYo = async date => {
