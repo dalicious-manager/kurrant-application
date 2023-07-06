@@ -75,17 +75,16 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
-  // const [goodLocal, setGoodLocal] = useState(good ? good : 0);
-
-  // const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
-
-  useEffect(() => {
-    console.log('good 입니당 ' + good);
-  }, [good]);
+  const [goodLocal, setGoodLocal] = useState(good ? good : 0);
+  const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
 
   useEffect(() => {
-    console.log('isGood입니당 ' + isGood);
-  }, [isGood]);
+    console.log('goodLocal 입니당 ' + goodLocal);
+  }, [goodLocal]);
+
+  useEffect(() => {
+    console.log('isGoodLocal입니당 ' + isGoodLocal);
+  }, [isGoodLocal]);
 
   return (
     <Container focusId={focusId} id={id}>
@@ -123,34 +122,29 @@ const Component = ({
             onPress={() => {
               if (isFetching) return;
 
-              // setGoodLocal(!goodLocal);
+              //로컬에서 계산하기
+
+              setIsGoodLocal(!isGoodLocal);
+              if (isGoodLocal) {
+                setGoodLocal(prev => prev - 1);
+              } else {
+                setGoodLocal(prev => prev + 1);
+              }
 
               pressLike({
                 dailyFoodId,
                 reviewId: id,
               });
             }}>
-            {/* <EditText isLike={likeNum}>도움이 돼요</EditText>
+            <EditText isGood={isGoodLocal}>도움이 돼요</EditText>
             <ThumbsUp
               width="14px"
               height="15px"
-              color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
+              color={
+                isGoodLocal ? theme.colors.green[500] : theme.colors.grey[5]
+              }
             />
-            <LikeNumber isLike={likeNum}>{likeNum}</LikeNumber> */}
-            {/* <EditText isLike={goodLocal}>도움이 돼요</EditText>
-            <ThumbsUp
-              width="14px"
-              height="15px"
-              color={goodLocal ? theme.colors.green[500] : theme.colors.grey[5]}
-            />
-            <LikeNumber isLike={goodLocal}>{goodLocal}</LikeNumber> */}
-            <EditText isGood={isGood}>도움이 돼요</EditText>
-            <ThumbsUp
-              width="14px"
-              height="15px"
-              color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
-            />
-            <LikeNumber isGood={isGood}>{good}</LikeNumber>
+            <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>
