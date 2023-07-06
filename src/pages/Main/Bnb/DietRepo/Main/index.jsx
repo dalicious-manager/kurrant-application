@@ -42,7 +42,6 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
 const Pages = ({route}) => {
   const navigation = useNavigation();
-  const queryClient = useQueryClient();
 
   const {
     readableAtom: {userRole},
@@ -52,13 +51,12 @@ const Pages = ({route}) => {
   const userInfo = useAtomValue(isUserInfoAtom);
   const userSpotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
 
-  const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
+  const {data: dailyfoodData} = useGetDailyfood(
     userSpotId,
     formattedWeekDate(new Date()),
   );
 
   const pager = useRef();
-  // const fadeAnim = useRef(new Animated.Value(32)).current;
 
   const [sliderValue, setSliderValue] = useState(1);
 
@@ -76,39 +74,11 @@ const Pages = ({route}) => {
     dietRepoMainList,
   } = useGetDietRepo(formattedWeekDate(date), undefined, undefined);
 
-  // 리렌더링이 잘 안되서
-
-  // useEffect(() => {
-  //   console.log('파람 데이트 확인하기 ');
-  //   console.log(route?.params?.date);
-
-  //   if (!route?.params?.date) return;
-
-  //   if (typeof route?.params?.date === 'object') {
-  //     setDate(route?.params?.date);
-  //   } else {
-  //     setDate(stringDateToJavascriptDate(route?.params?.date, '-'));
-  //   }
-  // }, [route?.params?.date]);
-
   useEffect(() => {
-    console.log('값확인하기 2');
-    console.log(date);
-    console.log(formattedWeekDate(date));
-  }, [date]);
-  useEffect(() => {
-    // 여기에 특정기간 주문내역 리포트
-    // console.log('useEffect 리펫치 했어요 ');
     dietRepoMainRefetch();
-    // queryClient.invalidateQueries([
-    //   'dietRepo',
-    //   'main',
-    //   formattedWeekDate(date),
-    // ]);
 
     const fetchYo = async date => {
       if (typeof date === 'object') {
-        console.log('이거 때문인가 object');
         if (
           (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
           toStringByFormatting(date)
@@ -121,8 +91,6 @@ const Pages = ({route}) => {
           );
         }
       } else if (typeof date === 'string') {
-        console.log('이거 때문인가 string');
-
         if ((await getStorage(`dietRepo_Date_${date}`)) === date) {
         } else {
           saveMeal(date);
@@ -132,11 +100,6 @@ const Pages = ({route}) => {
     };
     fetchYo(date);
   }, [date]);
-
-  useEffect(() => {
-    console.log('dietRepoMainList 마지막 렌더 직전');
-    console.log(dietRepoMainList);
-  }, [dietRepoMainList]);
 
   const {saveMeal} = useDietRepoMutation();
 
@@ -149,8 +112,6 @@ const Pages = ({route}) => {
       date: formattedWeekDate(date),
     });
   };
-
-  // 특정기간 주문내역 래포트로 저장
 
   return (
     <>

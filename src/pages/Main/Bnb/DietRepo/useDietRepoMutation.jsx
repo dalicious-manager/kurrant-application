@@ -49,11 +49,6 @@ const useDietRepoMutation = date => {
             style: 'cancel',
           },
         ]);
-
-        // queryClient.invalidateQueries([
-        //   'review',
-        //   'GetMealDetailReviewInfinite',
-        // ]);
       },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
@@ -69,9 +64,6 @@ const useDietRepoMutation = date => {
       const response = await fetchJson(
         `/users/me/daily/report/${data}`,
         'DELETE',
-        // {
-        //   body: JSON.stringify(data),
-        // },
       );
 
       return response;

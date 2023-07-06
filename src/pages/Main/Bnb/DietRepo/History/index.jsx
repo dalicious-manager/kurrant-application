@@ -25,6 +25,7 @@ import {
   sampleStackedBarData1,
 } from './logic';
 import useGetDietRepo from '../useGetDietRepo';
+import LoadingScreen from '~components/LoadingScreen';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 
@@ -37,7 +38,7 @@ const Pages = ({route}) => {
       : calcWeekArr(new Date()),
   );
 
-  const {historyDataList} = useGetDietRepo(
+  const {historyDataList, isDietRepoHistoryRefetchLoading} = useGetDietRepo(
     undefined,
     undefined,
     undefined,
@@ -57,87 +58,103 @@ const Pages = ({route}) => {
   // params에 date가 들어갈때 그 일주일을 계산하기
 
   return (
-    <ContainerScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        alignItems: 'center',
-      }}>
-      <DateSelectorWrap>
-        <Pressable
-          onPress={() => {
-            setWeek(calcWeekArr(calcDate(-7, week[0])));
-          }}>
-          <GreyArrowLeftInACircle />
-        </Pressable>
-        <DateSelectorText>
-          {`${
-            extractMonthAndDateFromDate2(toStringByFormatting(week[0]), '-')[0]
-          }.${
-            extractMonthAndDateFromDate2(toStringByFormatting(week[0]), '-')[1]
-          }`}
-          ~
-          {`${
-            extractMonthAndDateFromDate2(toStringByFormatting(week[6]), '-')[0]
-          }.${
-            extractMonthAndDateFromDate2(toStringByFormatting(week[6]), '-')[1]
-          }`}
-        </DateSelectorText>
-        <Pressable
-          onPress={() => {
-            setWeek(calcWeekArr(calcDate(7, week[0])));
-          }}>
-          <GreyArrowRightInACircle />
-        </Pressable>
-      </DateSelectorWrap>
+    <>
+      <ContainerScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          alignItems: 'center',
+        }}>
+        <DateSelectorWrap>
+          <Pressable
+            onPress={() => {
+              setWeek(calcWeekArr(calcDate(-7, week[0])));
+            }}>
+            <GreyArrowLeftInACircle />
+          </Pressable>
+          <DateSelectorText>
+            {`${
+              extractMonthAndDateFromDate2(
+                toStringByFormatting(week[0]),
+                '-',
+              )[0]
+            }.${
+              extractMonthAndDateFromDate2(
+                toStringByFormatting(week[0]),
+                '-',
+              )[1]
+            }`}
+            ~
+            {`${
+              extractMonthAndDateFromDate2(
+                toStringByFormatting(week[6]),
+                '-',
+              )[0]
+            }.${
+              extractMonthAndDateFromDate2(
+                toStringByFormatting(week[6]),
+                '-',
+              )[1]
+            }`}
+          </DateSelectorText>
+          <Pressable
+            onPress={() => {
+              setWeek(calcWeekArr(calcDate(7, week[0])));
+            }}>
+            <GreyArrowRightInACircle />
+          </Pressable>
+        </DateSelectorWrap>
 
-      <HistoryStackedBarChart
-        // data={[
-        //   {x: '06월', carbohydrate: 120, protein: 240, fat: 60},
-        //   {x: '07월', carbohydrate: 220, protein: 140, fat: 160},
-        //   {x: '08월', carbohydrate: 320, protein: 50, fat: 90},
-        //   {x: '09월', carbohydrate: 100, protein: 30, fat: 190},
-        //   {x: '10월', carbohydrate: 220, protein: 50, fat: 90},
-        //   {x: '11월', carbohydrate: 0, protein: 0, fat: 0},
-        //   {x: '12월', carbohydrate: 520, protein: 75, fat: 0},
-        // ]}
+        <HistoryStackedBarChart
+          // data={[
+          //   {x: '06월', carbohydrate: 120, protein: 240, fat: 60},
+          //   {x: '07월', carbohydrate: 220, protein: 140, fat: 160},
+          //   {x: '08월', carbohydrate: 320, protein: 50, fat: 90},
+          //   {x: '09월', carbohydrate: 100, protein: 30, fat: 190},
+          //   {x: '10월', carbohydrate: 220, protein: 50, fat: 90},
+          //   {x: '11월', carbohydrate: 0, protein: 0, fat: 0},
+          //   {x: '12월', carbohydrate: 520, protein: 75, fat: 0},
+          // ]}
 
-        data={modifyDateFormatForStackedBarData(
-          modifyEachHistoryListData(historyDataList, week),
-        )}
-        dataOrder={['carbohydrate', 'protein', 'fat']}
-        colorSetting={{
-          carbohydrate: '#4F6FDF',
-          protein: '#819DFF',
-          fat: '#C8D4FF',
-        }}
-        title="영양소 정보"
-        width={'100%'}
-      />
+          data={modifyDateFormatForStackedBarData(
+            modifyEachHistoryListData(historyDataList, week),
+          )}
+          dataOrder={['carbohydrate', 'protein', 'fat']}
+          colorSetting={{
+            carbohydrate: '#4F6FDF',
+            protein: '#819DFF',
+            fat: '#C8D4FF',
+          }}
+          title="영양소 정보"
+          width={'100%'}
+        />
 
-      <HistoryLineChart
-        // data={[
-        //   {x: '10일', y: 820},
-        //   {x: '11일', y: 120},
-        //   {x: '12일', y: 1220},
-        //   {x: '13일', y: 220},
-        //   {x: '14일', y: 1410},
-        //   {x: '15일', y: 610},
-        //   {x: '오늘', y: 2100},
-        // ]}
+        <HistoryLineChart
+          // data={[
+          //   {x: '10일', y: 820},
+          //   {x: '11일', y: 120},
+          //   {x: '12일', y: 1220},
+          //   {x: '13일', y: 220},
+          //   {x: '14일', y: 1410},
+          //   {x: '15일', y: 610},
+          //   {x: '오늘', y: 2100},
+          // ]}
 
-        data={modifyDateFormatAndValueForHistoryLineChartData(
-          modifyEachHistoryListData(historyDataList, week),
-        )}
-        title="칼로리"
-        width={'100%'}
-      />
-      <GreyBlock width={screenWidth} />
+          data={modifyDateFormatAndValueForHistoryLineChartData(
+            modifyEachHistoryListData(historyDataList, week),
+          )}
+          title="칼로리"
+          width={'100%'}
+        />
+        <GreyBlock width={screenWidth} />
 
-      <HistoryTables data={historyDataList} />
-      <Filler />
-    </ContainerScrollView>
+        <HistoryTables data={historyDataList} />
+        <Filler />
+      </ContainerScrollView>
+      {isDietRepoHistoryRefetchLoading && <LoadingScreen />}
+    </>
   );
 };
+
 export default Pages;
 
 const ContainerScrollView = styled.ScrollView`
