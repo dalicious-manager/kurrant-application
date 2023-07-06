@@ -626,6 +626,7 @@ const Pages = () => {
               position={'absolute'}
               right={'10px'}
               top={'4px'}>
+              {/* 홈 알림 벨모양 Sse */}
               <BellIconPress
                 onPress={() => {
                   navigation.navigate(NotificationCenterName);
@@ -773,7 +774,8 @@ const Pages = () => {
         </Wrap>
       </ScrollViewWrap>
 
-      {sseType5.userId && !sseType5.read && (
+      {!!sseType5.userId && !sseType5.read && !!sseType5.content && (
+        //다음주 식사는 구매하셨나요
         <BalloonPressable
           onPress={() => {
             // confirmBalloonClicked();
