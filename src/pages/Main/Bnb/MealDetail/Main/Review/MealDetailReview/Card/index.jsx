@@ -32,6 +32,7 @@ const Component = ({
   createDate,
   updateDate,
   commentList,
+  isFetching,
 }) => {
   const navigation = useNavigation();
 
@@ -73,6 +74,8 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
+  const [isLikeLocal, setIsLikeLocal] = useState(likeNum ? likeNum : false);
+
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
@@ -107,18 +110,31 @@ const Component = ({
         <EditWrap>
           <LikePressable
             onPress={() => {
+              if (isFetching) return;
+
+              setIsLikeLocal(!isLikeLocal);
+
               pressLike({
                 dailyFoodId,
                 reviewId: id,
               });
             }}>
-            <EditText isLike={likeNum}>도움이 돼요</EditText>
+            {/* <EditText isLike={likeNum}>도움이 돼요</EditText>
             <ThumbsUp
               width="14px"
               height="15px"
               color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
             />
-            <LikeNumber isLike={likeNum}>{likeNum}</LikeNumber>
+            <LikeNumber isLike={likeNum}>{likeNum}</LikeNumber> */}
+            <EditText isLike={isLikeLocal}>도움이 돼요</EditText>
+            <ThumbsUp
+              width="14px"
+              height="15px"
+              color={
+                isLikeLocal ? theme.colors.green[500] : theme.colors.grey[5]
+              }
+            />
+            <LikeNumber isLike={isLikeLocal}>{isLikeLocal}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>

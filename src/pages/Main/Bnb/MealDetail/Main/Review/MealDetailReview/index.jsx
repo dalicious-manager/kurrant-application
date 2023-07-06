@@ -400,6 +400,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
                     imageLocation={item.imageLocation}
                     forMakers={item.forMakers}
                     commentList={item.commentList}
+                    // 도움이돼요 빠르게 만들기
+
+                    isFetching={isFetching}
                   />
                 );
               })}
