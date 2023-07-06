@@ -193,6 +193,29 @@ const Pages = ({route}) => {
   const keyboardStatus = useKeyboardEvent(inputRef);
 
   const handleEventPayments = () => {
+    if (!orderPhone) {
+      Alert.alert(
+        '핸드폰번호',
+        '핸드폰번호가 등록 되지 않았을 경우\n배송기사와의 연락이 어려울 수 있습니다.',
+        [
+          {
+            onPress: () => {
+              goUpdatePhoneNumber();
+              return;
+            },
+            text: '번호 등록',
+          },
+          {
+            onPress: () => {
+              orderPress2(selected);
+              return;
+            },
+            text: '무시',
+          },
+        ],
+      );
+      return;
+    }
     orderPress2(selected);
   };
 
@@ -212,6 +235,24 @@ const Pages = ({route}) => {
       console.log(orderPhone);
     }, []),
   );
+  const goUpdatePhoneNumber = () => {
+    navigation.setOptions({
+      headerTitle: `연락처 수정`,
+      headerLeft: () => (
+        <BackButton
+          margin={[10, 0]}
+          onPressEvent={() => {
+            navigation.setOptions({
+              headerTitle: `주문`,
+              headerLeft: () => <BackButton margin={[10, 0]} />,
+            });
+            setIsPhone(false);
+          }}
+        />
+      ),
+    });
+    setIsPhone(true);
+  };
   useEffect(() => {
     if (isLoadMeal?.data?.spotCarts) {
       setSpotFilter(
@@ -298,6 +339,7 @@ const Pages = ({route}) => {
       );
       return;
     }
+
     const data = {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
@@ -434,24 +476,7 @@ const Pages = ({route}) => {
                           <DeliveryTitle>연락처</DeliveryTitle>
                           <Pressable
                             onPress={() => {
-                              navigation.setOptions({
-                                headerTitle: `연락처 수정`,
-                                headerLeft: () => (
-                                  <BackButton
-                                    margin={[10, 0]}
-                                    onPressEvent={() => {
-                                      navigation.setOptions({
-                                        headerTitle: `주문`,
-                                        headerLeft: () => (
-                                          <BackButton margin={[10, 0]} />
-                                        ),
-                                      });
-                                      setIsPhone(false);
-                                    }}
-                                  />
-                                ),
-                              });
-                              setIsPhone(true);
+                              goUpdatePhoneNumber();
                             }}>
                             <DeliveryText orderPhone={!orderPhone}>
                               {!orderPhone
