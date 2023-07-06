@@ -36,11 +36,13 @@ import useDietRepoMutation from '../useDietRepoMutation';
 import DietRepoCalendar2 from '../DietRepoCalendar/DietRepoCalendar2';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
 const Pages = ({route}) => {
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
 
   const {
     readableAtom: {userRole},
@@ -96,8 +98,13 @@ const Pages = ({route}) => {
   }, [date]);
   useEffect(() => {
     // 여기에 특정기간 주문내역 리포트
-    console.log('useEffect 리펫치 했어요 ');
+    // console.log('useEffect 리펫치 했어요 ');
     dietRepoMainRefetch();
+    // queryClient.invalidateQueries([
+    //   'dietRepo',
+    //   'main',
+    //   formattedWeekDate(date),
+    // ]);
 
     const fetchYo = async date => {
       if (typeof date === 'object') {

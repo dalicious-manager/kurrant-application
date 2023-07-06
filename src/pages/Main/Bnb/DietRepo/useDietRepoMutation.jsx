@@ -25,6 +25,8 @@ const useDietRepoMutation = date => {
     },
     {
       onSuccess: data => {
+        queryClient.invalidateQueries(['dietRepo', 'main', date]);
+
         Alert.alert('작성 완료', '식단이 추가되었습니다 ', [
           {
             text: '확인',

@@ -26,10 +26,42 @@ const useGetDietRepo = (
     console.log(mainDate);
   }, [mainDate]);
 
+  // const {
+  //   refetch: dietRepoMainRefetch,
+  //   // isLoading: isDietRepoMainRefetchLoading,
+  //   isFetching: isDietRepoMainRefetchLoading,
+  // } = useQuery(
+  //   ['dietRepo', 'main', mainDate],
+  //   async ({queryKey}) => {
+  //     console.log('리펫치 시작이요. 쿼리 키 값이에요 ' + queryKey[2]);
+
+  //     const response = await fetchJson(
+  //       `/users/me/daily/report?date=${queryKey[2]}`,
+  //       'GET',
+  //     );
+
+  //     console.log('데이터 받아왔어요');
+  //     console.log(response?.data);
+  //     setDietRepoMainList([...response?.data?.dailyReportResDtoList]);
+  //     setTotalList({
+  //       totalCalorie: response?.data?.totalCalorie,
+  //       totalCarbohydrate: response?.data?.totalCarbohydrate,
+  //       totalFat: response?.data?.totalFat,
+  //       totalProtein: response?.data?.totalProtein,
+  //     });
+  //   },
+  //   {
+  //     enabled: !!mainDate,
+  //   },
+  // );
+
+  // useQuery 테스트용
+
   const {
     refetch: dietRepoMainRefetch,
-    // isLoading: isDietRepoMainRefetchLoading,
+
     isFetching: isDietRepoMainRefetchLoading,
+    data,
   } = useQuery(
     ['dietRepo', 'main', mainDate],
     async ({queryKey}) => {
@@ -40,20 +72,44 @@ const useGetDietRepo = (
         'GET',
       );
 
-      console.log('데이터 받아왔어요');
-      console.log(response?.data);
-      setDietRepoMainList([...response?.data?.dailyReportResDtoList]);
-      setTotalList({
-        totalCalorie: response?.data?.totalCalorie,
-        totalCarbohydrate: response?.data?.totalCarbohydrate,
-        totalFat: response?.data?.totalFat,
-        totalProtein: response?.data?.totalProtein,
-      });
+      // console.log('데이터 받아왔어요');
+      // console.log(response?.data);
+      // setDietRepoMainList([...response?.data?.dailyReportResDtoList]);
+      // setTotalList({
+      //   totalCalorie: response?.data?.totalCalorie,
+      //   totalCarbohydrate: response?.data?.totalCarbohydrate,
+      //   totalFat: response?.data?.totalFat,
+      //   totalProtein: response?.data?.totalProtein,
+      // });
+      return {
+        dietRepoMainList: response?.data?.dailyReportResDtoList,
+        totalNutrition: {
+          totalCalorie: response?.data?.totalCalorie,
+          totalCarbohydrate: response?.data?.totalCarbohydrate,
+          totalFat: response?.data?.totalFat,
+          totalProtein: response?.data?.totalProtein,
+        },
+      };
     },
     {
       enabled: !!mainDate,
     },
   );
+
+  useEffect(() => {
+    console.log('데이터 ㅌㅌ');
+    console.log(data);
+    if (data) {
+      setDietRepoMainList([...data.dietRepoMainList]);
+      setTotalList({...data.totalNutrition});
+    }
+  }, [data]);
+
+  // useEffect(() => {
+  //   console.log('확인하세~~');
+  //   console.log(dailyReportResDtoList);
+  //   console.log(totalCalorie);
+  // }, [dailyReportResDtoList, totalCalorie]);
 
   const {isFetching: isDietRepoAddRefetchLoading} = useQuery(
     ['dietRepo', 'addMeal'],
