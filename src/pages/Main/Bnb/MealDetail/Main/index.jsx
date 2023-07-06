@@ -459,14 +459,14 @@ const Pages = ({route}) => {
                 </InfoTextView>
               </InfoWrap>
             </Content>
-            {/* 리뷰자리 */}
-            {/* {!isFoodDetailLoading && (
+
+            {!isFoodDetailLoading && (
               <MealDetailReview
                 foodName={isFoodDetail?.name}
                 imageLocation={isFoodDetail?.imageList}
                 dailyFoodId={dailyFoodId}
               />
-            )} */}
+            )}
           </View>
         </ScrollViewWrap>
 
