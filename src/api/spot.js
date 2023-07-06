@@ -6,6 +6,10 @@ export const spotApis = {
     await fetchJson('/application-forms/spots/my', 'POST', {
       body: JSON.stringify(data),
     }),
+  updateMyspotInfo: async (data, target, id) =>
+    await fetchJson(`/users/me/groups/${id}/myspots?target=${target}`, 'POST', {
+      body: JSON.stringify(data),
+    }),
   // 마이스팟 신청내역 삭제
   deleteApplyMySpot: async () =>
     await fetchJson('/application-forms/spots', 'DELETE'),

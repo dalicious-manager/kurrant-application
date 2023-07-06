@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import Typography from '~components/Typography';
 import Label from '~components/Label';
-import MealImage from './MealImage';
+import Typography from '~components/Typography';
 
-import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
+import MealImage from './MealImage';
 import {YellowStar} from '../../../../../components/Icon';
+import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 
 const Card = ({
   m,
@@ -71,7 +71,7 @@ const Card = ({
         <ReviewWrap>
           <YellowStar width="15px" height="15px" />
           <ReviewAverage>
-            {m.reviewAverage.toString().length === 1
+            {m?.reviewAverage && m.reviewAverage?.toString().length === 1
               ? m.reviewAverage.toFixed(1)
               : m.reviewAverage}
           </ReviewAverage>

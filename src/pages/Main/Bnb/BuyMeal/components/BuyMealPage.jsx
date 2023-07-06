@@ -8,12 +8,12 @@ import {css} from 'styled-components/native';
 import BottomModal from '~components/BottomModal';
 import Typography from '~components/Typography';
 
+import Card from './Card';
 import MealImage from './MealImage';
 import {Label} from '../../../../../components/Button/component';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
-import Card from './Card';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -159,90 +159,6 @@ const BuyMealPage = props => {
               addCartPress={addCartPress}
               navigation={navigation}
             />
-            // <Contents
-            //   key={m.id}
-            //   spicy={m.spicy}
-            //   vegan={m.vegan}
-            //   disabled={
-            //     m.status === 2 || m.status === 6 || isAddMeal || m.status === 5
-            //   }
-            //   onPress={e => {
-            //     navigation.navigate(MealDetailPageName, {
-            //       dailyFoodId: m.id,
-            //       deliveryTime: time,
-            //     });
-            //     e.stopPropagation();
-            //   }}>
-            //   <ContentsText>
-            //     <MakersName soldOut={m.status}>{m.makersName}</MakersName>
-            //     <MealName
-            //       soldOut={m.status}
-            //       numberOfLines={1}
-            //       ellipsizeMode="tail">
-            //       {m.foodName}
-            //     </MealName>
-            //     <MealDsc
-            //       soldOut={m.status}
-            //       numberOfLines={2}
-            //       ellipsizeMode="tail">
-            //       {m.description}
-            //     </MealDsc>
-            //     <PriceWrap>
-            //       {realToTalDiscountRate !== 0 && (
-            //         <PercentText soldOut={m.status}>
-            //           {Math.round(realToTalDiscountRate * 100) / 100}%
-            //         </PercentText>
-            //       )}
-            //       <Price soldOut={m.status}>
-            //         {withCommas(m.price - totalDiscount)}원
-            //       </Price>
-            //       {realToTalDiscountRate !== 0 && (
-            //         <OriginPrice>{withCommas(m.price)}원</OriginPrice>
-            //       )}
-            //     </PriceWrap>
-            //     {m.spicy !== null && (
-            //       <LabelWrap>
-            //         {m.status === 2 || m.status === 6 ? (
-            //           <Label label={`${m.spicy}`} type={'soldOut'} />
-            //         ) : (
-            //           <Label label={`${m.spicy}`} />
-            //         )}
-            //       </LabelWrap>
-            //     )}
-            //     {m.vegan && m.vegan !== null && (
-            //       <LabelWrap>
-            //         {m.status === 2 || m.status === 6 ? (
-            //           <Label label={`${m.vegan}`} type={'soldOut'} />
-            //         ) : (
-            //           <Label label={`${m.vegan}`} type={'vegan'} />
-            //         )}
-            //       </LabelWrap>
-            //     )}
-            //   </ContentsText>
-            //   <MealImage
-            //     status={m.status}
-            //     image={m.image}
-            //     dailyFoodId={m.id}
-            //     orderFoodList={orderDailyFoodId}
-            //     cartFoodList={cartDailyFoodId}
-            //     onPressEvent={() => {
-            //       addCartPress(m.id, m.serviceDate, m.diningType, m);
-            //     }}
-            //     isAddMeal={isAddMeal}
-            //     rank={m.rank}
-            //   />
-
-            //   {m.status === 2 && (
-            //     <SoldOut soldOut={m.status} rank={m.rank}>
-            //       품절됐어요
-            //     </SoldOut>
-            //   )}
-            //   {m.status === 6 && (
-            //     <SoldOut soldOut={m.status} rank={m.rank}>
-            //       마감됐어요
-            //     </SoldOut>
-            //   )}
-            // </Contents>
           );
         })}
         <BottomModal
@@ -274,39 +190,6 @@ const FoodContainer = styled.View`
   padding-bottom:24px;
 `;
 
-const Contents = styled.Pressable`
-  padding: ${({spicy, vegan}) =>
-    spicy || vegan ? '18px 0px 28px 0px' : '18px 0px 28px 0px'};
-  margin: 0px 28px;
-  flex-direction: row;
-  justify-content: space-between;
-  border-bottom-color: ${props => props.theme.colors.grey[8]};
-  border-bottom-width: 1px;
-  align-items: center;
-  min-height: 160px;
-`;
-
-const LabelWrap = styled.View`
-  margin-top: 6px;
-`;
-
-const ContentsText = styled.View`
-  width: 60%;
-`;
-
-const PriceWrap = styled.View`
-  flex-direction: row;
-  margin-top: 4px;
-  margin-bottom: 6px;
-`;
-
-const SoldOut = styled(Typography).attrs({text: 'Title04SB'})`
-  position: absolute;
-  right: ${({rank}) => (rank === 1 ? '17px' : '15px')};
-  top: ${({rank}) => (rank === 1 ? '60%' : '55%')};
-  color: ${props => props.theme.colors.grey[4]};
-  z-index: 1000;
-`;
 export const MakersName = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${({theme, soldOut}) =>
     soldOut === 2 || soldOut === 6
@@ -322,40 +205,6 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
     soldOut === 2 || soldOut === 6
       ? theme.colors.grey[6]
       : theme.colors.grey[2]};
-`;
-
-const Price = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[2]};
-`;
-
-const MealDsc = styled(Typography).attrs({text: 'MealDes'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[4]};
-  margin-top: 6px;
-`;
-
-const PercentText = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6 ? theme.colors.grey[6] : '#DD5257'};
-  margin-right: 4px;
-`;
-
-const OriginPrice = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[5]};
-  text-decoration: line-through;
-  text-decoration-color: ${({theme, soldOut}) =>
-    soldOut === 2 || soldOut === 6
-      ? theme.colors.grey[6]
-      : theme.colors.grey[5]};
-  margin-left: 6px;
 `;
 
 const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`

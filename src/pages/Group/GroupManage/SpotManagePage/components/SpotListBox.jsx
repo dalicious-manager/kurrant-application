@@ -10,7 +10,7 @@ import {PAGE_NAME as GroupManageSpotDetailPageName} from '../../DetailPage';
 const SpotListBox = ({item}) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
-  console.log(item);
+  //console.log(item);
   return (
     <Wrap>
       <TitleBox>
@@ -19,7 +19,7 @@ const SpotListBox = ({item}) => {
           type={
             item.groupType === '프라이빗스팟'
               ? 'blue'
-              : item.spotType === '마이스팟'
+              : item.groupType === '마이스팟'
               ? 'pink'
               : 'green'
           }
