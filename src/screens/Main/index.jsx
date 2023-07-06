@@ -266,6 +266,9 @@ import DefaultPaymentManage, {
 import Payment, {
   PAGE_NAME as PaymentPageName,
 } from '../../pages/Main/Bnb/Payment/Main';
+import PaymentChangePhone, {
+  PAGE_NAME as PaymentChangePhonePageName,
+} from '../../pages/Main/Bnb/Payment/ChangePhone';
 import MealPayment, {
   PAGE_NAME as MealPaymentPageName,
 } from '../../pages/Main/Bnb/Payment/MealPayment';
@@ -985,6 +988,22 @@ const Screen = () => {
           options={{
             headerShown: true,
             title: '주문',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={PaymentChangePhonePageName}
+          component={PaymentChangePhone}
+          options={{
+            headerShown: true,
+            title: '연락처 수정',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
               fontSize: 14,

@@ -26,3 +26,6 @@ export const shareMapZoomAtom = atomWithReset(18);
 // 마이스팟 줌
 export const mySpotMapZoomAtom = atomWithReset(18);
 export const registerMapZoomAtom = atomWithReset(18);
+
+//장바구니 주문
+export const paymentPhone = atomWithReset();

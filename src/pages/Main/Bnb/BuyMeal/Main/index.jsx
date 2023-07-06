@@ -16,7 +16,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import PagerView from 'react-native-pager-view';
 import Animateds from 'react-native-reanimated';
-import styled from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
 import useAuth from '../../../../../biz/useAuth';
@@ -630,7 +630,7 @@ const Pages = ({route}) => {
       </CalendarWrap>
       <PagerViewWrap isMembership={isUserInfo?.data?.isMembership}>
         {!isDailyFoodLoading && (
-          <StatusWrap>
+          <StatusWrap showSupportPrice={showSupportPrice}>
             <ProgressWrap>
               <Progress>
                 {DININGTYPE.map((btn, i) => {
@@ -857,7 +857,7 @@ const Pages = ({route}) => {
 const styles = StyleSheet.create({
   trackStyle: {
     backgroundColor: 'white',
-    width: 102,
+    width: 92,
     height: 2,
   },
   thumbStyle: {
@@ -906,7 +906,8 @@ const StatusWrap = styled.View`
   justify-content: space-between;
   align-items: center;
   border: 0.5px solid ${({theme}) => theme.colors.grey[8]};
-  border-bottom-width: 6px;
+  border-bottom-width: ${({showSupportPrice}) =>
+    showSupportPrice ? '1px' : '6px'};
 `;
 const ProgressWrap = styled.View`
   flex-direction: column;
@@ -914,8 +915,6 @@ const ProgressWrap = styled.View`
   padding-top: 13px;
   height: 48px;
   width: 142px;
-  /* padding: 0px 24px; */
-  /* justify-content: space-between; */
 `;
 
 const TimeWrap = styled.FlatList`
@@ -960,9 +959,9 @@ const QuestionPressable = styled.Pressable`
   margin-right: 3px;
 `;
 
-const Typography22 = styled(Typography).attrs({text: 'Body05R'})`
+const Typography22 = styled(Typography).attrs({text: 'Body06R'})`
   margin-right: 4px;
-  color: ${({theme}) => theme.colors.grey[2]};
+  color: ${({theme}) => theme.colors.grey[4]};
 `;
 
 const Typography3 = styled(Typography).attrs({text: 'Body05SB'})`
@@ -975,7 +974,6 @@ const Typography3 = styled(Typography).attrs({text: 'Body05SB'})`
 const Progress = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  width: 120px;
 `;
 
 const Pager = styled(AnimatedPagerView)`
@@ -1016,9 +1014,17 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
       : theme.colors.grey[2]};
 `;
 
-const ProgressText = styled(Typography).attrs({text: 'Title04SB'})`
+const ProgressText = styled(Typography).attrs({text: 'Button09SB'})`
   color: ${({theme, type}) =>
     type ? theme.colors.grey[2] : theme.colors.grey[7]};
+  ${({index}) => {
+    if (index === 1) {
+      return css`
+        margin-left: 12px;
+        margin-right: 12px;
+      `;
+    }
+  }}
 `;
 
 const Typography4 = styled(Typography).attrs({text: 'Body05SB'})`
