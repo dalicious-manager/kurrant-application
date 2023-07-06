@@ -144,13 +144,13 @@ const Component = ({
               color={goodLocal ? theme.colors.green[500] : theme.colors.grey[5]}
             />
             <LikeNumber isLike={goodLocal}>{goodLocal}</LikeNumber> */}
-            <EditText isLike={isGood}>도움이 돼요</EditText>
+            <EditText isGood={isGood}>도움이 돼요</EditText>
             <ThumbsUp
               width="14px"
               height="15px"
               color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
             />
-            <LikeNumber isLike={good}>{good}</LikeNumber>
+            <LikeNumber isGood={isGood}>{good}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>
@@ -310,14 +310,14 @@ const EditWrap = styled.View`
 `;
 
 const EditText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme, isLike}) =>
-    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
+  color: ${({theme, isGood}) =>
+    isGood ? theme.colors.green[500] : theme.colors.grey[5]};
   margin-right: 6px;
 `;
 
 const LikeNumber = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme, isLike}) =>
-    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
+  color: ${({theme, isGood}) =>
+    isGood ? theme.colors.green[500] : theme.colors.grey[5]};
 
   margin-left: 3px;
 `;
