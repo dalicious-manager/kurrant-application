@@ -1,10 +1,10 @@
-import styled from 'styled-components';
-import Typography from '~components/Typography';
+import styled, {useTheme} from 'styled-components';
 import Label from '~components/Label';
-import MealImage from './MealImage';
+import Typography from '~components/Typography';
 
-import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
+import MealImage from './MealImage';
 import {YellowStar} from '../../../../../components/Icon';
+import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 
 const Card = ({
   m,
@@ -25,6 +25,8 @@ const Card = ({
   // 리뷰 별점 reviewAverage
   // 총 리뷰 수
   // 비건, 신라면 맵기 vegan, spicy
+
+  const themeApp = useTheme();
 
   // 4.0 일 경우 4.0으로 표기되게 바꾸기
 
@@ -69,13 +71,22 @@ const Card = ({
         </PriceWrap>
 
         <ReviewWrap>
-          <YellowStar width="15px" height="15px" />
-          <ReviewAverage>
-            {m.reviewAverage.toString().length === 1
+          <YellowStar
+            color={
+              m.status === 2 ||
+              (m.status === 6 ? themeApp.colors.grey[6] : '#FDC800')
+            }
+            width="15px"
+            height="15px"
+          />
+          <ReviewAverageText isSoldout={m.status === 2 || m.status === 6}>
+            {m?.reviewAverage && m.reviewAverage?.toString().length === 1
               ? m.reviewAverage.toFixed(1)
               : m.reviewAverage}
-          </ReviewAverage>
-          <TotalReviewCount>리뷰 {m.totalReviewCount}</TotalReviewCount>
+          </ReviewAverageText>
+          <TotalReviewCount isSoldout={m.status === 2 || m.status === 6}>
+            리뷰 {m.totalReviewCount}
+          </TotalReviewCount>
         </ReviewWrap>
 
         <LabelWrapper>
@@ -245,13 +256,15 @@ const ReviewWrap = styled.View`
   margin-bottom: 4px;
 `;
 
-const ReviewAverage = styled(Typography).attrs({text: 'SmallLabelR'})`
+const ReviewAverageText = styled(Typography).attrs({text: 'SmallLabelR'})`
   margin-left: 2px;
   margin-right: 5px;
-  color: ${({theme}) => theme.colors.grey[2]};
+  color: ${({theme, isSoldout}) =>
+    isSoldout ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 const TotalReviewCount = styled(Typography).attrs({text: 'SmallLabelR'})`
-  color: ${({theme}) => theme.colors.grey[4]};
+  color: ${({theme, isSoldout}) =>
+    isSoldout ? theme.colors.grey[6] : theme.colors.grey[4]};
 `;
 
 // ContentsText

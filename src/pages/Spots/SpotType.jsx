@@ -18,7 +18,7 @@ import {
 } from '../../hook/useSpot';
 import {useGetUserInfo} from '../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
-import {PAGE_NAME as GroupManagePageName} from '../Group/GroupManage/DetailPage';
+import {PAGE_NAME as GroupManagePageName} from '../Group/GroupManage/SpotManagePage';
 import {PAGE_NAME as MySpotMap} from '../Map/MySpotMap';
 import {PAGE_NAME as ShareSpotMap} from '../Map/ShareSpotMap';
 import {PAGE_NAME as PrivateInfo} from '../Spots/privateSpot/PrivateInfo';

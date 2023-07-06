@@ -30,7 +30,7 @@ const ApplySpot = ({route}) => {
   const name = route?.params?.name;
   const id = route?.params?.groupId;
   const from = route?.params?.from;
-  console.log(center, '신규스팟 좌표');
+
   const [use, setUse] = useState();
   const [show, setShow] = useState(false);
   const [time, setTime] = useState(new Date());

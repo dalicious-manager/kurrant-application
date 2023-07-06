@@ -101,7 +101,7 @@ const BottomSheetSpot = props => {
         <Overlay>
           {snap === 0 && !showDim && userSpotId === null && (
             <BalloonMessage
-              location={{top: '150px'}}
+              location={{bottom: '-18%'}}
               vertical="down"
               message={`배송받으실 스팟을 선택해주세요.${'\n'}추후 변경 가능합니다.`}
             />
@@ -118,7 +118,7 @@ const BottomSheetSpot = props => {
                 {booleanValue && (
                   <ManagePressView
                     onPress={() => {
-                      onPressEvent2(setModalVisible(false));
+                      onPressEvent2(userSpotId && setModalVisible(false));
                     }}>
                     <ManageText>설정/관리</ManageText>
                   </ManagePressView>

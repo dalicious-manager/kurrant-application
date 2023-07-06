@@ -14,16 +14,13 @@ import {ArrowLeftBoxIcon, MaterialIcons} from '../Icon';
  * @param {number[]} margin index 0 : margin-left, index 1 : margin-right
  * @returns
  */
-const Component = ({
-  mode = 'page',
-  color,
-  margin = [0, 0],
-  onPressEvent = () => {},
-}) => {
+const Component = ({mode = 'page', color, margin = [0, 0], onPressEvent}) => {
   const navigation = useNavigation();
   const theme = useTheme();
 
   const handleBackPress = () => {
+    console.log(onPressEvent);
+    if (onPressEvent) return onPressEvent();
     if (navigation.canGoBack()) {
       navigation.goBack();
     } else {
@@ -48,7 +45,6 @@ const Component = ({
     <Wrpaper
       margin={margin}
       onPress={() => {
-        onPressEvent();
         handleBackPress();
       }}>
       {renderContents[mode]}

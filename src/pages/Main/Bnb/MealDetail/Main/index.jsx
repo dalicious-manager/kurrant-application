@@ -24,13 +24,13 @@ import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
 //   fetchNextPageReviewDetailAtom,
 //   hasNextPageReviewDetailAtom,
 // } from './Review/MealDetailReview/store';
+import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
+import useAuth from '../../../../../biz/useAuth';
+import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from '../../../../../biz/useReview/useMealDetailReview/store';
-import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
-import useAuth from '../../../../../biz/useAuth';
-import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
@@ -401,7 +401,6 @@ const Pages = ({route}) => {
                   </PriceWrap>
                 </View>
 
-                {/* 여기서 에러뜨는 것 같음 */}
                 {isFoodDetail?.membershipDiscountedRate &&
                   isfoodDetailDiscount?.membershipDiscountRate &&
                   isfoodDetailDiscount?.membershipDiscountRate !==
@@ -460,7 +459,7 @@ const Pages = ({route}) => {
                 </InfoTextView>
               </InfoWrap>
             </Content>
-            {/* 리뷰자리 */}
+
             {!isFoodDetailLoading && (
               <MealDetailReview
                 foodName={isFoodDetail?.name}

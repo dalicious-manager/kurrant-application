@@ -27,11 +27,13 @@ const Component = ({
   rating,
   reviewText,
   focusId,
-  likeNum,
+  good,
+  isGood,
   imageLocation,
   createDate,
   updateDate,
   commentList,
+  isFetching,
 }) => {
   const navigation = useNavigation();
 
@@ -73,6 +75,17 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
+  const [goodLocal, setGoodLocal] = useState(good ? good : 0);
+  const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
+
+  useEffect(() => {
+    console.log('goodLocal 입니당 ' + goodLocal);
+  }, [goodLocal]);
+
+  useEffect(() => {
+    console.log('isGoodLocal입니당 ' + isGoodLocal);
+  }, [isGoodLocal]);
+
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
@@ -107,18 +120,31 @@ const Component = ({
         <EditWrap>
           <LikePressable
             onPress={() => {
+              if (isFetching) return;
+
+              //로컬에서 계산하기
+
+              setIsGoodLocal(!isGoodLocal);
+              if (isGoodLocal) {
+                setGoodLocal(prev => prev - 1);
+              } else {
+                setGoodLocal(prev => prev + 1);
+              }
+
               pressLike({
                 dailyFoodId,
                 reviewId: id,
               });
             }}>
-            <EditText isLike={likeNum}>도움이 돼요</EditText>
+            <EditText isGood={isGoodLocal}>도움이 돼요</EditText>
             <ThumbsUp
               width="14px"
               height="15px"
-              color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
+              color={
+                isGoodLocal ? theme.colors.green[500] : theme.colors.grey[5]
+              }
             />
-            <LikeNumber isLike={likeNum}>{likeNum}</LikeNumber>
+            <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>
@@ -278,14 +304,14 @@ const EditWrap = styled.View`
 `;
 
 const EditText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme, isLike}) =>
-    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
+  color: ${({theme, isGood}) =>
+    isGood ? theme.colors.green[500] : theme.colors.grey[5]};
   margin-right: 6px;
 `;
 
 const LikeNumber = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme, isLike}) =>
-    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
+  color: ${({theme, isGood}) =>
+    isGood ? theme.colors.green[500] : theme.colors.grey[5]};
 
   margin-left: 3px;
 `;

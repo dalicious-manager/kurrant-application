@@ -389,8 +389,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
                     id={item.reviewId}
                     userName={item.userName}
                     item={item}
-                    likeNum={item.good}
-                    isLike={item.isGood}
+                    good={item.good}
+                    isGood={item.isGood}
                     createDate={item.createDate}
                     updateDate={item.updateDate}
                     writtenDate={convertDateFormat1(item.createDate)}
@@ -400,6 +400,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
                     imageLocation={item.imageLocation}
                     forMakers={item.forMakers}
                     commentList={item.commentList}
+                    // 도움이돼요 빠르게 만들기
+
+                    isFetching={isFetching}
                   />
                 );
               })}
