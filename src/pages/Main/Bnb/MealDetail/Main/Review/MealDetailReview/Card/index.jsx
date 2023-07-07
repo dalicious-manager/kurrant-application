@@ -114,8 +114,6 @@ const Component = ({
             onPress={() => {
               if (isFetching) return;
 
-              //로컬에서 계산하기
-
               setIsGoodLocal(!isGoodLocal);
               if (isGoodLocal) {
                 setGoodLocal(prev => prev - 1);
@@ -224,8 +222,6 @@ const Component = ({
         )}
       </ReviewPressable>
 
-      {/* 신고하기 버튼 자리 */}
-
       {commentList &&
         commentList.length > 0 &&
         commentList.map((v, i) => {
@@ -262,7 +258,6 @@ const Container = styled.View`
   width: 100%;
 
   ${({focusId, id}) => {
-    // console.log(focusId, id, 'focusId === id');
     if (focusId === id) {
       return css`
         background-color: ${({theme}) => theme.colors.grey[8]};
