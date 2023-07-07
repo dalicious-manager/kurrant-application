@@ -78,14 +78,6 @@ const Component = ({
   const [goodLocal, setGoodLocal] = useState(good ? good : 0);
   const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
 
-  useEffect(() => {
-    console.log('goodLocal 입니당 ' + goodLocal);
-  }, [goodLocal]);
-
-  useEffect(() => {
-    console.log('isGoodLocal입니당 ' + isGoodLocal);
-  }, [isGoodLocal]);
-
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
