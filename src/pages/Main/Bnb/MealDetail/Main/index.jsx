@@ -296,13 +296,6 @@ const Pages = ({route}) => {
     detail();
   }, []);
 
-  // 상세페이지 리뷰 로직
-
-  useEffect(() => {
-    console.log('isFoodDetail 푸드 디테일');
-    console.log(isFoodDetail);
-  }, [isFoodDetail]);
-
   if (
     isFoodDetailLoading &&
     !isFoodDetail?.membershipDiscountedRate &&
