@@ -57,21 +57,6 @@ const Pages = ({route}) => {
 
   // params에 date가 들어갈때 그 일주일을 계산하기
 
-  const [isDisableRightClick, setIsDisableRightClick] = useState(false);
-
-  useEffect(() => {
-    if (
-      week.filter(
-        v => toStringByFormatting(v) === toStringByFormatting(new Date()),
-      ).length > 0
-    ) {
-      console.log('더이상 앞으로 가면 안됨 ');
-      setIsDisableRightClick(true);
-    } else {
-      setIsDisableRightClick(false);
-    }
-  }, [week]);
-
   return (
     <>
       <ContainerScrollView
@@ -80,12 +65,24 @@ const Pages = ({route}) => {
           alignItems: 'center',
         }}>
         <DateSelectorWrap>
-          <Pressable
+          <CirclePressable
+            isClickDisabled={
+              week.filter(
+                v => toStringByFormatting(v) === route?.params?.pastLimitDate,
+              ).length > 0
+            }
             onPress={() => {
+              if (
+                week.filter(
+                  v => toStringByFormatting(v) === route?.params?.pastLimitDate,
+                ).length > 0
+              )
+                return;
+
               setWeek(calcWeekArr(calcDate(-7, week[0])));
             }}>
             <GreyArrowLeftInACircle />
-          </Pressable>
+          </CirclePressable>
           <DateSelectorText>
             {`${
               extractMonthAndDateFromDate2(
@@ -112,9 +109,21 @@ const Pages = ({route}) => {
             }`}
           </DateSelectorText>
           <CirclePressable
-            isClickDisabled={isDisableRightClick}
+            isClickDisabled={
+              week.filter(
+                v =>
+                  toStringByFormatting(v) === toStringByFormatting(new Date()),
+              ).length > 0
+            }
             onPress={() => {
-              if (isDisableRightClick) return;
+              if (
+                week.filter(
+                  v =>
+                    toStringByFormatting(v) ===
+                    toStringByFormatting(new Date()),
+                ).length > 0
+              )
+                return;
 
               setWeek(calcWeekArr(calcDate(7, week[0])));
             }}>

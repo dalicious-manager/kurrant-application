@@ -43,6 +43,8 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 const Pages = ({route}) => {
   const navigation = useNavigation();
 
+  const pastLimitDate = new Date(2023, 2, 26);
+
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -110,6 +112,7 @@ const Pages = ({route}) => {
   const handleHistoryPress = () => {
     navigation.navigate(DietRepoHistoryPageName, {
       date: formattedWeekDate(date),
+      pastLimitDate: toStringByFormatting(pastLimitDate),
     });
   };
 
@@ -144,6 +147,7 @@ const Pages = ({route}) => {
             selectDate={formattedWeekDate(date)}
             margin={'0px 28px'}
             pagerRef={pager}
+            pastLimitDate={pastLimitDate}
             sliderValue={sliderValue}
             isServiceDays={dailyfoodData?.data?.serviceDays}
           />

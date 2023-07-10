@@ -41,7 +41,7 @@ const DietRepoCalendar2 = ({
   onPressEvent2,
 
   selectDate,
-
+  pastLimitDate,
   pagerRef,
   margin = '0px',
   sliderValue,
@@ -76,12 +76,12 @@ const DietRepoCalendar2 = ({
 
       <PagerViewWrap
         ref={pager}
-        initialPage={makeUltimateDietRepoCalendar().length - 2}
+        initialPage={makeUltimateDietRepoCalendar(pastLimitDate).length - 2}
         pageMargin={22}
         onPageScroll={e => {}}
         onPageSelected={e => {}}
         margins={margin}>
-        {[...makeUltimateDietRepoCalendar()].map((week, i) => {
+        {[...makeUltimateDietRepoCalendar(pastLimitDate)].map((week, i) => {
           return (
             <View key={i}>
               <Wrap>
