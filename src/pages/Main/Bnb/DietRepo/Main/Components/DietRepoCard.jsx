@@ -8,9 +8,6 @@ import {Line} from 'react-native-svg';
 import useDietRepoMutation from '../../useDietRepoMutation';
 
 const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
-  // console.log('아이템 2');
-  // console.log(item2);
-
   const {deleteMeal, addMeal} = useDietRepoMutation(date);
 
   return (
@@ -89,7 +86,7 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
                         {
                           text: '취소',
                           onPress: () => {
-                            console.log('cancel pressed');
+                            // console.log('cancel pressed');
                           },
                         },
                         {
