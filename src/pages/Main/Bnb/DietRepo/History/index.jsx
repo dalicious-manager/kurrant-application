@@ -57,6 +57,21 @@ const Pages = ({route}) => {
 
   // params에 date가 들어갈때 그 일주일을 계산하기
 
+  const [isDisableRightClick, setIsDisableRightClick] = useState(false);
+
+  useEffect(() => {
+    if (
+      week.filter(
+        v => toStringByFormatting(v) === toStringByFormatting(new Date()),
+      ).length > 0
+    ) {
+      console.log('더이상 앞으로 가면 안됨 ');
+      setIsDisableRightClick(true);
+    } else {
+      setIsDisableRightClick(false);
+    }
+  }, [week]);
+
   return (
     <>
       <ContainerScrollView
@@ -96,12 +111,15 @@ const Pages = ({route}) => {
               )[1]
             }`}
           </DateSelectorText>
-          <Pressable
+          <CirclePressable
+            isClickDisabled={isDisableRightClick}
             onPress={() => {
+              if (isDisableRightClick) return;
+
               setWeek(calcWeekArr(calcDate(7, week[0])));
             }}>
             <GreyArrowRightInACircle />
-          </Pressable>
+          </CirclePressable>
         </DateSelectorWrap>
 
         <HistoryStackedBarChart
@@ -184,3 +202,9 @@ const DateSelectorText = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
   margin: 24px 16px;
 `;
+
+const CirclePressable = styled(Pressable)`
+  opacity: ${({isClickDisabled}) => (isClickDisabled ? 0.3 : 1)};
+`;
+
+const CircleRightClick = styled(GreyArrowRightInACircle)``;
