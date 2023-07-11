@@ -92,36 +92,14 @@ const useDietRepoMutation = date => {
   const {mutate: addMeal} = useMutation(
     async data => {
       const response = await fetchJson(`/users/me/daily/report`, 'POST', {
-        body: JSON.stringify(data),
+        body: JSON.stringify(data[0]),
       });
 
-      return response;
+      return [response, data[1]];
     },
     {
       onSuccess: data => {
-        Alert.alert('식단 추가', '식단이 추가되었습니다 ', [
-          {
-            text: '확인',
-            onPress: async () => {
-              // queryClient.invalidateQueries(['dietRepo', 'main']);
-              navigation.reset({
-                index: 1,
-                routes: [
-                  {
-                    name: MainScreenName,
-                  },
-                  {
-                    name: DietRepoMainPageName,
-                    params: {
-                      date: date,
-                    },
-                  },
-                ],
-              });
-            },
-            style: 'cancel',
-          },
-        ]);
+        data[1](date);
       },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
