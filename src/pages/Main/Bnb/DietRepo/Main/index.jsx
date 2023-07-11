@@ -79,28 +79,7 @@ const Pages = ({route}) => {
   useEffect(() => {
     dietRepoMainRefetch();
 
-    const fetchYo = async date => {
-      if (typeof date === 'object') {
-        if (
-          (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
-          toStringByFormatting(date)
-        ) {
-        } else {
-          saveMeal(toStringByFormatting(date));
-          setStorage(
-            `dietRepo_Date_${toStringByFormatting(date)}`,
-            toStringByFormatting(date),
-          );
-        }
-      } else if (typeof date === 'string') {
-        if ((await getStorage(`dietRepo_Date_${date}`)) === date) {
-        } else {
-          saveMeal(date);
-          setStorage(`dietRepo_Date_${date}`, date);
-        }
-      }
-    };
-    fetchYo(date);
+    // fetchYo(date);
   }, [date]);
 
   const {saveMeal} = useDietRepoMutation();

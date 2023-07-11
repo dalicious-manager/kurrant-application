@@ -117,15 +117,19 @@ const useDietRepoMutation = date => {
 
       const response = await fetchJson('/users/me/daily/report/food', 'POST', {
         body: JSON.stringify({
-          startDate: data,
-          endDate: data,
+          startDate: data[0],
+          endDate: data[1],
         }),
       });
 
-      return response;
+      return [response, data[2]];
     },
     {
-      onSuccess: data => {},
+      onSuccess: data => {
+        if (data[1]) {
+          data[1]();
+        }
+      },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
         console.log(err);

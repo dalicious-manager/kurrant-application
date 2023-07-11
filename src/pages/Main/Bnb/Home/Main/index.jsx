@@ -52,7 +52,11 @@ import {
 } from '../../../../../hook/useSpot';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../../screens/Main/Bnb';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {
+  getStorage,
+  removeItemFromStorage,
+  setStorage,
+} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
@@ -72,6 +76,8 @@ import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {BowlIcon} from '~components/Icon';
 import useGetDietRepo from '../../DietRepo/useGetDietRepo';
+import {callDietRepoSaveMeal} from '../../DietRepo/logic';
+import useDietRepoMutation from '../../DietRepo/useDietRepoMutation';
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
@@ -116,6 +122,7 @@ const Pages = () => {
 
   const {
     totalNutrition: {totalCalorie},
+    dietRepoMainRefetch,
   } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
 
   const loadCoinSound = () => {
@@ -564,6 +571,17 @@ const Pages = () => {
       getData();
     }, []),
   );
+
+  /// dietRepo 확인하기
+
+  const {saveMeal} = useDietRepoMutation();
+
+  useEffect(() => {
+    callDietRepoSaveMeal(saveMeal, () => {
+      dietRepoMainRefetch();
+    });
+    // removeItemFromStorage('dietRepoDate');
+  }, []);
 
   if (!isUserInfo?.data) {
     return <SkeletonUI />;

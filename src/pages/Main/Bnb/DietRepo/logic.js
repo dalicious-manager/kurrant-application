@@ -1,7 +1,10 @@
+import {getStorage, setStorage} from '../../../../utils/asyncStorage';
 import {
+  calcDate,
   stringDateToJavascriptDate,
   toStringByFormatting,
 } from '../../../../utils/dateFormatter';
+import {dietRepoPastLimitDate} from './data';
 
 const sampleData = [
   {
@@ -183,5 +186,77 @@ export const calcWeekArr = date => {
       yo.push(nextDate);
     }
     return yo;
+  }
+};
+
+export const callDietRepoSaveMeal = async (
+  callback1,
+  callback2 = undefined,
+) => {
+  const startDate = toStringByFormatting(dietRepoPastLimitDate);
+  const today = toStringByFormatting(new Date(2023, 6, 11));
+
+  const localStorageDate = await getStorage('dietRepoDate');
+
+  if (localStorageDate) {
+    // console.log('dietRepo 기록이 있어요');
+    const dates = localStorageDate.split(',');
+
+    if (
+      stringDateToJavascriptDate(dates[1]) < stringDateToJavascriptDate(today)
+    ) {
+      // 하루 이상 일 경우
+      // console.log(
+      //   `dietRepo 기록이 하루 이상이에요 ${[yo1, today].join(
+      //     ',',
+      //   )}만큼 dietRepo를 추가하빈다 `,
+      // );
+      const yo1 = toStringByFormatting(
+        calcDate(1, stringDateToJavascriptDate(dates[1])),
+      );
+      await callback1([yo1, today, callback2]); // saveMeal startDate
+      await setStorage(`dietRepoDate`, [yo1, today].join(','));
+    } else {
+      // console.log('dietRepo 기록이 하루가 아직 안 지났어요');
+      return;
+    }
+  } else {
+    // console.log(
+    //   `앱에 저장된 dietRepo 기록이 없어요 ${[startDate, today].join(
+    //     ',',
+    //   )}만큼 dietRepo를 추가합니다 `,
+    // );
+
+    await callback1([startDate, today, callback2]);
+
+    await setStorage(`dietRepoDate`, [startDate, today].join(','));
+  }
+
+  // 확인하기
+
+  // const confirm = await getStorage('dietRepoDate');
+  // console.log('dietRepo 확인하기 ');
+  // console.log(confirm);
+};
+
+const fetchYo = async date => {
+  if (typeof date === 'object') {
+    if (
+      (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
+      toStringByFormatting(date)
+    ) {
+    } else {
+      saveMeal([toStringByFormatting(date)]);
+      setStorage(
+        `dietRepo_Date_${toStringByFormatting(date)}`,
+        toStringByFormatting(date),
+      );
+    }
+  } else if (typeof date === 'string') {
+    if ((await getStorage(`dietRepo_Date_${date}`)) === date) {
+    } else {
+      saveMeal([date]);
+      setStorage(`dietRepo_Date_${date}`, date);
+    }
   }
 };
