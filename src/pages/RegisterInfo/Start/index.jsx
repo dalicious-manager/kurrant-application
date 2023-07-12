@@ -17,12 +17,9 @@ import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 import {PAGE_NAME as RegisterInfoPage10PageName} from '../Page7_8_9_10/Page10';
 import {PAGE_NAME as RegisterInfoFinishPageName} from '../Finish';
 
-import {SmallXVectorIcon, XVectorIcon} from '../../../components/Icon';
+import {SmallXVectorIcon} from '../../../components/Icon';
 
-// import RegisterInfoBack from '../../../assets/icons/RegisterInfo/RegisterInfoBack.svg';
 import RegisterInfoBack from '../../../assets/images/RegisterInfo/RegisterInfoBack.png';
-
-import {PAGE_NAME as HOME} from '../../Main/Bnb/Home';
 
 // import BuyMeal, {
 //   PAGE_NAME as BuyMealPageName,
@@ -30,28 +27,15 @@ import {PAGE_NAME as HOME} from '../../Main/Bnb/Home';
 
 import Typography from '~components/Typography';
 import {removeItemFromStorage, setStorage} from '../../../utils/asyncStorage';
-import LinearGradient from 'react-native-linear-gradient';
-
-// import BackgroundImage from './BackgroundImage';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_START';
 
 const Pages = () => {
-  //   const [clickAvaliable, setClickAvaliable] = useState(false);
-
   const navigation = useNavigation();
   const theme = useTheme();
 
   const handlePress = () => {
-    // navigation.navigate(RegisterInfoPage2PageName);
-
-    // 1. 클릭하면 localstorage에 클릭한 날짜 저장
-    // 기존거 지우고 새로운거 올리기
-
     navigation.navigate(RegisterInfoPage1PageName);
-    // navigation.navigate(RegisterInfoPage1PageName);
-    // navigation.navigate(RegisterInfoFinishPageName);
-    // navigation.navigate(RegisterInfoPage2PageName);
   };
 
   const handleTodayPress = async () => {

@@ -27,10 +27,5 @@ export const makeYo = arr => {
     };
   });
 
-  // const result =
-
-  console.log('고고고고고ㅗㄱ고');
-  console.log(result);
-
   return result;
 };

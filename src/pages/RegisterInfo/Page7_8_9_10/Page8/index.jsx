@@ -22,7 +22,7 @@ import {selectedFoodIdPage8Atom, unselectedFoodIdPage8Atom} from '../store';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import NoPhotosSign from '../components/NoPhotosSign/NoPhotosSign';
-import BottomModal from '~components/BottomModal';
+import BottomModalWithHalfButton from '~components/BottomModalWithHalfButton';
 import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE8';
@@ -271,7 +271,7 @@ const Pages = () => {
         }}
       /> */}
 
-      <BottomModal
+      <BottomModalWithHalfButton
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="3개까지만 선택 가능합니다"

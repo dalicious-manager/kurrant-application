@@ -74,10 +74,10 @@ const Pages = () => {
     }
   }, [yesOrNo, setClickAvaliable, beganLevel]);
 
-  useEffect(() => {
-    console.log('페이지 4 ');
-    console.log(finalRegister);
-  }, [finalRegister]);
+  // useEffect(() => {
+  //   console.log('페이지 4 ');
+  //   console.log(finalRegister);
+  // }, [finalRegister]);
 
   const handleSelectBottomModal = id => {
     setBeganLevel(id);
