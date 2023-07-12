@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 
-import Typography from '../../../../../../components/Typography';
+import Typography from '~components/Typography';
 
 /**
  * @param {object} props

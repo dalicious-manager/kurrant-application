@@ -62,7 +62,7 @@ import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
 import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
-import MainDim from '../../../../Spots/spotGuide/MainDim';
+
 import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
@@ -72,6 +72,10 @@ import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {BowlIcon} from '~components/Icon';
 import useGetDietRepo from '../../DietRepo/useGetDietRepo';
+import useGetRegisterDoneCheck from '../../../../../biz/useRegisterInfo/getRegisterDoneCheck/hook';
+
+import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
+
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
