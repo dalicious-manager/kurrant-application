@@ -14,7 +14,7 @@ import Typography from '~components/Typography';
 import ButtonContainer from '../components/button/Page2_3/ButtonContainer';
 import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hook';
 
-import BottomModal from '~components/BottomModal';
+import BottomModalWithHalfButton from '~components/BottomModalWithHalfButton';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
@@ -241,7 +241,7 @@ const Pages = () => {
         )}
       </ScrollViewContainer>
 
-      <BottomModal
+      <BottomModalWithHalfButton
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="4개 국가까지만 선택 가능합니다"

@@ -35,6 +35,9 @@ const Component = props => {
     buttonTitle2 = '모달버튼',
     buttonType1 = 'yellow',
     buttonType2 = 'grey2',
+    halfButtonTitle,
+    halfButtonType = 'yellow',
+    onPressEventHalf = () => {},
     onPressEvent1 = () => {},
     onPressEvent2,
     image,
@@ -112,7 +115,19 @@ const Component = props => {
             )}
           </BottomSheetTitleView>
 
-          {!onPressEvent2 ? (
+          {halfButtonTitle ? (
+            <ButtonWrap>
+              <ButtonMargin>
+                <Button
+                  label={halfButtonTitle}
+                  size="modalHalf"
+                  type={halfButtonType}
+                  text={'Button09SB'}
+                  onPressEvent={onPressEventHalf}
+                />
+              </ButtonMargin>
+            </ButtonWrap>
+          ) : !onPressEvent2 ? (
             <ButtonWrap>
               <Button
                 label={buttonTitle1}
