@@ -99,7 +99,9 @@ const useDietRepoMutation = date => {
     },
     {
       onSuccess: data => {
-        data[1](date);
+        if (data[1]) {
+          data[1](date);
+        }
       },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
@@ -110,10 +112,14 @@ const useDietRepoMutation = date => {
 
   // 특정기간 주문내역 리포트로 저장
 
-  const {mutate: saveMeal} = useMutation(
+  // 식단 리포트 일주일정도로만
+
+  const {mutate: saveMeal, status: saveMealStatus} = useMutation(
     async data => {
-      //   console.log('데이터 ');
+      // console.log('특정 주문 데이터 확인 여기여기');
       // console.log(data);
+      // console.log(data[0]);
+      // console.log(data[1]);
 
       const response = await fetchJson('/users/me/daily/report/food', 'POST', {
         body: JSON.stringify({
@@ -131,7 +137,9 @@ const useDietRepoMutation = date => {
         }
       },
       onError: err => {
-        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
+        console.log(
+          '특정기간 주문내역 이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요',
+        );
         console.log(err);
       },
     },
@@ -142,6 +150,7 @@ const useDietRepoMutation = date => {
     addMeal,
     deleteMeal,
     saveMeal,
+    saveMealStatus,
   };
 };
 export default useDietRepoMutation;

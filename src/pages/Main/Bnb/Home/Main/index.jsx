@@ -57,7 +57,10 @@ import {
   removeItemFromStorage,
   setStorage,
 } from '../../../../../utils/asyncStorage';
-import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {
+  formattedWeekDate,
+  toStringByFormatting,
+} from '../../../../../utils/dateFormatter';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
@@ -572,17 +575,6 @@ const Pages = () => {
     }, []),
   );
 
-  /// dietRepo 확인하기
-
-  const {saveMeal} = useDietRepoMutation();
-
-  useEffect(() => {
-    callDietRepoSaveMeal(saveMeal, () => {
-      dietRepoMainRefetch();
-    });
-    // removeItemFromStorage('dietRepoDate');
-  }, []);
-
   if (!isUserInfo?.data) {
     return <SkeletonUI />;
   }
@@ -667,6 +659,7 @@ const Pages = () => {
                         <MealInfoComponent
                           m={m}
                           meal={meal}
+                          dailyFoodId={meal.dailyFoodId}
                           coinSound={coinSound}
                           key={`${meal.id} ${meal.dailyFoodId}`}
                         />
@@ -783,7 +776,16 @@ const Pages = () => {
                 <DietRepoText>식단 리포트</DietRepoText>
               </Wrap1>
 
-              <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText>
+              {/* <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText> */}
+              <CalText>
+                오늘{' '}
+                {
+                  orderMealList?.data?.find(
+                    v => v.serviceDate === toStringByFormatting(new Date()),
+                  )?.totalCalorie
+                }{' '}
+                kcal
+              </CalText>
             </DietRepoPressable>
           </MainWrap>
         </Wrap>
