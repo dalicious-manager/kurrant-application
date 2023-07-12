@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
+import {useQueryClient} from 'react-query';
 import {PAGE_NAME as LoginPageName} from '~pages/Main/Login/Login';
-import {formattedWeekDate} from '../../utils/dateFormatter';
+
 import * as Fetch from './Fetch';
 import {
   isOrderMealAtom,
@@ -10,6 +11,7 @@ import {
   isOrderMealLoadingAtom,
   isOrderLoadingAtom,
 } from './store';
+import {formattedWeekDate} from '../../utils/dateFormatter';
 
 const useOrderMeal = () => {
   const [isOrderMeal, setOrderMeal] = useAtom(isOrderMealAtom);
@@ -19,6 +21,7 @@ const useOrderMeal = () => {
   );
   const [orderLoading, setOrderLoading] = useAtom(isOrderLoadingAtom);
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
 
   const orderMeal = async (startdate, enddate) => {
     try {
@@ -27,7 +30,7 @@ const useOrderMeal = () => {
       // console.log(res.data, '123231');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -45,15 +48,17 @@ const useOrderMeal = () => {
   };
   const orderNice = async (body, option = {}) => {
     try {
+      console.log(body);
       const res = await Fetch.orderNice(
         {
           ...body,
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -78,10 +83,10 @@ const useOrderMeal = () => {
         },
         option,
       );
-
+      queryClient.invalidateQueries('orderMeal');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -108,9 +113,14 @@ const useOrderMeal = () => {
         },
         option,
       );
+
+      queryClient.invalidateQueries('orderMeal');
+      queryClient.invalidateQueries('allPurchaseHistory');
+      queryClient.invalidateQueries('purchaseDetail');
+      queryClient.invalidateQueries('mealPurchaseHistory');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -135,9 +145,13 @@ const useOrderMeal = () => {
         },
         option,
       );
+      queryClient.invalidateQueries('orderMeal');
+      queryClient.invalidateQueries('allPurchaseHistory');
+      queryClient.invalidateQueries('purchaseDetail');
+      queryClient.invalidateQueries('mealPurchaseHistory');
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -171,7 +185,7 @@ const useOrderMeal = () => {
       setTodayMeal(todayMeal);
       return res;
     } catch (err) {
-      if (err.toString().replace('Error:', '').trim() === '403') {
+      if (err.toString()?.replace('Error:', '').trim() === '403') {
         AsyncStorage.clear();
         navigation.reset({
           index: 0,
@@ -196,7 +210,6 @@ const useOrderMeal = () => {
     refundItem,
     refundAll,
     setOrderMeal,
-    order,
     orderNice,
     isOrderMeal,
     todayMeal,

@@ -1,17 +1,27 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
+import {useGetShoppingBasket} from '../../hook/useShoppingBasket';
 import Typography from '../Typography';
 
 const Component = () => {
-  const {isquantity, isLoadMealLoading} = useShoppingBasket();
-
+  const [quantity, setQuantity] = useState(0);
+  const {data: isLoadMeal} = useGetShoppingBasket();
+  useEffect(() => {
+    const qty = isLoadMeal?.data?.spotCarts.map(m =>
+      m.cartDailyFoodDtoList.map(v => v.cartDailyFoods.length),
+    );
+    const badgeQty = qty?.flat().reduce((acc, cur) => {
+      return acc + cur;
+    }, 0);
+    setQuantity(badgeQty);
+  }, [isLoadMeal]);
   return (
     <>
-      {isquantity !== 0 && (
+      {quantity !== 0 && (
         <Wrap>
-          <Count>{isquantity}</Count>
+          <Count>{quantity}</Count>
         </Wrap>
       )}
     </>

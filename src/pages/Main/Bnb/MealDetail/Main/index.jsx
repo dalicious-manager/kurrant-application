@@ -1,4 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import analytics from '@react-native-firebase/analytics';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useState, useRef, useEffect, useLayoutEffect} from 'react';
 import {
   View,
@@ -9,12 +12,25 @@ import {
   Pressable,
   Platform,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
-import styled from 'styled-components';
-import analytics from '@react-native-firebase/analytics';
-import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
+import LinearGradient from 'react-native-linear-gradient';
+import styled from 'styled-components';
+
+import MealDetailReview from './Review/MealDetailReview';
+import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
+// import {
+//   fetchNextPageReviewDetailAtom,
+//   hasNextPageReviewDetailAtom,
+// } from './Review/MealDetailReview/store';
+import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
+import useAuth from '../../../../../biz/useAuth';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
+import {
+  fetchNextPageReviewDetailAtom,
+  hasNextPageReviewDetailAtom,
+} from '../../../../../biz/useReview/useMealDetailReview/store';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
@@ -25,16 +41,15 @@ import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import Typography from '../../../../../components/Typography';
+import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import withCommas from '../../../../../utils/withCommas';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
-import Skeleton from '../Skeleton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import useAuth from '../../../../../biz/useAuth';
-import useUserInfo from '../../../../../biz/useUserInfo';
-import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import CarouselImage from '../components/CarouselImage';
-import MealDetailReview from './Review/MealDetailReview';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
+import Skeleton from '../Skeleton';
+import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -52,11 +67,17 @@ const Pages = ({route}) => {
   const {
     readableAtom: {userRole},
   } = useAuth();
-  const {addMeal, loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
-  const {isUserInfo} = useUserInfo();
+  const {loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
+  const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const headerTitle = isFoodDetail?.name;
   const dailyFoodId = route.params.dailyFoodId;
-
+  const time = route.params.deliveryTime;
+  // console.log(isFoodDetailLoading, 'oo');
+  const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
+  const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
   const closeModal = () => {
@@ -109,6 +130,9 @@ const Pages = ({route}) => {
     loadFoodDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    console.log(isfoodDetailDiscount?.membershipDiscountRate, 'food');
+  }, [isfoodDetailDiscount?.membershipDiscountRate]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTransparent: true,
@@ -153,8 +177,6 @@ const Pages = ({route}) => {
           </View>
         ),
     });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTitle, navigation, scroll]);
 
   const addCartPress = async () => {
@@ -199,26 +221,23 @@ const Pages = ({route}) => {
       try {
         await addToCart();
       } catch (err) {
-        console.log(err);
+        Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
       }
     }
   };
   const addToCart = async () => {
     try {
-      const data = await addMeal([
+      await addMeal([
         {
           dailyFoodId: dailyFoodId,
           count: count,
           spotId: isUserInfo?.spotId,
+          deliveryTime: time,
         },
       ]);
-      //console.log(data);
       balloonEvent();
-      // await loadMeal();
     } catch (err) {
-      alert(err.toString().replace('error:', '').trim());
-      console.log(err);
-      //  throw err
+      Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
     }
     closeModal();
   };
@@ -233,6 +252,15 @@ const Pages = ({route}) => {
   const handleScroll = e => {
     const scrollY = e.nativeEvent.contentOffset.y;
     setScroll(scrollY);
+
+    // 상세페이지 리뷰
+    if (isCloseToBottomOfScrollView(e.nativeEvent)) {
+      //'바닥에 도달함 '
+
+      if (hasNextPageReviewDetail) {
+        fetchNextPageReviewDetail.fetchNextPage();
+      }
+    }
   };
 
   const focusPress = () => {
@@ -267,7 +295,12 @@ const Pages = ({route}) => {
     }
     detail();
   }, []);
-  if (isFoodDetailLoading) {
+
+  if (
+    isFoodDetailLoading &&
+    !isFoodDetail?.membershipDiscountedRate &&
+    !isfoodDetailDiscount?.membershipDiscountRate
+  ) {
     return <Skeleton />;
   }
 
@@ -366,10 +399,15 @@ const Pages = ({route}) => {
                     )}
                   </PriceWrap>
                 </View>
-                {isfoodDetailDiscount?.membershipDiscountRate !==
-                  isFoodDetail?.membershipDiscountedRate && (
-                  <MembershipDiscountBox isFoodDetail={isfoodDetailDiscount} />
-                )}
+
+                {isFoodDetail?.membershipDiscountedRate &&
+                  isfoodDetailDiscount?.membershipDiscountRate &&
+                  isfoodDetailDiscount?.membershipDiscountRate !==
+                    isFoodDetail?.membershipDiscountedRate && (
+                    <MembershipDiscountBox
+                      isFoodDetail={isfoodDetailDiscount}
+                    />
+                  )}
               </Content>
             </TouchableWithoutFeedback>
             <Content>
@@ -421,15 +459,60 @@ const Pages = ({route}) => {
               </InfoWrap>
             </Content>
 
-            {/* <MealDetailReview /> */}
+            <Content>
+              <InfoWrap>
+                <InfoTitleView>
+                  <InfoTitle>영양 정보</InfoTitle>
+                </InfoTitleView>
+                <InfoTextView>
+                  <InfoTextWrap>
+                    <Info>칼로리</Info>
+                    <InfoText>
+                      {isFoodDetail?.calorie
+                        ? addCommasInEveryThirdDigit(isFoodDetail?.calorie)
+                        : 0}
+                      kcal
+                    </InfoText>
+                  </InfoTextWrap>
+                  <InfoTextWrap>
+                    <Info>탄수화물</Info>
+                    <InfoText>
+                      {isFoodDetail?.carbohydrate
+                        ? addCommasInEveryThirdDigit(isFoodDetail?.carbohydrate)
+                        : 0}
+                      g
+                    </InfoText>
+                  </InfoTextWrap>
+                  <InfoTextWrap>
+                    <Info>단백질</Info>
+                    <InfoText>
+                      {' '}
+                      {isFoodDetail?.protein
+                        ? addCommasInEveryThirdDigit(isFoodDetail?.protein)
+                        : 0}
+                      g
+                    </InfoText>
+                  </InfoTextWrap>
+                  <InfoTextWrap>
+                    <Info>지방</Info>
+                    <InfoText>
+                      {isFoodDetail?.fat
+                        ? addCommasInEveryThirdDigit(isFoodDetail?.fat)
+                        : 0}
+                      g
+                    </InfoText>
+                  </InfoTextWrap>
+                </InfoTextView>
+              </InfoWrap>
+            </Content>
 
-            {/* 리뷰자리 */}
-            {/* <Content >
-                    <View>
-                    <ReviewPage/>
-                    </View>
-                </Content>
-                <MoreButton/> */}
+            {!isFoodDetailLoading && (
+              <MealDetailReview
+                foodName={isFoodDetail?.name}
+                imageLocation={isFoodDetail?.imageList}
+                dailyFoodId={dailyFoodId}
+              />
+            )}
           </View>
         </ScrollViewWrap>
 
@@ -469,7 +552,7 @@ const Pages = ({route}) => {
           message={'장바구니에 담았어요'}
           horizontal={'right'}
           size={'B'}
-          location={{top: '96px', right: '14px'}}
+          location={{top: '11.5%', right: '16px'}}
         />
         <BottomModal
           modalVisible={modalVisible}

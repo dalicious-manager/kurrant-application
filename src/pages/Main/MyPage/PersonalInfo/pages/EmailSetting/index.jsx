@@ -1,10 +1,17 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, View, Alert} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  View,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import styled from 'styled-components/native';
 
+import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
 import useAuth from '../../../../../../biz/useAuth';
 import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
@@ -13,7 +20,6 @@ import RefTextInput from '../../../../../../components/RefTextInput';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
-import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
 const {StatusBarManager} = NativeModules;
 
 export const PAGE_NAME = 'P__MY_PAGE__EMAIL_SETTING';
@@ -66,7 +72,7 @@ const Pages = () => {
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
-        err.toString().replace('error: ', ''),
+        err.toString()?.replace('error: ', ''),
         [
           {
             text: '확인',
@@ -137,7 +143,7 @@ const Pages = () => {
                         required: '필수 입력 항목 입니다.',
                         pattern: {
                           value:
-                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                            /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\,;:\s@#$%^&+/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                           message: '올바른 아이디를 입력해주세요.',
                         },
                       }}
@@ -281,7 +287,7 @@ const Pages = () => {
                           } catch (err) {
                             Alert.alert(
                               '인증확인 실패',
-                              err.toString().replace('error: ', ''),
+                              err.toString()?.replace('error: ', ''),
                               [
                                 {
                                   text: '확인',
@@ -311,7 +317,7 @@ const Pages = () => {
                     } catch (err) {
                       Alert.alert(
                         '인증확인 실패',
-                        err.toString().replace('error: ', ''),
+                        err.toString()?.replace('error: ', ''),
                         [
                           {
                             text: '확인',

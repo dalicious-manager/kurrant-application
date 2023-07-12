@@ -1,32 +1,22 @@
-import {StackActions, useNavigation} from '@react-navigation/native';
-import {useAtom} from 'jotai';
+import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {
   KeyboardAvoidingView,
   NativeModules,
   Platform,
-  Keyboard,
-  Text,
-  TextInput,
-  View,
   Alert,
 } from 'react-native';
-import styled, {css, useTheme} from 'styled-components/native';
-import {registCardAtom} from '../../../../../../atoms/store';
+import styled, {useTheme} from 'styled-components/native';
+
 import useAuth from '../../../../../../biz/useAuth';
-import useUserInfo from '../../../../../../biz/useUserInfo';
-import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
 import KeyboardButton from '../../../../../../components/KeyboardButton';
 import RefTextInput from '../../../../../../components/RefTextInput';
 import Typography from '../../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
+import {useGetUserInfo} from '../../../../../../hook/useUserInfo';
 import {PAGE_NAME as RePayCheckPasswordPageName} from '../RePayCheckPassword';
-import {PAGE_NAME as EveryCardPageName} from '../PaymentManage/EveryCard';
-import {PAGE_NAME as SelectedDefaultCardName} from '../PaymentManage/SelectedDefaultCard';
-import {PAGE_NAME as DefaultPaymentManage} from '../../../../Bnb/Payment/DefaultPaymentManage';
-import {PAGE_NAME as MemebershipPaymentManage} from '../../../../../Membership/MembershipJoin/MemebershipPaymentManage';
 export const PAGE_NAME =
   'P__MY_PAGE__PAYMENT_MANAGE__RE_PAY_CHECK_PASSWORD_EMAIL';
 const {StatusBarManager} = NativeModules;
@@ -41,11 +31,11 @@ export default function PasswordCheck({route}) {
     formState: {errors},
   } = form;
   const auth = useAuth();
-  const {isUserInfo} = useUserInfo();
-  const [isCard, setIsCard] = useAtom(registCardAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [progress, setProgress] = useState(1);
   // 함수들은 Class 를 외부에서 생성하여 import를 하여 사용하였다.
-  const {cardRegistedNiceFirst} = useUserMe();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const callMailAuth = async () => {
     try {
@@ -54,7 +44,7 @@ export default function PasswordCheck({route}) {
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
-        err.toString().replace('error: ', ''),
+        err.toString()?.replace('error: ', ''),
         [
           {
             text: '확인',
@@ -81,7 +71,7 @@ export default function PasswordCheck({route}) {
       inputRef.current.blur();
       navigation.navigate(RePayCheckPasswordPageName);
     } catch (error) {
-      Alert.alert('이메일 인증 실패', error.toString().replace('error:', ''));
+      Alert.alert('이메일 인증 실패', error.toString()?.replace('error:', ''));
     }
   };
   useEffect(() => {
@@ -149,6 +139,7 @@ export default function PasswordCheck({route}) {
               isAuth: true,
               authText: '인증요청',
               authPressEvent: callMailAuth,
+              disabledEvent: !auth.readableAtom.isEmailLoading,
               // timer:900,
             }}
             additionalCssOnTextInput={'padding-right: 90px'}
@@ -156,8 +147,8 @@ export default function PasswordCheck({route}) {
               required: '필수 입력 항목 입니다.',
               pattern: {
                 value:
-                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                message: '이메일 형식에 맞지 않습니다.',
+                  /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\,;:\s@#$%^&+/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: '올바른 이메일 주소를 입력해주세요.',
               },
             }}
             padding=" 4px 0px"

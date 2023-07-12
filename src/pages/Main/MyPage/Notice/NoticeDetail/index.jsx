@@ -1,11 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
+import {Dimensions, ScrollView} from 'react-native';
+import HTML, {defaultSystemFonts} from 'react-native-render-html';
 import styled, {useTheme} from 'styled-components/native';
-
 import Wrapper from '~components/Wrapper';
 
-import HTML, {defaultSystemFonts} from 'react-native-render-html';
-import {Dimensions, ScrollView} from 'react-native';
 export const PAGE_NAME = 'P__MY_PAGE__NOTICE_DETAIL';
 
 const Pages = ({route}) => {

@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
+  View,
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
@@ -38,7 +39,8 @@ const Component = props => {
     halfButtonType = 'yellow',
     onPressEvent1 = () => {},
     onPressEvent2,
-    onPressEventHalf = () => {},
+    image,
+    closeType = true,
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
@@ -77,9 +79,12 @@ const Component = props => {
     };
   }, [up, upY]);
   const closeModal = () => {
-    closeBottomSheet.start(() => {
-      setModalVisible(false);
-    });
+    if (closeType) {
+      closeBottomSheet.start(() => {
+        setModalVisible(false);
+      });
+    }
+    return;
   };
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
@@ -98,6 +103,7 @@ const Component = props => {
             <DragButtonView/>
           </DragButton> */}
           <BottomSheetTitleView>
+            {image && <View style={{marginBottom: 24}}>{image}</View>}
             <BottomSheetTitle textColor={themeApp.colors.grey[2]}>
               {title}
             </BottomSheetTitle>
@@ -188,7 +194,7 @@ const BottomSheetTitleView = styled.View`
 const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-bottom: 6px;
-  max-width: 285px;
+  max-width: 300px;
   text-align: center;
 `;
 const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`

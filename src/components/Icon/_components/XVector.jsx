@@ -2,7 +2,6 @@ import React from 'react';
 import {Path, Svg} from 'react-native-svg';
 
 import XVectorIcon from '../../../assets/icons/XCircle.svg';
-
 import IconWrapper from '../component';
 /**
  *

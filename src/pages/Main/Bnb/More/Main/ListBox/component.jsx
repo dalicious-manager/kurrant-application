@@ -1,9 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback} from 'react';
-import {Linking, Pressable} from 'react-native';
-
+import {Linking, Platform, Pressable} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 
 import Typography from '../../../../../../components/Typography';
@@ -77,7 +75,11 @@ const Component = ({
       </TitleBox>
       <TailBox>
         <TailTextBox>
-          {description && <Description>{description}</Description>}
+          {description && (
+            <Description textColor={themeApp.colors.grey[4]}>
+              {description}
+            </Description>
+          )}
           {effect && effect}
         </TailTextBox>
         {isVersion &&

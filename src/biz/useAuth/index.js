@@ -1,2 +1,2 @@
-export { default } from './hook';
+export {default} from './hook';
 export * as Fetch from './Fetch';

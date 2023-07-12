@@ -2,7 +2,6 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useNavigation} from '@react-navigation/native';
 import React, {useLayoutEffect} from 'react';
 import styled, {useTheme} from 'styled-components/native';
-
 import PublicNotice, {
   PAGE_NAME as PublicNoticePageName,
 } from '~pages/Main/MyPage/Notice/PublicNotice';
@@ -14,12 +13,16 @@ export const SCREEN_NAME = 'S_MAIN__NOTICE';
 
 const Tab = createMaterialTopTabNavigator();
 
-const Screen = () => {
+const Screen = ({route}) => {
+  const from = route?.params?.from;
   const theme = useTheme();
   const navigation = useNavigation();
 
   return (
     <Tab.Navigator
+      initialRouteName={
+        from === 'public' ? PublicNoticePageName : SpotNoticePageName
+      }
       screenOptions={{
         tabBarIndicatorStyle: {
           backgroundColor: theme.colors.grey[1],

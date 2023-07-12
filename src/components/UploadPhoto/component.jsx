@@ -1,9 +1,7 @@
 import React from 'react';
-
-import styled from 'styled-components';
-
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Alert, PermissionsAndroid} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import styled from 'styled-components';
 
 const Component = ({photosArray, setPhotosArray}) => {
   const widthNum = 80;
@@ -37,22 +35,18 @@ const Component = ({photosArray, setPhotosArray}) => {
       }
 
       if (res.didCancel) {
-        console.log('사진 업로드를 취소하셨습니다');
         return;
       }
 
       if (!res.assets[0]) {
-        console.log('사실상 존재하지 않는 이미지파일입니다 ');
         return;
       }
       const formdata = new FormData();
       formdata.append('file', res.assets[0].uri);
 
       const fileSize = res.assets[0].fileSize;
-      console.log('파일 사이즈');
-      console.log(fileSize);
       if (fileSize > 4900 * 1000) {
-        Alert.alert('용량초과', '사진은 5MB이하 크리고 업로드해주세요', [
+        Alert.alert('용량초과', '사진은 5MB 이하 크기로 업로드해 주세요', [
           {
             text: '확인',
             onPress: () => {

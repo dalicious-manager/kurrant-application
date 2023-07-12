@@ -1,42 +1,49 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 
+import {width, heigth} from '../../theme';
 import Typography from '../Typography';
 
 const Component = ({
   label,
   disabled = false,
+
   touch,
   setTouch,
-  apartment,
-  corporation,
+
+  margin = '0',
+  title = [
+    {id: 1, type: '아침'},
+    {id: 2, type: '점심'},
+    {id: 3, type: '저녁'},
+  ],
 }) => {
-  const title = ['아침', '점심', '저녁'];
-
-  const onPressButton = idx => {
-    if (touch?.includes(idx)) {
-      return setTouch(touch?.filter(v => v !== idx));
+  const onPressButton = id => {
+    if (touch?.includes(id)) {
+      if (touch?.length > 1) {
+        return setTouch(touch?.filter(v => v !== id));
+      }
+      return;
     }
-    setTouch([...touch, idx]);
+
+    setTouch([...touch, id]);
   };
 
-  const touchPress = () => {
-    setTouch(prev => !prev);
-  };
   return (
     <>
       {title.map((t, idx) => {
         return (
           <Wrap
-            key={idx}
+            margins={margin}
+            key={t.id}
             onPress={() => {
-              onPressButton(idx);
+              onPressButton(t.id);
             }}
-            touch={touch?.includes(idx)}
-            idx={idx}>
+            touch={touch?.includes(t.id)}
+            idx={t.id}>
             <TextView>
-              <Label touch={touch?.includes(idx)} idx={idx}>
-                {t}
+              <Label touch={touch?.includes(t.id)} idx={t.id}>
+                {t.type}
               </Label>
             </TextView>
           </Wrap>
@@ -49,11 +56,11 @@ const Component = ({
 export default Component;
 
 const Wrap = styled.Pressable`
-  border-color: ${({theme, disabled, touch}) =>
+  border-color: ${({theme, disabled, touch, allTouch}) =>
     !touch ? theme.colors.grey[8] : disabled && theme.colors.grey[7]};
   border-width: 1px;
   border-radius: 14px;
-  background-color: ${({theme, disabled, touch}) =>
+  background-color: ${({theme, disabled, touch, allTouch}) =>
     touch
       ? theme.colors.grey[2]
       : disabled
@@ -62,6 +69,9 @@ const Wrap = styled.Pressable`
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  width: ${width * 103}px;
+  height: 40px;
+  margin-right: ${({margins}) => margins && margins}px;
 `;
 
 const Line = styled.View`
@@ -75,9 +85,7 @@ const Line = styled.View`
   box-sizing: border-box;
 `;
 
-const TextView = styled.View`
-  padding: 8px 36px;
-`;
+const TextView = styled.View``;
 
 const Label = styled(Typography).attrs({text: 'BottomButtonSB'})`
   color: ${({theme, disabled, touch}) =>

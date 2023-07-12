@@ -1,5 +1,6 @@
 import {useAtom} from 'jotai';
 import {useState} from 'react';
+import {Alert} from 'react-native';
 
 import * as Fetch from './Fetch';
 import {totalWrittenReview, writtenReviewList} from './store';
@@ -24,7 +25,10 @@ const useWrittenReview = () => {
       setWrittenReviewList(res.data.items);
       // setWrittenReviewList(res);
     } catch (err) {
-      console.log(err);
+      Alert.alert(
+        '작성된리뷰 가져오기',
+        err?.toString()?.replace('error: ', ''),
+      );
     }
   };
 

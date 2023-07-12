@@ -10,28 +10,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components/native';
+
+import OrderItem from './components/orderItem';
 import useOrderMeal from '../../../../../../biz/useOrderMeal';
 import usePurchaseHistory from '../../../../../../biz/usePurchaseHistory';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
+import {useGetPurchaseDetail} from '../../../../../../hook/usePurchaseHistory';
 import {formattedDateAndDay} from '../../../../../../utils/dateFormatter';
 import withCommas from '../../../../../../utils/withCommas';
-import OrderItem from './components/orderItem';
-import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'P_MAIN__PURCHASE_DETAIL';
 
 const Pages = ({route}) => {
   const {id} = route.params;
   const queryClient = useQueryClient();
-  const navigation = useNavigation();
   const themeApp = useTheme();
-  const {
-    getPurchaseDetail,
-    setPurchaseDetail,
-    readAbleAtom: {purchaseDetail, isPurchaseDetailLoading},
-  } = usePurchaseHistory();
+
+  const reqs = {
+    purchaseId: id,
+  };
+  const {data: purchaseDetail, isLoading: isPurchaseDetailLoading} =
+    useGetPurchaseDetail(reqs);
   const {refundItem, refundAll} = useOrderMeal();
   const cancelItem = async foodId => {
     try {
@@ -40,21 +42,8 @@ const Pages = ({route}) => {
       };
       await refundItem(req);
       queryClient.invalidateQueries('pointList');
-      const refund = {
-        ...purchaseDetail,
-        orderItems: [
-          ...purchaseDetail.orderItems.map(v => {
-            if (v.id === foodId) {
-              return {...v, orderStatus: 7};
-            } else {
-              return v;
-            }
-          }),
-        ],
-      };
-      setPurchaseDetail(refund);
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   const cancelAll = async () => {
@@ -63,67 +52,40 @@ const Pages = ({route}) => {
         id: id,
       };
       await refundAll(req);
-      const refund = {
-        ...purchaseDetail,
-        orderItems: [
-          ...purchaseDetail.orderItems.map(v => {
-            return {...v, orderStatus: 7};
-          }),
-        ],
-      };
-
-      // purchaseDetail.map((o)=> {
-      //   return {...o,orderItems:[...o.orderItems.map(v=>{
-      //   if(v.id === id){
-      //     return { ...v , orderStatus:7}
-      //   }else{
-      //     return v
-      //   }
-      // })]}})
-      setPurchaseDetail(refund);
-      const reqs = {
-        purchaseId: id,
-      };
-      getPurchaseDetail(reqs);
       queryClient.invalidateQueries('pointList');
     } catch (error) {
-      Alert.alert('취소불가', error.toString().replace('error:', ''));
+      Alert.alert('취소불가', error.toString()?.replace('error:', ''));
     }
   };
   const possibleOrder =
-    purchaseDetail?.orderItems?.filter(v => v.orderStatus === 7)?.length > 0
-      ? purchaseDetail?.orderItems?.filter(
+    purchaseDetail?.data?.orderItems?.filter(v => v.orderStatus === 7)?.length >
+    0
+      ? purchaseDetail?.data?.orderItems?.filter(
           v => v.isBeforeLastOrderTime === false,
         )?.length > 0
         ? '(취소된 주문:' +
-          purchaseDetail?.orderItems?.filter(v => v.orderStatus === 7)?.length +
+          purchaseDetail?.data?.orderItems?.filter(v => v.orderStatus === 7)
+            ?.length +
           ' / 마감된 주문:' +
-          purchaseDetail?.orderItems?.filter(
+          purchaseDetail?.data?.orderItems?.filter(
             v => v.isBeforeLastOrderTime === true,
           )?.length +
           ' 제외)'
         : '(취소된 주문:' +
-          purchaseDetail?.orderItems?.filter(v => v.orderStatus === 7)?.length +
+          purchaseDetail?.data?.orderItems?.filter(v => v.orderStatus === 7)
+            ?.length +
           ' 제외)'
-      : purchaseDetail?.orderItems?.filter(
+      : purchaseDetail?.data?.orderItems?.filter(
           v => v.isBeforeLastOrderTime === false,
         )?.length > 0
       ? '(마감된 주문:' +
-        purchaseDetail?.orderItems?.filter(
+        purchaseDetail?.data?.orderItems?.filter(
           v => v.isBeforeLastOrderTime === true,
         )?.length +
         ' 제외)'
       : '';
-  purchaseDetail?.orderItems?.map(v => console.log(v));
-  useEffect(() => {
-    const getData = async () => {
-      const req = {
-        purchaseId: id,
-      };
-      await getPurchaseDetail(req);
-    };
-    getData();
-  }, []);
+  purchaseDetail?.data?.orderItems?.map(v => console.log(v));
+
   if (isPurchaseDetailLoading) {
     return (
       <SafeView>
@@ -141,10 +103,10 @@ const Pages = ({route}) => {
         <Wrapper paddingTop={14}>
           <CodeBlock>
             <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
-              {purchaseDetail.code}
+              {purchaseDetail?.data.code}
             </Typography>
             <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
-              {formattedDateAndDay(purchaseDetail.orderDate)}
+              {formattedDateAndDay(purchaseDetail?.data.orderDate)}
             </Typography>
           </CodeBlock>
           <PurchaseInfoBox>
@@ -153,7 +115,7 @@ const Pages = ({route}) => {
                 상품 타입
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
-                {purchaseDetail?.orderType}
+                {purchaseDetail?.data?.orderType}
               </Typography>
             </PurchaseInfoList>
             <PurchaseInfoList>
@@ -161,7 +123,15 @@ const Pages = ({route}) => {
                 주문자
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
-                {purchaseDetail?.userName}
+                {purchaseDetail?.data?.userName}
+              </Typography>
+            </PurchaseInfoList>
+            <PurchaseInfoList>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
+                연락처
+              </Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
+                {purchaseDetail?.data?.phone}
               </Typography>
             </PurchaseInfoList>
             <PurchaseInfoList>
@@ -169,7 +139,8 @@ const Pages = ({route}) => {
                 상세 스팟
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
-                {purchaseDetail?.groupName} / {purchaseDetail?.spotName}
+                {purchaseDetail?.data?.groupName} /{' '}
+                {purchaseDetail?.data?.spotName}
               </Typography>
             </PurchaseInfoList>
             {/* <PurchaseInfoList>
@@ -185,7 +156,7 @@ const Pages = ({route}) => {
                 배송지
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
-                {purchaseDetail?.address}
+                {purchaseDetail?.data?.address}
               </Typography>
             </PurchaseInfoList>
           </PurchaseInfoBox>
@@ -198,9 +169,11 @@ const Pages = ({route}) => {
                 onPress={() => {
                   Alert.alert(
                     '주문 취소',
-                    `${purchaseDetail?.orderItems?.length}개의 주문 중 ${
-                      purchaseDetail?.orderItems?.filter(
-                        v => v.orderStatus === 5,
+                    `${purchaseDetail?.data?.orderItems?.length}개의 주문 중 ${
+                      purchaseDetail?.data?.orderItems?.filter(
+                        v =>
+                          v.orderStatus === 5 &&
+                          (v.dailyFoodStatus === 1 || v.dailyFoodStatus === 2),
                       )?.length || 0
                     }개를 취소 하시겠어요?\n${possibleOrder}`,
                     [
@@ -211,8 +184,15 @@ const Pages = ({route}) => {
                       {
                         text: '메뉴 취소',
                         onPress: async () => {
-                          cancelAll();
-                          queryClient.invalidateQueries('todayMeal');
+                          try {
+                            cancelAll();
+                            queryClient.invalidateQueries('orderMeal');
+                          } catch (error) {
+                            Alert.alert(
+                              '메뉴취소 불가',
+                              error.toString()?.replace('error: ', ''),
+                            );
+                          }
                         },
                         style: 'destructive',
                       },
@@ -226,7 +206,7 @@ const Pages = ({route}) => {
                 </Typography>
               </CancelButton>
             </OrderTitleBox>
-            {purchaseDetail?.orderItems?.map(v => {
+            {purchaseDetail?.data?.orderItems?.map(v => {
               return (
                 <OrderItem key={v.id} orderItem={v} onCancel={cancelItem} />
               );
@@ -243,7 +223,7 @@ const Pages = ({route}) => {
                 총 상품금액
               </Typography>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                {withCommas(purchaseDetail?.defaultPrice)} 원
+                {withCommas(purchaseDetail?.data?.defaultPrice)} 원
               </Typography>
             </PaymentsList>
             <PaymentsList>
@@ -251,7 +231,7 @@ const Pages = ({route}) => {
                 식사 지원금 사용금액
               </Typography>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                - {withCommas(purchaseDetail?.supportPrice)} 원
+                - {withCommas(purchaseDetail?.data?.supportPrice)} 원
               </Typography>
             </PaymentsList>
             <PaymentsList>
@@ -259,7 +239,7 @@ const Pages = ({route}) => {
                 총 할인금액
               </Typography>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                - {withCommas(purchaseDetail?.discountPrice)} 원
+                - {withCommas(purchaseDetail?.data?.discountPrice)} 원
               </Typography>
             </PaymentsList>
             <SaleContainer>
@@ -276,7 +256,8 @@ const Pages = ({route}) => {
                   <Typography
                     text="CaptionR"
                     textColor={themeApp.colors.grey[5]}>
-                    {withCommas(purchaseDetail?.membershipDiscountPrice)} 원
+                    {withCommas(purchaseDetail?.data?.membershipDiscountPrice)}{' '}
+                    원
                   </Typography>
                 </SaleItem>
                 <SaleCenterItem>
@@ -288,7 +269,7 @@ const Pages = ({route}) => {
                   <Typography
                     text="CaptionR"
                     textColor={themeApp.colors.grey[5]}>
-                    {withCommas(purchaseDetail?.makersDiscountPrice)} 원
+                    {withCommas(purchaseDetail?.data?.makersDiscountPrice)} 원
                   </Typography>
                 </SaleCenterItem>
                 <SaleItem>
@@ -300,7 +281,7 @@ const Pages = ({route}) => {
                   <Typography
                     text="CaptionR"
                     textColor={themeApp.colors.grey[5]}>
-                    {withCommas(purchaseDetail?.periodDiscountPrice)} 원
+                    {withCommas(purchaseDetail?.data?.periodDiscountPrice)} 원
                   </Typography>
                 </SaleItem>
               </SaleBox>
@@ -310,7 +291,7 @@ const Pages = ({route}) => {
                 배송비
               </Typography>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                {withCommas(purchaseDetail?.deliveryFee)} 원
+                {withCommas(purchaseDetail?.data?.deliveryFee)} 원
               </Typography>
             </PaymentsList>
             <PaymentsList>
@@ -318,9 +299,9 @@ const Pages = ({route}) => {
                 포인트 사용금액
               </Typography>
               <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                {purchaseDetail?.point === 0
+                {purchaseDetail?.data?.point === 0
                   ? 0
-                  : '-' + withCommas(purchaseDetail?.point)}{' '}
+                  : '-' + withCommas(purchaseDetail?.data?.point)}{' '}
                 P
               </Typography>
             </PaymentsList>
@@ -329,12 +310,12 @@ const Pages = ({route}) => {
                 총 결제금액
               </Typography>
               <Typography text="Title03SB" textColor={themeApp.colors.grey[2]}>
-                {withCommas(purchaseDetail?.totalPrice)} 원
+                {withCommas(purchaseDetail?.data?.totalPrice)} 원
               </Typography>
             </TotalPriceBox>
           </PaymentsBox>
-          {purchaseDetail?.refundDto && <LineBar />}
-          {purchaseDetail?.refundDto && (
+          {purchaseDetail?.data?.refundDto && <LineBar />}
+          {purchaseDetail?.data?.refundDto && (
             <PaymentsBox>
               <PaymentsTitle>
                 <Typography text="Body05SB" textColor={themeApp.colors.grey[2]}>
@@ -346,7 +327,8 @@ const Pages = ({route}) => {
                   추가 결제금
                 </Typography>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                  {withCommas(purchaseDetail?.refundDto?.refundPayPrice)} 원
+                  {withCommas(purchaseDetail?.data?.refundDto?.refundPayPrice)}{' '}
+                  원
                 </Typography>
               </PaymentsList>
               <SaleContainer>
@@ -363,7 +345,9 @@ const Pages = ({route}) => {
                     <Typography
                       text="CaptionR"
                       textColor={themeApp.colors.grey[5]}>
-                      {withCommas(purchaseDetail?.refundDto?.refundItemPrice)}{' '}
+                      {withCommas(
+                        purchaseDetail?.data?.refundDto?.refundItemPrice,
+                      )}{' '}
                       원
                     </Typography>
                   </SaleItem>
@@ -377,7 +361,7 @@ const Pages = ({route}) => {
                       text="CaptionR"
                       textColor={themeApp.colors.grey[5]}>
                       {withCommas(
-                        purchaseDetail?.refundDto?.refundSupportPrice,
+                        purchaseDetail?.data?.refundDto?.refundSupportPrice,
                       )}{' '}
                       원
                     </Typography>
@@ -389,7 +373,10 @@ const Pages = ({route}) => {
                   배송비
                 </Typography>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                  {withCommas(purchaseDetail?.refundDto?.refundDeliveryFee)} 원
+                  {withCommas(
+                    purchaseDetail?.data?.refundDto?.refundDeliveryFee,
+                  )}{' '}
+                  원
                 </Typography>
               </PaymentsList>
               {/* <SaleContainer>
@@ -432,7 +419,8 @@ const Pages = ({route}) => {
                   환불 차감
                 </Typography>
                 <Typography text="Body05R" textColor={themeApp.colors.grey[4]}>
-                  {withCommas(purchaseDetail?.refundDto?.refundDeduction)} 원
+                  {withCommas(purchaseDetail?.data?.refundDto?.refundDeduction)}{' '}
+                  원
                 </Typography>
               </PaymentsList>
               {/* <SaleContainer>
@@ -464,7 +452,10 @@ const Pages = ({route}) => {
                 <Typography
                   text="Title03SB"
                   textColor={themeApp.colors.grey[2]}>
-                  {withCommas(purchaseDetail?.refundDto?.refundTotalPrice)} 원
+                  {withCommas(
+                    purchaseDetail?.data?.refundDto?.refundTotalPrice,
+                  )}{' '}
+                  원
                 </Typography>
               </TotalPriceBox>
               <SaleContainer>
@@ -481,7 +472,9 @@ const Pages = ({route}) => {
                     <Typography
                       text="CaptionR"
                       textColor={themeApp.colors.grey[5]}>
-                      {withCommas(purchaseDetail?.refundDto?.refundCardPrice)}{' '}
+                      {withCommas(
+                        purchaseDetail?.data?.refundDto?.refundCardPrice,
+                      )}{' '}
                       원
                     </Typography>
                   </SaleItem>
@@ -494,7 +487,9 @@ const Pages = ({route}) => {
                     <Typography
                       text="CaptionR"
                       textColor={themeApp.colors.grey[5]}>
-                      {withCommas(purchaseDetail?.refundDto?.refundTotalPoint)}{' '}
+                      {withCommas(
+                        purchaseDetail?.data?.refundDto?.refundTotalPoint,
+                      )}{' '}
                       원
                     </Typography>
                   </SaleItem>
@@ -508,20 +503,22 @@ const Pages = ({route}) => {
             </Typography>
             <ReceiptBox>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
-                {purchaseDetail?.paymentCompany}
+                {purchaseDetail?.data?.paymentCompany}
               </Typography>
-              {purchaseDetail?.receiptUrl ? (
+              {purchaseDetail?.data?.receiptUrl ? (
                 <ReceiptTouch
-                  onPress={() => Linking.openURL(purchaseDetail?.receiptUrl)}>
+                  onPress={() =>
+                    Linking.openURL(purchaseDetail?.data?.receiptUrl)
+                  }>
                   <ReceiptText
                     text="CaptionR"
                     textColor={themeApp.colors.grey[5]}>
                     (영수증)
                   </ReceiptText>
                 </ReceiptTouch>
-              ) : purchaseDetail?.cardNumber ? (
+              ) : purchaseDetail?.data?.cardNumber ? (
                 <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
-                  ({purchaseDetail?.cardNumber})
+                  ({purchaseDetail?.data?.cardNumber})
                 </Typography>
               ) : (
                 <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
@@ -530,7 +527,7 @@ const Pages = ({route}) => {
               )}
             </ReceiptBox>
           </PaymentsMethodBox>
-          <CancelBox></CancelBox>
+          <CancelBox />
         </Wrapper>
       </ScrollView>
     </SafeView>

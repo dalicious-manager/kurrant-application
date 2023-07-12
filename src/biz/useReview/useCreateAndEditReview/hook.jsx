@@ -1,5 +1,6 @@
 import {useAtom} from 'jotai';
 import {useState} from 'react';
+import {Alert} from 'react-native';
 
 import * as Fetch from './Fetch';
 import {reviewWaitListAtom} from './store';
@@ -18,7 +19,13 @@ const useReviewWait = () => {
       setReviewWaitList(res.data.orderFoodList);
       // setReviewWaitList([]);
     } catch (err) {
-      console.log(err);
+      Alert.alert('작성 리뷰 조회', err.toString()?.replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
     }
   };
 

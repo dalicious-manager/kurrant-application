@@ -1,4 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
+import {useResetAtom} from 'jotai/utils';
+import jwtDecode from 'jwt-decode';
+import {Alert} from 'react-native';
+import {useQueryClient} from 'react-query';
 
 import * as Fetch from './Fetch';
 import {
@@ -13,15 +19,12 @@ import {
   userRoleAtom,
   fcmTokenAtom,
 } from './store';
-import {setStorage} from '../../utils/asyncStorage';
-import {isUserSpotStatusAtom} from '../useUserInfo/store';
-import jwtDecode from 'jwt-decode';
-import {Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as LoginPageName} from '../../pages/Main/Login/Login';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setStorage} from '../../utils/asyncStorage';
+import {isUserInfoAtom, isUserSpotStatusAtom} from '../useUserInfo/store';
 
 const useAuth = () => {
+  const queryClient = useQueryClient();
   const [isEmailAuthLoading, setEmailAuthLoading] = useAtom(
     isEmailAuthLoadingAtom,
   );
@@ -40,6 +43,7 @@ const useAuth = () => {
   const [isChangePasswordLoading, setChangePasswordLoading] = useAtom(
     isChangePasswordLoadingAtom,
   );
+  const resetAtom = useResetAtom(isUserInfoAtom);
   const [isEmailLoading, setEmailLoading] = useAtom(isFindEmailLoading);
   const [fcmToken, setFcmToken] = useAtom(fcmTokenAtom);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
@@ -50,7 +54,6 @@ const useAuth = () => {
       setEmailAuthLoading(true);
 
       const res = await Fetch.requestEmailAuth(body, type, option);
-
       return res;
     } catch (err) {
       throw err;
@@ -63,7 +66,7 @@ const useAuth = () => {
       setConfirmEmailLoading(true);
 
       const res = await Fetch.confirmEmailAuth(auth, type);
-
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -75,7 +78,6 @@ const useAuth = () => {
     try {
       setPhoneAuthLoading(true);
       const res = await Fetch.requestPhoneAuth(body, type, option);
-
       return res;
     } catch (err) {
       throw err;
@@ -86,7 +88,7 @@ const useAuth = () => {
   const confirmPhoneAuth = async (auth, type) => {
     try {
       setConfirmPhoneLoading(true);
-
+      queryClient.invalidateQueries('userInfo');
       const res = await Fetch.confirmPhoneAuth(auth, type);
 
       return res;
@@ -106,7 +108,7 @@ const useAuth = () => {
         },
         option,
       );
-
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -123,7 +125,7 @@ const useAuth = () => {
         },
         option,
       );
-
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -174,14 +176,16 @@ const useAuth = () => {
         option,
       );
       if (res?.data?.isActive) {
-        console.log(res.data);
+        // console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', 'GENERAL');
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', 'GENERAL');
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
@@ -215,7 +219,7 @@ const useAuth = () => {
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
-                  alert(e.toString().replace('error:', ''));
+                  alert(e.toString()?.replace('error:', ''));
                 }
               },
             },
@@ -235,7 +239,6 @@ const useAuth = () => {
 
       const res = await Fetch.autoLogin();
       if (res?.data?.isActive) {
-        console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
@@ -267,14 +270,13 @@ const useAuth = () => {
                 try {
                   const cancel = await cancelTerminateUser();
                   await setStorage('token', JSON.stringify(res.data));
-                  await setStorage('isLogin', body.autoLogin.toString());
                   await setStorage(
                     'spotStatus',
                     res?.data?.spotStatus.toString(),
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
-                  alert(e.toString().replace('error:', ''));
+                  alert(e.toString()?.replace('error:', ''));
                 }
               },
             },
@@ -301,15 +303,16 @@ const useAuth = () => {
         type,
         option,
       );
-      console.log(res?.data)
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
@@ -337,13 +340,14 @@ const useAuth = () => {
                   const cancel = await cancelTerminateUser();
                   await setStorage('token', JSON.stringify(res.data));
                   await setStorage('isLogin', body.autoLogin.toString());
+                  await setStorage('lastLogin', type.toString());
                   await setStorage(
                     'spotStatus',
                     res?.data?.spotStatus.toString(),
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
-                  alert(e.toString().replace('error:', ''));
+                  alert(e.toString()?.replace('error:', ''));
                 }
               },
             },
@@ -370,11 +374,13 @@ const useAuth = () => {
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
+        await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
         Alert.alert(
@@ -408,7 +414,7 @@ const useAuth = () => {
                   );
                   setUserRole('NOMAL');
                 } catch (e) {
-                  alert(e.toString().replace('error:', ''));
+                  alert(e.toString()?.replace('error:', ''));
                 }
               },
             },
@@ -429,6 +435,8 @@ const useAuth = () => {
       },
       option,
     );
+    queryClient.invalidateQueries('userInfo');
+    resetAtom();
     return res;
   };
   const saveFcmToken = async (body, option = {}) => {
@@ -438,6 +446,7 @@ const useAuth = () => {
       },
       option,
     );
+
     return res;
   };
   const nameSetting = async (body, option = {}) => {
@@ -447,14 +456,17 @@ const useAuth = () => {
       },
       option,
     );
+    queryClient.invalidateQueries('userInfo');
     return res;
   };
   const terminateUser = async (body, option = {}) => {
     const res = await Fetch.terminateUser(option);
+    queryClient.invalidateQueries('userInfo');
     return res;
   };
   const cancelTerminateUser = async (body, option = {}) => {
     const res = await Fetch.cancelTerminateUser(option);
+    queryClient.invalidateQueries('userInfo');
     return res;
   };
   return {
@@ -486,7 +498,6 @@ const useAuth = () => {
       isChangePasswordLoading,
       isEmailLoading,
       isLoginLoading,
-      fcmToken,
     },
   };
 };

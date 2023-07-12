@@ -3,18 +3,19 @@ import React, {useEffect} from 'react';
 import {ScrollView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled, {useTheme} from 'styled-components/native';
-import {formattedSameDate} from '../../../utils/dateFormatter';
+
+import {PAGE_NAME as MembershipUsagedetailsPageName} from './MembershipUsageDetails';
+import useMembership from '../../../biz/useMembership';
+import useUserMe from '../../../biz/useUserMe';
 import Button from '../../../components/Button';
 import Label from '../../../components/Label';
 import Typography from '../../../components/Typography';
-import {PAGE_NAME as MembershipJoinPageName} from '../MembershipJoin';
-import {PAGE_NAME as MembershipTerminatePageName} from '../MembershipTerminate';
-import {PAGE_NAME as MembershipUsagedetailsPageName} from './MembershipUsageDetails';
-import {PAGE_NAME as MemebershipPaymentManagePageName} from '../MembershipJoin/MemebershipPaymentManage';
-import useMembership from '../../../biz/useMembership';
+import {useGetUserInfo} from '../../../hook/useUserInfo';
+import {formattedSameDate} from '../../../utils/dateFormatter';
 import withCommas from '../../../utils/withCommas';
-import useUserInfo from '../../../biz/useUserInfo';
-import useUserMe from '../../../biz/useUserMe';
+import {PAGE_NAME as MembershipJoinPageName} from '../MembershipJoin';
+import {PAGE_NAME as MemebershipPaymentManagePageName} from '../MembershipJoin/MemebershipPaymentManage';
+import {PAGE_NAME as MembershipTerminatePageName} from '../MembershipTerminate';
 export const PAGE_NAME = 'P__MEMBERSHIP__INFO';
 const Pages = () => {
   const themeApp = useTheme();
@@ -23,7 +24,9 @@ const Pages = () => {
     getMembershipInfo,
     readableAtom: {membershipInfo, isMembershipInfoLoading},
   } = useMembership();
-  const {isUserInfo} = useUserInfo();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const {getCardList} = useUserMe();
   useEffect(() => {
     const getMembershipBenefit = async () => {
@@ -47,9 +50,7 @@ const Pages = () => {
           <TextCenterField
             text={'LargeTitle'}
             textColor={themeApp.colors.neutral[0]}>
-
             {isUserInfo?.name}님은{'\n'}멤버십 이용중
-
           </TextCenterField>
           <MembershipLabelBox>
             <LabelBox>
@@ -170,7 +171,6 @@ const Pages = () => {
               </Typography>
             </SaleTextBox>
           </InfoContainer>
-
         </Container>
         <ButtonContainer>
           <ButtonBox>

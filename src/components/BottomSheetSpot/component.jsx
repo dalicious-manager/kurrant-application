@@ -1,24 +1,29 @@
+import BottomSheet, {
+  BottomSheetFlatList,
+  BottomSheetModal,
+} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
   Modal,
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
-  FlatList,
-  Pressable,
   View,
   PanResponder,
+  Text,
 } from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
-import Typography from '../Typography';
+import {mainDimAtom} from '../../utils/store';
+import BalloonMessage from '../BalloonMessage';
 import Label from '../Label';
+import Typography from '../Typography';
 
 const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 const BottomSheetSpot = props => {
   const {
@@ -27,7 +32,6 @@ const BottomSheetSpot = props => {
     title = '옵션 선택',
     description = '',
     data = {},
-    selected,
     setSelected,
     onPressEvent = () => {},
     userSpotId,
@@ -36,9 +40,7 @@ const BottomSheetSpot = props => {
   } = props;
   //멀티 셀렉터시 이용
   // const [selected, setSelected] = useState(new Map());
-
-  const navigation = useNavigation();
-
+  const [showDim, setShowDim] = useAtom(mainDimAtom);
   const onSelect = useCallback(
     id => {
       //멀티 셀렉터시 이용
@@ -53,10 +55,11 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['35%', '90%'], []);
+  const snapPoints = useMemo(() => ['70%', '90%'], []);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
+  const [parentHeight, setParentHeight] = useState(0);
 
   const resetBottomSheet = Animated.timing(panY, {
     toValue: 0,
@@ -68,49 +71,13 @@ const BottomSheetSpot = props => {
     duration: 50,
     useNativeDriver: true,
   });
-  const list = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => false,
-      onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > 0 && gestureState.vy > 1.5) {
-          closeModal();
-        } else {
-          resetBottomSheet.start();
-        }
-      },
-    }),
-  );
+
   const handleSheetChange = useCallback(index => {
     setSnap(index);
   }, []);
   const handleSnapPress = useCallback(index => {
-    list.current?.snapToIndex(index);
+    setSnap(index);
   }, []);
-  const pressOutUp = e => {
-    e.stopPropagation();
-    const {pageY} = e.nativeEvent;
-    if (pageY > y + 50) {
-      if (snap === 0) {
-        closeModal();
-      } else {
-        if (contentScroll && scrollStart == 0) {
-          handleSnapPress(0);
-        }
-      }
-    } else if (pageY < y - 50) {
-      handleSnapPress(1);
-    } else {
-      if (contentScroll && scrollStart == 0) {
-        handleSnapPress(0);
-      }
-    }
-  };
-  const pressInUp = e => {
-    e.stopPropagation();
-    const {pageY} = e.nativeEvent;
-    setY(pageY);
-  };
 
   useEffect(() => {
     if (props.modalVisible) {
@@ -123,100 +90,138 @@ const BottomSheetSpot = props => {
       setModalVisible(false);
     });
   };
+
+  const onLayout = event => {
+    const {height} = event.nativeEvent.layout;
+    setParentHeight(height);
+  };
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
-      <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <Background />
-        </TouchableWithoutFeedback>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <Overlay>
+          {snap === 0 && !showDim && userSpotId === null && (
+            <BalloonMessage
+              location={{bottom: '-18%'}}
+              vertical="down"
+              message={`배송받으실 스팟을 선택해주세요.${'\n'}추후 변경 가능합니다.`}
+            />
+          )}
 
-        <BottomSheet
-          ref={list}
-          snapPoints={snapPoints}
-          onChange={handleSheetChange}
-          style={{
-            marginBottom: 50,
-          }}>
-          <BottomSheetTitleView>
-            <BottomSheetTitle>{title}</BottomSheetTitle>
-            {description !== '' && (
-              <BottomSheetDecs>{description}</BottomSheetDecs>
-            )}
-          </BottomSheetTitleView>
-          <BottomSheetFlatList
-            data={data}
-            scrollEnabled={snap === 1}
-            onScrollBeginDrag={e => {
-              setScrollStart(e.nativeEvent.contentOffset.y);
-            }}
-            onMomentumScrollBegin={e => {
-              if (scrollEnd === 0) {
-                handleSnapPress(0);
-              }
-            }}
-            onScrollEndDrag={e => {
-              setContentScroll(e.nativeEvent.contentOffset.y === 0);
-              setScrollEnd(e.nativeEvent.contentOffset.y);
-              if (e.nativeEvent.contentOffset.y === 0) {
-                if (contentScroll) {
+          <TouchableWithoutFeedback onPress={closeModal}>
+            <Background />
+          </TouchableWithoutFeedback>
+
+          <BottomSheet snapPoints={snapPoints} onChange={handleSheetChange}>
+            <BottomSheetTitleView>
+              <TitleWrap>
+                <BottomSheetTitle>{title}</BottomSheetTitle>
+                {booleanValue && (
+                  <ManagePressView
+                    onPress={() => {
+                      onPressEvent2(userSpotId && setModalVisible(false));
+                    }}>
+                    <ManageText>설정/관리</ManageText>
+                  </ManagePressView>
+                )}
+              </TitleWrap>
+              {description !== '' && (
+                <BottomSheetDecs>{description}</BottomSheetDecs>
+              )}
+            </BottomSheetTitleView>
+            <BottomSheetFlatList
+              data={data}
+              scrollEnabled={snap === 1}
+              onScrollBeginDrag={e => {
+                setScrollStart(e.nativeEvent.contentOffset.y);
+              }}
+              onMomentumScrollBegin={() => {
+                if (scrollEnd === 0) {
                   handleSnapPress(0);
                 }
-              }
-            }}
-            renderItem={({item}) => (
-              <>
-                <ItemContainer>
-                  <GroupView>
-                    <GroupName>{item.clientName}</GroupName>
-                    <View style={{marginLeft: 8}}>
-                      <Label
-                        label={
-                          item.spotType === 0 ? '프라이빗 스팟' : '오픈 스팟'
-                        }
-                        type={item.spotType === 0 ? 'red' : 'green'}
-                      />
-                    </View>
-                  </GroupView>
-                  <Border />
-                </ItemContainer>
+              }}
+              onScrollEndDrag={e => {
+                setContentScroll(e.nativeEvent.contentOffset.y === 0);
+                setScrollEnd(e.nativeEvent.contentOffset.y);
+                if (e.nativeEvent.contentOffset.y === 0) {
+                  if (contentScroll) {
+                    handleSnapPress(0);
+                  }
+                }
+              }}
+              renderItem={({item}) => (
+                <View onLayout={onLayout}>
+                  <ItemContainer>
+                    <GroupView>
+                      <View style={{marginRight: 8}}>
+                        <Label
+                          label={
+                            item.spotType === 0
+                              ? '프라이빗 스팟'
+                              : item.spotType === 2
+                              ? '공유 스팟'
+                              : '마이 스팟'
+                          }
+                          type={
+                            item.spotType === 0
+                              ? 'blue'
+                              : item.spotType === 2
+                              ? 'green'
+                              : 'pink'
+                          }
+                        />
+                      </View>
+                      <GroupName>{item.clientName}</GroupName>
+                    </GroupView>
+                    <Border />
+                  </ItemContainer>
 
-                {item.spots.map((el, idx) => {
-                  return (
-                    <ContentItemContainer
-                      onPressIn={pressInUp}
-                      onPressOut={pressOutUp}
-                      onPress={() => {
-                        onSelect(el.spotId);
-                        onPressEvent(el.spotId);
-                      }}
-                      key={el.spotId}>
-                      {el.spotId === userSpotId ? (
-                        <ContentItemBox>
-                          <ContentItemText>{el.spotName}</ContentItemText>
-                          <CheckedIcon />
-                        </ContentItemBox>
-                      ) : (
-                        <ContentItemText>{el.spotName}</ContentItemText>
-                      )}
-                    </ContentItemContainer>
-                  );
-                })}
-              </>
-            )}
-            keyExtractor={item => item.clientId.toString()}
-          />
-          <ManagePressView></ManagePressView>
-        </BottomSheet>
+                  {item.spots.map(el => {
+                    const spotNameCut = el.spotName?.includes(null);
+                    const useSpotName = spotNameCut
+                      ? el.spotName.split('null')[0]
+                      : el.spotName;
+                    const arrs = data[data.length - 1];
 
-        {booleanValue && (
-          <ManagePressView
-            onPress={() => {
-              onPressEvent2(setModalVisible(false));
-            }}>
-            <ContentItemText>스팟 관리하기</ContentItemText>
-          </ManagePressView>
-        )}
-      </Overlay>
+                    return (
+                      <ContentItemContainer
+                        lastArr={arrs === item}
+                        onPress={() => {
+                          onSelect(el.spotId);
+                          onPressEvent(el.spotId);
+                        }}
+                        key={el.spotId}>
+                        {el.spotId === userSpotId ? (
+                          <ContentItemBox>
+                            <TextView>
+                              <ContentItemText>{useSpotName}</ContentItemText>
+                              {el.isRestriction && (
+                                <Restriction>외부인 출입 제한</Restriction>
+                              )}
+                            </TextView>
+                            <CheckedIcon />
+                          </ContentItemBox>
+                        ) : (
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <ContentItemText>{useSpotName}</ContentItemText>
+                            {el.isRestriction && (
+                              <Restriction>외부인 출입 제한</Restriction>
+                            )}
+                          </View>
+                        )}
+                      </ContentItemContainer>
+                    );
+                  })}
+                </View>
+              )}
+              // keyExtractor={item => item.clientId.toString()}
+            />
+          </BottomSheet>
+        </Overlay>
+      </GestureHandlerRootView>
     </Modal>
   );
 };
@@ -232,33 +237,13 @@ const Background = styled.View`
   flex: 1;
 `;
 
-const AnimatedView = styled(Animated.View)`
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  padding-top: 20px;
-`;
-
-const DragButton = styled.TouchableOpacity`
-  flex: 1;
-`;
-
-const DragButtonView = styled.View`
-  background-color: white;
-  width: 40px;
-  height: 5px;
-  border-radius: 10px;
-`;
-
 const BottomSheetTitleView = styled.View`
   width: 100%;
   padding: 0px 24px;
 `;
 
 const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 `;
 
 const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
@@ -270,6 +255,7 @@ const ContentItemContainer = styled.Pressable`
   height: 60px;
   padding: 19px 24px;
   padding-left: 40px;
+  //margin-bottom: ${({lastArr}) => (lastArr ? '50px' : '0px')};
 `;
 
 const ItemContainer = styled.View`
@@ -284,9 +270,14 @@ const ContentItemBox = styled.View`
   align-items: center;
 `;
 
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
+const ContentItemText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+`;
+const ManageText = styled(Typography).attrs({text: 'Button09R'})`
+  color: ${({theme}) => theme.colors.grey[3]};
+`;
 
-const GroupName = styled(Typography).attrs({text: 'Body06R'})`
+const GroupName = styled(Typography).attrs({text: 'Body06SB'})`
   color: ${({theme}) => theme.colors.grey[4]};
 `;
 
@@ -298,10 +289,9 @@ const Border = styled.View`
 `;
 
 const ManagePressView = styled.Pressable`
-  width: ${Dimensions.get('screen').width}px;
-  height: 100px;
+  /* width: ${Dimensions.get('screen').width}px;
   padding: 19px 24px 55px 24px;
-  background-color: white;
+  background-color: white; */
 `;
 
 const GroupView = styled.View`
@@ -310,3 +300,23 @@ const GroupView = styled.View`
 `;
 
 export default BottomSheetSpot;
+
+const MessageWrap = styled.View`
+  position: absolute;
+`;
+
+const TitleWrap = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const Restriction = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+  margin-left: 8px;
+`;
+
+const TextView = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;

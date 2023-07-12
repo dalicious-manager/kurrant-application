@@ -1,5 +1,4 @@
 import React from 'react';
-
 import DiscountIcon from '~assets/icons/discount.svg';
 
 import IconWrapper from '../component';

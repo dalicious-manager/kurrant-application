@@ -1,3 +1,5 @@
+import {Dimensions} from 'react-native';
+
 // Grey
 export const grey = {
   0: '#FFFFFF', // white
@@ -32,6 +34,7 @@ export const blue = {
 // Red
 export const red = {
   100: '#FFEAEA',
+
   500: '#DD5257',
 };
 
@@ -59,6 +62,18 @@ export const etc = {
   naver: '#4FA42B',
 };
 
+export const basicDimensions = {
+  // 디자이너가 작업하고 있는 XD파일 스크린의 세로,가로
+  height: 812,
+  width: 375,
+};
+
+export const height = // 높이 변환 작업
+  (Dimensions.get('screen').height * (1 / basicDimensions.height)).toFixed(1);
+
+export const width = // 가로 변환 작업
+  (Dimensions.get('screen').width * (1 / basicDimensions.width)).toFixed(1);
+
 const colors = {
   grey,
   blue,
@@ -68,6 +83,8 @@ const colors = {
   green,
   purple,
   etc,
+  height,
+  width,
 };
 
 const Theme = {

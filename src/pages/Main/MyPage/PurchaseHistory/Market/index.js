@@ -1,1 +1,4 @@
-export { PAGE_NAME as MarketHistoryPageName, default as MarketHistoryPage } from './Main';
+export {
+  PAGE_NAME as MarketHistoryPageName,
+  default as MarketHistoryPage,
+} from './Main';

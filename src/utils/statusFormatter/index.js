@@ -15,7 +15,7 @@ export function formattedMealFoodStatus(data) {
     case 5:
       return '결제완료';
     case 6:
-      return '배송대기';
+      return '상품준비중';
     case 7:
       return '취소';
     case 8:
@@ -49,7 +49,7 @@ export function formattedCatorFoodStatus(data) {
     case 5:
       return '결제완료';
     case 6:
-      return '배송대기';
+      return '상품준비중';
     case 7:
       return '주문취소';
     case 8:
@@ -90,6 +90,22 @@ export function formattedCardCode(data) {
       return '카카오뱅크카드';
     default:
       break;
+  }
+}
+export function formattedLogin(data) {
+  switch (data) {
+    case 'GOOGLE':
+      return '구글 로그인';
+    case 'APPLE':
+      return '애플 로그인';
+    case 'NAVER':
+      return '네이버 로그인';
+    case 'FACEBOOK':
+      return '페이스북 로그인';
+    case 'KAKAO':
+      return '카카오 로그인';
+    default:
+      return data;
   }
 }
 export const cardListData = [

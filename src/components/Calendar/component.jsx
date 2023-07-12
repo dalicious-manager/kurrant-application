@@ -1,31 +1,20 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {useNavigation} from '@react-navigation/native';
-import {
-  addDays,
-  eachWeekOfInterval,
-  subDays,
-  eachDayOfInterval,
-  format,
-  daysInYear,
-} from 'date-fns';
+import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
-import {useAtom, useAtomValue} from 'jotai';
+import {useAtomValue} from 'jotai';
 import React, {useEffect, useRef, useState} from 'react';
-import {Pressable, View, Text} from 'react-native';
+import {View} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components/native';
 
+import {getCircleColor, getTodayColor, getFontStyle} from './style';
 import {weekAtom} from '../../biz/useBanner/store';
-import useFoodDaily from '../../biz/useDailyFood/hook';
 import {calculateSelectDatePosition} from '../../biz/useDailyFood/logic';
-import useFoodDetail from '../../biz/useFoodDetail/hook';
-import useOrderMeal from '../../biz/useOrderMeal/hook';
-import useUserInfo from '../../biz/useUserInfo';
-import {isUserMeAtom} from '../../biz/useUserInfo/store';
 import {PAGE_NAME as MealMainPageName} from '../../pages/Main/Bnb/Meal/Main';
 import {formattedDate, formattedWeekDate} from '../../utils/dateFormatter';
 import Button from '../CalendarButton';
 import Typography from '../Typography';
-import {getCircleColor, getTodayColor, getFontStyle} from './style';
 
 /**
  *
@@ -56,10 +45,8 @@ const Component = ({
   const pager = pagerRef ? pagerRef : useRef();
   const today = new Date();
   const weekly = useAtomValue(weekAtom);
-  const {isOrderMeal, orderMeal} = useOrderMeal();
   const [currentPress, setCurrentPress] = useState(selectDate);
   const [chk, setChk] = useState(0);
-
   const morningServiceDays = isServiceDays?.morningServiceDays;
   const lunchServiceDays = isServiceDays?.lunchServiceDays;
   const dinnerServiceDays = isServiceDays?.dinnerServiceDays;
@@ -117,9 +104,7 @@ const Component = ({
                   const propsDay = formattedWeekDate(day);
                   const lastDay =
                     formattedDate(day, '/') < formattedDate(today, '/');
-                  const order = isOrderMeal?.filter(
-                    x => x.serviceDate === propsDay,
-                  );
+                  const order = meal?.filter(x => x.serviceDate === propsDay);
                   const set = new Set(order?.map(x => x.diningType));
                   const orderCount = [...set].length;
 

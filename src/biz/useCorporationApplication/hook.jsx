@@ -1,8 +1,9 @@
 import {useAtom} from 'jotai';
+import {Alert} from 'react-native';
 
-import {setStorage} from '../../utils/asyncStorage';
 import * as Fetch from './Fetch';
 import {corpApplicationListAtom, isCorpApplicationLoadingAtom} from './store';
+import {setStorage} from '../../utils/asyncStorage';
 
 const useCorporationApplication = () => {
   const [isCorpCheck, setCorpCheck] = useAtom(corpApplicationListAtom);
@@ -32,7 +33,13 @@ const useCorporationApplication = () => {
 
       setCorpCheck(res.data);
     } catch (err) {
-      console.log(err);
+      Alert.alert('신청 내역 조회', err.toString()?.replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
     } finally {
       setCorpLoading(false);
     }

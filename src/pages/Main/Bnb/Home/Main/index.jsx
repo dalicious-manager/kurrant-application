@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {
   useFocusEffect,
@@ -6,127 +8,222 @@ import {
 } from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, StatusBar, AppState} from 'react-native';
+import {
+  View,
+  Alert,
+  StatusBar,
+  AppState,
+  Platform,
+  Linking,
+  Pressable,
+  Text,
+} from 'react-native';
+import Sound from 'react-native-sound';
+import VersionCheck from 'react-native-version-check';
+import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
 
-import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
+import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
+import {BespinMembers, FoundersMembers} from '../../../../../assets';
 import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
+import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
+import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
+import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
-import useOrderMeal from '../../../../../biz/useOrderMeal';
-import useUserInfo from '../../../../../biz/useUserInfo';
+import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
+import useMembership from '../../../../../biz/useMembership';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
+import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
+import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
+import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {
-  formattedWeekDate,
-  isTimeNumberDifferenceLarger,
-} from '../../../../../utils/dateFormatter';
-import {formattedMealFoodStatus} from '../../../../../utils/statusFormatter';
-import {PAGE_NAME as GroupCreateMainPageName} from '../../../../Group/GroupCreate';
+  useGetPrivateSpots,
+  useGroupSpotList,
+} from '../../../../../hook/useSpot';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {SCREEN_NAME} from '../../../../../screens/Main/Bnb';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {mainDimAtom} from '../../../../../utils/store';
+import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
+import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
+import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
+import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
+import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
+import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
+import MainDim from '../../../../Spots/spotGuide/MainDim';
+import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
+import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
+import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
+import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
-import {
-  getStorage,
-  setStorage,
-  removeItemFromStorage,
-} from '../../../../../utils/asyncStorage';
-import {PAGE_NAME as GroupSelectPageName} from '../../../../Group/GroupManage/index';
-import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/DetailPage';
-import Toast from '../../../../../components/Toast';
-import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
-import {BespinMembers, FoundersMembers} from '../../../../../assets';
-import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
-import {PAGE_NAME as CreateGroupPageName} from '../../../../../pages/Group/GroupCreate';
-import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
-import {PAGE_NAME as RegisterInfoStartPageName} from '../../../../RegisterInfo/Start';
-import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import FastImage from 'react-native-fast-image';
-import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useAuth from '../../../../../biz/useAuth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ModalAnnouncement from '../../../../../components/ModalAnnouncement/Component';
-import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
-
-import useGetAnnouncements from '../../../../../biz/useGetHomeAnnouncements/hook';
-import useMembership from '../../../../../biz/useMembership';
-import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
-import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
-
-import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
-import {useGetTodayMeal} from '../../../../../hook/useOrder';
-import useGetRegisterDoneCheck from '../../../../../biz/useRegisterInfo/getRegisterDoneCheck/hook';
+import {BowlIcon} from '~components/Icon';
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
+const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
+// 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
+const GOOGLE_PLAY_STORE_WEB_LINK =
+  'https://play.google.com/store/apps/details?id=com.dalicious.kurrant';
+// 애플 앱 스토어 링크
+const APPLE_APP_STORE_LINK = 'itms-apps://itunes.apple.com/us/app/id1663407738';
+// 애플 앱 스토어가 설치되어 있지 않을 때 웹 링크
+const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   const navigation = useNavigation();
 
+  const routeName = useRoute();
+
   const [isVisible, setIsVisible] = useState(true);
+  const [userGroupSpot, setUserGroupSpot] = useState();
   const weekly = useAtomValue(weekAtom);
-  const {isUserInfo, userInfo, isUserInfoLoading, isUserSpotStatus} =
-    useUserInfo();
+  const {data: isUserInfo} = useGetUserInfo();
+  const currentVersion = VersionCheck.getCurrentVersion();
+  const userName = isUserInfo?.data?.name;
+  const userSpot = isUserInfo?.data?.spot;
+  const userGroupName = isUserInfo?.data?.group;
+  const userSpotId = isUserInfo?.data?.spotId;
+  const clientId = isUserInfo?.data?.groupId;
+  const queryClient = useQueryClient();
+  const spotNameCut = userSpot?.includes(null);
+  const useSpotName = spotNameCut ? userSpot.split('null')[0] : userSpot;
   const {
     saveFcmToken,
-    readableAtom: {userRole, fcmToken},
+    readableAtom: {userRole},
   } = useAuth();
   const {
-    userGroupSpotCheck,
-    isUserGroupSpotCheck,
+    // userGroupSpotCheck,
+    // isUserGroupSpotCheck,
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
+  const {data: isUserGroupSpotCheck, refetch: groupRefetch} =
+    useGroupSpotList();
+  const [coinSound, setCoinSound] = useState(null);
+
   const {
-    isOrderMeal,
-    todayMeal,
-    orderMeal,
-    todayOrderMeal,
-    isOrderMealLoading,
-  } = useOrderMeal();
+    totalNutrition: {totalCalorie},
+  } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
+
+  const loadCoinSound = () => {
+    const sound = new Sound(
+      require('../../../../../assets/sounds/coin.wav'),
+      Platform.OS === 'android'
+        ? Sound.MAIN_BUNDLE
+        : Sound.MAIN_BUNDLE.bundlePath,
+      error => {
+        if (error) {
+          return;
+        }
+      },
+    );
+    setCoinSound(sound);
+  };
   const {
     getMembershipHistory,
     readableAtom: {membershipHistory},
   } = useMembership();
-  const {loadMeal} = useShoppingBasket();
-  const {dailyFood, isServiceDays, isDailyFoodLoading} = useFoodDaily();
+
+  const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
+    userSpotId,
+    formattedWeekDate(new Date()),
+  );
   const [modalVisible, setModalVisible] = useState(false);
+  const [showDim, setShowDim] = useAtom(mainDimAtom);
 
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState();
   const [appState, setAppState] = useState();
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
+
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
-  const mealCheck = isOrderMeal?.map(el => {
-    return el.serviceDate;
-  });
+
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
-  // const start = weekly.map(s => {
-  //   const startData = formattedWeekDate(s[0]);
-  //   return startData;
-  // });
-
-  // const end = weekly.map(e => {
-  //   const endData = formattedWeekDate(e.slice(-1)[0]);
-  //   return endData;
-  // });
   const date = formattedWeekDate(new Date());
-  const {data: todayMealList, refetch: todayRefetch} = useGetTodayMeal(date);
+  const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(
+      weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
+    ),
+  );
+  const mealCheck = orderMealList?.data?.map(el => {
+    return el.serviceDate;
+  });
+
+  useEffect(() => {
+    if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
+      setUserGroupSpot(isUserGroupSpotCheck?.data);
+    }
+  }, [isUserGroupSpotCheck?.data]);
+
+  useEffect(() => {
+    if (isUserInfo?.data && userGroupSpot && navigation.isFocused()) {
+      if (isUserInfo?.data?.spotId) dailyfoodRefetch();
+      else if (
+        isUserInfo?.data?.spotId === null &&
+        userGroupSpot?.privateCount === 1
+      ) {
+        navigation.navigate(PrivateInvitePageName);
+      } else if (
+        isUserInfo?.data?.spotId === null &&
+        (userGroupSpot?.shareSpotCount > 0 ||
+          userGroupSpot?.mySpotCount > 0 ||
+          userGroupSpot?.privateCount > 1)
+      ) {
+        setShowDim(true);
+      } else if (
+        isUserInfo?.data?.spotId === null &&
+        userGroupSpot?.shareSpotCount === 0 &&
+        userGroupSpot?.mySpotCount === 0 &&
+        userGroupSpot?.privateCount === 0
+      ) {
+        navigation.navigate(SpotGuidePageName);
+      }
+    }
+  }, [isUserInfo?.data, userGroupSpot]);
+  useEffect(() => {
+    if (
+      isUserInfo?.data?.spotId === null &&
+      (userGroupSpot?.shareSpotCount > 0 ||
+        userGroupSpot?.mySpotCount > 0 ||
+        userGroupSpot?.privateCount > 1) &&
+      showDim === false
+    ) {
+      setModalVisible(true);
+    }
+  }, [showDim]);
 
   // 홈 전체 공지사항
 
+  const handlePress = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
   // const {getAnnouncements, announcements, announcementModalVisible} =
   //   useGetAnnouncements();
 
@@ -155,12 +252,6 @@ const Pages = () => {
   // }, [announcements]);
 
   // useEffect(() => {
-  //   console.log('랄랄라1');
-  //   console.log(announcements);
-  //   console.log(announcements.length);
-  // }, [announcements]);
-
-  // useEffect(() => {
   //   removeItemFromStorage('announcementsClickedDates');
   // }, []);
 
@@ -178,9 +269,8 @@ const Pages = () => {
   // }, []);
 
   // useEffect(() => {
-  //   console.log('아나운스먼트 여기여');
-  //   console.log(oneAnnouncement);
-  // }, [oneAnnouncement]);
+  //   navigation.navigate(DietRepoMainPageName);
+  // }, []);
 
   // 회원 정보 입력
 
@@ -270,6 +360,7 @@ const Pages = () => {
     };
     handleShowModal();
     getOneAnnouncement(2);
+    if (coinSound === null) loadCoinSound();
   }, []);
 
   const closeBalloon = async () => {
@@ -284,107 +375,126 @@ const Pages = () => {
   };
   useEffect(() => {
     const getHistory = async () => {
-      setEventSpotLoading(true);
       await getMembershipHistory();
-      setEventSpotLoading(false);
     };
     getHistory();
-  }, [isUserInfo]);
+  }, [isUserInfo?.data]);
   useFocusEffect(
     useCallback(() => {
-      // console.log('test');
-      async function loadUser() {
-        try {
-          const userData = await userInfo();
-          if (userData?.email) {
-            if (userData?.spotId) {
-              const daily = await dailyFood(
-                userData?.spotId,
-                formattedWeekDate(new Date()),
-              );
-              if (!(userRole === 'ROLE_GUEST')) {
-                await orderMeal(
-                  formattedWeekDate(weekly[0][0]),
-                  formattedWeekDate(
-                    weekly[weekly?.length - 1][weekly[0].length - 1],
-                  ),
-                );
-              }
-            }
-          }
-          return true;
-        } catch (error) {
-          return false;
-        }
-      }
-      const isTester = async () => {
-        const user = await loadUser();
-        // console.log(user, 'test');
-        if (!(userRole === 'ROLE_GUEST')) {
-          const status = async () => {
-            const userStatus = await getStorage('spotStatus');
-            // const result = await todayOrderMeal(start[0], end[0]);
-
-            const getUserStatus = Number(userStatus);
-            if (getUserStatus === 1) {
-              navigation.navigate(GroupSelectPageName);
-            }
-            if (getUserStatus === 2 && !isCancelSpot) {
-              navigation.navigate(GroupCreateMainPageName);
-            }
-            // return result;
-          };
-          try {
-            if (!(userRole === 'ROLE_GUEST')) {
-              if (user) {
-                const data = await status();
-
-                const group = await userGroupSpotCheck();
-                if (group.statusCode === 200) {
-                  await loadMeal();
-                }
-              }
-            }
-          } catch (error) {
-            if (error.toString().replace('Error:', '').trim() === '403') {
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: LoginPageName,
-                  },
-                ],
-              });
-            }
-          }
-        }
-      };
       try {
-        isTester();
-        todayRefetch();
+        orderMealRefetch();
       } catch (e) {
-        alert(e.toString().replace('error:'));
+        Alert.alert(e.toString()?.replace('error:'));
       }
     }, [isCancelSpot, appState]),
   );
+  const checkPermission = () => {
+    messaging()
+      .hasPermission()
+      .then(enabled => {
+        if (enabled) {
+          getToken();
+        } else {
+          requestPermission();
+        }
+      })
+      .catch(error => {});
+  };
 
+  //2
+  const requestPermission = () => {
+    messaging()
+      .requestPermission()
+      .then(() => {
+        getToken();
+      })
+      .catch(error => {});
+  };
+
+  //3
+  const getToken = () => {
+    messaging()
+      .getToken()
+      .then(token => {
+        if (token) {
+          saveFcmToken({
+            token: token,
+          });
+        }
+      })
+      .catch(error => {});
+  };
   useEffect(() => {
+    checkPermission();
     // Check whether an initial notification is available
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      if (remoteMessage) {
+        if (remoteMessage.data.page !== 'Home') {
+          if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
+            return navigation.navigate(remoteMessage.data.page, {
+              date: date,
+            });
+          }
+          if (remoteMessage.data.page === 'S_MAIN__REVIEW') {
+            navigation.navigate(remoteMessage.data.page, {
+              from: 'point',
+              id: remoteMessage.data.reviewId,
+            });
+          }
+          if (remoteMessage.data.page === 'P_MAIN__MYPAGE__WRITTENREVIEW') {
+            return navigation.navigate('S_MAIN__REVIEW');
+          }
+          if (remoteMessage.data.page === 'P__MY_PAGE__PUBLIC_NOTICE') {
+            return navigation.navigate('S_MAIN__NOTICE', {
+              from: 'public',
+            });
+          }
+          if (remoteMessage.data.page === 'P__MY_PAGE__SPOT_NOTICE') {
+            return navigation.navigate('S_MAIN__NOTICE', {
+              from: 'spot',
+            });
+          }
+          navigation.navigate(remoteMessage.data.page);
+        }
+      }
+    });
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.data,
-          );
-          if (remoteMessage.data.page !== 'HOME')
+          if (remoteMessage.data.page !== 'Home') {
+            if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
+              return navigation.navigate(remoteMessage.data.page, {
+                date: date,
+              });
+            }
+            if (remoteMessage.data.page === 'S_MAIN__REVIEW') {
+              navigation.navigate(remoteMessage.data.page, {
+                from: 'point',
+                id: remoteMessage.data.reviewId,
+              });
+            }
+            if (remoteMessage.data.page === 'P_MAIN__MYPAGE__WRITTENREVIEW') {
+              return navigation.navigate('S_MAIN__REVIEW');
+            }
+            if (remoteMessage.data.page === 'P__MY_PAGE__PUBLIC_NOTICE') {
+              return navigation.navigate('S_MAIN__NOTICE', {
+                from: 'public',
+              });
+            }
+            if (remoteMessage.data.page === 'P__MY_PAGE__SPOT_NOTICE') {
+              return navigation.navigate('S_MAIN__NOTICE', {
+                from: 'spot',
+              });
+            }
+
             navigation.navigate(remoteMessage.data.page);
+          }
         }
       });
 
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     });
 
     return unsubscribe;
@@ -398,7 +508,6 @@ const Pages = () => {
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
-        await userInfo();
         setShow(true);
         toast.toastEvent();
         setTimeout(() => {
@@ -406,27 +515,10 @@ const Pages = () => {
         }, 2000);
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('스팟', err?.toString()?.replace('error: ', ''));
     }
   };
 
-  const userName = isUserInfo?.name;
-  const userSpot = isUserInfo?.spot;
-  const userGroupName = isUserInfo?.group;
-  const userSpotId = isUserInfo?.spotId;
-  const clientId = isUserInfo?.groupId;
-
-  useEffect(() => {
-    async function dailys() {
-      try {
-        if (userSpotId)
-          await dailyFood(userSpotId, formattedWeekDate(new Date()));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    dailys();
-  }, [userSpotId]);
   const PressSpotButton = () => {
     if (userRole === 'ROLE_GUEST') {
       return Alert.alert(
@@ -455,36 +547,88 @@ const Pages = () => {
         ],
       );
     }
-    if (isUserGroupSpotCheck.length !== 0) {
+    if (userGroupSpot?.length !== 0) {
       setModalVisible(true);
     } else {
-      navigation.navigate(CreateGroupPageName);
+      navigation.navigate(SpotTypePageName);
     }
   };
 
   const groupManagePress = async () => {
-    try {
-      await groupSpotDetail(userSpotId);
-      navigation.navigate(GroupManagePageName, {
-        id: userSpotId,
-        clientId: clientId,
-      });
-    } catch (err) {
-      console.log(err);
+    if (userSpotId) {
+      try {
+        await groupSpotDetail(userSpotId);
+        navigation.navigate(GroupManagePageName, {
+          id: userSpotId,
+          clientId: clientId,
+        });
+      } catch (err) {}
+    } else {
+      Alert.alert('', '스팟을 선택해 주세요', [
+        {
+          text: '확인',
+          onPress: () => {},
+        },
+      ]);
     }
   };
   const handleStatus = e => {
     setAppState(e);
-    todayRefetch();
   };
-  const mockStatus = 10;
+
+  const spotName =
+    userGroupName?.length + userSpot?.length + 1 > 11 && userGroupName !== null
+      ? userGroupName + '\n' + userSpot
+      : userGroupName === null
+      ? useSpotName
+      : userGroupName + '\u00a0' + userSpot;
+
   useEffect(() => {
     const listener = AppState.addEventListener('change', handleStatus);
+
     return () => {
       listener.remove();
     };
-  }, []);
-  if (!isUserInfo) {
+  }, [isUserGroupSpotCheck]);
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        await VersionCheck.getLatestVersion().then(latestVersion => {
+          const regex = /[^0-9]/g;
+          const result = currentVersion?.replace(regex, '');
+          const result2 = latestVersion?.replace(regex, '');
+          if (Number(result) < Number(result2)) {
+            Alert.alert(
+              '앱 업데이트',
+              '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
+              [
+                {
+                  text: '확인',
+                  onPress: async () => {
+                    if (Platform.OS === 'android') {
+                      handlePress(
+                        GOOGLE_PLAY_STORE_LINK,
+                        GOOGLE_PLAY_STORE_WEB_LINK,
+                      );
+                    } else {
+                      handlePress(
+                        APPLE_APP_STORE_LINK,
+                        APPLE_APP_STORE_WEB_LINK,
+                      );
+                    }
+                  },
+                  style: 'destructive',
+                },
+              ],
+            );
+          }
+        });
+      };
+      getData();
+    }, []),
+  );
+
+  if (!isUserInfo?.data) {
     return <SkeletonUI />;
   }
 
@@ -523,14 +667,13 @@ const Pages = () => {
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
-            <SpotNameText>
-              {!userGroupName
+            <SpotNameText
+              numberOfLines={userGroupName !== null ? 2 : 1}
+              ellipsizeMode="tail">
+              {isUserInfo?.data && !isUserInfo?.data?.spotId
                 ? '스팟을 선택해 주세요'
-                : userGroupName?.length + userSpot?.length + 1 > 11
-                ? userGroupName + '\n' + userSpot
-                : userGroupName + '\u00a0' + userSpot}
+                : spotName}
             </SpotNameText>
-
             <ArrowIcon />
           </SpotName>
           <Icons>
@@ -554,25 +697,28 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {todayMealList?.data?.length === 0 ? (
+          {orderMealList?.data?.filter(order => order.serviceDate === date)
+            .length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
-            todayMealList?.data?.map((m, idx) => {
-              return (
-                <React.Fragment key={`${m.id} ${idx}`}>
-                  {m.orderItemDtoList.map((meal, i) => {
-                    return (
-                      <MealInfoComponent
-                        m={m}
-                        meal={meal}
-                        key={`${meal.id} ${meal.dailyFoodId}`}
-                      />
-                    );
-                  })}
-                </React.Fragment>
-              );
+            orderMealList?.data?.map((m, idx) => {
+              if (m.serviceDate === date)
+                return (
+                  <React.Fragment key={`${m.id} ${idx}`}>
+                    {m.orderItemDtoList.map(meal => {
+                      return (
+                        <MealInfoComponent
+                          m={m}
+                          meal={meal}
+                          coinSound={coinSound}
+                          key={`${meal.id} ${meal.dailyFoodId}`}
+                        />
+                      );
+                    })}
+                  </React.Fragment>
+                );
             })
           )}
         </MainWrap>
@@ -585,7 +731,8 @@ const Pages = () => {
                 <TitleText>식사일정</TitleText>
               </MealCalendarTitle>
               <Calendar
-                isServiceDays={isServiceDays}
+                isServiceDays={dailyfoodData?.data?.serviceDays}
+                meal={orderMealList?.data}
                 onPressEvent={() => navigation.navigate(MealMainPageName)}
               />
             </MealCalendar>
@@ -599,17 +746,8 @@ const Pages = () => {
               <CountText>건</CountText>
             </CountWrap>
           </CatorWrap> */}
-            {/* {isUserInfo?.isMembership && <MembershipWrap>
-            <Membership>
-              <MembershipIcon/>
-              <TitleText>멤버십</TitleText>
-            </Membership>
-            <CountWrap>
-              <Count>2</Count>
-              <CountText>건</CountText>
-            </CountWrap>
-          </MembershipWrap>} */}
-            {isUserInfo?.isMembership ? (
+
+            {isUserInfo?.data?.isMembership ? (
               <MembershipWrap
                 onPress={() => navigation.navigate(MembershipInfoPageName)}>
                 <Membership>
@@ -618,33 +756,33 @@ const Pages = () => {
                 </Membership>
                 <View>
                   <MembershipUsing>
-                    {isUserInfo?.membershipUsingPeriod}일째 이용중
+                    {isUserInfo?.data?.membershipUsingPeriod}일째 이용중
                   </MembershipUsing>
-                  {isUserInfo?.foundersNumber < 5000 && (
+                  {isUserInfo?.data?.foundersNumber < 5000 && (
                     <MembersWrap>
                       <MembersIcon />
                       <MembersText>
-                        {isUserInfo?.foundersNumber}번째 커런트파운더스
+                        {isUserInfo?.data?.foundersNumber}번째 커런트파운더스
                       </MembersText>
                     </MembersWrap>
                   )}
                 </View>
               </MembershipWrap>
-            ) : isUserInfo?.email.includes('@bespinglobal.com') &&
+            ) : isUserInfo?.data?.email.includes('@bespinglobal.com') &&
               membershipHistory.length < 1 ? (
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImages source={BespinMembers} resizeMode={'cover'} />
               </MenbershipBanner>
-            ) : isUserInfo?.leftFoundersNumber > 0 ? (
+            ) : isUserInfo?.data?.leftFoundersNumber > 0 ? (
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImages
@@ -656,7 +794,7 @@ const Pages = () => {
               <MenbershipBanner
                 onPress={() =>
                   navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
                   })
                 }>
                 <MembershipImage
@@ -668,6 +806,8 @@ const Pages = () => {
                 </MembershipText>
               </MenbershipBanner>
             )}
+
+            {/* 아래주석 마켓 추가시 사용 */}
             {/* <MarketWrap>
             <Market>
               <MarketIcon/>
@@ -678,6 +818,18 @@ const Pages = () => {
               <CountText>건</CountText>
             </CountWrap>
           </MarketWrap> */}
+
+            <DietRepoPressable
+              onPress={() => {
+                navigation.navigate(DietRepoMainPageName);
+              }}>
+              <Wrap1>
+                <BowlIcon />
+                <DietRepoText>식단 리포트</DietRepoText>
+              </Wrap1>
+
+              <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText>
+            </DietRepoPressable>
           </MainWrap>
         </Wrap>
       </ScrollViewWrap>
@@ -691,12 +843,7 @@ const Pages = () => {
       <ButtonWrap>
         <Button
           onPress={async () => {
-            // 임시 재신
-            // const lalala = await getData();
-            // console.log(lalala)
-            // removeItemFromStorage('announcementsClickedOneDate');
-
-            if (userSpotId) {
+            if (isUserInfo?.data?.spotId) {
               navigation.navigate(BuyMealPageName);
               closeBalloon();
             } else {
@@ -710,8 +857,9 @@ const Pages = () => {
       <BottomSheetSpot
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        title="상세스팟 선택"
-        data={isUserGroupSpotCheck}
+        title="배송 스팟 선택"
+        // data={userGroupSpot?.spotListResponseDtoList}
+        data={isUserGroupSpotCheck?.data.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
         userSpotId={userSpotId}
@@ -774,6 +922,7 @@ const BarWrap = styled.View`
 
 const SpotName = styled.Pressable`
   ${Display};
+  max-width: 220px;
 `;
 
 const Icons = styled.View`
@@ -785,74 +934,13 @@ const Icons = styled.View`
 
 const MainWrap = styled.View`
   align-items: center;
-  /* padding:24px 0px; */
   margin: 0px 24px;
-`;
-
-const MealInfoWrapper = styled.View`
-  margin-bottom: 16px;
-`;
-
-const MealInfoWrap = styled.Pressable`
-  ${Display};
-  height: 64px;
-  border-radius: 14px;
-  background-color: ${props => props.theme.colors.grey[0]};
-  margin-bottom: 16px;
-  padding: 16px;
-  justify-content: space-between;
-  padding-left: 0px;
-`;
-
-const OrderStatusWrap = styled.View`
-  align-items: center;
-`;
-const CommentText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-  margin-bottom: 4px;
-`;
-const ConfirmPressable = styled.Pressable`
-  background-color: ${({theme}) => theme.colors.purple[500]};
-  border-radius: 999px;
-  height: 28px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 12px;
-`;
-const ConfirmText = styled(Typography).attrs({text: 'Button09SB'})`
-  color: white;
 `;
 
 const NoMealInfo = styled.View`
   ${BoxWrap};
   ${Display};
   justify-content: center;
-`;
-
-const MealInfo = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const MealImage = styled.Image`
-  width: 64px;
-  height: 64px;
-  border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
-`;
-
-const MealText = styled.View`
-  margin-left: 16px;
-  flex-direction: row;
-  flex: 1;
-  justify-content: space-between;
-`;
-
-const MealCount = styled.View`
-  align-self: flex-end;
-  justify-content: flex-end;
-  align-items: flex-end;
 `;
 
 const MealCalendar = styled.View`
@@ -863,16 +951,6 @@ const MealCalendar = styled.View`
   padding: 16px;
   min-height: 130px;
   padding-bottom: 10px;
-  //padding:15px 16px;
-`;
-
-const MealCheckButton = styled.Pressable`
-  justify-self: flex-start;
-  height: 28px;
-  background-color: ${props => props.theme.colors.purple[500]};
-  padding: 3.5px 12px;
-  border-radius: 20px;
-  margin-bottom: 16px;
 `;
 
 const MealCalendarTitle = styled.View`
@@ -899,8 +977,6 @@ const MenbershipBanner = styled.Pressable`
   margin-left: 24px;
   margin-right: 24px;
   margin-bottom: 16px;
-  /* justify-content:center;
-align-items:center; */
 `;
 
 const MembershipImage = styled.Image`
@@ -915,47 +991,15 @@ const MembershipImages = styled.Image`
   border-radius: 14px;
 `;
 
-const CatorWrap = styled.View`
-  ${BoxWrap};
-  ${Display};
-  justify-content: space-between;
-`;
-
-const Cator = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const MarketWrap = styled.View`
-  ${BoxWrap};
-  ${Display};
-  justify-content: space-between;
-`;
-
-const Market = styled.View`
-  flex-direction: row;
-`;
-
 const TitleText = styled(Typography).attrs({text: 'Body05SB'})`
   margin-left: 14px;
   color: ${props => props.theme.colors.grey[2]};
 `;
 
-const CountWrap = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
 const ButtonWrap = styled.View`
   position: absolute;
   bottom: 17px;
-  /* margin:0px 24px; */
   width: 100%;
-`;
-
-const MealCheckWrap = styled.View`
-  justify-content: center;
-  align-items: center;
 `;
 
 // text
@@ -967,10 +1011,6 @@ const LargeTitle = styled(Typography).attrs({text: 'LargeTitle'})`
 `;
 
 const SemiBoldTxt = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
-const MealTxt = styled(Typography).attrs({text: 'Body06R'})`
   color: ${props => props.theme.colors.grey[2]};
 `;
 
@@ -988,14 +1028,6 @@ const SpotNameText = styled(Typography).attrs({text: 'BottomButtonSB'})`
   margin-right: 6px;
 `;
 
-const DiningType = styled(Typography).attrs({text: 'CaptionSB'})`
-  color: ${props => props.theme.colors.grey[2]};
-`;
-
-const Count = styled(Typography).attrs({text: 'Title03SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-`;
-
 const CountText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-left: 4px;
@@ -1008,15 +1040,6 @@ const MembershipText = styled(SemiBoldTxt)`
   position: absolute;
   left: 24px;
   top: 20px;
-`;
-
-const MealCheckText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[1]};
-  margin-bottom: 4px;
-`;
-
-const MealCheckButtonText = styled(Typography).attrs({text: 'Button09SB'})`
-  color: ${props => props.theme.colors.grey[0]};
 `;
 
 const Button = styled.Pressable`
@@ -1069,4 +1092,26 @@ const CsIconPress = styled.Pressable`
   height: 40px;
   justify-content: center;
   align-items: center;
+`;
+
+const DietRepoPressable = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+  border-radius: 14px;
+  background-color: white;
+  padding: 21px 16px;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const Wrap1 = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+const DietRepoText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 13px;
+`;
+const CalText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[2]};
 `;

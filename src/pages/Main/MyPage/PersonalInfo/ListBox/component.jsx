@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {View} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {Alert, View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import Switch from '~components/Switch';
 import Typography from '~components/Typography';
+
+import {useSetAlramSetting} from '../../../../../hook/useAlram';
 
 /**
  * @param {object} props
@@ -23,11 +24,7 @@ const Component = ({
   title = '',
   isVersion,
   isArrow = true,
-  toggle = {
-    isToggle: false,
-    toggleName: '',
-    toggleEvent: () => console.log('스위치가 변경 되었습니다.'),
-  },
+  toggle,
   toggleAgree = false,
   description,
   effect,
@@ -36,6 +33,21 @@ const Component = ({
 }) => {
   const themeApp = useTheme();
   const navigation = useNavigation();
+
+  const {mutateAsync: setAlram} = useSetAlramSetting();
+  const alarmAgree = useCallback(async v => {
+    try {
+      await setAlram({
+        code: v.code,
+        isActive: !v.isActive,
+      });
+    } catch (error) {
+      Alert.alert('알람설정', error.toString()?.replace('error: ', ''));
+    }
+
+    // await getAlarm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <TitleContainer
       onPress={() => {
@@ -64,12 +76,14 @@ const Component = ({
           </Description>
         )}
         {isArrow && <ArrowIcon />}
-        {toggle.isToggle && (
+        {toggle && (
           <Switch
-            name={toggle.toggleName}
+            name={title}
             size={'md'}
-            agree={toggleAgree}
-            toggleEvent={toggle.toggleEvent}
+            agree={toggle.isActive}
+            toggleEvent={async () => {
+              await alarmAgree(toggle);
+            }}
           />
         )}
       </TailBox>

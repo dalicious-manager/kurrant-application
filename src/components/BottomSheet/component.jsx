@@ -1,3 +1,4 @@
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
@@ -9,8 +10,8 @@ import {
   Pressable,
   PanResponder,
 } from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
 import Typography from '../Typography';
@@ -19,6 +20,7 @@ const screenWidth = Dimensions.get('screen').width;
 
 const BottomSheetSpot = props => {
   const {
+    firstSnap = '35%',
     modalVisible,
     setModalVisible,
     title = '옵션 선택',
@@ -52,7 +54,7 @@ const BottomSheetSpot = props => {
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const [snap, setSnap] = useState(0);
   const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['35%', '90%'], []);
+  const snapPoints = useMemo(() => [firstSnap, '90%'], [firstSnap]);
   const [contentScroll, setContentScroll] = useState(true);
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
@@ -128,63 +130,63 @@ const BottomSheetSpot = props => {
         <TouchableWithoutFeedback onPress={closeModal}>
           <Background />
         </TouchableWithoutFeedback>
-
-        <BottomSheet
-          ref={list}
-          snapPoints={snapPoints}
-          onChange={handleSheetChange}
-          style={{
-            marginBottom: 50,
-          }}>
-          <BottomSheetTitleView>
-            <BottomSheetTitle>{title}</BottomSheetTitle>
-            {description !== '' && (
-              <BottomSheetDecs>{description}</BottomSheetDecs>
-            )}
-          </BottomSheetTitleView>
-          <BottomSheetFlatList
-            data={data}
-            scrollEnabled={snap === 1}
-            onScrollBeginDrag={e => {
-              setScrollStart(e.nativeEvent.contentOffset.y);
-            }}
-            onMomentumScrollBegin={e => {
-              if (scrollEnd === 0) {
-                handleSnapPress(0);
-              }
-            }}
-            onScrollEndDrag={e => {
-              setContentScroll(e.nativeEvent.contentOffset.y === 0);
-              setScrollEnd(e.nativeEvent.contentOffset.y);
-              if (e.nativeEvent.contentOffset.y === 0) {
-                if (contentScroll) {
+        <GestureHandlerRootView style={{flex: 1}}>
+          <BottomSheet
+            ref={list}
+            snapPoints={snapPoints}
+            onChange={handleSheetChange}
+            style={{
+              marginBottom: 50,
+            }}>
+            <BottomSheetTitleView>
+              <BottomSheetTitle>{title}</BottomSheetTitle>
+              {description !== '' && (
+                <BottomSheetDecs>{description}</BottomSheetDecs>
+              )}
+            </BottomSheetTitleView>
+            <BottomSheetFlatList
+              data={data}
+              scrollEnabled={snap === 1}
+              onScrollBeginDrag={e => {
+                setScrollStart(e.nativeEvent.contentOffset.y);
+              }}
+              onMomentumScrollBegin={e => {
+                if (scrollEnd === 0) {
                   handleSnapPress(0);
                 }
-              }
-            }}
-            renderItem={({item}) => (
-              <ContentItemContainer
-                onPressIn={pressInUp}
-                onPressOut={pressOutUp}
-                onPress={() => {
-                  onSelect(item.id, item.text);
-                  onPressEvent(item.id);
-                }}>
-                {selected === item.id ? (
-                  <ContentItemBox>
+              }}
+              onScrollEndDrag={e => {
+                setContentScroll(e.nativeEvent.contentOffset.y === 0);
+                setScrollEnd(e.nativeEvent.contentOffset.y);
+                if (e.nativeEvent.contentOffset.y === 0) {
+                  if (contentScroll) {
+                    handleSnapPress(0);
+                  }
+                }
+              }}
+              renderItem={({item}) => (
+                <ContentItemContainer
+                  onPressIn={pressInUp}
+                  onPressOut={pressOutUp}
+                  onPress={() => {
+                    onSelect(item.id, item.text);
+                    onPressEvent(item.id);
+                  }}>
+                  {selected === item.id ? (
+                    <ContentItemBox>
+                      <ContentItemText>{item.text}</ContentItemText>
+                      <CheckedIcon />
+                    </ContentItemBox>
+                  ) : (
                     <ContentItemText>{item.text}</ContentItemText>
-                    <CheckedIcon />
-                  </ContentItemBox>
-                ) : (
-                  <ContentItemText>{item.text}</ContentItemText>
-                )}
-              </ContentItemContainer>
-            )}
-            keyExtractor={item => item.id.toString()}
-          />
-          <ManagePressView></ManagePressView>
-        </BottomSheet>
-
+                  )}
+                </ContentItemContainer>
+              )}
+              keyExtractor={item => item.id.toString()}
+            />
+            <ManagePressView />
+          </BottomSheet>
+        </GestureHandlerRootView>
         {booleanValue && (
           <ManagePressView
             onPress={() => {

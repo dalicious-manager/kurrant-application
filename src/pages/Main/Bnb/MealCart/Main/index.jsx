@@ -1,92 +1,66 @@
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import {
-  Alert,
-  Dimensions,
-  Image,
-  KeyboardAvoidingView,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, Pressable, Text, View, ActivityIndicator} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
-import FastImage from 'react-native-fast-image';
-import SoldOut from '../../../../../assets/icons/MealCart/soldOut.svg';
 import Arrow from '../../../../../assets/icons/MealCart/arrow.svg';
 import DeleteIcon from '../../../../../assets/icons/MealCart/delete.svg';
 import Question from '../../../../../assets/icons/MealCart/question.svg';
-import X from '../../../../../assets/icons/MealCart/x.svg';
+import SoldOut from '../../../../../assets/icons/MealCart/soldOut.svg';
 import WarningIcon from '../../../../../assets/icons/MealCart/warning.svg';
-import Minus from '../../../../../assets/icons/MealDetail/minus.svg';
-import PlusIcon from '../../../../../assets/icons/MealDetail/plus.svg';
-import {loadMealCart} from '../../../../../biz/useShoppingBasket/Fetch';
+import X from '../../../../../assets/icons/MealCart/x.svg';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
-import {isQuantityAtom} from '../../../../../biz/useShoppingBasket/store';
-import useUserInfo from '../../../../../biz/useUserInfo';
 import BottomModal from '../../../../../components/BottomModal';
+import BottomSheet from '../../../../../components/BottomSheet';
+import BottomMenu from '../../../../../components/BottomSheetMenu';
 import Button from '../../../../../components/Button';
 import NoMealButton from '../../../../../components/Button';
 import Count from '../../../../../components/Count';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
+import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
+import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {getStorage} from '../../../../../utils/asyncStorage';
 import {formattedMonthDay} from '../../../../../utils/dateFormatter';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
-import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
-import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
-import BottomSheet from '../../../../../components/BottomSheet';
-import BottomMenu from '../../../../../components/BottomSheetMenu';
-import Toast from '../../../../../components/Toast';
-import useUserMe from '../../../../../biz/useUserMe';
-import {surpportPrice} from '../../../../Group/GroupCorporations/CorporationsApplication/ThirdPage/Pages/function';
-import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'MEAL_CART_PAGE';
 const Pages = () => {
-  const isFocused = useIsFocused();
   const navigation = useNavigation();
   const bodyRef = useRef();
   const scrollRef = useRef();
-  const boxRef = useRef();
   const [focus, setFocus] = useState(false);
   const [id, setId] = useState(null);
   const queryClient = useQueryClient();
   const {
-    isLoadMeal,
-    isQuantity,
-    loadMeal,
     deleteMeal,
     setLoadMeal,
     updateMeal,
     allDeleteMeal,
-    userPoint,
-    mealCartSpot,
+    // mealCartSpot,
     loadSoldOutMeal,
     soldOutMeal,
-    clientStatus,
+    // clientStatus,
   } = useShoppingBasket();
-
+  const {data: isLoadMeal, isFetching} = useGetShoppingBasket();
+  const [spotCartData, setSpotCartData] = useState();
+  const [mealCartSpot, setMealCartSpot] = useState();
+  const [clientStatus, setClientStatus] = useState([]);
+  const [time, setTime] = useState('11:00');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [show, setShow] = useState(false);
-  const {isUserInfo} = useUserInfo();
-  const {getCardList} = useUserMe();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
+  // const {getCardList} = useUserMe();
   const [selected, setSelected] = useState(isUserInfo?.spotId);
   const [name, setName] = useState();
   const [date, setDate] = useState();
@@ -99,117 +73,116 @@ const Pages = () => {
 
   const keyboardStatus = useKeyboardEvent();
 
-  useFocusEffect(
-    useCallback(() => {
-      async function loadCart() {
-        try {
-          const res = await loadMeal();
-          if (res) {
-          }
-        } catch (error) {
-          if (error.toString().replace('Error:', '').trim() === '403') {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: LoginPageName,
-                },
-              ],
-            });
-          }
-        }
-      }
-      const getData = async () => {
-        const card = await getCardList();
-        if (card.statusCode === 200) {
-          const update = await updateMeal(req);
-          if (update.statusCode === 200) {
-            await loadCart();
-          }
-        }
-      };
-      getData();
-    }, []),
-  );
-  useEffect(() => {}, [isFocused]);
-  useEffect(() => {}, []);
-
-  const quantityArr = isLoadMeal?.map(el =>
-    el.cartDailyFoodDtoList.map(v =>
-      v.cartDailyFoods.map(c => {
-        return {
-          dailyFoodId: c.dailyFoodId,
-          count: c.count,
-          cartItemId: c.id,
-        };
-      }),
-    ),
-  );
-  const quantity = quantityArr.reduce((acc, val) => [...acc, ...val], []);
-  const modifyQty = quantity.reduce((acc, cur) => [...acc, ...cur], []);
-  const req = {updateCartList: modifyQty};
-
   const fundButton = () => {
     setModalVisible(true);
   };
+  useEffect(() => {
+    if (isLoadMeal?.data?.spotCarts) {
+      const spot = isLoadMeal?.data?.spotCarts.map(m => {
+        return {
+          id: m.spotId,
+          text: m.groupName + '\u00a0' + m.spotName,
+        };
+      });
+      const clientType = isLoadMeal?.data?.spotCarts.map(el => {
+        return {
+          spotId: el.spotId,
+          groupType: el.groupType,
+        };
+      });
+      setClientStatus(clientType);
+      setMealCartSpot(spot);
+      setSpotCartData(isLoadMeal?.data?.spotCarts);
+    }
 
-  const addHandle = productId => {
-    const addQty = isLoadMeal?.map(el => {
-      return {
-        ...el,
-        cartDailyFoodDtoList: [
-          ...el.cartDailyFoodDtoList.map(v => {
+    const getTime = async () => {
+      const localTime = JSON.parse(await getStorage('diningTime'));
+      setTime(localTime.time);
+    };
+    getTime();
+  }, [isLoadMeal?.data]);
+  useEffect(() => {
+    // getCardList();
+    if (isUserInfo?.spotId) setSelected(isUserInfo?.spotId);
+  }, [isUserInfo?.spotId]);
+  if (!isLoadMeal?.data) {
+    return <ActivityIndicator size={'large'} />;
+  }
+
+  const addHandle = async (cartData, id) => {
+    const modifyQty = cartData
+      .map(c => {
+        if (id === c.dailyFoodId)
+          return {
+            dailyFoodId: c.dailyFoodId,
+            count: c.count + 1,
+            cartItemId: c.id,
+          };
+      })
+      .filter(element => element);
+    setSpotCartData(
+      spotCartData.map(food => {
+        return {
+          ...food,
+          cartDailyFoodDtoList: food.cartDailyFoodDtoList.map(f => {
             return {
-              ...v,
-              cartDailyFoods: [
-                ...v.cartDailyFoods.map(food => {
-                  if (food.dailyFoodId === productId) {
-                    return {...food, count: food.count + 1};
-                  } else {
-                    return {...food};
-                  }
-                }),
-              ],
+              ...f,
+              cartDailyFoods: f.cartDailyFoods.map(v => {
+                if (id === v.dailyFoodId)
+                  return {
+                    ...v,
+                    count: v.count + 1,
+                  };
+                return v;
+              }),
             };
           }),
-        ],
-      };
-    });
-    setLoadMeal(addQty);
+        };
+      }),
+    );
+    const req = {updateCartList: modifyQty};
+    updateMeal(req);
   };
 
-  const substractHandle = productId => {
-    const substracQty = isLoadMeal?.map(el => {
-      return {
-        ...el,
-        cartDailyFoodDtoList: [
-          ...el.cartDailyFoodDtoList.map(v => {
+  const substractHandle = async (cartData, id) => {
+    const modifyQty = cartData
+      .map(c => {
+        if (id === c.dailyFoodId)
+          return {
+            dailyFoodId: c.dailyFoodId,
+            count: c.count > 0 ? c.count - 1 : 0,
+            cartItemId: c.id,
+          };
+      })
+      .filter(element => element);
+    setSpotCartData(
+      spotCartData.map(food => {
+        return {
+          ...food,
+          cartDailyFoodDtoList: food.cartDailyFoodDtoList.map(f => {
             return {
-              ...v,
-              cartDailyFoods: [
-                ...v.cartDailyFoods.map(food => {
-                  if (food.dailyFoodId === productId) {
-                    return {
-                      ...food,
-                      count: food.count <= 1 ? 1 : food.count - 1,
-                    };
-                  } else {
-                    return {...food};
-                  }
-                }),
-              ],
+              ...f,
+              cartDailyFoods: f.cartDailyFoods.map(v => {
+                if (id === v.dailyFoodId)
+                  return {
+                    ...v,
+                    count: v.count > 0 ? v.count - 1 : 0,
+                  };
+                return v;
+              }),
             };
           }),
-        ],
-      };
-    });
-    setLoadMeal(substracQty);
+        };
+      }),
+    );
+    const req = {updateCartList: modifyQty};
+    updateMeal(req);
   };
 
   // 할인 우선순위 : 1.멤버십 2. 판매자할인 3.기간할인
 
   // 주문 마감 제외 배열
-  const arrs = isLoadMeal
+  const arrs = spotCartData
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
       el.cartDailyFoodDtoList?.map(v =>
@@ -217,17 +190,17 @@ const Pages = () => {
       ),
     )
     .flat();
-  const arr = arrs.reduce((acc, val) => [...acc, ...val], []);
+  const arr = arrs?.reduce((acc, val) => [...acc, ...val], []);
 
   // 장바구니 배열(마감,품절 포함)
-  const cartArrs = isLoadMeal
+  const cartArrs = spotCartData
     ?.filter(p => p.spotId === selected)
     ?.map(el => el.cartDailyFoodDtoList.map(v => v.cartDailyFoods))
     .flat();
-  const cartArr = cartArrs.reduce((acc, val) => [...acc, ...val], []);
+  const cartArr = cartArrs?.reduce((acc, val) => [...acc, ...val], []);
 
   // 주문 마감 수량
-  const deadlineArrs = isLoadMeal
+  const deadlineArrs = spotCartData
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
       el.cartDailyFoodDtoList?.map(v =>
@@ -236,17 +209,17 @@ const Pages = () => {
     )
     .flat();
 
-  const deadlineArr = deadlineArrs.reduce((acc, val) => [...acc, ...val], []);
+  const deadlineArr = deadlineArrs?.reduce((acc, val) => [...acc, ...val], []);
   const deadline = deadlineArr
-    .map(p => p.count)
+    ?.map(p => p.count)
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
 
   // 주문 마감 제외 시킨 배열
-  const spotFilter = isLoadMeal.filter(el => el.spotId === selected);
+  const spotFilter = spotCartData?.filter(el => el.spotId === selected);
 
-  const newArr = spotFilter.map(el => {
+  const newArr = spotFilter?.map(el => {
     return {
       cartDailyFoodDtoList: [
         ...el.cartDailyFoodDtoList.map(v => {
@@ -263,13 +236,16 @@ const Pages = () => {
     };
   });
 
-  const newArrs = newArr.reduce((acc, cur) => {
+  const newArrs = newArr?.reduce((acc, cur) => {
     return acc.concat(cur);
   }, []);
 
-  const lastArr = newArrs[0]?.cartDailyFoodDtoList?.filter(
-    el => el.cartDailyFoods.length !== 0,
-  );
+  const lastArr =
+    newArrs?.length > 0
+      ? newArrs[0]?.cartDailyFoodDtoList?.filter(
+          el => el.cartDailyFoods.length !== 0,
+        )
+      : [];
 
   // 총 개수 (주문 마감 미포함)
   const totalCount = arr
@@ -326,7 +302,7 @@ const Pages = () => {
 
   // 메드트로닉 식사가격
   const medtronicPrice =
-    medtronicSupportArr.includes(62471004) &&
+    medtronicSupportArr?.includes(62471004) &&
     Math.round(discountPrice / 20) * 10;
 
   // 총 할인금액
@@ -356,12 +332,23 @@ const Pages = () => {
       .reduce((acc, cur) => {
         return acc + cur;
       }, 0);
+    const discountedPrice = v.cartDailyFoods
+      ?.map(p => p.discountedPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+
+    const supportPrice =
+      discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
+
     const dailyDiscountPrice =
       membershipDateDiscountPrice +
       makersDateDiscountPrice +
       periodDateDiscountPrice;
+
     const totalDatePrice =
-      totalDateMealPrice - dailyDiscountPrice - v.supportPrice + v.deliveryFee;
+      totalDateMealPrice - dailyDiscountPrice - supportPrice + v.deliveryFee;
+
     return totalDatePrice > 0 ? totalDatePrice : 0;
   });
   const useDateSupportPrice = lastArr?.map(v => {
@@ -389,15 +376,21 @@ const Pages = () => {
       .reduce((acc, cur) => {
         return acc + cur;
       }, 0);
+    const discountedPrice = v.cartDailyFoods
+      ?.map(p => p.discountedPrice * p.count)
+      .reduce((acc, cur) => {
+        return acc + cur;
+      }, 0);
+
+    const supportPrice =
+      discountedPrice < v.supportPrice ? discountedPrice : v.supportPrice;
     const dailyDiscountPrice =
       membershipDateDiscountPrice +
       makersDateDiscountPrice +
       periodDateDiscountPrice;
     const totalDatePrice =
-      totalDateMealPrice - dailyDiscountPrice - v.supportPrice + v.deliveryFee;
-    return totalDatePrice > 0
-      ? v.supportPrice
-      : v.supportPrice + totalDatePrice;
+      totalDateMealPrice - dailyDiscountPrice - supportPrice + v.deliveryFee;
+    return totalDatePrice > 0 ? supportPrice : supportPrice + totalDatePrice;
   });
 
   const totalPrice = totals?.reduce((acc, cur) => {
@@ -418,17 +411,16 @@ const Pages = () => {
     totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
 
   // 품절
-  const soldout = arr.filter(el => el.status === 2);
+  const soldout = arr?.filter(el => el.status === 2);
 
   // 클라 타입
-  const clientType = clientStatus.filter(p => p.spotId === selected);
-
+  const clientType = clientStatus?.filter(p => p.spotId === selected);
   // 스팟 이름
 
-  const spotName = mealCartSpot.filter(p => p.id === selected);
+  const spotName = mealCartSpot?.filter(p => p.id === selected);
 
   // 재고 부족
-  const isLack = cartArr.map(el => {
+  const isLack = cartArr?.map(el => {
     return el.status === 1 && el.capacity < el.count;
   });
 
@@ -439,30 +431,24 @@ const Pages = () => {
     setFocus(false);
   };
 
-  const changeText = (number, pi) => {
-    const changeQty = isLoadMeal?.map(el => {
-      return {
-        ...el,
-        cartDailyFoodDtoList: [
-          ...el.cartDailyFoodDtoList.map(v => {
-            return {
-              ...v,
-              cartDailyFoods: [
-                ...v.cartDailyFoods.map(food => {
-                  if (food.dailyFoodId === pi) {
-                    return {...food, count: Number(number)};
-                  } else {
-                    return {...food};
-                  }
-                }),
-              ],
-            };
-          }),
-        ],
-      };
+  const changeText = (cartData, number, pi) => {
+    const modifyQty = cartData.map(c => {
+      if (pi === c.dailyFoodId)
+        return {
+          dailyFoodId: c.dailyFoodId,
+          count: Number(number),
+          cartItemId: c.id,
+        };
+      else
+        return {
+          dailyFoodId: c.dailyFoodId,
+          count: c.count,
+          cartItemId: c.id,
+        };
     });
 
-    setLoadMeal(changeQty);
+    const req = {updateCartList: modifyQty};
+    updateMeal(req);
   };
 
   const closeModal = () => {
@@ -470,39 +456,25 @@ const Pages = () => {
   };
 
   const deleteButton = async foodId => {
-    const arr = isLoadMeal?.map(el => {
-      return {
-        ...el,
-        cartDailyFoodDtoList: [
-          ...el.cartDailyFoodDtoList.map(v => {
-            return {
-              ...v,
-              cartDailyFoods: [
-                ...v.cartDailyFoods.filter(food => food.id !== foodId),
-              ],
-            };
-          }),
-        ],
-      };
-    });
-
-    const deleteArr = arr.map(el => {
-      return {
-        ...el,
-        cartDailyFoodDtoList: [
-          ...el.cartDailyFoodDtoList.filter(v => v.cartDailyFoods.length !== 0),
-        ],
-      };
-    });
-    const deleteArrs = deleteArr.filter(el => {
-      return el.cartDailyFoodDtoList.length !== 0;
-    });
-
     try {
-      await deleteMeal(foodId);
-      setLoadMeal(deleteArrs);
+      deleteMeal(foodId);
+      setSpotCartData(
+        spotCartData.map(v => {
+          return {
+            ...v,
+            cartDailyFoodDtoList: v.cartDailyFoodDtoList.map(cart => {
+              return {
+                ...cart,
+                cartDailyFoods: cart.cartDailyFoods.filter(food => {
+                  return food.id !== foodId;
+                }),
+              };
+            }),
+          };
+        }),
+      );
     } catch (err) {
-      console.log(err);
+      Alert.alert('메뉴 취소', err?.toString()?.replace('error: ', ''));
     }
   };
 
@@ -510,16 +482,7 @@ const Pages = () => {
     setId(mealId);
   };
 
-  const modifyPress = async () => {
-    // try {
-    //     await updateMeal({"updateCartList":quantity});
-    // } catch(err){
-    //     throw new Error ('에러남')
-    // }
-  };
-
   const allDelete = spotId => {
-    const data = isLoadMeal?.filter(el => el.spotId !== selected);
     Alert.alert('전체 삭제', '메뉴를 모두 삭제하시겠어요?', [
       {
         text: '아니요',
@@ -531,9 +494,11 @@ const Pages = () => {
         onPress: () => {
           try {
             allDeleteMeal(spotId);
-            setLoadMeal(data);
           } catch (err) {
-            console.log(err);
+            Alert.alert(
+              '메뉴 전체 삭제',
+              err?.toString()?.replace('error: ', ''),
+            );
           }
         },
       },
@@ -556,10 +521,13 @@ const Pages = () => {
           onPress: async () => {
             try {
               await deleteButton(id);
-              queryClient.invalidateQueries('todayMeal');
+              queryClient.invalidateQueries('orderMeal');
               setModalVisible3(true);
             } catch (err) {
-              console.log(err);
+              Alert.alert(
+                '메뉴취소 불가',
+                err.toString()?.replace('error: ', ''),
+              );
             }
           },
           style: 'destructive',
@@ -591,7 +559,7 @@ const Pages = () => {
   };
 
   const isDeadline = () => {
-    const data = isLoadMeal?.filter(el => el.spotId !== selected);
+    const data = spotCartData?.filter(el => el.spotId !== selected);
     if (totalCount === 0) {
       Alert.alert(
         '주문할 수 있는 상품이 없어요',
@@ -620,15 +588,16 @@ const Pages = () => {
       console.log(err);
     }
   };
-  const selectSpotName = mealCartSpot.filter(el => el.id === selected);
+  const selectSpotName = mealCartSpot?.filter(el => el.id === selected);
+
   return (
     <SafeView>
       <SpotView>
         <SpotPress onPress={PressSpotButton}>
           <SpotName>
-            {spotName[0]?.text === undefined
+            {spotName?.length > 0 && spotName[0]?.text === undefined
               ? '스팟 없음'
-              : selectSpotName[0].text}
+              : selectSpotName?.length > 0 && selectSpotName[0].text}
           </SpotName>
           <ArrowIcon />
         </SpotPress>
@@ -639,7 +608,7 @@ const Pages = () => {
           <Text>전체삭제</Text>
         </Pressable>
       </SpotView>
-      {cartArr.length === 0 && (
+      {cartArr?.length === 0 && (
         <EmptyView>
           <NoMealText>아직 담은 식사가 없어요!</NoMealText>
           <NoMealButtonWrap>
@@ -656,7 +625,7 @@ const Pages = () => {
         </EmptyView>
       )}
       <ScrollViewWrap ref={scrollRef}>
-        {isLoadMeal?.map((el, idx) => {
+        {spotCartData?.map((el, idx) => {
           return (
             <React.Fragment key={idx}>
               {selected === el.spotId &&
@@ -789,9 +758,10 @@ const Pages = () => {
                               data={soldOutMeal}
                               toast={toast}
                               setShow={setShow}
+                              time={time}
                             />
                             <CountWrap>
-                              {food.status !== 6 && (
+                              {food.status !== 6 && !isFetching && (
                                 <Count
                                   onPressEvent={() => {
                                     bodyRef.current.focus();
@@ -800,6 +770,7 @@ const Pages = () => {
                                   }}
                                   increasePress={addHandle}
                                   decreasePress={substractHandle}
+                                  data={v.cartDailyFoods}
                                   count={food.count}
                                   id={food.dailyFoodId}
                                   status={food.status}
@@ -824,24 +795,25 @@ const Pages = () => {
                 <PaymentText>총 상품금액</PaymentText>
                 <PaymentText>{withCommas(totalMealPrice)} 원</PaymentText>
               </PaymentView>
-              {clientType[0]?.clientStatus === 1 && (
-                <PaymentView>
-                  <PressableView onPress={fundButton}>
-                    <PaymentText>식사 지원금 사용 금액</PaymentText>
-                    <QuestionIcon />
-                  </PressableView>
-                  <PaymentText>
-                    {medtronicSupportArr.includes(62471004)
-                      ? `-${withCommas(medtronicPrice)}`
-                      : usedSupportPrice === 0
-                      ? 0
-                      : discountPrice < usedSupportPrice
-                      ? `-${withCommas(discountPrice)}`
-                      : `-${withCommas(usedSupportPrice)}`}{' '}
-                    원
-                  </PaymentText>
-                </PaymentView>
-              )}
+              {isLoadMeal?.data?.spotCarts &&
+                clientType[0]?.clientStatus === 0 && (
+                  <PaymentView>
+                    <PressableView onPress={fundButton}>
+                      <PaymentText>식사 지원금 사용 금액</PaymentText>
+                      <QuestionIcon />
+                    </PressableView>
+                    <PaymentText>
+                      {medtronicSupportArr.includes(62471004)
+                        ? `-${withCommas(medtronicPrice)}`
+                        : usedSupportPrice === 0
+                        ? 0
+                        : discountPrice < usedSupportPrice
+                        ? `-${withCommas(discountPrice)}`
+                        : `-${withCommas(usedSupportPrice)}`}{' '}
+                      원
+                    </PaymentText>
+                  </PaymentView>
+                )}
               <PaymentView>
                 <PaymentText>총 할인금액</PaymentText>
                 <PaymentText>
@@ -872,7 +844,10 @@ const Pages = () => {
                 <UserPointText>
                   보유포인트{' '}
                   <UserHavePoint>
-                    {isUserInfo.point === 0 ? 0 : withCommas(isUserInfo.point)}P
+                    {isUserInfo?.point === 0
+                      ? 0
+                      : withCommas(isUserInfo?.point || 0)}
+                    P
                   </UserHavePoint>
                   (결제시 적용가능)
                 </UserPointText>
@@ -892,12 +867,13 @@ const Pages = () => {
         bodyRef={bodyRef}
         changeText={changeText}
         id={id}
+        data={spotCartData}
       />
 
       {/*  */}
-      {cartArr.length !== 0 && !keyboardStatus.isKeyboardActivate && (
+      {cartArr?.length !== 0 && !keyboardStatus.isKeyboardActivate && (
         <ButtonWrap focus={focus}>
-          {deadlineArr.length !== 0 && (
+          {deadlineArr?.length !== 0 && (
             <EndView>
               <EndText>
                 주문 마감된 상품이 있어요
@@ -914,7 +890,6 @@ const Pages = () => {
             onPressEvent={() => {
               deadline !== 0 && isDeadline();
               soldout.length !== 0 && isSoldOut();
-              updateMeal(req);
               isLack.includes(true) && isShortage();
               soldout.length === 0 &&
                 totalCount !== 0 &&
@@ -956,6 +931,7 @@ const Pages = () => {
         onPressEvent1={closeModal}
       />
       <BottomSheet
+        firstSnap="50%"
         modalVisible={modalVisible2}
         setModalVisible={setModalVisible2}
         title="스팟 선택"
@@ -980,8 +956,6 @@ const SafeView = styled.SafeAreaView`
 const ScrollViewWrap = styled.ScrollView`
   flex: 1;
 `;
-
-const BottomView = styled.View``;
 
 export const PressableView = styled.Pressable`
   flex-direction: row;
@@ -1099,7 +1073,6 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
 export const PaymentText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[4]};
   white-space: nowrap;
-  //padding-bottom:16px;
 `;
 
 export const PointText = styled(Typography).attrs({text: 'Body05R'})`
@@ -1118,28 +1091,6 @@ const NoMealText = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[5]};
   margin-bottom: 16px;
   white-space: nowrap;
-`;
-
-const InnerView = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  width: 98px;
-  height: 38px;
-  background-color: ${props => props.theme.colors.grey[0]};
-  border: 1px solid ${props => props.theme.colors.grey[6]};
-  border-radius: 7px;
-`;
-
-const IconWrap = styled.Pressable`
-  padding: 5px;
-  height: 100%;
-  justify-content: center;
-`;
-
-const MinusIcon = styled(Minus)`
-  color: ${({disabled, theme}) =>
-    disabled === 1 ? theme.colors.grey[6] : theme.colors.grey[2]};
 `;
 
 export const PointWrap = styled.View`
@@ -1197,7 +1148,6 @@ const UserHavePoint = styled(Typography).attrs({text: 'CaptionR'})`
 
 const Border = styled.View`
   background-color: ${({theme}) => theme.colors.grey[8]};
-  /* width:100%; */
   height: 1px;
   margin: 0px 24px;
 `;

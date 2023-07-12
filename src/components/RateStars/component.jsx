@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Text} from 'react-native';
 import styled from 'styled-components';
+
 import {splitNumberAndUnit} from '../../utils/splitNumberAndUnit';
 
 const Component = ({
@@ -14,6 +15,8 @@ const Component = ({
 
   useEffect(() => {
     if (ratingInput) {
+      setRating(ratingInput);
+    } else if (ratingInput === 0) {
       setRating(ratingInput);
     }
   }, [ratingInput]);

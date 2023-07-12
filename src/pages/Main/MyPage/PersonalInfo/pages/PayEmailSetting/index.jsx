@@ -1,10 +1,18 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useState, useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
-import {Platform, Keyboard, NativeModules, View, Alert} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Platform,
+  Keyboard,
+  NativeModules,
+  View,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import styled from 'styled-components/native';
 
+import {registCardAtom} from '../../../../../../atoms/store';
 import useAuth from '../../../../../../biz/useAuth';
 import useUserMe from '../../../../../../biz/useUserMe';
 import Button from '../../../../../../components/Button';
@@ -13,15 +21,10 @@ import RefTextInput from '../../../../../../components/RefTextInput';
 import Typography from '../../../../../../components/Typography';
 import Wrapper from '../../../../../../components/Wrapper';
 import useKeyboardEvent from '../../../../../../hook/useKeyboardEvent';
-import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
-import useUserInfo from '../../../../../../biz/useUserInfo/hook';
-import {registCardAtom} from '../../../../../../atoms/store';
-
+import {PAGE_NAME as MemebershipPaymentManage} from '../../../../../Membership/MembershipJoin/MemebershipPaymentManage';
+import {PAGE_NAME as DefaultPaymentManage} from '../../../../Bnb/Payment/DefaultPaymentManage';
 import {PAGE_NAME as EveryCardPageName} from '../PaymentManage/EveryCard';
 import {PAGE_NAME as SelectedDefaultCardName} from '../PaymentManage/SelectedDefaultCard';
-import {PAGE_NAME as DefaultPaymentManage} from '../../../../Bnb/Payment/DefaultPaymentManage';
-import {PAGE_NAME as MemebershipPaymentManage} from '../../../../../Membership/MembershipJoin/MemebershipPaymentManage';
-import {useAtom} from 'jotai';
 const {StatusBarManager} = NativeModules;
 
 export const PAGE_NAME = 'P__MY_PAGE__PAY_EMAIL_SETTING';
@@ -36,7 +39,7 @@ const Pages = ({route}) => {
   const params = route?.params;
   const auth = useAuth();
   const {cardRegistedNice} = useUserMe();
-  const {isUserInfo} = useUserInfo();
+
   const navigation = useNavigation();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [progress, setProgress] = useState(1);
@@ -76,7 +79,7 @@ const Pages = ({route}) => {
     } catch (err) {
       Alert.alert(
         '메일 인증 요청 실패',
-        err.toString().replace('error: ', ''),
+        err.toString()?.replace('error: ', ''),
         [
           {
             text: '확인',
@@ -120,7 +123,7 @@ const Pages = ({route}) => {
         });
       }
     } catch (err) {
-      Alert.alert('등록 실패', err.toString().replace('error: '));
+      Alert.alert('등록 실패', err.toString()?.replace('error: '));
     }
   };
 
@@ -169,7 +172,7 @@ const Pages = ({route}) => {
                         required: '필수 입력 항목 입니다.',
                         pattern: {
                           value:
-                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                            /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\,;:\s@#$%^&+/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                           message: '올바른 아이디를 입력해주세요.',
                         },
                       }}
@@ -313,7 +316,7 @@ const Pages = ({route}) => {
                           } catch (err) {
                             Alert.alert(
                               '인증확인 실패',
-                              err.toString().replace('error: ', ''),
+                              err.toString()?.replace('error: ', ''),
                               [
                                 {
                                   text: '확인',
@@ -343,7 +346,7 @@ const Pages = ({route}) => {
                     } catch (err) {
                       Alert.alert(
                         '인증확인 실패',
-                        err.toString().replace('error: ', ''),
+                        err.toString()?.replace('error: ', ''),
                         [
                           {
                             text: '확인',

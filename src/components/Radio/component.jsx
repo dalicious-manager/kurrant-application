@@ -1,10 +1,10 @@
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import {Controller, useFormContext} from 'react-hook-form';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import styled from 'styled-components/native';
 
+import {getBackgroundColor, getBorderColor, getTextColor} from './style';
 import Typography from '../Typography';
-import { getBackgroundColor, getBorderColor, getTextColor } from './style';
 
 /** 예시 */
 // <Radio
@@ -24,15 +24,19 @@ import { getBackgroundColor, getBorderColor, getTextColor } from './style';
  * @param { string } props.name useFormContext_name
  * @param { string } props.title 버튼의 타이틀
  * @param { object } props.contents 배열 안에 객체 반복
- * @param { string } props.contents.label 
+ * @param { string } props.contents.label
  * @param { string } props.contents.value
  * @param { number } props.defaultIndex default로 지정하고 싶은 값의 index 값
  * @returns
  */
 
-const Component = ({ name, title = '대상 구분', contents = [{}], defaultIndex }) => {
-
-  const { control, watch } = useFormContext();
+const Component = ({
+  name,
+  title = '대상 구분',
+  contents = [{}],
+  defaultIndex,
+}) => {
+  const {control, watch} = useFormContext();
   const watchRadio = watch(name);
 
   const defaultValue = contents[defaultIndex]?.value;
@@ -46,7 +50,7 @@ const Component = ({ name, title = '대상 구분', contents = [{}], defaultInde
         control={control}
         name={name}
         defaultValue={defaultValue || contents[0].value}
-        render={({ field: { onChange, value } }) => (
+        render={({field: {onChange, value}}) => (
           <ItemWrap>
             {contents.map(item => (
               <Wrapper
@@ -80,8 +84,8 @@ const Wrap = styled.View``;
 const TitleWrap = styled.View`
   margin-bottom: 4px;
 `;
-const Title = styled(Typography).attrs({ variant: 'h500', weight: 'R' })`
-  color: ${({ theme }) => theme.colors.neutral[700]};
+const Title = styled(Typography).attrs({variant: 'h500', weight: 'R'})`
+  color: ${({theme}) => theme.colors.neutral[700]};
 `;
 
 const ItemWrap = styled.View`
@@ -95,8 +99,8 @@ const Wrapper = styled.Pressable`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  ${({ checked }) => getBorderColor(checked)};
-  ${({ checked }) => getBackgroundColor(checked)};
+  ${({checked}) => getBorderColor(checked)};
+  ${({checked}) => getBackgroundColor(checked)};
 `;
 const IconWrap = styled.View`
   margin-right: 2px;
@@ -104,6 +108,6 @@ const IconWrap = styled.View`
 
 const LabelWrap = styled.View``;
 
-const Label = styled(Typography).attrs({ variant: 'h500', weight: 'B' })`
-  ${({ checked }) => getTextColor(checked)};
+const Label = styled(Typography).attrs({variant: 'h500', weight: 'B'})`
+  ${({checked}) => getTextColor(checked)};
 `;

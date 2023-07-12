@@ -1,20 +1,17 @@
+import {useAtom} from 'jotai';
 import React, {useEffect, useState} from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components/native';
-import Typography from '../../../../components/Typography';
-
-// import QuestionCircleMonoIcon from '../assets/icons/QuestionCircleMono.svg';
-import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
-import Card from './Card';
-import NoOrder from '../NoOrder';
-
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-
-import useReviewWait from '../../../../biz/useReview/useReviewWait';
+import Typography from '~components/Typography';
 
 import Banner from './Banner';
-import { useAtom } from 'jotai';
-import { modalStatusAtom } from '../../../../biz/useReview/useReviewWait/store';
+import Card from './Card';
+import QuestionCircleMonoIcon from '../../../../assets/icons/QuestionCircleMono.svg';
+import useReviewWait from '../../../../biz/useReview/useReviewWait';
+import {modalStatusAtom} from '../../../../biz/useReview/useReviewWait/store';
+import NoOrder from '../NoOrder';
+
+// import QuestionCircleMonoIcon from '../assets/icons/QuestionCircleMono.svg';
 
 export const PAGE_NAME = 'S_MAIN__MYPAGE__REVIEW';
 
@@ -30,64 +27,65 @@ const Pages = () => {
 
   return (
     <Container>
-      
-
       <View
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
-         
-
         {!!reviewWaitList && reviewWaitList.length > 0 ? (
           <FlatListWrap>
             <FlatList
-              ListHeaderComponent={ <View>
-                {!!reviewWaitList && reviewWaitList.length > 0 && (
-              <Banner redeemablePoints={redeemablePoints} />
-            )}
-              {!!reviewWaitList && reviewWaitList.length > 0 && (
-                <View style={{paddingLeft:24,paddingRight:24}}>
-                <PlaneGreyBox>
-                  <SmallWrap>
-                    <View>
-                      <PlaneRowView>
-                        <MiniWrap>
-                          <Typography2 variant="h400">작성안내</Typography2>
-                          <Pressable
-                            onPress={() => {
-                              setPopupShow(!popupShow);
-                            }}>
-                            <QuestionCircleMonoIcon />
-                          </Pressable>
-                        </MiniWrap>
-                      </PlaneRowView>
+              ListHeaderComponent={
+                <View>
+                  {!!reviewWaitList && reviewWaitList.length > 0 && (
+                    <Banner redeemablePoints={redeemablePoints} />
+                  )}
+                  {!!reviewWaitList && reviewWaitList.length > 0 && (
+                    <View style={{paddingLeft: 24, paddingRight: 24}}>
+                      <PlaneGreyBox>
+                        <SmallWrap>
+                          <View>
+                            <PlaneRowView>
+                              <MiniWrap>
+                                <Typography2 variant="h400">
+                                  작성안내
+                                </Typography2>
+                                <Pressable
+                                  onPress={() => {
+                                    setPopupShow(!popupShow);
+                                  }}>
+                                  <QuestionCircleMonoIcon />
+                                </Pressable>
+                              </MiniWrap>
+                            </PlaneRowView>
+                          </View>
+                          <PlaneRowView>
+                            <MiniWrap>
+                              <Typography1 variant="h400">포토후기</Typography1>
+
+                              <PointText>70P</PointText>
+                            </MiniWrap>
+                            <MiniWrap lmargin={6}>
+                              <Typography1 variant="h400">
+                                텍스트 후기
+                              </Typography1>
+
+                              <PointText>50P</PointText>
+                            </MiniWrap>
+                          </PlaneRowView>
+                        </SmallWrap>
+                      </PlaneGreyBox>
                     </View>
-                    <PlaneRowView>
-                      <MiniWrap>
-                        <Typography1 variant="h400">포토후기</Typography1>
-      
-                        <PointText>70P</PointText>
-                      </MiniWrap>
-                      <MiniWrap lmargin={6}>
-                        <Typography1 variant="h400">텍스트 후기</Typography1>
-      
-                        <PointText>50P</PointText>
-                      </MiniWrap>
-                    </PlaneRowView>
-                  </SmallWrap>
-                </PlaneGreyBox>
+                  )}
                 </View>
-              )}
-      </View>}
+              }
               contentContainerStyle={{paddingBottom: 190}}
               data={reviewWaitList}
               scrollEnabled={true}
               renderItem={({item}) => {
                 return (
-                  <View style={{paddingLeft:24,paddingRight:24}}>
-                     
+                  <View style={{paddingLeft: 24, paddingRight: 24}}>
                     {item.items &&
                       item.items.map((value2, index2) => {
-                        console.log(value2);
+                        // console.log(value2);
                         return (
                           <Card
                             key={index2}
@@ -114,7 +112,7 @@ const Pages = () => {
         ) : (
           <NoOrder
             isArrayEmpty={true}
-            message={`아직 작성한 리뷰가 없어요.`}
+            message={`주문 후 리뷰를 작성해 보세요.`}
           />
         )}
       </View>
@@ -153,7 +151,7 @@ const MiniWrap = styled.View`
   display: flex;
   flex-flow: row;
   align-items: center;
-  margin-left: ${({lmargin})=> lmargin ? `${lmargin}px` : 0};
+  margin-left: ${({lmargin}) => (lmargin ? `${lmargin}px` : 0)};
 `;
 
 const PointText = styled(Typography).attrs({text: 'CaptionR'})`

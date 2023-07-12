@@ -14,6 +14,8 @@ import {
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
 
+import {priceAverage, surpportPrice} from './function';
+import {foodPriceList, supportPriceList} from './Price/price';
 import Arrow from '../../../../../../assets/icons/Group/arrowDown.svg';
 import {
   corpApplicationWeek,
@@ -37,8 +39,6 @@ import {
 } from '../../../../../../utils/dateFormatter';
 import withCommas from '../../../../../../utils/withCommas';
 import {Cancel, Confirm, IosButton} from '../../SecondPage';
-import {priceAverage, surpportPrice} from './function';
-import {foodPriceList, supportPriceList} from './Price/price';
 
 export const PAGE_NAME = 'CORPORATION__APPLICATION__MEAL__INFO';
 const Pages = ({route}) => {
@@ -142,10 +142,10 @@ const Pages = ({route}) => {
     const price = foodPriceList?.filter(el => el.text === priceAverageChk);
     const support = supportPriceList?.filter(el => el.text === supportPriceChk);
     const supportPrice = Number(
-      support[0].text.replace(/,/g, '').replace(/[^0-9]/g, ''),
+      support[0].text?.replace(/,/g, '')?.replace(/[^0-9]/g, ''),
     );
     const atomSupportPrice = Number(
-      name2?.replace(/,/g, '').replace(/[^0-9]/g, ''),
+      name2?.replace(/,/g, '')?.replace(/[^0-9]/g, ''),
     );
     const data = await getStorage('corpPage3-1');
     const data2 = await getStorage('corpPage3-2');
@@ -214,7 +214,6 @@ const Pages = ({route}) => {
   const supportPriceValue = text => {
     setValue('supportPrice', text);
   };
-  console.log(selected);
   useEffect(() => {
     const getData = async () => {
       const data1 = await getStorage('corpPage3-1');

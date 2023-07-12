@@ -25,7 +25,6 @@ import {
   isApartUserNameAtom,
   isApartUserPhoneAtom,
 } from '../../../../../biz/useApartApplication/store';
-import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import BackButton from '../../../../../components/BackButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
@@ -35,6 +34,7 @@ import ProgressBar from '../../../../../components/ProgressBar2';
 import RefTextInput from '../../../../../components/RefTextInput';
 import Typography from '../../../../../components/Typography';
 import useKeyboardEvent from '../../../../../hook/useKeyboardEvent';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {PAGE_NAME as ApartmentApplicationSecondPageName} from '../SecondPage';
 
@@ -44,7 +44,9 @@ const Pages = () => {
   const phoneRef = useRef(null);
   const emailRef = useRef(null);
   const navigation = useNavigation();
-  const userInfo = useAtomValue(isUserInfoAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   const [modalVisible, setModalVisible] = useState(false);
   const [isApplicant, setApplicant] = useAtom(isApartmentApplicant);
   const information = useForm(); // 체크박스
@@ -66,7 +68,7 @@ const Pages = () => {
   const nameChk = watch('name');
   const phoneChk = watch('phone');
   const emailChk = watch('email');
-  const {name, phone, email} = userInfo;
+  const {name, phone, email} = isUserInfo;
   const isValidation =
     (nameChk || nameChk !== '') &&
     (emailChk || emailChk !== '') &&
@@ -249,8 +251,8 @@ const Pages = () => {
                 required: '필수 입력 항목 입니다.',
                 pattern: {
                   value:
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  message: '이메일 형식에 맞지 않습니다.',
+                    /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\,;:\s@#$%^&+/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  message: '올바른 이메일 주소를 입력해주세요.',
                 },
               }}
             />

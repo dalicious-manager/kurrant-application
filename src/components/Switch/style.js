@@ -1,14 +1,14 @@
 import {css} from 'styled-components';
 
 export const getToggleBackgroundColor = Type => {
-  if(Type) {
-    return css `
+  if (Type) {
+    return css`
       background-color: ${({theme}) => theme.colors.yellow[500]};
-    `
+    `;
   } else {
-    return css `
+    return css`
       background-color: ${({theme}) => theme.colors.neutral[300]};
-    `
+    `;
   }
 };
 
@@ -43,29 +43,29 @@ const ToggleSize = {
 };
 
 export const getToggleTop = (size, agree) => {
-  if(agree){
-  if (size === 'md') {
-    return css`
-      top: 2px;
-      left: 22px;
-    `;
+  if (agree) {
+    if (size === 'md') {
+      return css`
+        top: 2px;
+        left: 11px;
+      `;
+    } else {
+      return css`
+        top: 3px;
+        left: 7px;
+      `;
+    }
   } else {
-    return css`
-      top: 3px;
-      left: 14px;
-    `;
-  }} else {
-  if (size === 'md') {
-    return css`
-      top: 2px;
-      left: 2px;
-    `;
-  } else {
-    return css`
-      top: 3px;
-      left: 3px;
-    `;
-  }
-
+    if (size === 'md') {
+      return css`
+        top: 2px;
+        left: 11px;
+      `;
+    } else {
+      return css`
+        top: 3px;
+        left: 1px;
+      `;
+    }
   }
 };

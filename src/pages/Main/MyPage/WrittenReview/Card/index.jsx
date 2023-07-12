@@ -1,35 +1,39 @@
+/* eslint-disable import/order */
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled from 'styled-components';
-import Typography from '../../../../../components/Typography';
-import ArrowRightGrey4 from '../../../../../assets/icons/Arrow/ArrowRightGrey4.svg';
-import StarRating from '../../../../../components/StarRating/StarRating';
+import {css} from 'styled-components/native';
+import ArrowRightGrey4 from '~assets/icons/Arrow/ArrowRightGrey4.svg';
+// import AdminOrMakersReview from './AdminOrMakersReview';
 
-
-import AdminOrMakersReview from './AdminOrMakersReview';
-import {useNavigation} from '@react-navigation/native';
-import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
+import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
+import {isOverThreeLines} from '~components/Review/WrittenReviewCard/logic';
+// import {SCREEN_NAME2 as EditReviewPage2ScreenName} from '../../../../../screens/Main/Review/CreateReview/Page2';
 
 import OnlyForMakers from './OnlyForMakers';
 // import {deleteReview} from '../../../../../biz/useReview/useWrittenReview/Fetch';
 
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
-import {getStorage} from '../../../../../utils/asyncStorage';
+// import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+// import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
+// import {getStorage} from '../../../../../utils/asyncStorage';
 import {
   deleteReview,
   deleteReview2,
-} from '../../../../../biz/useReview/useWrittenReview/Fetch';
+} from '~biz/useReview/useWrittenReview/Fetch';
+import useWrittenReview from '~biz/useReview/useWrittenReview/hook';
+import {SkinnyArrowDown} from '~components/Icon';
+import StarRating from '~components/StarRating/StarRating';
+import Typography from '~components/Typography';
+
+import {PAGE_NAME2 as EditReviewPage2ScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page2';
 
 import ImageModal from './ImageModal/ImageModal';
-import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
+// import useWrittenReview from '../../../../../biz/useReview/useWrittenReview/hook';
 import {changeSeperator} from '../../../../../utils/dateFormatter';
-import {SkinnyArrowDown} from '../../../../../components/Icon';
-import {css} from 'styled-components/native';
+// import {SkinnyArrowDown} from '../../../../../components/Icon';
 
-// '../../../pages/Main/MyPage/Review';
-const onlyForMakers = true;
 // const onlyForMakers = false;
 
 const Component = ({
@@ -47,7 +51,7 @@ const Component = ({
   createDate,
   updateDate,
   commentList,
-  toast
+  toast,
 }) => {
   const navigation = useNavigation();
 
@@ -57,17 +61,6 @@ const Component = ({
 
   const [firstClickedImageIndex, setFirstClickedImageIndex] = useState(0);
   const [elaborateComment, setElaborateComment] = useState(false);
-  
-  const getToken = useCallback(async () => {
-    const token = await getStorage('token');
-
-    let tokenBox;
-    if (token) {
-      tokenBox = JSON.parse(token);
-    }
-
-    return tokenBox?.accessToken;
-  }, []);
 
   let imageLocationToSix = [];
 
@@ -114,48 +107,10 @@ const Component = ({
                   },
                 ]);
               } else {
-                toast.toastEvent()
+                toast.toastEvent();
                 await getWrittenReview();
-                // Alert.alert('리뷰 삭제 완료', '리뷰를 삭제하였습니다', [
-                //   {
-                //     text: '확인',
-                //     onPress: async () => {
-                //       await getWrittenReview();
-                //       // await getReviewWait();
-                //       navigation.navigate(WrittenReviewPageName, {
-                //         screen: ReviewScreenName,
-                //         params: {
-                //           tabIndex: 1,
-                //         },
-                //       });
-
-                //       // navigation.reset({
-                //       //   routes: [
-                //       //     {
-                //       //       name: ReviewScreenName,
-
-                //       //       state: {
-                //       //         index: 1,
-                //       //         routes: [
-                //       //           {
-                //       //             name: ReviewPageName,
-                //       //           },
-                //       //           {
-                //       //             name: WrittenReviewPageName,
-                //       //           },
-                //       //         ],
-                //       //       },
-                //       //     },
-                //       //   ],
-                //       // });
-                //     },
-                //     style: 'cancel',
-                //   },
-                // ]);
               }
             } catch (err) {
-              console.log('리뷰 삭제 에러뜸');
-              console.log(err);
               Alert.alert('리뷰 삭제 실패', '', [
                 {
                   text: '확인',
@@ -165,28 +120,6 @@ const Component = ({
               ]);
             }
 
-            // await deleteReview({id: id}, token, () => {
-            //   navigation.reset({
-            //     routes: [
-            //       {
-            //         name: ReviewScreenName,
-
-            //         state: {
-            //           index: 1,
-            //           routes: [
-            //             {
-            //               name: ReviewPageName,
-            //             },
-            //             {
-            //               name: WrittenReviewPageName,
-            //             },
-            //           ],
-            //         },
-            //       },
-            //     ],
-            //   });
-            // });
-
             return;
           },
 
@@ -195,11 +128,27 @@ const Component = ({
       ],
     );
   };
-  const [numLines, setNumLines] = useState(1);
+
+  const handlePressReviewText = () => {
+    setElaborateComment(!elaborateComment);
+  };
+
+  const [calcFontSize, setCalcFontSize] = useState(278 * 0.05115);
+
+  const getWidth = e => {
+    const {width, height, x, y} = e.nativeEvent.layout;
+
+    setCalcFontSize(width * 0.052279);
+  };
+
+  // '\n'개수 파악하기
+
+  // /n이 하나일떄 24*24
+  // /n이 두개일떄 24
+  // /n 이 세개일떄 0
 
   return (
     <Container focusId={focusId} id={id}>
-       
       <TopWrap>
         <TitleWrap>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
@@ -254,36 +203,36 @@ const Component = ({
       {forMakers && <OnlyForMakers />}
 
       {imageLocation && imageLocation.length > 0 && (
-          <ImagesWrapper>
-            {imageLocationToSix.map((v, i) => {
-              if (v) {
-                // 이미지가 수직 이미지인가 수평이미지인가 확인하기
+        <ImagesWrapper>
+          {imageLocationToSix.map((v, i) => {
+            if (v) {
+              // 이미지가 수직 이미지인가 수평이미지인가 확인하기
 
-                return (
-                  <ImagePressable
-                    key={i}
-                    onPress={() => {
-                      setFirstClickedImageIndex(i);
-                      setImageModalVisible(true);
-                    }}>
-                    <MealImage
-                      source={{
-                        uri: v,
-                      }}
-                    />
-                  </ImagePressable>
-                );
-              }
-              // defaultPicture 기각됨
-              // else {
-              //   return (
-              //     <ImageWrap key={i}>
-              //       <DefaultImage />
-              //     </ImageWrap>
-              //   );
-              // }
-            })}
-          </ImagesWrapper>
+              return (
+                <ImagePressable
+                  key={i}
+                  onPress={() => {
+                    setFirstClickedImageIndex(i);
+                    setImageModalVisible(true);
+                  }}>
+                  <MealImage
+                    source={{
+                      uri: v,
+                    }}
+                  />
+                </ImagePressable>
+              );
+            }
+            // defaultPicture 기각됨
+            // else {
+            //   return (
+            //     <ImageWrap key={i}>
+            //       <DefaultImage />
+            //     </ImageWrap>
+            //   );
+            // }
+          })}
+        </ImagesWrapper>
       )}
 
       <ImageModal
@@ -293,128 +242,46 @@ const Component = ({
         firstClickedImageIndex={firstClickedImageIndex}
       />
 
-      <ReviewPressable>
-        {Platform.OS === 'ios' && numLines >= 3 && !elaborateComment && (
-          <IconDiv
-            onPress={() => {
-              setElaborateComment(!elaborateComment);
-            }}>
-            <SkinnyArrowDown width={'12px'} height={'8px'} />
-          </IconDiv>
-        )}
-
-        {Platform.OS === 'ios' ? (
-          <>
-            {numLines >= 3 && elaborateComment ? (
-              // <ReviewTextTextInput value={reviewText} editable={false} />
-              <ReviewTextTextInputIos
-                // value={reviewText.concat(' ', '...')}
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                value={reviewText}
-                multiline={true}
-                selectTextOnFocus={false}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                suppressHighlighting={true}
-                editable={false}
-              />
-            ) : (
-              <ReviewTextTextInputIos
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                maxHeight={62}
-                value={reviewText}
-                multiline={true}
-                editable={false}
-                selectTextOnFocus={false}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                numberOfLines={3}
-                ellipsizeMode="tail"
-              />
-            )}
-          </>
-        ) : (
-          <>
-            <ReviewTextTextInputAndroid
-              onContentSizeChange={event =>
-                setNumLines(
-                  Math.max(
-                    Math.ceil(event.nativeEvent.contentSize.height / 18),
-                    1,
-                  ),
-                )
-              }
-              value={reviewText}
-              multiline={true}
-              onPressIn={() => {
+      <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
+        {Platform.OS === 'ios' &&
+          isOverThreeLines(reviewText) &&
+          !elaborateComment && (
+            <IconDiv
+              onPress={() => {
                 setElaborateComment(!elaborateComment);
-              }}
-              editable={false}
-            />
+              }}>
+              <SkinnyArrowDown width={'12px'} height={'8px'} />
+            </IconDiv>
+          )}
 
-            {/* {numLines >= 3 && elaborateComment ? (
-              // <ReviewTextTextInput value={reviewText} editable={false} />
-              <ReviewTextTextInputAndroid
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                value={reviewText}
-                multiline={true}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                editable={false}
-              />
-            ) : (
-              <ReviewTextTextInputAndroid
-                onContentSizeChange={event =>
-                  setNumLines(
-                    Math.max(
-                      Math.ceil(event.nativeEvent.contentSize.height / 18),
-                      1,
-                    ),
-                  )
-                }
-                value={reviewText}
-                multiline={true}
-                editable={false}
-                maxHeight={62}
-                onPressIn={() => {
-                  setElaborateComment(!elaborateComment);
-                }}
-                // numberOfLines={3}
-                // ellipsizeMode="tail"
-              />
-            )} */}
-          </>
+        {/* <Text
+          // lineBreakStrategyIOS={'hangul-word'}
+          textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}>
+          {reviewText}
+        </Text> */}
+
+        {!elaborateComment ? (
+          <ReviewText
+            numberOfLines={3}
+            ellipsizeMode="tail"
+            // textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}
+            textBreakStrategy={
+              Platform.OS === 'android' ? 'balanced' : undefined
+            }
+            calcFontSize={calcFontSize}>
+            {reviewText}
+          </ReviewText>
+        ) : (
+          <ReviewText
+            // textBreakStrategy={Platform.OS === 'android' ? 'simple' : undefined}
+            textBreakStrategy={
+              Platform.OS === 'android' ? 'balanced' : undefined
+            }
+            calcFontSize={calcFontSize}>
+            {reviewText}
+          </ReviewText>
         )}
       </ReviewPressable>
-      {/* <ReviewText>{reviewText}</ReviewText> */}
-      {/* 둘 다 존재할떄랑, 둘 다 존재하는 경우가 아닐때 */}
-      {/* <ReviewText numberOfLines={3} ellipsizeMode="tail">
-            {reviewText}
-          </ReviewText> */}
 
       {commentList &&
         commentList.length > 0 &&
@@ -511,6 +378,7 @@ const ImagesWrapper = styled.Pressable`
   flex-direction: row;
   padding-top: 11px;
   padding-bottom: 4px;
+  /* border: 1px solid black; */
 `;
 
 const ImagePressable = styled.Pressable`
@@ -539,13 +407,23 @@ const DefaultImage = styled.View`
 `;
 
 const ReviewPressable = styled.Pressable`
-  width: 300px;
+  /* width: 278px; */
+  width: 86%;
   margin: auto;
   position: relative;
+  /* border: 1px solid black; */
+  margin-top: 4px;
+  /* padding: 0 11px; */
 `;
+const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 6px;
 
+  font-size: ${({calcFontSize}) =>
+    calcFontSize ? `${calcFontSize}px` : '14.2px'};
+`;
 const ReviewTextTextInputAndroid = styled.TextInput`
-  color: ${props => props.theme.colors.grey[2]};  
+  color: ${props => props.theme.colors.grey[2]};
   font-size: 14px;
   padding-top: 0px;
   font-weight: 400;
@@ -564,10 +442,6 @@ const ReviewTextTextInputIos = styled.TextInput`
   font-family: 'Pretendard-Regular';
 `;
 
-const ReviewText = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 6px;
-`;
 const CommentWrap = styled.View`
   width: 100%;
 `;

@@ -1,4 +1,6 @@
 import {useAtom} from 'jotai';
+import {Alert} from 'react-native';
+import {useQueryClient} from 'react-query';
 
 import * as Fetch from './Fetch';
 import {
@@ -15,7 +17,7 @@ const useGroupSpots = () => {
   ); // 유저가 속한 그룹 스팟 조회
   const [isDetailSpot, setDetailSpot] = useAtom(groupSpotDetailAtom); // 그룹별 스팟 상세 조회
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom); // 그룹별 스팟 상세 조회
-
+  const queryClient = useQueryClient();
   // 그룹/스팟 신청 목록 조회 (아파트 + 프라이빗 스팟)
   const applicationList = async () => {
     try {
@@ -23,7 +25,17 @@ const useGroupSpots = () => {
 
       setApplicationList(res.data);
     } catch (err) {
-      console.log(err);
+      // Alert.alert(
+      //   '그룹/스팟 신청 목록 조회',
+      //   err.toString()?.replace('error: ', ''),
+      //   [
+      //     {
+      //       text: '확인',
+      //       onPress: () => {},
+      //       style: 'cancel',
+      //     },
+      //   ],
+      // );
     }
   };
   // 유저가 속한 그룹 스팟 조회
@@ -34,7 +46,13 @@ const useGroupSpots = () => {
       setUserGroupSpotCheck(res.data);
       return res;
     } catch (err) {
-      console.log(err);
+      // Alert.alert('그룹/스팟', err.toString()?.replace('error: ', ''), [
+      //   {
+      //     text: '확인',
+      //     onPress: () => {},
+      //     style: 'cancel',
+      //   },
+      // ]);
     }
   };
 
@@ -44,6 +62,7 @@ const useGroupSpots = () => {
       const res = await Fetch.UserGroupAdd({
         ...body,
       });
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -70,7 +89,8 @@ const useGroupSpots = () => {
       const res = await Fetch.SpotRegister({
         ...body,
       });
-
+      queryClient.invalidateQueries('dailyfood');
+      queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
       throw err;
@@ -84,10 +104,18 @@ const useGroupSpots = () => {
       const res = await Fetch.WithdrawGroup({
         ...body,
       });
-
+      queryClient.invalidateQueries('userInfo');
+      queryClient.invalidateQueries('groupSpotList');
+      queryClient.invalidateQueries('groupSpotManageLists');
       return res;
     } catch (err) {
-      console.log(err);
+      Alert.alert('그룹 탈퇴', err.toString()?.replace('error: ', ''), [
+        {
+          text: '확인',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ]);
     }
   };
 

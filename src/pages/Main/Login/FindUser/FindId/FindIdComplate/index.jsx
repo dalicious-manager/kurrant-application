@@ -5,11 +5,14 @@ import {Text, View} from 'react-native';
 import styled from 'styled-components';
 import {useTheme} from 'styled-components/native';
 
+import GeneralIcon from '~assets/icons/Social/general.svg';
+
 import Typography from '~components/Typography';
 import {formattedDate} from '~utils/dateFormatter';
 
 import useAuth from '../../../../../../biz/useAuth';
 import {SocialIcons} from '../../../../../../components/Icon';
+import snsLogin from '../../../../../../utils/snsLogin';
 import {PAGE_NAME as EmailLoginPageName} from '../../../EmailLogin';
 import {PAGE_NAME as LoginPageName} from '../../../Login';
 
@@ -24,6 +27,8 @@ const Pages = ({route}) => {
   });
   const themeApp = useTheme();
   const navigation = useNavigation();
+  const {appleLogin, facebookLogin, googleLogin, kakaoLogin, naverLogin} =
+    snsLogin();
   const {findEmail} = useAuth();
   const getUserId = async () => {
     const userEmail = await findEmail({phone: phone});
@@ -37,15 +42,10 @@ const Pages = ({route}) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('여기 맞ㄱ음');
-    console.log(userId);
-  }, [userId]);
-
   const showSocialTitleIntoKr = socialName => {
     switch (socialName) {
       case 'GENERAL':
-        return <GeneralIcon size={size} color={color} />;
+        return '이메일';
       case 'KAKAO':
         return '카카오';
       case 'APPLE':
@@ -69,7 +69,7 @@ const Pages = ({route}) => {
       <LoginContainer>
         {userId.connectedSns.length > 0 &&
           userId.connectedSns.map((emailInfo, i) => {
-            const onPressEvent = () => {
+            const onPressEvent = async () => {
               if (emailInfo.provider === 'GENERAL') {
                 navigation.reset({
                   index: 1,
@@ -85,6 +85,16 @@ const Pages = ({route}) => {
                     },
                   ],
                 });
+              } else if (emailInfo.provider === 'KAKAO') {
+                await kakaoLogin();
+              } else if (emailInfo.provider === 'APPLE') {
+                await appleLogin();
+              } else if (emailInfo.provider === 'FACEBOOK') {
+                await facebookLogin();
+              } else if (emailInfo.provider === 'GOOGLE') {
+                await googleLogin();
+              } else if (emailInfo.provider === 'NAVER') {
+                await naverLogin();
               }
             };
             return (

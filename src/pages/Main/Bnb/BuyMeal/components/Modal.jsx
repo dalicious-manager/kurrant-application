@@ -1,19 +1,23 @@
+import {useNavigation} from '@react-navigation/native';
+import {useAtomValue} from 'jotai';
 import React, {useEffect, useState} from 'react';
 import {View, Text, Pressable} from 'react-native';
 import styled from 'styled-components';
+
+import CloseIcon from '../../../../../assets/icons/BuyMeal/close.svg';
 import AIicon from '../../../../../assets/icons/BuyMeal/modalAI.svg';
 import XIcon from '../../../../../assets/icons/BuyMeal/modalX.svg';
-import CloseIcon from '../../../../../assets/icons/BuyMeal/close.svg';
 import Typography from '../../../../../components/Typography';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedDate} from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
-import {useNavigation} from '@react-navigation/native';
-import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
-import {useAtomValue} from 'jotai';
+
 const Modal = ({hideModal, setHideModal}) => {
   const navigation = useNavigation();
-  const isUserInfo = useAtomValue(isUserInfoAtom);
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
   // const [hideModal, setHideModal] = useState(true);
 
   const today = new Date();

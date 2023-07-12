@@ -1,17 +1,17 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, Alert} from 'react-native';
 import styled from 'styled-components';
 
+import {PAGE_NAME as GroupManageDetailPageName} from './SpotManagePage';
 import useApartApplication from '../../../biz/useApartApplication/hook';
 import useGroupSpots from '../../../biz/useGroupSpots/hook';
-import useUserInfo from '../../../biz/useUserInfo';
 import BottomSheetSpot from '../../../components/BottomSheetSpot';
 import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
+import {useGroupSpotList} from '../../../hook/useSpot';
 import {setStorage} from '../../../utils/asyncStorage';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../GroupApartment/SearchApartment/AddApartment/DetailAddress';
-import {PAGE_NAME as GroupManageDetailPageName} from '../GroupManage/DetailPage';
 export const PAGE_NAME = 'P__GROUP__MANAGE';
 const Pages = () => {
   const navigation = useNavigation();
@@ -19,12 +19,11 @@ const Pages = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const {
     userGroupSpotCheck,
-    isUserGroupSpotCheck,
+    // isUserGroupSpotCheck,
     groupSpotDetail,
     userSpotRegister,
   } = useGroupSpots();
-  const {userInfo} = useUserInfo();
-
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const [selected, setSelected] = useState();
 
   const modalOpen = () => {
@@ -39,23 +38,21 @@ const Pages = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const goSpotRegisterPage = async (id, clientId) => {
+  const goSpotRegisterPage = async id => {
     try {
       const res = await userSpotRegister({
         id: id,
       });
+
       if (res.data === null) {
         navigation.navigate(ApartRegisterSpotPageName, {id: id});
       } else {
         await setStorage('spotStatus', '0');
-        await userInfo();
-        navigation.navigate(GroupManageDetailPageName, {
-          id: id,
-          clientId: clientId,
-        });
+
+        navigation.navigate(GroupManageDetailPageName);
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('스팟 가입', err?.toString()?.replace('error: ', ''));
     }
   };
   return (
@@ -64,10 +61,16 @@ const Pages = () => {
         <MyGroup>내 스팟</MyGroup>
         <Contents showsVerticalScrollIndicator={false}>
           <GroupNameView>
-            {isUserGroupSpotCheck.length !== 0 &&
-              isUserGroupSpotCheck.map((el, idx) => (
-                <GroupName key={el.clientId}>{el.clientName}</GroupName>
-              ))}
+            {isUserGroupSpotCheck?.data?.spotListResponseDtoList?.length !==
+              0 &&
+              isUserGroupSpotCheck?.data?.spotListResponseDtoList?.map(
+                (el, idx) =>
+                  el.spots.map(v => (
+                    <View key={v.spotId}>
+                      <GroupName>{el.clientName ?? v.spotName}</GroupName>
+                    </View>
+                  )),
+              )}
           </GroupNameView>
         </Contents>
       </Wrap>
@@ -78,11 +81,11 @@ const Pages = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         title="스팟 선택"
-        data={isUserGroupSpotCheck}
+        data={isUserGroupSpotCheck?.data.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
-        onPressEvent={(id, clientId) => {
-          goSpotRegisterPage(id, clientId);
+        onPressEvent={id => {
+          goSpotRegisterPage(id);
         }}
       />
     </SafeView>

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import Typography from '../Typography';
 import {getTypeColor} from './styles';
+import Typography from '../Typography';
 /**
  *
  * @param {object} props

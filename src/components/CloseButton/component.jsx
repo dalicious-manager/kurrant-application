@@ -39,6 +39,8 @@ const Component = ({margin = [0, 0], isSpot = false}) => {
             },
           ],
         );
+      } else {
+        navigation.goBack();
       }
     } else {
       if (Platform.OS === 'android') {

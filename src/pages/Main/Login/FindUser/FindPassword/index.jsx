@@ -56,7 +56,7 @@ const Pages = () => {
         email: email,
       });
     } catch (error) {
-      alert(error.toString().replace('error:', ''));
+      alert(error.toString()?.replace('error:', ''));
     }
   };
   const onSubmit2 = async data => {
@@ -66,7 +66,7 @@ const Pages = () => {
         type: 'phone',
       });
     } catch (error) {
-      alert(error.toString().replace('error:', ''));
+      alert(error.toString()?.replace('error:', ''));
     }
   };
 
@@ -113,8 +113,8 @@ const Pages = () => {
                     required: '필수 입력 항목 입니다.',
                     pattern: {
                       value:
-                        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                      message: '이메일 형식에 맞지 않습니다.',
+                        /^(([a-zA-Z0-9_-]+(\.[^<>()[\]\\,;:\s@#$%^&+/*?'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                      message: '올바른 이메일 주소를 입력해주세요.',
                     },
                   }}
                   style={inputStyle}

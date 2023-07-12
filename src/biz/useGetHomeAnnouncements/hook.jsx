@@ -1,9 +1,10 @@
 import {useAtom} from 'jotai';
 import {useEffect, useState} from 'react';
-import {getStorage} from '../../utils/asyncStorage';
-import {isTimeDifferenceLarger} from '../../utils/dateFormatter';
+
 import * as Fetch from './Fetch';
 import {AnnouncementsAtom} from './store';
+import {getStorage} from '../../utils/asyncStorage';
+import {isTimeDifferenceLarger} from '../../utils/dateFormatter';
 
 const useGetAnnouncements = () => {
   const [announcements, setAnnouncements] = useAtom(AnnouncementsAtom);
@@ -119,11 +120,6 @@ const useGetAnnouncements = () => {
       throw err;
     }
   };
-
-  useEffect(() => {
-    console.log('일단 로컬스토리지에는 없어 리스판스 여기여~~~~');
-    console.log(announcementModalVisible);
-  }, [announcementModalVisible]);
 
   return {
     getAnnouncements,

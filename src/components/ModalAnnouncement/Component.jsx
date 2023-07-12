@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
-import styled, {useTheme} from 'styled-components';
-import Typography from '../Typography';
-
-import HTML, {defaultSystemFonts} from 'react-native-render-html';
-
 import {Dimensions, ScrollView} from 'react-native';
+import HTML, {defaultSystemFonts} from 'react-native-render-html';
+import styled, {useTheme} from 'styled-components';
+
 import {getStorage, setStorage} from '../../utils/asyncStorage';
+import Typography from '../Typography';
 
 const Component = ({
   modalVisible,
@@ -54,12 +53,6 @@ const Component = ({
 
     // setModalOffPriorityOne(false);
   };
-
-  useEffect(() => {
-    return () => {
-      console.log('컴포넌트 없어짐' + data.id);
-    };
-  }, []);
 
   return (
     <CenteredView>

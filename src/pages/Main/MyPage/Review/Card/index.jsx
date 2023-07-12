@@ -1,26 +1,22 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-
+import {Alert} from 'react-native';
 import {Line} from 'react-native-svg';
 import styled from 'styled-components';
+
+import {calculateReviewDDay} from './logic';
 import {isDueDateCloseRenderRed} from '../../../../../biz/useMypageReview';
-
+import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 import Typography from '../../../../../components/Typography';
-import {SCREEN_NAME as CreateReviewScreenName} from '../../../../../screens/Main/Review/CreateReview/Page1';
-
+import {PAGE_NAME as MealDetailPageName} from '../../../../../pages/Main/Bnb/MealDetail/Main';
+// import {PAGE_NAME as CreateReviewScreenName} from '../../../../../screens/Main/Review/CreateReview/Page1';
+import {PAGE_NAME as CreateReviewScreenName} from '../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
 import {
   formattedMonthDay,
   stringDateToJavascriptDate,
   timeLeftIndicator,
   timePassIndicator,
 } from '../../../../../utils/dateFormatter';
-
-import {Alert} from 'react-native';
-
-import {calculateReviewDDay} from './logic';
-
-import {PAGE_NAME as MealDetailPageName} from '../../../../../pages/Main/Bnb/MealDetail/Main';
-import useReviewWait from '../../../../../biz/useReview/useReviewWait/hook';
 
 /**
  * @param {object} props

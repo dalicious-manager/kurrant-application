@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import {css} from 'styled-components';
 
 export const getButtonSizeStyles = sizeType => {
   return btnSizeStyle[sizeType];
@@ -61,26 +61,24 @@ export const getButtonColor = type => {
 
 const buttonColor = {
   primary: css`
-    background-color: ${({ theme }) => theme.colors.purple[500]}; 
+    background-color: ${({theme}) => theme.colors.purple[500]};
   `,
   gray: css`
-    background-color: ${({ theme }) => theme.colors.neutral[30]}; 
+    background-color: ${({theme}) => theme.colors.neutral[30]};
   `,
   red: css`
-    background-color: ${({ theme }) => theme.colors.red[500]};
+    background-color: ${({theme}) => theme.colors.red[500]};
   `,
   blue: css`
-    background-color: ${({ theme }) => theme.colors.blue[500]}; 
+    background-color: ${({theme}) => theme.colors.blue[500]};
   `,
   yellow: css`
-    background-color: ${({ theme }) => theme.colors.yellow[500]};
+    background-color: ${({theme}) => theme.colors.yellow[500]};
   `,
   keyboard: css`
-    background-color: ${({ theme }) => theme.colors.yellow[500]};
-  `
-
+    background-color: ${({theme}) => theme.colors.yellow[500]};
+  `,
 };
-
 
 export const getDisabledColor = type => {
   return disabledButtonColor[type];
@@ -88,33 +86,33 @@ export const getDisabledColor = type => {
 
 const disabledButtonColor = {
   primary: css`
-    background-color: ${({ theme }) => theme.colors.purple[100]}; 
+    background-color: ${({theme}) => theme.colors.purple[100]};
   `,
   gray: css`
-    background-color: ${({ theme }) => theme.colors.neutral[30]}; 
+    background-color: ${({theme}) => theme.colors.neutral[30]};
   `,
   red: css`
-    background-color:${({ theme }) => theme.colors.red[100]}; 
+    background-color: ${({theme}) => theme.colors.red[100]};
   `,
   blue: css`
-    background-color: ${({ theme }) => theme.colors.blue[100]}; 
+    background-color: ${({theme}) => theme.colors.blue[100]};
   `,
   yellow: css`
-    background-color: ${({ theme }) => theme.colors.yellow[100]}; 
+    background-color: ${({theme}) => theme.colors.yellow[100]};
   `,
   keyboard: css`
-    background-color: ${({ theme }) => theme.colors.yellow[100]}; 
-  `
+    background-color: ${({theme}) => theme.colors.yellow[100]};
+  `,
 };
 
 export const getLabelColor = disabled => {
   if (disabled === true) {
     return css`
-      color: ${({ theme }) => theme.colors.neutral[700]}; 
-    `
+      color: ${({theme}) => theme.colors.neutral[700]};
+    `;
   } else {
     return css`
-      color: ${({ theme }) => theme.colors.neutral[400]}; 
-    `
+      color: ${({theme}) => theme.colors.neutral[400]};
+    `;
   }
-}
+};

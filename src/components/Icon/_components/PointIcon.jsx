@@ -1,5 +1,4 @@
 import React from 'react';
-
 import PointIcon from '~assets/icons/point.svg';
 
 import IconWrapper from '../component';
