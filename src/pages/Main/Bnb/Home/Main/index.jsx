@@ -75,6 +75,7 @@ import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import useGetRegisterDoneCheck from '../../../../../biz/useRegisterInfo/getRegisterDoneCheck/hook';
 
 import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
+import useShowRegisterInfo from '../../../../RegisterInfo/ShowRegisterInfo/useShowRegisterInfo';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -272,74 +273,9 @@ const Pages = () => {
   //   removeItemFromStorage('announcementsClickedOneDate');
   // }, []);
 
-  // useEffect(() => {
-  //   navigation.navigate(DietRepoMainPageName);
-  // }, []);
+  // // 회원 정보 입력
 
-  // 회원 정보 입력
-
-  // 1.  회원 정보 이미 썻는가 안썻는가 파악하기
-
-  const {isRegisterDone, getRegisterDoneCheck, isRegisterInfoLoading} =
-    useGetRegisterDoneCheck();
-
-  useEffect(() => {
-    getRegisterDoneCheck();
-  }, []);
-
-  // 2. 하루지났는가 안 지났는가
-
-  const [shouldOpenRegister, setShouldOpenRegister] = useState(false);
-
-  const isRegisterInfoPassTime = async () => {
-    const clickedDate = await getStorage('registerInfoClicked');
-
-    if (clickedDate) {
-      if (isTimeNumberDifferenceLarger(clickedDate, Date.now(), 1)) {
-        console.log('registerInfo 하루가 지났음 ');
-        setShouldOpenRegister(true);
-      } else {
-        console.log('registerInfo 하루가 아직 안지나서 아직 못 염');
-        setShouldOpenRegister(false);
-      }
-    } else {
-      console.log('registerInfo 첫 회원 등록임 그래서 열어줌');
-      setShouldOpenRegister(true);
-    }
-  };
-
-  useEffect(() => {
-    // 회원정보입력 보여줄지 안보여줄지 판단하기
-
-    // 로딩 처리
-    if (isRegisterInfoLoading) {
-      // console.log('회원정보입력 입력 여부 받아오는 중');
-      return;
-    } else if (isRegisterInfoLoading === false) {
-      // console.log('회원정보입력 입력 여부받기 완료');
-    } else if (isRegisterInfoLoading === undefined) {
-      // console.log('아직 첫 렌더링중임');
-      return;
-    }
-    // 회원정보입력 작성여부 파악
-    if (isRegisterDone) {
-      console.log('회원정보입력 이미 작성하셨습니다');
-    } else {
-      console.log('회원정보입력 아직 작성 안하심');
-      isRegisterInfoPassTime();
-    }
-  }, [isRegisterDone, isRegisterInfoLoading]);
-
-  useEffect(() => {
-    if (shouldOpenRegister) {
-      navigation.navigate(RegisterInfoStartPageName);
-    }
-    // navigation.navigate(RegisterInfoStartPageName);
-  }, [shouldOpenRegister]);
-
-  // useEffect(() => {
-  //   removeItemFromStorage('registerInfoClicked');
-  // }, []);
+  useShowRegisterInfo();
 
   useEffect(() => {
     const handleShowModal = async () => {
