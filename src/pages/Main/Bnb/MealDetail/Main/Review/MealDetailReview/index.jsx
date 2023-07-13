@@ -45,6 +45,8 @@ const Component = ({
   getNextPage,
   getNextPageIsPossible,
   refetch,
+  url,
+  setUrl,
 }) => {
   const theme = useTheme();
   const queryClient = useQueryClient();
@@ -79,27 +81,6 @@ const Component = ({
 
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
-
-  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
-
-  useEffect(() => {
-    setUrl(
-      buildCustomUrl(
-        dailyFoodId,
-        orderFilter,
-        isOnlyPhoto,
-        selectedKeyword,
-        rateSelected,
-      ),
-    );
-  }, [
-    dailyFoodId,
-    orderFilter,
-    isOnlyPhoto,
-    selectedKeyword,
-    setUrl,
-    rateSelected,
-  ]);
 
   // const {getInfiniteQuery} = useGetMealDetailReview(url, dailyFoodId);
 

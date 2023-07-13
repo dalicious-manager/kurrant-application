@@ -43,14 +43,14 @@ export const buildCustomUrl = (
 };
 
 export const modifyStarRatingCount = starts => {
-  console.log(starts);
-  Object.entries(starts).map((v, i) => {
-    return {
-      id: v[0],
-      text: v[0],
-      reviewCount: v[1],
-    };
-  });
+  if (starts)
+    Object.entries(starts).map((v, i) => {
+      return {
+        id: v[0],
+        text: v[0],
+        reviewCount: v[1],
+      };
+    });
 };
 
 export const isCloseToBottomOfScrollView = ({
