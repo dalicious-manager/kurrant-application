@@ -779,11 +779,13 @@ const Pages = () => {
               {/* <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText> */}
               <CalText>
                 오늘{' '}
-                {
-                  orderMealList?.data?.find(
-                    v => v.serviceDate === toStringByFormatting(new Date()),
-                  )?.totalCalorie
-                }{' '}
+                {orderMealList?.data?.find(
+                  v => v.serviceDate === toStringByFormatting(new Date()),
+                )?.totalCalorie
+                  ? orderMealList?.data?.find(
+                      v => v.serviceDate === toStringByFormatting(new Date()),
+                    )?.totalCalorie
+                  : 0}{' '}
                 kcal
               </CalText>
             </DietRepoPressable>
