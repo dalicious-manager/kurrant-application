@@ -4,6 +4,7 @@ import {useInfiniteQuery, useQuery} from 'react-query';
 
 import {fetchJson} from '~utils/fetch';
 
+
 const useGetMealDetailReview = (url, dailyFoodId) => {
   const [isError, setIsError] = useState(false);
 

@@ -123,6 +123,7 @@ const Component = forwardRef(
                   ref={ref && ref}
                   {...textInputProps}
                   name={name}
+                  defaultValue={defaultValue && defaultValue}
                   onChangeText={onChange}
                   onBlur={() => {
                     setFocused(false);

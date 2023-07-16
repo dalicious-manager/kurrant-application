@@ -8,15 +8,12 @@ import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
-// import {SCREEN_NAME as CreateReviewScreenName} from '~screens/Main/Review/CreateReview/Page1';
+
 import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
-// import {
-//   fetchNextPageReviewDetailAtom,
-//   hasNextPageReviewDetailAtom,
-// } from './store';
+
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
@@ -34,6 +31,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   const theme = useTheme();
 
   const navigation = useNavigation();
+
+  // console.log(dailyFoodId);
 
   // 샘플 대에터
   // const dailyFoodId = 40827;
@@ -387,8 +386,8 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
                     id={item.reviewId}
                     userName={item.userName}
                     item={item}
-                    likeNum={item.good}
-                    isLike={item.isGood}
+                    good={item.good}
+                    isGood={item.isGood}
                     createDate={item.createDate}
                     updateDate={item.updateDate}
                     writtenDate={convertDateFormat1(item.createDate)}
@@ -398,6 +397,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
                     imageLocation={item.imageLocation}
                     forMakers={item.forMakers}
                     commentList={item.commentList}
+                    // 도움이돼요 빠르게 만들기
+
+                    isFetching={isFetching}
                   />
                 );
               })}

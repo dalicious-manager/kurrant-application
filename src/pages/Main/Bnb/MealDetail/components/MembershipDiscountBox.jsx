@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import Typography from '~components/Typography';

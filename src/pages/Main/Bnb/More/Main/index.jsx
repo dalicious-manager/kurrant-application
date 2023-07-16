@@ -55,6 +55,7 @@ import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import useSse from '../../../../../utils/sse/sseLogics/useSse';
 import {checkSseType3Atom} from '../../../../../utils/sse/sseLogics/store';
+import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -322,6 +323,7 @@ const Pages = ({route}) => {
                 routeName={GroupApplicationCheckPageName}
               />
             )}
+            <ListBox title="식단 리포트" routeName={DietRepoMainPageName} />
           </ListContainer>
           <ListContainer title="알림">
             <ListBox

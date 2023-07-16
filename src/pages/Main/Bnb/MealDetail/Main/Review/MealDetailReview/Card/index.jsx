@@ -27,11 +27,13 @@ const Component = ({
   rating,
   reviewText,
   focusId,
-  likeNum,
+  good,
+  isGood,
   imageLocation,
   createDate,
   updateDate,
   commentList,
+  isFetching,
 }) => {
   const navigation = useNavigation();
 
@@ -73,6 +75,9 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
+  const [goodLocal, setGoodLocal] = useState(good ? good : 0);
+  const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
+
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
@@ -107,18 +112,29 @@ const Component = ({
         <EditWrap>
           <LikePressable
             onPress={() => {
+              if (isFetching) return;
+
+              setIsGoodLocal(!isGoodLocal);
+              if (isGoodLocal) {
+                setGoodLocal(prev => prev - 1);
+              } else {
+                setGoodLocal(prev => prev + 1);
+              }
+
               pressLike({
                 dailyFoodId,
                 reviewId: id,
               });
             }}>
-            <EditText isLike={likeNum}>도움이 돼요</EditText>
+            <EditText isGood={isGoodLocal}>도움이 돼요</EditText>
             <ThumbsUp
               width="14px"
               height="15px"
-              color={likeNum ? theme.colors.green[500] : theme.colors.grey[5]}
+              color={
+                isGoodLocal ? theme.colors.green[500] : theme.colors.grey[5]
+              }
             />
-            <LikeNumber isLike={likeNum}>{likeNum}</LikeNumber>
+            <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>
@@ -206,8 +222,6 @@ const Component = ({
         )}
       </ReviewPressable>
 
-      {/* 신고하기 버튼 자리 */}
-
       {commentList &&
         commentList.length > 0 &&
         commentList.map((v, i) => {
@@ -244,7 +258,6 @@ const Container = styled.View`
   width: 100%;
 
   ${({focusId, id}) => {
-    // console.log(focusId, id, 'focusId === id');
     if (focusId === id) {
       return css`
         background-color: ${({theme}) => theme.colors.grey[8]};
@@ -278,14 +291,14 @@ const EditWrap = styled.View`
 `;
 
 const EditText = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme, isLike}) =>
-    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
+  color: ${({theme, isGood}) =>
+    isGood ? theme.colors.green[500] : theme.colors.grey[5]};
   margin-right: 6px;
 `;
 
 const LikeNumber = styled(Typography).attrs({text: 'Button10R'})`
-  color: ${({theme, isLike}) =>
-    isLike ? theme.colors.green[500] : theme.colors.grey[5]};
+  color: ${({theme, isGood}) =>
+    isGood ? theme.colors.green[500] : theme.colors.grey[5]};
 
   margin-left: 3px;
 `;

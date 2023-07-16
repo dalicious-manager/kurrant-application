@@ -18,7 +18,7 @@ const PrivateInfo = ({route}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const {mutateAsync: setAlram} = useSetAlramSetting();
-  console.log(list);
+
   const alarmButton = async () => {
     await setAlram({
       code: 4001,

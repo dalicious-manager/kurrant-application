@@ -18,6 +18,36 @@ export function useApplyMySpot() {
     },
   });
 }
+export function useUpdateMySpotInfo() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    data => {
+      const req = {
+        value: data.value,
+      };
+      return spotApis.updateMyspotInfo(req, data.target, data.id);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('userInfo');
+        queryClient.invalidateQueries('groupSpotManageLists');
+        queryClient.invalidateQueries('groupSpotList');
+        queryClient.invalidateQueries('groupSpotDetail');
+        queryClient.invalidateQueries('groupSpotManageDetail');
+      },
+      onError: err => {
+        Alert.alert('', err?.toString()?.replace('error: ', ''), [
+          {
+            text: '확인',
+            onPress: () => {},
+            style: 'cancel',
+          },
+        ]);
+        console.log(err, 'err');
+      },
+    },
+  );
+}
 
 // 마이스팟 신청 내역 삭제
 export function useDeleteApplyMySpot() {
@@ -34,6 +64,11 @@ export function useGetPrivateSpots() {
     return spotApis.groupSpotList();
   });
 }
+export function useGetSpotsManageList() {
+  return useQuery('groupSpotManageLists', () => {
+    return spotApis.groupSpotManageList();
+  });
+}
 
 export function useGroupSpotList() {
   return useQuery('groupSpotList', () => {
@@ -45,6 +80,17 @@ export function useGroupSpotDetail(id) {
     'groupSpotDetail',
     () => {
       return spotApis.groupSpotDetail(id);
+    },
+    {
+      enabled: false,
+    },
+  );
+}
+export function useGroupSpotManageDetail(id) {
+  return useQuery(
+    'groupSpotManageDetail',
+    () => {
+      return spotApis.groupSpotManageDetail(id);
     },
     {
       enabled: false,

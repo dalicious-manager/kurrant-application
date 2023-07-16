@@ -128,6 +128,14 @@ const Pages = ({route}) => {
             </PurchaseInfoList>
             <PurchaseInfoList>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
+                연락처
+              </Typography>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>
+                {purchaseDetail?.data?.phone}
+              </Typography>
+            </PurchaseInfoList>
+            <PurchaseInfoList>
+              <Typography text="CaptionR" textColor={themeApp.colors.grey[4]}>
                 상세 스팟
               </Typography>
               <Typography text="CaptionR" textColor={themeApp.colors.grey[2]}>

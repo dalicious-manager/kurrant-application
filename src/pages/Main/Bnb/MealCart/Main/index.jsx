@@ -87,7 +87,7 @@ const Pages = () => {
       const clientType = isLoadMeal?.data?.spotCarts.map(el => {
         return {
           spotId: el.spotId,
-          clientStatus: el.clientStatus,
+          groupType: el.groupType,
         };
       });
       setClientStatus(clientType);

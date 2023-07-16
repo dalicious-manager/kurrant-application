@@ -34,7 +34,7 @@ import BottomModal from '../../../../components/BottomModal';
 import {useGetUserInfo} from '../../../../hook/useUserInfo';
 import {SCREEN_NAME as PaymentsManageScreenName} from '../../../../screens/Main/PaymentsManage';
 import {setStorage} from '../../../../utils/asyncStorage';
-import {PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/DetailPage';
+import {PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/SpotManagePage';
 import {PAGE_NAME as LoginPageName} from '../../../Main/Login/Login';
 import {PAGE_NAME as SpotTypePageName} from '../../../Spots/SpotType';
 import {PAGE_NAME as NameSettingPageName} from '../../Login/AppleSignup';

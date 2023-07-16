@@ -38,6 +38,7 @@ import {
 import {useGroupSpotList} from '../../hook/useSpot';
 import {PAGE_NAME as ApplySpotPage} from '../../pages/Spots/shareSpot/ApplySpot';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
+import {SCREEN_NAME as HomeMainPageName} from '../../screens/Main/Bnb';
 import {diningTypeString} from '../../utils/diningType';
 import Button from '../Button';
 import Typography from '../Typography';
@@ -89,7 +90,8 @@ const Component = props => {
       };
       await selectSpot(body);
       // await userGroupSpotCheck();
-      navigation.navigate(SCREEN_NAME);
+
+      navigation.navigate(HomeMainPageName);
     }
   };
 
