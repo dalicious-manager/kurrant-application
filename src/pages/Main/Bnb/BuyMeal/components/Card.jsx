@@ -41,7 +41,6 @@ const Card = ({
       vegan={m.vegan}
       disabled={m.status === 2 || m.status === 6 || isAddMeal || m.status === 5}
       onPress={e => {
-        setFoodDetailData();
         setDailyfoodId(m.id);
         setTimeout(() => {
           navigation.navigate(MealDetailPageName, {
@@ -49,7 +48,7 @@ const Card = ({
             deliveryTime: time,
             detailFetching: detailFetching,
           });
-        }, 500);
+        }, 200);
 
         e.stopPropagation();
       }}>

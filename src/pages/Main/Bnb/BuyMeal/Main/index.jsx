@@ -516,13 +516,6 @@ const Pages = ({route}) => {
     time?.diningType,
   ]);
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log('test');
-      setFoodDetailData();
-    }, [setFoodDetailData]),
-  );
-
   useEffect(() => {
     if (userRole === 'ROLE_GUEST') {
       return setWeeklyService(

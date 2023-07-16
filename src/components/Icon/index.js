@@ -54,4 +54,3 @@ export {default as ThumbsUp} from './_components/ThumbsUp';
 export {default as ArrowUpAndDown} from './_components/ArrowUpAndDown';
 export {default as Picture} from './_components/Picture';
 export {default as Settings} from './_components/Settings';
-export {default as LoadingIcons} from './_components/LoadingIcons';
