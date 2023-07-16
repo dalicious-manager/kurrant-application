@@ -13,7 +13,7 @@ import useSse from '../utils/sse/sseLogics/useSse';
 const Root = createNativeStackNavigator();
 
 const Screen = () => {
-  // useSse();
+  useSse();
 
   useFocusEffect(
     useCallback(() => {
