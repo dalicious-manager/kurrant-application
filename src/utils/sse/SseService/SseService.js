@@ -15,10 +15,7 @@ class SseService {
       return SseServiceOnlyOneInstance;
     } else {
       instanceCount += 1;
-      console.log(
-        '이게 호출되면 sse 인스턴스가 또 만들어진갓임, 인스턴스 만든 횟수 ' +
-          instanceCount,
-      );
+      console.log('인스턴스 만든 횟수 ' + instanceCount);
     }
 
     this.baseUrl = baseUrl;
