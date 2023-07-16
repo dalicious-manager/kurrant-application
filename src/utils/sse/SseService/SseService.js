@@ -1,11 +1,26 @@
 import Config from 'react-native-config';
 
 import EventSource from 'react-native-sse';
+
+let SseServiceOnlyOneInstance;
+
+let instanceCount = 0;
+
 class SseService {
   token;
   baseUrl;
   eventSource;
   constructor(baseUrl, token) {
+    if (SseServiceOnlyOneInstance) {
+      return SseServiceOnlyOneInstance;
+    } else {
+      instanceCount += 1;
+      console.log(
+        '이게 호출되면 sse 인스턴스가 또 만들어진갓임, 인스턴스 만든 횟수 ' +
+          instanceCount,
+      );
+    }
+
     this.baseUrl = baseUrl;
     this.token = token;
 
@@ -21,6 +36,8 @@ class SseService {
         // retry: 3000,
       },
     );
+
+    SseServiceOnlyOneInstance = this;
   }
 
   onMessage = callback => {
@@ -37,16 +54,20 @@ class SseService {
     //   console.log(' sse onOpen');
     // };
     this.eventSource.addEventListener('open', e => {
+      console.log('sse OnOpen됬어요');
       callback(e.data);
     });
   };
 
   onError = () => {
-    this.eventSource.onerror = () => {
+    this.eventSource.onerror = () => {};
+
+    this.eventSource.addEventListener('error', e => {
       console.log('error occured closing connection');
+      console.log(e);
       //  에러가 뜨면 프론트에서 닫아준다
       this.onDisconnect();
-    };
+    });
   };
 
   onDisconnect = () => {

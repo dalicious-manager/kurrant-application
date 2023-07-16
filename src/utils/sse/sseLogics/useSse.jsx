@@ -20,7 +20,7 @@ const apiHostUrl =
     ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
     : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
-let instanceCount = 0;
+let forOnlyOneSseService;
 
 const useSse = () => {
   const [sseType1, setSseType1] = useAtom(sseType1Atom);
@@ -47,15 +47,16 @@ const useSse = () => {
 
   const getSseServiceInstance = useCallback(async () => {
     const tokenYo = await getToken();
-    const yoyoyo = new SseService(apiHostUrl, tokenYo);
-    instanceCount += 1;
-    // console.log('인스턴스 만든 횟수 ' + instanceCount);
 
-    return yoyoyo;
+    if (forOnlyOneSseService) return; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
+    forOnlyOneSseService = new SseService(apiHostUrl, tokenYo);
+
+    return forOnlyOneSseService;
   }, [apiHostUrl, getToken]);
 
   useEffect(() => {
     getSseServiceInstance().then(sseServiceInstance => {
+      if (!sseServiceInstance) return;
       sseServiceInstance.onOpen();
       sseServiceInstance.onMessage(message => {
         if (typeof message === 'string') {

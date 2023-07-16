@@ -14,6 +14,7 @@ const Root = createNativeStackNavigator();
 
 const Screen = () => {
   // useSse();
+
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBarStyle('dark-content');
