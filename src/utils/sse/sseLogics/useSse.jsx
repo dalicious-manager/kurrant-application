@@ -48,8 +48,13 @@ const useSse = () => {
   const getSseServiceInstance = useCallback(async () => {
     const tokenYo = await getToken();
 
-    if (forOnlyOneSseService) return; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
+    if (forOnlyOneSseService) return forOnlyOneSseService; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
     forOnlyOneSseService = new SseService(apiHostUrl, tokenYo);
+
+    if (!forOnlyOneSseService) {
+      console.log('forOnlyOneSseService 가 지금 undefined에요 ');
+      console.log(forOnlyOneSseService);
+    }
 
     return forOnlyOneSseService;
   }, [apiHostUrl, getToken]);
@@ -182,19 +187,20 @@ const useSse = () => {
 
   // 뭔가 에러터지면 끊기
 
-  const disconnectSse = () => {
-    getSseServiceInstance().then(sseServiceInstance => {
-      sseServiceInstance.onDisconnect();
-    });
+  const disconnectSse = async () => {
+    const yo = await getSseServiceInstance();
+
+    // console.log('sseServiceInstance값 확인');
+    // console.log(yo);
+
+    yo.onDisconnect();
   };
 
-  useEffect(() => {
-    return () => {
-      getSseServiceInstance().then(sseServiceInstance => {
-        sseServiceInstance.onDisconnect();
-      });
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     disconnectSse();
+  //   };
+  // }, []);
 
   return {
     sseType1,
