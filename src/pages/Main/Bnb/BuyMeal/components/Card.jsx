@@ -1,8 +1,12 @@
-import styled, {useTheme} from 'styled-components';
+import {useAtom} from 'jotai';
+import React from 'react';
+import styled from 'styled-components';
+import {useTheme} from 'styled-components/native';
 import Label from '~components/Label';
 import Typography from '~components/Typography';
 
 import MealImage from './MealImage';
+import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
 import {YellowStar} from '../../../../../components/Icon';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 
@@ -15,9 +19,12 @@ const Card = ({
   orderDailyFoodId,
   cartDailyFoodId,
   time,
+  setDailyfoodId,
+  detailFetching,
   addCartPress,
   navigation,
 }) => {
+  const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   //// 필요한 것들 확인하기
   // 원가 price
   // 할인율 discountedPrice/price * 100
@@ -37,10 +44,15 @@ const Card = ({
       vegan={m.vegan}
       disabled={m.status === 2 || m.status === 6 || isAddMeal || m.status === 5}
       onPress={e => {
-        navigation.navigate(MealDetailPageName, {
-          dailyFoodId: m.id,
-          deliveryTime: time,
-        });
+        setDailyfoodId(m.id);
+        setTimeout(() => {
+          navigation.navigate(MealDetailPageName, {
+            dailyFoodId: m.id,
+            deliveryTime: time,
+            detailFetching: detailFetching,
+          });
+        }, 200);
+
         e.stopPropagation();
       }}>
       <ContentsText>
@@ -53,14 +65,15 @@ const Card = ({
         </MealDsc> */}
 
         <PriceWrap>
-          {Math.round(realToTalDiscountRate * 100) / 100 !== 0 && (
+          {Math.round(Math.round(realToTalDiscountRate * 100) / 100) !== 0 && (
             <OriginPrice>{withCommas(m.price)}원</OriginPrice>
           )}
 
           <PriceWrap2>
-            {Math.round(realToTalDiscountRate * 100) / 100 !== 0 && (
+            {Math.round(Math.round(realToTalDiscountRate * 100) / 100) !==
+              0 && (
               <PercentText soldOut={m.status}>
-                {Math.round(realToTalDiscountRate * 100) / 100}%
+                {Math.round(Math.round(realToTalDiscountRate * 100) / 100)}%
               </PercentText>
             )}
 

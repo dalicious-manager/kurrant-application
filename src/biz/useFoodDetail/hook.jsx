@@ -1,4 +1,5 @@
 import {useAtom} from 'jotai';
+import {useQueryClient} from 'react-query';
 
 import * as Fetch from './Fetch';
 import {
@@ -24,6 +25,7 @@ const useFoodDetail = () => {
     try {
       setFoodDetailLoading(true);
       const res = await Fetch.FoodDetail(foodId, userRole);
+
       //console.log(res, '12312937');
       setFoodDetail(res.data);
       return res.data;

@@ -15,11 +15,12 @@ const Component = () => {
     const badgeQty = qty?.flat().reduce((acc, cur) => {
       return acc + cur;
     }, 0);
+    console.log(badgeQty);
     setQuantity(badgeQty);
   }, [isLoadMeal]);
   return (
     <>
-      {quantity !== 0 && (
+      {quantity > 0 && (
         <Wrap>
           <Count>{quantity}</Count>
         </Wrap>
