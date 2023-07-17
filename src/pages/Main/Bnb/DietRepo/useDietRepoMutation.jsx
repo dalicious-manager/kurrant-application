@@ -92,36 +92,16 @@ const useDietRepoMutation = date => {
   const {mutate: addMeal} = useMutation(
     async data => {
       const response = await fetchJson(`/users/me/daily/report`, 'POST', {
-        body: JSON.stringify(data),
+        body: JSON.stringify(data[0]),
       });
 
-      return response;
+      return [response, data[1]];
     },
     {
       onSuccess: data => {
-        Alert.alert('식단 추가', '식단이 추가되었습니다 ', [
-          {
-            text: '확인',
-            onPress: async () => {
-              // queryClient.invalidateQueries(['dietRepo', 'main']);
-              navigation.reset({
-                index: 1,
-                routes: [
-                  {
-                    name: MainScreenName,
-                  },
-                  {
-                    name: DietRepoMainPageName,
-                    params: {
-                      date: date,
-                    },
-                  },
-                ],
-              });
-            },
-            style: 'cancel',
-          },
-        ]);
+        if (data[1]) {
+          data[1](date);
+        }
       },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
@@ -132,21 +112,29 @@ const useDietRepoMutation = date => {
 
   // 특정기간 주문내역 리포트로 저장
 
-  const {mutate: saveMeal} = useMutation(
+  // 식단 리포트 일주일정도로만
+
+  const {mutate: saveMeal, status: saveMealStatus} = useMutation(
     async data => {
       const response = await fetchJson('/users/me/daily/report/food', 'POST', {
         body: JSON.stringify({
-          startDate: data,
-          endDate: data,
+          startDate: data[0],
+          endDate: data[1],
         }),
       });
 
-      return response;
+      return [response, data[2]];
     },
     {
-      onSuccess: data => {},
+      onSuccess: data => {
+        if (data[1]) {
+          data[1]();
+        }
+      },
       onError: err => {
-        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
+        console.log(
+          '특정기간 주문내역 이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요',
+        );
         console.log(err);
       },
     },
@@ -157,6 +145,7 @@ const useDietRepoMutation = date => {
     addMeal,
     deleteMeal,
     saveMeal,
+    saveMealStatus,
   };
 };
 export default useDietRepoMutation;

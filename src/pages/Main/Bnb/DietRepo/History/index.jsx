@@ -14,9 +14,17 @@ import {useEffect, useState} from 'react';
 
 import {
   calcDate,
+  formattedWeekDate,
   toStringByFormatting,
 } from '../../../../../utils/dateFormatter';
-import {calcWeekArr, extractMonthAndDateFromDate2} from '../logic';
+import {
+  addDateInDateRange,
+  calcWeekArr,
+  extractMonthAndDateFromDate2,
+  findIfDateIsInDateRange,
+  mondayOfThisWeek,
+  sundayOfThisWeek,
+} from '../logic';
 import {stringDateToJavascriptDate} from '../../../../../utils/dateFormatter';
 import {
   modifyEachHistoryListData,
@@ -26,6 +34,8 @@ import {
 } from './logic';
 import useGetDietRepo from '../useGetDietRepo';
 import LoadingScreen from '~components/LoadingScreen';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import useDietRepoMutation from '../useDietRepoMutation';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__HISTORY';
 
@@ -46,6 +56,8 @@ const Pages = ({route}) => {
     toStringByFormatting(week[6]),
   );
 
+  const {saveMeal, saveMealStatus} = useDietRepoMutation();
+
   // week 값은 이렇습니다
   // [월요일 자바스크립트 date객체,
   // 화요일 자바스크립트 date객체,
@@ -55,7 +67,95 @@ const Pages = ({route}) => {
   // 토요일 자바스크립트 date객체,
   // 일요일 자바스크립트 date객체]
 
-  // params에 date가 들어갈때 그 일주일을 계산하기
+  // useEffect(() => {
+  //   console.log('week 값');
+  //   console.log(week);
+  // }, [week]);
+
+  useEffect(() => {
+    (async () => {
+      // console.log('로컬 지움');
+      // await removeItemFromStorage('dietRepoDate');
+      // return;
+
+      // console.log('스토리지 확인');
+      // console.log('다이어트 레포 확인 ' + (await getStorage(`dietRepoDate`)));
+
+      const dietRepoDate = await getStorage(`dietRepoDate`);
+
+      // console.log('다이어트 데이트');
+      // console.log(dietRepoDate);
+
+      if (!dietRepoDate) {
+        // console.log('case 1');
+        // console.log(formattedWeekDate(mondayOfThisWeek(calcDate(-7, week[0]))));
+        // console.log(formattedWeekDate(sundayOfThisWeek(week[0])));
+        saveMeal([
+          formattedWeekDate(mondayOfThisWeek(calcDate(-7, week[0]))),
+          formattedWeekDate(sundayOfThisWeek(week[0])),
+        ]);
+
+        // console.log('들어갈 데이터 ');
+        // console.log(
+        //   formattedWeekDate(mondayOfThisWeek(calcDate(-7, week[0]))).concat(
+        //     ', ',
+        //     formattedWeekDate(mondayOfThisWeek(week[0])),
+        //   ),
+        // );
+
+        return setStorage(
+          'dietRepoDate',
+          // 2주전 월요일 , 이번주 일요일
+          formattedWeekDate(mondayOfThisWeek(calcDate(-7, week[0]))).concat(
+            ', ',
+            formattedWeekDate(mondayOfThisWeek(week[0])),
+          ),
+        );
+      } else {
+        if (
+          findIfDateIsInDateRange(
+            dietRepoDate,
+            toStringByFormatting(mondayOfThisWeek(week[0])),
+          )
+        ) {
+          // console.log('case 2');
+          return;
+        }
+
+        // 없다면 보내주고 추가해야됨
+        // console.log('case 3');
+
+        // console.log('들어갈 데이터 ');
+        // console.log(toStringByFormatting(week[0]));
+        // console.log(
+        //   addDateInDateRange(
+        //     dietRepoDate,
+        //     formattedWeekDate(mondayOfThisWeek(week[0])),
+        //   ),
+        // );
+
+        // 여기서 부터 밥먹고
+
+        saveMeal([
+          formattedWeekDate(mondayOfThisWeek(week[0])),
+
+          formattedWeekDate(sundayOfThisWeek(week[0])),
+
+          () => {
+            // 성공하면
+            setStorage(
+              'dietRepoDate',
+              // 2주전 월요일 , 이번주 일요일
+              addDateInDateRange(
+                dietRepoDate,
+                formattedWeekDate(mondayOfThisWeek(week[0])),
+              ),
+            );
+          },
+        ]);
+      }
+    })();
+  }, [week[0]]);
 
   return (
     <>

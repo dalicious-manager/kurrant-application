@@ -22,7 +22,6 @@ import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
-import {BowlIcon} from '~components/Icon';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -58,7 +57,10 @@ import {
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../../screens/Main/Bnb';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
-import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {
+  formattedWeekDate,
+  toStringByFormatting,
+} from '../../../../../utils/dateFormatter';
 import jwtUtils from '../../../../../utils/fetch/jwtUtill';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
@@ -75,9 +77,11 @@ import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
 import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
-import useGetDietRepo from '../../DietRepo/useGetDietRepo';
+
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
+import {BowlIcon} from '~components/Icon';
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
@@ -134,6 +138,7 @@ const Pages = () => {
 
   const {
     totalNutrition: {totalCalorie},
+    dietRepoMainRefetch,
   } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
 
   const loadCoinSound = async () => {
@@ -686,7 +691,6 @@ const Pages = () => {
                         <MealInfoComponent
                           m={m}
                           meal={meal}
-                          loadCoinSound={loadCoinSound}
                           coinSound={coinSound}
                           key={`${meal.id} ${meal.dailyFoodId}`}
                         />
@@ -803,7 +807,18 @@ const Pages = () => {
                 <DietRepoText>식단 리포트</DietRepoText>
               </Wrap1>
 
-              <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText>
+              {/* <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText> */}
+              <CalText>
+                오늘{' '}
+                {orderMealList?.data?.find(
+                  v => v.serviceDate === toStringByFormatting(new Date()),
+                )?.totalCalorie
+                  ? orderMealList?.data?.find(
+                      v => v.serviceDate === toStringByFormatting(new Date()),
+                    )?.totalCalorie
+                  : 0}{' '}
+                kcal
+              </CalText>
             </DietRepoPressable>
           </MainWrap>
         </Wrap>

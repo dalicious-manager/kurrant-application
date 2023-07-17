@@ -13,16 +13,24 @@ import {PAGE_NAME as reviewPage} from '../../../../../../pages/Main/MyPage/Revie
 import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
 import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import CoinAnimation from '../../components/CoinAnimation';
+import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
+import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
+import {useQueryClient} from 'react-query';
 
 const MealInfoComponent = ({m, meal, mockStatus, loadCoinSound, coinSound}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
+  const {dietRepoMainRefetch} = useGetDietRepo();
+  const {addMeal} = useDietRepoMutation();
   const {mutateAsync: orderState} = useConfirmOrderState();
   const [startAni, setStartAni] = useState(false);
   const deliveryConfirmPress = async () => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
   };
+  const queryClient = useQueryClient();
+  // console.log('확인 yo');
+  // console.log(dailyFoodId);
 
   const goToReviewPage = (id, image, name) => {
     navigation.navigate(reviewPage, {
@@ -107,6 +115,16 @@ const MealInfoComponent = ({m, meal, mockStatus, loadCoinSound, coinSound}) => {
                   // console.log('000');
                   setStartAni(true);
                   deliveryConfirmPress();
+                  // 식단 리포트 추가하기
+                  addMeal([
+                    {dailyFoodId},
+                    () => {
+                      queryClient.invalidateQueries({
+                        queryKey: ['dietRepo', 'main'],
+                      });
+                      // dietRepoMainRefetch();
+                    },
+                  ]);
                 } else {
                   // console.log('00011');
                   // 리뷰로 가기

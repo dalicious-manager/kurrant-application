@@ -4,7 +4,7 @@
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import {useAtomValue} from 'jotai';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {useTheme} from 'styled-components';
@@ -76,7 +76,7 @@ const DietRepoCalendar2 = ({
 
       <PagerViewWrap
         ref={pager}
-        initialPage={makeUltimateDietRepoCalendar(pastLimitDate).length - 2}
+        initialPage={makeUltimateDietRepoCalendar(pastLimitDate).length - 1}
         pageMargin={22}
         onPageScroll={e => {}}
         onPageSelected={e => {}}

@@ -83,24 +83,26 @@ const Card = ({
           </PriceWrap2>
         </PriceWrap>
 
-        <ReviewWrap>
-          <YellowStar
-            color={
-              m.status === 2 ||
-              (m.status === 6 ? themeApp.colors.grey[6] : '#FDC800')
-            }
-            width="15px"
-            height="15px"
-          />
-          <ReviewAverageText isSoldout={m.status === 2 || m.status === 6}>
-            {m?.reviewAverage && m.reviewAverage?.toString().length === 1
-              ? m.reviewAverage.toFixed(1)
-              : m.reviewAverage}
-          </ReviewAverageText>
-          <TotalReviewCount isSoldout={m.status === 2 || m.status === 6}>
-            리뷰 {m.totalReviewCount}
-          </TotalReviewCount>
-        </ReviewWrap>
+        {m.totalReviewCount > 0 && (
+          <ReviewWrap>
+            <YellowStar
+              color={
+                m.status === 2 ||
+                (m.status === 6 ? themeApp.colors.grey[6] : '#FDC800')
+              }
+              width="15px"
+              height="15px"
+            />
+            <ReviewAverageText isSoldout={m.status === 2 || m.status === 6}>
+              {m?.reviewAverage && m.reviewAverage?.toString().length === 1
+                ? m.reviewAverage.toFixed(1)
+                : m.reviewAverage}
+            </ReviewAverageText>
+            <TotalReviewCount isSoldout={m.status === 2 || m.status === 6}>
+              리뷰 {m.totalReviewCount}
+            </TotalReviewCount>
+          </ReviewWrap>
+        )}
 
         <LabelWrapper>
           {m.vegan && m.vegan !== null && (
