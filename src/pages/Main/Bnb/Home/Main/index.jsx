@@ -22,6 +22,7 @@ import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
+import {BowlIcon} from '~components/Icon';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -77,11 +78,9 @@ import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
 import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
-
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {BowlIcon} from '~components/Icon';
-import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
@@ -676,7 +675,7 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {!orderMealList?.data?.filter(order => order.serviceDate === date)
+          {orderMealList?.data?.filter(order => order.serviceDate === date)
             .length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
@@ -691,6 +690,8 @@ const Pages = () => {
                         <MealInfoComponent
                           m={m}
                           meal={meal}
+                          loadCoinSound={loadCoinSound}
+                          dailyFoodId={meal.dailyFoodId}
                           coinSound={coinSound}
                           key={`${meal.id} ${meal.dailyFoodId}`}
                         />
