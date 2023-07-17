@@ -14,7 +14,7 @@ import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
 import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import CoinAnimation from '../../components/CoinAnimation';
 
-const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
+const MealInfoComponent = ({m, meal, mockStatus, loadCoinSound, coinSound}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
   const {mutateAsync: orderState} = useConfirmOrderState();
@@ -121,6 +121,7 @@ const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
               {startAni && (
                 <CoinAnimation
                   isStart={startAni}
+                  loadCoinSound={loadCoinSound}
                   coinSound={coinSound}
                   setStart={setStartAni}
                 />

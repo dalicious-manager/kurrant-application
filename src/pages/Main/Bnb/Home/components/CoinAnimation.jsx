@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Animated, Vibration} from 'react-native';
+import {StyleSheet, View, Animated} from 'react-native';
 import Sound from 'react-native-sound';
 import styled, {css} from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
@@ -7,7 +7,7 @@ import Typography from '~components/Typography';
 
 import {PointArrow} from '../../../../../components/Icon';
 
-const CoinAnimation = ({isStart, setStart, coinSound}) => {
+const CoinAnimation = ({isStart, setStart, loadCoinSound, coinSound}) => {
   const [spinValue, setSpinValue] = useState(new Animated.Value(0));
   const [opacityValue, setOpacityValue] = useState(new Animated.Value(1));
   const [moveValue, setMoveValue] = useState(
@@ -20,9 +20,23 @@ const CoinAnimation = ({isStart, setStart, coinSound}) => {
   // Load the sound file 'whoosh.mp3' from the app bundle
   // See notes below about preloading sounds within initialization code below.
   const playSound = () => {
-    if (coinSound) {
-      coinSound.play();
-    }
+    const checkSilentModeAndVibrate = async () => {
+      try {
+        const silentModeEnabled = await loadCoinSound();
+        if (silentModeEnabled) {
+          console.log('매너 모드가 활성화되었습니다.');
+          // Vibration.vibrate();
+        } else {
+          if (coinSound) {
+            coinSound.play();
+          }
+          console.log('매너 모드가 비활성화되었습니다.');
+        }
+      } catch (error) {
+        console.error('매너 모드 확인 중 오류가 발생했습니다:', error);
+      }
+    };
+    checkSilentModeAndVibrate();
   };
   const themeApp = useTheme();
   useEffect(() => {
@@ -43,7 +57,7 @@ const CoinAnimation = ({isStart, setStart, coinSound}) => {
       }),
     ]).start(() => {
       setTextTime(true);
-      Vibration.vibrate();
+      // Vibration.vibrate();
       playSound();
       //   startAnimation();
     });
