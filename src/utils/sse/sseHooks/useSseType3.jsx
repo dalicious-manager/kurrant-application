@@ -15,7 +15,7 @@ const useSseType3 = () => {
   }, [checkSseType3]);
 
   useEffect(() => {
-    // if (!checkSseType3) return;
+    if (!checkSseType3) return;
 
     console.log('sseType3 보낼지 말지 판단하기 ');
 
