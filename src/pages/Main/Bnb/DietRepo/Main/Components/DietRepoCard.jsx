@@ -36,9 +36,7 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
         <MetadataWrap>
           <SmallRowWrap>
             <RestaurentNameText>
-              {'['}
               {item1?.title || item2?.makersName}
-              {']'}
             </RestaurentNameText>
             <MenuNameWrap>
               {!!item1 && !item2 ? (
