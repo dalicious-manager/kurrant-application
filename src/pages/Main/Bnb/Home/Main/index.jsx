@@ -141,19 +141,26 @@ const Pages = () => {
     dietRepoMainRefetch,
   } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
 
-  const loadCoinSound = () => {
-    const sound = new Sound(
-      require('../../../../../assets/sounds/coin.wav'),
-      Platform.OS === 'android'
-        ? Sound.MAIN_BUNDLE
-        : Sound.MAIN_BUNDLE.bundlePath,
-      error => {
-        if (error) {
-          return;
-        }
-      },
-    );
-    setCoinSound(sound);
+  const loadCoinSound = async () => {
+    try {
+      const sound = new Sound(
+        require('../../../../../assets/sounds/coin.wav'),
+        Platform.OS === 'android'
+          ? Sound.MAIN_BUNDLE
+          : Sound.MAIN_BUNDLE.bundlePath,
+        error => {
+          if (error) {
+            return;
+          }
+        },
+      );
+      await sound.play();
+      sound.release();
+      setCoinSound(sound);
+      return false;
+    } catch (error) {
+      throw error;
+    }
   };
   const {
     getMembershipHistory,
@@ -669,14 +676,14 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
         <MainWrap>
-          {orderMealList?.data?.filter(order => order.serviceDate === date)
+          {!orderMealList?.data?.filter(order => order.serviceDate === date)
             .length === 0 ? (
             <NoMealInfo>
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
             orderMealList?.data?.map((m, idx) => {
-              if (m.serviceDate === date)
+              if (m.serviceDate !== date)
                 return (
                   <React.Fragment key={`${m.id} ${idx}`}>
                     {m.orderItemDtoList.map(meal => {
