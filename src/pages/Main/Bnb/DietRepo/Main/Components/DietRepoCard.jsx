@@ -28,7 +28,8 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
                 ? {
                     uri: item1?.imgLocation || item2?.imageLocation,
                   }
-                : require('../../../../../../assets/images/logo/main-logo.png')
+                : // : require('../../../../../../assets/images/logo/main-logo.png')
+                  require('../../../../../../assets/images/dietRepo/EmptyPlate.png')
             }
           />
         </ImagePressable>
