@@ -104,39 +104,38 @@ const Page = () => {
 
   useEffect(() => {
     const handlePress = async () => {
-      Animated.timing(scaleAnim, {
-        toValue: fadeIn ? 0 : 1,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(heightAnim, {
-        toValue: fadeIn ? 0 : 1,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-
-      setTimeout(() => {
-        Animated.timing(widthAnim, {
-          toValue: fadeIn ? 0 : 1,
-          duration: 500,
-          useNativeDriver: false,
-        }).start();
-        Animated.timing(paddingAnim, {
-          toValue: fadeIn ? 0 : 1,
-          duration: 500,
-          useNativeDriver: false,
-        }).start();
-        Animated.timing(fadeAnim, {
-          toValue: fadeIn ? 0 : 1,
-          duration: 500,
-          useNativeDriver: false,
-        }).start();
-      }, 300);
       try {
-        setTimeout(async () => {
-          await checkPermission();
-          await isAutoLogin();
-        }, 2000);
+        Animated.timing(scaleAnim, {
+          toValue: fadeIn ? 0 : 1,
+          duration: 300,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(heightAnim, {
+          toValue: fadeIn ? 0 : 1,
+          duration: 300,
+          useNativeDriver: false,
+        }).start();
+
+        setTimeout(() => {
+          Animated.timing(widthAnim, {
+            toValue: fadeIn ? 0 : 1,
+            duration: 500,
+            useNativeDriver: false,
+          }).start();
+          Animated.timing(paddingAnim, {
+            toValue: fadeIn ? 0 : 1,
+            duration: 500,
+            useNativeDriver: false,
+          }).start();
+          Animated.timing(fadeAnim, {
+            toValue: fadeIn ? 0 : 1,
+            duration: 500,
+            useNativeDriver: false,
+          }).start();
+        }, 300);
+
+        await checkPermission();
+        await isAutoLogin();
       } catch (error) {
         setTimeout(() => {
           navigation.reset({
