@@ -9,7 +9,7 @@ import {
   Pressable,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import styled from 'styled-components/native';
+import styled, {useTheme} from 'styled-components/native';
 import PlusIcon from '~assets/icons/Map/plus.svg';
 import EditIcon from '~assets/icons/Spot/edit.svg';
 import MealIcon from '~assets/icons/Spot/meal.svg';
@@ -76,6 +76,7 @@ export const PAGE_NAME = 'P__GROUP__MANAGE__SPOT_DETAIL';
 const Pages = ({route}) => {
   const groupId = route?.params?.groupId;
   const groupType = route?.params?.groupType;
+  const themeApp = useTheme();
   const {userWithdrawGroup} = useGroupSpots();
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const myGroupList =
@@ -241,6 +242,12 @@ const Pages = ({route}) => {
             )}
           </DeliveryWrap>
           <InnerView>
+            <Typography
+              style={{marginBottom: 16}}
+              text="Body06R"
+              textColor={themeApp.colors.red[500]}>
+              상품마다 주문마감시간이 다를 수 있습니다.
+            </Typography>
             <DeliveryTable mealInfo={detailData?.data?.mealInfos} />
           </InnerView>
           <Border />
@@ -253,7 +260,9 @@ const Pages = ({route}) => {
                     style={{width: 20, height: 20}}
                   />
 
-                  <Body06RText style={{marginLeft: 16}}>배송 스팟</Body06RText>
+                  <Body06RText style={{marginLeft: 16}}>
+                    배송 스팟 리스트
+                  </Body06RText>
                 </Delivery>
                 {groupType === '공유스팟' && (
                   <ApplyButton onPress={() => goToApplyPage('spot')}>
@@ -397,7 +406,7 @@ const DetailSpotWrap = styled.View`
 `;
 
 const InnerView = styled.View`
-  padding: 16px 0px 0px 36px;
+  padding: 0px 0px 0px 36px;
 `;
 
 const DiningTypeDisabledText = styled(Typography).attrs({text: 'Body06R'})`
