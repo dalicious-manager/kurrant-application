@@ -62,23 +62,23 @@ export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 const Pages = ({route}) => {
   const {sseType3, confirmSseIsRead} = useSse();
 
-  const [checkSseType3, setCheckSseType3] = useAtom(checkSseType3Atom);
   const [total] = useAtom(totalReviewWaitListAtom);
   const [redeemablePoints] = useAtom(redeemablePointsAtom);
-  useEffect(() => {
-    if (!checkSseType3) return;
+  // const [checkSseType3, setCheckSseType3] = useAtom(checkSseType3Atom);
+  // useEffect(() => {
+  //   if (!checkSseType3) return;
 
-    console.log('sseType3 보낼지 말지 판단하기 ');
+  //   console.log('sseType3 보낼지 말지 판단하기 ');
 
-    if (total <= 0) {
-      // 서버에 read했다고보내기
-      // setCheckType3 false로 바꾸기
-      console.log('sseType3 읽었다고 올림 ');
-      confirmSseIsRead(3);
+  //   if (total <= 0) {
+  //     // 서버에 read했다고보내기
+  //     // setCheckType3 false로 바꾸기
+  //     console.log('sseType3 읽었다고 올림 ');
+  //     confirmSseIsRead(3);
 
-      setCheckSseType3(false);
-    }
-  }, [checkSseType3]);
+  //     setCheckSseType3(false);
+  //   }
+  // }, [checkSseType3]);
 
   const themeApp = useTheme();
   const navigation = useNavigation();
@@ -231,7 +231,7 @@ const Pages = ({route}) => {
           <InfomationContainer>
             <InfomationBox
               onPress={() => {
-                confirmSseIsRead(3);
+                // confirmSseIsRead(3);
                 navigation.navigate(ReviewScreenName);
               }}>
               <SseRedDotType3
