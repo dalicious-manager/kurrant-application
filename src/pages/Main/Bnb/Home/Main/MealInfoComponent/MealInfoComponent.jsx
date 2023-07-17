@@ -17,7 +17,7 @@ import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
 import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
 import {useQueryClient} from 'react-query';
 
-const MealInfoComponent = ({m, meal, mockStatus, dailyFoodId, coinSound}) => {
+const MealInfoComponent = ({m, meal, mockStatus, loadCoinSound, coinSound}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
   const {dietRepoMainRefetch} = useGetDietRepo();
@@ -139,6 +139,7 @@ const MealInfoComponent = ({m, meal, mockStatus, dailyFoodId, coinSound}) => {
               {startAni && (
                 <CoinAnimation
                   isStart={startAni}
+                  loadCoinSound={loadCoinSound}
                   coinSound={coinSound}
                   setStart={setStartAni}
                 />
