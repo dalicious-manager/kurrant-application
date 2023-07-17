@@ -2247,7 +2247,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2263,7 +2263,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2279,7 +2279,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
         <MainRoot.Screen
@@ -2295,7 +2295,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
-            headerLeft: () => <BackButton />,
+            headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
       </MainRoot.Group>

@@ -13,9 +13,6 @@ import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 import {useNavigation} from '@react-navigation/native';
 
 const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
-  // console.log('아이템 2');
-  // console.log(item2);
-
   const {deleteMeal, addMeal} = useDietRepoMutation(date);
   const navigation = useNavigation();
   return (
@@ -94,7 +91,7 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
                         {
                           text: '취소',
                           onPress: () => {
-                            console.log('cancel pressed');
+                            // console.log('cancel pressed');
                           },
                         },
                         {

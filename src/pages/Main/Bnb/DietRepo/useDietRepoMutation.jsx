@@ -116,11 +116,6 @@ const useDietRepoMutation = date => {
 
   const {mutate: saveMeal, status: saveMealStatus} = useMutation(
     async data => {
-      // console.log('특정 주문 데이터 확인 여기여기');
-      // console.log(data);
-      // console.log(data[0]);
-      // console.log(data[1]);
-
       const response = await fetchJson('/users/me/daily/report/food', 'POST', {
         body: JSON.stringify({
           startDate: data[0],

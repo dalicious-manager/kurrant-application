@@ -81,7 +81,7 @@ const Pages = ({route}) => {
       {
         text: '취소',
         onPress: () => {
-          console.log('cancel pressed');
+          // console.log('cancel pressed');
         },
         style: 'destructive',
       },

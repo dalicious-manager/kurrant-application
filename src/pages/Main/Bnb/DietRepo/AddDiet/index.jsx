@@ -22,11 +22,6 @@ export const PAGE_NAME = 'P_MAIN__DIET_REPO__AddDiet';
 const Pages = ({route}) => {
   const navigation = useNavigation();
 
-  // console.log('route');
-  // console.log(route?.params?.date);
-  // console.log(extractMonthAndDateFromDate(route?.params?.date, '-'));
-  // console.log(route?.params?.diningType);
-
   const {dietRepoAddMealList, isDietRepoAddRefetchLoading} = useGetDietRepo(
     undefined,
     route?.params?.date,

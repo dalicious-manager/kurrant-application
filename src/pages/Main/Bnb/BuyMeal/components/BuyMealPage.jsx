@@ -46,6 +46,8 @@ const BuyMealPage = props => {
       selectFood,
       time,
     },
+    detailFetching,
+    setDailyfoodId,
   } = props;
 
   const {
@@ -135,21 +137,23 @@ const BuyMealPage = props => {
         {diningFood?.map(m => {
           const realToTalDiscountRate =
             100 -
-            (100 - m.membershipDiscountRate) *
+            (100 - m?.membershipDiscountRate) *
               0.01 *
-              ((100 - m.makersDiscountRate) * 0.01) *
-              ((100 - m.periodDiscountRate) * 0.01) *
+              ((100 - m?.makersDiscountRate) * 0.01) *
+              ((100 - m?.periodDiscountRate) * 0.01) *
               100;
           const totalDiscount =
-            m.membershipDiscountPrice +
-            m.makersDiscountPrice +
-            m.periodDiscountPrice;
+            m?.membershipDiscountPrice +
+            m?.makersDiscountPrice +
+            m?.periodDiscountPrice;
 
           return (
             <Card
               key={m.id}
               m={m}
               isAddMeal={isAddMeal}
+              setDailyfoodId={setDailyfoodId}
+              detailFetching={detailFetching}
               realToTalDiscountRate={realToTalDiscountRate}
               withCommas={withCommas}
               totalDiscount={totalDiscount}
