@@ -63,6 +63,7 @@ import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
+import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
 import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
@@ -75,7 +76,8 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-
+import {BowlIcon} from '~components/Icon';
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
@@ -109,6 +111,7 @@ const Pages = () => {
 
   const [coinSound, setCoinSound] = useState(null);
 
+
   // const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
   //   userSpotId,
   //   formattedWeekDate(new Date()),
@@ -129,6 +132,12 @@ const Pages = () => {
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
   const date = formattedWeekDate(new Date());
+
+  const {
+    totalNutrition: {totalCalorie},
+  } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
+
+
   const loadCoinSound = () => {
     const sound = new Sound(
       require('../../../../../assets/sounds/coin.wav'),
@@ -288,9 +297,8 @@ const Pages = () => {
   // }, []);
 
   // useEffect(() => {
-  //   console.log('아나운스먼트 여기여');
-  //   console.log(oneAnnouncement);
-  // }, [oneAnnouncement]);
+  //   navigation.navigate(DietRepoMainPageName);
+  // }, []);
 
   // 로컬스토리지 확인하기
 
@@ -779,6 +787,18 @@ const Pages = () => {
               <CountText>건</CountText>
             </CountWrap>
           </MarketWrap> */}
+
+            <DietRepoPressable
+              onPress={() => {
+                navigation.navigate(DietRepoMainPageName);
+              }}>
+              <Wrap1>
+                <BowlIcon />
+                <DietRepoText>식단 리포트</DietRepoText>
+              </Wrap1>
+
+              <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText>
+            </DietRepoPressable>
           </MainWrap>
         </Wrap>
       </ScrollViewWrap>
@@ -1041,4 +1061,26 @@ const CsIconPress = styled.Pressable`
   height: 40px;
   justify-content: center;
   align-items: center;
+`;
+
+const DietRepoPressable = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+  border-radius: 14px;
+  background-color: white;
+  padding: 21px 16px;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const Wrap1 = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+const DietRepoText = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 13px;
+`;
+const CalText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[2]};
 `;

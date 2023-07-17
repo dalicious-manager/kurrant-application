@@ -43,6 +43,7 @@ import {PAGE_NAME as FAQPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
+import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -279,6 +280,7 @@ const Pages = () => {
                 routeName={GroupApplicationCheckPageName}
               />
             )}
+            <ListBox title="식단 리포트" routeName={DietRepoMainPageName} />
           </ListContainer>
           <ListContainer title="알림">
             <ListBox title="공지사항" routeName={NoticeScreenName} />

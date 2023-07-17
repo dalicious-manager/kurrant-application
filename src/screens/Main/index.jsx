@@ -104,7 +104,6 @@ import MembershipTerminateComplate, {
   PAGE_NAME as MembershipTerminateComplatePageName,
 } from '~pages/Membership/MembershipTerminate/MembershipTerminateComplate';
 
-//import CloseIcon from '../../assets/icons/Group/close.svg';
 import BnbScreen, {SCREEN_NAME as BnbScreenName} from './Bnb';
 import Notice, {SCREEN_NAME as NoticeScreenName} from './Notice';
 import PaymentsManage, {
@@ -116,24 +115,6 @@ import PurchaseHistory, {
 import RegisterCard, {
   SCREEN_NAME as RegisterCardScreenName,
 } from './RegisterCard';
-import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
-// import CreateReviewPage1, {
-//   SCREEN_NAME as CreateReviewPage1ScreenName,
-// } from './Review/CreateReview/Page1';
-import CreateReviewPage1, {
-  PAGE_NAME as CreateReviewPage1PageName,
-} from '../../pages/Main/MyPage/Review/CreateReview/Page1';
-// import CreateReviewPage2, {
-//   PAGE_NAME as CreateReviewPage2ScreenName,
-//   PAGE_NAME2 as EditReviewPage2ScreenName,
-// } from './Review/CreateReview/Page2';
-import CreateReviewPage2, {
-  PAGE_NAME as CreateReviewPage2ScreenName,
-  PAGE_NAME2 as EditReviewPage2ScreenName,
-} from '../../pages/Main/MyPage/Review/CreateReview/Page2';
-import ReportReview, {
-  PAGE_NAME as ReportReviewPageName,
-} from '../../pages/Main/MyPage/Review/ReportReview';
 import {isLoginLoadingAtom} from '../../biz/useAuth/store';
 import useBoard from '../../biz/useBoard';
 import BackButton from '../../components/BackButton';
@@ -278,6 +259,40 @@ import CompanyInfo, {
 import Credit, {
   PAGE_NAME as CreditPageName,
 } from '../../pages/Main/MyPage/Credit';
+
+// 리뷰
+// import CreateReviewPage1, {
+//   PAGE_NAME as CreateReviewPage1PageName,
+// } from './Review/CreateReview/Page1';
+import CreateReviewPage1, {
+  PAGE_NAME as CreateReviewPage1PageName,
+} from '~pages/Main/MyPage/Review/CreateReview/Page1';
+
+import CreateReviewPage2, {
+  PAGE_NAME as CreateReviewPage2PageName,
+  PAGE_NAME2 as EditReviewPage2PageName,
+} from '~pages/Main/MyPage/Review/CreateReview/Page2';
+
+import Review, {SCREEN_NAME as ReviewScreenName} from './Review';
+
+import ReportReview, {
+  PAGE_NAME as ReportReviewPageName,
+} from '../../pages/Main/MyPage/Review/ReportReview';
+
+// 식단 리포트
+
+import DietRepoMain, {
+  PAGE_NAME as DietRepoMainPageName,
+} from '../../pages/Main/Bnb/DietRepo/Main';
+import DietRepoHistory, {
+  PAGE_NAME as DietRepoHistoryPageName,
+} from '../../pages/Main/Bnb/DietRepo/History';
+import DietRepoAddDiet, {
+  PAGE_NAME as DietRepoAddDietPageName,
+} from '../../pages/Main/Bnb/DietRepo/AddDiet';
+import DietRepoAddMyDiet, {
+  PAGE_NAME as DietRepoAddMyDietPageName,
+} from '../../pages/Main/Bnb/DietRepo/AddMyDiet';
 
 // 리뷰 및 재신 개인
 import {
@@ -2101,7 +2116,7 @@ const Screen = () => {
         />
 
         <MainRoot.Screen
-          name={CreateReviewPage2ScreenName}
+          name={CreateReviewPage2PageName}
           component={CreateReviewPage2}
           options={{
             headerShown: true,
@@ -2145,7 +2160,7 @@ const Screen = () => {
         />
 
         <MainRoot.Screen
-          name={EditReviewPage2ScreenName}
+          name={EditReviewPage2PageName}
           component={CreateReviewPage2}
           options={{
             headerShown: true,
@@ -2215,6 +2230,76 @@ const Screen = () => {
           }}
         />
       </MainRoot.Group>
+
+      {/* 식단 리포트 */}
+
+      <MainRoot.Group>
+        <MainRoot.Screen
+          name={DietRepoMainPageName}
+          component={DietRepoMain}
+          options={{
+            headerShown: true,
+            title: '식단 리포트',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={DietRepoHistoryPageName}
+          component={DietRepoHistory}
+          options={{
+            headerShown: true,
+            title: '식사 히스토리',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={DietRepoAddDietPageName}
+          component={DietRepoAddDiet}
+          options={{
+            headerShown: true,
+            title: '식사 추가',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+        <MainRoot.Screen
+          name={DietRepoAddMyDietPageName}
+          component={DietRepoAddMyDiet}
+          options={{
+            headerShown: true,
+            title: '내 음식 추가',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            headerShadowVisible: false,
+            headerLeft: () => <BackButton />,
+          }}
+        />
+      </MainRoot.Group>
+
       <MainRoot.Group>
         <MainRoot.Screen
           name={MySpotMapPage}

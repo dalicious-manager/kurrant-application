@@ -213,8 +213,17 @@ export const timeLeftIndicator = (criterionDayLength, compareDate) => {
   }
 };
 
-// 2023-03-22T12:14:50.559+09:00 -> 2023. 03. 22
+// 2023-03-22T12:14:50.559+09:00 -> 2023-03-22
 
+export function toStringByFormatting(source, delimiter = '-') {
+  const year = source.getFullYear();
+  const month = leftPad(source.getMonth() + 1);
+  const day = leftPad(source.getDate());
+
+  return [year, month, day].join(delimiter);
+}
+
+// 2023-03-22 -> 2023. 03. 22
 export const convertDateFormat1 = stringDate => {
   // 1. 앞에 날짜 자르기
 
@@ -252,7 +261,7 @@ export const convertDateFormat1 = stringDate => {
 // 스트링날짜 Date객체로 변환
 // 예) '2022-12-27 -> 2022-12-26T15:00:00.000Z
 
-export const stringDateToJavascriptDate = (stringDate, seperator) => {
+export const stringDateToJavascriptDate = (stringDate, seperator = '-') => {
   const process1 = stringDate.trim();
 
   const process2 = process1.split(seperator);
@@ -289,4 +298,69 @@ export const changeSeperator = (dateInput, inputSeperator, outputSeperator) => {
   const process3 = process2.join(outputSeperator);
 
   return process3;
+};
+
+// 몇 일후의 날짜 계산하기
+
+// 하루 후 -> calcDate(1,date)
+// 이틀 후 -> calcDate(2,date)
+
+export const calcDate = (daysPassed = 0, date = new Date()) => {
+  const today = date;
+
+  const nextDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + daysPassed,
+  );
+
+  return nextDate;
+};
+
+// 두 날짜 사이에 며칠 차이인가 계산하기
+
+// 예1) 2023-05-24(자바스크립트 date객체), 2023-05-26(자바스크립트 date객체) -> 2
+// 예2) 2023-05-24(자바스크립트 date객체), 2023-06-07(자바스크립트 date객체) -> 14(2주일 차이)
+
+export const calcTimeBetweenTwoDates = (date1, date2) => {
+  const difference = Math.abs(
+    stringDateToJavascriptDate(date2, '-').getTime() -
+      stringDateToJavascriptDate(date1, '-').getTime(),
+  );
+
+  return difference / (1000 * 60 * 60 * 24);
+};
+
+export const getDayOfTheSameWeekOfADay = (date, dayNum) => {
+  const dayOfDate = date.getDay();
+  // 해당
+  // 해당 몇요일인가 구하기
+  const result = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() - dayOfDate + dayNum,
+  );
+
+  return result;
+};
+
+export const calculateHowManyWeeksBetweenTwoDates = (startDate, endDate) => {
+  // startDate -> 그 주의 금요일
+
+  const startDate1 = getDayOfTheSameWeekOfADay(startDate, 5);
+
+  // endDate -> 그 주의 토요일
+  const endDate1 = getDayOfTheSameWeekOfADay(endDate, 6);
+
+  const startMillis = startDate1.getTime();
+  const endMillis = endDate1.getTime();
+
+  // Calculate the difference in milliseconds between the two dates
+  const diffMillis = Math.abs(endMillis - startMillis);
+
+  // Calculate the number of weeks
+  const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+  const weeks = Math.ceil(diffMillis / millisecondsPerWeek);
+
+  return weeks;
 };

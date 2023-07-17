@@ -70,6 +70,7 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
+import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -541,7 +542,52 @@ const Pages = ({route}) => {
                       </InfoTextView>
                     </InfoWrap>
                   </Content>
-
+                   <Content>
+              <InfoWrap>
+                <InfoTitleView>
+                  <InfoTitle>영양 정보</InfoTitle>
+                </InfoTitleView>
+                <InfoTextView>
+                  <InfoTextWrap>
+                    <Info>칼로리</Info>
+                    <InfoText>
+                      {isFoodDetail?.calorie
+                        ? addCommasInEveryThirdDigit(isFoodDetail?.calorie)
+                        : 0}
+                      kcal
+                    </InfoText>
+                  </InfoTextWrap>
+                  <InfoTextWrap>
+                    <Info>탄수화물</Info>
+                    <InfoText>
+                      {isFoodDetail?.carbohydrate
+                        ? addCommasInEveryThirdDigit(isFoodDetail?.carbohydrate)
+                        : 0}
+                      g
+                    </InfoText>
+                  </InfoTextWrap>
+                  <InfoTextWrap>
+                    <Info>단백질</Info>
+                    <InfoText>
+                      {' '}
+                      {isFoodDetail?.protein
+                        ? addCommasInEveryThirdDigit(isFoodDetail?.protein)
+                        : 0}
+                      g
+                    </InfoText>
+                  </InfoTextWrap>
+                  <InfoTextWrap>
+                    <Info>지방</Info>
+                    <InfoText>
+                      {isFoodDetail?.fat
+                        ? addCommasInEveryThirdDigit(isFoodDetail?.fat)
+                        : 0}
+                      g
+                    </InfoText>
+                  </InfoTextWrap>
+                </InfoTextView>
+              </InfoWrap>
+            </Content>
                   {/* 리뷰자리 */}
                   {!getBoardIsLoading && reviewData ? (
                     <MealDetailReview
@@ -572,6 +618,7 @@ const Pages = ({route}) => {
             </View>
           }
         />
+
 
         <KeyboardAvoiding
           mealDetail

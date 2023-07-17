@@ -34,6 +34,7 @@ export const blue = {
 // Red
 export const red = {
   100: '#FFEAEA',
+
   500: '#DD5257',
 };
 
