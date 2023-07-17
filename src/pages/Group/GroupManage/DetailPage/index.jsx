@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
-import {useTheme} from 'styled-components/native';
 import PlusIcon from '~assets/icons/Map/plus.svg';
 import EditIcon from '~assets/icons/Spot/edit.svg';
 import MealIcon from '~assets/icons/Spot/meal.svg';
