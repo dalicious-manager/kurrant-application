@@ -22,7 +22,6 @@ import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
-import {BowlIcon} from '~components/Icon';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -78,7 +77,7 @@ import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
 import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
-import useGetDietRepo from '../../DietRepo/useGetDietRepo';
+
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {BowlIcon} from '~components/Icon';
