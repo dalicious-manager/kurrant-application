@@ -89,12 +89,12 @@ const MealInfoComponent = ({m, meal, mockStatus, loadCoinSound, coinSound}) => {
             </MealInfo>
           </MealInfoWrap>
         </Shadow>
-        {(meal.orderStatus === 10 || meal.orderStatus === 11) && (
+        {(meal.orderStatus !== 10 || meal.orderStatus === 11) && (
           <OrderStatusWrap>
             <CommentText>
               {meal.orderStatus === 11
                 ? '식사 맛있게 하셨나요?'
-                : meal.orderStatus === 10 &&
+                : meal.orderStatus !== 10 &&
                   '배송완료! 메뉴 확인후 수령하셨나요?'}
             </CommentText>
 
@@ -102,7 +102,7 @@ const MealInfoComponent = ({m, meal, mockStatus, loadCoinSound, coinSound}) => {
               disabled={startAni}
               startAni={startAni}
               onPress={() => {
-                if (meal.orderStatus === 10) {
+                if (meal.orderStatus !== 10) {
                   // 주문상태변경 - 수령완료 api보내야함
                   // console.log('000');
                   setStartAni(true);
@@ -116,7 +116,7 @@ const MealInfoComponent = ({m, meal, mockStatus, loadCoinSound, coinSound}) => {
               <ConfirmText>
                 {meal.orderStatus === 11
                   ? '맛 평가하기'
-                  : meal.orderStatus === 10 && '네, 확인했어요'}
+                  : meal.orderStatus !== 10 && '네, 확인했어요'}
               </ConfirmText>
               {startAni && (
                 <CoinAnimation

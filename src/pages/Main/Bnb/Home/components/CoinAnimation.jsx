@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Animated} from 'react-native';
+import {StyleSheet, View, Animated, Vibration} from 'react-native';
 import Sound from 'react-native-sound';
 import styled, {css} from 'styled-components/native';
 import {useTheme} from 'styled-components/native';
@@ -25,11 +25,12 @@ const CoinAnimation = ({isStart, setStart, loadCoinSound, coinSound}) => {
         const silentModeEnabled = await loadCoinSound();
         if (silentModeEnabled) {
           console.log('매너 모드가 활성화되었습니다.');
-          // Vibration.vibrate();
+          Vibration.vibrate();
         } else {
           if (coinSound) {
             coinSound.play();
           }
+          Vibration.vibrate();
           console.log('매너 모드가 비활성화되었습니다.');
         }
       } catch (error) {
