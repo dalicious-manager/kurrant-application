@@ -80,91 +80,96 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
             )}
 
             <ButtonWrap>
-              <ReviewFormWriteButton
-                onPress={() => {
-                  if (item1 && item1?.reportId) {
-                    Alert.alert(
-                      '식단 제거',
-                      `${item1?.foodName}을 식단에서 제거시키시겠습니까? `,
-                      [
-                        {
-                          text: '취소',
-                          onPress: () => {
-                            // console.log('cancel pressed');
+              {!item2?.isDuplicated && (
+                <ReviewFormWriteButton
+                  onPress={() => {
+                    if (item1 && item1?.reportId) {
+                      Alert.alert(
+                        '식단 제거',
+                        `${item1?.foodName}을 식단에서 제거시키시겠습니까? `,
+                        [
+                          {
+                            text: '취소',
+                            onPress: () => {
+                              // console.log('cancel pressed');
+                            },
                           },
-                        },
-                        {
-                          text: '제거',
-                          onPress: () => {
-                            try {
-                              deleteMeal(item1?.reportId);
-                            } catch (err) {
-                              console.log(err);
-                            }
+                          {
+                            text: '제거',
+                            onPress: () => {
+                              try {
+                                deleteMeal(item1?.reportId);
+                              } catch (err) {
+                                console.log(err);
+                              }
+                            },
+                            style: 'destructive',
                           },
-                          style: 'destructive',
-                        },
-                      ],
-                    );
-                  } else if (item2 && item2?.dailyFoodId) {
-                    Alert.alert(
-                      '식단 추가',
-                      `${item2?.foodName}을(를) 식단에서 추가하시겠습니까? `,
-                      [
-                        {
-                          text: '취소',
-                          onPress: () => {
-                            console.log('cancel pressed');
+                        ],
+                      );
+                    } else if (item2 && item2?.dailyFoodId) {
+                      Alert.alert(
+                        '식단 추가',
+                        `${item2?.foodName}을(를) 식단에서 추가하시겠습니까? `,
+                        [
+                          {
+                            text: '취소',
+                            onPress: () => {
+                              console.log('cancel pressed');
+                            },
                           },
-                        },
-                        {
-                          text: '추가',
-                          onPress: () => {
-                            try {
-                              addMeal([
-                                {dailyFoodId: item2?.dailyFoodId},
-                                date => {
-                                  Alert.alert(
-                                    '식단 추가',
-                                    '식단이 추가되었습니다 ',
-                                    [
-                                      {
-                                        text: '확인',
-                                        onPress: async () => {
-                                          // queryClient.invalidateQueries(['dietRepo', 'main']);
-                                          navigation.reset({
-                                            index: 1,
-                                            routes: [
-                                              {
-                                                name: MainScreenName,
-                                              },
-                                              {
-                                                name: DietRepoMainPageName,
-                                                params: {
-                                                  date: date,
+                          {
+                            text: '추가',
+                            onPress: () => {
+                              try {
+                                addMeal([
+                                  {dailyFoodId: item2?.dailyFoodId},
+                                  date => {
+                                    Alert.alert(
+                                      '식단 추가',
+                                      '식단이 추가되었습니다 ',
+                                      [
+                                        {
+                                          text: '확인',
+                                          onPress: async () => {
+                                            // queryClient.invalidateQueries(['dietRepo', 'main']);
+                                            navigation.reset({
+                                              index: 1,
+                                              routes: [
+                                                {
+                                                  name: MainScreenName,
                                                 },
-                                              },
-                                            ],
-                                          });
+                                                {
+                                                  name: DietRepoMainPageName,
+                                                  params: {
+                                                    date: date,
+                                                  },
+                                                },
+                                              ],
+                                            });
+                                          },
+                                          style: 'cancel',
                                         },
-                                        style: 'cancel',
-                                      },
-                                    ],
-                                  );
-                                },
-                              ]);
-                            } catch (err) {
-                              console.log(err);
-                            }
+                                      ],
+                                    );
+                                  },
+                                ]);
+                              } catch (err) {
+                                console.log(err);
+                              }
+                            },
+                            // style: 'cancel',
                           },
-                          // style: 'cancel',
-                        },
-                      ],
-                    );
-                  }
-                }}>
-                <TextText> {!!item1 && !item2 ? '제거' : '식사 추가'}</TextText>
-              </ReviewFormWriteButton>
+                        ],
+                      );
+                    }
+                  }}>
+                  <TextText>
+                    {' '}
+                    {!!item1 && !item2 ? '제거' : '식사 추가'}
+                  </TextText>
+                </ReviewFormWriteButton>
+              )}
             </ButtonWrap>
           </MainWrap4>
         </MetadataWrap>

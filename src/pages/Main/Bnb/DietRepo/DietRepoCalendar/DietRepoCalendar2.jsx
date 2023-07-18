@@ -92,6 +92,12 @@ const DietRepoCalendar2 = ({
                   const propsDay = formattedWeekDate(day);
                   const lastDay =
                     formattedDate(day, '/') > formattedDate(today, '/');
+
+                  console.log('lastDay 확인');
+                  console.log(formattedDate(day, '/'));
+                  console.log(formattedDate(today, '/'));
+                  console.log(lastDay);
+
                   const order = isOrderMeal?.data?.filter(
                     x => x.serviceDate === propsDay,
                   );
