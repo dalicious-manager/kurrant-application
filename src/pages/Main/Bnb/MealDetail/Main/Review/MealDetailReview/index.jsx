@@ -10,12 +10,10 @@ import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMea
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
-
 import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
-
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,

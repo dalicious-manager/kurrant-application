@@ -367,7 +367,7 @@ const Component = forwardRef(
                 )}
               </ControlContainer>
               {/* caption */}
-              {caption && (
+              {caption && !errors[name] && (
                 <CaptionContainer>
                   <Typography
                     text="CaptionR"
@@ -382,6 +382,7 @@ const Component = forwardRef(
               {errors[name] && (
                 <LabelContainer>
                   <Typography
+                    style={rest.errorStyle}
                     variant="h500"
                     weight="R"
                     textColor={themeApp.colors.red[500]}>
@@ -412,6 +413,7 @@ const LabelContainer = styled.View`
 const CaptionContainer = styled.View`
   width: 100%;
   background-color: transparent;
+  margin-top: 4px;
 `;
 
 // TextInput
