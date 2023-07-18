@@ -87,8 +87,9 @@ const Card = ({
           <ReviewWrap>
             <YellowStar
               color={
-                m.status === 2 ||
-                (m.status === 6 ? themeApp.colors.grey[6] : '#FDC800')
+                m.status === 2 || m.status === 6
+                  ? themeApp.colors.grey[6]
+                  : '#FDC800'
               }
               width="15px"
               height="15px"

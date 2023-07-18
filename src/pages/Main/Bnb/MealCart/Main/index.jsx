@@ -66,6 +66,7 @@ const Pages = () => {
   const [date, setDate] = useState();
   const [type, setType] = useState();
   const toast = Toast();
+  const presentUserGroup = isUserInfo?.group + `\u00A0` + isUserInfo?.spot;
 
   const PressSpotButton = () => {
     setModalVisible2(true);
@@ -79,6 +80,7 @@ const Pages = () => {
   useEffect(() => {
     if (isLoadMeal?.data?.spotCarts) {
       const spot = isLoadMeal?.data?.spotCarts.map(m => {
+        // console.log(m.cartDailyFoodDtoList[0].cartDailyFoods, 'w2');
         return {
           id: m.spotId,
           text: m.groupName + '\u00a0' + m.spotName,
@@ -97,6 +99,8 @@ const Pages = () => {
 
     const getTime = async () => {
       const localTime = JSON.parse(await getStorage('diningTime'));
+      const timeData = localTime.filter(el => el.spotId === selected);
+
       setTime(localTime.time);
     };
     getTime();
@@ -521,8 +525,8 @@ const Pages = () => {
           onPress: async () => {
             try {
               await deleteButton(id);
-              queryClient.invalidateQueries('orderMeal');
               setModalVisible3(true);
+              queryClient.invalidateQueries('orderMeal');
             } catch (err) {
               Alert.alert(
                 '메뉴취소 불가',
@@ -595,8 +599,8 @@ const Pages = () => {
       <SpotView>
         <SpotPress onPress={PressSpotButton}>
           <SpotName>
-            {spotName?.length > 0 && spotName[0]?.text === undefined
-              ? '스팟 없음'
+            {spotName?.length === 0
+              ? presentUserGroup
               : selectSpotName?.length > 0 && selectSpotName[0].text}
           </SpotName>
           <ArrowIcon />

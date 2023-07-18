@@ -222,7 +222,7 @@ const Pages = ({route}) => {
       const getDailyfoodData = dailyfoodDataList?.data?.dailyFoodsByDate.filter(
         v => v.serviceDate === formattedWeekDate(date),
       );
-      console.log(getDailyfoodData);
+      //console.log(getDailyfoodData);
       setDailyfoodData(
         getDailyfoodData?.length > 0 ? getDailyfoodData[0] : null,
       );
