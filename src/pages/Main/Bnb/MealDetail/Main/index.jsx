@@ -54,6 +54,7 @@ import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/ButtonExtendable';
 import GifImage from '../../../../../components/GifImage';
+import {YellowStar} from '../../../../../components/Icon';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
@@ -68,7 +69,6 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
-import {YellowStar} from '../../../../../components/Icon';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -269,6 +269,9 @@ const Pages = ({route}) => {
   };
   const addToCart = async () => {
     try {
+      if (!time) {
+        throw new Error('주문하실 상품의 배송시간을 선택해주세요.');
+      }
       await addMeal([
         {
           dailyFoodId: dailyFoodId,
