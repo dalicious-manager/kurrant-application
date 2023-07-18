@@ -5,20 +5,18 @@ import {ActivityIndicator, Dimensions, View} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styled, {useTheme} from 'styled-components';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
+import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
-
 import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
-
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from '../../../../../../../biz/useReview/useMealDetailReview/store';
-import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import {
   ArrowUpAndDown,
   Picture,

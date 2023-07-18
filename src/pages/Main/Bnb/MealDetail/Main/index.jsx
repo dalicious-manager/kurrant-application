@@ -43,13 +43,13 @@ import Modal from '../../../../../components/Modal';
 import Typography from '../../../../../components/Typography';
 import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
-import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
