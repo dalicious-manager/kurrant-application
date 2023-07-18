@@ -10,6 +10,7 @@ export const getTime = async (
   const diningTimesData = dailyfoodData.filter(
     v => v.diningType === sliderValue + 1,
   );
+  if (diningTimesData?.length <= 0) return;
   if (localTime?.length > 0) {
     const isSpotId = localTime.find(v => {
       return (
