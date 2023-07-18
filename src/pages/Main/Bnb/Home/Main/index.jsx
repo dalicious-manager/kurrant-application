@@ -22,6 +22,7 @@ import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
+import {BowlIcon} from '~components/Icon';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -66,7 +67,6 @@ import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
-import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
 import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
@@ -77,12 +77,10 @@ import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
+import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {BowlIcon} from '~components/Icon';
-import useGetDietRepo from '../../DietRepo/useGetDietRepo';
-import {callDietRepoSaveMeal} from '../../DietRepo/logic';
-import useDietRepoMutation from '../../DietRepo/useDietRepoMutation';
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
@@ -142,19 +140,26 @@ const Pages = () => {
     dietRepoMainRefetch,
   } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
 
-  const loadCoinSound = () => {
-    const sound = new Sound(
-      require('../../../../../assets/sounds/coin.wav'),
-      Platform.OS === 'android'
-        ? Sound.MAIN_BUNDLE
-        : Sound.MAIN_BUNDLE.bundlePath,
-      error => {
-        if (error) {
-          return;
-        }
-      },
-    );
-    setCoinSound(sound);
+  const loadCoinSound = async () => {
+    try {
+      const sound = new Sound(
+        require('../../../../../assets/sounds/coin.wav'),
+        Platform.OS === 'android'
+          ? Sound.MAIN_BUNDLE
+          : Sound.MAIN_BUNDLE.bundlePath,
+        error => {
+          if (error) {
+            return;
+          }
+        },
+      );
+      await sound.play();
+      sound.release();
+      setCoinSound(sound);
+      return false;
+    } catch (error) {
+      throw error;
+    }
   };
   const {
     getMembershipHistory,
@@ -668,7 +673,10 @@ const Pages = () => {
       <ScrollViewWrap
         scrollEventThrottle={0}
         showsVerticalScrollIndicator={false}>
-        <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
+        <LargeTitle>
+          {isUserInfo?.data?.nickname ?? userName}님{' '}
+          {isUserInfo?.data?.nickname?.length === 12 && `\n`}안녕하세요!
+        </LargeTitle>
         <MainWrap>
           {orderMealList?.data?.filter(order => order.serviceDate === date)
             .length === 0 ? (
@@ -685,6 +693,7 @@ const Pages = () => {
                         <MealInfoComponent
                           m={m}
                           meal={meal}
+                          loadCoinSound={loadCoinSound}
                           dailyFoodId={meal.dailyFoodId}
                           coinSound={coinSound}
                           key={`${meal.id} ${meal.dailyFoodId}`}

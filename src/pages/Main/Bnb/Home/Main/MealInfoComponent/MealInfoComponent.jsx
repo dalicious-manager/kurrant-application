@@ -4,6 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Shadow} from 'react-native-shadow-2';
 import Sound from 'react-native-sound';
+import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components';
 
 import Typography from '../../../../../../components/Typography';
@@ -11,13 +12,19 @@ import {useConfirmOrderState} from '../../../../../../hook/useOrder';
 // import {PAGE_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
 import {PAGE_NAME as reviewPage} from '../../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
 import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
-import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
-import CoinAnimation from '../../components/CoinAnimation';
 import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
 import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
-import {useQueryClient} from 'react-query';
+import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
+import CoinAnimation from '../../components/CoinAnimation';
 
-const MealInfoComponent = ({m, meal, mockStatus, dailyFoodId, coinSound}) => {
+const MealInfoComponent = ({
+  m,
+  meal,
+  mockStatus,
+  dailyFoodId,
+  loadCoinSound,
+  coinSound,
+}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
   const {dietRepoMainRefetch} = useGetDietRepo();
@@ -139,6 +146,7 @@ const MealInfoComponent = ({m, meal, mockStatus, dailyFoodId, coinSound}) => {
               {startAni && (
                 <CoinAnimation
                   isStart={startAni}
+                  loadCoinSound={loadCoinSound}
                   coinSound={coinSound}
                   setStart={setStartAni}
                 />

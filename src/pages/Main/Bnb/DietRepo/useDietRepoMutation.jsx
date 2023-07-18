@@ -1,12 +1,11 @@
-import {useMutation, useQueryClient} from 'react-query';
-import {fetchJson} from '../../../../utils/fetch';
+import {useNavigation} from '@react-navigation/core';
 import {Alert, View} from 'react-native';
-
+import {useMutation, useQueryClient} from 'react-query';
+import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 import {SCREEN_NAME as MainScreenName} from '~screens/Main/Bnb';
 
-import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
-import {useNavigation} from '@react-navigation/core';
 import {toStringByFormatting} from '../../../../utils/dateFormatter';
+import {fetchJson} from '../../../../utils/fetch';
 
 const useDietRepoMutation = date => {
   const navigation = useNavigation();

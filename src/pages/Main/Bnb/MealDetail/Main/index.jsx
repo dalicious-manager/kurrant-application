@@ -58,10 +58,7 @@ import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
 import Typography from '../../../../../components/Typography';
-import {
-  useGetDailyfoodDetail,
-  useGetDailyfoodDetailNow,
-} from '../../../../../hook/useDailyfood';
+import {useGetDailyfoodDetailNow} from '../../../../../hook/useDailyfood';
 import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
@@ -71,6 +68,7 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
+import {YellowStar} from '../../../../../components/Icon';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -121,6 +119,9 @@ const Pages = ({route}) => {
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
+
+  // console.log(dailyFoodId);
+
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -342,14 +343,6 @@ const Pages = ({route}) => {
   // }, [dailyFoodId, refetch]);
 
   useEffect(() => {
-    console.log(foodDetailData, isFoodDetail?.data);
-    // if (isFoodDetail?.data) setFoodDetailData(isFoodDetail?.data);
-
-    //   return () => {
-    //     setFoodDetailData();
-    //   };
-  }, [isFoodDetail?.data]);
-  useEffect(() => {
     setReviewData(getBoard);
   }, [getBoard]);
   // 상세페이지 리뷰 로직
@@ -393,11 +386,25 @@ const Pages = ({route}) => {
                           {detailFetching ? '' : foodDetailData?.name || ''}
                         </MealTitle>
                         <Line>
-                          {/* <ReviewWrap>
-                <StartIcon/>
-                <ReviewPoint>4.0</ReviewPoint>
-                <ReviewCount>(132)</ReviewCount>
-              </ReviewWrap> */}
+                          {reviewData?.pages[0]?.items.totalReview >= 1 && (
+                            <ReviewWrap>
+                              <YellowStar width="20px" height="20px" />
+                              <ReviewPoint>
+                                {/* {reviewData?.pages[0]?.items.starAverage} */}
+                                {reviewData?.pages[0]?.items.starAverage &&
+                                reviewData?.pages[0]?.items.starAverage?.toString()
+                                  .length === 1
+                                  ? reviewData?.pages[0]?.items.starAverage.toFixed(
+                                      1,
+                                    )
+                                  : reviewData?.pages[0]?.items.starAverage}
+                              </ReviewPoint>
+                              <ReviewCount>
+                                ({reviewData?.pages[0]?.items.totalReview})
+                              </ReviewCount>
+                            </ReviewWrap>
+                          )}
+
                           <InformationWrap
                             onPress={() => {
                               navigation.navigate(MealInformationPageName, {

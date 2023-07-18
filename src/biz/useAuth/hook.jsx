@@ -25,6 +25,7 @@ import {isUserInfoAtom, isUserSpotStatusAtom} from '../useUserInfo/store';
 
 const useAuth = () => {
   const queryClient = useQueryClient();
+
   const [isEmailAuthLoading, setEmailAuthLoading] = useAtom(
     isEmailAuthLoadingAtom,
   );
@@ -78,6 +79,7 @@ const useAuth = () => {
     try {
       setPhoneAuthLoading(true);
       const res = await Fetch.requestPhoneAuth(body, type, option);
+
       return res;
     } catch (err) {
       throw err;

@@ -13,6 +13,7 @@ import useUserMe from '~biz/useUserMe';
 import {SettingIcon} from '~components/Icon';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
+import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 import {PAGE_NAME as TermOfServicePageName} from '~pages/Main/MyPage/TermOfService';
 
 import ListBox from './ListBox';
@@ -43,7 +44,6 @@ import {PAGE_NAME as FAQPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
-import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -165,7 +165,7 @@ const Pages = () => {
                 <Typography
                   text="Title02SB"
                   textColor={themeApp.colors.grey[2]}>
-                  {isUserInfo?.name}님
+                  {isUserInfo?.nickname ?? isUserInfo?.name}님
                 </Typography>
               </LoginIdBox>
               <Pressable
