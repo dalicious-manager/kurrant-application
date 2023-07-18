@@ -682,7 +682,7 @@ const Pages = () => {
             </NoMealInfo>
           ) : (
             orderMealList?.data?.map((m, idx) => {
-              if (m.serviceDate !== date)
+              if (m.serviceDate === date)
                 return (
                   <React.Fragment key={`${m.id} ${idx}`}>
                     {m.orderItemDtoList.map(meal => {
