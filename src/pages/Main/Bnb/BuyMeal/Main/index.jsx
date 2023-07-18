@@ -515,7 +515,14 @@ const Pages = ({route}) => {
     sliderValue,
     time?.diningType,
   ]);
-
+  useEffect(() => {
+    if (dailyfoodDataList?.data?.diningTypes?.length > 0) {
+      diningRef.current.setPage(
+        dailyfoodDataList?.data?.diningTypes[0].diningType - 1,
+      );
+      setSliderValue(dailyfoodDataList?.data?.diningTypes[0].diningType);
+    }
+  }, [dailyfoodDataList?.data]);
   useEffect(() => {
     if (userRole === 'ROLE_GUEST') {
       return setWeeklyService(
