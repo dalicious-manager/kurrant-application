@@ -3,7 +3,36 @@ import {useEffect, useState} from 'react';
 import {useInfiniteQuery, useQuery} from 'react-query';
 import {fetchJson} from '~utils/fetch';
 
-const useMainReviewInfiniteQuery = (url, dailyFoodId) => {
+const getMealDetailReview = async (pageParam, url) => {
+  const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
+  // const res = await fetchJson(`${url}&limit=1&page=${page}`);
+  // console.log(res);
+  const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
+    res.data;
+
+  return {
+    items,
+    currentPage: pageParam,
+    isLast,
+    starAverage,
+    foodId,
+    totalReview,
+    reviewWrite,
+  };
+};
+
+export function useMainReviewInfiniteQuery(url, dailyFoodId) {
+  const getPageBoard = async ({pageParam = 1}) => {
+    const res = await getMealDetailReview(pageParam, url);
+    return {
+      // 실제 데이터
+      items: res.items,
+      // 반환 값에 현재 페이지를 넘겨주자
+      currentPage: pageParam,
+      isLast: res.isLast,
+    };
+  };
+
   const {
     data: getBoard,
     fetchNextPage: getNextPage,
@@ -24,17 +53,6 @@ const useMainReviewInfiniteQuery = (url, dailyFoodId) => {
     },
   });
 
-  const getPageBoard = async ({pageParam = 1}) => {
-    const res = await getMealDetailReview(pageParam, url);
-    return {
-      // 실제 데이터
-      items: res.items,
-      // 반환 값에 현재 페이지를 넘겨주자
-      currentPage: pageParam,
-      isLast: res.isLast,
-    };
-  };
-
   return {
     getBoard,
     getNextPage,
@@ -44,23 +62,4 @@ const useMainReviewInfiniteQuery = (url, dailyFoodId) => {
     getNextPageIsPossible,
     refetch,
   };
-};
-export default useMainReviewInfiniteQuery;
-
-const getMealDetailReview = async (pageParam, url) => {
-  const res = await fetchJson(`${url}&limit=5&page=${pageParam}`);
-  // const res = await fetchJson(`${url}&limit=1&page=${page}`);
-  // console.log(res);
-  const {items, starAverage, isLast, foodId, totalReview, reviewWrite} =
-    res.data;
-
-  return {
-    items,
-    currentPage: pageParam,
-    isLast,
-    starAverage,
-    foodId,
-    totalReview,
-    reviewWrite,
-  };
-};
+}

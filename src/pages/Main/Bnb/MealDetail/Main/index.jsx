@@ -68,8 +68,6 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
-import {YellowStar} from '../../../../../components/Icon';
-import {detailReviewDataAtom} from './Review/MealDetailReview/store';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -108,21 +106,12 @@ const Pages = ({route}) => {
   // console.log(isFoodDetailLoading, 'oo');
 
   const [count, setCount] = useState(1);
-  // const {
-  //   getBoard,
-  //   getBoardIsSuccess,
-  //   getBoardIsFetching,
-  //   getBoardIsLoading,
-  //   getNextPage,
-  //   getNextPageIsPossible,
-  //   refetch,
-  // } = useMainInfiniteScrollQuery(url, dailyFoodId);
 
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
-  // console.log(dailyFoodId);
+  console.log(dailyFoodId);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -343,8 +332,6 @@ const Pages = ({route}) => {
 
   //   detail();
   // }, [dailyFoodId, refetch]);
-
-  // 상세페이지 리뷰 로직
 
   // if (detailFetching) {
   //   return <Skeleton />;
@@ -606,13 +593,6 @@ const Pages = ({route}) => {
                     dailyFoodId={dailyFoodId}
                     allReviewList={allReviewList}
                     setAllReviewList={setAllReviewList}
-                    // getBoard={reviewData}
-                    // getNextPage={getNextPage}
-                    // getBoardIsSuccess={getBoardIsSuccess}
-                    // getBoardIsFetching={getBoardIsFetching}
-                    // getBoardIsLoading={getBoardIsLoading}
-                    // getNextPageIsPossible={getNextPageIsPossible}
-                    // refetch={refetch}
                   />
                 </>
               ) : (

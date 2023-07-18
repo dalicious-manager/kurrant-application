@@ -6,7 +6,7 @@ import {Shadow} from 'react-native-shadow-2';
 import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
-import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
+
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
@@ -18,7 +18,7 @@ import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from '../../../../../../../biz/useReview/useMealDetailReview/store';
-import {useMainInfiniteScrollQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
+
 import {
   ArrowUpAndDown,
   Picture,
@@ -27,21 +27,15 @@ import {
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
 import {detailReviewDataAtom} from './store';
+import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
+import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
 
 const Component = ({
   imageLocation,
   foodName,
   dailyFoodId,
-
   allReviewList,
   setAllReviewList,
-  // getBoard,
-  // getBoardIsSuccess,
-  // getBoardIsFetching,
-  // getBoardIsLoading,
-  // getNextPage,
-  // getNextPageIsPossible,
-  // refetch,
 }) => {
   const theme = useTheme();
   const queryClient = useQueryClient();
@@ -79,7 +73,7 @@ const Component = ({
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
-  const [reviewData, setReviewData] = useAtom(detailReviewDataAtom);
+  const [reviewData, setReviewData] = useState([]);
 
   const {
     getBoard,
@@ -89,11 +83,47 @@ const Component = ({
     getNextPage,
     getNextPageIsPossible,
     refetch,
-  } = useMainInfiniteScrollQuery(url, dailyFoodId);
+  } = useMainReviewInfiniteQuery(url, dailyFoodId);
+
+  const {starRatingCounts, reviewKeyword} = useGetMealDetailReview(dailyFoodId);
 
   useEffect(() => {
     setReviewData(getBoard);
   }, [getBoard]);
+
+  useEffect(() => {
+    setUrl(
+      buildCustomUrl(
+        dailyFoodId,
+        orderFilter,
+        isOnlyPhoto,
+        selectedKeyword,
+        rateSelected,
+      ),
+    );
+  }, [
+    dailyFoodId,
+    orderFilter,
+    isOnlyPhoto,
+    selectedKeyword,
+    setUrl,
+    // rateSelected,
+  ]);
+
+  // useEffect(() => {
+  //   console.log(' rateSelected 확인');
+  //   console.log(rateSelected);
+  // }, [rateSelected]);
+
+  // useEffect(() => {
+  //   console.log('selectedKeyword 랄랄라');
+  //   console.log(selectedKeyword);
+  // }, [selectedKeyword]);
+
+  useEffect(() => {
+    console.log('url 확인 ');
+    console.log(url);
+  }, [url]);
 
   // const {getInfiniteQuery} = useGetMealDetailReview(url, dailyFoodId);
 
@@ -473,7 +503,7 @@ const Component = ({
               modalVisible={bottomModalOpen}
               setModalVisible={setBottomModalOpen}
               title="별점 필터"
-              data={modifyStarRatingCount(stars)}
+              data={modifyStarRatingCount(starRatingCounts)}
               multiple={true}
               selected={rateSelected}
               setSelected={handleSelectBottomModal}
