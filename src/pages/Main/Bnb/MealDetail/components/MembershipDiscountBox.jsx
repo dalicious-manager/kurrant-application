@@ -17,13 +17,7 @@ const MembershipDiscountBox = ({isFoodDetail}) => {
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
-  const realToTalDiscountRate =
-    100 -
-    (100 - isFoodDetail.membershipDiscountRate) *
-      0.01 *
-      ((100 - isFoodDetail.makersDiscountRate) * 0.01) *
-      ((100 - isFoodDetail.periodDiscountRate) * 0.01) *
-      100;
+
   const navigation = useNavigation();
 
   return (
@@ -46,7 +40,7 @@ const MembershipDiscountBox = ({isFoodDetail}) => {
               style={{marginRight: 3}}
               text="Title04SB"
               textColor={themeApp.colors.red[500]}>
-              {Math.round(realToTalDiscountRate * 100) / 100}%
+              {Math.round(isFoodDetail?.totalDiscountedPrice * 100) / 100}%
             </Typography>
             <Typography
               style={{marginRight: 6}}

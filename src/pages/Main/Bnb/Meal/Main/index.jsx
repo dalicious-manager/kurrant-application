@@ -8,6 +8,7 @@ import styled from 'styled-components/native';
 import NoMealButton from '~components/Button';
 
 import Plus from '../../../../../assets/icons/Home/plus.svg';
+import useAuth from '../../../../../biz/useAuth/hook';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useOrderMeal from '../../../../../biz/useOrderMeal';
@@ -15,7 +16,10 @@ import LabelButton from '../../../../../components/ButtonMeal';
 import BuyCalendar from '../../../../../components/BuyCalendar';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
-import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {
+  useGetDailyfood,
+  useGetDailyfoodList,
+} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {
@@ -36,8 +40,7 @@ const Pages = ({route}) => {
     route?.params?.isToday === undefined ? false : route.params.isToday;
   const navigation = useNavigation();
   const meal = true;
-  // console.log(data);
-  const {dailyFood, isServiceDays} = useFoodDaily();
+  // console.log(data)
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
@@ -49,19 +52,44 @@ const Pages = ({route}) => {
   const {refundItem, setOrderMeal} = useOrderMeal();
   const pagerRef = useRef();
   const [weekly] = useAtom(weekAtom);
-  const {data: isOrderMeal, refetch: orderMealRefetch} = useGetOrderMeal(
+  const {setMorning, setLunch, setDinner} = useFoodDaily();
+  const {
+    readableAtom: {userRole},
+  } = useAuth();
+  const {data: isOrderMeal} = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
     formattedWeekDate(
       weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
     ),
   );
-
-  const {
-    data: dailyfoodData,
-    refetch: dailyfoodRefetch,
-    isLoading: dailyLoading,
-    isFetching: dailyFetching,
-  } = useGetDailyfood(userSpotId, data ? data : date);
+  const [dailyfoodData, setDailyfoodData] = useState();
+  const {data: dailyfoodDataList, refetch: dailyfoodListRefetch} =
+    useGetDailyfoodList(
+      userSpotId,
+      formattedWeekDate(weekly[0][0]),
+      formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+      userRole,
+    );
+  useEffect(() => {
+    if (dailyfoodDataList?.data?.dailyFoodsByDate) {
+      setMorning([]);
+      setLunch([]);
+      setDinner([]);
+      const getDailyfoodData = dailyfoodDataList?.data?.dailyFoodsByDate.filter(
+        v => v.serviceDate === formattedWeekDate(date),
+      );
+      console.log(getDailyfoodData);
+      setDailyfoodData(
+        getDailyfoodData?.length > 0 ? getDailyfoodData[0] : null,
+      );
+    }
+  }, [dailyfoodDataList?.data?.dailyFoodsByDate, date]);
+  // const {
+  //   data: dailyfoodData,
+  //   refetch: dailyfoodRefetch,
+  //   isLoading: dailyLoading,
+  //   isFetching: dailyFetching,
+  // } = useGetDailyfood(userSpotId, data ? data : date);
   // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
   const selectDate = isOrderMeal?.data?.filter(
     m => m.serviceDate === touchDate,
@@ -176,8 +204,8 @@ const Pages = ({route}) => {
   // }, []);
 
   useEffect(() => {
-    dailyfoodRefetch();
-  }, [dailyfoodRefetch, isUserInfo]);
+    dailyfoodListRefetch();
+  }, [dailyfoodListRefetch, isUserInfo]);
   useFocusEffect(
     useCallback(() => {
       if (isToday) {
@@ -203,7 +231,7 @@ const Pages = ({route}) => {
             meal={meal}
             margin={'0px 28px'}
             sliderValue={isToday && 0}
-            isServiceDays={dailyfoodData?.data?.serviceDays}
+            isServiceDays={dailyfoodDataList?.data?.diningTypes}
           />
         </CalendarWrap>
 
@@ -489,26 +517,10 @@ const PlusButton = styled.Pressable`
   bottom: 26px;
   right: 0;
 `;
-const ButtonBox = styled.Pressable`
-  position: absolute;
-  bottom: 26px;
-  right: 0px;
-  left: 20px;
-`;
 const PlusIcon = styled(Plus)`
   position: absolute;
   bottom: 20px;
   left: 18px;
-`;
-const PlusLongIcon = styled(Plus)``;
-const Button = styled.Pressable`
-  background-color: ${({theme}) => theme.colors.yellow[500]};
-  border-radius: 100px;
-  width: 100%;
-  padding: 16px 0px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
 `;
 
 const CountText = styled(Typography).attrs({text: 'CaptionR'})`
@@ -535,9 +547,4 @@ const CancelText = styled(Typography).attrs({test: 'Body06R'})`
 
 const NoMealButtonWrap = styled.View`
   padding: 10px 120px;
-`;
-
-const ButtonText = styled(Typography).attrs({text: 'BottomButtonSB'})`
-  color: ${props => props.theme.colors.grey[1]};
-  margin-left: 8px;
 `;

@@ -7,9 +7,14 @@ import Typography from '~components/Typography';
 import {Line} from 'react-native-svg';
 import useDietRepoMutation from '../../useDietRepoMutation';
 
+import {SCREEN_NAME as MainScreenName} from '~screens/Main/Bnb';
+
+import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
+import {useNavigation} from '@react-navigation/native';
+
 const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
   const {deleteMeal, addMeal} = useDietRepoMutation(date);
-
+  const navigation = useNavigation();
   return (
     <Container>
       <CardContentBox>
@@ -117,7 +122,38 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
                           text: '추가',
                           onPress: () => {
                             try {
-                              addMeal({dailyFoodId: item2?.dailyFoodId});
+                              addMeal([
+                                {dailyFoodId: item2?.dailyFoodId},
+                                date => {
+                                  Alert.alert(
+                                    '식단 추가',
+                                    '식단이 추가되었습니다 ',
+                                    [
+                                      {
+                                        text: '확인',
+                                        onPress: async () => {
+                                          // queryClient.invalidateQueries(['dietRepo', 'main']);
+                                          navigation.reset({
+                                            index: 1,
+                                            routes: [
+                                              {
+                                                name: MainScreenName,
+                                              },
+                                              {
+                                                name: DietRepoMainPageName,
+                                                params: {
+                                                  date: date,
+                                                },
+                                              },
+                                            ],
+                                          });
+                                        },
+                                        style: 'cancel',
+                                      },
+                                    ],
+                                  );
+                                },
+                              ]);
                             } catch (err) {
                               console.log(err);
                             }

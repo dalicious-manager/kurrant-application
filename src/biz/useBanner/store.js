@@ -7,4 +7,5 @@ export const heroBannersAtom = atomWithReset([]);
 export const heroBuyBannersAtom = atomWithReset([]);
 export const tieBannersAtom = atomWithReset([]);
 export const weekAtom = atomWithReset(dates); // 경로 바꿔야함
+export const foodDetailDataAtom = atomWithReset({});
 export const weekServiceAtom = atomWithReset(); // 경로 바꿔야함

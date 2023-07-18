@@ -96,7 +96,7 @@ const Pages = ({route}) => {
           <Arrow />
         </SpotView>
         <Typography text="Body06R" textColor={themeApp.colors.grey[4]}>
-          스팟 내역
+          스팟 리스트
         </Typography>
         <SpotListWrap
           data={userSpotManageList?.data?.groups}
