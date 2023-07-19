@@ -78,14 +78,14 @@ const Component = ({
   const {
     getBoard,
     getBoardIsSuccess,
-    getBoardIsFetching,
+    getBoardIsFetching: isFetching,
     getBoardIsLoading,
     getNextPage,
     getNextPageIsPossible,
-    refetch,
+    getBoardRefetch,
   } = useMainReviewInfiniteQuery(url, dailyFoodId);
 
-  const {starRatingCounts, reviewKeyword} = useGetMealDetailReview(dailyFoodId);
+  const {starRatingCounts} = useGetMealDetailReview(dailyFoodId);
 
   useEffect(() => {
     setReviewData(getBoard);
@@ -101,69 +101,41 @@ const Component = ({
         rateSelected,
       ),
     );
-  }, [
-    dailyFoodId,
-    orderFilter,
-    isOnlyPhoto,
-    selectedKeyword,
-    setUrl,
-    // rateSelected,
-  ]);
-
-  // useEffect(() => {
-  //   console.log(' rateSelected 확인');
-  //   console.log(rateSelected);
-  // }, [rateSelected]);
-
-  // useEffect(() => {
-  //   console.log('selectedKeyword 랄랄라');
-  //   console.log(selectedKeyword);
-  // }, [selectedKeyword]);
+  }, [dailyFoodId, orderFilter, isOnlyPhoto, selectedKeyword, setUrl]);
 
   useEffect(() => {
-    console.log('url 확인 ');
-    console.log(url);
+    getBoardRefetch();
   }, [url]);
 
-  // const {getInfiniteQuery} = useGetMealDetailReview(url, dailyFoodId);
+  const [isFetchingTop, setIsFetchingTop] = useState(false);
+  const [isFetchingBottom, setIsFetchingBottom] = useState(false);
 
-  // const reviewKeyword = ['달퐁이', '참새'];
+  useEffect(() => {
+    setIsFetchingTop(true);
+  }, [url]);
 
-  // useEffect(() => {
-  //   // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
+  useEffect(() => {
+    if (isFetching && isFetchingTop) {
+      setIsFetchingTop(true);
+      setIsFetchingBottom(false);
+    } else {
+      setIsFetchingTop(false);
+    }
+  }, [isFetching]);
 
-  //   refetch();
-  // }, [url]);
+  useEffect(() => {
+    if (isFetching) {
+      setIsFetchingBottom(true);
+    } else {
+      setIsFetchingBottom(false);
+    }
+  }, [isFetching]);
 
-  // const [isFetchingTop, setIsFetchingTop] = useState(false);
-  // const [isFetchingBottom, setIsFetchingBottom] = useState(false);
-
-  // useEffect(() => {
-  //   setIsFetchingTop(true);
-  // }, [url]);
-
-  // useEffect(() => {
-  //   if (isFetching && isFetchingTop) {
-  //     setIsFetchingTop(true);
-  //     setIsFetchingBottom(false);
-  //   } else {
-  //     setIsFetchingTop(false);
-  //   }
-  // }, [isFetching]);
-
-  // useEffect(() => {
-  //   if (isFetching) {
-  //     setIsFetchingBottom(true);
-  //   } else {
-  //     setIsFetchingBottom(false);
-  //   }
-  // }, [isFetching]);
-
-  // useEffect(() => {
-  //   if (isFetchingBottom && isFetchingTop) {
-  //     setIsFetchingBottom(false);
-  //   }
-  // }, [isFetchingBottom, isFetchingTop]);
+  useEffect(() => {
+    if (isFetchingBottom && isFetchingTop) {
+      setIsFetchingBottom(false);
+    }
+  }, [isFetchingBottom, isFetchingTop]);
 
   // useEffect(() => {
   //   setHasNextPageReviewDetail(hasNextPage);
@@ -174,8 +146,6 @@ const Component = ({
   // }, [fetchNextPage, setFetchNextPageReviewDetail]);
 
   useEffect(() => {
-    // console.log(getBoard?.pages, 'testset');
-
     const review =
       getBoard?.pages.flatMap(page => page.items?.reviewList) ?? [];
     if (getBoard?.pages) {
@@ -215,8 +185,6 @@ const Component = ({
   //   console.log(dailyFoodId); //
   // });
 
-  // best, latest, photo, rating, like
-
   // 바텀 모달
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
 
@@ -251,272 +219,221 @@ const Component = ({
   };
 
   return (
-    <>
-      {!getBoardIsLoading && reviewData ? (
-        <>
-          <Container>
-            <Wrap1>
-              <TitleWrap>
-                <ReviewCount>리뷰({totalReview})</ReviewCount>
-              </TitleWrap>
+    <Container>
+      <Wrap1>
+        <TitleWrap>
+          <ReviewCount>리뷰({totalReview})</ReviewCount>
+        </TitleWrap>
 
-              <StarRatingWrap>
-                <RateStars
-                  ratingInput={starAverage}
-                  width={'132px'}
-                  margin={'3px'}
-                  disableButton={true}
-                  callback={() => {}}
-                />
+        <StarRatingWrap>
+          <RateStars
+            ratingInput={starAverage}
+            width={'132px'}
+            margin={'3px'}
+            disableButton={true}
+            callback={() => {}}
+          />
 
-                <RatingPointText>{starAverage}</RatingPointText>
+          <RatingPointText>{starAverage}</RatingPointText>
 
-                <RatingOutOfText>/</RatingOutOfText>
-                <RatingOutOfText>5</RatingOutOfText>
-              </StarRatingWrap>
+          <RatingOutOfText>/</RatingOutOfText>
+          <RatingOutOfText>5</RatingOutOfText>
+        </StarRatingWrap>
 
-              <Wrap3>
-                {Array.isArray(keyword) && keyword.length > 0 && (
-                  <FlatFlatList
-                    data={keyword}
-                    scrollEnabled={true}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    initialNumToRender={5}
-                    contentContainerStyle={{
-                      height: 56,
-                      alignItems: 'center',
-                    }}
-                    renderItem={({item, index}) => {
-                      return (
-                        <ButtonPressable
-                          onPress={() => {
-                            if (selectedKeyword === item) {
-                              setSelectedKeyword('');
-                            } else {
-                              setSelectedKeyword(item);
-                            }
-                          }}
-                          isClicked={selectedKeyword === item}
-                          isFirst={index === 0}
-                          isLast={index === keyword.length - 1}>
-                          <ButtonText isClicked={selectedKeyword === item}>
-                            {item}
-                          </ButtonText>
-                        </ButtonPressable>
-                      );
-                    }}
-                  />
-                )}
-              </Wrap3>
-
-              <Wrap4 isMarginBottom={reviewWrite === 0}>
-                <Wrap6>
-                  <FilterPressable
-                    onPress={() => {
-                      setShowSelectList(!showSelectList);
-                    }}>
-                    <ArrowUpAndDown />
-                    <FilterText>
-                      {showSelectedOrderFilter(orderFilter)}
-                    </FilterText>
-                  </FilterPressable>
-
-                  <ThinGreyLineVertical />
-                  <FilterPressable
-                    onPress={() => {
-                      setIsOnlyPhoto(!isOnlyPhoto);
-                    }}>
-                    <Picture
-                      isOn={isOnlyPhoto}
-                      color={
-                        isOnlyPhoto
-                          ? theme.colors.blue[500]
-                          : theme.colors.grey[4]
-                      }
-                    />
-
-                    <FilterText isOn={isOnlyPhoto}>포토리뷰만</FilterText>
-                  </FilterPressable>
-                </Wrap6>
-
-                <FilterPressable
-                  onPress={() => {
-                    setBottomModalOpen(!bottomModalOpen);
-                  }}>
-                  <Settings />
-                  <FilterText>별점필터</FilterText>
-                </FilterPressable>
-              </Wrap4>
-
-              {reviewWrite !== 0 && (
-                <Wrap5>
-                  <GoToWriteReviewPressable
-                    onPress={() => {
-                      navigation.navigate(CreateReviewScreenName, {
-                        orderItemId: reviewWrite,
-                        imageLocation: imageLocation[0],
-                        foodName,
-                      });
-                    }}>
-                    <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>
-                    <RightSkinnyArrow
-                      width={'5px'}
-                      height={'9px'}
-                      color={theme.colors.blue[500]}
-                    />
-                  </GoToWriteReviewPressable>
-                </Wrap5>
-              )}
-            </Wrap1>
-
-            {showSelectList && (
-              <WrapWrapView isOn={Array.isArray(keyword) && keyword.length > 0}>
-                <ShadowWrap startColor="rgba(0, 0, 0, 0.03)" distance={14}>
-                  <FilterSelecterWrap>
-                    <FilterSelecterPressable
-                      onPress={() => {
-                        setOrderFilter(0);
-
-                        setShowSelectList(false);
-                      }}>
-                      <SelectorText isClicked={orderFilter === 0}>
-                        베스트 순
-                      </SelectorText>
-                    </FilterSelecterPressable>
-                    <FilterSelecterPressable
-                      isTopBorder={true}
-                      onPress={() => {
-                        setOrderFilter(1);
-
-                        setShowSelectList(false);
-                      }}>
-                      <SelectorText isClicked={orderFilter === 1}>
-                        최신 순
-                      </SelectorText>
-                      <></>
-                    </FilterSelecterPressable>
-                    <FilterSelecterPressable
-                      isTopBorder={true}
-                      onPress={() => {
-                        setOrderFilter(2);
-
-                        setShowSelectList(false);
-                      }}>
-                      <SelectorText isClicked={orderFilter === 2}>
-                        리뷰 추천순
-                      </SelectorText>
-                    </FilterSelecterPressable>
-                  </FilterSelecterWrap>
-                </ShadowWrap>
-              </WrapWrapView>
-            )}
-
-            <ReviewListWrap>
-              {/* {isFetchingTop && (
-         
-        )} */}
-              {/* <LoadingPage1>
-          <ActivityIndicator size={'large'} />
-        </LoadingPage1> */}
-
-              {allReviewList && !getBoardIsLoading && (
-                <FlatList
-                  data={allReviewList}
-                  keyExtractor={item => item.reviewId.toString()}
-                  renderItem={({item}) => (
-                    <Card
-                      key={item.reviewId}
-                      dailyFoodId={dailyFoodId}
-                      id={item.reviewId}
-                      userName={item.userName}
-                      item={item}
-                      likeNum={item.good}
-                      isLike={item.isGood}
-                      createDate={item.createDate}
-                      updateDate={item.updateDate}
-                      writtenDate={convertDateFormat1(item.createDate)}
-                      option={item.option}
-                      rating={item.satisfaction}
-                      reviewText={item.content}
-                      imageLocation={item.imageLocation}
-                      forMakers={item.forMakers}
-                      commentList={item.commentList}
-                      isFetching={getBoardIsFetching}
-                    />
-                  )}
-                  onEndReached={() => {
-                    if (getNextPageIsPossible) {
-                      getNextPage();
-                    }
-                  }}
-                  onEndReachedThreshold={0.1}
-                />
-              )}
-              {/* {data?.pages.map((v, i) => {
-          return (
-            <View key={i}>
-              {v.items?.reviewList.map((item, i2) => {
+        <Wrap3>
+          {Array.isArray(keyword) && keyword.length > 0 && (
+            <FlatFlatList
+              data={keyword}
+              scrollEnabled={true}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              horizontal={true}
+              initialNumToRender={5}
+              contentContainerStyle={{
+                height: 56,
+                alignItems: 'center',
+              }}
+              renderItem={({item, index}) => {
                 return (
-                  <Card
-                    key={item.reviewId}
-                    dailyFoodId={dailyFoodId}
-                    id={item.reviewId}
-                    userName={item.userName}
-                    item={item}
-                    good={item.good}
-                    isGood={item.isGood}
-                    createDate={item.createDate}
-                    updateDate={item.updateDate}
-                    writtenDate={convertDateFormat1(item.createDate)}
-                    option={item.option}
-                    rating={item.satisfaction}
-                    reviewText={item.content}
-                    imageLocation={item.imageLocation}
-                    forMakers={item.forMakers}
-                    commentList={item.commentList}
-                    // 도움이돼요 빠르게 만들기
-
-                    isFetching={isFetching}
-                  />
+                  <ButtonPressable
+                    onPress={() => {
+                      if (selectedKeyword === item) {
+                        setSelectedKeyword('');
+                      } else {
+                        setSelectedKeyword(item);
+                      }
+                    }}
+                    isClicked={selectedKeyword === item}
+                    isFirst={index === 0}
+                    isLast={index === keyword.length - 1}>
+                    <ButtonText isClicked={selectedKeyword === item}>
+                      {item}
+                    </ButtonText>
+                  </ButtonPressable>
                 );
-              })}
-            </View>
-          );
-        })} */}
-              {/* <LoadingPage>
-          <ActivityIndicator size={'large'} />
-        </LoadingPage> */}
-              {getBoardIsFetching && (
-                <LoadingPage>
-                  <ActivityIndicator size={'large'} />
-                </LoadingPage>
-              )}
-              {/* <View>
-          <Typography>test</Typography>
-        </View> */}
-            </ReviewListWrap>
-
-            <BottomModalMultipleSelect
-              onConfirmPress={handleConfirmPress}
-              modalVisible={bottomModalOpen}
-              setModalVisible={setBottomModalOpen}
-              title="별점 필터"
-              data={modifyStarRatingCount(starRatingCounts)}
-              multiple={true}
-              selected={rateSelected}
-              setSelected={handleSelectBottomModal}
-              SelecterComponent={BottomModalSelecterComponent}
+              }}
             />
-          </Container>
-        </>
-      ) : (
-        <LoadingPage>
-          <ActivityIndicator size={'large'} />
-        </LoadingPage>
+          )}
+        </Wrap3>
+
+        <Wrap4 isMarginBottom={reviewWrite === 0}>
+          <Wrap6>
+            <FilterPressable
+              onPress={() => {
+                setShowSelectList(!showSelectList);
+              }}>
+              <ArrowUpAndDown />
+              <FilterText>{showSelectedOrderFilter(orderFilter)}</FilterText>
+            </FilterPressable>
+
+            <ThinGreyLineVertical />
+            <FilterPressable
+              onPress={() => {
+                setIsOnlyPhoto(!isOnlyPhoto);
+              }}>
+              <Picture
+                isOn={isOnlyPhoto}
+                color={
+                  isOnlyPhoto ? theme.colors.blue[500] : theme.colors.grey[4]
+                }
+              />
+
+              <FilterText isOn={isOnlyPhoto}>포토리뷰만</FilterText>
+            </FilterPressable>
+          </Wrap6>
+
+          <FilterPressable
+            onPress={() => {
+              setBottomModalOpen(!bottomModalOpen);
+            }}>
+            <Settings />
+            <FilterText>별점필터</FilterText>
+          </FilterPressable>
+        </Wrap4>
+
+        {reviewWrite !== 0 && (
+          <Wrap5>
+            <GoToWriteReviewPressable
+              onPress={() => {
+                navigation.navigate(CreateReviewScreenName, {
+                  orderItemId: reviewWrite,
+                  imageLocation: imageLocation[0],
+                  foodName,
+                });
+              }}>
+              <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>
+              <RightSkinnyArrow
+                width={'5px'}
+                height={'9px'}
+                color={theme.colors.blue[500]}
+              />
+            </GoToWriteReviewPressable>
+          </Wrap5>
+        )}
+      </Wrap1>
+
+      {showSelectList && (
+        <WrapWrapView isOn={Array.isArray(keyword) && keyword.length > 0}>
+          <ShadowWrap startColor="rgba(0, 0, 0, 0.03)" distance={14}>
+            <FilterSelecterWrap>
+              <FilterSelecterPressable
+                onPress={() => {
+                  setOrderFilter(0);
+
+                  setShowSelectList(false);
+                }}>
+                <SelectorText isClicked={orderFilter === 0}>
+                  베스트 순
+                </SelectorText>
+              </FilterSelecterPressable>
+              <FilterSelecterPressable
+                isTopBorder={true}
+                onPress={() => {
+                  setOrderFilter(1);
+
+                  setShowSelectList(false);
+                }}>
+                <SelectorText isClicked={orderFilter === 1}>
+                  최신 순
+                </SelectorText>
+                <></>
+              </FilterSelecterPressable>
+              <FilterSelecterPressable
+                isTopBorder={true}
+                onPress={() => {
+                  setOrderFilter(2);
+
+                  setShowSelectList(false);
+                }}>
+                <SelectorText isClicked={orderFilter === 2}>
+                  리뷰 추천순
+                </SelectorText>
+              </FilterSelecterPressable>
+            </FilterSelecterWrap>
+          </ShadowWrap>
+        </WrapWrapView>
       )}
-    </>
+
+      <ReviewListWrap>
+        {isFetchingTop && (
+          <LoadingPage1>
+            <ActivityIndicator size={'large'} />
+          </LoadingPage1>
+        )}
+
+        {allReviewList && !getBoardIsLoading && (
+          <FlatList
+            data={allReviewList}
+            keyExtractor={item => item.reviewId.toString()}
+            renderItem={({item}) => (
+              <Card
+                key={item.reviewId}
+                dailyFoodId={dailyFoodId}
+                id={item.reviewId}
+                userName={item.userName}
+                item={item}
+                likeNum={item.good}
+                isLike={item.isGood}
+                createDate={item.createDate}
+                updateDate={item.updateDate}
+                writtenDate={convertDateFormat1(item.createDate)}
+                option={item.option}
+                rating={item.satisfaction}
+                reviewText={item.content}
+                imageLocation={item.imageLocation}
+                forMakers={item.forMakers}
+                commentList={item.commentList}
+                isFetching={isFetching}
+              />
+            )}
+            onEndReached={() => {
+              if (getNextPageIsPossible) {
+                getNextPage();
+              }
+            }}
+            onEndReachedThreshold={0.1}
+          />
+        )}
+
+        {isFetchingBottom && (
+          <LoadingPage>
+            <ActivityIndicator size={'large'} />
+          </LoadingPage>
+        )}
+      </ReviewListWrap>
+
+      <BottomModalMultipleSelect
+        onConfirmPress={handleConfirmPress}
+        modalVisible={bottomModalOpen}
+        setModalVisible={setBottomModalOpen}
+        title="별점 필터"
+        data={modifyStarRatingCount(starRatingCounts)}
+        multiple={true}
+        selected={rateSelected}
+        setSelected={handleSelectBottomModal}
+        SelecterComponent={BottomModalSelecterComponent}
+      />
+    </Container>
   );
 };
 export default Component;

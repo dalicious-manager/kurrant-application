@@ -40,8 +40,8 @@ export function useMainReviewInfiniteQuery(url, dailyFoodId) {
     isLoading: getBoardIsLoading,
     isFetching: getBoardIsFetching,
     hasNextPage: getNextPageIsPossible,
-    refetch,
-  } = useInfiniteQuery(['review'], getPageBoard, {
+    refetch: getBoardRefetch,
+  } = useInfiniteQuery(['review', 'detail', 'getBoard'], getPageBoard, {
     getNextPageParam: lastPage => {
       // lastPage와 pages는 콜백함수에서 리턴한 값을 의미한다!!
       // lastPage: 직전에 반환된 리턴값, pages: 여태 받아온 전체 페이지
@@ -60,6 +60,6 @@ export function useMainReviewInfiniteQuery(url, dailyFoodId) {
     getBoardIsFetching,
     getBoardIsLoading,
     getNextPageIsPossible,
-    refetch,
+    getBoardRefetch,
   };
 }

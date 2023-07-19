@@ -111,7 +111,7 @@ const Pages = ({route}) => {
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
-  console.log(dailyFoodId);
+  // console.log(dailyFoodId);
 
   const closeModal = () => {
     setModalVisible(false);
