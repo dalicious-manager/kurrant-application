@@ -17,17 +17,12 @@ import {LineChartConfigSample} from './LineChartConfigSample';
 
 const LineChart = ({
   dataBasic = [],
-
+  disableMeaninglessValue,
   chartWidth = 300,
   chartHeight = 200,
   chartConfig = LineChartConfigSample,
 }) => {
   //// 1. 필요한 데이터
-
-  // useEffect(() => {
-  //   console.log('데이터베이직 ');
-  //   console.log(dataBasic);
-  // }, [dataBasic]);
 
   const {one, two, three, four, five} = chartConfig;
 
@@ -66,16 +61,29 @@ const LineChart = ({
   //// 3. 좌표 계산하기
 
   // 점 좌표
-  const dotsCoordinateArr = dataBasic.map((v, i) => {
-    if (Number.isNaN(zeroY - ((chartHeight - two - four) * v.y) / M)) {
-      return {};
-    } else {
-      return {
-        x: one + five + i * xTickWidth,
-        y: zeroY - ((chartHeight - two - four) * v.y) / M,
-      };
-    }
-  });
+  const dotsCoordinateArr = disableMeaninglessValue
+    ? dataBasic
+        .filter(v => !v.disable)
+        .map((v, i) => {
+          if (Number.isNaN(zeroY - ((chartHeight - two - four) * v.y) / M)) {
+            return {};
+          } else {
+            return {
+              x: one + five + i * xTickWidth,
+              y: zeroY - ((chartHeight - two - four) * v.y) / M,
+            };
+          }
+        })
+    : dataBasic.map((v, i) => {
+        if (Number.isNaN(zeroY - ((chartHeight - two - four) * v.y) / M)) {
+          return {};
+        } else {
+          return {
+            x: one + five + i * xTickWidth,
+            y: zeroY - ((chartHeight - two - four) * v.y) / M,
+          };
+        }
+      });
 
   // 그래프 그리기
 
@@ -83,6 +91,17 @@ const LineChart = ({
 
   for (let i = 0; i < dataBasic.length - 1; i++) {
     chartCoordinateArr.push({
+      x1: dotsCoordinateArr[i]?.x,
+      y1: dotsCoordinateArr[i]?.y,
+      x2: dotsCoordinateArr[i + 1]?.x,
+      y2: dotsCoordinateArr[i + 1]?.y,
+    });
+  }
+
+  let chartCoordinateArr2 = [];
+
+  for (let i = 0; i < dotsCoordinateArr.length - 1; i++) {
+    chartCoordinateArr2.push({
       x1: dotsCoordinateArr[i]?.x,
       y1: dotsCoordinateArr[i]?.y,
       x2: dotsCoordinateArr[i + 1]?.x,
@@ -105,10 +124,6 @@ const LineChart = ({
       </G>
     );
   };
-  // useEffect(() => {
-  //   console.log('dotsCoordinateArr 랄라라');
-  //   console.log(dotsCoordinateArr);
-  // }, [dotsCoordinateArr]);
 
   const ChartLine = ({x1, y1, x2, y2, i}) => {
     return (
@@ -145,19 +160,35 @@ const LineChart = ({
 
         {/* 선 */}
 
-        {chartCoordinateArr.length > 0 &&
-          chartCoordinateArr.map((v, i) => {
-            return (
-              <ChartLine
-                key={i}
-                x1={v.x1}
-                y1={v.y1}
-                x2={v.x2}
-                y2={v.y2}
-                i={i}
-              />
-            );
-          })}
+        {disableMeaninglessValue
+          ? chartCoordinateArr2.length > 0 &&
+            chartCoordinateArr2.map((v, i) => {
+              return (
+                <ChartLine
+                  key={i}
+                  x1={v.x1}
+                  y1={v.y1}
+                  x2={v.x2}
+                  y2={v.y2}
+                  i={i}
+                />
+              );
+            })
+          : chartCoordinateArr.length > 0 &&
+            chartCoordinateArr.map((v, i) => {
+              return (
+                <ChartLine
+                  key={i}
+                  x1={v.x1}
+                  y1={v.y1}
+                  x2={v.x2}
+                  y2={v.y2}
+                  i={i}
+                />
+              );
+            })}
+
+        {}
       </Svg>
     </Container>
   );
