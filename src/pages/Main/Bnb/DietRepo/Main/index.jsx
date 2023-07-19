@@ -328,6 +328,7 @@ export default Pages;
 const Container = styled.View`
   flex: 1;
   background-color: #ffffff;
+  /* border: 1px solid black; */
   /* position: absolute; */
 `;
 
