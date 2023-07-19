@@ -284,6 +284,7 @@ const MainWrap6 = styled.View`
 `;
 const MainText6 = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[5]};
+  margin-right: 8px;
 `;
 
 const AddMealWrap5 = styled.View``;
