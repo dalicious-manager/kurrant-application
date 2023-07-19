@@ -25,8 +25,10 @@ import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
 
 import {PAGE_NAME as AppleLoginPageName} from '../../pages/Main/Login/AppleSignup';
-
+import {PAGE_NAME as nicknameSettingPageName} from '../../pages/Main/MyPage/Nickname/index';
 import Config from 'react-native-config';
+import {isHasNicknameAtom} from '../../biz/useAuth/store';
+import {useAtom} from 'jotai';
 
 const nonce = uuid();
 
@@ -46,6 +48,8 @@ const naverData = () => {
 };
 export default () => {
   const {snsLogin, snsAppleLogin} = useAuth();
+  const [hasNickname, setHasNickname] = useAtom(isHasNicknameAtom);
+  console.log(hasNickname, 'sss');
   const navigation = useNavigation();
   const naverLogin = async () => {
     // console.log('로그인')
@@ -105,14 +109,26 @@ export default () => {
         },
         'GOOGLE',
       );
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: SCREEN_NAME,
-          },
-        ],
-      });
+      console.log(hasNickname, 'sii');
+      if (hasNickname) {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: nicknameSettingPageName,
+            },
+          ],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SCREEN_NAME,
+            },
+          ],
+        });
+      }
     } catch (error) {
       // console.log('err', error.toString());
     }
