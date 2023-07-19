@@ -669,8 +669,13 @@ const Pages = () => {
                             <ContentHeader>
                               <DiningName>
                                 {formattedMonthDay(v.serviceDate)}{' '}
-                                {v.diningType}
+                                {v.diningType} {food.deliveryTime}
                               </DiningName>
+                              {!(food.status === 2 || food.status === 6) && (
+                                <DeadlineGuide>
+                                  {food.lastOrderTime} 마감
+                                </DeadlineGuide>
+                              )}
                             </ContentHeader>
                             <DeleteIcons
                               onPress={() => {
@@ -983,7 +988,7 @@ const Wrap = styled.View`
   border-bottom-width: 1px;
   position: relative;
   background-color: ${({theme, status, count, capacity}) =>
-    status === 0 || (status === 1 && capacity < count)
+    status === 2 || (status === 1 && capacity < count)
       ? theme.colors.grey[8]
       : theme.colors.grey[0]};
   min-height: 180px;
@@ -1070,7 +1075,7 @@ export const DiningName = styled(Typography).attrs({text: 'CaptionR'})`
 `;
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[2]};
+    status === 6 ? theme.colors.grey[6] : theme.colors.grey[2]};
   margin-bottom: 2px;
 `;
 
@@ -1158,7 +1163,7 @@ const Border = styled.View`
 
 const DeleteIcons = styled.Pressable`
   position: absolute;
-  top: 16px;
+  top: 14px;
   right: 24px;
   padding: 4px;
 `;
@@ -1254,4 +1259,9 @@ const BlurView = styled.View`
 const ShortageText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.red[500]};
   margin-left: 4px;
+`;
+
+const DeadlineGuide = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+  margin-right: 28px;
 `;
