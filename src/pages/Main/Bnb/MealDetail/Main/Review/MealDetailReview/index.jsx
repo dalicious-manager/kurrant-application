@@ -6,7 +6,7 @@ import {Shadow} from 'react-native-shadow-2';
 import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
-import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
+
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
@@ -18,7 +18,7 @@ import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from '../../../../../../../biz/useReview/useMealDetailReview/store';
-import {useMainInfiniteScrollQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
+
 import {
   ArrowUpAndDown,
   Picture,
@@ -26,6 +26,9 @@ import {
 } from '../../../../../../../components/Icon';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
+import {detailReviewDataAtom} from './store';
+import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
+import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
 
 const Component = ({
   imageLocation,
@@ -33,15 +36,6 @@ const Component = ({
   dailyFoodId,
   allReviewList,
   setAllReviewList,
-  getBoard,
-  getBoardIsSuccess,
-  getBoardIsFetching,
-  getBoardIsLoading,
-  getNextPage,
-  getNextPageIsPossible,
-  refetch,
-  url,
-  setUrl,
 }) => {
   const theme = useTheme();
   const queryClient = useQueryClient();
@@ -60,6 +54,8 @@ const Component = ({
   const [reviewWrite, setReviewWrite] = useState(0);
   const [isLast, setIsLast] = useState(false);
 
+  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+
   // 베스트순,최신순,리뷰순 (sort)
   // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
 
@@ -77,45 +73,69 @@ const Component = ({
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
-  // const {getInfiniteQuery} = useGetMealDetailReview(url, dailyFoodId);
+  const [reviewData, setReviewData] = useState([]);
 
-  // const reviewKeyword = ['달퐁이', '참새'];
+  const {
+    getBoard,
+    getBoardIsSuccess,
+    getBoardIsFetching: isFetching,
+    getBoardIsLoading,
+    getNextPage,
+    getNextPageIsPossible,
+    getBoardRefetch,
+  } = useMainReviewInfiniteQuery(url, dailyFoodId);
 
-  // useEffect(() => {
-  //   // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
+  const {starRatingCounts} = useGetMealDetailReview(dailyFoodId);
 
-  //   refetch();
-  // }, [url]);
+  useEffect(() => {
+    setReviewData(getBoard);
+  }, [getBoard]);
 
-  // const [isFetchingTop, setIsFetchingTop] = useState(false);
-  // const [isFetchingBottom, setIsFetchingBottom] = useState(false);
+  useEffect(() => {
+    setUrl(
+      buildCustomUrl(
+        dailyFoodId,
+        orderFilter,
+        isOnlyPhoto,
+        selectedKeyword,
+        rateSelected,
+      ),
+    );
+  }, [dailyFoodId, orderFilter, isOnlyPhoto, selectedKeyword, setUrl]);
 
-  // useEffect(() => {
-  //   setIsFetchingTop(true);
-  // }, [url]);
+  useEffect(() => {
+    getBoardRefetch();
+  }, [url]);
 
-  // useEffect(() => {
-  //   if (isFetching && isFetchingTop) {
-  //     setIsFetchingTop(true);
-  //     setIsFetchingBottom(false);
-  //   } else {
-  //     setIsFetchingTop(false);
-  //   }
-  // }, [isFetching]);
+  const [isFetchingTop, setIsFetchingTop] = useState(false);
+  const [isFetchingBottom, setIsFetchingBottom] = useState(false);
 
-  // useEffect(() => {
-  //   if (isFetching) {
-  //     setIsFetchingBottom(true);
-  //   } else {
-  //     setIsFetchingBottom(false);
-  //   }
-  // }, [isFetching]);
+  useEffect(() => {
+    setIsFetchingTop(true);
+  }, [url]);
 
-  // useEffect(() => {
-  //   if (isFetchingBottom && isFetchingTop) {
-  //     setIsFetchingBottom(false);
-  //   }
-  // }, [isFetchingBottom, isFetchingTop]);
+  useEffect(() => {
+    if (isFetching && isFetchingTop) {
+      setIsFetchingTop(true);
+      setIsFetchingBottom(false);
+    } else {
+      setIsFetchingTop(false);
+    }
+  }, [isFetching]);
+
+  useEffect(() => {
+    if (isFetching) {
+      setIsFetchingBottom(true);
+    } else {
+      setIsFetchingBottom(false);
+    }
+  }, [isFetching]);
+
+  useEffect(() => {
+    if (isFetchingBottom && isFetchingTop) {
+      setIsFetchingBottom(false);
+    }
+  }, [isFetchingBottom, isFetchingTop]);
 
   // useEffect(() => {
   //   setHasNextPageReviewDetail(hasNextPage);
@@ -126,8 +146,6 @@ const Component = ({
   // }, [fetchNextPage, setFetchNextPageReviewDetail]);
 
   useEffect(() => {
-    // console.log(getBoard?.pages, 'testset');
-
     const review =
       getBoard?.pages.flatMap(page => page.items?.reviewList) ?? [];
     if (getBoard?.pages) {
@@ -166,8 +184,6 @@ const Component = ({
   //   console.log('데일리푸드아이딩~');
   //   console.log(dailyFoodId); //
   // });
-
-  // best, latest, photo, rating, like
 
   // 바텀 모달
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
@@ -359,12 +375,11 @@ const Component = ({
       )}
 
       <ReviewListWrap>
-        {/* {isFetchingTop && (
-         
-        )} */}
-        {/* <LoadingPage1>
-          <ActivityIndicator size={'large'} />
-        </LoadingPage1> */}
+        {isFetchingTop && (
+          <LoadingPage1>
+            <ActivityIndicator size={'large'} />
+          </LoadingPage1>
+        )}
 
         {allReviewList && !getBoardIsLoading && (
           <FlatList
@@ -388,7 +403,7 @@ const Component = ({
                 imageLocation={item.imageLocation}
                 forMakers={item.forMakers}
                 commentList={item.commentList}
-                isFetching={getBoardIsFetching}
+                isFetching={isFetching}
               />
             )}
             onEndReached={() => {
@@ -399,48 +414,12 @@ const Component = ({
             onEndReachedThreshold={0.1}
           />
         )}
-        {/* {data?.pages.map((v, i) => {
-          return (
-            <View key={i}>
-              {v.items?.reviewList.map((item, i2) => {
-                return (
-                  <Card
-                    key={item.reviewId}
-                    dailyFoodId={dailyFoodId}
-                    id={item.reviewId}
-                    userName={item.userName}
-                    item={item}
-                    good={item.good}
-                    isGood={item.isGood}
-                    createDate={item.createDate}
-                    updateDate={item.updateDate}
-                    writtenDate={convertDateFormat1(item.createDate)}
-                    option={item.option}
-                    rating={item.satisfaction}
-                    reviewText={item.content}
-                    imageLocation={item.imageLocation}
-                    forMakers={item.forMakers}
-                    commentList={item.commentList}
-                    // 도움이돼요 빠르게 만들기
 
-                    isFetching={isFetching}
-                  />
-                );
-              })}
-            </View>
-          );
-        })} */}
-        {/* <LoadingPage>
-          <ActivityIndicator size={'large'} />
-        </LoadingPage> */}
-        {getBoardIsFetching && (
+        {isFetchingBottom && (
           <LoadingPage>
             <ActivityIndicator size={'large'} />
           </LoadingPage>
         )}
-        {/* <View>
-          <Typography>test</Typography>
-        </View> */}
       </ReviewListWrap>
 
       <BottomModalMultipleSelect
@@ -448,7 +427,7 @@ const Component = ({
         modalVisible={bottomModalOpen}
         setModalVisible={setBottomModalOpen}
         title="별점 필터"
-        data={modifyStarRatingCount(stars)}
+        data={modifyStarRatingCount(starRatingCounts)}
         multiple={true}
         selected={rateSelected}
         setSelected={handleSelectBottomModal}
