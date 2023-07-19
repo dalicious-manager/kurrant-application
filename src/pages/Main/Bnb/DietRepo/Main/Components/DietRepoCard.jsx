@@ -1,4 +1,4 @@
-import {Alert, Pressable, Text} from 'react-native';
+import {Alert, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components';
 import Typography from '~components/Typography';
 
@@ -11,10 +11,13 @@ import {SCREEN_NAME as MainScreenName} from '~screens/Main/Bnb';
 
 import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 import {useNavigation} from '@react-navigation/native';
+import {useEffect, useRef, useState} from 'react';
+import EllipsizedTextByCharLength from './EllipsizedTextByCharLength';
 
 const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
   const {deleteMeal, addMeal} = useDietRepoMutation(date);
   const navigation = useNavigation();
+
   return (
     <Container>
       <CardContentBox>
@@ -39,21 +42,48 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
             <RestaurentNameText>
               {item1?.title || item2?.makersName}
             </RestaurentNameText>
-            <MenuNameWrap>
-              {!!item1 && !item2 ? (
-                <MenuNameText numberOfLines={1} ellipsizeMode="tail">
-                  {item1?.foodName || item2?.foodName}
-                </MenuNameText>
-              ) : (
-                <MenuNameText>
-                  {item1?.foodName || item2?.foodName}
-                </MenuNameText>
-              )}
+            <MenuNameView>
+              <MenuNameWrap>
+                {!!item1 && !item2 ? (
+                  <>
+                    <MenuNameText
+                      textContent={item1?.foodName || item2?.foodName}
+                      maxLength={
+                        // 네자리수, 세자리수 두자리수 한자리수
+                        item1?.calorie.toString().length === 4
+                          ? 11
+                          : item1?.calorie.toString().length === 3
+                          ? 12
+                          : item1?.calorie.toString().length === 2
+                          ? 13
+                          : item1?.calorie.toString().length === 1 && 14
+                      }
+                    />
+                    {/* <MenuNameText
+                      textContent={sampleText}
+                      maxLength={
+                        // 네자리수, 세자리수 두자리수 한자리수
+                        sampleLength === 4
+                          ? 11
+                          : sampleLength === 3
+                          ? 12
+                          : sampleLength === 2
+                          ? 13
+                          : sampleLength === 1 && 14
+                      }
+                    /> */}
+                  </>
+                ) : (
+                  <MenuNameText>
+                    {item1?.foodName || item2?.foodName}
+                  </MenuNameText>
+                )}
 
-              {!!item1 && !item2 && (
-                <TotalCalText> · {item1?.calorie}kcal</TotalCalText>
-              )}
-            </MenuNameWrap>
+                {!!item1 && !item2 && (
+                  <TotalCalText> · {item1?.calorie}kcal</TotalCalText>
+                )}
+              </MenuNameWrap>
+            </MenuNameView>
           </SmallRowWrap>
 
           <MainWrap4>
@@ -212,7 +242,9 @@ const MetadataWrap = styled.View`
   flex: 1;
   height: 100%;
 
-  padding: 0 16px;
+  /* padding: 0 16px; */
+  padding-left: 16px;
+  /* border: 1px solid black; */
   display: flex;
   /* justify-content: space-between; */
 `;
@@ -225,17 +257,17 @@ const RestaurentNameText = styled(Typography).attrs({text: 'SmallLabel'})`
   margin: 1px 0;
 `;
 
-const MenuNameText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin: 1px 0;
-  margin-left: 1px;
+const MenuNameText = styled(EllipsizedTextByCharLength)``;
 
-  max-width: 142px;
+const MenuNameView = styled.View`
+  max-width: 100%;
 `;
 
 const MenuNameWrap = styled.View`
   flex-direction: row;
   align-items: center;
+
+  /* width: 100%; */
 `;
 
 const MainWrap4 = styled.View`
@@ -261,11 +293,13 @@ const AddMealText6 = styled(Typography).attrs({text: 'Button10R'})`
 
 const TotalCalText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[2]};
+  /* border: 1px solid black; */
 `;
 
 const ButtonWrap = styled.View`
   height: 100%;
   flex-direction: column-reverse;
+  /* border: 1px solid black; */
 `;
 
 const ReviewFormWriteButton = styled.Pressable`
