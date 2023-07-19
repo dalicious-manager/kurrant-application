@@ -74,9 +74,9 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
                     /> */}
                   </>
                 ) : (
-                  <MenuNameText>
+                  <MenuNameItem2Text>
                     {item1?.foodName || item2?.foodName}
-                  </MenuNameText>
+                  </MenuNameItem2Text>
                 )}
 
                 {!!item1 && !item2 && (
@@ -258,6 +258,11 @@ const RestaurentNameText = styled(Typography).attrs({text: 'SmallLabel'})`
 `;
 
 const MenuNameText = styled(EllipsizedTextByCharLength)``;
+
+const MenuNameItem2Text = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin: 1px 0;
+`;
 
 const MenuNameView = styled.View`
   max-width: 100%;
