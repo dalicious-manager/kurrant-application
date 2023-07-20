@@ -18,6 +18,12 @@ export const sseType5Atom = atomWithReset({});
 // type: 6
 
 export const sseType6Atom = atomWithReset({});
+// type: 7
+
+export const sseType7Atom = atomWithReset({});
+// type: 8
+
+export const sseType8Atom = atomWithReset({});
 
 ///////
 
