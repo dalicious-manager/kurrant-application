@@ -1,24 +1,24 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Dimensions, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {ActivityIndicator, Dimensions, FlatList, View} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
+import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
+
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
-
 import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
-
 import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from '../../../../../../../biz/useReview/useMealDetailReview/store';
-import useGetMealDetailReview from '~biz/useReview/useMealDetailReview/useGetMealDetailReview';
+
 import {
   ArrowUpAndDown,
   Picture,
@@ -26,10 +26,19 @@ import {
 } from '../../../../../../../components/Icon';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
+import {detailReviewDataAtom} from './store';
+import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
+import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
 
-const Component = ({imageLocation, foodName, dailyFoodId}) => {
+const Component = ({
+  imageLocation,
+  foodName,
+  dailyFoodId,
+  allReviewList,
+  setAllReviewList,
+}) => {
   const theme = useTheme();
-
+  const queryClient = useQueryClient();
   const navigation = useNavigation();
 
   // console.log(dailyFoodId);
@@ -37,18 +46,15 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   // 샘플 대에터
   // const dailyFoodId = 40827;
 
-  const [hasNextPageReviewDetail, setHasNextPageReviewDetail] = useAtom(
-    hasNextPageReviewDetailAtom,
-  );
-  const [fetchNextPageReviewDetail, setFetchNextPageReviewDetail] = useAtom(
-    fetchNextPageReviewDetailAtom,
-  );
-
   const [starAverage, setStarAverage] = useState(1);
+  const [stars, setStars] = useState({});
+  const [keyword, setKeyword] = useState([]);
   const [totalReview, setTotalReview] = useState(0);
   const [foodId, setFoodId] = useState(undefined);
   const [reviewWrite, setReviewWrite] = useState(0);
   const [isLast, setIsLast] = useState(false);
+
+  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
 
   // 베스트순,최신순,리뷰순 (sort)
   // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
@@ -67,7 +73,23 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
-  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+  const [reviewData, setReviewData] = useState([]);
+
+  const {
+    getBoard,
+    getBoardIsSuccess,
+    getBoardIsFetching: isFetching,
+    getBoardIsLoading,
+    getNextPage,
+    getNextPageIsPossible,
+    getBoardRefetch,
+  } = useMainReviewInfiniteQuery(url, dailyFoodId);
+
+  const {starRatingCounts} = useGetMealDetailReview(dailyFoodId);
+
+  useEffect(() => {
+    setReviewData(getBoard);
+  }, [getBoard]);
 
   useEffect(() => {
     setUrl(
@@ -79,27 +101,10 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         rateSelected,
       ),
     );
-  }, [
-    dailyFoodId,
-    orderFilter,
-    isOnlyPhoto,
-    selectedKeyword,
-    setUrl,
-    // rateSelected,
-  ]);
-
-  const {
-    getInfiniteQuery: {data, hasNextPage, fetchNextPage, refetch, isFetching},
-    starRatingCounts,
-    reviewKeyword,
-  } = useGetMealDetailReview(url, dailyFoodId);
-
-  // const reviewKeyword = ['달퐁이', '참새'];
+  }, [dailyFoodId, orderFilter, isOnlyPhoto, selectedKeyword, setUrl]);
 
   useEffect(() => {
-    // url이 바뀌어서 refetching 이 될떄 로딩 따로하기
-
-    refetch();
+    getBoardRefetch();
   }, [url]);
 
   const [isFetchingTop, setIsFetchingTop] = useState(false);
@@ -132,27 +137,39 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     }
   }, [isFetchingBottom, isFetchingTop]);
 
-  useEffect(() => {
-    setHasNextPageReviewDetail(hasNextPage);
-  }, [hasNextPage, setHasNextPageReviewDetail]);
+  // useEffect(() => {
+  //   setHasNextPageReviewDetail(hasNextPage);
+  // }, [hasNextPage, setHasNextPageReviewDetail]);
+
+  // useEffect(() => {
+  //   setFetchNextPageReviewDetail(fetchNextPage);
+  // }, [fetchNextPage, setFetchNextPageReviewDetail]);
 
   useEffect(() => {
-    setFetchNextPageReviewDetail(fetchNextPage);
-  }, [fetchNextPage, setFetchNextPageReviewDetail]);
-
-  useEffect(() => {
-    if (data?.pages) {
+    const review =
+      getBoard?.pages.flatMap(page => page.items?.reviewList) ?? [];
+    if (getBoard?.pages) {
       const {
-        items: {starAverage, isLast, foodId, totalReview, reviewWrite},
-      } = data?.pages[0];
-
+        items: {
+          starAverage,
+          isLast,
+          foodId,
+          totalReview,
+          reviewWrite,
+          stars,
+          keywords,
+        },
+      } = getBoard?.pages[0];
+      setAllReviewList(review);
       setStarAverage(starAverage);
+      setStars(stars);
+      setKeyword(keywords);
       setIsLast(isLast);
       setFoodId(foodId);
       setTotalReview(totalReview);
       setReviewWrite(reviewWrite);
     }
-  }, [data?.pages]);
+  }, [getBoard?.pages]);
 
   const [showSelectList, setShowSelectList] = useState(false);
 
@@ -167,8 +184,6 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   //   console.log('데일리푸드아이딩~');
   //   console.log(dailyFoodId); //
   // });
-
-  // best, latest, photo, rating, like
 
   // 바텀 모달
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
@@ -190,16 +205,6 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
       return '리뷰 추천순';
     }
   };
-
-  // useEffect(() => {
-  //   console.log('data여');
-  //   console.log(data);
-  //   console.log(data?.pages);
-  //   console.log(data?.pages[0]);
-  //   console.log(data?.pages[0].items);
-  //   console.log(data?.pages[0].items?.reviewList);
-  //   console.log(data?.pages[0].items?.starAverage);
-  // }, [data]);
 
   const handleConfirmPress = () => {
     setUrl(
@@ -236,13 +241,14 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
         </StarRatingWrap>
 
         <Wrap3>
-          {Array.isArray(reviewKeyword) && reviewKeyword.length > 0 && (
+          {Array.isArray(keyword) && keyword.length > 0 && (
             <FlatFlatList
-              data={reviewKeyword}
+              data={keyword}
               scrollEnabled={true}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               horizontal={true}
+              initialNumToRender={5}
               contentContainerStyle={{
                 height: 56,
                 alignItems: 'center',
@@ -259,7 +265,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
                     }}
                     isClicked={selectedKeyword === item}
                     isFirst={index === 0}
-                    isLast={index === reviewKeyword.length - 1}>
+                    isLast={index === keyword.length - 1}>
                     <ButtonText isClicked={selectedKeyword === item}>
                       {item}
                     </ButtonText>
@@ -327,8 +333,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
       </Wrap1>
 
       {showSelectList && (
-        <WrapWrapView
-          isOn={Array.isArray(reviewKeyword) && reviewKeyword.length > 0}>
+        <WrapWrapView isOn={Array.isArray(keyword) && keyword.length > 0}>
           <ShadowWrap startColor="rgba(0, 0, 0, 0.03)" distance={14}>
             <FilterSelecterWrap>
               <FilterSelecterPressable
@@ -375,37 +380,40 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
             <ActivityIndicator size={'large'} />
           </LoadingPage1>
         )}
-        {data?.pages.map((v, i) => {
-          return (
-            <View key={i}>
-              {v.items?.reviewList.map((item, i2) => {
-                return (
-                  <Card
-                    key={item.reviewId}
-                    dailyFoodId={dailyFoodId}
-                    id={item.reviewId}
-                    userName={item.userName}
-                    item={item}
-                    good={item.good}
-                    isGood={item.isGood}
-                    createDate={item.createDate}
-                    updateDate={item.updateDate}
-                    writtenDate={convertDateFormat1(item.createDate)}
-                    option={item.option}
-                    rating={item.satisfaction}
-                    reviewText={item.content}
-                    imageLocation={item.imageLocation}
-                    forMakers={item.forMakers}
-                    commentList={item.commentList}
-                    // 도움이돼요 빠르게 만들기
 
-                    isFetching={isFetching}
-                  />
-                );
-              })}
-            </View>
-          );
-        })}
+        {allReviewList && !getBoardIsLoading && (
+          <FlatList
+            data={allReviewList}
+            keyExtractor={item => item.reviewId.toString()}
+            renderItem={({item}) => (
+              <Card
+                key={item.reviewId}
+                dailyFoodId={dailyFoodId}
+                id={item.reviewId}
+                userName={item.userName}
+                item={item}
+                likeNum={item.good}
+                isLike={item.isGood}
+                createDate={item.createDate}
+                updateDate={item.updateDate}
+                writtenDate={convertDateFormat1(item.createDate)}
+                option={item.option}
+                rating={item.satisfaction}
+                reviewText={item.content}
+                imageLocation={item.imageLocation}
+                forMakers={item.forMakers}
+                commentList={item.commentList}
+                isFetching={isFetching}
+              />
+            )}
+            onEndReached={() => {
+              if (getNextPageIsPossible) {
+                getNextPage();
+              }
+            }}
+            onEndReachedThreshold={0.1}
+          />
+        )}
 
         {isFetchingBottom && (
           <LoadingPage>

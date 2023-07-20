@@ -13,6 +13,7 @@ import useUserMe from '~biz/useUserMe';
 import {SettingIcon} from '~components/Icon';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
+import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 import {PAGE_NAME as TermOfServicePageName} from '~pages/Main/MyPage/TermOfService';
 
 import ListBox from './ListBox';
@@ -194,7 +195,7 @@ const Pages = ({route}) => {
                 <Typography
                   text="Title02SB"
                   textColor={themeApp.colors.grey[2]}>
-                  {isUserInfo?.name}님
+                  {isUserInfo?.nickname ?? isUserInfo?.name}님
                 </Typography>
               </LoginIdBox>
               <Pressable

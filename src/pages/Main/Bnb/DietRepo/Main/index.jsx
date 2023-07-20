@@ -3,6 +3,7 @@ import {FlatList, Platform} from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled, {css} from 'styled-components';
 import {
+  calcDate,
   formattedWeekDate,
   stringDateToJavascriptDate,
   toStringByFormatting,
@@ -28,14 +29,25 @@ import DietRepoCard from './Components/DietRepoCard';
 import {ArrowRightBlue} from '../../../../../components/Icon';
 
 import useGetDietRepo from '../useGetDietRepo';
-import {modifyDietRepoMainData} from '../logic';
+import {
+  addDateInDateRange,
+  calcWeekArr,
+  findIfDateIsInDateRange,
+  modifyDietRepoMainData,
+  mondayOfThisWeek,
+  sundayOfThisWeek,
+} from '../logic';
 
 import LoadingScreen from '~components/LoadingScreen';
 
 import useDietRepoMutation from '../useDietRepoMutation';
 import DietRepoCalendar2 from '../DietRepoCalendar/DietRepoCalendar2';
 import {useGetDailyfood} from '../../../../../hook/useDailyfood';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
+import {
+  getStorage,
+  removeItemFromStorage,
+  setStorage,
+} from '../../../../../utils/asyncStorage';
 import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
@@ -44,7 +56,7 @@ const Pages = ({route}) => {
   const navigation = useNavigation();
 
   const pastLimitDate = new Date(2023, 2, 26);
-
+  const {saveMeal, saveMealStatus} = useDietRepoMutation();
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -77,33 +89,90 @@ const Pages = ({route}) => {
   } = useGetDietRepo(formattedWeekDate(date), undefined, undefined);
 
   useEffect(() => {
-    dietRepoMainRefetch();
+    (async () => {
+      // console.log('로컬 지움');
+      // await removeItemFromStorage('dietRepoDate');
+      // return;
 
-    const fetchYo = async date => {
-      if (typeof date === 'object') {
+      // console.log('스토리지 확인');
+      // console.log('다이어트 레포 확인 ' + (await getStorage(`dietRepoDate`)));
+
+      const dietRepoDate = await getStorage(`dietRepoDate`);
+
+      // console.log('다이어트 데이트');
+      // console.log(dietRepoDate);
+
+      if (!dietRepoDate) {
+        // console.log('case 1');
+        // console.log(formattedWeekDate(mondayOfThisWeek(calcDate(-7, date))));
+        // console.log(formattedWeekDate(sundayOfThisWeek(date)));
+        saveMeal([
+          formattedWeekDate(mondayOfThisWeek(calcDate(-7, date))),
+          formattedWeekDate(sundayOfThisWeek(date)),
+        ]);
+
+        // console.log('들어갈 데이터 ');
+        // console.log(
+        //   formattedWeekDate(mondayOfThisWeek(calcDate(-7, date))).concat(
+        //     ', ',
+        //     formattedWeekDate(mondayOfThisWeek(date)),
+        //   ),
+        // );
+
+        return setStorage(
+          'dietRepoDate',
+          // 2주전 월요일 , 이번주 일요일
+          formattedWeekDate(mondayOfThisWeek(calcDate(-7, date))).concat(
+            ', ',
+            formattedWeekDate(mondayOfThisWeek(date)),
+          ),
+        );
+      } else {
         if (
-          (await getStorage(`dietRepo_Date_${toStringByFormatting(date)}`)) ===
-          toStringByFormatting(date)
+          findIfDateIsInDateRange(
+            dietRepoDate,
+            toStringByFormatting(mondayOfThisWeek(date)),
+          )
         ) {
-        } else {
-          saveMeal(toStringByFormatting(date));
-          setStorage(
-            `dietRepo_Date_${toStringByFormatting(date)}`,
-            toStringByFormatting(date),
-          );
+          // console.log('case 2');
+          return;
         }
-      } else if (typeof date === 'string') {
-        if ((await getStorage(`dietRepo_Date_${date}`)) === date) {
-        } else {
-          saveMeal(date);
-          setStorage(`dietRepo_Date_${date}`, date);
-        }
-      }
-    };
-    fetchYo(date);
-  }, [date]);
 
-  const {saveMeal} = useDietRepoMutation();
+        // 없다면 보내주고 추가해야됨
+        // console.log('case 3');
+
+        // console.log('들어갈 데이터 ');
+        // console.log(toStringByFormatting(date));
+        // console.log(
+        //   addDateInDateRange(
+        //     dietRepoDate,
+        //     formattedWeekDate(mondayOfThisWeek(date)),
+        //   ),
+        // );
+
+        // 여기서 부터 밥먹고
+
+        saveMeal([
+          formattedWeekDate(mondayOfThisWeek(date)),
+
+          formattedWeekDate(sundayOfThisWeek(date)),
+
+          () => {
+            // 성공하면
+            setStorage(
+              'dietRepoDate',
+              // 2주전 월요일 , 이번주 일요일
+              addDateInDateRange(
+                dietRepoDate,
+                formattedWeekDate(mondayOfThisWeek(date)),
+              ),
+            );
+          },
+        ]);
+      }
+      dietRepoMainRefetch();
+    })();
+  }, [date]);
 
   const dayPress = selectedDate => {
     setDate(stringDateToJavascriptDate(selectedDate, '-'));

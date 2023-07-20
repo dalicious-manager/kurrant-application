@@ -11,7 +11,7 @@ const Row = styled.View`
 `;
 
 const Cell = styled.View`
-  flex: 3;
+  width: 90px;
   border-right-width: 1px;
   border-bottom-width: ${({isLast}) => (!isLast ? '1px' : '0px')};
   border-color: ${({theme}) => theme.colors.grey[7]};
@@ -35,7 +35,7 @@ const Cell22 = styled.View`
 `;
 
 const Cell3 = styled.View`
-  flex: 4;
+  width: 110px;
   border-right-width: 1px;
   border-bottom-width: ${({isLast}) => (!isLast ? '1px' : '0px')};
   border-color: ${({theme}) => theme.colors.grey[7]};
@@ -45,7 +45,7 @@ const Cell3 = styled.View`
   align-items: center;
 `;
 const Cell2 = styled.View`
-  flex: 5;
+  width: 110px;
   border-bottom-width: ${({isLast}) => (!isLast ? '1px' : '0px')};
   border-color: ${({theme}) => theme.colors.grey[7]};
   padding: 8px;
@@ -56,6 +56,7 @@ const Cell2 = styled.View`
 `;
 const CellText = styled(Typography)`
   white-space: nowrap;
+  flex-wrap: nowrap;
 `;
 export default function Component({mealInfo}) {
   const themeApp = useTheme();

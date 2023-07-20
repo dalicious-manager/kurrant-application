@@ -1,7 +1,10 @@
+import {getStorage, setStorage} from '../../../../utils/asyncStorage';
 import {
+  calcDate,
   stringDateToJavascriptDate,
   toStringByFormatting,
 } from '../../../../utils/dateFormatter';
+import {dietRepoPastLimitDate} from './data';
 
 const sampleData = [
   {
@@ -184,4 +187,63 @@ export const calcWeekArr = date => {
     }
     return yo;
   }
+};
+
+// 로컬 스토리지에 있는 월요일 들만 들어있는 Date 스트링에 inputDate가 있는지 판단해주는 로직
+// 예) ('2023-06-26, 2023-07-03, 2023-07-10' , '2023-07-10' ) => 후자의 값이 전자에 들어있음 true
+// 예2) ('2023-07-03, 2023-07-10' , '2023-06-26' ) => 후자의 값이 전자에 들어있지 않음 false
+// '특정주문 저장하기'
+
+export const findIfLocalStorageDateMatch = (
+  compareDateRange,
+  inputDateRange,
+) => {
+  const mondays = compareDateRange.split(', ');
+
+  console.log(mondays);
+
+  if (mondays.find(inputDateRange)) {
+    // 특정주문 호출 안 함
+    return true;
+  } else {
+    return false;
+    // 특정 주문 호출 함
+  }
+};
+
+// 전자안에 후자가 있는지 파악
+// 예) ('2023-06-26, 2023-07-03, 2023-07-10', '2023-07-10') => true
+// 예2) ('2023-06-26, 2023-07-03, 2023-07-10', '2023-07-09') => false
+// return 은 boolean
+
+export const findIfDateIsInDateRange = (dateRange, date) => {
+  return dateRange.split(', ').includes(date);
+};
+
+// 날짜범위 안에 새로운 날짜를 추가하기 (이미 있을 시 추가하지 않음)
+// 예) ('2023-07-03, 2023-07-10', '2023-07-17') ->  '2023-07-03, 2023-07-10, 2023-07-17'
+// 예2) ('2023-07-03, 2023-07-10', '2023-07-10') ->  '2023-07-03, 2023-07-10'
+
+export const addDateInDateRange = (dateRange, date) => {
+  // 배열화
+
+  if (!dateRange.split(', ').includes(date)) {
+    const yes = dateRange.split(', ');
+    yes.push(date);
+
+    yes.sort(
+      (a, b) => stringDateToJavascriptDate(a) < stringDateToJavascriptDate(b),
+    );
+
+    return yes.join(', ');
+  } else {
+    return dateRange;
+  }
+};
+
+export const mondayOfThisWeek = date => {
+  return calcWeekArr(date)[0];
+};
+export const sundayOfThisWeek = date => {
+  return calcWeekArr(date)[6];
 };
