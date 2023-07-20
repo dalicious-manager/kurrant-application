@@ -42,13 +42,17 @@ import LoadingScreen from '~components/LoadingScreen';
 
 import useDietRepoMutation from '../useDietRepoMutation';
 import DietRepoCalendar2 from '../DietRepoCalendar/DietRepoCalendar2';
-import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {
+  useGetDailyfood,
+  useGetDailyfoodList,
+} from '../../../../../hook/useDailyfood';
 import {
   getStorage,
   removeItemFromStorage,
   setStorage,
 } from '../../../../../utils/asyncStorage';
 import {useQueryClient} from 'react-query';
+import {weekAtom} from '../../../../../biz/useBanner/store';
 
 export const PAGE_NAME = 'P_MAIN__DIET_REPO__MAIN';
 
@@ -65,10 +69,22 @@ const Pages = ({route}) => {
   const userInfo = useAtomValue(isUserInfoAtom);
   const userSpotId = userRole === 'ROLE_GUEST' ? 1 : userInfo?.spotId;
 
-  const {data: dailyfoodData} = useGetDailyfood(
+  const weekly = useAtomValue(weekAtom);
+  const {
+    data: dailyfoodDataList,
+    refetch: dailyfoodListRefetch,
+    isFetching: dailyListFetching,
+  } = useGetDailyfoodList(
     userSpotId,
-    formattedWeekDate(new Date()),
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+    userRole,
   );
+
+  // const {data: dailyfoodData} = useGetDailyfood(
+  //   userSpotId,
+  //   formattedWeekDate(new Date()),
+  // );
 
   const pager = useRef();
 
@@ -218,7 +234,9 @@ const Pages = ({route}) => {
             pagerRef={pager}
             pastLimitDate={pastLimitDate}
             sliderValue={sliderValue}
-            isServiceDays={dailyfoodData?.data?.serviceDays}
+            // isServiceDays={dailyfoodData?.data?.serviceDays}
+            // isServiceDays={dailyfoodData?.data?.serviceDays}
+            isServiceDays={dailyfoodDataList?.data?.diningTypes}
           />
         </CalendarWrap>
 
@@ -310,6 +328,7 @@ export default Pages;
 const Container = styled.View`
   flex: 1;
   background-color: #ffffff;
+  /* border: 1px solid black; */
   /* position: absolute; */
 `;
 

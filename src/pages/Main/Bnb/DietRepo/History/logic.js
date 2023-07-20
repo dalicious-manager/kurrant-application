@@ -66,12 +66,17 @@ export const modifyDateFormatForStackedBarData = inputData => {
 };
 
 export const modifyDateFormatAndValueForHistoryLineChartData = inputData =>
-  inputData.map(v => {
-    return {
-      x: `${extractMonthAndDateFromDate2(v.eatDate, '-')[1]}일`,
-      y: v.calorie,
-    };
-  });
+  // 오늘보다 날짜가 넘어가면 아예 보여주지 않기
+
+  {
+    return inputData.map(v => {
+      return {
+        x: `${extractMonthAndDateFromDate2(v.eatDate, '-')[1]}일`,
+        y: v.calorie,
+        disable: v.eatDate > toStringByFormatting(new Date()),
+      };
+    });
+  };
 
 // 서버 데이터랑, week 랑
 

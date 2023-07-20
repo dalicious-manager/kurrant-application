@@ -271,6 +271,8 @@ const Pages = ({route}) => {
           )}
           title="칼로리"
           width={'100%'}
+          disableMeaninglessValue={true}
+          // disableMeaninglessValue={false}
         />
         <GreyBlock width={screenWidth} />
 

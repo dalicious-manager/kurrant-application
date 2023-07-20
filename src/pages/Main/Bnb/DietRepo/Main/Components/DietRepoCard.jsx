@@ -1,4 +1,4 @@
-import {Alert, Pressable, Text} from 'react-native';
+import {Alert, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components';
 import Typography from '~components/Typography';
 
@@ -11,10 +11,13 @@ import {SCREEN_NAME as MainScreenName} from '~screens/Main/Bnb';
 
 import {PAGE_NAME as DietRepoMainPageName} from '~pages/Main/Bnb/DietRepo/Main';
 import {useNavigation} from '@react-navigation/native';
+import {useEffect, useRef, useState} from 'react';
+import EllipsizedTextByCharLength from './EllipsizedTextByCharLength';
 
 const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
   const {deleteMeal, addMeal} = useDietRepoMutation(date);
   const navigation = useNavigation();
+
   return (
     <Container>
       <CardContentBox>
@@ -28,7 +31,8 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
                 ? {
                     uri: item1?.imgLocation || item2?.imageLocation,
                   }
-                : require('../../../../../../assets/images/logo/main-logo.png')
+                : // : require('../../../../../../assets/images/logo/main-logo.png')
+                  require('../../../../../../assets/images/dietRepo/EmptyPlate.png')
             }
           />
         </ImagePressable>
@@ -36,25 +40,50 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
         <MetadataWrap>
           <SmallRowWrap>
             <RestaurentNameText>
-              {'['}
               {item1?.title || item2?.makersName}
-              {']'}
             </RestaurentNameText>
-            <MenuNameWrap>
-              {!!item1 && !item2 ? (
-                <MenuNameText numberOfLines={1} ellipsizeMode="tail">
-                  {item1?.foodName || item2?.foodName}
-                </MenuNameText>
-              ) : (
-                <MenuNameText>
-                  {item1?.foodName || item2?.foodName}
-                </MenuNameText>
-              )}
+            <MenuNameView>
+              <MenuNameWrap>
+                {!!item1 && !item2 ? (
+                  <>
+                    <MenuNameText
+                      textContent={item1?.foodName || item2?.foodName}
+                      maxLength={
+                        // 네자리수, 세자리수 두자리수 한자리수
+                        item1?.calorie.toString().length === 4
+                          ? 11
+                          : item1?.calorie.toString().length === 3
+                          ? 12
+                          : item1?.calorie.toString().length === 2
+                          ? 13
+                          : item1?.calorie.toString().length === 1 && 14
+                      }
+                    />
+                    {/* <MenuNameText
+                      textContent={sampleText}
+                      maxLength={
+                        // 네자리수, 세자리수 두자리수 한자리수
+                        sampleLength === 4
+                          ? 11
+                          : sampleLength === 3
+                          ? 12
+                          : sampleLength === 2
+                          ? 13
+                          : sampleLength === 1 && 14
+                      }
+                    /> */}
+                  </>
+                ) : (
+                  <MenuNameItem2Text>
+                    {item1?.foodName || item2?.foodName}
+                  </MenuNameItem2Text>
+                )}
 
-              {!!item1 && !item2 && (
-                <TotalCalText> · {item1?.calorie}kcal</TotalCalText>
-              )}
-            </MenuNameWrap>
+                {!!item1 && !item2 && (
+                  <TotalCalText> · {item1?.calorie}kcal</TotalCalText>
+                )}
+              </MenuNameWrap>
+            </MenuNameView>
           </SmallRowWrap>
 
           <MainWrap4>
@@ -81,91 +110,96 @@ const DietRepoCard = ({item1 = undefined, item2 = undefined, date}) => {
             )}
 
             <ButtonWrap>
-              <ReviewFormWriteButton
-                onPress={() => {
-                  if (item1 && item1?.reportId) {
-                    Alert.alert(
-                      '식단 제거',
-                      `${item1?.foodName}을 식단에서 제거시키시겠습니까? `,
-                      [
-                        {
-                          text: '취소',
-                          onPress: () => {
-                            // console.log('cancel pressed');
+              {!item2?.isDuplicated && (
+                <ReviewFormWriteButton
+                  onPress={() => {
+                    if (item1 && item1?.reportId) {
+                      Alert.alert(
+                        '식단 제거',
+                        `${item1?.foodName}을 식단에서 제거시키시겠습니까? `,
+                        [
+                          {
+                            text: '취소',
+                            onPress: () => {
+                              // console.log('cancel pressed');
+                            },
                           },
-                        },
-                        {
-                          text: '제거',
-                          onPress: () => {
-                            try {
-                              deleteMeal(item1?.reportId);
-                            } catch (err) {
-                              console.log(err);
-                            }
+                          {
+                            text: '제거',
+                            onPress: () => {
+                              try {
+                                deleteMeal(item1?.reportId);
+                              } catch (err) {
+                                console.log(err);
+                              }
+                            },
+                            style: 'destructive',
                           },
-                          style: 'destructive',
-                        },
-                      ],
-                    );
-                  } else if (item2 && item2?.dailyFoodId) {
-                    Alert.alert(
-                      '식단 추가',
-                      `${item2?.foodName}을(를) 식단에서 추가하시겠습니까? `,
-                      [
-                        {
-                          text: '취소',
-                          onPress: () => {
-                            console.log('cancel pressed');
+                        ],
+                      );
+                    } else if (item2 && item2?.dailyFoodId) {
+                      Alert.alert(
+                        '식단 추가',
+                        `${item2?.foodName}을(를) 식단에서 추가하시겠습니까? `,
+                        [
+                          {
+                            text: '취소',
+                            onPress: () => {
+                              console.log('cancel pressed');
+                            },
                           },
-                        },
-                        {
-                          text: '추가',
-                          onPress: () => {
-                            try {
-                              addMeal([
-                                {dailyFoodId: item2?.dailyFoodId},
-                                date => {
-                                  Alert.alert(
-                                    '식단 추가',
-                                    '식단이 추가되었습니다 ',
-                                    [
-                                      {
-                                        text: '확인',
-                                        onPress: async () => {
-                                          // queryClient.invalidateQueries(['dietRepo', 'main']);
-                                          navigation.reset({
-                                            index: 1,
-                                            routes: [
-                                              {
-                                                name: MainScreenName,
-                                              },
-                                              {
-                                                name: DietRepoMainPageName,
-                                                params: {
-                                                  date: date,
+                          {
+                            text: '추가',
+                            onPress: () => {
+                              try {
+                                addMeal([
+                                  {dailyFoodId: item2?.dailyFoodId},
+                                  date => {
+                                    Alert.alert(
+                                      '식단 추가',
+                                      '식단이 추가되었습니다 ',
+                                      [
+                                        {
+                                          text: '확인',
+                                          onPress: async () => {
+                                            // queryClient.invalidateQueries(['dietRepo', 'main']);
+                                            navigation.reset({
+                                              index: 1,
+                                              routes: [
+                                                {
+                                                  name: MainScreenName,
                                                 },
-                                              },
-                                            ],
-                                          });
+                                                {
+                                                  name: DietRepoMainPageName,
+                                                  params: {
+                                                    date: date,
+                                                  },
+                                                },
+                                              ],
+                                            });
+                                          },
+                                          style: 'cancel',
                                         },
-                                        style: 'cancel',
-                                      },
-                                    ],
-                                  );
-                                },
-                              ]);
-                            } catch (err) {
-                              console.log(err);
-                            }
+                                      ],
+                                    );
+                                  },
+                                ]);
+                              } catch (err) {
+                                console.log(err);
+                              }
+                            },
+                            // style: 'cancel',
                           },
-                          // style: 'cancel',
-                        },
-                      ],
-                    );
-                  }
-                }}>
-                <TextText> {!!item1 && !item2 ? '제거' : '식사 추가'}</TextText>
-              </ReviewFormWriteButton>
+                        ],
+                      );
+                    }
+                  }}>
+                  <TextText>
+                    {' '}
+                    {!!item1 && !item2 ? '제거' : '식사 추가'}
+                  </TextText>
+                </ReviewFormWriteButton>
+              )}
             </ButtonWrap>
           </MainWrap4>
         </MetadataWrap>
@@ -208,7 +242,9 @@ const MetadataWrap = styled.View`
   flex: 1;
   height: 100%;
 
-  padding: 0 16px;
+  /* padding: 0 16px; */
+  padding-left: 16px;
+  /* border: 1px solid black; */
   display: flex;
   /* justify-content: space-between; */
 `;
@@ -221,17 +257,22 @@ const RestaurentNameText = styled(Typography).attrs({text: 'SmallLabel'})`
   margin: 1px 0;
 `;
 
-const MenuNameText = styled(Typography).attrs({text: 'Body05SB'})`
+const MenuNameText = styled(EllipsizedTextByCharLength)``;
+
+const MenuNameItem2Text = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[2]};
   margin: 1px 0;
-  margin-left: 1px;
+`;
 
-  max-width: 142px;
+const MenuNameView = styled.View`
+  max-width: 100%;
 `;
 
 const MenuNameWrap = styled.View`
   flex-direction: row;
   align-items: center;
+
+  /* width: 100%; */
 `;
 
 const MainWrap4 = styled.View`
@@ -248,6 +289,7 @@ const MainWrap6 = styled.View`
 `;
 const MainText6 = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[5]};
+  margin-right: 8px;
 `;
 
 const AddMealWrap5 = styled.View``;
@@ -257,11 +299,13 @@ const AddMealText6 = styled(Typography).attrs({text: 'Button10R'})`
 
 const TotalCalText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[2]};
+  /* border: 1px solid black; */
 `;
 
 const ButtonWrap = styled.View`
   height: 100%;
   flex-direction: column-reverse;
+  /* border: 1px solid black; */
 `;
 
 const ReviewFormWriteButton = styled.Pressable`
