@@ -18,7 +18,6 @@ import {
   isFindEmailLoading,
   userRoleAtom,
   fcmTokenAtom,
-  isHasNicknameAtom,
 } from './store';
 import {PAGE_NAME as LoginPageName} from '../../pages/Main/Login/Login';
 import {setStorage} from '../../utils/asyncStorage';
@@ -50,7 +49,7 @@ const useAuth = () => {
   const [fcmToken, setFcmToken] = useAtom(fcmTokenAtom);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
   const [userRole, setUserRole] = useAtom(userRoleAtom);
-  const [hasNickname, setHasNickname] = useAtom(isHasNicknameAtom);
+
   const navigation = useNavigation();
 
   const requestEmailAuth = async (body, type, option = {}) => {
@@ -307,14 +306,13 @@ const useAuth = () => {
         type,
         option,
       );
-      console.log('hook');
+
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
         await setStorage('lastLogin', type.toString());
         await setStorage('spotStatus', res?.data?.spotStatus.toString());
         setUserRole('NOMAL');
-        setHasNickname(res.data.hasNickname);
       } else {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
@@ -504,7 +502,6 @@ const useAuth = () => {
       isChangePasswordLoading,
       isEmailLoading,
       isLoginLoading,
-      hasNickname,
     },
   };
 };
