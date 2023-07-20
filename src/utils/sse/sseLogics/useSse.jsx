@@ -10,6 +10,9 @@ import {
   sseType3Atom,
   sseType4Atom,
   sseType5Atom,
+  sseType6Atom,
+  sseType7Atom,
+  sseType8Atom,
 } from './store';
 import {useAtom} from 'jotai';
 import {useMutation, useQuery} from 'react-query';
@@ -28,7 +31,9 @@ const useSse = () => {
   const [sseType3, setSseType3] = useAtom(sseType3Atom);
   const [sseType4, setSseType4] = useAtom(sseType4Atom);
   const [sseType5, setSseType5] = useAtom(sseType5Atom);
-  const [sseType6, setSseType6] = useAtom(sseType5Atom);
+  const [sseType6, setSseType6] = useAtom(sseType6Atom);
+  const [sseType7, setSseType7] = useAtom(sseType7Atom);
+  const [sseType8, setSseType8] = useAtom(sseType8Atom);
 
   // sse 구독
 
@@ -110,11 +115,25 @@ const useSse = () => {
                 setSseType5({...JSON.parse(message)});
                 break;
               case 6:
-                // type: 6 알림 관련
+                // type: 6 푸시 알림 관련
                 // 발동조건: 푸시알림을 받으면 뜸
                 console.log('type: 6 Sse 확인');
                 console.log({...JSON.parse(message)});
                 setSseType6({...JSON.parse(message)});
+                break;
+              case 7:
+                // type: 7 그룹
+
+                console.log('type: 6 Sse 확인');
+                console.log({...JSON.parse(message)});
+                setSseType7({...JSON.parse(message)});
+                break;
+              case 8:
+                // type: 8 댓글
+
+                console.log('type: 6 Sse 확인');
+                console.log({...JSON.parse(message)});
+                setSseType8({...JSON.parse(message)});
                 break;
               default:
                 break;
@@ -124,6 +143,8 @@ const useSse = () => {
       });
     });
   }, []);
+
+  // sse 전체 이력 조회
 
   // sse 알림 읽었다고 서버에 보내주기
   const {mutate: confirmSseIsRead} = useMutation(
@@ -174,6 +195,18 @@ const useSse = () => {
             // console.log({});
             setSseType6({});
             break;
+          case 7:
+            // type: 6 알림관련
+            console.log('sse 알림읽기 성공 message type 6');
+            // console.log({});
+            setSseType7({});
+            break;
+          case 8:
+            // type: 6 알림관련
+            console.log('sse 알림읽기 성공 message type 6');
+            // console.log({});
+            setSseType8({});
+            break;
           default:
             break;
         }
@@ -189,9 +222,6 @@ const useSse = () => {
 
   const disconnectSse = async () => {
     const yo = await getSseServiceInstance();
-
-    // console.log('sseServiceInstance값 확인');
-    // console.log(yo);
 
     yo.onDisconnect();
   };
