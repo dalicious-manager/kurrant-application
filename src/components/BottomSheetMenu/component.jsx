@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
@@ -13,7 +14,10 @@ import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 
 import WarningIcon from '../../assets/icons/MealCart/warning.svg';
+import useAuth from '../../biz/useAuth/hook';
+import {foodDetailDataAtom} from '../../biz/useBanner/store';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
+import {useGetDailyfoodDetail} from '../../hook/useDailyfood';
 import {useGetUserInfo} from '../../hook/useUserInfo';
 import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
 import withCommas from '../../utils/withCommas';
@@ -35,12 +39,23 @@ const BottomSheet = props => {
   } = props;
   //멀티 셀렉터시 이용
   const [selected, setSelected] = useState();
-
+  const [dailyfoodId, setDailyfoodId] = useState();
+  const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   const navigation = useNavigation();
   const {addMeal, setSoldOutMeal, loadMeal} = useShoppingBasket();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
+  const {
+    readableAtom: {userRole},
+  } = useAuth();
+  const {
+    data: isFoodDetail,
+    isLoading: detailLoading,
+    isFetching: detailFetching,
+    isSuccess: detailSuccess,
+    refetch: detailFetch,
+  } = useGetDailyfoodDetail(dailyfoodId, userRole);
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const upY = useRef(new Animated.Value(0)).current;
@@ -162,10 +177,19 @@ const BottomSheet = props => {
   const disabledList = data.filter(el => el.count !== 0);
 
   const detailPagePress = id => {
-    setModalVisible(false);
-    navigation.navigate(mealDetailPageName, {dailyFoodId: id});
+    setDailyfoodId(id);
+    setTimeout(() => {
+      navigation.navigate(mealDetailPageName, {
+        dailyFoodId: id,
+        deliveryTime: time,
+        detailFetching: detailFetching,
+      });
+    }, 200);
   };
-
+  useEffect(() => {
+    if (dailyfoodId && isFoodDetail?.data)
+      setFoodDetailData(isFoodDetail?.data);
+  }, [dailyfoodId, isFoodDetail?.data, setFoodDetailData]);
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay>

@@ -412,6 +412,7 @@ const Pages = () => {
 
   // 품절
   const soldout = arr?.filter(el => el.status === 2);
+  const salesend = arr?.filter(el => el.status === 4);
 
   // 클라 타입
   const clientType = clientStatus?.filter(p => p.spotId === selected);
@@ -539,6 +540,18 @@ const Pages = () => {
   const isSoldOut = () => {
     if (soldout.length !== 0) {
       Alert.alert('품절된 상품이 있어요', '메뉴를 변경하시겠어요?', [
+        {
+          text: '메뉴변경',
+          onPress: () => {},
+        },
+      ]);
+    } else {
+      return;
+    }
+  };
+  const isSalesEnd = () => {
+    if (salesend.length !== 0) {
+      Alert.alert('판매중지된 상품이 있어요', '메뉴를 변경하시겠어요?', [
         {
           text: '메뉴변경',
           onPress: () => {},
@@ -716,6 +729,14 @@ const Pages = () => {
                                     </SoldOutText>
                                   </SoldOutView>
                                 )}
+                                {food.status === 4 && (
+                                  <SoldOutView>
+                                    <SalesEndIcon status={food.status} />
+                                    <SalesEndText status={food.status}>
+                                      판매중지
+                                    </SalesEndText>
+                                  </SoldOutView>
+                                )}
                                 {food.status === 6 && (
                                   <SoldOutView>
                                     <SoldOutIcon status={food.status} />
@@ -735,21 +756,23 @@ const Pages = () => {
                                   )}
                               </MealNameView>
                             </ContentWrap>
-                            {food.status === 2 && (
-                              <MenuChangeView
-                                onPress={() => {
-                                  changeMealPress(food.count, food.id);
-                                  changMealList(
-                                    el.spotId,
-                                    v.serviceDate,
-                                    diningType,
-                                  );
-                                  setDate(v.serviceDate);
-                                  setType(v.diningType);
-                                }}>
-                                <MenuChangeText>메뉴 변경</MenuChangeText>
-                              </MenuChangeView>
-                            )}
+                            {food.status === 2 ||
+                              (food.status === 4 && (
+                                <MenuChangeView
+                                  onPress={() => {
+                                    changeMealPress(food.count, food.id);
+                                    changMealList(
+                                      el.spotId,
+                                      v.serviceDate,
+                                      diningType,
+                                    );
+                                    setDate(v.serviceDate);
+                                    setType(v.diningType);
+                                  }}>
+                                  <MenuChangeText>메뉴 변경</MenuChangeText>
+                                </MenuChangeView>
+                              ))}
+
                             <BottomMenu
                               modalVisible={modalVisible3}
                               setModalVisible={setModalVisible3}
@@ -761,22 +784,24 @@ const Pages = () => {
                               time={time}
                             />
                             <CountWrap>
-                              {food.status !== 6 && !isFetching && (
-                                <Count
-                                  onPressEvent={() => {
-                                    bodyRef.current.focus();
-                                    focusPress();
-                                    propsId(food.dailyFoodId);
-                                  }}
-                                  increasePress={addHandle}
-                                  decreasePress={substractHandle}
-                                  data={v.cartDailyFoods}
-                                  count={food.count}
-                                  id={food.dailyFoodId}
-                                  status={food.status}
-                                  capacity={food.capacity}
-                                />
-                              )}
+                              {food.status !== 6 &&
+                                food.status !== 4 &&
+                                !isFetching && (
+                                  <Count
+                                    onPressEvent={() => {
+                                      bodyRef.current.focus();
+                                      focusPress();
+                                      propsId(food.dailyFoodId);
+                                    }}
+                                    increasePress={addHandle}
+                                    decreasePress={substractHandle}
+                                    data={v.cartDailyFoods}
+                                    count={food.count}
+                                    id={food.dailyFoodId}
+                                    status={food.status}
+                                    capacity={food.capacity}
+                                  />
+                                )}
                             </CountWrap>
                           </Wrap>
                         );
@@ -890,8 +915,10 @@ const Pages = () => {
             onPressEvent={() => {
               deadline !== 0 && isDeadline();
               soldout.length !== 0 && isSoldOut();
+              salesend.length !== 0 && isSalesEnd();
               isLack.includes(true) && isShortage();
               soldout.length === 0 &&
+                salesend.length === 0 &&
                 totalCount !== 0 &&
                 !isLack.includes(true) &&
                 navigation.navigate(PaymentPageName, {
@@ -1066,7 +1093,7 @@ export const DiningName = styled(Typography).attrs({text: 'CaptionR'})`
 `;
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[2]};
+    status === 2 || status === 4 ? theme.colors.grey[6] : theme.colors.grey[2]};
   margin-bottom: 2px;
 `;
 
@@ -1211,6 +1238,16 @@ const SoldOutIcon = styled(SoldOut)`
 const SoldOutText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme, status}) =>
     status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
+`;
+const SalesEndIcon = styled(SoldOut)`
+  color: ${({theme, status}) =>
+    status === 4 ? theme.colors.red[500] : theme.colors.grey[4]};
+  margin-right: 4px;
+`;
+
+const SalesEndText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme, status}) =>
+    status === 4 ? theme.colors.red[500] : theme.colors.grey[4]};
 `;
 
 const SoldOutView = styled.View`
