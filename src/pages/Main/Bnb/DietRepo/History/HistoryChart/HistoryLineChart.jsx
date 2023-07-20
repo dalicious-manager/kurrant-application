@@ -9,8 +9,14 @@ const HistoryLineChart = ({
   height = undefined,
   data = [],
   title,
+  disableMeaninglessValue,
 }) => {
   // height가 없을 경우 height는 자동적으로 width의 258/327을 곱하기
+
+  // useEffect(() => {
+  //   console.log('차트 데이터 학인 data');
+  //   console.log(data);
+  // }, [data]);
 
   const theme = useTheme();
 
@@ -41,6 +47,7 @@ const HistoryLineChart = ({
       {containerHeight > 0 && containerWidth && (
         <LineChart
           dataBasic={data}
+          disableMeaninglessValue={disableMeaninglessValue}
           chartWidth={containerWidth}
           chartHeight={containerHeight * 0.8}
           chartConfig={{
