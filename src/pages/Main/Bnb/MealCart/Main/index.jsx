@@ -1,6 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Pressable, Text, View, ActivityIndicator} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  Text,
+  View,
+  ActivityIndicator,
+  Platform,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
@@ -883,7 +890,7 @@ const Pages = () => {
       {cartArr?.length !== 0 && !keyboardStatus.isKeyboardActivate && (
         <ButtonWrap focus={focus}>
           {deadlineArr?.length !== 0 && (
-            <EndView>
+            <EndView platform={Platform.OS}>
               <EndText>
                 주문 마감된 상품이 있어요
                 <EndPointText>({deadline}개)</EndPointText>
@@ -1238,12 +1245,14 @@ const EndPointText = styled(Typography).attrs({text: 'CaptionSB'})`
 
 const EndQuestionText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[3]};
+
+  width: 200px;
 `;
 
 const EndView = styled.View`
-  background-color: #fff;
   align-items: center;
-  padding: 12px 0px;
+
+  ${({platform}) => platform === 'ios' && 'paddingBottom:12px'};
 `;
 
 const BlurView = styled.View`
