@@ -122,16 +122,16 @@ const useSse = () => {
                 setSseType6({...JSON.parse(message)});
                 break;
               case 7:
-                // type: 7 그룹
+                // type: 7 신규 스팟 그룹
 
-                console.log('type: 6 Sse 확인');
+                console.log('type: 7 Sse 확인');
                 console.log({...JSON.parse(message)});
                 setSseType7({...JSON.parse(message)});
                 break;
               case 8:
-                // type: 8 댓글
+                // type: 8 사장님 댓글
 
-                console.log('type: 6 Sse 확인');
+                console.log('type: 8 Sse 확인');
                 console.log({...JSON.parse(message)});
                 setSseType8({...JSON.parse(message)});
                 break;

@@ -61,3 +61,11 @@ export async function deleteAlarm(type, option) {
 
   // }
 }
+
+export async function readAlarm(body) {
+  const fetchRes = await fetchJson('/boards/alarms', 'PATCH', {
+    body: JSON.stringify(body),
+  });
+
+  return fetchRes;
+}

@@ -26,6 +26,8 @@ const useSseType3 = () => {
       confirmSseIsRead(3);
 
       setCheckSseType3(false);
+    } else {
+      console.log('total값이 0보다 큰 수라 안 보냄');
     }
   }, [checkSseType3]);
 

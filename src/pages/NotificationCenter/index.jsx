@@ -58,6 +58,7 @@ const Pages = () => {
   const themeApp = useTheme();
   const {
     getAlarm,
+    readAlarm,
     readableAtom: {alarm},
   } = useBoard();
   const navigation = useNavigation();
@@ -65,8 +66,27 @@ const Pages = () => {
     const getUseAlarm = async () => {
       await getAlarm();
     };
+
     getUseAlarm();
   }, []);
+
+  useEffect(() => {
+    console.log('alarm 확인');
+    console.log(alarm);
+  }, [alarm]);
+
+  useEffect(() => {
+    return () => {
+      // 나가게 되면 알람
+      // readAlarm(data)
+    };
+  }, []);
+
+  const handleNotificationBoxPress = id => {
+    console.log(id);
+
+    readAlarm(id);
+  };
 
   return (
     <Wrapper>
@@ -80,13 +100,14 @@ const Pages = () => {
       ) : (
         <ScrollView>
           {alarm?.map(v => {
-            {
-              /* {alramData?.map(v => { */
-            }
             return (
-              <NotificationBox key={v.id}>
+              <NotificationBox
+                key={v.id}
+                onPress={() => {
+                  handleNotificationBoxPress(v.id);
+                }}>
                 <SseRedDotType6
-                  isSse={v.isRead}
+                  isSse={!v.isRead}
                   position={'absolute'}
                   top={'-8px'}
                   right={'-1px'}

@@ -94,12 +94,23 @@ const useBoard = () => {
       setDeleteAlarmLoading(false);
     }
   };
+
+  const readAlarm = async data => {
+    try {
+      await Fetch.readAlarm(data);
+    } catch (err) {
+      throw err;
+    } finally {
+    }
+  };
+
   return {
     getNotice,
     getMypageNotice,
     getSpotNotice,
     getAlarm,
     deleteAlarm,
+    readAlarm,
     readableAtom: {
       notice,
       spotNotice,
