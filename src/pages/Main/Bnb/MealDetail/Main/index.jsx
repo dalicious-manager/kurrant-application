@@ -54,6 +54,7 @@ import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/ButtonExtendable';
 import GifImage from '../../../../../components/GifImage';
+import {YellowStar} from '../../../../../components/Icon';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
@@ -61,6 +62,7 @@ import Typography from '../../../../../components/Typography';
 import {useGetDailyfoodDetailNow} from '../../../../../hook/useDailyfood';
 import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
@@ -68,7 +70,6 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
-import {YellowStar} from '../../../../../components/Icon';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -93,6 +94,7 @@ const Pages = ({route}) => {
     isSuccess: detailSuccess,
     refetch: detailRefetch,
   } = useGetDailyfoodDetailNow(route.params.dailyFoodId, userRole); // 상세정보
+
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -120,7 +122,14 @@ const Pages = ({route}) => {
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
-  // console.log(dailyFoodId);
+  // 데드라인
+  const lastOrderTime = isFoodDetail?.data?.lastOrderTime;
+  // const day = formattedWeekDate(new Date(), '/');
+  // const today = day.split('/')[1] + '/' + day.split('/')[2];
+
+  // const todayOrderLastTime = lastOrderTime.split(' ')[0];
+  // const orderLastTime = lastOrderTime.split(' ')[1];
+  // const comparisonDate = today === todayOrderLastTime;
 
   const closeModal = () => {
     setModalVisible(false);
@@ -366,11 +375,20 @@ const Pages = ({route}) => {
               ) : (
                 <StatusBar barStyle="light-content" />
               )}
-              <CarouselImage
-                detailFetching={detailFetching}
-                img={foodDetailData?.imageList}
-                setImgScroll={setImgScroll}
-              />
+              <View style={{position: 'relative'}}>
+                <CarouselImage
+                  detailFetching={detailFetching}
+                  img={foodDetailData?.imageList}
+                  setImgScroll={setImgScroll}
+                />
+                {!detailFetching && (
+                  <DeadlineGuide>
+                    <DeadlineText>
+                      {isFoodDetail?.data?.lastOrderTime} 마감
+                    </DeadlineText>
+                  </DeadlineGuide>
+                )}
+              </View>
               {!detailFetching ? (
                 <>
                   <TouchableWithoutFeedback
@@ -870,4 +888,19 @@ const InfoText = styled(Typography).attrs({text: 'CaptionR'})`
 const Test = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
   width: 50%;
+`;
+
+const DeadlineGuide = styled.View`
+  background-color: #1d1c2180;
+  padding: 4px 0px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DeadlineText = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${props => props.theme.colors.grey[0]};
 `;

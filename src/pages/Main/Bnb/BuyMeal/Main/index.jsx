@@ -214,6 +214,7 @@ const Pages = ({route}) => {
     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
     userRole,
   );
+
   useEffect(() => {
     if (dailyfoodDataList?.data?.dailyFoodsByDate) {
       setMorning([]);
