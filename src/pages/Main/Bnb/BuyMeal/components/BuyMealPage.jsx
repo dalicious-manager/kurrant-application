@@ -224,7 +224,8 @@ const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`
 const NoServieceView = styled.View`
   position: absolute;
   top: ${({status, isMembership}) => (status && !isMembership ? '10%' : '20%')};
-  left: 28%;
+  width: 100%;
+  justify-content: center;
   align-items: center;
 `;
 
