@@ -33,6 +33,7 @@ import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import {formattedMonthDay} from '../../../../../utils/dateFormatter';
+import {formattedDailyFoodStatus} from '../../../../../utils/statusFormatter';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
@@ -106,9 +107,13 @@ const Pages = () => {
 
     const getTime = async () => {
       const localTime = JSON.parse(await getStorage('diningTime'));
-      const timeData = localTime.filter(el => el.spotId === selected);
-
-      setTime(localTime.time);
+      setTime(
+        localTime
+          .filter(t => {
+            return t.spotId === selected;
+          })
+          .flat(),
+      );
     };
     getTime();
   }, [isLoadMeal?.data]);
@@ -423,6 +428,7 @@ const Pages = () => {
 
   // 품절
   const soldout = arr?.filter(el => el.status === 2);
+  const salesend = arr?.filter(el => el.status !== 1);
 
   // 클라 타입
   const clientType = clientStatus?.filter(p => p.spotId === selected);
@@ -549,9 +555,21 @@ const Pages = () => {
 
   const isSoldOut = () => {
     if (soldout.length !== 0) {
-      Alert.alert('품절된 상품이 있어요', '메뉴를 변경하시겠어요?', [
+      Alert.alert('품절된 상품이 있어요', '메뉴룰 변경해 주세요', [
         {
-          text: '메뉴변경',
+          text: '확인',
+          onPress: () => {},
+        },
+      ]);
+    } else {
+      return;
+    }
+  };
+  const isSalesEnd = () => {
+    if (salesend.length !== 0) {
+      Alert.alert('판매할수 없는 상품이 있어요', '메뉴룰 변경해 주세요', [
+        {
+          text: '확인',
           onPress: () => {},
         },
       ]);
@@ -702,7 +720,7 @@ const Pages = () => {
                                   borderRadius: 7,
                                   marginRight: 12,
                                 }}>
-                                {food.status === 6 && <BlurView />}
+                                {food.status !== 1 && <BlurView />}
                               </FastImage>
                               <MealNameView>
                                 <MealName
@@ -724,34 +742,28 @@ const Pages = () => {
                                     </SalePrice>
                                   )}
                                 </SalePriceWrap>
-                                {food.status === 2 && (
-                                  <SoldOutView>
-                                    <SoldOutIcon status={food.status} />
-                                    <SoldOutText status={food.status}>
-                                      품절
-                                    </SoldOutText>
-                                  </SoldOutView>
-                                )}
-                                {food.status === 6 && (
-                                  <SoldOutView>
-                                    <SoldOutIcon status={food.status} />
-                                    <SoldOutText status={food.status}>
-                                      주문마감
-                                    </SoldOutText>
-                                  </SoldOutView>
-                                )}
+
                                 {food.status === 1 &&
-                                  food.capacity < food.count && (
+                                food.capacity < food.count ? (
+                                  <SoldOutView>
+                                    <WarningIcon />
+                                    <ShortageText>
+                                      재고부족(재고 수량:{food.capacity})
+                                    </ShortageText>
+                                  </SoldOutView>
+                                ) : (
+                                  food.status !== 1 && (
                                     <SoldOutView>
-                                      <WarningIcon />
-                                      <ShortageText>
-                                        재고부족(재고 수량:{food.capacity})
-                                      </ShortageText>
+                                      <SoldOutIcon status={food.status} />
+                                      <SoldOutText status={food.status}>
+                                        {formattedDailyFoodStatus(food.status)}
+                                      </SoldOutText>
                                     </SoldOutView>
-                                  )}
+                                  )
+                                )}
                               </MealNameView>
                             </ContentWrap>
-                            {food.status === 2 && (
+                            {food.status !== 1 && (
                               <MenuChangeView
                                 onPress={() => {
                                   changeMealPress(food.count, food.id);
@@ -766,6 +778,7 @@ const Pages = () => {
                                 <MenuChangeText>메뉴 변경</MenuChangeText>
                               </MenuChangeView>
                             )}
+
                             <BottomMenu
                               modalVisible={modalVisible3}
                               setModalVisible={setModalVisible3}
@@ -777,7 +790,7 @@ const Pages = () => {
                               time={time}
                             />
                             <CountWrap>
-                              {food.status !== 6 && !isFetching && (
+                              {food.status === 1 && !isFetching && (
                                 <Count
                                   onPressEvent={() => {
                                     bodyRef.current.focus();
@@ -906,8 +919,10 @@ const Pages = () => {
             onPressEvent={() => {
               deadline !== 0 && isDeadline();
               soldout.length !== 0 && isSoldOut();
+              salesend.length !== 0 && isSalesEnd();
               isLack.includes(true) && isShortage();
               soldout.length === 0 &&
+                salesend.length === 0 &&
                 totalCount !== 0 &&
                 !isLack.includes(true) &&
                 navigation.navigate(PaymentPageName, {
@@ -1082,7 +1097,7 @@ export const DiningName = styled(Typography).attrs({text: 'CaptionR'})`
 `;
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${({theme, status}) =>
-    status === 6 ? theme.colors.grey[6] : theme.colors.grey[2]};
+    status !== 1 ? theme.colors.grey[6] : theme.colors.grey[2]};
   margin-bottom: 2px;
 `;
 
@@ -1220,13 +1235,27 @@ const MenuChangeView = styled.Pressable`
 
 const SoldOutIcon = styled(SoldOut)`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
+    status !== 1 && status !== 6
+      ? theme.colors.red[500]
+      : theme.colors.grey[4]};
   margin-right: 4px;
 `;
 
 const SoldOutText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
+    status !== 1 && status !== 6
+      ? theme.colors.red[500]
+      : theme.colors.grey[4]};
+`;
+const SalesEndIcon = styled(SoldOut)`
+  color: ${({theme, status}) =>
+    status === 4 ? theme.colors.red[500] : theme.colors.grey[4]};
+  margin-right: 4px;
+`;
+
+const SalesEndText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme, status}) =>
+    status === 4 ? theme.colors.red[500] : theme.colors.grey[4]};
 `;
 
 const SoldOutView = styled.View`

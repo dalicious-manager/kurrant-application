@@ -11,7 +11,7 @@ const Row = styled.View`
 `;
 
 const Cell = styled.View`
-  width: 90px;
+  flex: 3;
   border-right-width: 1px;
   border-bottom-width: ${({isLast}) => (!isLast ? '1px' : '0px')};
   border-color: ${({theme}) => theme.colors.grey[7]};
@@ -21,7 +21,6 @@ const Cell = styled.View`
   align-items: center;
 `;
 const Cell22 = styled.View`
-  flex: 1;
   width: 100%;
   padding: 8px;
   padding-left: 16px;
@@ -35,7 +34,7 @@ const Cell22 = styled.View`
 `;
 
 const Cell3 = styled.View`
-  width: 110px;
+  flex: 4;
   border-right-width: 1px;
   border-bottom-width: ${({isLast}) => (!isLast ? '1px' : '0px')};
   border-color: ${({theme}) => theme.colors.grey[7]};
@@ -45,7 +44,7 @@ const Cell3 = styled.View`
   align-items: center;
 `;
 const Cell2 = styled.View`
-  width: 110px;
+  flex: 4;
   border-bottom-width: ${({isLast}) => (!isLast ? '1px' : '0px')};
   border-color: ${({theme}) => theme.colors.grey[7]};
   padding: 8px;

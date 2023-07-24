@@ -336,6 +336,21 @@ const Pages = ({route}) => {
   //   detail();
   // }, [dailyFoodId, refetch]);
 
+  useEffect(() => {
+    setReviewData(getBoard);
+  }, [getBoard]);
+  useFocusEffect(
+    useCallback(() => {
+      if (foodDetailData.dailyFoodId !== dailyFoodId) detailRefetch();
+    }, [dailyFoodId, detailRefetch, foodDetailData.dailyFoodId]),
+  );
+  useEffect(() => {
+    console.log(isFoodDetail?.data);
+    if (isFoodDetail?.data) setFoodDetailData(isFoodDetail?.data);
+  }, [isFoodDetail?.data, setFoodDetailData]);
+  // 상세페이지 리뷰 로직
+
+
   // if (detailFetching) {
   //   return <Skeleton />;
   // }
@@ -489,7 +504,7 @@ const Pages = ({route}) => {
                         </PriceWrap>
                       </View>
 
-                      {foodDetailData?.membershipDiscountedRate === 0 && (
+                      {!foodDetailData?.isMembership && (
                         <MembershipDiscountBox isFoodDetail={foodDetailData} />
                       )}
                     </Content>

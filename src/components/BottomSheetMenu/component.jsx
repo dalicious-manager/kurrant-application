@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
@@ -13,7 +14,11 @@ import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 
 import WarningIcon from '../../assets/icons/MealCart/warning.svg';
+import useAuth from '../../biz/useAuth/hook';
+import {foodDetailDataAtom} from '../../biz/useBanner/store';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
+import {useGetDailyfoodDetail} from '../../hook/useDailyfood';
+import {useAddShoppingBasket} from '../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../hook/useUserInfo';
 import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
 import withCommas from '../../utils/withCommas';
@@ -35,12 +40,24 @@ const BottomSheet = props => {
   } = props;
   //멀티 셀렉터시 이용
   const [selected, setSelected] = useState();
-
+  const [dailyfoodId, setDailyfoodId] = useState();
+  const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   const navigation = useNavigation();
-  const {addMeal, setSoldOutMeal, loadMeal} = useShoppingBasket();
+  const {setSoldOutMeal, loadMeal} = useShoppingBasket();
+  const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
+  const {
+    readableAtom: {userRole},
+  } = useAuth();
+  const {
+    data: isFoodDetail,
+    isLoading: detailLoading,
+    isFetching: detailFetching,
+    isSuccess: detailSuccess,
+    refetch: detailFetch,
+  } = useGetDailyfoodDetail(dailyfoodId, userRole);
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
   const upY = useRef(new Animated.Value(0)).current;
@@ -134,21 +151,22 @@ const BottomSheet = props => {
     // console.log(isUserInfo, 'tests');
   }, [isUserInfo]);
   const addCart = async () => {
-    const meal = data
-      .filter(el => el.count !== 0)
-      .map(v => {
-        return {
-          dailyFoodId: v.id,
-          count: v.count,
-          spotId: isUserInfo?.spotId,
-          deliveryTime: time,
-        };
-      });
+    console.log(time);
 
     try {
+      if (time?.length <= 0) throw new Error('시간을 선택해 주세요');
+      const meal = data
+        .filter(el => el.count !== 0)
+        .map(v => {
+          return {
+            dailyFoodId: v.id,
+            count: v.count,
+            spotId: isUserInfo?.spotId,
+            deliveryTime: time[0].time,
+          };
+        });
       await addMeal(meal);
       setModalVisible(false);
-      await loadMeal();
       setShow(true);
       toast.toastEvent();
       setTimeout(() => {
@@ -162,10 +180,19 @@ const BottomSheet = props => {
   const disabledList = data.filter(el => el.count !== 0);
 
   const detailPagePress = id => {
-    setModalVisible(false);
-    navigation.navigate(mealDetailPageName, {dailyFoodId: id});
+    setDailyfoodId(id);
+    setTimeout(() => {
+      navigation.navigate(mealDetailPageName, {
+        dailyFoodId: id,
+        deliveryTime: time,
+        detailFetching: detailFetching,
+      });
+    }, 200);
   };
-
+  useEffect(() => {
+    if (dailyfoodId && isFoodDetail?.data)
+      setFoodDetailData(isFoodDetail?.data);
+  }, [dailyfoodId, isFoodDetail?.data, setFoodDetailData]);
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay>
