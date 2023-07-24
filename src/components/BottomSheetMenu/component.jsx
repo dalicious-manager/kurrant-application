@@ -18,6 +18,7 @@ import useAuth from '../../biz/useAuth/hook';
 import {foodDetailDataAtom} from '../../biz/useBanner/store';
 import useShoppingBasket from '../../biz/useShoppingBasket/hook';
 import {useGetDailyfoodDetail} from '../../hook/useDailyfood';
+import {useAddShoppingBasket} from '../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../hook/useUserInfo';
 import {PAGE_NAME as mealDetailPageName} from '../../pages/Main/Bnb/MealDetail/Main';
 import withCommas from '../../utils/withCommas';
@@ -42,7 +43,8 @@ const BottomSheet = props => {
   const [dailyfoodId, setDailyfoodId] = useState();
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   const navigation = useNavigation();
-  const {addMeal, setSoldOutMeal, loadMeal} = useShoppingBasket();
+  const {setSoldOutMeal, loadMeal} = useShoppingBasket();
+  const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
@@ -149,21 +151,22 @@ const BottomSheet = props => {
     // console.log(isUserInfo, 'tests');
   }, [isUserInfo]);
   const addCart = async () => {
-    const meal = data
-      .filter(el => el.count !== 0)
-      .map(v => {
-        return {
-          dailyFoodId: v.id,
-          count: v.count,
-          spotId: isUserInfo?.spotId,
-          deliveryTime: time,
-        };
-      });
+    console.log(time);
 
     try {
+      if (time?.length <= 0) throw new Error('시간을 선택해 주세요');
+      const meal = data
+        .filter(el => el.count !== 0)
+        .map(v => {
+          return {
+            dailyFoodId: v.id,
+            count: v.count,
+            spotId: isUserInfo?.spotId,
+            deliveryTime: time[0].time,
+          };
+        });
       await addMeal(meal);
       setModalVisible(false);
-      await loadMeal();
       setShow(true);
       toast.toastEvent();
       setTimeout(() => {
