@@ -106,22 +106,12 @@ const Pages = ({route}) => {
   const headerTitle = foodDetailData?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
-  // console.log(isFoodDetailLoading, 'oo');
 
   const [count, setCount] = useState(1);
 
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
-
-  // 데드라인
-  const lastOrderTime = isFoodDetail?.data?.lastOrderTime;
-  // const day = formattedWeekDate(new Date(), '/');
-  // const today = day.split('/')[1] + '/' + day.split('/')[2];
-
-  // const todayOrderLastTime = lastOrderTime.split(' ')[0];
-  // const orderLastTime = lastOrderTime.split(' ')[1];
-  // const comparisonDate = today === todayOrderLastTime;
 
   const closeModal = () => {
     setModalVisible(false);
