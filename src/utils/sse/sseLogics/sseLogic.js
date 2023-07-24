@@ -1,3 +1,5 @@
+import {getStorage} from '../../asyncStorage';
+
 export const SseLogics = {};
 
 export const applyDebouncing = (millisecond, callback) => {
@@ -9,3 +11,14 @@ export const applyDebouncing = (millisecond, callback) => {
 };
 
 export const applyThrottle = () => {};
+
+export const getAppToken = async () => {
+  const token = await getStorage('token');
+
+  let yo;
+  if (token) {
+    yo = JSON.parse(token);
+  }
+
+  return yo?.accessToken;
+};
