@@ -32,7 +32,6 @@ const useSseStart = () => {
     if (token) {
       yo = JSON.parse(token);
     }
-
     return yo?.accessToken;
   }, []);
 
@@ -77,16 +76,9 @@ const useSseStart = () => {
 
   useEffect(() => {
     getSseServiceInstance();
-    // .then(sseServiceInstance => {
-    //   if (!sseServiceInstance) return;
-    //   sseServiceInstance.onOpen();
-    //   sseServiceInstance.onMessage(message => {
-
-    //   });
-    // });
   }, []);
 
-  return {};
+  return;
 };
 
 export default useSseStart;

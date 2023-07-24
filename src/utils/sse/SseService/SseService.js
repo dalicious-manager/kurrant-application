@@ -1,4 +1,3 @@
-import {useAtom} from 'jotai';
 import EventSource from 'react-native-sse';
 
 let SseServiceOnlyOneInstance;

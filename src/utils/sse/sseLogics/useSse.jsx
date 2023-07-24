@@ -1,9 +1,6 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
-
-import {getStorage, setStorage} from '../../asyncStorage';
 import * as sseAtoms from './store';
 import {useAtom} from 'jotai';
-import {useMutation, useQuery} from 'react-query';
+import {useMutation} from 'react-query';
 import {fetchJson} from '../../fetch';
 
 const useSse = () => {
@@ -15,40 +12,6 @@ const useSse = () => {
   const [sseType6, setSseType6] = useAtom(sseAtoms.sseType6Atom);
   const [sseType7, setSseType7] = useAtom(sseAtoms.sseType7Atom);
   const [sseType8, setSseType8] = useAtom(sseAtoms.sseType8Atom);
-
-  useEffect(() => {
-    console.log('sseType1 이여');
-    console.log(sseType1);
-  }, [sseType1]);
-  useEffect(() => {
-    console.log('sseType2 이여');
-    console.log(sseType2);
-  }, [sseType2]);
-  useEffect(() => {
-    console.log('sseType3 이여');
-    console.log(sseType3);
-  }, [sseType3]);
-  useEffect(() => {
-    console.log('sseType4 이여');
-    console.log(sseType4);
-  }, [sseType4]);
-  useEffect(() => {
-    console.log('sseType5 이여');
-    console.log(sseType5);
-  }, [sseType5]);
-
-  useEffect(() => {
-    console.log('sseType6 이여');
-    console.log(sseType6);
-  }, [sseType6]);
-  useEffect(() => {
-    console.log('sseType7 이여');
-    console.log(sseType7);
-  }, [sseType7]);
-  useEffect(() => {
-    console.log('sseType8 이여');
-    console.log(sseType8);
-  }, [sseType8]);
 
   // sse 알림 읽었다고 서버에 보내주기
   const {mutate: confirmSseIsRead} = useMutation(
@@ -122,29 +85,16 @@ const useSse = () => {
     },
   );
 
-  // 뭔가 에러터지면 끊기
-
-  const disconnectSse = async () => {
-    const yo = await getSseServiceInstance();
-
-    yo.onDisconnect();
-  };
-
-  // useEffect(() => {
-  //   return () => {
-  //     disconnectSse();
-  //   };
-  // }, []);
-
   return {
     sseType1,
     sseType2,
     sseType3,
     sseType4,
     sseType5,
-
+    sseType6,
+    sseType7,
+    sseType8,
     confirmSseIsRead,
-    disconnectSse,
   };
 };
 
