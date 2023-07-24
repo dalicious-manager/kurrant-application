@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useState} from 'react';
 import React from 'react';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, View, Text} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import {css} from 'styled-components/native';
@@ -10,6 +10,7 @@ import Typography from '~components/Typography';
 
 import Card from './Card';
 import MealImage from './MealImage';
+import ExclamationPoint from '../../../../../assets/icons/BuyMeal/exclamationPoint.svg';
 import {Label} from '../../../../../components/Button/component';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import withCommas from '../../../../../utils/withCommas';
@@ -120,7 +121,13 @@ const BuyMealPage = props => {
           <NoServieceView
             status={hideModal}
             isMembership={isUserInfo?.isMembership}>
-            <NoServiceText>서비스 운영일이 아니에요</NoServiceText>
+            <NoServiceText>새로운 식단을 준비 중이에요</NoServiceText>
+            <NoHolidayServiceView>
+              <ExclamationPoint />
+              <NoHolidayServiceText>
+                공휴일은 서비스를 하지 않아요
+              </NoHolidayServiceText>
+            </NoHolidayServiceView>
           </NoServieceView>
         )}
         {spotId === null && (
@@ -216,12 +223,24 @@ const NoServiceText = styled(Typography).attrs({text: 'Body05R'})`
 `;
 const NoServieceView = styled.View`
   position: absolute;
-  top: ${({status, isMembership}) => (status && !isMembership ? '10%' : '30%')};
-  left: 29%;
+  top: ${({status, isMembership}) => (status && !isMembership ? '10%' : '20%')};
+  left: 28%;
+  align-items: center;
 `;
 
 const NoSpotView = styled(NoServieceView)`
   justify-content: center;
   align-items: center;
   left: 18%;
+`;
+
+const NoHolidayServiceText = styled(Typography).attrs({text: 'CationR'})`
+  color: ${({theme}) => theme.colors.grey[6]};
+  padding-left: 4px;
+`;
+
+const NoHolidayServiceView = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-top: 4px;
 `;

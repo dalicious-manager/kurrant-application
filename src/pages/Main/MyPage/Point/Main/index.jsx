@@ -124,7 +124,11 @@ const Pages = () => {
                         <DateText>
                           {el.rewardDate} ・ {status}
                         </DateText>
-                        {!(el.pointStatus === 4 || el.pointStatus === 5) && (
+                        {!(
+                          el.pointStatus === 4 ||
+                          el.pointStatus === 5 ||
+                          el.pointStatus === 6
+                        ) && (
                           <DetailButton>
                             <TextLable
                               label="상세보기"

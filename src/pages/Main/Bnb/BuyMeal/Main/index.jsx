@@ -669,7 +669,11 @@ const Pages = ({route}) => {
         setShow(false);
       }, 3000);
     } catch (err) {
-      Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''));
+      Alert.alert('장바구니 담기', err?.toString()?.replace('error: ', ''), [
+        {
+          text: '확인',
+        },
+      ]);
     }
     closeModal();
   };

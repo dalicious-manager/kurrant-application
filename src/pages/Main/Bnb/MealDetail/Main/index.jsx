@@ -83,7 +83,7 @@ const Pages = ({route}) => {
   const [scroll, setScroll] = useState(0);
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
-  const [reviewData, setReviewData] = useState();
+
   const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
   const {isFoodDetails, isFoodDetailLoading, foodDetail} = useFoodDetail();
   const {
@@ -105,17 +105,9 @@ const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
   // console.log(isFoodDetailLoading, 'oo');
-  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+
   const [count, setCount] = useState(1);
-  const {
-    getBoard,
-    getBoardIsSuccess,
-    getBoardIsFetching,
-    getBoardIsLoading,
-    getNextPage,
-    getNextPageIsPossible,
-    refetch,
-  } = useMainInfiniteScrollQuery(url, dailyFoodId);
+
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
@@ -359,6 +351,7 @@ const Pages = ({route}) => {
   }, [isFoodDetail?.data, setFoodDetailData]);
   // 상세페이지 리뷰 로직
 
+
   // if (detailFetching) {
   //   return <Skeleton />;
   // }
@@ -398,11 +391,10 @@ const Pages = ({route}) => {
                           {detailFetching ? '' : foodDetailData?.name || ''}
                         </MealTitle>
                         <Line>
-                          {reviewData?.pages[0]?.items.totalReview >= 1 && (
+                          {/* {reviewData?.pages[0]?.items.totalReview >= 1 && (
                             <ReviewWrap>
                               <YellowStar width="20px" height="20px" />
                               <ReviewPoint>
-                                {/* {reviewData?.pages[0]?.items.starAverage} */}
                                 {reviewData?.pages[0]?.items.starAverage &&
                                 reviewData?.pages[0]?.items.starAverage?.toString()
                                   .length === 1
@@ -415,7 +407,7 @@ const Pages = ({route}) => {
                                 ({reviewData?.pages[0]?.items.totalReview})
                               </ReviewCount>
                             </ReviewWrap>
-                          )}
+                          )} */}
 
                           <InformationWrap
                             onPress={() => {
@@ -614,28 +606,13 @@ const Pages = ({route}) => {
                     </InfoWrap>
                   </Content>
                   {/* 리뷰자리 */}
-                  {!getBoardIsLoading && reviewData ? (
-                    <MealDetailReview
-                      foodName={foodDetailData?.name}
-                      imageLocation={foodDetailData?.imageList}
-                      dailyFoodId={dailyFoodId}
-                      allReviewList={allReviewList}
-                      setAllReviewList={setAllReviewList}
-                      url={url}
-                      setUrl={setUrl}
-                      getBoard={reviewData}
-                      getNextPage={getNextPage}
-                      getBoardIsSuccess={getBoardIsSuccess}
-                      getBoardIsFetching={getBoardIsFetching}
-                      getBoardIsLoading={getBoardIsLoading}
-                      getNextPageIsPossible={getNextPageIsPossible}
-                      refetch={refetch}
-                    />
-                  ) : (
-                    <LoadingPage>
-                      <ActivityIndicator size={'large'} />
-                    </LoadingPage>
-                  )}
+                  <MealDetailReview
+                    foodName={foodDetailData?.name}
+                    imageLocation={foodDetailData?.imageList}
+                    dailyFoodId={dailyFoodId}
+                    allReviewList={allReviewList}
+                    setAllReviewList={setAllReviewList}
+                  />
                 </>
               ) : (
                 <Skeleton />

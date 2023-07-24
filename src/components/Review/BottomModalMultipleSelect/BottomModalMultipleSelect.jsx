@@ -124,6 +124,7 @@ const BottomModalMultipleSelect = props => {
       setModalVisible(false);
     });
   };
+
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>

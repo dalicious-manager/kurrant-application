@@ -673,7 +673,10 @@ const Pages = () => {
       <ScrollViewWrap
         scrollEventThrottle={0}
         showsVerticalScrollIndicator={false}>
-        <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
+        <LargeTitle>
+          {isUserInfo?.data?.nickname ?? userName}님{' '}
+          {isUserInfo?.data?.nickname?.length === 12 && `\n`}안녕하세요!
+        </LargeTitle>
         <MainWrap>
           {orderMealList?.data?.filter(order => order.serviceDate === date)
             .length === 0 ? (
