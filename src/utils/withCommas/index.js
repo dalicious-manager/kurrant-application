@@ -11,7 +11,6 @@ const CATERING = 4; //케이터링
 
 export default function withCommas(price) {
   if (!price) return '0';
-
   return Math.round(price)
     .toString()
     ?.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
