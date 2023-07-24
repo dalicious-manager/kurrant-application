@@ -214,6 +214,7 @@ const Pages = ({route}) => {
     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
     userRole,
   );
+
   useEffect(() => {
     if (dailyfoodDataList?.data?.dailyFoodsByDate) {
       setMorning([]);
@@ -222,7 +223,7 @@ const Pages = ({route}) => {
       const getDailyfoodData = dailyfoodDataList?.data?.dailyFoodsByDate.filter(
         v => v.serviceDate === formattedWeekDate(date),
       );
-      console.log(getDailyfoodData);
+      //console.log(getDailyfoodData);
       setDailyfoodData(
         getDailyfoodData?.length > 0 ? getDailyfoodData[0] : null,
       );

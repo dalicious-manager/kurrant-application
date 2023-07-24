@@ -221,6 +221,7 @@ const BottomSheet = props => {
             )}
           </BottomSheetTitleView>
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={data}
             ref={list}
             scrollEnabled={up > 500}

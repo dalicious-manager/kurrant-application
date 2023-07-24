@@ -1,6 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Pressable, Text, View, ActivityIndicator} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  Text,
+  View,
+  ActivityIndicator,
+  Platform,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
@@ -67,6 +74,7 @@ const Pages = () => {
   const [date, setDate] = useState();
   const [type, setType] = useState();
   const toast = Toast();
+  const presentUserGroup = isUserInfo?.group + `\u00A0` + isUserInfo?.spot;
 
   const PressSpotButton = () => {
     setModalVisible2(true);
@@ -80,6 +88,7 @@ const Pages = () => {
   useEffect(() => {
     if (isLoadMeal?.data?.spotCarts) {
       const spot = isLoadMeal?.data?.spotCarts.map(m => {
+        // console.log(m.cartDailyFoodDtoList[0].cartDailyFoods, 'w2');
         return {
           id: m.spotId,
           text: m.groupName + '\u00a0' + m.spotName,
@@ -529,8 +538,8 @@ const Pages = () => {
           onPress: async () => {
             try {
               await deleteButton(id);
-              queryClient.invalidateQueries('orderMeal');
               setModalVisible3(true);
+              queryClient.invalidateQueries('orderMeal');
             } catch (err) {
               Alert.alert(
                 '메뉴취소 불가',
@@ -615,8 +624,8 @@ const Pages = () => {
       <SpotView>
         <SpotPress onPress={PressSpotButton}>
           <SpotName>
-            {spotName?.length > 0 && spotName[0]?.text === undefined
-              ? '스팟 없음'
+            {spotName?.length === 0
+              ? presentUserGroup
               : selectSpotName?.length > 0 && selectSpotName[0].text}
           </SpotName>
           <ArrowIcon />
@@ -685,8 +694,13 @@ const Pages = () => {
                             <ContentHeader>
                               <DiningName>
                                 {formattedMonthDay(v.serviceDate)}{' '}
-                                {v.diningType}
+                                {v.diningType} {food.deliveryTime}
                               </DiningName>
+                              {!(food.status === 2 || food.status === 6) && (
+                                <DeadlineGuide>
+                                  {food.lastOrderTime} 마감
+                                </DeadlineGuide>
+                              )}
                             </ContentHeader>
                             <DeleteIcons
                               onPress={() => {
@@ -889,7 +903,7 @@ const Pages = () => {
       {cartArr?.length !== 0 && !keyboardStatus.isKeyboardActivate && (
         <ButtonWrap focus={focus}>
           {deadlineArr?.length !== 0 && (
-            <EndView>
+            <EndView platform={Platform.OS}>
               <EndText>
                 주문 마감된 상품이 있어요
                 <EndPointText>({deadline}개)</EndPointText>
@@ -996,7 +1010,7 @@ const Wrap = styled.View`
   border-bottom-width: 1px;
   position: relative;
   background-color: ${({theme, status, count, capacity}) =>
-    status === 0 || (status === 1 && capacity < count)
+    status === 2 || (status === 1 && capacity < count)
       ? theme.colors.grey[8]
       : theme.colors.grey[0]};
   min-height: 180px;
@@ -1171,7 +1185,7 @@ const Border = styled.View`
 
 const DeleteIcons = styled.Pressable`
   position: absolute;
-  top: 16px;
+  top: 14px;
   right: 24px;
   padding: 4px;
 `;
@@ -1260,12 +1274,14 @@ const EndPointText = styled(Typography).attrs({text: 'CaptionSB'})`
 
 const EndQuestionText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[3]};
+
+  width: 200px;
 `;
 
 const EndView = styled.View`
-  background-color: #fff;
   align-items: center;
-  padding: 12px 0px;
+
+  ${({platform}) => platform === 'ios' && 'paddingBottom:12px'};
 `;
 
 const BlurView = styled.View`
@@ -1281,4 +1297,9 @@ const BlurView = styled.View`
 const ShortageText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.red[500]};
   margin-left: 4px;
+`;
+
+const DeadlineGuide = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+  margin-right: 28px;
 `;

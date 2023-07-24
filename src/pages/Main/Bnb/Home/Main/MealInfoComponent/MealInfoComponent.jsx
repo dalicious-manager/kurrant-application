@@ -47,6 +47,7 @@ const MealInfoComponent = ({
       test: 'test',
     });
   };
+
   return (
     <>
       <MealInfoWrapper>
@@ -83,7 +84,9 @@ const MealInfoComponent = ({
 
               <MealText>
                 <View style={{width: '80%', overflow: 'hidden'}}>
-                  <DiningType>{`오늘 ${m.diningType}`}</DiningType>
+                  <DiningType>
+                    {m.diningType + ' ' + meal.deliveryTime}
+                  </DiningType>
                   <View>
                     <MealTxt numberOfLines={1} ellipsizeMode="tail">
                       {meal.name}

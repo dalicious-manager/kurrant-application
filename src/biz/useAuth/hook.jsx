@@ -49,7 +49,9 @@ const useAuth = () => {
   const [fcmToken, setFcmToken] = useAtom(fcmTokenAtom);
   const [isLoginLoading, setLoginLoading] = useAtom(isLoginLoadingAtom);
   const [userRole, setUserRole] = useAtom(userRoleAtom);
+
   const navigation = useNavigation();
+
   const requestEmailAuth = async (body, type, option = {}) => {
     try {
       setEmailAuthLoading(true);
@@ -178,7 +180,6 @@ const useAuth = () => {
         option,
       );
       if (res?.data?.isActive) {
-        // console.log(res.data);
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
         await setStorage('lastLogin', 'GENERAL');
@@ -305,6 +306,7 @@ const useAuth = () => {
         type,
         option,
       );
+
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());

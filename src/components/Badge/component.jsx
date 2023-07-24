@@ -15,7 +15,7 @@ const Component = () => {
     const badgeQty = qty?.flat().reduce((acc, cur) => {
       return acc + cur;
     }, 0);
-    console.log(badgeQty);
+    //console.log(badgeQty);
     setQuantity(badgeQty);
   }, [isLoadMeal]);
   return (
