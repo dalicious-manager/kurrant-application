@@ -70,22 +70,25 @@ const Pages = () => {
     getUseAlarm();
   }, []);
 
-  useEffect(() => {
-    console.log('alarm 확인');
-    console.log(alarm);
-  }, [alarm]);
+  // useEffect(() => {
+  //   console.log('alarm 확인');
+  //   console.log(alarm);
+  // }, [alarm]);
 
   useEffect(() => {
     return () => {
       // 나가게 되면 알람
-      // readAlarm(data)
+      if (!alarm) return;
+      const alarmList = alarm.map(v => v.id);
+
+      // readAlarm(alarmList);
     };
-  }, []);
+  }, [alarm]);
 
   const handleNotificationBoxPress = id => {
-    console.log(id);
+    // console.log(id);
 
-    readAlarm(id);
+    readAlarm([id]);
   };
 
   return (
@@ -104,7 +107,9 @@ const Pages = () => {
               <NotificationBox
                 key={v.id}
                 onPress={() => {
-                  handleNotificationBoxPress(v.id);
+                  if (!v.isRead) {
+                    handleNotificationBoxPress(v.id);
+                  }
                 }}>
                 <SseRedDotType6
                   isSse={!v.isRead}

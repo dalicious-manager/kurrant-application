@@ -97,7 +97,12 @@ const useBoard = () => {
 
   const readAlarm = async data => {
     try {
-      await Fetch.readAlarm(data);
+      const response = await Fetch.readAlarm(data);
+
+      if (response.statusCode === 200) {
+        getAlarm();
+        console.log('리뷰 댓글을 읽었습니다 ');
+      }
     } catch (err) {
       throw err;
     } finally {

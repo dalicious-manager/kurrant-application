@@ -10,6 +10,7 @@ import {
 } from './store';
 
 import * as Fetch from './Fetch';
+import {useQuery} from 'react-query';
 
 const useGetBoard = () => {
   const [notice, setNotice] = useAtom(noticeAtom);
@@ -28,17 +29,33 @@ const useGetBoard = () => {
     isGetSpotNoticeLoadingAtom,
   );
 
-  useQuery(['board', 'alarm'], async ({queryKey}) => {
-    // const response = await fetchJson(
-    //   `/dailyfoods/${dailyFoodId}/review/keyword`,
-    //   'GET',
-    // );
+  const {isFetching: isGetAlarmFetching, refetch: getAlarmRefetch} = useQuery(
+    ['board', 'alarm'],
+    async ({queryKey}) => {
+      // const response = await fetchJson(
+      //   `/dailyfoods/${dailyFoodId}/review/keyword`,
+      //   'GET',
+      // );
 
-    // setReviewKeyword(response.data.filter(v => v !== ''));
+      // setReviewKeyword(response.data.filter(v => v !== ''));
 
-    const response = await Fetch.getAlarm();
-  });
+      const response = await Fetch.getAlarm();
+      setAlarm(response.data);
+    },
+  );
 
-  return {};
+  return {
+    getAlarmRefetch,
+
+    readableAtom: {
+      notice,
+      spotNotice,
+      isGetNoticeLoading,
+      isGetSpotNoticeLoading,
+      alarm,
+      isDeleteAlarmLoading,
+      isGetAlarmLoading,
+    },
+  };
 };
 export default useGetBoard;
