@@ -61,7 +61,7 @@ const Pages = () => {
     readAlarm,
     readableAtom: {alarm},
   } = useBoard();
-  const navigation = useNavigation();
+
   useEffect(() => {
     const getUseAlarm = async () => {
       await getAlarm();
@@ -70,24 +70,16 @@ const Pages = () => {
     getUseAlarm();
   }, []);
 
-  // useEffect(() => {
-  //   console.log('alarm 확인');
-  //   console.log(alarm);
-  // }, [alarm]);
-
   useEffect(() => {
     return () => {
-      // 나가게 되면 알람
       if (!alarm) return;
       const alarmList = alarm.map(v => v.id);
 
-      // readAlarm(alarmList);
+      readAlarm(alarmList);
     };
   }, [alarm]);
 
   const handleNotificationBoxPress = id => {
-    // console.log(id);
-
     readAlarm([id]);
   };
 

@@ -1,8 +1,8 @@
 import * as sseAtoms from './store';
 import {useAtom} from 'jotai';
-import {useMutation} from 'react-query';
+import {useQuery, useMutation} from 'react-query';
 import {fetchJson} from '../../fetch';
-
+import {useState} from 'react';
 const useSse = () => {
   const [sseType1, setSseType1] = useAtom(sseAtoms.sseType1Atom);
   const [sseType2, setSseType2] = useAtom(sseAtoms.sseType2Atom);
@@ -14,7 +14,23 @@ const useSse = () => {
   const [sseType8, setSseType8] = useAtom(sseAtoms.sseType8Atom);
 
   // sse 전체 이력 조회
+  const [sseHistory, setSseHistory] = useState([]);
 
+  const {refetch: sseHistoryRefetch} = useQuery(
+    ['sse', 'notification'],
+    async ({queryKey}) => {
+      const response = await fetchJson(
+        `/notification`,
+
+        'GET',
+      );
+
+      setSseHistory(response.data);
+    },
+    {
+      // enabled: false,
+    },
+  );
   // sse 알림 읽었다고 서버에 보내주기
   const {mutate: confirmSseIsRead} = useMutation(
     async data => {
@@ -97,6 +113,8 @@ const useSse = () => {
     sseType7,
     sseType8,
     confirmSseIsRead,
+    sseHistory,
+    sseHistoryRefetch,
   };
 };
 

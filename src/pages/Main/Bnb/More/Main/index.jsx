@@ -54,30 +54,12 @@ import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
-import useSse from '../../../../../utils/sse/sseLogics/useSse';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
 const Pages = ({route}) => {
-  const {sseType3, confirmSseIsRead} = useSse();
-
   const [total] = useAtom(totalReviewWaitListAtom);
   const [redeemablePoints] = useAtom(redeemablePointsAtom);
-  // const [checkSseType3, setCheckSseType3] = useAtom(checkSseType3Atom);
-  // useEffect(() => {
-  //   if (!checkSseType3) return;
-
-  //   console.log('sseType3 보낼지 말지 판단하기 ');
-
-  //   if (total <= 0) {
-  //     // 서버에 read했다고보내기
-  //     // setCheckType3 false로 바꾸기
-  //     console.log('sseType3 읽었다고 올림 ');
-  //     confirmSseIsRead(3);
-
-  //     setCheckSseType3(false);
-  //   }
-  // }, [checkSseType3]);
 
   const themeApp = useTheme();
   const navigation = useNavigation();

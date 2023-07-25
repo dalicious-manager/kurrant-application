@@ -98,10 +98,17 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   //
-  const {sseType1, sseType2, sseType3, sseType4, sseType5, confirmSseIsRead} =
-    useSse();
+  const {
+    sseType1,
+    sseType2,
+    sseType3,
+    sseType4,
+    sseType5,
+    confirmSseIsRead,
+    sseHistory,
+  } = useSse();
 
-  useSseType3();
+  useSseType3(confirmSseIsRead);
 
   const navigation = useNavigation();
 
@@ -667,13 +674,14 @@ const Pages = () => {
           </SpotName>
           <Icons>
             <SseRedDotType6
-              isSse={true}
+              isSse={!!sseHistory.find(v => v.type === 6)}
               position={'absolute'}
               right={'10px'}
               top={'4px'}>
               {/* 홈 알림 벨모양 Sse */}
               <BellIconPress
                 onPress={() => {
+                  confirmSseIsRead(6);
                   navigation.navigate(NotificationCenterName);
                 }}>
                 <BellIcon />
