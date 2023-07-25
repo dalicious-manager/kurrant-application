@@ -34,9 +34,11 @@ const Component = ({
   imageLocation,
   foodName,
   dailyFoodId,
-  allReviewList,
-  setAllReviewList,
+  // allReviewList,
+  // setAllReviewList,
 }) => {
+  const [allReviewList, setAllReviewList] = useState();
+
   const theme = useTheme();
   const queryClient = useQueryClient();
   const navigation = useNavigation();
@@ -73,11 +75,8 @@ const Component = ({
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
-  const [reviewData, setReviewData] = useState([]);
-
   const {
     getBoard,
-    getBoardIsSuccess,
     getBoardIsFetching: isFetching,
     getBoardIsLoading,
     getNextPage,
@@ -86,10 +85,6 @@ const Component = ({
   } = useMainReviewInfiniteQuery(url, dailyFoodId);
 
   const {starRatingCounts} = useGetMealDetailReview(dailyFoodId);
-
-  useEffect(() => {
-    setReviewData(getBoard);
-  }, [getBoard]);
 
   useEffect(() => {
     setUrl(
@@ -106,36 +101,6 @@ const Component = ({
   useEffect(() => {
     getBoardRefetch();
   }, [url]);
-
-  const [isFetchingTop, setIsFetchingTop] = useState(false);
-  const [isFetchingBottom, setIsFetchingBottom] = useState(false);
-
-  useEffect(() => {
-    setIsFetchingTop(true);
-  }, [url]);
-
-  useEffect(() => {
-    if (isFetching && isFetchingTop) {
-      setIsFetchingTop(true);
-      setIsFetchingBottom(false);
-    } else {
-      setIsFetchingTop(false);
-    }
-  }, [isFetching]);
-
-  useEffect(() => {
-    if (isFetching) {
-      setIsFetchingBottom(true);
-    } else {
-      setIsFetchingBottom(false);
-    }
-  }, [isFetching]);
-
-  useEffect(() => {
-    if (isFetchingBottom && isFetchingTop) {
-      setIsFetchingBottom(false);
-    }
-  }, [isFetchingBottom, isFetchingTop]);
 
   // useEffect(() => {
   //   setHasNextPageReviewDetail(hasNextPage);
@@ -217,6 +182,51 @@ const Component = ({
       ),
     );
   };
+
+  // useEffect(() => {
+  //   console.log('getBoard 확인');
+  //   console.log(getBoard.pages);
+  // }, [getBoard]);
+
+  // useEffect(() => {
+  //   console.log('reviewData 확인');
+  //   console.log(reviewData);
+  // }, [reviewData]);
+  const [isFetchingTop, setIsFetchingTop] = useState(false);
+  const [isFetchingBottom, setIsFetchingBottom] = useState(false);
+
+  useEffect(() => {
+    setIsFetchingTop(true);
+  }, [url]);
+
+  useEffect(() => {
+    if (isFetching && isFetchingTop) {
+      setIsFetchingTop(true);
+      setIsFetchingBottom(false);
+    } else {
+      setIsFetchingTop(false);
+    }
+  }, [isFetching]);
+
+  useEffect(() => {
+    if (isFetching) {
+      setIsFetchingBottom(true);
+    } else {
+      setIsFetchingBottom(false);
+    }
+  }, [isFetching]);
+
+  useEffect(() => {
+    if (isFetchingBottom && isFetchingTop) {
+      setIsFetchingBottom(false);
+    }
+  }, [isFetchingBottom, isFetchingTop]);
+
+  useEffect(() => {
+    return () => {
+      setAllReviewList([]);
+    };
+  }, [setAllReviewList]);
 
   return (
     <Container>
@@ -381,7 +391,9 @@ const Component = ({
           </LoadingPage1>
         )}
 
+        {/* 처음에 들어왔을때 fetching중에는 빈화면이 보이게 */}
         {allReviewList && !getBoardIsLoading && (
+          // !isFetching
           <FlatList
             data={allReviewList}
             keyExtractor={item => item.reviewId.toString()}

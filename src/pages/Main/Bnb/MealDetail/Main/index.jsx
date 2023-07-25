@@ -80,7 +80,7 @@ const Pages = ({route}) => {
   const {balloonEvent, BalloonWrap} = Balloon();
   const [modalVisible, setModalVisible] = useState(false);
   const [focus, setFocus] = useState(false);
-  const [allReviewList, setAllReviewList] = useState();
+
   const [scroll, setScroll] = useState(0);
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
@@ -146,8 +146,8 @@ const Pages = ({route}) => {
   // foodId 넘겨줘야함
   useEffect(() => {
     async function loadFoodDetail() {
-      queryClient.invalidateQueries(['review']);
-      setAllReviewList();
+      // queryClient.invalidateQueries(['review']);
+      // setAllReviewList();
       const foodData = await foodDetail(dailyFoodId);
       if (foodData) {
         const meal = await loadMeal();
@@ -345,10 +345,9 @@ const Pages = ({route}) => {
     }, [dailyFoodId, detailRefetch, foodDetailData.dailyFoodId]),
   );
   useEffect(() => {
-    console.log(isFoodDetail?.data);
+    // console.log(isFoodDetail?.data);
     if (isFoodDetail?.data) setFoodDetailData(isFoodDetail?.data);
   }, [isFoodDetail?.data, setFoodDetailData]);
-  // 상세페이지 리뷰 로직
 
   // if (detailFetching) {
   //   return <Skeleton />;
@@ -617,8 +616,8 @@ const Pages = ({route}) => {
                     foodName={foodDetailData?.name}
                     imageLocation={foodDetailData?.imageList}
                     dailyFoodId={dailyFoodId}
-                    allReviewList={allReviewList}
-                    setAllReviewList={setAllReviewList}
+                    // allReviewList={allReviewList}
+                    // setAllReviewList={setAllReviewList}
                   />
                 </>
               ) : (
