@@ -4,11 +4,10 @@ import useSse from '../sseLogics/useSse';
 import {useEffect} from 'react';
 import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
 
-const useSseType3 = () => {
-  const {sseType3, confirmSseIsRead} = useSse();
-
+const useSseType3 = confirmSseIsRead => {
   const [checkSseType3, setCheckSseType3] = useAtom(checkSseType3Atom);
   const [total] = useAtom(totalReviewWaitListAtom);
+
   useEffect(() => {
     console.log('checkSseType3 확인하기 ');
     console.log(checkSseType3);
@@ -26,6 +25,8 @@ const useSseType3 = () => {
       confirmSseIsRead(3);
 
       setCheckSseType3(false);
+    } else {
+      console.log('total값이 0보다 큰 수라 안 보냄');
     }
   }, [checkSseType3]);
 

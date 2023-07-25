@@ -58,15 +58,30 @@ const Pages = () => {
   const themeApp = useTheme();
   const {
     getAlarm,
+    readAlarm,
     readableAtom: {alarm},
   } = useBoard();
-  const navigation = useNavigation();
+
   useEffect(() => {
     const getUseAlarm = async () => {
       await getAlarm();
     };
+
     getUseAlarm();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (!alarm) return;
+      const alarmList = alarm.map(v => v.id);
+
+      readAlarm(alarmList);
+    };
+  }, [alarm]);
+
+  const handleNotificationBoxPress = id => {
+    readAlarm([id]);
+  };
 
   return (
     <Wrapper>
@@ -80,13 +95,16 @@ const Pages = () => {
       ) : (
         <ScrollView>
           {alarm?.map(v => {
-            {
-              /* {alramData?.map(v => { */
-            }
             return (
-              <NotificationBox key={v.id}>
+              <NotificationBox
+                key={v.id}
+                onPress={() => {
+                  if (!v.isRead) {
+                    handleNotificationBoxPress(v.id);
+                  }
+                }}>
                 <SseRedDotType6
-                  isSse={v.isRead}
+                  isSse={!v.isRead}
                   position={'absolute'}
                   top={'-8px'}
                   right={'-1px'}
