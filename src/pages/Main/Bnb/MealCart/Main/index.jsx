@@ -1,6 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Pressable, Text, View, ActivityIndicator} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  Text,
+  View,
+  ActivityIndicator,
+  Platform,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
@@ -26,6 +33,7 @@ import {useGetShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {getStorage} from '../../../../../utils/asyncStorage';
 import {formattedMonthDay} from '../../../../../utils/dateFormatter';
+import {formattedDailyFoodStatus} from '../../../../../utils/statusFormatter';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {PAGE_NAME as PaymentPageName} from '../../Payment/Main';
@@ -66,6 +74,7 @@ const Pages = () => {
   const [date, setDate] = useState();
   const [type, setType] = useState();
   const toast = Toast();
+  const presentUserGroup = isUserInfo?.group + `\u00A0` + isUserInfo?.spot;
 
   const PressSpotButton = () => {
     setModalVisible2(true);
@@ -79,6 +88,7 @@ const Pages = () => {
   useEffect(() => {
     if (isLoadMeal?.data?.spotCarts) {
       const spot = isLoadMeal?.data?.spotCarts.map(m => {
+        // console.log(m.cartDailyFoodDtoList[0].cartDailyFoods, 'w2');
         return {
           id: m.spotId,
           text: m.groupName + '\u00a0' + m.spotName,
@@ -97,7 +107,13 @@ const Pages = () => {
 
     const getTime = async () => {
       const localTime = JSON.parse(await getStorage('diningTime'));
-      setTime(localTime.time);
+      setTime(
+        localTime
+          .filter(t => {
+            return t.spotId === selected;
+          })
+          .flat(),
+      );
     };
     getTime();
   }, [isLoadMeal?.data]);
@@ -412,6 +428,7 @@ const Pages = () => {
 
   // 품절
   const soldout = arr?.filter(el => el.status === 2);
+  const salesend = arr?.filter(el => el.status !== 1);
 
   // 클라 타입
   const clientType = clientStatus?.filter(p => p.spotId === selected);
@@ -521,8 +538,8 @@ const Pages = () => {
           onPress: async () => {
             try {
               await deleteButton(id);
-              queryClient.invalidateQueries('orderMeal');
               setModalVisible3(true);
+              queryClient.invalidateQueries('orderMeal');
             } catch (err) {
               Alert.alert(
                 '메뉴취소 불가',
@@ -538,9 +555,21 @@ const Pages = () => {
 
   const isSoldOut = () => {
     if (soldout.length !== 0) {
-      Alert.alert('품절된 상품이 있어요', '메뉴를 변경하시겠어요?', [
+      Alert.alert('품절된 상품이 있어요', '메뉴룰 변경해 주세요', [
         {
-          text: '메뉴변경',
+          text: '확인',
+          onPress: () => {},
+        },
+      ]);
+    } else {
+      return;
+    }
+  };
+  const isSalesEnd = () => {
+    if (salesend.length !== 0) {
+      Alert.alert('판매할수 없는 상품이 있어요', '메뉴룰 변경해 주세요', [
+        {
+          text: '확인',
           onPress: () => {},
         },
       ]);
@@ -595,8 +624,8 @@ const Pages = () => {
       <SpotView>
         <SpotPress onPress={PressSpotButton}>
           <SpotName>
-            {spotName?.length > 0 && spotName[0]?.text === undefined
-              ? '스팟 없음'
+            {spotName?.length === 0
+              ? presentUserGroup
               : selectSpotName?.length > 0 && selectSpotName[0].text}
           </SpotName>
           <ArrowIcon />
@@ -665,8 +694,13 @@ const Pages = () => {
                             <ContentHeader>
                               <DiningName>
                                 {formattedMonthDay(v.serviceDate)}{' '}
-                                {v.diningType}
+                                {v.diningType} {food.deliveryTime}
                               </DiningName>
+                              {!(food.status === 2 || food.status === 6) && (
+                                <DeadlineGuide>
+                                  {food.lastOrderTime} 마감
+                                </DeadlineGuide>
+                              )}
                             </ContentHeader>
                             <DeleteIcons
                               onPress={() => {
@@ -686,7 +720,7 @@ const Pages = () => {
                                   borderRadius: 7,
                                   marginRight: 12,
                                 }}>
-                                {food.status === 6 && <BlurView />}
+                                {food.status !== 1 && <BlurView />}
                               </FastImage>
                               <MealNameView>
                                 <MealName
@@ -708,34 +742,28 @@ const Pages = () => {
                                     </SalePrice>
                                   )}
                                 </SalePriceWrap>
-                                {food.status === 2 && (
-                                  <SoldOutView>
-                                    <SoldOutIcon status={food.status} />
-                                    <SoldOutText status={food.status}>
-                                      품절
-                                    </SoldOutText>
-                                  </SoldOutView>
-                                )}
-                                {food.status === 6 && (
-                                  <SoldOutView>
-                                    <SoldOutIcon status={food.status} />
-                                    <SoldOutText status={food.status}>
-                                      주문마감
-                                    </SoldOutText>
-                                  </SoldOutView>
-                                )}
+
                                 {food.status === 1 &&
-                                  food.capacity < food.count && (
+                                food.capacity < food.count ? (
+                                  <SoldOutView>
+                                    <WarningIcon />
+                                    <ShortageText>
+                                      재고부족(재고 수량:{food.capacity})
+                                    </ShortageText>
+                                  </SoldOutView>
+                                ) : (
+                                  food.status !== 1 && (
                                     <SoldOutView>
-                                      <WarningIcon />
-                                      <ShortageText>
-                                        재고부족(재고 수량:{food.capacity})
-                                      </ShortageText>
+                                      <SoldOutIcon status={food.status} />
+                                      <SoldOutText status={food.status}>
+                                        {formattedDailyFoodStatus(food.status)}
+                                      </SoldOutText>
                                     </SoldOutView>
-                                  )}
+                                  )
+                                )}
                               </MealNameView>
                             </ContentWrap>
-                            {food.status === 2 && (
+                            {food.status !== 1 && (
                               <MenuChangeView
                                 onPress={() => {
                                   changeMealPress(food.count, food.id);
@@ -750,6 +778,7 @@ const Pages = () => {
                                 <MenuChangeText>메뉴 변경</MenuChangeText>
                               </MenuChangeView>
                             )}
+
                             <BottomMenu
                               modalVisible={modalVisible3}
                               setModalVisible={setModalVisible3}
@@ -761,7 +790,7 @@ const Pages = () => {
                               time={time}
                             />
                             <CountWrap>
-                              {food.status !== 6 && !isFetching && (
+                              {food.status === 1 && !isFetching && (
                                 <Count
                                   onPressEvent={() => {
                                     bodyRef.current.focus();
@@ -874,7 +903,7 @@ const Pages = () => {
       {cartArr?.length !== 0 && !keyboardStatus.isKeyboardActivate && (
         <ButtonWrap focus={focus}>
           {deadlineArr?.length !== 0 && (
-            <EndView>
+            <EndView platform={Platform.OS}>
               <EndText>
                 주문 마감된 상품이 있어요
                 <EndPointText>({deadline}개)</EndPointText>
@@ -890,8 +919,10 @@ const Pages = () => {
             onPressEvent={() => {
               deadline !== 0 && isDeadline();
               soldout.length !== 0 && isSoldOut();
+              salesend.length !== 0 && isSalesEnd();
               isLack.includes(true) && isShortage();
               soldout.length === 0 &&
+                salesend.length === 0 &&
                 totalCount !== 0 &&
                 !isLack.includes(true) &&
                 navigation.navigate(PaymentPageName, {
@@ -979,7 +1010,7 @@ const Wrap = styled.View`
   border-bottom-width: 1px;
   position: relative;
   background-color: ${({theme, status, count, capacity}) =>
-    status === 0 || (status === 1 && capacity < count)
+    status === 2 || (status === 1 && capacity < count)
       ? theme.colors.grey[8]
       : theme.colors.grey[0]};
   min-height: 180px;
@@ -1066,7 +1097,7 @@ export const DiningName = styled(Typography).attrs({text: 'CaptionR'})`
 `;
 export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.grey[6] : theme.colors.grey[2]};
+    status !== 1 ? theme.colors.grey[6] : theme.colors.grey[2]};
   margin-bottom: 2px;
 `;
 
@@ -1154,7 +1185,7 @@ const Border = styled.View`
 
 const DeleteIcons = styled.Pressable`
   position: absolute;
-  top: 16px;
+  top: 14px;
   right: 24px;
   padding: 4px;
 `;
@@ -1204,13 +1235,27 @@ const MenuChangeView = styled.Pressable`
 
 const SoldOutIcon = styled(SoldOut)`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
+    status !== 1 && status !== 6
+      ? theme.colors.red[500]
+      : theme.colors.grey[4]};
   margin-right: 4px;
 `;
 
 const SoldOutText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme, status}) =>
-    status === 2 ? theme.colors.red[500] : theme.colors.grey[4]};
+    status !== 1 && status !== 6
+      ? theme.colors.red[500]
+      : theme.colors.grey[4]};
+`;
+const SalesEndIcon = styled(SoldOut)`
+  color: ${({theme, status}) =>
+    status === 4 ? theme.colors.red[500] : theme.colors.grey[4]};
+  margin-right: 4px;
+`;
+
+const SalesEndText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${({theme, status}) =>
+    status === 4 ? theme.colors.red[500] : theme.colors.grey[4]};
 `;
 
 const SoldOutView = styled.View`
@@ -1229,12 +1274,14 @@ const EndPointText = styled(Typography).attrs({text: 'CaptionSB'})`
 
 const EndQuestionText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[3]};
+
+  width: 200px;
 `;
 
 const EndView = styled.View`
-  background-color: #fff;
   align-items: center;
-  padding: 12px 0px;
+
+  ${({platform}) => platform === 'ios' && 'paddingBottom:12px'};
 `;
 
 const BlurView = styled.View`
@@ -1250,4 +1297,9 @@ const BlurView = styled.View`
 const ShortageText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.red[500]};
   margin-left: 4px;
+`;
+
+const DeadlineGuide = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${({theme}) => theme.colors.grey[5]};
+  margin-right: 28px;
 `;

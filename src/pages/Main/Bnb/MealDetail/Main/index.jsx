@@ -62,6 +62,7 @@ import Typography from '../../../../../components/Typography';
 import {useGetDailyfoodDetailNow} from '../../../../../hook/useDailyfood';
 import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
@@ -79,7 +80,7 @@ const Pages = ({route}) => {
   const {balloonEvent, BalloonWrap} = Balloon();
   const [modalVisible, setModalVisible] = useState(false);
   const [focus, setFocus] = useState(false);
-  const [allReviewList, setAllReviewList] = useState();
+
   const [scroll, setScroll] = useState(0);
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
@@ -93,6 +94,7 @@ const Pages = ({route}) => {
     isSuccess: detailSuccess,
     refetch: detailRefetch,
   } = useGetDailyfoodDetailNow(route.params.dailyFoodId, userRole); // 상세정보
+
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -101,18 +103,18 @@ const Pages = ({route}) => {
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
+
   const headerTitle = foodDetailData?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
-  // console.log(isFoodDetailLoading, 'oo');
+
+  // console.log(dailyFoodId);
 
   const [count, setCount] = useState(1);
 
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
-
-  // console.log(dailyFoodId);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -144,8 +146,8 @@ const Pages = ({route}) => {
   // foodId 넘겨줘야함
   useEffect(() => {
     async function loadFoodDetail() {
-      queryClient.invalidateQueries(['review']);
-      setAllReviewList();
+      // queryClient.invalidateQueries(['review']);
+      // setAllReviewList();
       const foodData = await foodDetail(dailyFoodId);
       if (foodData) {
         const meal = await loadMeal();
@@ -337,6 +339,16 @@ const Pages = ({route}) => {
   //   detail();
   // }, [dailyFoodId, refetch]);
 
+  useFocusEffect(
+    useCallback(() => {
+      if (foodDetailData.dailyFoodId !== dailyFoodId) detailRefetch();
+    }, [dailyFoodId, detailRefetch, foodDetailData.dailyFoodId]),
+  );
+  useEffect(() => {
+    // console.log(isFoodDetail?.data);
+    if (isFoodDetail?.data) setFoodDetailData(isFoodDetail?.data);
+  }, [isFoodDetail?.data, setFoodDetailData]);
+
   // if (detailFetching) {
   //   return <Skeleton />;
   // }
@@ -356,11 +368,20 @@ const Pages = ({route}) => {
               ) : (
                 <StatusBar barStyle="light-content" />
               )}
-              <CarouselImage
-                detailFetching={detailFetching}
-                img={foodDetailData?.imageList}
-                setImgScroll={setImgScroll}
-              />
+              <View style={{position: 'relative'}}>
+                <CarouselImage
+                  detailFetching={detailFetching}
+                  img={foodDetailData?.imageList}
+                  setImgScroll={setImgScroll}
+                />
+                {!detailFetching && (
+                  <DeadlineGuide>
+                    <DeadlineText>
+                      {isFoodDetail?.data?.lastOrderTime} 마감
+                    </DeadlineText>
+                  </DeadlineGuide>
+                )}
+              </View>
               {!detailFetching ? (
                 <>
                   <TouchableWithoutFeedback
@@ -481,7 +502,7 @@ const Pages = ({route}) => {
                         </PriceWrap>
                       </View>
 
-                      {foodDetailData?.membershipDiscountedRate === 0 && (
+                      {!foodDetailData?.isMembership && (
                         <MembershipDiscountBox isFoodDetail={foodDetailData} />
                       )}
                     </Content>
@@ -595,8 +616,8 @@ const Pages = ({route}) => {
                     foodName={foodDetailData?.name}
                     imageLocation={foodDetailData?.imageList}
                     dailyFoodId={dailyFoodId}
-                    allReviewList={allReviewList}
-                    setAllReviewList={setAllReviewList}
+                    // allReviewList={allReviewList}
+                    // setAllReviewList={setAllReviewList}
                   />
                 </>
               ) : (
@@ -844,4 +865,19 @@ const InfoText = styled(Typography).attrs({text: 'CaptionR'})`
 const Test = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
   width: 50%;
+`;
+
+const DeadlineGuide = styled.View`
+  background-color: #1d1c2180;
+  padding: 4px 0px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DeadlineText = styled(Typography).attrs({text: 'SmallLabel'})`
+  color: ${props => props.theme.colors.grey[0]};
 `;

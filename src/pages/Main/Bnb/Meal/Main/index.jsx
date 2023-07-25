@@ -4,6 +4,7 @@ import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useQueryClient} from 'react-query';
+import {useTheme} from 'styled-components';
 import styled from 'styled-components/native';
 import NoMealButton from '~components/Button';
 
@@ -45,6 +46,7 @@ const Pages = ({route}) => {
     data: {data: isUserInfo},
   } = useGetUserInfo();
 
+  const themeApp = useTheme();
   const queryClient = useQueryClient();
   const [touchDate, setTouchDate] = useState(data);
   const [show, setShow] = useState(false);
@@ -239,22 +241,33 @@ const Pages = ({route}) => {
           {touchDate ? (
             <>
               {selectDate?.map((s, index) => {
-                return (
-                  <View key={index}>
-                    <DiningTimeWrap>
-                      <DiningTime>
-                        {formattedMonthDay(s.serviceDate)} {s.diningType}
-                      </DiningTime>
-                    </DiningTimeWrap>
-                    {s.orderItemDtoList?.map((sm, idx) => {
-                      return (
-                        <MealContentWrap key={idx}>
-                          {sm.dailyFoodStatus === 6 && <BlurView />}
-                          {sm.dailyFoodStatus === 6 && (
-                            <SoldOut soldOut={sm.dailyFoodStatus}>
-                              마감됐어요
-                            </SoldOut>
+                return s.orderItemDtoList?.map((sm, idx) => {
+                  return (
+                    <View key={index}>
+                      <DiningTimeWrap>
+                        <DiningTime>
+                          {formattedMonthDay(s.serviceDate)} {s.diningType}{' '}
+                          {sm.deliveryTime}
+                        </DiningTime>
+                      </DiningTimeWrap>
+                      <MealContentWrap key={idx}>
+                        {sm.dailyFoodStatus === 6 && <BlurView />}
+                        {sm.dailyFoodStatus === 6 && (
+                          <SoldOut soldOut={sm.dailyFoodStatus}>
+                            마감됐어요
+                          </SoldOut>
+                        )}
+                        <View>
+                          {sm.dailyFoodStatus !== 6 && (
+                            <DeadlineGuide>
+                              <Typography
+                                textColor={themeApp.colors.grey[0]}
+                                text="SmallLabel">
+                                {sm.lastOrderTime} 마감
+                              </Typography>
+                            </DeadlineGuide>
                           )}
+
                           <FastImage
                             source={{
                               uri: `${sm.image}`,
@@ -266,74 +279,83 @@ const Pages = ({route}) => {
                               borderRadius: 7,
                             }}
                           />
+                        </View>
 
-                          <Content
-                            onPress={() =>
-                              navigation.navigate(MealDetailPageName, {
-                                dailyFoodId: sm.dailyFoodId,
-                              })
-                            }>
-                            <MakersName>[{sm.makers}]</MakersName>
-                            <MealName numberOfLines={1} ellipsizeMode="tail">
-                              {sm.name}
-                            </MealName>
-                            <DeliveryAddress>
-                              {sm.groupName}・{sm.spotName}
-                            </DeliveryAddress>
-                            <CountText>{sm.count}개</CountText>
-                            {sm.orderStatus === 7 && (
-                              <CancelText>취소완료</CancelText>
-                            )}
-                          </Content>
-                          {(sm.dailyFoodStatus === 1 ||
-                            sm.dailyFoodStatus === 2) &&
-                            sm.orderStatus === 5 && (
-                              <CancelBtnWrap status={sm.orderStatus}>
-                                <LabelButton
-                                  label={'취소'}
-                                  onPressEvent={() =>
-                                    cancelMealPress(sm.id, s.serviceDate)
-                                  }
-                                  disabled={sm.orderStatus === 7}
-                                />
-                              </CancelBtnWrap>
-                            )}
-                          {(sm.dailyFoodStatus === 1 ||
-                            sm.dailyFoodStatus === 2) &&
-                            sm.orderStatus === 5 &&
-                            sm.orderStatus !== 7 && (
-                              <MealChangeWrap>
-                                <LabelButton
-                                  label={'메뉴변경'}
-                                  onPressEvent={() =>
-                                    changeMealPress(sm.id, s.serviceDate)
-                                  }
-                                />
-                              </MealChangeWrap>
-                            )}
-                        </MealContentWrap>
-                      );
-                    })}
-                  </View>
-                );
+                        <Content
+                          onPress={() =>
+                            navigation.navigate(MealDetailPageName, {
+                              dailyFoodId: sm.dailyFoodId,
+                            })
+                          }>
+                          <MakersName>{sm.makers}</MakersName>
+                          <MealName numberOfLines={1} ellipsizeMode="tail">
+                            {sm.name}
+                          </MealName>
+                          <DeliveryAddress>
+                            {sm.groupName}・{sm.spotName}
+                          </DeliveryAddress>
+                          <CountText>{sm.count}개</CountText>
+                          {sm.orderStatus === 7 && (
+                            <CancelText>취소완료</CancelText>
+                          )}
+                        </Content>
+                        {(sm.dailyFoodStatus === 1 ||
+                          sm.dailyFoodStatus === 2) &&
+                          sm.orderStatus === 5 && (
+                            <CancelBtnWrap status={sm.orderStatus}>
+                              <LabelButton
+                                label={'취소'}
+                                onPressEvent={() =>
+                                  cancelMealPress(sm.id, s.serviceDate)
+                                }
+                                disabled={sm.orderStatus === 7}
+                              />
+                            </CancelBtnWrap>
+                          )}
+                        {(sm.dailyFoodStatus === 1 ||
+                          sm.dailyFoodStatus === 2) &&
+                          sm.orderStatus === 5 &&
+                          sm.orderStatus !== 7 && (
+                            <MealChangeWrap>
+                              <LabelButton
+                                label={'메뉴변경'}
+                                onPressEvent={() =>
+                                  changeMealPress(sm.id, s.serviceDate)
+                                }
+                              />
+                            </MealChangeWrap>
+                          )}
+                      </MealContentWrap>
+                    </View>
+                  );
+                });
               })}
             </>
           ) : (
             <>
               {selectDate &&
                 selectDate.map((m, i) => {
-                  return (
-                    <View key={i}>
-                      <DiningTimeWrap>
-                        <DiningTime>
-                          {formattedMonthDay(m.serviceDate)} {m.diningType}
-                          ・오늘
-                        </DiningTime>
-                      </DiningTimeWrap>
-                      {m.orderItemDtoList?.map((el, idx) => {
-                        return (
-                          <MealContentWrap key={idx}>
-                            {el.dailyFoodStatus === 6 && <BlurView />}
+                  return m.orderItemDtoList?.map((el, idx) => {
+                    return (
+                      <View key={i}>
+                        <DiningTimeWrap>
+                          <DiningTime>
+                            {formattedMonthDay(m.serviceDate)} {m.diningType}
+                            ・오늘
+                          </DiningTime>
+                        </DiningTimeWrap>
+                        <MealContentWrap key={idx}>
+                          {el.dailyFoodStatus === 6 && <BlurView />}
+                          <View>
+                            {el.dailyFoodStatus !== 6 && (
+                              <DeadlineGuide>
+                                <Typography
+                                  textColor={themeApp.colors.grey[0]}
+                                  text="SmallLabel">
+                                  {el.lastOrderTime} 마감
+                                </Typography>
+                              </DeadlineGuide>
+                            )}
                             <FastImage
                               source={{
                                 uri: `${el.image}`,
@@ -345,51 +367,51 @@ const Pages = ({route}) => {
                                 borderRadius: 7,
                               }}
                             />
-                            <Content
-                              onPress={() =>
-                                navigation.navigate(MealDetailPageName, {
-                                  dailyFoodId: el.dailyFoodId,
-                                })
-                              }>
-                              <MakersName>[{el.makers}]</MakersName>
-                              <MealName numberOfLines={1} ellipsizeMode="tail">
-                                {el.name}
-                              </MealName>
-                              <DeliveryAddress>
-                                {el.groupName}・{el.spotName}
-                              </DeliveryAddress>
-                              <CountText>{el.count}개</CountText>
-                              {el.orderStatus === 7 && (
-                                <CancelText>취소완료</CancelText>
-                              )}
-                            </Content>
-                            {(el.dailyFoodStatus === 1 ||
-                              el.dailyFoodStatus === 2) &&
-                              el.orderStatus === 5 && (
-                                <CancelBtnWrap status={el.orderStatus}>
-                                  <LabelButton
-                                    label={'취소'}
-                                    onPressEvent={() => cancelMealPress(el.id)}
-                                    disabled={el.orderStatus === 7}
-                                  />
-                                </CancelBtnWrap>
-                              )}
-                            {(el.dailyFoodStatus === 1 ||
-                              el.dailyFoodStatus === 2) &&
-                              el.orderStatus === 5 &&
-                              el.orderStatus !== 7 && (
-                                <MealChangeWrap>
-                                  <LabelButton
-                                    label={'메뉴변경'}
-                                    onPressEvent={() => changeMealPress(el.id)}
-                                  />
-                                </MealChangeWrap>
-                              )}
-                          </MealContentWrap>
-                        );
-                      })}
-                    </View>
-                  );
+                          </View>
+                          <Content
+                            onPress={() =>
+                              navigation.navigate(MealDetailPageName, {
+                                dailyFoodId: el.dailyFoodId,
+                              })
+                            }>
+                            <MakersName>{el.makers}</MakersName>
+                            <MealName numberOfLines={1} ellipsizeMode="tail">
+                              {el.name}
+                            </MealName>
+                            <DeliveryAddress>
+                              {el.groupName}・{el.spotName}
+                            </DeliveryAddress>
+                            <CountText>{el.count}개</CountText>
+                            {el.orderStatus === 7 && (
+                              <CancelText>취소완료</CancelText>
+                            )}
+                          </Content>
+                          {(el.dailyFoodStatus === 1 ||
+                            el.dailyFoodStatus === 2) &&
+                            el.orderStatus === 5 && (
+                              <CancelBtnWrap status={el.orderStatus}>
+                                <LabelButton
+                                  label={'취소'}
+                                  onPressEvent={() => cancelMealPress(el.id)}
+                                  disabled={el.orderStatus === 7}
+                                />
+                              </CancelBtnWrap>
+                            )}
+                          {(el.dailyFoodStatus === 1 ||
+                            el.dailyFoodStatus === 2) &&
+                            el.orderStatus === 5 &&
+                            el.orderStatus !== 7 && (
+                              <MealChangeWrap>
+                                <LabelButton
+                                  label={'메뉴변경'}
+                                  onPressEvent={() => changeMealPress(el.id)}
+                                />
+                              </MealChangeWrap>
+                            )}
+                        </MealContentWrap>
+                      </View>
+                    );
+                  });
                 })}
             </>
           )}
@@ -547,4 +569,16 @@ const CancelText = styled(Typography).attrs({test: 'Body06R'})`
 
 const NoMealButtonWrap = styled.View`
   padding: 10px 120px;
+`;
+const DeadlineGuide = styled.View`
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 107px;
+  height: 24px;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  left: 0px;
+  background: #1d1c2180;
+  z-index: 999;
 `;

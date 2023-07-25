@@ -120,7 +120,6 @@ async function json(url, method, options = {}) {
   //   if (!jwtUtils.isAuth(token?.accessToken)) {
   //     return await getReissue(headers, reqUrl, token, method, options);
   //   }
-  // console.log('fetching to:', reqUrl);
 
   // console.log('fetching to:', reqUrl);
 

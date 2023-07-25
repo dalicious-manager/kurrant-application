@@ -155,6 +155,12 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                       <Typography text="Title04SB" textColor={statusColor()}>
                         {formattedMealFoodStatus(order.orderStatus)}
                       </Typography>
+                      {order.orderStatus === 5 && (
+                        <Typography text="SmallLabel" textColor={'#BDBAC1'}>
+                          {' '}
+                          {order.lastOrderTime} 주문 마감
+                        </Typography>
+                      )}
                       {order.orderStatus !== 5 &&
                         !(
                           order.dailyFoodStatus === 1 ||

@@ -78,6 +78,8 @@ const Component = ({
   const [goodLocal, setGoodLocal] = useState(good ? good : 0);
   const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
 
+  // console.log(userName);
+
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
@@ -180,6 +182,8 @@ const Component = ({
         imageLocation={imageLocation}
         firstClickedImageIndex={firstClickedImageIndex}
       />
+
+      <Filler />
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
         {Platform.OS === 'ios' &&
@@ -424,4 +428,9 @@ const IconDiv = styled.Pressable`
 
   bottom: 5px;
   right: -20px;
+`;
+
+const Filler = styled.View`
+  width: 100%;
+  height: 8px;
 `;

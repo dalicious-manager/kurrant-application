@@ -10,19 +10,18 @@ const useMealDetailReviewMutation = () => {
       //   console.log('데이터 ');
       //   console.log(data);
 
-      const response = await await fetchJson(
-        '/dailyfoods/review/like',
-        'POST',
-        {
-          body: JSON.stringify(data),
-        },
-      );
+      const response = await fetchJson('/dailyfoods/review/like', 'POST', {
+        body: JSON.stringify(data),
+      });
+
+      // console.log('response 보기 ');
+      // console.log(response);
 
       return response;
     },
     {
       onSuccess: data => {
-        console.log('상품 추천 수정 success');
+        // console.log('상품 추천 수정 success');
 
         queryClient.invalidateQueries([
           'review',

@@ -208,7 +208,7 @@ const Pages = ({route}) => {
                 <Typography
                   text="Title02SB"
                   textColor={themeApp.colors.grey[2]}>
-                  {myInfoPerson?.nickName ?? myInfoPerson?.name}님
+                  {myInfoPerson?.nickname ?? myInfoPerson?.name}님
                 </Typography>
                 <NicknameButton
                   onPress={() => navigation.navigate(NicknameModifyPageName)}>
