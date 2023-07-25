@@ -149,7 +149,12 @@ const Pages = ({route}) => {
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
-    if (parseInt(supportPrice, 10) || supportPrice === '0') {
+    console.log(supportPrice);
+    if (
+      parseInt(supportPrice, 10) ||
+      supportPrice === '0' ||
+      supportPrice === 0
+    ) {
       // 숫자이면
       if (parseInt(supportPrice, 10) >= 0) {
         setShowSupportPrice(true);
@@ -161,6 +166,7 @@ const Pages = ({route}) => {
       // 널 이냐 한국어이냐
       if (typeof supportPrice === 'string') {
         // 한국어 일때
+        console.log(supportPrice);
         setWhenSupportPriceKor(true);
         setShowSupportPrice(true);
       } else {
@@ -214,6 +220,7 @@ const Pages = ({route}) => {
     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
     userRole,
   );
+
   useEffect(() => {
     if (dailyfoodDataList?.data?.dailyFoodsByDate) {
       setMorning([]);
@@ -222,7 +229,7 @@ const Pages = ({route}) => {
       const getDailyfoodData = dailyfoodDataList?.data?.dailyFoodsByDate.filter(
         v => v.serviceDate === formattedWeekDate(date),
       );
-      console.log(getDailyfoodData);
+      //console.log(getDailyfoodData);
       setDailyfoodData(
         getDailyfoodData?.length > 0 ? getDailyfoodData[0] : null,
       );
@@ -478,9 +485,10 @@ const Pages = ({route}) => {
       const supportPrices = nowDining[0]?.supportPriceByDays?.filter(
         v => v.day === selectDay,
       );
+      console.log(dailyfoodData?.supportPrice, supportPrices[0].supportPrice);
       if (supportPrices?.length > 0) {
         setSupportPrice(
-          dailyfoodData?.supportPrice
+          dailyfoodData?.supportPrice || dailyfoodData?.supportPrice === 0
             ? dailyfoodData?.supportPrice
             : supportPrices[0].supportPrice,
         );

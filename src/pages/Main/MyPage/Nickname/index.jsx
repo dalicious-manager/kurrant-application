@@ -10,6 +10,7 @@ import {
   Pressable,
 } from 'react-native';
 import styled from 'styled-components';
+import BackButton from '~components/BackButton';
 import Button from '~components/Button';
 import KeyboardButton from '~components/KeyboardButton';
 import RefTextInput from '~components/RefTextInput';
@@ -18,16 +19,17 @@ import RandomIcon from '../../../../assets/icons/Nickname/random.svg';
 import useKeyboardEvent from '../../../../hook/useKeyboardEvent';
 import {useSettingNickname} from '../../../../hook/useNickname';
 import {useGetUserInfo} from '../../../../hook/useUserInfo';
+import {SCREEN_NAME} from '../../../../screens/Main/Bnb';
 import {fetchJson} from '../../../../utils/fetch';
 export const PAGE_NAME = 'MYPAGE_NICKNAME';
 
 const {StatusBarManager} = NativeModules;
-const Pages = () => {
+const Pages = ({route}) => {
+  const from = route?.params?.from;
   const navigation = useNavigation();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
-  const {
-    data: {data: isUserInfo},
-  } = useGetUserInfo();
+  const {data: isUserInfo} = useGetUserInfo();
+
   const {mutateAsync: settingNickname} = useSettingNickname();
   const form = useForm({
     mode: 'all',
@@ -47,7 +49,18 @@ const Pages = () => {
 
   const onSubmit = async () => {
     await settingNickname({name: nickname});
-    navigation.goBack();
+    if (from) {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: SCREEN_NAME,
+          },
+        ],
+      });
+    } else {
+      navigation.goBack();
+    }
   };
 
   const getRandomNickname = async () => {
@@ -64,12 +77,15 @@ const Pages = () => {
   }, []);
 
   useEffect(() => {
-    setValue('nickname', isUserInfo.nickname);
-  }, [isUserInfo.nickname, setValue]);
+    setValue('nickname', isUserInfo?.data?.nickname);
+  }, [isUserInfo?.data?.nickname, setValue]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: isUserInfo.nickname ? '닉네임 수정' : '닉네임 설정',
+      title: from ? '닉네임 설정' : '닉네임 수정',
+      headerLeft: () => {
+        return !from && <BackButton margin={[10, 0]} />;
+      },
     });
   }, []);
 
