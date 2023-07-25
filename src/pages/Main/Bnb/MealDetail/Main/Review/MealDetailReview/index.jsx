@@ -35,6 +35,8 @@ import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
 import {detailReviewDataAtom} from './store';
 import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
+import useDetectValueWhenDailyFoodIdChanged from '../../../../../../../hook/useDetectValueWhenChanged';
+import {reviewDetailDailyFoodIdAtom} from './store';
 
 const Component = ({
   imageLocation,
@@ -49,7 +51,7 @@ const Component = ({
   const queryClient = useQueryClient();
   const navigation = useNavigation();
 
-  console.log(dailyFoodId);
+  // console.log(dailyFoodId);
 
   // 샘플 대에터
   // const dailyFoodId = 40827;
@@ -89,6 +91,39 @@ const Component = ({
     getNextPageIsPossible,
     getBoardRefetch,
   } = useMainReviewInfiniteQuery(url, dailyFoodId);
+
+  const [dailyFoodIdFromAtom, setDailyFoodIdFromAtom] = useAtom(
+    reviewDetailDailyFoodIdAtom,
+  );
+
+  const [initialLoading, setInitialLoading] = useState(false);
+
+  useEffect(() => {
+    // 첫 펫칭
+
+    // setDailyFoodIdFromAtom()
+    // 전과 비교해야됨
+    // console.log(dailyFoodIdFromAtom);
+    if (dailyFoodIdFromAtom === 0) {
+      setDailyFoodIdFromAtom(dailyFoodId);
+      return;
+    }
+
+    if (dailyFoodIdFromAtom !== dailyFoodId) {
+      // console.log(1);
+      setInitialLoading(true);
+    } else {
+      setInitialLoading(false);
+      // console.log(2);
+    }
+
+    setDailyFoodIdFromAtom(dailyFoodId);
+  }, [dailyFoodId, isFetching]);
+
+  // useEffect(() => {
+  //   console.log('initialLoading 확인');
+  //   console.log(initialLoading);
+  // }, [initialLoading]);
 
   const {starRatingCounts} = useGetMealDetailReview(dailyFoodId);
 
@@ -228,30 +263,42 @@ const Component = ({
     }
   }, [isFetchingBottom, isFetchingTop]);
 
+  // const {value, isDailyFoodIdChanged, setValue} =
+  //   useDetectValueWhenDailyFoodIdChanged(dailyFoodId);
+
+  // useEffect(() => {
+  //   // console.log(dailyFoodId);
+  //   setValue(dailyFoodId);
+  // }, [dailyFoodId]);
+
+  // useEffect(() => {
+  //   console.log('isDailyFoodIdChanged 확인');
+  //   console.log(isDailyFoodIdChanged);
+  // }, [isDailyFoodIdChanged]);
+
   useEffect(() => {
     return () => {
       setAllReviewList([]);
     };
   }, [setAllReviewList]);
 
-
   return (
     <Container>
       <Wrap1>
         <TitleWrap>
-          <ReviewCount>리뷰({totalReview})</ReviewCount>
+          <ReviewCount>리뷰({initialLoading ? '' : totalReview})</ReviewCount>
         </TitleWrap>
 
         <StarRatingWrap>
           <RateStars
-            ratingInput={starAverage}
+            ratingInput={initialLoading ? '' : starAverage}
             width={'132px'}
             margin={'3px'}
             disableButton={true}
             callback={() => {}}
           />
 
-          <RatingPointText>{starAverage}</RatingPointText>
+          <RatingPointText>{initialLoading ? '' : starAverage}</RatingPointText>
 
           <RatingOutOfText>/</RatingOutOfText>
           <RatingOutOfText>5</RatingOutOfText>
@@ -399,7 +446,8 @@ const Component = ({
         )}
 
         {/* 처음에 들어왔을때 fetching중에는 빈화면이 보이게 */}
-        {allReviewList && !getBoardIsLoading && (
+        {allReviewList && !initialLoading && (
+          // && !getBoardIsLoading
           // !isFetching
           <FlatList
             data={allReviewList}
