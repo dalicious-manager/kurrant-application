@@ -103,9 +103,12 @@ const Pages = ({route}) => {
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
+
   const headerTitle = foodDetailData?.name;
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
+
+  // console.log(dailyFoodId);
 
   const [count, setCount] = useState(1);
 
