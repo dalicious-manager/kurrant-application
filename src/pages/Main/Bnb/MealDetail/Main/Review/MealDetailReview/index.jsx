@@ -1,7 +1,13 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {ActivityIndicator, Dimensions, FlatList, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Platform,
+  View,
+} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components';
@@ -43,7 +49,7 @@ const Component = ({
   const queryClient = useQueryClient();
   const navigation = useNavigation();
 
-  // console.log(dailyFoodId);
+  console.log(dailyFoodId);
 
   // 샘플 대에터
   // const dailyFoodId = 40827;
@@ -227,6 +233,7 @@ const Component = ({
       setAllReviewList([]);
     };
   }, [setAllReviewList]);
+
 
   return (
     <Container>
@@ -568,6 +575,7 @@ const WrapWrapView = styled.View`
   top: ${({isOn}) => (isOn ? '215px' : '175px')};
   left: 30px;
   z-index: 1;
+  /* border: 1px solid black; */
 `;
 
 const ShadowWrap = styled(Shadow)`
@@ -575,7 +583,12 @@ const ShadowWrap = styled(Shadow)`
 `;
 
 const FilterSelecterWrap = styled.View`
-  width: 84px;
+  width: ${() => {
+    if (Platform.OS === 'android') {
+      return `86px`;
+    }
+    return `84px`;
+  }};
   background-color: #ffffff;
   flex-direction: column;
   align-items: center;
