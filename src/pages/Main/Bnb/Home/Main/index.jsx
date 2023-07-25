@@ -75,6 +75,7 @@ import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGu
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
+import {PAGE_NAME as nicknameSettingPageName} from '../../../MyPage/Nickname/index';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
 import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
