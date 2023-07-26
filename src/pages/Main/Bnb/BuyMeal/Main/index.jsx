@@ -43,6 +43,7 @@ import {
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
+import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 // import TossPayment from 'react-native-toss-payments';
 
 import Modal from '../components/Modal';
@@ -76,6 +77,7 @@ const Pages = ({route}) => {
   const themeApp = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisibleMembership, setModalVisibleMembership] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [time, setTime] = useState();
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
@@ -149,7 +151,6 @@ const Pages = ({route}) => {
   const [showSupportPrice, setShowSupportPrice] = useState(false);
 
   useEffect(() => {
-    console.log(supportPrice);
     if (
       parseInt(supportPrice, 10) ||
       supportPrice === '0' ||
@@ -166,7 +167,6 @@ const Pages = ({route}) => {
       // 널 이냐 한국어이냐
       if (typeof supportPrice === 'string') {
         // 한국어 일때
-        console.log(supportPrice);
         setWhenSupportPriceKor(true);
         setShowSupportPrice(true);
       } else {
@@ -892,7 +892,11 @@ const Pages = ({route}) => {
         )}
         {!isUserInfo?.data?.isMembership && (
           <View>
-            <Modal hideModal={hideModal} setHideModal={setHideModal} />
+            <Modal
+              hideModal={hideModal}
+              setHideModal={setHideModal}
+              setModalVisible2={setModalVisibleMembership}
+            />
           </View>
         )}
         {/* {!isUserInfo?.data || dailyListFetching ? (
@@ -961,6 +965,24 @@ const Pages = ({route}) => {
           }}
         />
       </ButtonWrap>
+      <BottomModal
+        modalVisible={modalVisibleMembership}
+        setModalVisible={setModalVisibleMembership}
+        title={`기업멤버십에 가입되어 있어요.`}
+        description={
+          '이미 멤버십 혜택이 적용 중이에요.\n개인멤버십 가입을 추가로 진행 할까요?'
+        }
+        buttonTitle1={'취소'}
+        buttonType1="grey7"
+        buttonTitle2={'확인'}
+        buttonType2="grey2"
+        onPressEvent1={() => setModalVisibleMembership(false)}
+        onPressEvent2={() => {
+          navigation.navigate(MembershipIntro, {
+            isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+          });
+        }}
+      />
       <BottomModal
         modalVisible={modalVisible4}
         setModalVisible={setModalVisible4}

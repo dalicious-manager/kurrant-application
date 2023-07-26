@@ -1,10 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import analytics from '@react-native-firebase/analytics';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {
   useState,
@@ -16,28 +11,16 @@ import React, {
 import {
   View,
   StatusBar,
-  Dimensions,
   Alert,
-  Text,
   Pressable,
   Platform,
   TouchableWithoutFeedback,
-  ScrollView,
   FlatList,
 } from 'react-native';
-import {ActivityIndicator} from 'react-native';
-import FastImage from 'react-native-fast-image';
-import LinearGradient from 'react-native-linear-gradient';
-import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
 import MealDetailReview from './Review/MealDetailReview';
 import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
-// import {
-//   fetchNextPageReviewDetailAtom,
-//   hasNextPageReviewDetailAtom,
-// } from './Review/MealDetailReview/store';
-import {LoadingIcon} from '../../../../../assets';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
@@ -46,15 +29,12 @@ import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from '../../../../../biz/useReview/useMealDetailReview/store';
-import {useMainInfiniteScrollQuery} from '../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/ButtonExtendable';
-import GifImage from '../../../../../components/GifImage';
-import {YellowStar} from '../../../../../components/Icon';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
@@ -62,9 +42,9 @@ import Typography from '../../../../../components/Typography';
 import {useGetDailyfoodDetailNow} from '../../../../../hook/useDailyfood';
 import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
-import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 import withCommas from '../../../../../utils/withCommas';
+import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
@@ -73,26 +53,22 @@ import Skeleton from '../Skeleton';
 import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
-const {width} = Dimensions.get('screen');
 const Pages = ({route}) => {
-  const queryClient = useQueryClient();
   const bodyRef = useRef();
   const navigation = useNavigation();
   const {balloonEvent, BalloonWrap} = Balloon();
   const [modalVisible, setModalVisible] = useState(false);
   const [focus, setFocus] = useState(false);
-
+  const [modalVisible2, setModalVisible2] = useState(false);
   const [scroll, setScroll] = useState(0);
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
 
-  const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
-  const {isFoodDetails, isFoodDetailLoading, foodDetail} = useFoodDetail();
+  const {isfoodDetailDiscount} = useFoodDetail(); // 할인정보
+  const {foodDetail} = useFoodDetail();
   const {
     data: isFoodDetail,
-    isLoading: detailLoading,
     isFetching: detailFetching,
-    isSuccess: detailSuccess,
     refetch: detailRefetch,
   } = useGetDailyfoodDetailNow(route.params.dailyFoodId, userRole); // 상세정보
 
@@ -104,7 +80,7 @@ const Pages = ({route}) => {
     readableAtom: {userRole},
   } = useAuth();
   const {loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
-  const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
+  const {mutateAsync: addMeal} = useAddShoppingBasket();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
@@ -113,13 +89,10 @@ const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
 
-  // console.log(dailyFoodId);
-
   const [count, setCount] = useState(1);
 
   const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
   const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
-  const isFocused = useIsFocused();
 
   const closeModal = () => {
     setModalVisible(false);
@@ -147,12 +120,8 @@ const Pages = ({route}) => {
   const quantity = quantityArr.reduce((acc, val) => [...acc, ...val], []);
   const modifyQty = quantity.reduce((acc, cur) => [...acc, ...cur], []);
   const req = {updateCartList: modifyQty};
-  // console.log(dailyFoodId,'id')
-  // foodId 넘겨줘야함
   useEffect(() => {
     async function loadFoodDetail() {
-      // queryClient.invalidateQueries(['review']);
-      // setAllReviewList();
       const foodData = await foodDetail(dailyFoodId);
       if (foodData) {
         const meal = await loadMeal();
@@ -160,18 +129,8 @@ const Pages = ({route}) => {
           await updateMeal(req);
         }
       }
-      const data = await analytics().logSelectContent({
-        content_type: foodData.makersName,
-        item_id: foodData.name,
-      });
-      const data2 = await analytics().logEvent('food_detail', {
-        id: dailyFoodId,
-        name: foodData.name,
-        makers: foodData.makersName,
-      });
     }
     loadFoodDetail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useLayoutEffect(() => {
@@ -314,7 +273,7 @@ const Pages = ({route}) => {
     setFocus(false);
   };
 
-  const changeText = (number, id) => {
+  const changeText = number => {
     setCount(number);
   };
 
@@ -325,24 +284,11 @@ const Pages = ({route}) => {
       ((100 - foodDetailData?.makersDiscountedRate) * 0.01) *
       ((100 - foodDetailData?.periodDiscountedRate) * 0.01) *
       100;
-  // console.log(Math.round(realToTalDiscountRate * 100) / 100, 'rate');
 
   const discountPrice =
     foodDetailData?.membershipDiscountedPrice +
     foodDetailData?.makersDiscountedPrice +
     foodDetailData?.periodDiscountedPrice;
-
-  const snapOffsets = [0, 0];
-
-  // useEffect(() => {
-  //   async function detail() {
-  //     await foodDetailDiscount(dailyFoodId);
-  //     setReviewData();
-  //     refetch();
-  //   }
-
-  //   detail();
-  // }, [dailyFoodId, refetch]);
 
   useFocusEffect(
     useCallback(() => {
@@ -350,13 +296,8 @@ const Pages = ({route}) => {
     }, [dailyFoodId, detailRefetch, foodDetailData.dailyFoodId]),
   );
   useEffect(() => {
-    // console.log(isFoodDetail?.data);
     if (isFoodDetail?.data) setFoodDetailData(isFoodDetail?.data);
   }, [isFoodDetail?.data, setFoodDetailData]);
-
-  // if (detailFetching) {
-  //   return <Skeleton />;
-  // }
 
   return (
     <>
@@ -503,7 +444,11 @@ const Pages = ({route}) => {
                       </View>
 
                       {!foodDetailData?.isMembership && (
-                        <MembershipDiscountBox isFoodDetail={foodDetailData} />
+                        <MembershipDiscountBox
+                          isFoodDetail={foodDetailData}
+                          setModalVisible2={setModalVisible2}
+                          modalVisible2={modalVisible2}
+                        />
                       )}
                     </Content>
                   </TouchableWithoutFeedback>
@@ -623,6 +568,7 @@ const Pages = ({route}) => {
                     setTotalReview={setTotalReview}
                     initialLoading={initialLoading}
                     setInitialLoading={setInitialLoading}
+
                   />
                 </>
               ) : (
@@ -682,6 +628,24 @@ const Pages = ({route}) => {
           onPressEvent1={closeModal}
           onPressEvent2={() => addToCart()}
         />
+        <BottomModal
+          modalVisible={modalVisible2}
+          setModalVisible={setModalVisible2}
+          title={`기업멤버십에 가입되어 있어요.`}
+          description={
+            '이미 멤버십 혜택이 적용 중이에요.\n개인멤버십 가입을 추가로 진행 할까요?'
+          }
+          buttonTitle1={'취소'}
+          buttonType1="grey7"
+          buttonTitle2={'확인'}
+          buttonType2="grey2"
+          onPressEvent1={() => setModalVisible2(false)}
+          onPressEvent2={() => {
+            navigation.navigate(MembershipIntroPageName, {
+              isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+            });
+          }}
+        />
       </Wrap>
     </>
   );
@@ -694,34 +658,15 @@ const Wrap = styled.View`
   flex: 1;
 `;
 
-const ScrollViewWrap = styled.ScrollView`
-  background-color: ${props => props.theme.colors.grey[0]};
-`;
-
-const FilterImage = styled(LinearGradient)`
-  max-width: ${width}px;
-  height: 380px;
-`;
 const Content = styled.View`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   border-bottom-width: 6px;
   padding: 24px 24px 16px 24px;
 `;
 
-const MealImage = styled.Image`
-  width: 100%;
-  height: 380px;
-`;
-
 const Line = styled.View`
   flex-direction: row-reverse;
   justify-content: space-between;
-`;
-
-const ReviewWrap = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 10px;
 `;
 
 const InformationWrap = styled.Pressable`
@@ -742,16 +687,6 @@ const PriceWrap = styled.View`
   align-items: center;
   text-align: center;
 `;
-const LoadingPage = styled.View`
-  background-color: white;
-  opacity: 0.5;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-  width: 100%;
-  flex: 1;
-  padding-bottom: 150px;
-`;
 const InfoWrap = styled.View`
   flex-direction: row;
   margin-bottom: 12px;
@@ -767,7 +702,6 @@ const InfoTextView = styled.View`
 const InfoTextWrap = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  /* width:100%; */
   align-items: center;
 `;
 
@@ -776,16 +710,6 @@ const ButtonWrap = styled.View`
   bottom: 35px;
   padding: 0px 16px;
   width: 100%;
-`;
-
-const countText = styled.TextInput``;
-const KeypadInput = styled.View`
-  height: 50px;
-  flex-direction: row;
-  background-color: ${props => props.theme.colors.grey[0]};
-  justify-content: space-between;
-  align-items: center;
-  opacity: ${props => (props.focus ? 1 : 0)};
 `;
 
 const ModalWrap = styled.View`
@@ -799,16 +723,6 @@ const MakersName = styled(Typography).attrs({text: 'Body06SB'})`
 const MealTitle = styled(Typography).attrs({text: 'LargeTitle'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-bottom: 8px;
-`;
-
-const ReviewPoint = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 4px;
-`;
-
-const ReviewCount = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 4px;
 `;
 
 const InformationText = styled(Typography).attrs({text: 'ButtonSB'})`
@@ -852,24 +766,11 @@ const Info = styled(Typography).attrs({text: 'CaptionR'})`
   width: 50%;
 `;
 
-const MessageView = styled.View`
-  flex-direction: row;
-  align-items: center;
-  width: 40%;
-  text-align: center;
-  position: relative;
-`;
-
 const InfoText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => props.theme.colors.grey[4]};
   margin-bottom: 4px;
   width: 50%;
   text-align: right;
-`;
-
-const Test = styled(Typography).attrs({text: 'CaptionR'})`
-  color: ${props => props.theme.colors.grey[4]};
-  width: 50%;
 `;
 
 const DeadlineGuide = styled.View`

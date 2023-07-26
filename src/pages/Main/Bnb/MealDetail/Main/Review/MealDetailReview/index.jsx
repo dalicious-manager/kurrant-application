@@ -1,18 +1,11 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useCallback, useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  Platform,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, Dimensions, FlatList, Platform} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
-
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
@@ -20,11 +13,9 @@ import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/C
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
-import {
-  fetchNextPageReviewDetailAtom,
-  hasNextPageReviewDetailAtom,
-} from '../../../../../../../biz/useReview/useMealDetailReview/store';
-
+import {reviewDetailDailyFoodIdAtom} from './store';
+import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
+import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import {
   ArrowUpAndDown,
   Picture,
@@ -49,16 +40,11 @@ const Component = ({
   initialLoading,
   setInitialLoading,
 }) => {
-  const [allReviewList, setAllReviewList] = useState();
 
+  const [allReviewList, setAllReviewList] = useState();
   const theme = useTheme();
   const queryClient = useQueryClient();
   const navigation = useNavigation();
-
-  // console.log(dailyFoodId);
-
-  // 샘플 대에터
-  // const dailyFoodId = 40827;
 
   const [keyword, setKeyword] = useState([]);
   // const [starAverage, setStarAverage] = useState(1);
