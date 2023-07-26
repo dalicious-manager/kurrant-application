@@ -128,6 +128,7 @@ const Card = ({
         </LabelWrapper>
       </ContentsText>
       <MealImage
+        lastOrderTime={m.lastOrderTime}
         status={m.status}
         image={m.image}
         dailyFoodId={m.id}

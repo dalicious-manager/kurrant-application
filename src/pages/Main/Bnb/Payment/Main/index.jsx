@@ -544,7 +544,7 @@ const Pages = ({route}) => {
                                           <ContentHeader>
                                             <DiningName>
                                               {formattedMonthDay(m.serviceDate)}{' '}
-                                              {m.diningType}
+                                              {m.diningType} {meal.deliveryTime}
                                             </DiningName>
                                           </ContentHeader>
                                           <ContentsWrap>

@@ -1339,7 +1339,7 @@ const Screen = () => {
               fontSize: 14,
               lineHeight: 22,
             },
-            headerLeft: () => <BackButton margin={[10, 0]} />,
+            // headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
       </MainRoot.Group>
