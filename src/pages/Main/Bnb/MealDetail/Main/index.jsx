@@ -44,6 +44,7 @@ import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 import withCommas from '../../../../../utils/withCommas';
+import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
@@ -57,7 +58,7 @@ const Pages = ({route}) => {
   const {balloonEvent, BalloonWrap} = Balloon();
   const [modalVisible, setModalVisible] = useState(false);
   const [focus, setFocus] = useState(false);
-
+  const [modalVisible2, setModalVisible2] = useState(false);
   const [scroll, setScroll] = useState(0);
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
@@ -425,7 +426,11 @@ const Pages = ({route}) => {
                       </View>
 
                       {!foodDetailData?.isMembership && (
-                        <MembershipDiscountBox isFoodDetail={foodDetailData} />
+                        <MembershipDiscountBox
+                          isFoodDetail={foodDetailData}
+                          setModalVisible2={setModalVisible2}
+                          modalVisible2={modalVisible2}
+                        />
                       )}
                     </Content>
                   </TouchableWithoutFeedback>
@@ -596,6 +601,24 @@ const Pages = ({route}) => {
           buttonType2="yellow"
           onPressEvent1={closeModal}
           onPressEvent2={() => addToCart()}
+        />
+        <BottomModal
+          modalVisible={modalVisible2}
+          setModalVisible={setModalVisible2}
+          title={`기업멤버십에 가입되어 있어요.`}
+          description={
+            '이미 멤버십 혜택이 적용 중이에요.\n개인멤버십 가입을 추가로 진행 할까요?'
+          }
+          buttonTitle1={'취소'}
+          buttonType1="grey7"
+          buttonTitle2={'확인'}
+          buttonType2="grey2"
+          onPressEvent1={() => setModalVisible2(false)}
+          onPressEvent2={() => {
+            navigation.navigate(MembershipIntroPageName, {
+              isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+            });
+          }}
         />
       </Wrap>
     </>
