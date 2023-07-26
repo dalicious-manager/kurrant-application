@@ -812,7 +812,6 @@ const Pages = () => {
                 <DietRepoText>식단 리포트</DietRepoText>
               </Wrap1>
 
-              {/* <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText> */}
               <CalText>
                 오늘{' '}
                 {orderMealList?.data?.find(
