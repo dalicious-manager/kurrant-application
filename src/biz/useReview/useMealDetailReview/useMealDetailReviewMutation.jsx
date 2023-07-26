@@ -23,10 +23,7 @@ const useMealDetailReviewMutation = () => {
       onSuccess: data => {
         // console.log('상품 추천 수정 success');
 
-        queryClient.invalidateQueries([
-          'review',
-          'GetMealDetailReviewInfinite',
-        ]);
+        queryClient.invalidateQueries(['review', 'detail', 'getBoard']);
       },
       onError: err => {
         console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
