@@ -29,12 +29,14 @@ import {
   fetchNextPageReviewDetailAtom,
   hasNextPageReviewDetailAtom,
 } from '../../../../../biz/useReview/useMealDetailReview/store';
+import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/ButtonExtendable';
+import {YellowStar} from '../../../../../components/Icon';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
@@ -50,7 +52,6 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
-import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
@@ -568,7 +569,6 @@ const Pages = ({route}) => {
                     setTotalReview={setTotalReview}
                     initialLoading={initialLoading}
                     setInitialLoading={setInitialLoading}
-
                   />
                 </>
               ) : (
@@ -704,7 +704,20 @@ const InfoTextWrap = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
+const ReviewWrap = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+const ReviewPoint = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 4px;
+`;
 
+const ReviewCount = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 4px;
+`;
 const ButtonWrap = styled.View`
   position: absolute;
   bottom: 35px;

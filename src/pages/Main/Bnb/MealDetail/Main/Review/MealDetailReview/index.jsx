@@ -23,11 +23,6 @@ import {
 } from '../../../../../../../components/Icon';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
-import {detailReviewDataAtom} from './store';
-import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
-import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
-import useDetectValueWhenDailyFoodIdChanged from '../../../../../../../hook/useDetectValueWhenChanged';
-import {reviewDetailDailyFoodIdAtom} from './store';
 
 const Component = ({
   imageLocation,
@@ -40,7 +35,6 @@ const Component = ({
   initialLoading,
   setInitialLoading,
 }) => {
-
   const [allReviewList, setAllReviewList] = useState();
   const theme = useTheme();
   const queryClient = useQueryClient();
