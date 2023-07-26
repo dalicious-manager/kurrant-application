@@ -280,7 +280,7 @@ const Pages = () => {
                 routeName={GroupApplicationCheckPageName}
               />
             )}
-            <ListBox title="식단 리포트" routeName={DietRepoMainPageName} />
+            {/* <ListBox title="식단 리포트" routeName={DietRepoMainPageName} /> */}
           </ListContainer>
           <ListContainer title="알림">
             <ListBox title="공지사항" routeName={NoticeScreenName} />
