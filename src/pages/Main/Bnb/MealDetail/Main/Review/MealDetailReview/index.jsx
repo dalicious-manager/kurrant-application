@@ -20,10 +20,6 @@ import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/C
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
-import {
-  fetchNextPageReviewDetailAtom,
-  hasNextPageReviewDetailAtom,
-} from '../../../../../../../biz/useReview/useMealDetailReview/store';
 
 import {
   ArrowUpAndDown,
@@ -38,7 +34,25 @@ import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDe
 import useDetectValueWhenDailyFoodIdChanged from '../../../../../../../hook/useDetectValueWhenChanged';
 import {reviewDetailDailyFoodIdAtom} from './store';
 
-const Component = ({imageLocation, foodName, dailyFoodId}) => {
+const Component = ({
+  imageLocation,
+  foodName,
+  dailyFoodId,
+  starAverage,
+  setStarAverage,
+  totalReview,
+  setTotalReview,
+  initialLoading,
+  setInitialLoading,
+
+  url,
+  setUrl,
+  getBoard,
+  isFetching,
+  getNextPage,
+  getNextPageIsPossible,
+  getBoardRefetch,
+}) => {
   const [allReviewList, setAllReviewList] = useState();
 
   const theme = useTheme();
@@ -50,15 +64,13 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   // 샘플 대에터
   // const dailyFoodId = 40827;
 
-  const [starAverage, setStarAverage] = useState(1);
-  const [stars, setStars] = useState({});
   const [keyword, setKeyword] = useState([]);
-  const [totalReview, setTotalReview] = useState(0);
-  const [foodId, setFoodId] = useState(undefined);
-  const [reviewWrite, setReviewWrite] = useState(0);
+  // const [starAverage, setStarAverage] = useState(1);
+  const [stars, setStars] = useState({});
   const [isLast, setIsLast] = useState(false);
+  const [foodId, setFoodId] = useState(0);
 
-  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+  const [reviewWrite, setReviewWrite] = useState(0);
 
   // 베스트순,최신순,리뷰순 (sort)
   // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
@@ -77,20 +89,9 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
-  const {
-    getBoard,
-    getBoardIsFetching: isFetching,
-    getBoardIsLoading,
-    getNextPage,
-    getNextPageIsPossible,
-    getBoardRefetch,
-  } = useMainReviewInfiniteQuery(url, dailyFoodId);
-
   const [dailyFoodIdFromAtom, setDailyFoodIdFromAtom] = useAtom(
     reviewDetailDailyFoodIdAtom,
   );
-
-  const [initialLoading, setInitialLoading] = useState(false);
 
   useEffect(() => {
     if (dailyFoodIdFromAtom === 0) {
