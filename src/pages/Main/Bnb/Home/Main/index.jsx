@@ -802,7 +802,8 @@ const Pages = () => {
             </CountWrap>
           </MarketWrap> */}
 
-            <DietRepoPressable
+            {/* 식단 리포트 버튼 */}
+            {/* <DietRepoPressable
               onPress={() => {
                 navigation.navigate(DietRepoMainPageName);
               }}>
@@ -811,7 +812,6 @@ const Pages = () => {
                 <DietRepoText>식단 리포트</DietRepoText>
               </Wrap1>
 
-              {/* <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText> */}
               <CalText>
                 오늘{' '}
                 {orderMealList?.data?.find(
@@ -823,7 +823,7 @@ const Pages = () => {
                   : 0}{' '}
                 kcal
               </CalText>
-            </DietRepoPressable>
+            </DietRepoPressable> */}
           </MainWrap>
         </Wrap>
       </ScrollViewWrap>

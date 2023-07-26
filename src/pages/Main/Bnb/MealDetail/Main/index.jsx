@@ -538,7 +538,8 @@ const Pages = ({route}) => {
                       </InfoTextView>
                     </InfoWrap>
                   </Content>
-                  <Content>
+                  {/* 식단 레포트 영양 정보 */}
+                  {/* <Content>
                     <InfoWrap>
                       <InfoTitleView>
                         <InfoTitle>영양 정보</InfoTitle>
@@ -589,7 +590,7 @@ const Pages = ({route}) => {
                         </InfoTextWrap>
                       </InfoTextView>
                     </InfoWrap>
-                  </Content>
+                  </Content> */}
                   {/* 리뷰자리 */}
                   <MealDetailReview
                     foodName={foodDetailData?.name}
