@@ -70,6 +70,7 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
+import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
@@ -94,6 +95,10 @@ const Pages = ({route}) => {
     isSuccess: detailSuccess,
     refetch: detailRefetch,
   } = useGetDailyfoodDetailNow(route.params.dailyFoodId, userRole); // 상세정보
+
+  const [starAverage, setStarAverage] = useState(1);
+  const [totalReview, setTotalReview] = useState(0);
+  const [initialLoading, setInitialLoading] = useState(false);
 
   const {
     readableAtom: {userRole},
@@ -397,24 +402,6 @@ const Pages = ({route}) => {
                           {detailFetching ? '' : foodDetailData?.name || ''}
                         </MealTitle>
                         <Line>
-                          {/* {reviewData?.pages[0]?.items.totalReview >= 1 && (
-                            <ReviewWrap>
-                              <YellowStar width="20px" height="20px" />
-                              <ReviewPoint>
-                                {reviewData?.pages[0]?.items.starAverage &&
-                                reviewData?.pages[0]?.items.starAverage?.toString()
-                                  .length === 1
-                                  ? reviewData?.pages[0]?.items.starAverage.toFixed(
-                                      1,
-                                    )
-                                  : reviewData?.pages[0]?.items.starAverage}
-                              </ReviewPoint>
-                              <ReviewCount>
-                                ({reviewData?.pages[0]?.items.totalReview})
-                              </ReviewCount>
-                            </ReviewWrap>
-                          )} */}
-
                           <InformationWrap
                             onPress={() => {
                               navigation.navigate(MealInformationPageName, {
@@ -424,6 +411,19 @@ const Pages = ({route}) => {
                             }}>
                             <InformationText>알레르기/원산지</InformationText>
                           </InformationWrap>
+
+                          {!initialLoading && totalReview >= 1 && (
+                            <ReviewWrap>
+                              <YellowStar width="20px" height="20px" />
+                              <ReviewPoint>
+                                {starAverage &&
+                                starAverage?.toString().length === 1
+                                  ? starAverage.toFixed(1)
+                                  : starAverage}
+                              </ReviewPoint>
+                              <ReviewCount>({totalReview})</ReviewCount>
+                            </ReviewWrap>
+                          )}
                         </Line>
                         <MealDsc>
                           {detailFetching ? '' : foodDetailData?.description}
@@ -617,8 +617,12 @@ const Pages = ({route}) => {
                     foodName={foodDetailData?.name}
                     imageLocation={foodDetailData?.imageList}
                     dailyFoodId={dailyFoodId}
-                    // allReviewList={allReviewList}
-                    // setAllReviewList={setAllReviewList}
+                    starAverage={starAverage}
+                    setStarAverage={setStarAverage}
+                    totalReview={totalReview}
+                    setTotalReview={setTotalReview}
+                    initialLoading={initialLoading}
+                    setInitialLoading={setInitialLoading}
                   />
                 </>
               ) : (
@@ -710,7 +714,7 @@ const MealImage = styled.Image`
 `;
 
 const Line = styled.View`
-  flex-direction: row;
+  flex-direction: row-reverse;
   justify-content: space-between;
 `;
 
