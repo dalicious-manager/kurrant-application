@@ -48,7 +48,6 @@ const Component = ({
 
   let imageLocationToSix = [];
 
-  // imageLocation이 널일 경우 null 을 빈 배열로 고쳐주기
   let importImageLocation = [];
   if (!imageLocation) {
   } else {
@@ -58,8 +57,6 @@ const Component = ({
   for (let i = 0; i < 6; i++) {
     imageLocationToSix.push(importImageLocation[i]);
   }
-
-  // 운영자 메이커스 댓글 늦게 작성한 댓글이 위에 있게 sorting해야됨
 
   const [numLines, setNumLines] = useState(1);
 
@@ -77,8 +74,6 @@ const Component = ({
 
   const [goodLocal, setGoodLocal] = useState(good ? good : 0);
   const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
-
-  // console.log(userName);
 
   return (
     <Container focusId={focusId} id={id}>
@@ -141,14 +136,10 @@ const Component = ({
         </EditWrap>
       </Wrap3>
 
-      {/* {forMakers && <OnlyForMakers />} */}
-
       {imageLocation && imageLocation.length > 0 && (
         <ImagesWrapper>
           {imageLocationToSix.map((v, i) => {
             if (v) {
-              // 이미지가 수직 이미지인가 수평이미지인가 확인하기
-
               return (
                 <ImagePressable
                   key={i}
