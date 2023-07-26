@@ -67,9 +67,9 @@ const useShowRegisterInfo = () => {
     }
   };
 
-  //   useEffect(() => {
-  //     removeItemFromStorage('registerInfoClicked');
-  //   }, []);
+  // useEffect(() => {
+  //   removeItemFromStorage('registerInfoClicked');
+  // }, []);
 };
 
 export default useShowRegisterInfo;

@@ -39,10 +39,10 @@ const Pages = () => {
     selectedFoodIdPage7Atom,
   );
 
-  useEffect(() => {
-    console.log(' foodImageListPage7 확인');
-    console.log(foodImageListPage7);
-  }, [foodImageListPage7]);
+  // useEffect(() => {
+  //   console.log(' foodImageListPage7 확인');
+  //   console.log(foodImageListPage7);
+  // }, [foodImageListPage7]);
 
   useEffect(() => {
     getFoodImageList();
