@@ -22,6 +22,7 @@ import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
+import {BowlIcon} from '~components/Icon';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -34,6 +35,7 @@ import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
+import useFoodDaily from '../../../../../biz/useDailyFood/hook';
 import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
@@ -44,7 +46,10 @@ import Calendar from '../../../../../components/Calendar';
 import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
-import {useGetDailyfood} from '../../../../../hook/useDailyfood';
+import {
+  useGetDailyfood,
+  useGetDailyfoodList,
+} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {
   useGetPrivateSpots,
@@ -53,12 +58,15 @@ import {
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../../screens/Main/Bnb';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
-import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {
+  formattedWeekDate,
+  toStringByFormatting,
+} from '../../../../../utils/dateFormatter';
+import jwtUtils from '../../../../../utils/fetch/jwtUtill';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
-import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
 import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
@@ -67,14 +75,16 @@ import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGu
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
+import {PAGE_NAME as nicknameSettingPageName} from '../../../MyPage/Nickname/index';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
+import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
+import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
 import {BowlIcon} from '~components/Icon';
 import useGetDietRepo from '../../DietRepo/useGetDietRepo';
-import useGetRegisterDoneCheck from '../../../../../biz/useRegisterInfo/getRegisterDoneCheck/hook';
 
-import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
 import useShowRegisterInfo from '../../../../RegisterInfo/ShowRegisterInfo/useShowRegisterInfo';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
@@ -90,67 +100,35 @@ export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   const navigation = useNavigation();
 
-  const routeName = useRoute();
-
+  const {setMorning, setLunch, setDinner, setDiningTypes} = useFoodDaily();
+  const queryclient = useQueryClient();
   const [isVisible, setIsVisible] = useState(true);
   const [userGroupSpot, setUserGroupSpot] = useState();
+  const [spotId, setSpotId] = useState();
   const weekly = useAtomValue(weekAtom);
   const {data: isUserInfo} = useGetUserInfo();
   const currentVersion = VersionCheck.getCurrentVersion();
+  const [dailyfoodData, setDailyfoodData] = useState();
+  const [selected, setSelected] = useState();
   const userName = isUserInfo?.data?.name;
   const userSpot = isUserInfo?.data?.spot;
   const userGroupName = isUserInfo?.data?.group;
   const userSpotId = isUserInfo?.data?.spotId;
   const clientId = isUserInfo?.data?.groupId;
-  const queryClient = useQueryClient();
   const spotNameCut = userSpot?.includes(null);
   const useSpotName = spotNameCut ? userSpot.split('null')[0] : userSpot;
-  const {
-    saveFcmToken,
-    readableAtom: {userRole},
-  } = useAuth();
-  const {
-    // userGroupSpotCheck,
-    // isUserGroupSpotCheck,
-    userSpotRegister,
-    groupSpotDetail,
-  } = useGroupSpots();
-  const {data: isUserGroupSpotCheck, refetch: groupRefetch} =
-    useGroupSpotList();
+
   const [coinSound, setCoinSound] = useState(null);
 
-  const {
-    totalNutrition: {totalCalorie},
-  } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
-
-  const loadCoinSound = () => {
-    const sound = new Sound(
-      require('../../../../../assets/sounds/coin.wav'),
-      Platform.OS === 'android'
-        ? Sound.MAIN_BUNDLE
-        : Sound.MAIN_BUNDLE.bundlePath,
-      error => {
-        if (error) {
-          return;
-        }
-      },
-    );
-    setCoinSound(sound);
-  };
-  const {
-    getMembershipHistory,
-    readableAtom: {membershipHistory},
-  } = useMembership();
-
-  const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
-    userSpotId,
-    formattedWeekDate(new Date()),
-  );
+  // const {data: dailyfoodData, refetch: dailyfoodRefetch} = useGetDailyfood(
+  //   userSpotId,
+  //   formattedWeekDate(new Date()),
+  // );
   const [modalVisible, setModalVisible] = useState(false);
   const [showDim, setShowDim] = useAtom(mainDimAtom);
 
   const [show, setShow] = useState(false);
-  const [selected, setSelected] = useState();
+
   const [appState, setAppState] = useState();
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
 
@@ -162,6 +140,37 @@ const Pages = () => {
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
   const date = formattedWeekDate(new Date());
+
+  const {
+    totalNutrition: {totalCalorie},
+    dietRepoMainRefetch,
+  } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
+
+  const loadCoinSound = async () => {
+    try {
+      const sound = new Sound(
+        require('../../../../../assets/sounds/coin.wav'),
+        Platform.OS === 'android'
+          ? Sound.MAIN_BUNDLE
+          : Sound.MAIN_BUNDLE.bundlePath,
+        error => {
+          if (error) {
+            return;
+          }
+        },
+      );
+      await sound.play();
+      sound.release();
+      setCoinSound(sound);
+      return false;
+    } catch (error) {
+      throw error;
+    }
+  };
+  const {
+    getMembershipHistory,
+    readableAtom: {membershipHistory},
+  } = useMembership();
   const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
     formattedWeekDate(
@@ -171,17 +180,70 @@ const Pages = () => {
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
   });
-
+  const {
+    saveFcmToken,
+    readableAtom: {userRole},
+  } = useAuth();
+  const {
+    // userGroupSpotCheck,
+    // isUserGroupSpotCheck,
+    userSpotRegister,
+    groupSpotDetail,
+  } = useGroupSpots();
+  const {data: dailyfoodDataList, refetch: dailyfoodListRefetch} =
+    useGetDailyfoodList(
+      selected !== undefined ? selected : isUserInfo?.data?.spotId,
+      formattedWeekDate(weekly[0][0]),
+      formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+      userRole,
+    );
+  const {data: isUserGroupSpotCheck} = useGroupSpotList();
   useEffect(() => {
     if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
       setUserGroupSpot(isUserGroupSpotCheck?.data);
     }
   }, [isUserGroupSpotCheck?.data]);
-
+  useEffect(() => {
+    const lunchData = dailyfoodData?.dailyFoodDtos.filter(
+      x => x.diningType === 2,
+    );
+    const morningData = dailyfoodData?.dailyFoodDtos.filter(
+      x => x.diningType === 1,
+    );
+    const dinnerData = dailyfoodData?.dailyFoodDtos.filter(
+      x => x.diningType === 3,
+    );
+    setLunch(lunchData);
+    setMorning(morningData);
+    setDinner(dinnerData);
+    setDiningTypes(
+      dailyfoodDataList?.data?.diningTypes.map(dining => dining.diningType),
+    );
+  }, [
+    dailyfoodData?.dailyFoodDtos,
+    setLunch,
+    setMorning,
+    setDinner,
+    spotId,
+    dailyfoodDataList?.data,
+    setDiningTypes,
+  ]);
+  useEffect(() => {
+    if (dailyfoodDataList?.data?.dailyFoodsByDate) {
+      setMorning([]);
+      setLunch([]);
+      setDinner([]);
+      const getDailyfoodData = dailyfoodDataList?.data?.dailyFoodsByDate.filter(
+        v => v.serviceDate === formattedWeekDate(date),
+      );
+      setDailyfoodData(
+        getDailyfoodData?.length > 0 ? getDailyfoodData[0] : null,
+      );
+    }
+  }, [dailyfoodDataList?.data?.dailyFoodsByDate, date]);
   useEffect(() => {
     if (isUserInfo?.data && userGroupSpot && navigation.isFocused()) {
-      if (isUserInfo?.data?.spotId) dailyfoodRefetch();
-      else if (
+      if (
         isUserInfo?.data?.spotId === null &&
         userGroupSpot?.privateCount === 1
       ) {
@@ -202,7 +264,13 @@ const Pages = () => {
         navigation.navigate(SpotGuidePageName);
       }
     }
-  }, [isUserInfo?.data, userGroupSpot]);
+  }, [isUserInfo?.data?.spotId, userGroupSpot]);
+  useEffect(() => {
+    if (selected) {
+      dailyfoodListRefetch();
+    }
+  }, [selected]);
+
   useEffect(() => {
     if (
       isUserInfo?.data?.spotId === null &&
@@ -229,36 +297,6 @@ const Pages = () => {
       await Linking.openURL(alterUrl);
     }
   }, []);
-  // const {getAnnouncements, announcements, announcementModalVisible} =
-  //   useGetAnnouncements();
-
-  // useEffect(() => {
-  //   // 공지사항 이용하기
-  //   // 0: 비활성 공지 보기
-  //   // 1: 활성 공지 보기
-  //   // 2: 팝업 공지보기
-  //   // 3: 스팟 공지보기(스팟 공지는 스팟아이디를 두번째 인자로 추가해줘야 볼 수 있음)
-  //   getAnnouncements(2);
-  // }, []);
-
-  // //팝업
-  // const [announcementHandle, setAnnouncementHandle] = useState();
-
-  // useEffect(() => {
-  //   const yes = {};
-
-  //   announcements.forEach(v => {
-  //     yes[v.id] = true;
-  //   });
-
-  //   console.log(yes);
-
-  //   setAnnouncementHandle(yes);
-  // }, [announcements]);
-
-  // useEffect(() => {
-  //   removeItemFromStorage('announcementsClickedDates');
-  // }, []);
 
   // 홈 공지사항 하나만 넣기
 
@@ -314,8 +352,12 @@ const Pages = () => {
     }
   };
   useEffect(() => {
+    const getTokenData = async () => {
+      const storage = JSON.parse(await getStorage('token'));
+      return jwtUtils.isAuth(storage?.accessToken);
+    };
     const getHistory = async () => {
-      await getMembershipHistory();
+      if (await getTokenData()) await getMembershipHistory();
     };
     getHistory();
   }, [isUserInfo?.data]);
@@ -338,7 +380,7 @@ const Pages = () => {
           requestPermission();
         }
       })
-      .catch(error => {});
+      .catch(() => {});
   };
 
   //2
@@ -348,7 +390,7 @@ const Pages = () => {
       .then(() => {
         getToken();
       })
-      .catch(error => {});
+      .catch(() => {});
   };
 
   //3
@@ -362,7 +404,7 @@ const Pages = () => {
           });
         }
       })
-      .catch(error => {});
+      .catch(() => {});
   };
   useEffect(() => {
     checkPermission();
@@ -433,7 +475,7 @@ const Pages = () => {
         }
       });
 
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
+    const unsubscribe = messaging().onMessage(async () => {
       // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     });
 
@@ -635,7 +677,10 @@ const Pages = () => {
       <ScrollViewWrap
         scrollEventThrottle={0}
         showsVerticalScrollIndicator={false}>
-        <LargeTitle>{userName}님 안녕하세요!</LargeTitle>
+        <LargeTitle>
+          {isUserInfo?.data?.nickname ?? userName}님{' '}
+          {isUserInfo?.data?.nickname?.length === 12 && `\n`}안녕하세요!
+        </LargeTitle>
         <MainWrap>
           {orderMealList?.data?.filter(order => order.serviceDate === date)
             .length === 0 ? (
@@ -652,6 +697,8 @@ const Pages = () => {
                         <MealInfoComponent
                           m={m}
                           meal={meal}
+                          loadCoinSound={loadCoinSound}
+                          dailyFoodId={meal.dailyFoodId}
                           coinSound={coinSound}
                           key={`${meal.id} ${meal.dailyFoodId}`}
                         />
@@ -671,7 +718,7 @@ const Pages = () => {
                 <TitleText>식사일정</TitleText>
               </MealCalendarTitle>
               <Calendar
-                isServiceDays={dailyfoodData?.data?.serviceDays}
+                isServiceDays={dailyfoodDataList?.data?.diningTypes}
                 meal={orderMealList?.data}
                 onPressEvent={() => navigation.navigate(MealMainPageName)}
               />
@@ -768,7 +815,18 @@ const Pages = () => {
                 <DietRepoText>식단 리포트</DietRepoText>
               </Wrap1>
 
-              <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText>
+              {/* <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText> */}
+              <CalText>
+                오늘{' '}
+                {orderMealList?.data?.find(
+                  v => v.serviceDate === toStringByFormatting(new Date()),
+                )?.totalCalorie
+                  ? orderMealList?.data?.find(
+                      v => v.serviceDate === toStringByFormatting(new Date()),
+                    )?.totalCalorie
+                  : 0}{' '}
+                kcal
+              </CalText>
             </DietRepoPressable>
           </MainWrap>
         </Wrap>

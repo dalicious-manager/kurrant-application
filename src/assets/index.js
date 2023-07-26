@@ -76,3 +76,4 @@ export const MembershipSongE = require('../assets/images/spot/membershipSongE.pn
 export const SpotManageShare = require('../assets/images/spot/manage/share.png');
 export const SpotManagePrivate = require('../assets/images/spot/manage/private.png');
 export const SpotManageMy = require('../assets/images/spot/manage/my.png');
+export const LoadingIcon = require('../assets/images/loading.png');

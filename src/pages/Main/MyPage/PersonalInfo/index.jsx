@@ -4,7 +4,13 @@ import NaverLogin from '@react-native-seoul/naver-login';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
-import {ActivityIndicator, Alert, ScrollView} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  View,
+} from 'react-native';
 import {
   RESULTS,
   checkNotifications,
@@ -13,6 +19,7 @@ import {
 } from 'react-native-permissions';
 import styled, {useTheme} from 'styled-components/native';
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
+import ModifyIcon from '~assets/icons/Nickname/modify.svg';
 import useUserMe from '~biz/useUserMe';
 import {isSNSConnectAtom} from '~biz/useUserMe/store';
 import {SocialConnectIcons} from '~components/Icon';
@@ -38,6 +45,7 @@ import {PAGE_NAME as GroupManagePageName} from '../../../Group/GroupManage/SpotM
 import {PAGE_NAME as LoginPageName} from '../../../Main/Login/Login';
 import {PAGE_NAME as SpotTypePageName} from '../../../Spots/SpotType';
 import {PAGE_NAME as NameSettingPageName} from '../../Login/AppleSignup';
+import {PAGE_NAME as NicknameModifyPageName} from '../Nickname';
 
 export const PAGE_NAME = 'P__MY_PAGE__PERSONAL_INFO';
 
@@ -196,9 +204,17 @@ const Pages = ({route}) => {
                 <Typography text='CaptionSB' textColor={themeApp.colors.blue[500]}>나의 미식타입 테스트 </Typography>
                 <ArrowRight/>
               </GourmetTestButton>             */}
-              <Typography text="Title02SB" textColor={themeApp.colors.grey[2]}>
-                {myInfoPerson?.name}님
-              </Typography>
+              <NameWrap>
+                <Typography
+                  text="Title02SB"
+                  textColor={themeApp.colors.grey[2]}>
+                  {myInfoPerson?.nickname ?? myInfoPerson?.name}님
+                </Typography>
+                <NicknameButton
+                  onPress={() => navigation.navigate(NicknameModifyPageName)}>
+                  <ModifyIcon />
+                </NicknameButton>
+              </NameWrap>
               {myInfoPerson?.hasGeneralProvider && (
                 <Typography text="Body06R" textColor={themeApp.colors.grey[2]}>
                   {myInfoPerson?.email}
@@ -442,7 +458,9 @@ const LoginBox = styled.Pressable`
   margin-left: 24px;
   margin-right: 24px;
 `;
-const LoginIdBox = styled.View``;
+const LoginIdBox = styled.View`
+  width: 100%;
+`;
 
 const SNSContainer = styled.View`
   margin-left: 24px;
@@ -518,3 +536,11 @@ const Line = styled.View`
   height: 6px;
   background-color: ${({theme}) => theme.colors.grey[8]};
 `;
+
+const NameWrap = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const NicknameButton = styled.Pressable``;

@@ -4,6 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Shadow} from 'react-native-shadow-2';
 import Sound from 'react-native-sound';
+import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components';
 
 import Typography from '../../../../../../components/Typography';
@@ -11,18 +12,32 @@ import {useConfirmOrderState} from '../../../../../../hook/useOrder';
 // import {PAGE_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
 import {PAGE_NAME as reviewPage} from '../../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
 import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
+import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
+import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
 import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import CoinAnimation from '../../components/CoinAnimation';
 
-const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
+const MealInfoComponent = ({
+  m,
+  meal,
+  mockStatus,
+  dailyFoodId,
+  loadCoinSound,
+  coinSound,
+}) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
+  const {dietRepoMainRefetch} = useGetDietRepo();
+  const {addMeal} = useDietRepoMutation();
   const {mutateAsync: orderState} = useConfirmOrderState();
   const [startAni, setStartAni] = useState(false);
   const deliveryConfirmPress = async () => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
   };
+  const queryClient = useQueryClient();
+  // console.log('확인 yo');
+  // console.log(dailyFoodId);
 
   const goToReviewPage = (id, image, name) => {
     navigation.navigate(reviewPage, {
@@ -32,6 +47,7 @@ const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
       test: 'test',
     });
   };
+
   return (
     <>
       <MealInfoWrapper>
@@ -68,7 +84,9 @@ const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
 
               <MealText>
                 <View style={{width: '80%', overflow: 'hidden'}}>
-                  <DiningType>{`오늘 ${m.diningType}`}</DiningType>
+                  <DiningType>
+                    {m.diningType + ' ' + meal.deliveryTime}
+                  </DiningType>
                   <View>
                     <MealTxt numberOfLines={1} ellipsizeMode="tail">
                       {meal.name}
@@ -107,6 +125,16 @@ const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
                   // console.log('000');
                   setStartAni(true);
                   deliveryConfirmPress();
+                  // 식단 리포트 추가하기
+                  addMeal([
+                    {dailyFoodId},
+                    () => {
+                      queryClient.invalidateQueries({
+                        queryKey: ['dietRepo', 'main'],
+                      });
+                      // dietRepoMainRefetch();
+                    },
+                  ]);
                 } else {
                   // console.log('00011');
                   // 리뷰로 가기
@@ -121,6 +149,7 @@ const MealInfoComponent = ({m, meal, mockStatus, coinSound}) => {
               {startAni && (
                 <CoinAnimation
                   isStart={startAni}
+                  loadCoinSound={loadCoinSound}
                   coinSound={coinSound}
                   setStart={setStartAni}
                 />

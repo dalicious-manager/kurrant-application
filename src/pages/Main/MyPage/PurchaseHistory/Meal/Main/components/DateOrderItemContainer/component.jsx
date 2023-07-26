@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import id from 'date-fns/esm/locale/id/index.js';
 import React, {useState} from 'react';
-import {Alert, Dimensions, Pressable, View} from 'react-native';
+import {Alert, Dimensions, Pressable, View, Text} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components/native';
@@ -123,6 +123,12 @@ const Component = ({purchaseId, date, itemIndex, data}) => {
                       <Typography text="Title04SB" textColor={statusColor()}>
                         {formattedMealFoodStatus(order.orderStatus)}
                       </Typography>
+                      {order.orderStatus === 5 && (
+                        <Typography text="SmallLabel" textColor={'#BDBAC1'}>
+                          {' '}
+                          {order.lastOrderTime} 주문 마감
+                        </Typography>
+                      )}
                       {order.orderStatus !== 5 &&
                         !(
                           order.dailyFoodStatus === 1 ||
@@ -397,3 +403,5 @@ const ArrowUpIcon = styled(ArrowDown)`
 const ArrowDownIcon = styled(ArrowDown)`
   margin-left: 4px;
 `;
+
+const DeadlineText = styled.Text``;

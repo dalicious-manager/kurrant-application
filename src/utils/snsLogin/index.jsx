@@ -25,7 +25,7 @@ import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
 
 import {PAGE_NAME as AppleLoginPageName} from '../../pages/Main/Login/AppleSignup';
-
+import {PAGE_NAME as nicknameSettingPageName} from '../../pages/Main/MyPage/Nickname/index';
 import Config from 'react-native-config';
 
 const nonce = uuid();
@@ -46,6 +46,7 @@ const naverData = () => {
 };
 export default () => {
   const {snsLogin, snsAppleLogin} = useAuth();
+
   const navigation = useNavigation();
   const naverLogin = async () => {
     // console.log('로그인')
@@ -55,26 +56,39 @@ export default () => {
       );
 
       if (successResponse) {
-        console.log(successResponse.accessToken);
         // console.log(successResponse)
         // Clipboard.setString(successResponse.accessToken)
         // const data = await NaverLogin.getProfile(successResponse.accessToken);
         // console.log(data);
-        await snsLogin(
+        const res = await snsLogin(
           {
             snsAccessToken: successResponse.accessToken,
             autoLogin: true,
           },
           'NAVER',
         );
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: SCREEN_NAME,
-            },
-          ],
-        });
+        if (res.data.hasNickname) {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: SCREEN_NAME,
+              },
+            ],
+          });
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: nicknameSettingPageName,
+                params: {
+                  from: 'sns',
+                },
+              },
+            ],
+          });
+        }
       } else {
         // console.log(failureResponse);
       }
@@ -99,21 +113,35 @@ export default () => {
       // Clipboard.setString(accessToken)
       // Sign-in the user with the credential
       await auth().signInWithCredential(googleCredential);
-      await snsLogin(
+      const res = await snsLogin(
         {
           snsAccessToken: accessToken,
           autoLogin: true,
         },
         'GOOGLE',
       );
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: SCREEN_NAME,
-          },
-        ],
-      });
+      if (res.data.hasNickname) {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SCREEN_NAME,
+            },
+          ],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: nicknameSettingPageName,
+              params: {
+                from: 'sns',
+              },
+            },
+          ],
+        });
+      }
     } catch (error) {
       // console.log('err', error.toString());
     }
@@ -132,21 +160,35 @@ export default () => {
           );
         // const appleCredential = firebase.auth.AppleAuthProvider.credential(test.id_token, test.nonce);
         // const userCredential = await firebase.auth().signInWithCredential(appleCredential);
-        await snsAppleLogin(
+        const res = await snsAppleLogin(
           {
             ...test,
             autoLogin: true,
           },
           'APPLE',
         );
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: SCREEN_NAME,
-            },
-          ],
-        });
+        if (res.data.hasNickname) {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: SCREEN_NAME,
+              },
+            ],
+          });
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: nicknameSettingPageName,
+                params: {
+                  from: 'sns',
+                },
+              },
+            ],
+          });
+        }
       } else {
         // await appleAuth.onCredentialRevoked(async () => {
         //   console.warn('If this function executes, User Credentials have been Revoked');
@@ -177,7 +219,7 @@ export default () => {
         const appleData = appleAuthRequestResponse;
 
         // console.log(userCredential);
-        await snsAppleLogin(
+        const res = await snsAppleLogin(
           {
             ...appleData,
             autoLogin: true,
@@ -185,16 +227,7 @@ export default () => {
           'APPLE',
         );
         if (!userCredential.additionalUserInfo.isNewUser) {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: SCREEN_NAME,
-              },
-            ],
-          });
-        } else {
-          if (appleAuthRequestResponse.fullName.familyName) {
+          if (res.data.hasNickname) {
             navigation.reset({
               index: 0,
               routes: [
@@ -204,6 +237,43 @@ export default () => {
               ],
             });
           } else {
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: nicknameSettingPageName,
+                  params: {
+                    from: 'sns',
+                  },
+                },
+              ],
+            });
+          }
+        } else {
+          if (appleAuthRequestResponse.fullName.familyName) {
+            if (res.data.hasNickname) {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: SCREEN_NAME,
+                  },
+                ],
+              });
+            } else {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: nicknameSettingPageName,
+                    params: {
+                      from: 'sns',
+                    },
+                  },
+                ],
+              });
+            }
+          } else {
             Alert.alert(
               '신규 유저',
               '이름을 가져올수 없습니다 이름을 등록하시겠습니까? \n이름을 등록 하지 않으면 이름없음으로 자동 등록 됩니다.',
@@ -211,14 +281,28 @@ export default () => {
                 {
                   text: '취소',
                   onPress: () => {
-                    navigation.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: SCREEN_NAME,
-                        },
-                      ],
-                    });
+                    if (res.data.hasNickname) {
+                      navigation.reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: SCREEN_NAME,
+                          },
+                        ],
+                      });
+                    } else {
+                      navigation.reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: nicknameSettingPageName,
+                            params: {
+                              from: 'sns',
+                            },
+                          },
+                        ],
+                      });
+                    }
                   },
                 },
                 {
@@ -246,21 +330,35 @@ export default () => {
     const token = await login();
     // Clipboard.setString(token.accessToken);
 
-    await snsLogin(
+    const res = await snsLogin(
       {
         snsAccessToken: token?.accessToken,
         autoLogin: true,
       },
       'KAKAO',
     );
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: SCREEN_NAME,
-        },
-      ],
-    });
+    if (res.data.hasNickname) {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: SCREEN_NAME,
+          },
+        ],
+      });
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: nicknameSettingPageName,
+            params: {
+              from: 'sns',
+            },
+          },
+        ],
+      });
+    }
   };
   const facebookLogin = async () => {
     try {
@@ -274,39 +372,67 @@ export default () => {
         const result = await AuthenticationToken.getAuthenticationTokenIOS();
         // Clipboard.setString(result?.authenticationToken);
 
-        await snsLogin(
+        const res = await snsLogin(
           {
             snsAccessToken: result?.authenticationToken,
             autoLogin: true,
           },
           'FACEBOOK',
         );
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: SCREEN_NAME,
-            },
-          ],
-        });
+        if (res.data.hasNickname) {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: SCREEN_NAME,
+              },
+            ],
+          });
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: nicknameSettingPageName,
+                params: {
+                  from: 'sns',
+                },
+              },
+            ],
+          });
+        }
       } else {
         const result = await AccessToken.getCurrentAccessToken();
         // Clipboard.setString(result?.accessToken);
-        await snsLogin(
+        const res = await snsLogin(
           {
             snsAccessToken: result?.accessToken,
             autoLogin: true,
           },
           'FACEBOOK',
         );
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: SCREEN_NAME,
-            },
-          ],
-        });
+        if (res.data.hasNickname) {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: SCREEN_NAME,
+              },
+            ],
+          });
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: nicknameSettingPageName,
+                params: {
+                  from: 'sns',
+                },
+              },
+            ],
+          });
+        }
       }
     } catch (error) {
       // console.log(error);

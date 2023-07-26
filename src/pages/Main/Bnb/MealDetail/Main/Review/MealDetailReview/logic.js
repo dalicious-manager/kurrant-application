@@ -33,7 +33,7 @@ export const buildCustomUrl = (
   if (selectedKeyword) {
     basicUrl.push(`&keywordFilter=${selectedKeyword}`);
   } else {
-    basicUrl.push(`&keywordFilter=`);
+    // basicUrl.push(`&keywordFilter=`);
   }
 
   // console.log('basicUrl');
@@ -42,14 +42,15 @@ export const buildCustomUrl = (
   return basicUrl.join('');
 };
 
-export const modifyStarRatingCount = starRatingCount =>
-  Object.entries(starRatingCount).map((v, i) => {
+export const modifyStarRatingCount = starts => {
+  return Object.entries(starts).map((v, i) => {
     return {
       id: v[0],
       text: v[0],
       reviewCount: v[1],
     };
   });
+};
 
 export const isCloseToBottomOfScrollView = ({
   layoutMeasurement,

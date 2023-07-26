@@ -470,7 +470,9 @@ const Pages = ({route}) => {
                       <>
                         <DeliveryTextWrap>
                           <DeliveryTitle>주문자 정보</DeliveryTitle>
-                          <DeliveryText>{isUserInfo?.name}</DeliveryText>
+                          <DeliveryText>
+                            {isUserInfo?.nickname ?? isUserInfo?.name}
+                          </DeliveryText>
                         </DeliveryTextWrap>
                         <DeliveryTextWrap>
                           <DeliveryTitle>연락처</DeliveryTitle>
@@ -495,7 +497,7 @@ const Pages = ({route}) => {
                       <DeliveryTextWrap>
                         <DeliveryTitle>주문자 정보</DeliveryTitle>
                         <DeliveryText>
-                          {isUserInfo?.name}
+                          {isUserInfo?.nickname ?? isUserInfo?.name}
                           {isUserInfo?.phone === null
                             ? ''
                             : `(${isUserInfo?.phone})`}
@@ -542,7 +544,7 @@ const Pages = ({route}) => {
                                           <ContentHeader>
                                             <DiningName>
                                               {formattedMonthDay(m.serviceDate)}{' '}
-                                              {m.diningType}
+                                              {m.diningType} {meal.deliveryTime}
                                             </DiningName>
                                           </ContentHeader>
                                           <ContentsWrap>

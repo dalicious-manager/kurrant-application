@@ -16,6 +16,8 @@ const useGetDietRepo = (
 
   const [historyDataList, setHistoryDataList] = useState([]);
 
+  // 유저 식단 리포트 조회
+
   const {
     refetch: dietRepoMainRefetch,
 
@@ -51,6 +53,7 @@ const useGetDietRepo = (
     }
   }, [data]);
 
+  // 유저 특정일 주문내역
   const {isFetching: isDietRepoAddRefetchLoading} = useQuery(
     ['dietRepo', 'addMeal'],
     async ({queryKey}) => {
@@ -69,6 +72,7 @@ const useGetDietRepo = (
     },
   );
 
+  // 식사 히스토리 조회
   const {isFetching: isDietRepoHistoryRefetchLoading} = useQuery(
     ['dietRepo', 'history', historyStartDate, historyEndDate],
     async ({queryKey}) => {

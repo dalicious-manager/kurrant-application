@@ -421,6 +421,9 @@ import MySpotDelivery, {
   PAGE_NAME as MySpotDeliveryPage,
 } from '../../pages/Spots/mySpot/Delivery';
 
+import NicknamePage, {
+  PAGE_NAME as NicknamePageName,
+} from '../../pages/Main/MyPage/Nickname';
 const MainRoot = createNativeStackNavigator();
 
 const Screen = () => {
@@ -959,7 +962,7 @@ const Screen = () => {
           component={BuyMeal}
           options={{
             headerShown: true,
-            title: '식사 구매하기',
+            title: '식사 구매',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',
@@ -1362,6 +1365,22 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerLeft: () => <BackButton margin={[10, 0]} />,
+          }}
+        />
+        <MainRoot.Screen
+          name={NicknamePageName}
+          component={NicknamePage}
+          options={{
+            headerShown: true,
+            title: '닉네임 수정',
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+            // headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
       </MainRoot.Group>

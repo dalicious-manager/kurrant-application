@@ -13,6 +13,7 @@ import {
 import styled from 'styled-components/native';
 
 import {PAGE_NAME as SignUpComplatePageName} from './SignUpComplate';
+import RandomIcon from '../../../../assets/icons/Nickname/random.svg';
 import useAuth from '../../../../biz/useAuth';
 import useJoinUser from '../../../../biz/useJoinUser';
 import Button from '../../../../components/Button';
@@ -22,6 +23,8 @@ import RefTextInput from '../../../../components/RefTextInput';
 import Typography from '../../../../components/Typography';
 import Wrapper from '../../../../components/Wrapper';
 import useKeyboardEvent from '../../../../hook/useKeyboardEvent';
+import {useGetNickname} from '../../../../hook/useNickname';
+import {fetchJson} from '../../../../utils/fetch';
 export const PAGE_NAME = 'P_SIGN_UP__MODAL__SIGN_UP';
 const {StatusBarManager} = NativeModules;
 
@@ -29,10 +32,12 @@ const Pages = () => {
   const auth = useAuth();
 
   const navigation = useNavigation();
+  const [nickname, setNickname] = useState('');
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [progress, setProgress] = useState(1);
   const [isPhoneAuth, setPhoneAuth] = useState(false);
   const [isAuthLoading, setAuthLoading] = useState(false);
+
   const form = useForm({
     mode: 'all',
   });
@@ -40,6 +45,7 @@ const Pages = () => {
     formState: {errors},
     watch,
     handleSubmit,
+    setValue,
   } = form;
   const keyboardStatus = useKeyboardEvent();
 
@@ -50,6 +56,7 @@ const Pages = () => {
   const emailAuth = watch('eauth');
   const phoneAuth = watch('pauth');
   const userName = watch('name');
+  const nickName = watch('nickname');
 
   const {joinUser} = useJoinUser();
   // navigation.navigate(SignUpComplatePageName,{
@@ -74,7 +81,11 @@ const Pages = () => {
   const isValidation =
     (progress === 2 && emailAuth && !errors.eauth) ||
     (progress === 4 && phoneAuth && !errors.pauth) ||
-    (progress === 5 && userName && !errors.name) ||
+    (progress === 5 &&
+      userName &&
+      !errors.name &&
+      nickName &&
+      !errors.nickname) ||
     (progress === 3 &&
       password &&
       passwordChecked &&
@@ -111,7 +122,8 @@ const Pages = () => {
       try {
         if (!isAuthLoading) {
           setAuthLoading(true);
-          await auth.requestPhoneAuth({to: phoneNumber}, 1);
+          const res = await auth.requestPhoneAuth({to: phoneNumber}, 1);
+          setNickname(res.data);
           if (progress < 4) setProgress(progressed => progressed + 1);
           setPhoneAuth(true);
         }
@@ -143,6 +155,7 @@ const Pages = () => {
         password: data.password,
         passwordCheck: data.passwordChecked,
         phone: data.phone,
+        nickname: nickName,
       };
       await joinUser(datas);
       navigation.navigate(SignUpComplatePageName, {
@@ -155,6 +168,11 @@ const Pages = () => {
 
   const inputStyle = {
     marginBottom: 16,
+  };
+
+  const getRandomNickname = async () => {
+    const res = await fetchJson('/public/nicknames', 'GET');
+    setValue('nickname', res.data);
   };
 
   useEffect(() => {
@@ -172,6 +190,10 @@ const Pages = () => {
       scrollViewRef.current.scrollToEnd({animated: true});
     }
   }, [keyboardStatus.isKeyboardActivate]);
+
+  useEffect(() => {
+    setValue('nickname', nickname);
+  }, [nickname, setValue]);
 
   return (
     <Wrapper>
@@ -413,33 +435,54 @@ const Pages = () => {
                       </>
                     )}
                   {progress === 5 && (
-                    <RefTextInput
-                      name="name"
-                      label="이름"
-                      placeholder="이름"
-                      autoCapitalize="none"
-                      blurOnSubmit={false}
-                      suffix={{
-                        isNeedDelete: true,
-                        // timer:900,
-                      }}
-                      rules={{
-                        required: '필수 입력 항목 입니다.',
-                        pattern: {
-                          value: /^[가-힣a-zA-Z0-9]+$/,
-                          message: '올바른 이름을 입력해 주세요.',
-                        },
-                      }}
-                      style={inputStyle}
-                      padding="4px 0"
-                      caption={
-                        <>
-                          <Text>
-                            {` 이름은 배송, 비밀번호 찾기 등에 사용되므로 실명을 기입해주세요.`}
-                          </Text>
-                        </>
-                      }
-                    />
+                    <>
+                      <RefTextInput
+                        name="name"
+                        label="이름"
+                        placeholder="이름"
+                        autoCapitalize="none"
+                        blurOnSubmit={false}
+                        suffix={{
+                          isNeedDelete: true,
+                          // timer:900,
+                        }}
+                        rules={{
+                          required: '필수 입력 항목 입니다.',
+                          pattern: {
+                            value: /^[가-힣a-zA-Z0-9]+$/,
+                            message: '올바른 이름을 입력해 주세요.',
+                          },
+                        }}
+                        style={inputStyle}
+                        padding="4px 0"
+                        caption={
+                          <>
+                            <Text>
+                              {` 이름은 배송, 비밀번호 찾기 등에 사용되므로 실명을 기입해주세요.`}
+                            </Text>
+                          </>
+                        }
+                      />
+                      <View>
+                        <RefTextInput
+                          name="nickname"
+                          label="닉네임"
+                          caption="닉네임은 2~12자리로 설정해 주세요."
+                          padding="4px 0px"
+                          rules={{
+                            pattern: {
+                              value: /^[가-힣a-zA-Z0-9]{2,12}$/,
+                              message:
+                                '닉네임은 띄어쓰기 없이 한글,영문,숫자만 가능해요.',
+                            },
+                          }}
+                          errorStyle={{marginTop: 4}}
+                        />
+                        <RandomPress onPress={getRandomNickname}>
+                          <RandomIcon />
+                        </RandomPress>
+                      </View>
+                    </>
                   )}
                 </ScrollView>
                 {progress === 5 && (
@@ -606,4 +649,13 @@ const TermsOfUseUnderlinedTypo = styled(Typography).attrs({text: 'CaptionR'})`
 
 const EmptySpacesView = styled.View`
   height: 100px;
+`;
+const RandomPress = styled.Pressable`
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0px;
+  bottom: 28px;
 `;

@@ -4,7 +4,7 @@
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import {useAtomValue} from 'jotai';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {useTheme} from 'styled-components';
@@ -60,11 +60,6 @@ const DietRepoCalendar2 = ({
   );
   const [currentPress, setCurrentPress] = useState(selectDate);
   const [chk, setChk] = useState(0);
-  //   const [calendarDate, setCalendarDate] = useState(new Date());
-
-  const morningServiceDays = isServiceDays?.morningServiceDays;
-  const lunchServiceDays = isServiceDays?.lunchServiceDays;
-  const dinnerServiceDays = isServiceDays?.dinnerServiceDays;
 
   const selectedPress = day => {
     setCurrentPress(day);
@@ -76,7 +71,7 @@ const DietRepoCalendar2 = ({
 
       <PagerViewWrap
         ref={pager}
-        initialPage={makeUltimateDietRepoCalendar(pastLimitDate).length - 2}
+        initialPage={makeUltimateDietRepoCalendar(pastLimitDate).length - 1}
         pageMargin={22}
         onPageScroll={e => {}}
         onPageSelected={e => {}}
@@ -92,6 +87,7 @@ const DietRepoCalendar2 = ({
                   const propsDay = formattedWeekDate(day);
                   const lastDay =
                     formattedDate(day, '/') > formattedDate(today, '/');
+
                   const order = isOrderMeal?.data?.filter(
                     x => x.serviceDate === propsDay,
                   );
@@ -101,16 +97,35 @@ const DietRepoCalendar2 = ({
                   const set = new Set(order?.map(x => x.diningType));
                   const orderCount = [...set].length;
 
+                  const morningServiceDays = isServiceDays?.filter(v => {
+                    return v.diningType === 1;
+                  });
+                  const lunchServiceDays = isServiceDays?.filter(v => {
+                    return v.diningType === 2;
+                  });
+                  const dinnerServiceDays = isServiceDays?.filter(v => {
+                    return v.diningType === 3;
+                  });
                   // 서비스일
+
                   const morning =
-                    (sliderValue === 0 && morningServiceDays?.includes(txt)) ||
-                    morningServiceDays?.includes(txt);
+                    (sliderValue === 0 &&
+                      morningServiceDays &&
+                      morningServiceDays?.length > 1 &&
+                      morningServiceDays[0]?.serviceDays?.includes(txt)) ||
+                    false;
                   const lunch =
-                    (sliderValue === 1 && lunchServiceDays?.includes(txt)) ||
-                    lunchServiceDays?.includes(txt);
+                    (sliderValue === 1 &&
+                      lunchServiceDays &&
+                      lunchServiceDays?.length > 0 &&
+                      lunchServiceDays[0]?.serviceDays?.includes(txt)) ||
+                    false;
                   const dinner =
-                    (sliderValue === 2 && dinnerServiceDays?.includes(txt)) ||
-                    dinnerServiceDays?.includes(txt);
+                    (sliderValue === 2 &&
+                      dinnerServiceDays &&
+                      dinnerServiceDays?.length > 0 &&
+                      dinnerServiceDays[0]?.serviceDays?.includes(txt)) ||
+                    false;
 
                   const events = () => {
                     selectedPress(day);
@@ -129,9 +144,9 @@ const DietRepoCalendar2 = ({
                       idx={idx}
                       disabled={
                         (lastDay && true) ||
-                        morning === false ||
-                        lunch === false ||
-                        dinner === false
+                        (sliderValue === 0 && morning === false) ||
+                        (sliderValue === 1 && lunch === false) ||
+                        (sliderValue === 2 && dinner === false)
                       }
                       onPress={() => {
                         events();

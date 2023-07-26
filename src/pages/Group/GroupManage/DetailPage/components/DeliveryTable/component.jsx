@@ -21,7 +21,6 @@ const Cell = styled.View`
   align-items: center;
 `;
 const Cell22 = styled.View`
-  flex: 1;
   width: 100%;
   padding: 8px;
   padding-left: 16px;
@@ -45,7 +44,7 @@ const Cell3 = styled.View`
   align-items: center;
 `;
 const Cell2 = styled.View`
-  flex: 5;
+  flex: 4;
   border-bottom-width: ${({isLast}) => (!isLast ? '1px' : '0px')};
   border-color: ${({theme}) => theme.colors.grey[7]};
   padding: 8px;
@@ -56,6 +55,7 @@ const Cell2 = styled.View`
 `;
 const CellText = styled(Typography)`
   white-space: nowrap;
+  flex-wrap: nowrap;
 `;
 export default function Component({mealInfo}) {
   const themeApp = useTheme();
