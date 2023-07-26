@@ -23,22 +23,36 @@ import {
 } from '../../../../../../../components/Icon';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
+import {detailReviewDataAtom} from './store';
+import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
+import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
+import useDetectValueWhenDailyFoodIdChanged from '../../../../../../../hook/useDetectValueWhenChanged';
+import {reviewDetailDailyFoodIdAtom} from './store';
 
-const Component = ({imageLocation, foodName, dailyFoodId}) => {
+const Component = ({
+  imageLocation,
+  foodName,
+  dailyFoodId,
+  starAverage,
+  setStarAverage,
+  totalReview,
+  setTotalReview,
+  initialLoading,
+  setInitialLoading,
+}) => {
+
   const [allReviewList, setAllReviewList] = useState();
-
   const theme = useTheme();
   const queryClient = useQueryClient();
   const navigation = useNavigation();
 
-  const [starAverage, setStarAverage] = useState(1);
-  const [stars, setStars] = useState({});
   const [keyword, setKeyword] = useState([]);
-  const [totalReview, setTotalReview] = useState(0);
-  const [foodId, setFoodId] = useState(undefined);
-  const [reviewWrite, setReviewWrite] = useState(0);
+  // const [starAverage, setStarAverage] = useState(1);
+  const [stars, setStars] = useState({});
   const [isLast, setIsLast] = useState(false);
+  const [foodId, setFoodId] = useState(0);
 
+  const [reviewWrite, setReviewWrite] = useState(0);
   const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
 
   // 베스트순,최신순,리뷰순 (sort)
@@ -71,10 +85,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
     reviewDetailDailyFoodIdAtom,
   );
 
-  const [initialLoading, setInitialLoading] = useState(false);
-
   useEffect(() => {
-    // 첫 펫칭
     if (dailyFoodIdFromAtom === 0) {
       setDailyFoodIdFromAtom(dailyFoodId);
       return;
@@ -366,10 +377,7 @@ const Component = ({imageLocation, foodName, dailyFoodId}) => {
           </LoadingPage1>
         )}
 
-        {/* 처음에 들어왔을때 fetching중에는 빈화면이 보이게 */}
         {allReviewList && !initialLoading && (
-          // && !getBoardIsLoading
-          // !isFetching
           <FlatList
             data={allReviewList}
             keyExtractor={item => item.reviewId.toString()}

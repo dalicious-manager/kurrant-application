@@ -50,6 +50,7 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
+import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
@@ -70,6 +71,10 @@ const Pages = ({route}) => {
     isFetching: detailFetching,
     refetch: detailRefetch,
   } = useGetDailyfoodDetailNow(route.params.dailyFoodId, userRole); // 상세정보
+
+  const [starAverage, setStarAverage] = useState(1);
+  const [totalReview, setTotalReview] = useState(0);
+  const [initialLoading, setInitialLoading] = useState(false);
 
   const {
     readableAtom: {userRole},
@@ -347,6 +352,19 @@ const Pages = ({route}) => {
                             }}>
                             <InformationText>알레르기/원산지</InformationText>
                           </InformationWrap>
+
+                          {!initialLoading && totalReview >= 1 && (
+                            <ReviewWrap>
+                              <YellowStar width="20px" height="20px" />
+                              <ReviewPoint>
+                                {starAverage &&
+                                starAverage?.toString().length === 1
+                                  ? starAverage.toFixed(1)
+                                  : starAverage}
+                              </ReviewPoint>
+                              <ReviewCount>({totalReview})</ReviewCount>
+                            </ReviewWrap>
+                          )}
                         </Line>
                         <MealDsc>
                           {detailFetching ? '' : foodDetailData?.description}
@@ -486,7 +504,8 @@ const Pages = ({route}) => {
                       </InfoTextView>
                     </InfoWrap>
                   </Content>
-                  <Content>
+                  {/* 식단 레포트 영양 정보 */}
+                  {/* <Content>
                     <InfoWrap>
                       <InfoTitleView>
                         <InfoTitle>영양 정보</InfoTitle>
@@ -537,12 +556,19 @@ const Pages = ({route}) => {
                         </InfoTextWrap>
                       </InfoTextView>
                     </InfoWrap>
-                  </Content>
+                  </Content> */}
                   {/* 리뷰자리 */}
                   <MealDetailReview
                     foodName={foodDetailData?.name}
                     imageLocation={foodDetailData?.imageList}
                     dailyFoodId={dailyFoodId}
+                    starAverage={starAverage}
+                    setStarAverage={setStarAverage}
+                    totalReview={totalReview}
+                    setTotalReview={setTotalReview}
+                    initialLoading={initialLoading}
+                    setInitialLoading={setInitialLoading}
+
                   />
                 </>
               ) : (
@@ -639,7 +665,7 @@ const Content = styled.View`
 `;
 
 const Line = styled.View`
-  flex-direction: row;
+  flex-direction: row-reverse;
   justify-content: space-between;
 `;
 
