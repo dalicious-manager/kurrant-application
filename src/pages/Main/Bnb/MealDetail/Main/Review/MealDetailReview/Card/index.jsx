@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
@@ -14,6 +15,7 @@ import {changeSeperator} from '~utils/dateFormatter';
 
 import {ThumbsUp} from '../../../../../../../../components/Icon';
 import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
+import {isGoodLoadingAtom} from '../store';
 
 // 상세페이지 카드
 
@@ -40,7 +42,7 @@ const Component = ({
   const navigation = useNavigation();
 
   const theme = useTheme();
-
+  let isloadingData = [];
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
   const {pressLike} = useMealDetailReviewMutation();
@@ -61,7 +63,7 @@ const Component = ({
   }
 
   const [numLines, setNumLines] = useState(1);
-
+  const [isLoading, setLoading] = useAtom(isGoodLoadingAtom);
   const handlePressReviewText = () => {
     setElaborateComment(!elaborateComment);
   };
@@ -134,23 +136,40 @@ const Component = ({
           </LikePressable> */}
           {isGood !== undefined && (
             <LikePressable
+              disabled={isloadingData.includes(id)}
               onPress={async () => {
-                if (isFetching) return;
-                const nowData = allReviewList.map(v => {
-                  if (v.reviewId === id) {
-                    return {
-                      ...v,
-                      isGood: !v.isGood,
-                      good: v.isGood ? good - 1 : good + 1,
-                    };
+                if (isloadingData.includes(id)) {
+                  console.log(id);
+                  return;
+                }
+                try {
+                  isloadingData.push(id);
+                  await pressLike({
+                    dailyFoodId,
+                    reviewId: id,
+                  });
+                  const nowData = allReviewList.map(v => {
+                    if (v.reviewId === id) {
+                      return {
+                        ...v,
+                        isGood: !v.isGood,
+                        good: v.isGood ? good - 1 : good + 1,
+                      };
+                    }
+                    return v;
+                  });
+
+                  setAllReviewList(nowData);
+                } catch (error) {
+                  Alert.alert(
+                    '도움이됐어요',
+                    error.toString().replace('error:', ''),
+                  );
+                } finally {
+                  if (isloadingData.includes(id)) {
+                    isloadingData = isloadingData.filter(v => v !== id);
                   }
-                  return v;
-                });
-                setAllReviewList(nowData);
-                await pressLike({
-                  dailyFoodId,
-                  reviewId: id,
-                });
+                }
               }}>
               <EditText isGood={isGood}>도움이 돼요</EditText>
               <ThumbsUp

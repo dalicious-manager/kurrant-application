@@ -369,29 +369,31 @@ const Component = ({
           <FlatList
             data={allReviewList}
             keyExtractor={item => item.reviewId.toString()}
-            renderItem={({item}) => (
-              <Card
-                key={item.reviewId}
-                dailyFoodId={dailyFoodId}
-                id={item.reviewId}
-                userName={item.userName}
-                item={item}
-                good={item.good}
-                allReviewList={allReviewList}
-                setAllReviewList={setAllReviewList}
-                isGood={item.isGood}
-                createDate={item.createDate}
-                updateDate={item.updateDate}
-                writtenDate={convertDateFormat1(item.createDate)}
-                option={item.option}
-                rating={item.satisfaction}
-                reviewText={item.content}
-                imageLocation={item.imageLocation}
-                forMakers={item.forMakers}
-                commentList={item.commentList}
-                isFetching={isFetching}
-              />
-            )}
+            renderItem={({item}) => {
+              return (
+                <Card
+                  key={item.reviewId}
+                  dailyFoodId={dailyFoodId}
+                  id={item.reviewId}
+                  userName={item.userName}
+                  item={item}
+                  good={item.good}
+                  allReviewList={allReviewList}
+                  setAllReviewList={setAllReviewList}
+                  isGood={item.isGood}
+                  createDate={item.createDate}
+                  updateDate={item.updateDate}
+                  writtenDate={convertDateFormat1(item.createDate)}
+                  option={item.option}
+                  rating={item.satisfaction}
+                  reviewText={item.content}
+                  imageLocation={item.imageLocation}
+                  forMakers={item.forMakers}
+                  commentList={item.commentList}
+                  isFetching={isFetching}
+                />
+              );
+            }}
             onEndReached={() => {
               if (getNextPageIsPossible) {
                 getNextPage();
