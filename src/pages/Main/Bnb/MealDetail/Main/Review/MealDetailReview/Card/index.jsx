@@ -33,6 +33,8 @@ const Component = ({
   createDate,
   updateDate,
   commentList,
+  allReviewList,
+  setAllReviewList,
   isFetching,
 }) => {
   const navigation = useNavigation();
@@ -71,9 +73,6 @@ const Component = ({
 
     setCalcFontSize(width * 0.052279);
   };
-
-  const [goodLocal, setGoodLocal] = useState(good ? good : 0);
-  const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
 
   return (
     <Container focusId={focusId} id={id}>
@@ -132,25 +131,37 @@ const Component = ({
               }
             />
             <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
-          </LikePressable>
-        </EditWrap> */}
-        <LikePressable
-          onPress={() => {
-            if (isFetching) return;
-
-            pressLike({
-              dailyFoodId,
-              reviewId: id,
-            });
-          }}>
-          <EditText isGood={isGood}>도움이 돼요</EditText>
-          <ThumbsUp
-            width="14px"
-            height="15px"
-            color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
-          />
-          <LikeNumber isGood={isGood}>{good}</LikeNumber>
-        </LikePressable>
+          </LikePressable> */}
+          {isGood !== undefined && (
+            <LikePressable
+              onPress={async () => {
+                if (isFetching) return;
+                const nowData = allReviewList.map(v => {
+                  if (v.reviewId === id) {
+                    return {
+                      ...v,
+                      isGood: !v.isGood,
+                      good: v.isGood ? good - 1 : good + 1,
+                    };
+                  }
+                  return v;
+                });
+                setAllReviewList(nowData);
+                await pressLike({
+                  dailyFoodId,
+                  reviewId: id,
+                });
+              }}>
+              <EditText isGood={isGood}>도움이 돼요</EditText>
+              <ThumbsUp
+                width="14px"
+                height="15px"
+                color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
+              />
+              <LikeNumber isGood={isGood}>{good}</LikeNumber>
+            </LikePressable>
+          )}
+        </EditWrap>
       </Wrap3>
 
       {imageLocation && imageLocation.length > 0 && (
