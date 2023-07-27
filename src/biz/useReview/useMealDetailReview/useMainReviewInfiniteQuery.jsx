@@ -26,7 +26,6 @@ export function useMainReviewInfiniteQuery(url, dailyFoodId) {
     const res = await getMealDetailReview(pageParam, url);
     return {
       items: res.items,
-
       currentPage: pageParam,
       isLast: res.isLast,
     };
@@ -51,6 +50,10 @@ export function useMainReviewInfiniteQuery(url, dailyFoodId) {
       return undefined;
     },
   });
+
+  // useEffect(() => {
+  //   getBoardRefetch();
+  // }, [url]);
 
   return {
     getBoard,

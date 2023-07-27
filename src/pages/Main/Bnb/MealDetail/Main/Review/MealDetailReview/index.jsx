@@ -20,10 +20,6 @@ import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/C
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
-import {
-  fetchNextPageReviewDetailAtom,
-  hasNextPageReviewDetailAtom,
-} from '../../../../../../../biz/useReview/useMealDetailReview/store';
 
 import {
   ArrowUpAndDown,
@@ -48,6 +44,14 @@ const Component = ({
   setTotalReview,
   initialLoading,
   setInitialLoading,
+
+  url,
+  setUrl,
+  getBoard,
+  isFetching,
+  getNextPage,
+  getNextPageIsPossible,
+  getBoardRefetch,
 }) => {
   const [allReviewList, setAllReviewList] = useState();
 
@@ -67,7 +71,6 @@ const Component = ({
   const [foodId, setFoodId] = useState(0);
 
   const [reviewWrite, setReviewWrite] = useState(0);
-  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
 
   // 베스트순,최신순,리뷰순 (sort)
   // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
@@ -85,15 +88,6 @@ const Component = ({
 
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
-
-  const {
-    getBoard,
-    getBoardIsFetching: isFetching,
-    getBoardIsLoading,
-    getNextPage,
-    getNextPageIsPossible,
-    getBoardRefetch,
-  } = useMainReviewInfiniteQuery(url, dailyFoodId);
 
   const [dailyFoodIdFromAtom, setDailyFoodIdFromAtom] = useAtom(
     reviewDetailDailyFoodIdAtom,
@@ -127,10 +121,6 @@ const Component = ({
       ),
     );
   }, [dailyFoodId, orderFilter, isOnlyPhoto, selectedKeyword, setUrl]);
-
-  useEffect(() => {
-    getBoardRefetch();
-  }, [url]);
 
   useEffect(() => {
     const review =
@@ -227,6 +217,11 @@ const Component = ({
       setAllReviewList([]);
     };
   }, [setAllReviewList]);
+
+  useEffect(() => {
+    console.log('isOnlyPhoto 확인');
+    console.log(isOnlyPhoto);
+  }, [isOnlyPhoto]);
 
   return (
     <Container>

@@ -42,10 +42,10 @@ import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
-import {
-  fetchNextPageReviewDetailAtom,
-  hasNextPageReviewDetailAtom,
-} from '../../../../../biz/useReview/useMealDetailReview/store';
+// import {
+//   fetchNextPageReviewDetailAtom,
+//   hasNextPageReviewDetailAtom,
+// } from '../../../../../biz/useReview/useMealDetailReview/store';
 import {useMainInfiniteScrollQuery} from '../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
@@ -75,6 +75,9 @@ import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDe
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const {width} = Dimensions.get('screen');
 const Pages = ({route}) => {
+  const dailyFoodId = route.params.dailyFoodId;
+  const time = route.params.deliveryTime;
+
   const queryClient = useQueryClient();
   const bodyRef = useRef();
   const navigation = useNavigation();
@@ -85,7 +88,7 @@ const Pages = ({route}) => {
   const [scroll, setScroll] = useState(0);
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
-
+  const headerTitle = foodDetailData?.name;
   const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
   const {isFoodDetails, isFoodDetailLoading, foodDetail} = useFoodDetail();
   const {
@@ -100,6 +103,19 @@ const Pages = ({route}) => {
   const [totalReview, setTotalReview] = useState(0);
   const [initialLoading, setInitialLoading] = useState(false);
 
+  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+  const {
+    getBoard,
+    getBoardIsFetching: isFetching,
+    getNextPage,
+    getNextPageIsPossible,
+    getBoardRefetch,
+  } = useMainReviewInfiniteQuery(url, dailyFoodId);
+
+  useEffect(() => {
+    getBoardRefetch();
+  }, [url]);
+
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -109,16 +125,10 @@ const Pages = ({route}) => {
     data: {data: isUserInfo},
   } = useGetUserInfo();
 
-  const headerTitle = foodDetailData?.name;
-  const dailyFoodId = route.params.dailyFoodId;
-  const time = route.params.deliveryTime;
-
   // console.log(dailyFoodId);
 
   const [count, setCount] = useState(1);
 
-  const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
-  const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
   const closeModal = () => {
@@ -296,15 +306,6 @@ const Pages = ({route}) => {
   const handleScroll = e => {
     const scrollY = e.nativeEvent.contentOffset.y;
     setScroll(scrollY);
-
-    // 상세페이지 리뷰
-    if (isCloseToBottomOfScrollView(e.nativeEvent)) {
-      //'바닥에 도달함 '
-
-      if (hasNextPageReviewDetail) {
-        fetchNextPageReviewDetail.fetchNextPage();
-      }
-    }
   };
 
   const focusPress = () => {
@@ -622,6 +623,13 @@ const Pages = ({route}) => {
                     setTotalReview={setTotalReview}
                     initialLoading={initialLoading}
                     setInitialLoading={setInitialLoading}
+                    url={url}
+                    setUrl={setUrl}
+                    getBoard={getBoard}
+                    isFetching={isFetching}
+                    getNextPage={getNextPage}
+                    getNextPageIsPossible={getNextPageIsPossible}
+                    getBoardRefetch={getBoardRefetch}
                   />
                 </>
               ) : (
