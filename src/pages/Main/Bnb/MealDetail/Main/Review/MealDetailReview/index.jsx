@@ -218,11 +218,6 @@ const Component = ({
     };
   }, [setAllReviewList]);
 
-  useEffect(() => {
-    console.log('isOnlyPhoto 확인');
-    console.log(isOnlyPhoto);
-  }, [isOnlyPhoto]);
-
   return (
     <Container>
       <Wrap1>

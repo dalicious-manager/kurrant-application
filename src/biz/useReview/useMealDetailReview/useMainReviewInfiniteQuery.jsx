@@ -51,10 +51,6 @@ export function useMainReviewInfiniteQuery(url, dailyFoodId) {
     },
   });
 
-  // useEffect(() => {
-  //   getBoardRefetch();
-  // }, [url]);
-
   return {
     getBoard,
     getNextPage,
