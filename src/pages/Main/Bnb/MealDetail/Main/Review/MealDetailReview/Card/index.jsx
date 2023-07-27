@@ -330,6 +330,8 @@ const Wrap3 = styled.View`
   ${({isMarginOn}) => {
     if (!isMarginOn) {
       return `margin-bottom: 8px;`;
+    } else {
+      return `margin-bottom: 11px;`;
     }
   }}
 `;
@@ -362,7 +364,7 @@ const LikePressable = styled.Pressable`
 
 const ImagesWrapper = styled.Pressable`
   flex-direction: row;
-  padding-top: 11px;
+  /* padding-top: 11px; */
   padding-bottom: 4px;
   /* border: 1px solid black; */
   margin-bottom: 8px;
