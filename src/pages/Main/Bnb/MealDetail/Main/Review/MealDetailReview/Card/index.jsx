@@ -93,7 +93,7 @@ const Component = ({
         <></>
       )}
 
-      <Wrap3>
+      <Wrap3 isMarginOn={imageLocation && imageLocation.length > 0}>
         <RowWrap>
           <StarsWrap>
             <StarRating rating={rating} width="66px" margin="1px" />
@@ -105,8 +105,8 @@ const Component = ({
           </PostDateText>
         </RowWrap>
 
-        <EditWrap>
-          {/* <LikePressable
+        {/* <EditWrap>
+          <LikePressable
             onPress={() => {
               if (isFetching) return;
 
@@ -202,7 +202,7 @@ const Component = ({
         firstClickedImageIndex={firstClickedImageIndex}
       />
 
-      <Filler />
+      {/* <Filler /> */}
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
         {Platform.OS === 'ios' &&
@@ -311,6 +311,8 @@ const RestaurentNameText = styled(Typography).attrs({text: 'Body05SB'})`
 const EditWrap = styled.View`
   flex-direction: row;
   align-items: center;
+  position: relative;
+  /* border: 1px solid black; */
 `;
 
 const EditText = styled(Typography).attrs({text: 'Button10R'})`
@@ -335,6 +337,14 @@ const Wrap3 = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  /* border: 1px solid black; */
+  ${({isMarginOn}) => {
+    if (!isMarginOn) {
+      return `margin-bottom: 8px;`;
+    } else {
+      return `margin-bottom: 11px;`;
+    }
+  }}
 `;
 
 const RowWrap = styled.View`
@@ -354,12 +364,21 @@ const PostDateText = styled(Typography).attrs({text: 'SmallLabel'})`
 const LikePressable = styled.Pressable`
   flex-direction: row;
   align-items: center;
+  /* border: 1px solid black; */
+
+  padding: 10px 0;
+  z-index: 1;
+  position: absolute;
+  top: -13.3px;
+  right: 0;
 `;
 
 const ImagesWrapper = styled.Pressable`
   flex-direction: row;
-  padding-top: 11px;
+  /* padding-top: 11px; */
   padding-bottom: 4px;
+  /* border: 1px solid black; */
+  margin-bottom: 8px;
 `;
 
 const ImagePressable = styled.Pressable`
@@ -452,4 +471,5 @@ const IconDiv = styled.Pressable`
 const Filler = styled.View`
   width: 100%;
   height: 8px;
+  border: 1px solid black;
 `;

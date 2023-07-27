@@ -55,6 +55,7 @@ import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
 
+
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
@@ -718,20 +719,7 @@ const InfoTextWrap = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
-const ReviewWrap = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-const ReviewPoint = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 4px;
-`;
 
-const ReviewCount = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 4px;
-`;
 const ButtonWrap = styled.View`
   position: absolute;
   bottom: 35px;
@@ -813,4 +801,19 @@ const DeadlineGuide = styled.View`
 
 const DeadlineText = styled(Typography).attrs({text: 'SmallLabel'})`
   color: ${props => props.theme.colors.grey[0]};
+`;
+
+const ReviewWrap = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+const ReviewPoint = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 4px;
+`;
+
+const ReviewCount = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 4px;
 `;

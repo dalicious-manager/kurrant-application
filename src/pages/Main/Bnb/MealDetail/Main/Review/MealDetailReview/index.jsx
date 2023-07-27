@@ -43,7 +43,7 @@ const Component = ({
   getNextPageIsPossible,
   getBoardRefetch,
 }) => {
-  const [allReviewList, setAllReviewList] = useState();
+  const [allReviewList, setAllReviewList] = useState([]);
   const theme = useTheme();
   const queryClient = useQueryClient();
   const navigation = useNavigation();
