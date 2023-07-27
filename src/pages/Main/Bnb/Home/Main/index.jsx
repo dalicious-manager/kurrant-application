@@ -803,7 +803,8 @@ const Pages = () => {
             </CountWrap>
           </MarketWrap> */}
 
-            <DietRepoPressable
+            {/* 식단 리포트 버튼 */}
+            {/* <DietRepoPressable
               onPress={() => {
                 navigation.navigate(DietRepoMainPageName);
               }}>
@@ -823,7 +824,7 @@ const Pages = () => {
                   : 0}{' '}
                 kcal
               </CalText>
-            </DietRepoPressable>
+            </DietRepoPressable> */}
           </MainWrap>
         </Wrap>
       </ScrollViewWrap>
