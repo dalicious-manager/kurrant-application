@@ -42,6 +42,7 @@ const Component = ({
   getNextPage,
   getNextPageIsPossible,
   getBoardRefetch,
+
 }) => {
   const [allReviewList, setAllReviewList] = useState();
   const theme = useTheme();

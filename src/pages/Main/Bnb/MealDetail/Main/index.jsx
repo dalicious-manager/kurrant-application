@@ -29,10 +29,6 @@ import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
-// import {
-//   fetchNextPageReviewDetailAtom,
-//   hasNextPageReviewDetailAtom,
-// } from '../../../../../biz/useReview/useMealDetailReview/store';
 import {useMainInfiniteScrollQuery} from '../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
@@ -40,6 +36,7 @@ import Balloon from '../../../../../components/Balloon';
 import ShoppingCart from '../../../../../components/BasketButton';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/ButtonExtendable';
+import {YellowStar} from '../../../../../components/Icon';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
@@ -58,6 +55,7 @@ import Skeleton from '../Skeleton';
 import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import {useQueryClient} from 'react-query';
 import {YellowStar} from '../../../../../components/Icon';
+
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
@@ -728,7 +726,20 @@ const InfoTextWrap = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
+const ReviewWrap = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+const ReviewPoint = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 4px;
+`;
 
+const ReviewCount = styled(Typography).attrs({text: 'Body05R'})`
+  color: ${props => props.theme.colors.grey[2]};
+  margin-left: 4px;
+`;
 const ButtonWrap = styled.View`
   position: absolute;
   bottom: 35px;
