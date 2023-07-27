@@ -94,13 +94,13 @@ const Pages = () => {
           text: m.groupName + '\u00a0' + m.spotName,
         };
       });
-      const clientType = isLoadMeal?.data?.spotCarts.map(el => {
+      const client = isLoadMeal?.data?.spotCarts.map(el => {
         return {
           spotId: el.spotId,
           groupType: el.groupType,
         };
       });
-      setClientStatus(clientType);
+      setClientStatus(client);
       setMealCartSpot(spot);
       setSpotCartData(isLoadMeal?.data?.spotCarts);
     }
@@ -828,7 +828,7 @@ const Pages = () => {
           <View>
             <PaymentWrap>
               <PaymentView>
-                <PaymentText>총 상품금액</PaymentText>
+                <PaymentText>총 상품금액{clientType}</PaymentText>
                 <PaymentText>{withCommas(totalMealPrice)} 원</PaymentText>
               </PaymentView>
               {isLoadMeal?.data?.spotCarts &&

@@ -42,7 +42,6 @@ const Component = ({
   const navigation = useNavigation();
 
   const theme = useTheme();
-  let isloadingData = [];
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
   const {pressLike} = useMealDetailReviewMutation();
@@ -63,7 +62,7 @@ const Component = ({
   }
 
   const [numLines, setNumLines] = useState(1);
-  const [isLoading, setLoading] = useAtom(isGoodLoadingAtom);
+  const [isLoading, setLoading] = useState(false);
   const handlePressReviewText = () => {
     setElaborateComment(!elaborateComment);
   };
@@ -134,16 +133,13 @@ const Component = ({
             />
             <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
           </LikePressable> */}
+        <EditWrap>
           {isGood !== undefined && (
             <LikePressable
-              disabled={isloadingData.includes(id)}
+              disabled={isLoading}
               onPress={async () => {
-                if (isloadingData.includes(id)) {
-                  console.log(id);
-                  return;
-                }
+                setLoading(true);
                 try {
-                  isloadingData.push(id);
                   await pressLike({
                     dailyFoodId,
                     reviewId: id,
@@ -166,9 +162,9 @@ const Component = ({
                     error.toString().replace('error:', ''),
                   );
                 } finally {
-                  if (isloadingData.includes(id)) {
-                    isloadingData = isloadingData.filter(v => v !== id);
-                  }
+                  setTimeout(() => {
+                    setLoading(false);
+                  }, 300);
                 }
               }}>
               <EditText isGood={isGood}>도움이 돼요</EditText>
