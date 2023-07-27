@@ -21,6 +21,7 @@ import {
   TouchableWithoutFeedback,
   FlatList,
 } from 'react-native';
+import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
 import MealDetailReview from './Review/MealDetailReview';
@@ -30,6 +31,7 @@ import useAuth from '../../../../../biz/useAuth';
 import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
 import {useMainInfiniteScrollQuery} from '../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
+import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
@@ -52,10 +54,6 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
-import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
-import {useQueryClient} from 'react-query';
-import {YellowStar} from '../../../../../components/Icon';
-
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
@@ -685,12 +683,6 @@ const Line = styled.View`
   justify-content: space-between;
 `;
 
-const ReviewWrap = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
 const InformationWrap = styled.Pressable`
   border: 1px solid ${props => props.theme.colors.grey[7]};
   border-radius: 7px;
@@ -760,14 +752,6 @@ const MealTitle = styled(Typography).attrs({text: 'LargeTitle'})`
   margin-bottom: 8px;
 `;
 
-const ReviewPoint = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 4px;
-`;
-const ReviewCount = styled(Typography).attrs({text: 'Body05R'})`
-  color: ${props => props.theme.colors.grey[2]};
-  margin-left: 4px;
-`;
 const InformationText = styled(Typography).attrs({text: 'ButtonSB'})`
   color: ${props => props.theme.colors.grey[3]};
 `;

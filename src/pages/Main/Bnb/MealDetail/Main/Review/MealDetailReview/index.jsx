@@ -42,7 +42,6 @@ const Component = ({
   getNextPage,
   getNextPageIsPossible,
   getBoardRefetch,
-
 }) => {
   const [allReviewList, setAllReviewList] = useState();
   const theme = useTheme();
@@ -378,6 +377,8 @@ const Component = ({
                 userName={item.userName}
                 item={item}
                 good={item.good}
+                allReviewList={allReviewList}
+                setAllReviewList={setAllReviewList}
                 isGood={item.isGood}
                 createDate={item.createDate}
                 updateDate={item.updateDate}

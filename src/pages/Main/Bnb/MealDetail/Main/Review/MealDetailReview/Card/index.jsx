@@ -33,6 +33,8 @@ const Component = ({
   createDate,
   updateDate,
   commentList,
+  allReviewList,
+  setAllReviewList,
   isFetching,
 }) => {
   const navigation = useNavigation();
@@ -134,10 +136,20 @@ const Component = ({
             <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
           </LikePressable> */}
           <LikePressable
-            onPress={() => {
+            onPress={async () => {
               if (isFetching) return;
-
-              pressLike({
+              const nowData = allReviewList.map(v => {
+                if (v.reviewId === id) {
+                  return {
+                    ...v,
+                    isGood: !v.isGood,
+                    good: v.isGood ? good - 1 : good + 1,
+                  };
+                }
+                return v;
+              });
+              setAllReviewList(nowData);
+              await pressLike({
                 dailyFoodId,
                 reviewId: id,
               });

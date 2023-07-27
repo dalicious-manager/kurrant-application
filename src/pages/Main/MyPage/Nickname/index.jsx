@@ -8,6 +8,7 @@ import {
   Platform,
   NativeModules,
   Pressable,
+  Alert,
 } from 'react-native';
 import styled from 'styled-components';
 import BackButton from '~components/BackButton';
@@ -48,18 +49,22 @@ const Pages = ({route}) => {
   const validation = nickname && !errors.nickname;
 
   const onSubmit = async () => {
-    await settingNickname({name: nickname});
-    if (from) {
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: SCREEN_NAME,
-          },
-        ],
-      });
-    } else {
-      navigation.goBack();
+    try {
+      await settingNickname({name: nickname});
+      if (from) {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SCREEN_NAME,
+            },
+          ],
+        });
+      } else {
+        navigation.goBack();
+      }
+    } catch (error) {
+      Alert.alert('닉네임 설정', error.toString().replace('error: ', ''));
     }
   };
 
