@@ -4,6 +4,7 @@ import {getStorage, removeItemFromStorage} from '../../../utils/asyncStorage';
 import {isTimeNumberDifferenceLarger} from '../../../utils/dateFormatter';
 import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
+import {PAGE_NAME as RegisterInfoPage6PageName} from '~pages/RegisterInfo/Page6';
 
 const useShowRegisterInfo = () => {
   // 회원 정보 입력 홈 화면
@@ -34,8 +35,8 @@ const useShowRegisterInfo = () => {
       // console.log('회원정보입력 입력 여부받기 완료');
     }
     // 회원정보입력 작성여부 파악
-    if (isRegisterDone) {
-      // if (false) {
+    // if (isRegisterDone) {
+    if (false) {
       console.log('회원정보입력 이미 작성하셨습니다');
     } else {
       console.log('회원정보입력을 아직 작성하지 않으셨습니다');
@@ -45,7 +46,8 @@ const useShowRegisterInfo = () => {
 
   useEffect(() => {
     if (shouldOpenRegister) {
-      navigation.navigate(RegisterInfoStartPageName);
+      // navigation.navigate(RegisterInfoStartPageName);
+      navigation.navigate(RegisterInfoPage6PageName);
     }
   }, [shouldOpenRegister]);
 

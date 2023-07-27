@@ -7,7 +7,8 @@ import {useEffect, useState} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 
 import Typography from '~components/Typography';
-import BottomSheet from '~components/BottomSheet';
+// import BottomSheet from '~components/BottomSheet';
+import BottomSheetRegisterInfo from '~components/BottomSheetRegisterInfo';
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
@@ -259,7 +260,7 @@ const Pages = () => {
       /> */}
 
       {/* <Bottom */}
-      <BottomSheet
+      <BottomSheetRegisterInfo
         modalVisible={genderModal}
         setModalVisible={setGenderModal}
         title="성별"
@@ -272,7 +273,7 @@ const Pages = () => {
         // setValue={onSelectEvent2}
         height={200}
       />
-      <BottomSheet
+      <BottomSheetRegisterInfo
         modalVisible={countryModal}
         setModalVisible={setCountryModal}
         title="국적"
@@ -282,7 +283,7 @@ const Pages = () => {
         // setValue={onSelectEvent2}
         height={200}
       />
-      <BottomSheet
+      <BottomSheetRegisterInfo
         modalVisible={jobTypeModal}
         setModalVisible={setJobTypeModal}
         title="직종 분류"
@@ -293,7 +294,7 @@ const Pages = () => {
         // setValue={onSelectEvent2}
         height={200}
       />
-      <BottomSheet
+      <BottomSheetRegisterInfo
         modalVisible={detailJobTypeModal}
         setModalVisible={setDetailJobTypeModal}
         title="상세 직종"
