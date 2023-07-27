@@ -35,6 +35,7 @@ const useShowRegisterInfo = () => {
     }
     // 회원정보입력 작성여부 파악
     if (isRegisterDone) {
+      // if (false) {
       console.log('회원정보입력 이미 작성하셨습니다');
     } else {
       console.log('회원정보입력을 아직 작성하지 않으셨습니다');
