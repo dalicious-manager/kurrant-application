@@ -427,8 +427,11 @@ const Pages = () => {
     totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
 
   // 품절
+  console.log(arr);
   const soldout = arr?.filter(el => el.status === 2);
-  const salesend = arr?.filter(el => el.status !== 1);
+  const salesend = spotCartData
+    ?.filter(p => p.spotId === selected)
+    ?.filter(el => el.status !== 1);
 
   // 클라 타입
   const clientType = clientStatus?.filter(p => p.spotId === selected);
@@ -917,6 +920,7 @@ const Pages = () => {
             label={`총 ${totalCount}개 결제하기`}
             type={'yellow'}
             onPressEvent={() => {
+              console.log(salesend);
               deadline !== 0 && isDeadline();
               soldout.length !== 0 && isSoldOut();
               salesend.length !== 0 && isSalesEnd();

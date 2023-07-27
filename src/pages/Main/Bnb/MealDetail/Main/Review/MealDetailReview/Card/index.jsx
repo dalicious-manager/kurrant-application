@@ -4,6 +4,7 @@ import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled, {useTheme} from 'styled-components';
 import {css} from 'styled-components/native';
+import useMealDetailReviewMutation from '~biz/useReview/useMealDetailReview/useMealDetailReviewMutation';
 import {SkinnyArrowDown} from '~components/Icon';
 import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
 import ImageModal from '~components/Review/ImageModal/ImageModal';
@@ -13,7 +14,6 @@ import {changeSeperator} from '~utils/dateFormatter';
 
 import {ThumbsUp} from '../../../../../../../../components/Icon';
 import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
-import useMealDetailReviewMutation from '~biz/useReview/useMealDetailReview/useMealDetailReviewMutation';
 
 // 상세페이지 카드
 
