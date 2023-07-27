@@ -107,7 +107,7 @@ const Component = ({
         </RowWrap>
 
         <EditWrap>
-          <LikePressable
+          {/* <LikePressable
             onPress={() => {
               if (isFetching) return;
 
@@ -132,6 +132,23 @@ const Component = ({
               }
             />
             <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
+          </LikePressable> */}
+          <LikePressable
+            onPress={() => {
+              if (isFetching) return;
+
+              pressLike({
+                dailyFoodId,
+                reviewId: id,
+              });
+            }}>
+            <EditText isGood={isGood}>도움이 돼요</EditText>
+            <ThumbsUp
+              width="14px"
+              height="15px"
+              color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
+            />
+            <LikeNumber isGood={isGood}>{good}</LikeNumber>
           </LikePressable>
         </EditWrap>
       </Wrap3>
