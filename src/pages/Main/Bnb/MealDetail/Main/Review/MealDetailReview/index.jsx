@@ -122,9 +122,9 @@ const Component = ({
     );
   }, [dailyFoodId, orderFilter, isOnlyPhoto, selectedKeyword, setUrl]);
 
-  useEffect(() => {
-    getBoardRefetch();
-  }, [url]);
+  // useEffect(() => {
+  //   getBoardRefetch();
+  // }, [url]);
 
   useEffect(() => {
     const review =
@@ -221,6 +221,11 @@ const Component = ({
       setAllReviewList([]);
     };
   }, [setAllReviewList]);
+
+  useEffect(() => {
+    console.log('isOnlyPhoto 확인');
+    console.log(isOnlyPhoto);
+  }, [isOnlyPhoto]);
 
   return (
     <Container>

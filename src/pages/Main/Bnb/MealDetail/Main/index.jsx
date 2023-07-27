@@ -112,6 +112,10 @@ const Pages = ({route}) => {
     getBoardRefetch,
   } = useMainReviewInfiniteQuery(url, dailyFoodId);
 
+  useEffect(() => {
+    getBoardRefetch();
+  }, [url]);
+
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -125,8 +129,6 @@ const Pages = ({route}) => {
 
   const [count, setCount] = useState(1);
 
-  // const [hasNextPageReviewDetail] = useAtom(hasNextPageReviewDetailAtom);
-  // const [fetchNextPageReviewDetail] = useAtom(fetchNextPageReviewDetailAtom);
   const isFocused = useIsFocused();
 
   const closeModal = () => {
@@ -304,15 +306,6 @@ const Pages = ({route}) => {
   const handleScroll = e => {
     const scrollY = e.nativeEvent.contentOffset.y;
     setScroll(scrollY);
-
-    // 상세페이지 리뷰
-    // if (isCloseToBottomOfScrollView(e.nativeEvent)) {
-    //   //'바닥에 도달함 '
-
-    //   if (hasNextPageReviewDetail) {
-    //     fetchNextPageReviewDetail.fetchNextPage();
-    //   }
-    // }
   };
 
   const focusPress = () => {
@@ -410,24 +403,6 @@ const Pages = ({route}) => {
                           {detailFetching ? '' : foodDetailData?.name || ''}
                         </MealTitle>
                         <Line>
-                          {/* {reviewData?.pages[0]?.items.totalReview >= 1 && (
-                            <ReviewWrap>
-                              <YellowStar width="20px" height="20px" />
-                              <ReviewPoint>
-                                {reviewData?.pages[0]?.items.starAverage &&
-                                reviewData?.pages[0]?.items.starAverage?.toString()
-                                  .length === 1
-                                  ? reviewData?.pages[0]?.items.starAverage.toFixed(
-                                      1,
-                                    )
-                                  : reviewData?.pages[0]?.items.starAverage}
-                              </ReviewPoint>
-                              <ReviewCount>
-                                ({reviewData?.pages[0]?.items.totalReview})
-                              </ReviewCount>
-                            </ReviewWrap>
-                          )} */}
-
                           <InformationWrap
                             onPress={() => {
                               navigation.navigate(MealInformationPageName, {
