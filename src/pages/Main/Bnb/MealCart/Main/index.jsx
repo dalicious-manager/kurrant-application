@@ -56,8 +56,13 @@ const Pages = () => {
     soldOutMeal,
     // clientStatus,
   } = useShoppingBasket();
-  const {data: isLoadMeal, isFetching} = useGetShoppingBasket();
+  const {
+    data: isLoadMeal,
+    isFetching,
+    refetch: loadMealRefetch,
+  } = useGetShoppingBasket();
   const [spotCartData, setSpotCartData] = useState();
+  const [salesend, setSalesend] = useState();
   const [mealCartSpot, setMealCartSpot] = useState();
   const [clientStatus, setClientStatus] = useState([]);
   const [time, setTime] = useState('11:00');
@@ -103,6 +108,16 @@ const Pages = () => {
       setClientStatus(clientType);
       setMealCartSpot(spot);
       setSpotCartData(isLoadMeal?.data?.spotCarts);
+      setSalesend(
+        isLoadMeal?.data?.spotCarts
+          ?.filter(p => p.spotId === selected)
+          ?.map(el =>
+            el.cartDailyFoodDtoList?.map(v =>
+              v.cartDailyFoods.filter(c => c.status !== 1),
+            ),
+          )
+          .flat(2),
+      );
     }
 
     const getTime = async () => {
@@ -424,14 +439,6 @@ const Pages = () => {
 
   // 품절
   const soldout = arr?.filter(el => el.status === 2);
-  const salesend = spotCartData
-    ?.filter(p => p.spotId === selected)
-    ?.map(el =>
-      el.cartDailyFoodDtoList?.map(v =>
-        v.cartDailyFoods.filter(c => c.status !== 1),
-      ),
-    )
-    .flat(2);
 
   // 클라 타입
   const clientType = clientStatus?.filter(p => p.spotId === selected);
@@ -568,14 +575,18 @@ const Pages = () => {
       return;
     }
   };
-  const isSalesEnd = () => {
-    if (salesend.length !== 0) {
-      Alert.alert('판매할수 없는 상품이 있어요', '메뉴룰 변경해 주세요', [
-        {
-          text: '확인',
-          onPress: () => {},
-        },
-      ]);
+  const isSalesEnd = refetchSelesEnd => {
+    if (salesend.length !== 0 || refetchSelesEnd?.length !== 0) {
+      return Alert.alert(
+        '구매할 수 없는 상품이 있어요',
+        '메뉴룰 변경해 주세요',
+        [
+          {
+            text: '확인',
+            onPress: () => {},
+          },
+        ],
+      );
     } else {
       return;
     }
@@ -924,13 +935,25 @@ const Pages = () => {
           <Button
             label={`총 ${totalCount}개 결제하기`}
             type={'yellow'}
-            onPressEvent={() => {
+            onPressEvent={async () => {
+              const data = await loadMealRefetch();
+              const refetchSelesEnd = data?.data?.data?.spotCarts
+                ?.filter(p => p.spotId === selected)
+                ?.map(el =>
+                  el.cartDailyFoodDtoList?.map(v =>
+                    v.cartDailyFoods.filter(c => c.status !== 1),
+                  ),
+                )
+                .flat(2);
               deadline !== 0 && isDeadline();
               soldout.length !== 0 && isSoldOut();
-              salesend.length !== 0 && isSalesEnd();
+              if (refetchSelesEnd.length !== 0)
+                return isSalesEnd(refetchSelesEnd);
+              if (salesend.length !== 0) return isSalesEnd();
               isLack.includes(true) && isShortage();
               soldout.length === 0 &&
                 salesend.length === 0 &&
+                refetchSelesEnd.length === 0 &&
                 totalCount !== 0 &&
                 !isLack.includes(true) &&
                 navigation.navigate(PaymentPageName, {
