@@ -94,13 +94,13 @@ const Pages = () => {
           text: m.groupName + '\u00a0' + m.spotName,
         };
       });
-      const client = isLoadMeal?.data?.spotCarts.map(el => {
+      const clientType = isLoadMeal?.data?.spotCarts.map(el => {
         return {
           spotId: el.spotId,
           groupType: el.groupType,
         };
       });
-      setClientStatus(client);
+      setClientStatus(clientType);
       setMealCartSpot(spot);
       setSpotCartData(isLoadMeal?.data?.spotCarts);
     }
@@ -121,9 +121,6 @@ const Pages = () => {
     // getCardList();
     if (isUserInfo?.spotId) setSelected(isUserInfo?.spotId);
   }, [isUserInfo?.spotId]);
-  if (!isLoadMeal?.data) {
-    return <ActivityIndicator size={'large'} />;
-  }
 
   const addHandle = async (cartData, id) => {
     const modifyQty = cartData
@@ -159,7 +156,6 @@ const Pages = () => {
     const req = {updateCartList: modifyQty};
     updateMeal(req);
   };
-
   const substractHandle = async (cartData, id) => {
     const modifyQty = cartData
       .map(c => {
@@ -625,7 +621,12 @@ const Pages = () => {
     }
   };
   const selectSpotName = mealCartSpot?.filter(el => el.id === selected);
-
+  useEffect(() => {
+    if (clientType) console.log(clientType, 'ttest');
+  }, [clientType]);
+  if (!isLoadMeal?.data) {
+    return <ActivityIndicator size={'large'} />;
+  }
   return (
     <SafeView>
       <SpotView>
@@ -828,11 +829,11 @@ const Pages = () => {
           <View>
             <PaymentWrap>
               <PaymentView>
-                <PaymentText>총 상품금액{clientType}</PaymentText>
+                <PaymentText>총 상품금액</PaymentText>
                 <PaymentText>{withCommas(totalMealPrice)} 원</PaymentText>
               </PaymentView>
               {isLoadMeal?.data?.spotCarts &&
-                clientType[0]?.clientStatus === 0 && (
+                clientType[0]?.groupType === 0 && (
                   <PaymentView>
                     <PressableView onPress={fundButton}>
                       <PaymentText>식사 지원금 사용 금액</PaymentText>

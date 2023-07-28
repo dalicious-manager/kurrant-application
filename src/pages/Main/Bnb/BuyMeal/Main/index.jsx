@@ -53,7 +53,10 @@ import {ko} from 'date-fns/locale';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {diningTimeFoodAtom} from '../../../../../biz/useDailyFood/store';
 import BuyMealPage from '../components/BuyMealPage';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from 'react-native-gesture-handler';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {goNextPage, goPrevPage} from '../util/movePage';
 import {foodDeliveryTimeFilter, getTime} from '../util/time';
@@ -83,8 +86,7 @@ const Pages = ({route}) => {
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   const [modalVisible4, setModalVisible4] = useState(false);
   const [diningDisabled, setDiningDisabled] = useState(false);
-  const [sliderValue, setSliderValue] = useState(1);
-  const [nowPage, setNowPage] = useState(1);
+  const [nowPage, setNowPage] = useState();
   const [selectFood, setSelectFood] = useState();
   const [show, setShow] = useState(false);
   const [scrollDir, setScrollDir] = useState(true);
@@ -93,7 +95,8 @@ const Pages = ({route}) => {
   const [orderDailyFoodId, setOrderDailyFoodId] = useState();
   const [dailyfoodData, setDailyfoodData] = useState();
   const [dailyfoodId, setDailyfoodId] = useState();
-
+  const REFRESH_DELAY = 200; // 1 second
+  let refreshTimer = null;
   const fadeAnim = useRef(new Animated.Value(32)).current;
   const [weekly] = useAtom(weekAtom);
   const [weeklyService, setWeeklyService] = useAtom(weekServiceAtom);
@@ -249,12 +252,16 @@ const Pages = ({route}) => {
     navigation.setParams({
       date: null,
     });
-    if (Platform.OS === 'android') {
-      if (offset === 0) {
-        if (nowPage === position) {
-          if (position === 2) {
+    if (isDiningTypes?.length > 0 && isDiningTypes[0]) {
+      if (Platform.OS === 'ios') {
+        if (offset !== 0) {
+          console.log(position);
+          if (
+            isDiningTypes[position] === 3 ||
+            (isDiningTypes?.length === 1 && position === 0)
+          ) {
             setDiningDisabled(true);
-
+            setNowPage(isDiningTypes[0]);
             goNextPage(
               weekly,
               weeklyService,
@@ -262,82 +269,53 @@ const Pages = ({route}) => {
               setDate,
               pager,
               setNowPage,
-              isDiningTypes,
+              dailyfoodDataList?.data?.diningTypes.map(
+                dining => dining.diningType,
+              ),
             );
+            diningRef.current.setPage(0);
             setTimeout(() => {
               setDiningDisabled(false);
             }, 500);
           }
-          if (position === 0) {
+          if (position === -1) {
             setDiningDisabled(true);
-
+            setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
             goPrevPage(
               weekly,
               weeklyService,
               date,
-              position,
               setDate,
               pager,
               setNowPage,
-              isDiningTypes,
+              dailyfoodDataList?.data?.diningTypes.map(
+                dining => dining.diningType,
+              ),
             );
+            diningRef.current.setPage(isDiningTypes?.length - 1);
             setTimeout(() => {
               setDiningDisabled(false);
             }, 500);
           }
-        }
-        setNowPage(position);
-      }
-    } else {
-      if (offset !== 0) {
-        if (position === 2) {
-          setDiningDisabled(true);
-
-          goNextPage(
-            weekly,
-            weeklyService,
-            date,
-            setDate,
-            pager,
-            setNowPage,
-            isDiningTypes,
-          );
-          setTimeout(() => {
-            setDiningDisabled(false);
-          }, 500);
-        }
-        if (position === -1) {
-          setDiningDisabled(true);
-
-          goPrevPage(
-            weekly,
-            weeklyService,
-            date,
-            position,
-            setDate,
-            pager,
-            setNowPage,
-            isDiningTypes,
-          );
-          setTimeout(() => {
-            setDiningDisabled(false);
-          }, 500);
         }
       }
     }
   };
 
   const onPageScroll = e => {
+    console.log('test');
     navigation.setParams({
       date: null,
     });
     const {position} = e.nativeEvent;
+    if (isDiningTypes[position] !== nowPage)
+      setNowPage(isDiningTypes[position]);
     if (
-      isDiningTypes?.length > 0 &&
+      isDiningTypes?.length === 1 &&
       isDiningTypes[0] &&
-      ((isMorningFood.length === 0 && position === 0) ||
-        (isLunchFood.length === 0 && position === 1) ||
-        (isDinnerFood.length === 0 && position === 2))
+      ((isMorningFood.length === 0 && isDiningTypes[position] === 1) ||
+        (isLunchFood.length === 0 && isDiningTypes[position] === 2) ||
+        (isDinnerFood.length === 0 && isDiningTypes[position] === 3))
     ) {
       const page =
         position === 0
@@ -363,9 +341,11 @@ const Pages = ({route}) => {
           : isDiningTypes?.includes(1)
           ? 0
           : 2;
+      console.log(page, position, 'position');
       if (page !== position) {
         if (position === 2) {
           setDiningDisabled(true);
+          // setNowPage(isDiningTypes[0]);
           goNextPage(
             weekly,
             weeklyService,
@@ -375,33 +355,33 @@ const Pages = ({route}) => {
             setNowPage,
             isDiningTypes,
           );
+          // diningRef.current.setPage(0);
           setTimeout(() => {
             setDiningDisabled(false);
           }, 500);
         }
         if (position === 0) {
           setDiningDisabled(true);
+          // setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
           goPrevPage(
             weekly,
             weeklyService,
             date,
-            position,
             setDate,
             pager,
             setNowPage,
             isDiningTypes,
           );
+          // diningRef.current.setPage(isDiningTypes?.length - 1);
           setTimeout(() => {
             setDiningDisabled(false);
           }, 500);
         }
-        diningRef.current.setPage(page);
-        setSliderValue(page);
-      } else {
-        setSliderValue(page);
       }
+
+      // setNowPage(isDiningTypes[page]);
     } else {
-      setSliderValue(position);
+      setNowPage(isDiningTypes[position]);
     }
     MorningRef?.current?.scrollTo({x: 0, y: 0, animated: false});
     LunchRef?.current?.scrollTo({x: 0, y: 0, animated: false});
@@ -479,13 +459,12 @@ const Pages = ({route}) => {
   useEffect(() => {
     const selectDay = format(new Date(date), 'EEE', {locale: ko});
     const nowDining = dailyfoodDataList?.data?.diningTypes.filter(
-      v => v.diningType === sliderValue + 1,
+      v => v.diningType === nowPage,
     );
     if (nowDining?.length > 0) {
       const supportPrices = nowDining[0]?.supportPriceByDays?.filter(
         v => v.day === selectDay,
       );
-      console.log(dailyfoodData?.supportPrice, supportPrices[0].supportPrice);
       if (supportPrices?.length > 0) {
         setSupportPrice(
           dailyfoodData?.supportPrice || dailyfoodData?.supportPrice === 0
@@ -496,14 +475,14 @@ const Pages = ({route}) => {
     }
 
     const diningTimes = dailyfoodDataList?.data?.diningTypes.filter(
-      v => v.diningType === sliderValue + 1,
+      v => v.diningType === nowPage,
     );
     const timeSetting = async () => {
       if (!dailyfoodData) return;
       const times = await getTime(
         isUserInfo?.data,
         dailyfoodDataList?.data?.diningTypes,
-        sliderValue,
+        nowPage,
       );
       setTime(times);
     };
@@ -520,7 +499,7 @@ const Pages = ({route}) => {
     dailyfoodData?.supportPrice,
     isUserInfo?.data,
     setDiningTime,
-    sliderValue,
+    nowPage,
     time?.diningType,
   ]);
   useEffect(() => {
@@ -528,7 +507,7 @@ const Pages = ({route}) => {
       diningRef.current.setPage(
         dailyfoodDataList?.data?.diningTypes[0].diningType - 1,
       );
-      setSliderValue(dailyfoodDataList?.data?.diningTypes[0].diningType);
+      setNowPage(dailyfoodDataList?.data?.diningTypes[0].diningType);
     }
   }, [dailyfoodDataList?.data]);
   useEffect(() => {
@@ -600,7 +579,7 @@ const Pages = ({route}) => {
         });
     }
     const diningTimes = dailyfoodDataList?.data?.diningTypes.filter(
-      v => v.diningType === sliderValue + 1,
+      v => v.diningType === nowPage,
     );
     const lunchData = dailyfoodData?.dailyFoodDtos.filter(
       x => x.diningType === 2,
@@ -716,7 +695,110 @@ const Pages = ({route}) => {
     handlePress: handlePress,
     time: time,
   };
+  const handleDrag = event => {
+    if (Platform.OS === 'android' && isDiningTypes?.length > 1) {
+      if (event.nativeEvent.translationX < 0) {
+        if (refreshTimer) {
+          clearTimeout(refreshTimer);
+        }
+        refreshTimer = setTimeout(() => {
+          const nowIndex = isDiningTypes.findIndex(v => v === nowPage);
+          const nextIndex = isDiningTypes.findIndex(v => v === nowPage + 1);
+          if (nextIndex === -1) {
+            setDiningDisabled(true);
 
+            setNowPage(isDiningTypes[0]);
+            goNextPage(
+              weekly,
+              weeklyService,
+              date,
+              setDate,
+              pager,
+              setNowPage,
+              isDiningTypes,
+            );
+            setDiningDisabled(false);
+            diningRef.current.setPage(0);
+
+            return;
+          }
+          return diningRef.current.setPage(nextIndex);
+        }, REFRESH_DELAY);
+      }
+      if (event.nativeEvent.translationX > 0) {
+        if (refreshTimer) {
+          clearTimeout(refreshTimer);
+        }
+        refreshTimer = setTimeout(() => {
+          const nowIndex = isDiningTypes.findIndex(v => v === nowPage);
+          const prevIndex = isDiningTypes.findIndex(v => v === nowPage - 1);
+          if (prevIndex === -1) {
+            setDiningDisabled(true);
+
+            setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
+            goPrevPage(
+              weekly,
+              weeklyService,
+              date,
+              setDate,
+              pager,
+              setNowPage,
+              dailyfoodDataList?.data?.diningTypes.map(
+                dining => dining.diningType,
+              ),
+            );
+            diningRef.current.setPage(isDiningTypes?.length - 1);
+
+            return;
+          }
+          return diningRef.current.setPage(prevIndex);
+        }, REFRESH_DELAY);
+      }
+    }
+    if (Platform.OS === 'android' && isDiningTypes?.length === 1) {
+      if (event.nativeEvent.translationX < 0) {
+        setDiningDisabled(true);
+        if (refreshTimer) {
+          clearTimeout(refreshTimer);
+        }
+        refreshTimer = setTimeout(() => {
+          setNowPage(isDiningTypes[0]);
+          goNextPage(
+            weekly,
+            weeklyService,
+            date,
+            setDate,
+            pager,
+            setNowPage,
+            isDiningTypes,
+          );
+          setDiningDisabled(false);
+          diningRef.current.setPage(0);
+        }, REFRESH_DELAY);
+      }
+      if (event.nativeEvent.translationX > 0) {
+        setDiningDisabled(true);
+        if (refreshTimer) {
+          clearTimeout(refreshTimer);
+        }
+        refreshTimer = setTimeout(() => {
+          setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
+          goPrevPage(
+            weekly,
+            weeklyService,
+            date,
+            setDate,
+            pager,
+            setNowPage,
+            dailyfoodDataList?.data?.diningTypes.map(
+              dining => dining.diningType,
+            ),
+          );
+          diningRef.current.setPage(isDiningTypes?.length - 1);
+        }, REFRESH_DELAY);
+      }
+    }
+  };
   return (
     <SafeView>
       <CalendarWrap>
@@ -731,7 +813,8 @@ const Pages = ({route}) => {
           margin={'0px 28px'}
           scrollDir={scrollDir}
           pagerRef={pager}
-          sliderValue={sliderValue}
+          nowPage={nowPage}
+          isDiningTypes={isDiningTypes}
           isServiceDays={dailyfoodDataList?.data?.diningTypes}
         />
       </CalendarWrap>
@@ -746,37 +829,23 @@ const Pages = ({route}) => {
                   return (
                     <DiningPress
                       key={i}
+                      index={i}
                       disabled={
                         diningDisabled ||
                         (!isDailyFoodLoading && !typeBoolean && true)
                       }
                       onPress={() => {
-                        diningRef.current.setPage(i);
-                        setSliderValue(i);
+                        const idx = isDiningTypes.findIndex(v => v === type);
+                        console.log(idx);
+                        diningRef.current.setPage(idx);
+                        setNowPage(type);
                       }}>
-                      <ProgressText type={typeBoolean} index={i}>
-                        {btn}
-                      </ProgressText>
+                      <ProgressText type={typeBoolean}>{btn}</ProgressText>
+                      {nowPage === type && <SelectLine />}
                     </DiningPress>
                   );
                 })}
               </Progress>
-              <View style={{position: 'relative', top: -10}}>
-                <Slider
-                  value={sliderValue}
-                  onValueChange={e => setSliderValue(...e)}
-                  minimumValue={0}
-                  maximumValue={2}
-                  maximumTrackTintColor="#fff"
-                  minimumTrackTintColor="#fff"
-                  onSlidingComplete={e => {
-                    diningRef.current.setPage(...e);
-                  }}
-                  step={1}
-                  trackStyle={styles.trackStyle}
-                  thumbStyle={styles.thumbStyle}
-                />
-              </View>
             </ProgressWrap>
             <HeaderWrap
               colors={[
@@ -818,7 +887,7 @@ const Pages = ({route}) => {
                           const selectTime = await getTime(
                             isUserInfo?.data,
                             dailyfoodDataList?.data?.diningTypes,
-                            sliderValue,
+                            nowPage,
                             item.value,
                           );
                           setTime(selectTime);
@@ -846,7 +915,7 @@ const Pages = ({route}) => {
                         const selectTime = await getTime(
                           isUserInfo?.data,
                           dailyfoodDataList?.data?.diningTypes,
-                          sliderValue,
+                          nowPage,
                           item.value,
                         );
                         setTime(selectTime);
@@ -905,31 +974,34 @@ const Pages = ({route}) => {
           </LoadingPage>
         ) : ( */}
         <GestureHandlerRootView style={{flex: 1}}>
-          <Pager
-            ref={diningRef}
-            overdrag={true}
-            initialPage={nowPage}
-            overScrollMode={'always'}
-            onPageScroll={onPageScroll2}
-            onPageSelected={e => {
-              onPageScroll(e);
-            }}>
-            <BuyMealPage
-              diningFood={isMorningFood}
-              mealData={mealData}
-              setDailyfoodId={setDailyfoodId}
-            />
-            <BuyMealPage
-              diningFood={isLunchFood}
-              mealData={mealData}
-              setDailyfoodId={setDailyfoodId}
-            />
-            <BuyMealPage
-              diningFood={isDinnerFood}
-              mealData={mealData}
-              setDailyfoodId={setDailyfoodId}
-            />
-          </Pager>
+          <PanGestureHandler onGestureEvent={handleDrag}>
+            <Pager
+              ref={diningRef}
+              overdrag={true}
+              overScrollMode={'always'}
+              onPageScroll={onPageScroll2}
+              onPageSelected={e => {
+                onPageScroll(e);
+              }}>
+              {isDiningTypes?.map(dining => {
+                return (
+                  <GestureHandlerRootView key={dining}>
+                    <BuyMealPage
+                      diningFood={
+                        dining === 1
+                          ? isMorningFood
+                          : dining === 2
+                          ? isLunchFood
+                          : isDinnerFood
+                      }
+                      mealData={mealData}
+                      setDailyfoodId={setDailyfoodId}
+                    />
+                  </GestureHandlerRootView>
+                );
+              })}
+            </Pager>
+          </PanGestureHandler>
         </GestureHandlerRootView>
         {/* )} */}
       </PagerViewWrap>
@@ -1057,6 +1129,7 @@ const StatusWrap = styled.View`
 const ProgressWrap = styled.View`
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   padding-top: 13px;
   height: 48px;
   width: 142px;
@@ -1162,14 +1235,7 @@ export const MealName = styled(Typography).attrs({text: 'Body05SB'})`
 const ProgressText = styled(Typography).attrs({text: 'Button09SB'})`
   color: ${({theme, type}) =>
     type ? theme.colors.grey[2] : theme.colors.grey[7]};
-  ${({index}) => {
-    if (index === 1) {
-      return css`
-        margin-left: 12px;
-        margin-right: 12px;
-      `;
-    }
-  }}
+  margin-bottom: 11.5px;
 `;
 
 const Typography4 = styled(Typography).attrs({text: 'Body05SB'})`
@@ -1179,4 +1245,20 @@ const Typography4 = styled(Typography).attrs({text: 'Body05SB'})`
   font-weight: 600;
 `;
 
-const DiningPress = styled.Pressable``;
+const DiningPress = styled.Pressable`
+  align-items: center;
+
+  ${({index}) => {
+    if (index === 1) {
+      return css`
+        margin-left: 12px;
+        margin-right: 12px;
+      `;
+    }
+  }}
+`;
+const SelectLine = styled.View`
+  width: 16px;
+  height: 1.5px;
+  background-color: ${({theme}) => theme.colors.grey[2]};
+`;

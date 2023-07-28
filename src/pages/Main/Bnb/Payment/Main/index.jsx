@@ -422,8 +422,8 @@ const Pages = ({route}) => {
     }
   };
   useEffect(() => {
-    console.log(clientType[0]?.groupType, 'groupType');
-  }, [clientType]);
+    console.log(isUserInfo);
+  }, [isUserInfo]);
   if (isPay) {
     return (
       <SafeArea>
