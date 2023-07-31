@@ -60,6 +60,8 @@ const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
 
+  console.log(time);
+
   const queryClient = useQueryClient();
   const bodyRef = useRef();
   const navigation = useNavigation();

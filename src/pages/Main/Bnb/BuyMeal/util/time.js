@@ -6,7 +6,14 @@ export const getTime = async (
   sliderValue,
   time = '',
 ) => {
+  // console.log('값들 확인 ');
+  // console.log(isUserInfo);
+  // console.log(dailyfoodData);
+  // console.log(sliderValue);
+
   const localTime = JSON.parse(await getStorage('diningTime'));
+  // console.log(localTime);
+
   const diningTimesData = dailyfoodData.filter(
     v => v.diningType === sliderValue + 1,
   );

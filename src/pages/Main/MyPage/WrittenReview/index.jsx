@@ -10,8 +10,17 @@ import {DefaultProfile} from '../../../../assets';
 import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
 import useWrittenReview from '../../../../biz/useReview/useWrittenReview/hook';
 import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/store';
-import {convertDateFormat1} from '../../../../utils/dateFormatter';
+import {
+  convertDateFormat1,
+  formattedWeekDate,
+} from '../../../../utils/dateFormatter';
 import NoOrder from '../NoOrder';
+import {weekAtom} from '../../../../biz/useBanner/store';
+import {useGetUserInfo} from '../../../../hook/useUserInfo';
+import useAuth from '../../../../biz/useAuth/hook';
+import {useGetDailyfoodList} from '../../../../hook/useDailyfood';
+
+import {getTime} from '../../../../pages/Main/Bnb/BuyMeal/util/time';
 
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const sampleAdminReview = {
@@ -29,7 +38,53 @@ const Pages = ({route}) => {
   const [idx, setIdx] = useState(-1);
   const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
 
-  const isFocused = useIsFocused();
+  // '클릭시 상품상세페이지로 이동하기' 기능에 필요한 값들 구하기
+  // dailyFoodId (확인)
+  // time : getTime(isUserInfo, dailyFoodDataList, sliderValue)
+  //    isUserInfo (userGetUserInfo(확인)) 체크
+  //    dailyFoodDataList
+  //        useGetDailyFoodList(spotId, weekly, userRole)
+  //            spotId : isUserInfo?.data?.spotId(확인) 체크
+  //            weekly : atom에 있음(확인)
+  //            userRole : useAuth(확인)
+  //    sliderValue : dailyfoodDataList?.data?.diningTypes[0].diningType(확인)
+
+  const [time, setTime] = useState('');
+
+  const {data: isUserInfo} = useGetUserInfo();
+  const [weekly] = useAtom(weekAtom);
+  const {
+    readableAtom: {userRole},
+  } = useAuth();
+
+  const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.data?.spotId;
+
+  const {data: dailyfoodDataList} = useGetDailyfoodList(
+    spotId,
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+    userRole,
+  );
+
+  useEffect(async () => {
+    // console.log('dailyFoodDataList 확인');
+    // console.log(dailyfoodDataList);
+
+    if (!dailyfoodDataList) return;
+
+    const times = await getTime(
+      isUserInfo?.data,
+      dailyfoodDataList?.data?.diningTypes,
+      sliderValue,
+    );
+
+    setTime(times);
+  }, [dailyfoodDataList]);
+
+  useEffect(() => {
+    console.log('time 확인');
+    console.log(time);
+  }, [time]);
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const toast = Toast();
@@ -37,10 +92,6 @@ const Pages = ({route}) => {
   useEffect(() => {
     getWrittenReview();
   }, []);
-
-  // useEffect(() => {
-  //   setTotalWrittenReviewList(writtenReviewCount);
-  // }, [writtenReviewCount]);
 
   useEffect(() => {
     if (reviewList) {
@@ -100,6 +151,7 @@ const Pages = ({route}) => {
               option: item.option,
               forMakers: item.forMakers,
               commentList: item.commentList,
+              dailyFoodId: item.dailyFoodId,
             };
 
             return (
@@ -120,6 +172,7 @@ const Pages = ({route}) => {
                   forMakers={item2.forMakers}
                   commentList={item2.commentList}
                   toast={toast}
+                  dailyFoodId={item2.dailyFoodId}
                 />
               </View>
             );

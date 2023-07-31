@@ -36,6 +36,8 @@ import {changeSeperator} from '../../../../../utils/dateFormatter';
 
 // const onlyForMakers = false;
 
+import {PAGE_NAME as mealDetailPageName} from '../../../../../pages/Main/Bnb/MealDetail/Main';
+
 const Component = ({
   id,
   editItem,
@@ -52,10 +54,13 @@ const Component = ({
   updateDate,
   commentList,
   toast,
+  dailyFoodId,
 }) => {
   // dailyFoodId
   // deliveryTime
   // 필요
+
+  // console.log(dailyFoodId);
 
   const navigation = useNavigation();
 
@@ -157,9 +162,9 @@ const Component = ({
         <TitlePressable
           onPress={() => {
             navigation.navigate(mealDetailPageName, {
-              dailyFoodId: id,
-              deliveryTime: time,
-              detailFetching: detailFetching,
+              dailyFoodId,
+              // deliveryTime: time,
+              // detailFetching: detailFetching,
             });
           }}>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
