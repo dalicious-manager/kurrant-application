@@ -42,7 +42,6 @@ const Component = ({
   getNextPage,
   getNextPageIsPossible,
   getBoardRefetch,
-
 }) => {
   const [allReviewList, setAllReviewList] = useState([]);
   const theme = useTheme();
@@ -600,7 +599,7 @@ const FilterText = styled(Typography).attrs({text: 'Button10SB'})`
 const ThinGreyLineVertical = styled.View`
   height: 19px;
 
-  margin: 0px 4px;
+  margin: 0px 6px;
 
   border-right-width: 1px;
   border-right-style: solid;

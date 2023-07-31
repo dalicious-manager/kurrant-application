@@ -500,6 +500,10 @@ const Pages = ({route}) => {
     );
     const timeSetting = async () => {
       if (!dailyfoodData) return;
+
+      // console.log('데이터여 ');
+      // console.log(dailyfoodDataList?.data?.diningTypes);
+
       const times = await getTime(
         isUserInfo?.data,
         dailyfoodDataList?.data?.diningTypes,
@@ -524,6 +528,12 @@ const Pages = ({route}) => {
     time?.diningType,
   ]);
   useEffect(() => {
+    // console.log('sliderValue 확인하기 ');
+    // console.log(dailyfoodDataList?.data);
+    // console.log(dailyfoodDataList?.data?.diningTypes);
+    // console.log(dailyfoodDataList?.data?.diningTypes[0]);
+    // console.log(dailyfoodDataList?.data?.diningTypes[0].diningType);
+
     if (dailyfoodDataList?.data?.diningTypes?.length > 0) {
       diningRef.current.setPage(
         dailyfoodDataList?.data?.diningTypes[0].diningType - 1,

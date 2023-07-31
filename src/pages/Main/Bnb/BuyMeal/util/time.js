@@ -7,6 +7,7 @@ export const getTime = async (
   time = '',
 ) => {
   const localTime = JSON.parse(await getStorage('diningTime'));
+
   const diningTimesData = dailyfoodData.filter(
     v => v.diningType === sliderValue + 1,
   );
