@@ -24,16 +24,6 @@ import LinearGradient from 'react-native-linear-gradient';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
-const sampleData = [
-  {id: 1, text: '비건'},
-  {id: 2, text: '락토 베지터리언'},
-  {id: 3, text: '오보 베지테리언'},
-  {id: 4, text: '락토 오보 베지테리언'},
-  {id: 5, text: '페스코 베지테리언'},
-  {id: 6, text: '폴로 베지테리언'},
-  {id: 7, text: '플렉시테리언'},
-];
-
 const Pages = () => {
   const [clickAvaliable, setClickAvaliable] = useState(false);
 

@@ -54,9 +54,9 @@ const BottomSheetRegisterInfo = props => {
     [setModalVisible, setSelected],
   );
 
-  const panY = useRef(new Animated.Value(screenHeight)).current;
-  const [snap, setSnap] = useState(0);
-  const [y, setY] = useState(0);
+  // const panY = useRef(new Animated.Value(screenHeight)).current;
+  // const [snap, setSnap] = useState(0);
+  // const [y, setY] = useState(0);
   // const snapPoints = useMemo(() => [firstSnap, '90%'], [firstSnap]);
   const snapPoints = useMemo(() => [firstSnap, '70%', '100%'], [firstSnap]);
   // const snapPoints = useMemo(() => ['100%', '100%'], [firstSnap]);
@@ -64,16 +64,16 @@ const BottomSheetRegisterInfo = props => {
   const [scrollStart, setScrollStart] = useState(0);
   const [scrollEnd, setScrollEnd] = useState(10);
 
-  const resetBottomSheet = Animated.timing(panY, {
-    toValue: 0,
-    duration: 50,
-    useNativeDriver: true,
-  });
-  const closeBottomSheet = Animated.timing(panY, {
-    toValue: screenHeight,
-    duration: 50,
-    useNativeDriver: true,
-  });
+  // const resetBottomSheet = Animated.timing(panY, {
+  //   toValue: 0,
+  //   duration: 50,
+  //   useNativeDriver: true,
+  // });
+  // const closeBottomSheet = Animated.timing(panY, {
+  //   toValue: screenHeight,
+  //   duration: 50,
+  //   useNativeDriver: true,
+  // });
   const list = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -87,52 +87,55 @@ const BottomSheetRegisterInfo = props => {
       },
     }),
   );
-  const handleSheetChange = useCallback(index => {
-    setSnap(index);
-  }, []);
-  const handleSnapPress = useCallback(index => {
-    list.current?.snapToIndex(index);
-  }, []);
-  const pressOutUp = e => {
-    e.stopPropagation();
-    const {pageY} = e.nativeEvent;
-    if (pageY > y + 50) {
-      if (snap === 0) {
-        closeModal();
-      } else {
-        if (contentScroll && scrollStart == 0) {
-          handleSnapPress(0);
-        }
-      }
-    } else if (pageY < y - 50) {
-      handleSnapPress(1);
-    } else {
-      if (contentScroll && scrollStart == 0) {
-        handleSnapPress(0);
-      }
-    }
-  };
-  const pressInUp = e => {
-    e.stopPropagation();
-    const {pageY} = e.nativeEvent;
-    setY(pageY);
-  };
+  // const handleSheetChange = useCallback(index => {
+  //   setSnap(index);
+  // }, []);
+  // const handleSnapPress = useCallback(index => {
+  //   list.current?.snapToIndex(index);
+  // }, []);
+  // const pressOutUp = e => {
+  //   e.stopPropagation();
+  //   const {pageY} = e.nativeEvent;
+  //   if (pageY > y + 50) {
+  //     if (snap === 0) {
+  //       closeModal();
+  //     } else {
+  //       if (contentScroll && scrollStart == 0) {
+  //         handleSnapPress(0);
+  //       }
+  //     }
+  //   } else if (pageY < y - 50) {
+  //     handleSnapPress(1);
+  //   } else {
+  //     if (contentScroll && scrollStart == 0) {
+  //       handleSnapPress(0);
+  //     }
+  //   }
+  // };
+  // const pressInUp = e => {
+  //   e.stopPropagation();
+  //   const {pageY} = e.nativeEvent;
+  //   setY(pageY);
+  // };
 
-  useEffect(() => {
-    if (props.modalVisible) {
-      resetBottomSheet.start();
-    }
-  }, [props.modalVisible, resetBottomSheet]);
+  // useEffect(() => {
+  //   if (props.modalVisible) {
+  //     resetBottomSheet.start();
+  //   }
+  // }, [props.modalVisible, resetBottomSheet]);
 
   const closeModal = () => {
-    closeBottomSheet.start(() => {
-      setModalVisible(false);
-    });
+    // closeBottomSheet.start(() => {
+    //   setModalVisible(false);
+    // });
+    setModalVisible(false);
   };
 
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
-      <Overlay onPressIn={pressInUp} onPressOut={pressOutUp}>
+      <Overlay
+      // onPressIn={pressInUp} onPressOut={pressOutUp}
+      >
         <TouchableWithoutFeedback onPress={closeModal}>
           <Background />
         </TouchableWithoutFeedback>
@@ -141,7 +144,7 @@ const BottomSheetRegisterInfo = props => {
             <BottomSheet
               ref={list}
               snapPoints={snapPoints}
-              onChange={handleSheetChange}
+              // onChange={handleSheetChange}
               style={{
                 marginBottom: 50,
               }}>
@@ -163,26 +166,26 @@ const BottomSheetRegisterInfo = props => {
                 // scrollEnabled={snap === 1}
                 scrollEnabled={true}
                 onScrollBeginDrag={e => {
-                  setScrollStart(e.nativeEvent.contentOffset.y);
+                  // setScrollStart(e.nativeEvent.contentOffset.y);
                 }}
                 onMomentumScrollBegin={e => {
-                  if (scrollEnd === 0) {
-                    handleSnapPress(0);
-                  }
+                  // if (scrollEnd === 0) {
+                  //   handleSnapPress(0);
+                  // }
                 }}
-                onScrollEndDrag={e => {
-                  setContentScroll(e.nativeEvent.contentOffset.y === 0);
-                  setScrollEnd(e.nativeEvent.contentOffset.y);
-                  if (e.nativeEvent.contentOffset.y === 0) {
-                    if (contentScroll) {
-                      handleSnapPress(0);
-                    }
-                  }
-                }}
+                // onScrollEndDrag={e => {
+                //   setContentScroll(e.nativeEvent.contentOffset.y === 0);
+                //   setScrollEnd(e.nativeEvent.contentOffset.y);
+                //   if (e.nativeEvent.contentOffset.y === 0) {
+                //     if (contentScroll) {
+                //       handleSnapPress(0);
+                //     }
+                //   }
+                // }}
                 renderItem={({item}) => (
                   <ContentItemContainer
-                    onPressIn={pressInUp}
-                    onPressOut={pressOutUp}
+                    // onPressIn={pressInUp}
+                    // onPressOut={pressOutUp}
                     onPress={() => {
                       onSelect(item.id, item.text);
                       onPressEvent(item.id);
