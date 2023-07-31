@@ -59,8 +59,7 @@ export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
-
-  console.log(time);
+  const disableAddCartFromReview = route.params.disableAddCartFromReview;
 
   const queryClient = useQueryClient();
   const bodyRef = useRef();
@@ -107,11 +106,7 @@ const Pages = ({route}) => {
     data: {data: isUserInfo},
   } = useGetUserInfo();
 
-  // console.log(dailyFoodId);
-
   const [count, setCount] = useState(1);
-
-  const isFocused = useIsFocused();
 
   const closeModal = () => {
     setModalVisible(false);
@@ -183,18 +178,20 @@ const Pages = ({route}) => {
             <BackArrow color={'#fff'} />
           </Pressable>
         ),
-      headerRight: () =>
-        scroll > 60 ? (
-          <View>
-            <ShoppingCart color={'#343337'} margin={[0, 10]} />
-            <Badge />
-          </View>
-        ) : (
-          <View>
-            <ShoppingCart color={'white'} margin={[0, 10]} />
-            <Badge />
-          </View>
-        ),
+      headerRight: disableAddCartFromReview
+        ? () => {}
+        : () =>
+            scroll > 60 ? (
+              <View>
+                <ShoppingCart color={'#343337'} margin={[0, 10]} />
+                <Badge />
+              </View>
+            ) : (
+              <View>
+                <ShoppingCart color={'white'} margin={[0, 10]} />
+                <Badge />
+              </View>
+            ),
     });
   }, [headerTitle, navigation, scroll]);
 
@@ -605,7 +602,7 @@ const Pages = ({route}) => {
           count={count}
           value={count.toString()}
         />
-        {!focus && (
+        {!disableAddCartFromReview && !focus && (
           <ButtonWrap>
             <Button
               price={foodDetailData?.price - discountPrice}

@@ -163,8 +163,7 @@ const Component = ({
           onPress={() => {
             navigation.navigate(mealDetailPageName, {
               dailyFoodId,
-              // deliveryTime: time,
-              // detailFetching: detailFetching,
+              disableAddCartFromReview: true,
             });
           }}>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">
