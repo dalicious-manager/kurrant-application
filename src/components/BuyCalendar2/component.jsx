@@ -41,7 +41,8 @@ const Component = ({
   meal,
   pagerRef,
   margin = '0px',
-  sliderValue,
+  nowPage,
+  isDiningTypes,
   isServiceDays,
 }) => {
   const navigation = useNavigation();
@@ -62,7 +63,6 @@ const Component = ({
   const selectedPress = day => {
     setCurrentPress(day);
   };
-  //console.log(sliderValue, '슬라이드');
 
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
@@ -110,7 +110,6 @@ const Component = ({
                 {week.map((day, idx) => {
                   const txt = format(day, 'EEE', {locale: ko});
                   const now = formattedDate(day) === formattedDate(today);
-                  const pressDay = formattedDate(day);
                   const propsDay = formattedWeekDate(day);
                   const lastDay =
                     formattedDate(day, '/') < formattedDate(today, '/');
@@ -120,8 +119,6 @@ const Component = ({
                   const isMorning = order?.filter(f => f.diningType === '아침');
                   const isLunch = order?.filter(f => f.diningType === '점심');
                   const isDinner = order?.filter(f => f.diningType === '저녁');
-                  const set = new Set(order?.map(x => x.diningType));
-                  const orderCount = [...set].length;
                   const morningServiceDays = isServiceDays?.filter(v => {
                     return v.diningType === 1;
                   });
@@ -132,26 +129,24 @@ const Component = ({
                     return v.diningType === 3;
                   });
                   // 서비스일
-
                   const morning =
-                    (sliderValue === 0 &&
+                    (nowPage === 1 &&
                       morningServiceDays &&
                       morningServiceDays?.length > 1 &&
                       morningServiceDays[0]?.serviceDays?.includes(txt)) ||
                     false;
                   const lunch =
-                    (sliderValue === 1 &&
+                    (nowPage === 2 &&
                       lunchServiceDays &&
                       lunchServiceDays?.length > 0 &&
                       lunchServiceDays[0]?.serviceDays?.includes(txt)) ||
                     false;
                   const dinner =
-                    (sliderValue === 2 &&
+                    (nowPage === 3 &&
                       dinnerServiceDays &&
                       dinnerServiceDays?.length > 0 &&
                       dinnerServiceDays[0]?.serviceDays?.includes(txt)) ||
                     false;
-
                   const events = () => {
                     selectedPress(day);
                     onPressEvent2(propsDay);
@@ -173,9 +168,9 @@ const Component = ({
                       idx={idx}
                       disabled={
                         (lastDay && true) ||
-                        (sliderValue === 0 && morning === false) ||
-                        (sliderValue === 1 && lunch === false) ||
-                        (sliderValue === 2 && dinner === false)
+                        (nowPage === 1 && morning === false) ||
+                        (nowPage === 2 && lunch === false) ||
+                        (nowPage === 3 && dinner === false)
                       }
                       onPress={() => {
                         onPressEvent

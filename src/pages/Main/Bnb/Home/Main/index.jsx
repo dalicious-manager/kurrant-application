@@ -6,6 +6,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import {el} from 'date-fns/locale';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
@@ -22,6 +23,7 @@ import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css} from 'styled-components/native';
+import BottomModal from '~components/BottomModal';
 import {BowlIcon} from '~components/Icon';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
@@ -55,7 +57,10 @@ import {
   useGetPrivateSpots,
   useGroupSpotList,
 } from '../../../../../hook/useSpot';
-import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {
+  useGetPrivateMembership,
+  useGetUserInfo,
+} from '../../../../../hook/useUserInfo';
 import {SCREEN_NAME} from '../../../../../screens/Main/Bnb';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {
@@ -120,6 +125,7 @@ const Pages = () => {
   //   formattedWeekDate(new Date()),
   // );
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const [showDim, setShowDim] = useAtom(mainDimAtom);
 
   const [show, setShow] = useState(false);
@@ -131,7 +137,8 @@ const Pages = () => {
   const toast = Toast();
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
-
+  const {data: isPrivateMembership, refetch: privateMembershipRefetch} =
+    useGetPrivateMembership();
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
   const date = formattedWeekDate(new Date());
@@ -185,13 +192,16 @@ const Pages = () => {
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-  const {data: dailyfoodDataList, refetch: dailyfoodListRefetch} =
-    useGetDailyfoodList(
-      selected !== undefined ? selected : isUserInfo?.data?.spotId,
-      formattedWeekDate(weekly[0][0]),
-      formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
-      userRole,
-    );
+  const {
+    data: dailyfoodDataList,
+    refetch: dailyfoodListRefetch,
+    isFetching: dailyfoodListIsFetching,
+  } = useGetDailyfoodList(
+    selected !== undefined ? selected : isUserInfo?.data?.spotId,
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+    userRole,
+  );
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
   useEffect(() => {
     if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
@@ -532,16 +542,21 @@ const Pages = () => {
       navigation.navigate(SpotTypePageName);
     }
   };
-
+  const closeModal = () => {
+    setModalVisible2(false);
+  };
   const groupManagePress = async () => {
-    if (userSpotId) {
+    console.log(userSpotId);
+    if (isUserInfo?.data?.spotId) {
       try {
-        await groupSpotDetail(userSpotId);
+        // await groupSpotDetail(userSpotId);
         navigation.navigate(GroupManagePageName, {
           id: userSpotId,
           clientId: clientId,
         });
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       Alert.alert('', '스팟을 선택해 주세요', [
         {
@@ -733,7 +748,9 @@ const Pages = () => {
 
             {isUserInfo?.data?.isMembership ? (
               <MembershipWrap
-                onPress={() => navigation.navigate(MembershipInfoPageName)}>
+                onPress={() => {
+                  navigation.navigate(MembershipInfoPageName);
+                }}>
                 <Membership>
                   <MembershipIcon />
                   <TitleText>멤버십</TitleText>
@@ -755,20 +772,28 @@ const Pages = () => {
             ) : isUserInfo?.data?.email.includes('@bespinglobal.com') &&
               membershipHistory.length < 1 ? (
               <MenbershipBanner
-                onPress={() =>
-                  navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
-                  })
-                }>
+                onPress={() => {
+                  if (isPrivateMembership?.data) {
+                    setModalVisible2(true);
+                  } else {
+                    navigation.navigate(MembershipIntro, {
+                      isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+                    });
+                  }
+                }}>
                 <MembershipImages source={BespinMembers} resizeMode={'cover'} />
               </MenbershipBanner>
             ) : isUserInfo?.data?.leftFoundersNumber > 0 ? (
               <MenbershipBanner
-                onPress={() =>
-                  navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
-                  })
-                }>
+                onPress={() => {
+                  if (isPrivateMembership?.data) {
+                    setModalVisible2(true);
+                  } else {
+                    navigation.navigate(MembershipIntro, {
+                      isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+                    });
+                  }
+                }}>
                 <MembershipImages
                   source={FoundersMembers}
                   resizeMode={'cover'}
@@ -776,11 +801,15 @@ const Pages = () => {
               </MenbershipBanner>
             ) : (
               <MenbershipBanner
-                onPress={() =>
-                  navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
-                  })
-                }>
+                onPress={() => {
+                  if (isPrivateMembership?.data) {
+                    setModalVisible2(true);
+                  } else {
+                    navigation.navigate(MembershipIntro, {
+                      isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+                    });
+                  }
+                }}>
                 <MembershipImage
                   source={require('../../../../../assets/images/membership.png')}
                   resizeMode="stretch"
@@ -803,7 +832,8 @@ const Pages = () => {
             </CountWrap>
           </MarketWrap> */}
 
-            <DietRepoPressable
+            {/* 식단 리포트 버튼 */}
+            {/* <DietRepoPressable
               onPress={() => {
                 navigation.navigate(DietRepoMainPageName);
               }}>
@@ -812,7 +842,6 @@ const Pages = () => {
                 <DietRepoText>식단 리포트</DietRepoText>
               </Wrap1>
 
-              {/* <CalText>오늘 {totalCalorie ? totalCalorie : 0} kcal</CalText> */}
               <CalText>
                 오늘{' '}
                 {orderMealList?.data?.find(
@@ -824,7 +853,7 @@ const Pages = () => {
                   : 0}{' '}
                 kcal
               </CalText>
-            </DietRepoPressable>
+            </DietRepoPressable> */}
           </MainWrap>
         </Wrap>
       </ScrollViewWrap>
@@ -837,6 +866,7 @@ const Pages = () => {
 
       <ButtonWrap>
         <Button
+          disabled={dailyfoodListIsFetching}
           onPress={async () => {
             if (isUserInfo?.data?.spotId) {
               navigation.navigate(BuyMealPageName);
@@ -849,6 +879,24 @@ const Pages = () => {
           <ButtonText>식사 구매하기</ButtonText>
         </Button>
       </ButtonWrap>
+      <BottomModal
+        modalVisible={modalVisible2}
+        setModalVisible={setModalVisible2}
+        title={`기업멤버십에 가입되어 있어요.`}
+        description={
+          '이미 멤버십 혜택이 적용 중이에요.\n개인멤버십 가입을 추가로 진행 할까요?'
+        }
+        buttonTitle1={'취소'}
+        buttonType1="grey7"
+        buttonTitle2={'확인'}
+        buttonType2="grey2"
+        onPressEvent1={closeModal}
+        onPressEvent2={() => {
+          navigation.navigate(MembershipIntro, {
+            isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+          });
+        }}
+      />
       <BottomSheetSpot
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}

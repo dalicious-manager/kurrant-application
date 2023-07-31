@@ -25,9 +25,7 @@ export function useMainReviewInfiniteQuery(url, dailyFoodId) {
   const getPageBoard = async ({pageParam = 1}) => {
     const res = await getMealDetailReview(pageParam, url);
     return {
-      // 실제 데이터
       items: res.items,
-      // 반환 값에 현재 페이지를 넘겨주자
       currentPage: pageParam,
       isLast: res.isLast,
     };

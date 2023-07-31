@@ -1,9 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import styled, {useTheme} from 'styled-components';
 import {css} from 'styled-components/native';
+import useMealDetailReviewMutation from '~biz/useReview/useMealDetailReview/useMealDetailReviewMutation';
 import {SkinnyArrowDown} from '~components/Icon';
 import AdminOrMakersReview from '~components/Review/AdminOrMakersReview';
 import ImageModal from '~components/Review/ImageModal/ImageModal';
@@ -13,7 +15,7 @@ import {changeSeperator} from '~utils/dateFormatter';
 
 import {ThumbsUp} from '../../../../../../../../components/Icon';
 import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
-import useMealDetailReviewMutation from '~biz/useReview/useMealDetailReview/useMealDetailReviewMutation';
+import {isGoodLoadingAtom} from '../store';
 
 // 상세페이지 카드
 
@@ -33,12 +35,13 @@ const Component = ({
   createDate,
   updateDate,
   commentList,
+  allReviewList,
+  setAllReviewList,
   isFetching,
 }) => {
   const navigation = useNavigation();
 
   const theme = useTheme();
-
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
   const {pressLike} = useMealDetailReviewMutation();
@@ -48,7 +51,6 @@ const Component = ({
 
   let imageLocationToSix = [];
 
-  // imageLocation이 널일 경우 null 을 빈 배열로 고쳐주기
   let importImageLocation = [];
   if (!imageLocation) {
   } else {
@@ -59,10 +61,8 @@ const Component = ({
     imageLocationToSix.push(importImageLocation[i]);
   }
 
-  // 운영자 메이커스 댓글 늦게 작성한 댓글이 위에 있게 sorting해야됨
-
   const [numLines, setNumLines] = useState(1);
-
+  const [isLoading, setLoading] = useState(false);
   const handlePressReviewText = () => {
     setElaborateComment(!elaborateComment);
   };
@@ -74,11 +74,6 @@ const Component = ({
 
     setCalcFontSize(width * 0.052279);
   };
-
-  const [goodLocal, setGoodLocal] = useState(good ? good : 0);
-  const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
-
-  // console.log(userName);
 
   return (
     <Container focusId={focusId} id={id}>
@@ -99,7 +94,7 @@ const Component = ({
         <></>
       )}
 
-      <Wrap3>
+      <Wrap3 isMarginOn={imageLocation && imageLocation.length > 0}>
         <RowWrap>
           <StarsWrap>
             <StarRating rating={rating} width="66px" margin="1px" />
@@ -112,7 +107,7 @@ const Component = ({
         </RowWrap>
 
         <EditWrap>
-          <LikePressable
+          {/* <LikePressable
             onPress={() => {
               if (isFetching) return;
 
@@ -137,18 +132,57 @@ const Component = ({
               }
             />
             <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
-          </LikePressable>
+          </LikePressable> */}
+        <EditWrap>
+          {isGood !== undefined && (
+            <LikePressable
+              disabled={isLoading}
+              onPress={async () => {
+                setLoading(true);
+                try {
+                  await pressLike({
+                    dailyFoodId,
+                    reviewId: id,
+                  });
+                  const nowData = allReviewList.map(v => {
+                    if (v.reviewId === id) {
+                      return {
+                        ...v,
+                        isGood: !v.isGood,
+                        good: v.isGood ? good - 1 : good + 1,
+                      };
+                    }
+                    return v;
+                  });
+
+                  setAllReviewList(nowData);
+                } catch (error) {
+                  Alert.alert(
+                    '도움이됐어요',
+                    error.toString().replace('error:', ''),
+                  );
+                } finally {
+                  setTimeout(() => {
+                    setLoading(false);
+                  }, 300);
+                }
+              }}>
+              <EditText isGood={isGood}>도움이 돼요</EditText>
+              <ThumbsUp
+                width="14px"
+                height="15px"
+                color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
+              />
+              <LikeNumber isGood={isGood}>{good}</LikeNumber>
+            </LikePressable>
+          )}
         </EditWrap>
       </Wrap3>
-
-      {/* {forMakers && <OnlyForMakers />} */}
 
       {imageLocation && imageLocation.length > 0 && (
         <ImagesWrapper>
           {imageLocationToSix.map((v, i) => {
             if (v) {
-              // 이미지가 수직 이미지인가 수평이미지인가 확인하기
-
               return (
                 <ImagePressable
                   key={i}
@@ -183,7 +217,7 @@ const Component = ({
         firstClickedImageIndex={firstClickedImageIndex}
       />
 
-      <Filler />
+      {/* <Filler /> */}
 
       <ReviewPressable onLayout={getWidth} onPress={handlePressReviewText}>
         {Platform.OS === 'ios' &&
@@ -292,6 +326,8 @@ const RestaurentNameText = styled(Typography).attrs({text: 'Body05SB'})`
 const EditWrap = styled.View`
   flex-direction: row;
   align-items: center;
+  position: relative;
+  /* border: 1px solid black; */
 `;
 
 const EditText = styled(Typography).attrs({text: 'Button10R'})`
@@ -316,6 +352,14 @@ const Wrap3 = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  /* border: 1px solid black; */
+  ${({isMarginOn}) => {
+    if (!isMarginOn) {
+      return `margin-bottom: 8px;`;
+    } else {
+      return `margin-bottom: 11px;`;
+    }
+  }}
 `;
 
 const RowWrap = styled.View`
@@ -335,12 +379,21 @@ const PostDateText = styled(Typography).attrs({text: 'SmallLabel'})`
 const LikePressable = styled.Pressable`
   flex-direction: row;
   align-items: center;
+  /* border: 1px solid black; */
+
+  padding: 10px 0;
+  z-index: 1;
+  position: absolute;
+  top: -13.3px;
+  right: 0;
 `;
 
 const ImagesWrapper = styled.Pressable`
   flex-direction: row;
-  padding-top: 11px;
+  /* padding-top: 11px; */
   padding-bottom: 4px;
+  /* border: 1px solid black; */
+  margin-bottom: 8px;
 `;
 
 const ImagePressable = styled.Pressable`
@@ -433,4 +486,5 @@ const IconDiv = styled.Pressable`
 const Filler = styled.View`
   width: 100%;
   height: 8px;
+  border: 1px solid black;
 `;

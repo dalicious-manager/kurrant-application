@@ -1,18 +1,11 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useCallback, useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  Platform,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, Dimensions, FlatList, Platform} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components';
 import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
-
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
@@ -20,11 +13,9 @@ import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/C
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
-import {
-  fetchNextPageReviewDetailAtom,
-  hasNextPageReviewDetailAtom,
-} from '../../../../../../../biz/useReview/useMealDetailReview/store';
-
+import {reviewDetailDailyFoodIdAtom} from './store';
+import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
+import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import {
   ArrowUpAndDown,
   Picture,
@@ -32,39 +23,38 @@ import {
 } from '../../../../../../../components/Icon';
 import BottomModalMultipleSelect from '../../../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 import {convertDateFormat1} from '../../../../../../../utils/dateFormatter';
-import {detailReviewDataAtom} from './store';
-import {useMainReviewInfiniteQuery} from '../../../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
-import useGetMealDetailReview from '../../../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
-import useDetectValueWhenDailyFoodIdChanged from '../../../../../../../hook/useDetectValueWhenChanged';
-import {reviewDetailDailyFoodIdAtom} from './store';
 
 const Component = ({
   imageLocation,
   foodName,
   dailyFoodId,
-  // allReviewList,
-  // setAllReviewList,
-}) => {
-  const [allReviewList, setAllReviewList] = useState();
+  starAverage,
+  setStarAverage,
+  totalReview,
+  setTotalReview,
+  initialLoading,
+  setInitialLoading,
 
+  url,
+  setUrl,
+  getBoard,
+  isFetching,
+  getNextPage,
+  getNextPageIsPossible,
+  getBoardRefetch,
+}) => {
+  const [allReviewList, setAllReviewList] = useState([]);
   const theme = useTheme();
   const queryClient = useQueryClient();
   const navigation = useNavigation();
 
-  // console.log(dailyFoodId);
-
-  // 샘플 대에터
-  // const dailyFoodId = 40827;
-
-  const [starAverage, setStarAverage] = useState(1);
-  const [stars, setStars] = useState({});
   const [keyword, setKeyword] = useState([]);
-  const [totalReview, setTotalReview] = useState(0);
-  const [foodId, setFoodId] = useState(undefined);
-  const [reviewWrite, setReviewWrite] = useState(0);
+  // const [starAverage, setStarAverage] = useState(1);
+  const [stars, setStars] = useState({});
   const [isLast, setIsLast] = useState(false);
+  const [foodId, setFoodId] = useState(0);
 
-  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+  const [reviewWrite, setReviewWrite] = useState(0);
 
   // 베스트순,최신순,리뷰순 (sort)
   // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
@@ -83,47 +73,24 @@ const Component = ({
   // 상품 상세 리뷰 키워드
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
-  const {
-    getBoard,
-    getBoardIsFetching: isFetching,
-    getBoardIsLoading,
-    getNextPage,
-    getNextPageIsPossible,
-    getBoardRefetch,
-  } = useMainReviewInfiniteQuery(url, dailyFoodId);
-
   const [dailyFoodIdFromAtom, setDailyFoodIdFromAtom] = useAtom(
     reviewDetailDailyFoodIdAtom,
   );
 
-  const [initialLoading, setInitialLoading] = useState(false);
-
   useEffect(() => {
-    // 첫 펫칭
-
-    // setDailyFoodIdFromAtom()
-    // 전과 비교해야됨
-    // console.log(dailyFoodIdFromAtom);
     if (dailyFoodIdFromAtom === 0) {
       setDailyFoodIdFromAtom(dailyFoodId);
       return;
     }
 
     if (dailyFoodIdFromAtom !== dailyFoodId) {
-      // console.log(1);
       setInitialLoading(true);
     } else {
       setInitialLoading(false);
-      // console.log(2);
     }
 
     setDailyFoodIdFromAtom(dailyFoodId);
   }, [dailyFoodId, isFetching]);
-
-  // useEffect(() => {
-  //   console.log('initialLoading 확인');
-  //   console.log(initialLoading);
-  // }, [initialLoading]);
 
   const {starRatingCounts} = useGetMealDetailReview(dailyFoodId);
 
@@ -138,18 +105,6 @@ const Component = ({
       ),
     );
   }, [dailyFoodId, orderFilter, isOnlyPhoto, selectedKeyword, setUrl]);
-
-  useEffect(() => {
-    getBoardRefetch();
-  }, [url]);
-
-  // useEffect(() => {
-  //   setHasNextPageReviewDetail(hasNextPage);
-  // }, [hasNextPage, setHasNextPageReviewDetail]);
-
-  // useEffect(() => {
-  //   setFetchNextPageReviewDetail(fetchNextPage);
-  // }, [fetchNextPage, setFetchNextPageReviewDetail]);
 
   useEffect(() => {
     const review =
@@ -179,19 +134,6 @@ const Component = ({
 
   const [showSelectList, setShowSelectList] = useState(false);
 
-  // 푸드아이디, 데일리 푸드아이디 확인하기
-
-  // useEffect(() => {
-  //   console.log('푸드아이딩~');
-  //   console.log(foodId); //
-  // }, [foodId]);
-
-  // useEffect(() => {
-  //   console.log('데일리푸드아이딩~');
-  //   console.log(dailyFoodId); //
-  // });
-
-  // 바텀 모달
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
 
   const handleSelectBottomModal = id => {
@@ -224,15 +166,6 @@ const Component = ({
     );
   };
 
-  // useEffect(() => {
-  //   console.log('getBoard 확인');
-  //   console.log(getBoard.pages);
-  // }, [getBoard]);
-
-  // useEffect(() => {
-  //   console.log('reviewData 확인');
-  //   console.log(reviewData);
-  // }, [reviewData]);
   const [isFetchingTop, setIsFetchingTop] = useState(false);
   const [isFetchingBottom, setIsFetchingBottom] = useState(false);
 
@@ -262,19 +195,6 @@ const Component = ({
       setIsFetchingBottom(false);
     }
   }, [isFetchingBottom, isFetchingTop]);
-
-  // const {value, isDailyFoodIdChanged, setValue} =
-  //   useDetectValueWhenDailyFoodIdChanged(dailyFoodId);
-
-  // useEffect(() => {
-  //   // console.log(dailyFoodId);
-  //   setValue(dailyFoodId);
-  // }, [dailyFoodId]);
-
-  // useEffect(() => {
-  //   console.log('isDailyFoodIdChanged 확인');
-  //   console.log(isDailyFoodIdChanged);
-  // }, [isDailyFoodIdChanged]);
 
   useEffect(() => {
     return () => {
@@ -445,34 +365,35 @@ const Component = ({
           </LoadingPage1>
         )}
 
-        {/* 처음에 들어왔을때 fetching중에는 빈화면이 보이게 */}
         {allReviewList && !initialLoading && (
-          // && !getBoardIsLoading
-          // !isFetching
           <FlatList
             data={allReviewList}
             keyExtractor={item => item.reviewId.toString()}
-            renderItem={({item}) => (
-              <Card
-                key={item.reviewId}
-                dailyFoodId={dailyFoodId}
-                id={item.reviewId}
-                userName={item.userName}
-                item={item}
-                good={item.good}
-                isGood={item.isGood}
-                createDate={item.createDate}
-                updateDate={item.updateDate}
-                writtenDate={convertDateFormat1(item.createDate)}
-                option={item.option}
-                rating={item.satisfaction}
-                reviewText={item.content}
-                imageLocation={item.imageLocation}
-                forMakers={item.forMakers}
-                commentList={item.commentList}
-                isFetching={isFetching}
-              />
-            )}
+            renderItem={({item}) => {
+              return (
+                <Card
+                  key={item.reviewId}
+                  dailyFoodId={dailyFoodId}
+                  id={item.reviewId}
+                  userName={item.userName}
+                  item={item}
+                  good={item.good}
+                  allReviewList={allReviewList}
+                  setAllReviewList={setAllReviewList}
+                  isGood={item.isGood}
+                  createDate={item.createDate}
+                  updateDate={item.updateDate}
+                  writtenDate={convertDateFormat1(item.createDate)}
+                  option={item.option}
+                  rating={item.satisfaction}
+                  reviewText={item.content}
+                  imageLocation={item.imageLocation}
+                  forMakers={item.forMakers}
+                  commentList={item.commentList}
+                  isFetching={isFetching}
+                />
+              );
+            }}
             onEndReached={() => {
               if (getNextPageIsPossible) {
                 getNextPage();

@@ -28,3 +28,9 @@ export function useGetUserInfo() {
     },
   );
 }
+
+export function useGetPrivateMembership() {
+  return useQuery('private-membership', () => {
+    return userInfoApi.getPrivateMembership();
+  });
+}
