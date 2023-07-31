@@ -3,13 +3,11 @@ import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 export const getTime = async (
   isUserInfo,
   dailyfoodData,
-  sliderValue,
+  nowPage,
   time = '',
 ) => {
   const localTime = JSON.parse(await getStorage('diningTime'));
-  const diningTimesData = dailyfoodData.filter(
-    v => v.diningType === sliderValue + 1,
-  );
+  const diningTimesData = dailyfoodData.filter(v => v.diningType === nowPage);
   if (diningTimesData?.length <= 0) return;
   if (localTime?.length > 0) {
     const isSpotId = localTime.find(v => {

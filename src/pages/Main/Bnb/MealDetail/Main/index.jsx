@@ -55,13 +55,11 @@ import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
 
-
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
 
-  const queryClient = useQueryClient();
   const bodyRef = useRef();
   const navigation = useNavigation();
   const {balloonEvent, BalloonWrap} = Balloon();
@@ -72,8 +70,8 @@ const Pages = ({route}) => {
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   const headerTitle = foodDetailData?.name;
-  const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
-  const {isFoodDetails, isFoodDetailLoading, foodDetail} = useFoodDetail();
+  const {isfoodDetailDiscount} = useFoodDetail(); // 할인정보
+  const {foodDetail} = useFoodDetail();
   const {
     data: isFoodDetail,
     isFetching: detailFetching,
@@ -109,8 +107,6 @@ const Pages = ({route}) => {
   // console.log(dailyFoodId);
 
   const [count, setCount] = useState(1);
-
-  const isFocused = useIsFocused();
 
   const closeModal = () => {
     setModalVisible(false);

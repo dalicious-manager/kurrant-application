@@ -192,13 +192,16 @@ const Pages = () => {
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
-  const {data: dailyfoodDataList, refetch: dailyfoodListRefetch} =
-    useGetDailyfoodList(
-      selected !== undefined ? selected : isUserInfo?.data?.spotId,
-      formattedWeekDate(weekly[0][0]),
-      formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
-      userRole,
-    );
+  const {
+    data: dailyfoodDataList,
+    refetch: dailyfoodListRefetch,
+    isFetching: dailyfoodListIsFetching,
+  } = useGetDailyfoodList(
+    selected !== undefined ? selected : isUserInfo?.data?.spotId,
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+    userRole,
+  );
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
   useEffect(() => {
     if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
@@ -543,14 +546,17 @@ const Pages = () => {
     setModalVisible2(false);
   };
   const groupManagePress = async () => {
-    if (userSpotId) {
+    console.log(userSpotId);
+    if (isUserInfo?.data?.spotId) {
       try {
-        await groupSpotDetail(userSpotId);
+        // await groupSpotDetail(userSpotId);
         navigation.navigate(GroupManagePageName, {
           id: userSpotId,
           clientId: clientId,
         });
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       Alert.alert('', '스팟을 선택해 주세요', [
         {
@@ -860,6 +866,7 @@ const Pages = () => {
 
       <ButtonWrap>
         <Button
+          disabled={dailyfoodListIsFetching}
           onPress={async () => {
             if (isUserInfo?.data?.spotId) {
               navigation.navigate(BuyMealPageName);

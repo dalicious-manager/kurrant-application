@@ -50,9 +50,7 @@ export function useMainReviewInfiniteQuery(url, dailyFoodId) {
       return undefined;
     },
   });
-  useEffect(() => {
-    if (dailyFoodId) getNextPage({pageParam: 0});
-  }, [dailyFoodId, getNextPage]);
+
   return {
     getBoard,
     getNextPage,
