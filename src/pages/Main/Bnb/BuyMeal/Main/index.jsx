@@ -95,7 +95,7 @@ const Pages = ({route}) => {
   const [orderDailyFoodId, setOrderDailyFoodId] = useState();
   const [dailyfoodData, setDailyfoodData] = useState();
   const [dailyfoodId, setDailyfoodId] = useState();
-  const REFRESH_DELAY = 400; // 1 second
+  const REFRESH_DELAY = 200; // 1 second
   let refreshTimer = null;
   let refreshTimer2 = null;
   const fadeAnim = useRef(new Animated.Value(32)).current;
@@ -260,7 +260,6 @@ const Pages = ({route}) => {
         }
         refreshTimer2 = setTimeout(() => {
           if (offset !== 0) {
-            console.log(position);
             if (
               isDiningTypes[position] === 3 ||
               (isDiningTypes?.length === 1 && position === 0)
@@ -310,7 +309,6 @@ const Pages = ({route}) => {
   };
 
   const onPageScroll = e => {
-    console.log('test');
     navigation.setParams({
       date: null,
     });
@@ -348,7 +346,6 @@ const Pages = ({route}) => {
           : isDiningTypes?.includes(1)
           ? 0
           : 2;
-      console.log(page, position, 'position');
       // if (page !== position) {
       //   if (position === 2) {
       //     setDiningDisabled(true);
@@ -485,7 +482,7 @@ const Pages = ({route}) => {
       v => v.diningType === nowPage,
     );
     const timeSetting = async () => {
-      if (!dailyfoodData) return;
+      if (!dailyfoodDataList) return;
       const times = await getTime(
         isUserInfo?.data,
         dailyfoodDataList?.data?.diningTypes,
@@ -507,7 +504,8 @@ const Pages = ({route}) => {
     isUserInfo?.data,
     setDiningTime,
     nowPage,
-    time?.diningType,
+    date,
+    dailyfoodData,
   ]);
   useEffect(() => {
     if (dailyfoodDataList?.data?.diningTypes?.length > 0) {
@@ -703,8 +701,6 @@ const Pages = ({route}) => {
     time: time,
   };
   const handleDrag = event => {
-    console.log(event.nativeEvent.translationX, 'X');
-    console.log(event.nativeEvent.translationY, 'Y');
     if (refreshTimer) {
       clearTimeout(refreshTimer);
     }
@@ -714,7 +710,7 @@ const Pages = ({route}) => {
       event.nativeEvent.translationY > -20
     ) {
       if (isDiningTypes?.length > 1) {
-        if (event.nativeEvent.translationX < -20) {
+        if (event.nativeEvent.translationX < 0) {
           return (refreshTimer = setTimeout(() => {
             const nowIndex = isDiningTypes.findIndex(v => v === nowPage);
             const nextIndex = isDiningTypes.findIndex(v => v === nowPage + 1);
@@ -739,7 +735,7 @@ const Pages = ({route}) => {
             return diningRef.current.setPage(nextIndex);
           }, REFRESH_DELAY));
         }
-        if (event.nativeEvent.translationX > 20) {
+        if (event.nativeEvent.translationX > 0) {
           return (refreshTimer = setTimeout(() => {
             const nowIndex = isDiningTypes.findIndex(v => v === nowPage);
             const prevIndex = isDiningTypes.findIndex(v => v === nowPage - 1);
@@ -767,7 +763,7 @@ const Pages = ({route}) => {
         }
       }
       if (isDiningTypes?.length === 1) {
-        if (event.nativeEvent.translationX < -20) {
+        if (event.nativeEvent.translationX < 0) {
           setDiningDisabled(true);
           return (refreshTimer = setTimeout(() => {
             setNowPage(isDiningTypes[0]);
@@ -785,7 +781,7 @@ const Pages = ({route}) => {
             setDiningDisabled(false);
           }, REFRESH_DELAY));
         }
-        if (event.nativeEvent.translationX > 20) {
+        if (event.nativeEvent.translationX > 0) {
           setDiningDisabled(true);
 
           return (refreshTimer = setTimeout(() => {
@@ -845,7 +841,6 @@ const Pages = ({route}) => {
                       }
                       onPress={() => {
                         const idx = isDiningTypes.findIndex(v => v === type);
-                        console.log(idx);
                         diningRef.current.setPage(idx);
                         setNowPage(type);
                       }}>

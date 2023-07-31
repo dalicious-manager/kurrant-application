@@ -224,15 +224,7 @@ const Pages = () => {
     setDiningTypes(
       dailyfoodDataList?.data?.diningTypes.map(dining => dining.diningType),
     );
-  }, [
-    dailyfoodData?.dailyFoodDtos,
-    setLunch,
-    setMorning,
-    setDinner,
-    spotId,
-    dailyfoodDataList?.data,
-    setDiningTypes,
-  ]);
+  }, [dailyfoodData?.dailyFoodDtos, spotId, dailyfoodDataList?.data]);
   useEffect(() => {
     if (dailyfoodDataList?.data?.dailyFoodsByDate) {
       setMorning([]);
