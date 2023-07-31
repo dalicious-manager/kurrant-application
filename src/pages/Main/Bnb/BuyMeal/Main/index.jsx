@@ -95,7 +95,7 @@ const Pages = ({route}) => {
   const [orderDailyFoodId, setOrderDailyFoodId] = useState();
   const [dailyfoodData, setDailyfoodData] = useState();
   const [dailyfoodId, setDailyfoodId] = useState();
-  const REFRESH_DELAY = 200; // 1 second
+  const REFRESH_DELAY = 100; // 1 second
   let refreshTimer = null;
   let refreshTimer2 = null;
   const fadeAnim = useRef(new Animated.Value(32)).current;
@@ -325,65 +325,29 @@ const Pages = ({route}) => {
       const page =
         position === 0
           ? isDiningTypes?.includes(1)
-            ? 0
-            : isDiningTypes?.includes(2)
             ? 1
-            : isDiningTypes?.includes(3)
+            : isDiningTypes?.includes(2)
             ? 2
-            : 0
+            : isDiningTypes?.includes(3)
+            ? 3
+            : 1
           : position === 1
           ? isDiningTypes?.includes(2)
-            ? 1
-            : isDiningTypes?.includes(3)
             ? 2
+            : isDiningTypes?.includes(3)
+            ? 3
             : isDiningTypes?.includes(1)
-            ? 0
-            : 1
+            ? 1
+            : 2
           : position === 2 && isDiningTypes?.includes(3)
-          ? 2
+          ? 3
           : isDiningTypes?.includes(2)
-          ? 1
+          ? 2
           : isDiningTypes?.includes(1)
-          ? 0
-          : 2;
-      // if (page !== position) {
-      //   if (position === 2) {
-      //     setDiningDisabled(true);
-      //     // setNowPage(isDiningTypes[0]);
-      //     goNextPage(
-      //       weekly,
-      //       weeklyService,
-      //       date,
-      //       setDate,
-      //       pager,
-      //       setNowPage,
-      //       isDiningTypes,
-      //     );
-      //     // diningRef.current.setPage(0);
-      //     setTimeout(() => {
-      //       setDiningDisabled(false);
-      //     }, 500);
-      //   }
-      //   if (position === 0) {
-      //     setDiningDisabled(true);
-      //     // setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
-      //     goPrevPage(
-      //       weekly,
-      //       weeklyService,
-      //       date,
-      //       setDate,
-      //       pager,
-      //       setNowPage,
-      //       isDiningTypes,
-      //     );
-      //     // diningRef.current.setPage(isDiningTypes?.length - 1);
-      //     setTimeout(() => {
-      //       setDiningDisabled(false);
-      //     }, 500);
-      //   }
-      // }
+          ? 1
+          : 3;
 
-      // setNowPage(isDiningTypes[page]);
+      setNowPage(page);
     } else {
       setNowPage(isDiningTypes[position]);
     }
@@ -613,17 +577,6 @@ const Pages = ({route}) => {
   useEffect(() => {
     if (time) dailyfoodListRefetch();
   }, [dailyfoodListRefetch, time]);
-  // useEffect(() => {
-  //   console.log(dailyfoodData);
-  //   setMorning(
-  //     dailyfoodData?.dailyFoodDtos.filter(x => x.diningType === 1),
-  //   );
-  //   setLunch(dailyfoodData?.dailyFoodDtos.filter(x => x.diningType === 2));
-  //   setDinner(
-  //     dailyfoodData?.dailyFoodDtos.filter(x => x.diningType === 3),
-  //   );
-
-  // }, [dailyfoodData, setDiningTypes, setDinner, setLunch, setMorning]);
 
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
@@ -701,9 +654,6 @@ const Pages = ({route}) => {
     time: time,
   };
   const handleDrag = event => {
-    if (refreshTimer) {
-      clearTimeout(refreshTimer);
-    }
     if (
       Platform.OS === 'android' &&
       event.nativeEvent.translationY < 20 &&
@@ -711,6 +661,9 @@ const Pages = ({route}) => {
     ) {
       if (isDiningTypes?.length > 1) {
         if (event.nativeEvent.translationX < 0) {
+          if (refreshTimer) {
+            clearTimeout(refreshTimer);
+          }
           return (refreshTimer = setTimeout(() => {
             const nowIndex = isDiningTypes.findIndex(v => v === nowPage);
             const nextIndex = isDiningTypes.findIndex(v => v === nowPage + 1);
@@ -729,13 +682,15 @@ const Pages = ({route}) => {
               );
               setDiningDisabled(false);
               diningRef.current.setPage(0);
-
               return;
             }
             return diningRef.current.setPage(nextIndex);
           }, REFRESH_DELAY));
         }
         if (event.nativeEvent.translationX > 0) {
+          if (refreshTimer) {
+            clearTimeout(refreshTimer);
+          }
           return (refreshTimer = setTimeout(() => {
             const nowIndex = isDiningTypes.findIndex(v => v === nowPage);
             const prevIndex = isDiningTypes.findIndex(v => v === nowPage - 1);
@@ -764,6 +719,9 @@ const Pages = ({route}) => {
       }
       if (isDiningTypes?.length === 1) {
         if (event.nativeEvent.translationX < 0) {
+          if (refreshTimer) {
+            clearTimeout(refreshTimer);
+          }
           setDiningDisabled(true);
           return (refreshTimer = setTimeout(() => {
             setNowPage(isDiningTypes[0]);
@@ -782,8 +740,10 @@ const Pages = ({route}) => {
           }, REFRESH_DELAY));
         }
         if (event.nativeEvent.translationX > 0) {
+          if (refreshTimer) {
+            clearTimeout(refreshTimer);
+          }
           setDiningDisabled(true);
-
           return (refreshTimer = setTimeout(() => {
             setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
             goPrevPage(
