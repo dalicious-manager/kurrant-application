@@ -54,6 +54,7 @@ import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
 import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import {useQueryClient} from 'react-query';
+import {LabelWrap} from '../../../../../components/Button/component';
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
@@ -335,6 +336,22 @@ const Pages = ({route}) => {
                   </DeadlineGuide>
                 )}
               </View>
+
+              {/* 라벨 위치 */}
+
+              <LabelView>
+                <LabelsWrap>
+                  <LabelEachView>
+                    <LabelEachText focused={true}>상세정보</LabelEachText>
+                  </LabelEachView>
+                  <LabelEachView>
+                    <LabelEachText focused={false}>리뷰(132)</LabelEachText>
+                  </LabelEachView>
+                </LabelsWrap>
+
+                <Indicator />
+              </LabelView>
+
               {!detailFetching ? (
                 <>
                   <TouchableWithoutFeedback
@@ -814,4 +831,40 @@ const ReviewPoint = styled(Typography).attrs({text: 'Body05SB'})`
 const ReviewCount = styled(Typography).attrs({text: 'Body05R'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-left: 4px;
+`;
+
+const LabelView = styled.View`
+  width: 100%;
+  height: 43px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${props => props.theme.colors.grey[8]};
+`;
+
+const LabelsWrap = styled.View`
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+`;
+const Indicator = styled.View`
+  width: 50%;
+  height: 2px;
+
+  border-bottom-width: 2px;
+  border-bottom-color: ${props => props.theme.colors.grey[1]};
+`;
+
+const LabelEachView = styled.View`
+  width: 50%;
+  height: 100%;
+  /* border: 1px solid black; */
+
+  align-items: center;
+  justify-content: center;
+`;
+
+const LabelEachText = styled(Typography).attrs({text: 'Button09SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  font-weight: ${({focused}) => {
+    return focused ? '600' : '400';
+  }};
 `;
