@@ -20,6 +20,10 @@ import {
   Platform,
   TouchableWithoutFeedback,
   FlatList,
+  Animated,
+  Easing,
+  Dimensions,
+  ScrollView,
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -56,6 +60,8 @@ import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDe
 import {useQueryClient} from 'react-query';
 import {LabelWrap} from '../../../../../components/Button/component';
 
+const screenWidth = Dimensions.get('screen').width;
+
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
@@ -80,6 +86,16 @@ const Pages = ({route}) => {
     isFetching: detailFetching,
     refetch: detailRefetch,
   } = useGetDailyfoodDetailNow(route.params.dailyFoodId, userRole); // 상세정보
+
+  ////
+
+  const indicatorAnim = useRef(new Animated.Value(0)).current;
+
+  const scrollViewRef = useRef(null);
+
+  const [isLabelOnMainDetail, setIsLabelOnMainDetail] = useState(true);
+
+  ////
 
   const [starAverage, setStarAverage] = useState(1);
   const [totalReview, setTotalReview] = useState(0);
@@ -341,17 +357,62 @@ const Pages = ({route}) => {
 
               <LabelView>
                 <LabelsWrap>
-                  <LabelEachView>
-                    <LabelEachText focused={true}>상세정보</LabelEachText>
-                  </LabelEachView>
-                  <LabelEachView>
-                    <LabelEachText focused={false}>리뷰(132)</LabelEachText>
-                  </LabelEachView>
+                  <LabelEachPressable
+                    onPress={() => {
+                      setIsLabelOnMainDetail(true);
+                      Animated.timing(indicatorAnim, {
+                        toValue: 0,
+                        duration: 500,
+                        easing: Easing.out(Easing.cubic),
+                        useNativeDriver: true,
+                      }).start();
+                      scrollViewRef.current.scrollTo({
+                        x: 0,
+                        y: 0,
+                        animated: true,
+                      });
+                    }}>
+                    <LabelEachText focused={isLabelOnMainDetail}>
+                      상세정보
+                    </LabelEachText>
+                  </LabelEachPressable>
+                  <LabelEachPressable
+                    onPress={() => {
+                      setIsLabelOnMainDetail(false);
+                      Animated.timing(indicatorAnim, {
+                        toValue: screenWidth / 2,
+                        duration: 500,
+                        easing: Easing.out(Easing.cubic),
+                        useNativeDriver: true,
+                      }).start();
+                      scrollViewRef.current.scrollTo({
+                        x: screenWidth,
+                        y: 0,
+                        animated: true,
+                      });
+                    }}>
+                    <LabelEachText focused={!isLabelOnMainDetail}>
+                      리뷰(132)
+                    </LabelEachText>
+                  </LabelEachPressable>
                 </LabelsWrap>
 
-                <Indicator />
+                <Indicator
+                  style={{
+                    transform: [{translateX: indicatorAnim}],
+                  }}
+                />
               </LabelView>
-
+              <ScrollView
+                ref={scrollViewRef}
+                scrollEnabled={true}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                <TextView>
+                  <EachPage></EachPage>
+                  <EachPage></EachPage>
+                </TextView>
+              </ScrollView>
               {!detailFetching ? (
                 <>
                   <TouchableWithoutFeedback
@@ -838,6 +899,7 @@ const LabelView = styled.View`
   height: 43px;
   border-bottom-width: 1px;
   border-bottom-color: ${props => props.theme.colors.grey[8]};
+  /* position: fixed; */
 `;
 
 const LabelsWrap = styled.View`
@@ -845,7 +907,7 @@ const LabelsWrap = styled.View`
   height: 100%;
   flex-direction: row;
 `;
-const Indicator = styled.View`
+const Indicator = styled(Animated.View)`
   width: 50%;
   height: 2px;
 
@@ -853,7 +915,7 @@ const Indicator = styled.View`
   border-bottom-color: ${props => props.theme.colors.grey[1]};
 `;
 
-const LabelEachView = styled.View`
+const LabelEachPressable = styled.Pressable`
   width: 50%;
   height: 100%;
   /* border: 1px solid black; */
@@ -867,4 +929,17 @@ const LabelEachText = styled(Typography).attrs({text: 'Button09SB'})`
   font-weight: ${({focused}) => {
     return focused ? '600' : '400';
   }};
+`;
+
+const TextView = styled.View`
+  width: ${() => `${screenWidth * 2}px`};
+  height: 100px;
+  /* border: 1px solid black; */
+  flex-direction: row;
+`;
+
+const EachPage = styled.View`
+  border: 1px solid black;
+  height: 100%;
+  flex: 1;
 `;
