@@ -150,13 +150,6 @@ const Pages = () => {
     dietRepoMainRefetch,
   } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
 
-  useEffect(() => {
-    navigation.navigate(mealDetailPageName, {
-      dailyFoodId: 80343,
-      disableAddCartFromReview: true,
-    });
-  }, []);
-
   const loadCoinSound = async () => {
     try {
       const sound = new Sound(
