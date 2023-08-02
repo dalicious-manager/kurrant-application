@@ -149,7 +149,7 @@ const Pages = () => {
         useName: data.name,
       });
     } catch (err) {
-      Alert.alert('회원가입', err.toString()?.replace('error: '));
+      Alert.alert('회원가입', err.toString()?.replace('error: ', ''));
     }
   };
 
