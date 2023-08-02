@@ -75,7 +75,13 @@ const Pages = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [focus, setFocus] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+
+  ////
   const [scroll, setScroll] = useState(0);
+  const [isScrollOver60, setIsScrollOver60] = useState(false);
+
+  ////
+
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   const headerTitle = foodDetailData?.name;
@@ -99,17 +105,17 @@ const Pages = ({route}) => {
   const heightOfImage = 300;
   // const heightOfLabel = 43;
 
-  useEffect(() => {
-    // console.log('scroll 확인');
-    // console.log(scroll);
-    if (scroll > heightOfImage) {
-      // console.log('이때 true로 바뀜 ' + scroll);
-      setShowLabel(true);
-    } else {
-      setShowLabel(false);
-    }
-    // 300 되면 sticky
-  }, [scroll]);
+  // useEffect(() => {
+  //   // console.log('scroll 확인');
+  //   // console.log(scroll);
+  //   if (scroll > heightOfImage) {
+  //     // console.log('이때 true로 바뀜 ' + scroll);
+  //     setShowLabel(true);
+  //   } else {
+  //     setShowLabel(false);
+  //   }
+  //   // 300 되면 sticky
+  // }, [scroll]);
 
   ////
 
@@ -184,11 +190,11 @@ const Pages = ({route}) => {
     navigation.setOptions({
       headerTransparent: true,
       headerStyle: {
-        backgroundColor: `${scroll < 60 ? 'transparent' : 'white'}`,
+        backgroundColor: `${isScrollOver60 ? 'white' : 'transparent'}`,
       },
-      headerTitle: `${scroll > 60 ? `${headerTitle}` : ''}`,
+      headerTitle: `${isScrollOver60 ? `${headerTitle}` : ''}`,
       headerLeft: () =>
-        scroll > 60 ? (
+        isScrollOver60 ? (
           <Pressable
             onPress={() => navigation.goBack()}
             style={{
@@ -214,7 +220,7 @@ const Pages = ({route}) => {
       headerRight: disableAddCartFromReview
         ? () => {}
         : () =>
-            scroll > 60 ? (
+            isScrollOver60 ? (
               <View>
                 <ShoppingCart color={'#343337'} margin={[0, 10]} />
                 <Badge />
@@ -226,7 +232,7 @@ const Pages = ({route}) => {
               </View>
             ),
     });
-  }, [headerTitle, navigation, scroll]);
+  }, [headerTitle, navigation, isScrollOver60]);
 
   const addCartPress = async () => {
     if (userRole === 'ROLE_GUEST') {
@@ -315,7 +321,13 @@ const Pages = ({route}) => {
   }, [stickyTop]);
 
   const handleScroll = e => {
-    setScroll(e.nativeEvent.contentOffset.y);
+    // setScroll(e.nativeEvent.contentOffset.y);
+
+    if (e.nativeEvent.contentOffset.y > 60) {
+      setIsScrollOver60(true);
+    } else {
+      setIsScrollOver60(false);
+    }
 
     Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
       useNativeDriver: false,
@@ -416,7 +428,7 @@ const Pages = ({route}) => {
           scrollEventThrottle={16}
           ListHeaderComponent={
             <View style={{marginBottom: 150}}>
-              {scroll > 60 ? (
+              {isScrollOver60 ? (
                 <StatusBar />
               ) : (
                 <StatusBar barStyle="light-content" />
