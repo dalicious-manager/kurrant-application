@@ -94,6 +94,22 @@ const Pages = ({route}) => {
   const scrollViewRef = useRef(null);
 
   const [isLabelOnMainDetail, setIsLabelOnMainDetail] = useState(true);
+  const [showLabel, setShowLabel] = useState(false);
+
+  const heightOfImage = 300;
+  // const heightOfLabel = 43;
+
+  useEffect(() => {
+    // console.log('scroll 확인');
+    // console.log(scroll);
+    if (scroll > heightOfImage) {
+      // console.log('이때 true로 바뀜 ' + scroll);
+      setShowLabel(true);
+    } else {
+      setShowLabel(false);
+    }
+    // 300 되면 sticky
+  }, [scroll]);
 
   ////
 
@@ -285,9 +301,25 @@ const Pages = ({route}) => {
     setCount(prev => (prev <= 1 ? 1 : prev - 1));
   };
 
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const stickyTop = scrollY.interpolate({
+    outputRange: [0, 1],
+    inputRange: [200, 6000],
+    extrapolate: 'clamp',
+  });
+
+  useEffect(() => {
+    console.log('stickyTop 확인');
+    console.log(stickyTop);
+  }, [stickyTop]);
+
   const handleScroll = e => {
-    const scrollY = e.nativeEvent.contentOffset.y;
-    setScroll(scrollY);
+    setScroll(e.nativeEvent.contentOffset.y);
+
+    Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
+      useNativeDriver: false,
+    })(e);
   };
 
   const focusPress = () => {
@@ -326,10 +358,67 @@ const Pages = ({route}) => {
   return (
     <>
       <Wrap>
+        {stickyTop > 0 && (
+          <LabelViewSticky>
+            <LabelsWrap>
+              <LabelEachPressable
+                onPress={() => {
+                  setIsLabelOnMainDetail(true);
+                  Animated.timing(indicatorAnim, {
+                    toValue: 0,
+                    duration: 500,
+                    easing: Easing.out(Easing.cubic),
+                    useNativeDriver: true,
+                  }).start();
+                  scrollViewRef.current.scrollTo({
+                    x: 0,
+                    y: 0,
+                    animated: true,
+                  });
+                }}>
+                <LabelEachText focused={isLabelOnMainDetail}>
+                  상세정보
+                </LabelEachText>
+              </LabelEachPressable>
+              <LabelEachPressable
+                onPress={() => {
+                  setIsLabelOnMainDetail(false);
+                  Animated.timing(indicatorAnim, {
+                    toValue: screenWidth / 2,
+                    duration: 500,
+                    easing: Easing.out(Easing.cubic),
+                    useNativeDriver: true,
+                  }).start();
+                  scrollViewRef.current.scrollTo({
+                    x: screenWidth,
+                    y: 0,
+                    animated: true,
+                  });
+                }}>
+                <LabelEachText focused={!isLabelOnMainDetail}>
+                  리뷰(132)
+                </LabelEachText>
+              </LabelEachPressable>
+            </LabelsWrap>
+
+            <Indicator
+              style={{
+                transform: [{translateX: indicatorAnim}],
+              }}
+            />
+          </LabelViewSticky>
+        )}
+
         <FlatList
           scrollEnabled={Platform.OS === 'android' ? imgScroll : true}
           showsVerticalScrollIndicator={false}
           onScroll={e => handleScroll(e)}
+          // onScroll={Animated.event(
+          //   [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          //   {
+          //     useNativeDriver: false,
+          //   },
+          // )}
           scrollEventThrottle={16}
           ListHeaderComponent={
             <View style={{marginBottom: 150}}>
@@ -354,7 +443,6 @@ const Pages = ({route}) => {
               </View>
 
               {/* 라벨 위치 */}
-
               <LabelView>
                 <LabelsWrap>
                   <LabelEachPressable
@@ -403,6 +491,7 @@ const Pages = ({route}) => {
                   }}
                 />
               </LabelView>
+
               <ScrollView
                 ref={scrollViewRef}
                 scrollEnabled={true}
@@ -894,6 +983,20 @@ const ReviewCount = styled(Typography).attrs({text: 'Body05R'})`
   margin-left: 4px;
 `;
 
+const LabelViewSticky = styled(Animated.View)`
+  width: 100%;
+  height: 43px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${props => props.theme.colors.grey[8]};
+  /* position: fixed; */
+  position: absolute;
+  top: 174px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: white;
+  /* display: none; */
+`;
 const LabelView = styled.View`
   width: 100%;
   height: 43px;
