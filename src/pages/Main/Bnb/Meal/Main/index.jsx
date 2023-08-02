@@ -212,7 +212,7 @@ const Pages = ({route}) => {
     useCallback(() => {
       if (isToday) {
         pressDay(formattedWeekDate(new Date()));
-        pagerRef.current.setPage(0);
+        pagerRef.current?.setPage(0);
       }
       setTouchDate(data);
     }, [isToday, data]),

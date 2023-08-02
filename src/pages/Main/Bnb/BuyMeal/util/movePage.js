@@ -59,7 +59,7 @@ export const goPrevPage = (
           ),
         );
       });
-      return pager.current.setPage(index);
+      return pager.current?.setPage(index);
       // console.log(index);
       // return setNowPage(index);
     }
@@ -110,7 +110,7 @@ export const goNextPage = (
         ),
       );
     });
-    return pager.current.setPage(index);
+    return pager.current?.setPage(index);
     // return setNowPage(isDiningTypes[0]);
   }
 };

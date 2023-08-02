@@ -394,8 +394,7 @@ const Pages = () => {
                     progress < 5 &&
                     password &&
                     passwordChecked &&
-                    password === passwordChecked &&
-                    isValidation && (
+                    password === passwordChecked && (
                       <>
                         <RefTextInput
                           name="phone"

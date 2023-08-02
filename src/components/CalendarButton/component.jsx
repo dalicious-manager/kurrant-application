@@ -26,7 +26,7 @@ const Component = ({pager, chk}) => {
   btn[1] = '다음주';
 
   const pagerPress = idx => {
-    pager.current.setPage(idx);
+    pager.current?.setPage(idx);
   };
 
   const scrollToPress = idx => {

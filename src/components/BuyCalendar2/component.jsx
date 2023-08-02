@@ -80,7 +80,7 @@ const Component = ({
     // '첫 렌더시 해당 날짜로 위치하게 하기'
     if (selectDate && isMount) {
       setTimeout(() => {
-        pager.current.setPage(calculateSelectDatePosition(selectDate, weekly));
+        pager.current?.setPage(calculateSelectDatePosition(selectDate, weekly));
       }, 100);
       setChk(calculateSelectDatePosition(selectDate, weekly));
       setIsMount(false);
