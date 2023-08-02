@@ -277,7 +277,7 @@ const Pages = ({route}) => {
                   dining => dining.diningType,
                 ),
               );
-              diningRef.current.setPage(0);
+              diningRef.current?.setPage(0);
               setTimeout(() => {
                 setDiningDisabled(false);
               }, 500);
@@ -285,7 +285,7 @@ const Pages = ({route}) => {
             if (position === -1) {
               setDiningDisabled(true);
               setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
-              diningRef.current.setPage(isDiningTypes?.length - 1);
+              diningRef.current?.setPage(isDiningTypes?.length - 1);
               goPrevPage(
                 weekly,
                 weeklyService,
@@ -473,7 +473,7 @@ const Pages = ({route}) => {
   ]);
   useEffect(() => {
     if (dailyfoodDataList?.data?.diningTypes?.length > 0) {
-      diningRef.current.setPage(
+      diningRef.current?.setPage(
         dailyfoodDataList?.data?.diningTypes[0].diningType - 1,
       );
       setNowPage(dailyfoodDataList?.data?.diningTypes[0].diningType);
@@ -681,10 +681,10 @@ const Pages = ({route}) => {
                 isDiningTypes,
               );
               setDiningDisabled(false);
-              diningRef.current.setPage(0);
+              diningRef.current?.setPage(0);
               return;
             }
-            return diningRef.current.setPage(nextIndex);
+            return diningRef.current?.setPage(nextIndex);
           }, REFRESH_DELAY));
         }
         if (event.nativeEvent.translationX > 0) {
@@ -709,11 +709,11 @@ const Pages = ({route}) => {
                   dining => dining.diningType,
                 ),
               );
-              diningRef.current.setPage(isDiningTypes?.length - 1);
+              diningRef.current?.setPage(isDiningTypes?.length - 1);
               setDiningDisabled(false);
               return;
             }
-            return diningRef.current.setPage(prevIndex);
+            return diningRef.current?.setPage(prevIndex);
           }, REFRESH_DELAY));
         }
       }
@@ -735,7 +735,7 @@ const Pages = ({route}) => {
               isDiningTypes,
             );
             setDiningDisabled(false);
-            diningRef.current.setPage(0);
+            diningRef.current?.setPage(0);
             setDiningDisabled(false);
           }, REFRESH_DELAY));
         }
@@ -757,7 +757,7 @@ const Pages = ({route}) => {
                 dining => dining.diningType,
               ),
             );
-            diningRef.current.setPage(isDiningTypes?.length - 1);
+            diningRef.current?.setPage(isDiningTypes?.length - 1);
             setDiningDisabled(false);
           }, REFRESH_DELAY));
         }
@@ -801,7 +801,7 @@ const Pages = ({route}) => {
                       }
                       onPress={() => {
                         const idx = isDiningTypes.findIndex(v => v === type);
-                        diningRef.current.setPage(idx);
+                        diningRef.current?.setPage(idx);
                         setNowPage(type);
                       }}>
                       <ProgressText type={typeBoolean}>{btn}</ProgressText>
