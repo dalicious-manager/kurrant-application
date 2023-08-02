@@ -18,11 +18,12 @@ import {
   Linking,
   Pressable,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
-import styled, {css} from 'styled-components/native';
+import styled, {css, useTheme} from 'styled-components/native';
 import BottomModal from '~components/BottomModal';
 import {BowlIcon} from '~components/Icon';
 
@@ -32,6 +33,7 @@ import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
+import DisabledPlusIcon from '../../../../../assets/icons/Home/disalbedplus.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
@@ -99,7 +101,7 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   const navigation = useNavigation();
-
+  const themeApp = useTheme();
   const {setMorning, setLunch, setDinner, setDiningTypes} = useFoodDaily();
   const queryclient = useQueryClient();
   const [isVisible, setIsVisible] = useState(true);
@@ -224,15 +226,7 @@ const Pages = () => {
     setDiningTypes(
       dailyfoodDataList?.data?.diningTypes.map(dining => dining.diningType),
     );
-  }, [
-    dailyfoodData?.dailyFoodDtos,
-    setLunch,
-    setMorning,
-    setDinner,
-    spotId,
-    dailyfoodDataList?.data,
-    setDiningTypes,
-  ]);
+  }, [dailyfoodData?.dailyFoodDtos, spotId, dailyfoodDataList?.data]);
   useEffect(() => {
     if (dailyfoodDataList?.data?.dailyFoodsByDate) {
       setMorning([]);
@@ -866,7 +860,8 @@ const Pages = () => {
 
       <ButtonWrap>
         <Button
-          disabled={dailyfoodListIsFetching}
+          disabled={dailyfoodListIsFetching && !dailyfoodDataList?.data}
+          status={!dailyfoodListIsFetching || dailyfoodDataList?.data}
           onPress={async () => {
             if (isUserInfo?.data?.spotId) {
               navigation.navigate(BuyMealPageName);
@@ -875,8 +870,18 @@ const Pages = () => {
               Alert.alert('식사구매', '스팟선택 후 식사를 구매해주세요');
             }
           }}>
-          <PlusIcon />
-          <ButtonText>식사 구매하기</ButtonText>
+          {(!dailyfoodListIsFetching || dailyfoodDataList?.data) && (
+            <PlusIcon />
+          )}
+          <ButtonText
+            status={!dailyfoodListIsFetching || dailyfoodDataList?.data}>
+            {dailyfoodListIsFetching && !dailyfoodDataList?.data
+              ? '식사 준비중...'
+              : '식사 구매하기'}
+          </ButtonText>
+          {dailyfoodListIsFetching && !dailyfoodDataList?.data && (
+            <ActivityIndicator color={themeApp.colors.grey[6]} />
+          )}
         </Button>
       </ButtonWrap>
       <BottomModal
@@ -1087,7 +1092,8 @@ const MembershipText = styled(SemiBoldTxt)`
 
 const Button = styled.Pressable`
   margin: 0px 24px;
-  background-color: ${({theme}) => theme.colors.yellow[500]};
+  background-color: ${({theme, status}) =>
+    status ? theme.colors.yellow[500] : theme.colors.grey[4]};
   border-radius: 100px;
 
   padding: 16px 0px;
@@ -1097,7 +1103,8 @@ const Button = styled.Pressable`
 `;
 
 const ButtonText = styled(Typography).attrs({text: 'BottomButtonSB'})`
-  color: ${props => props.theme.colors.grey[1]};
+  color: ${props =>
+    props.status ? props.theme.colors.grey[1] : props.theme.colors.grey[6]};
   margin-left: 8px;
 `;
 

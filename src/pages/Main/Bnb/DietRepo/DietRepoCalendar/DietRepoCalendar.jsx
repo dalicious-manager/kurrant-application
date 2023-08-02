@@ -89,7 +89,7 @@ const DietRepoCalendar = ({
         console.log('이니셜데이트 없음');
       }
 
-      pager.current.setPage(2);
+      pager.current?.setPage(2);
       setChk(2);
       setIsMount(false);
     }, 100);
@@ -116,13 +116,13 @@ const DietRepoCalendar = ({
             //뒤로가기
 
             setCalendarDate(calcDate(-7, calendarDate));
-            pager.current.setPageWithoutAnimation(2);
+            pager.current?.setPageWithoutAnimation(2);
             setChk(2);
           } else if (chk < position) {
             // 앞으로 가기
 
             setCalendarDate(calcDate(7, calendarDate));
-            pager.current.setPageWithoutAnimation(2);
+            pager.current?.setPageWithoutAnimation(2);
             setChk(2);
           } else {
           }
