@@ -62,6 +62,8 @@ import {LabelWrap} from '../../../../../components/Button/component';
 
 const screenWidth = Dimensions.get('screen').width;
 
+let yo = 0;
+
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
@@ -103,6 +105,10 @@ const Pages = ({route}) => {
   const [showLabel, setShowLabel] = useState(false);
 
   const heightOfImage = 300;
+
+  yo = yo + 1;
+  console.log('스크롤시 리렌더링 체크하기 ' + yo);
+
   // const heightOfLabel = 43;
 
   // useEffect(() => {
@@ -329,7 +335,7 @@ const Pages = ({route}) => {
       setIsScrollOver60(false);
     }
 
-    if (e.nativeEvent.contentOffset.y > 310) {
+    if (e.nativeEvent.contentOffset.y > (Platform.OS === 'ios' ? 310 : 286)) {
       setShowLabel(true);
     } else {
       setShowLabel(false);
@@ -454,7 +460,6 @@ const Pages = ({route}) => {
                 )}
               </View>
 
-              {/* 라벨 위치 */}
               <LabelView>
                 <LabelsWrap>
                   <LabelEachPressable
@@ -514,6 +519,9 @@ const Pages = ({route}) => {
                   <EachPage></EachPage>
                 </TextView>
               </ScrollView>
+
+              {/* <View style={{width: screenWidth, height: 800}} /> */}
+
               {!detailFetching ? (
                 <>
                   <TouchableWithoutFeedback
@@ -690,8 +698,8 @@ const Pages = ({route}) => {
                       </InfoTextView>
                     </InfoWrap>
                   </Content>
-                  {/* 식단 레포트 영양 정보 */}
-                  {/* <Content>
+                  {/* 
+                  <Content>
                     <InfoWrap>
                       <InfoTitleView>
                         <InfoTitle>영양 정보</InfoTitle>
@@ -743,7 +751,7 @@ const Pages = ({route}) => {
                       </InfoTextView>
                     </InfoWrap>
                   </Content> */}
-                  {/* 리뷰자리 */}
+
                   <MealDetailReview
                     foodName={foodDetailData?.name}
                     imageLocation={foodDetailData?.imageList}
@@ -1002,7 +1010,13 @@ const LabelViewSticky = styled(Animated.View)`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   /* position: fixed; */
   position: absolute;
-  top: 74px;
+  top: ${() => {
+    if (Platform.OS === 'ios') {
+      return `74px`;
+    } else if (Platform.OS === 'android') {
+      return `94px`;
+    }
+  }};
   left: 0;
   right: 0;
   z-index: 1;
