@@ -413,12 +413,6 @@ const Pages = ({route}) => {
           scrollEnabled={Platform.OS === 'android' ? imgScroll : true}
           showsVerticalScrollIndicator={false}
           onScroll={e => handleScroll(e)}
-          // onScroll={Animated.event(
-          //   [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          //   {
-          //     useNativeDriver: false,
-          //   },
-          // )}
           scrollEventThrottle={16}
           ListHeaderComponent={
             <View style={{marginBottom: 150}}>
