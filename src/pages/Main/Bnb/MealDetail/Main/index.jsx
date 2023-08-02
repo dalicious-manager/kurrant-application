@@ -307,18 +307,18 @@ const Pages = ({route}) => {
     setCount(prev => (prev <= 1 ? 1 : prev - 1));
   };
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  // const scrollY = useRef(new Animated.Value(0)).current;
 
-  const stickyTop = scrollY.interpolate({
-    outputRange: [0, 1],
-    inputRange: [200, 6000],
-    extrapolate: 'clamp',
-  });
+  // const stickyTop = scrollY.interpolate({
+  //   outputRange: [0, 1],
+  //   inputRange: [200, 6000],
+  //   extrapolate: 'clamp',
+  // });
 
-  useEffect(() => {
-    console.log('stickyTop 확인');
-    console.log(stickyTop);
-  }, [stickyTop]);
+  // useEffect(() => {
+  //   console.log('stickyTop 확인');
+  //   console.log(stickyTop);
+  // }, [stickyTop]);
 
   const handleScroll = e => {
     // setScroll(e.nativeEvent.contentOffset.y);
@@ -329,9 +329,15 @@ const Pages = ({route}) => {
       setIsScrollOver60(false);
     }
 
-    Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
-      useNativeDriver: false,
-    })(e);
+    if (e.nativeEvent.contentOffset.y > 310) {
+      setShowLabel(true);
+    } else {
+      setShowLabel(false);
+    }
+
+    // Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
+    //   useNativeDriver: false,
+    // })(e);
   };
 
   const focusPress = () => {
@@ -370,7 +376,7 @@ const Pages = ({route}) => {
   return (
     <>
       <Wrap>
-        {stickyTop > 0 && (
+        {showLabel && (
           <LabelViewSticky>
             <LabelsWrap>
               <LabelEachPressable
@@ -996,7 +1002,7 @@ const LabelViewSticky = styled(Animated.View)`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
   /* position: fixed; */
   position: absolute;
-  top: 174px;
+  top: 74px;
   left: 0;
   right: 0;
   z-index: 1;
