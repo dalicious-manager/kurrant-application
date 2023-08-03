@@ -108,7 +108,7 @@ const Pages = () => {
   const [userGroupSpot, setUserGroupSpot] = useState();
   const [spotId, setSpotId] = useState();
   const weekly = useAtomValue(weekAtom);
-  const {data: isUserInfo} = useGetUserInfo();
+  const {data: isUserInfo, refetch: userRefetch} = useGetUserInfo();
   const currentVersion = VersionCheck.getCurrentVersion();
   const [dailyfoodData, setDailyfoodData] = useState();
   const [selected, setSelected] = useState();
@@ -176,10 +176,8 @@ const Pages = () => {
     readableAtom: {membershipHistory},
   } = useMembership();
   const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
-    formattedWeekDate(weekly[0][0]),
-    formattedWeekDate(
-      weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
-    ),
+    formattedWeekDate(date),
+    formattedWeekDate(date),
   );
   const mealCheck = orderMealList?.data?.map(el => {
     return el.serviceDate;
@@ -201,7 +199,7 @@ const Pages = () => {
   } = useGetDailyfoodList(
     selected !== undefined ? selected : isUserInfo?.data?.spotId,
     formattedWeekDate(weekly[0][0]),
-    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+    formattedWeekDate(weekly[0][weekly[0].length - 1]),
     userRole,
   );
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
@@ -210,6 +208,9 @@ const Pages = () => {
       setUserGroupSpot(isUserGroupSpotCheck?.data);
     }
   }, [isUserGroupSpotCheck?.data]);
+  useEffect(() => {
+    if (!isUserInfo) userRefetch();
+  }, [isUserInfo]);
   useEffect(() => {
     const lunchData = dailyfoodData?.dailyFoodDtos.filter(
       x => x.diningType === 2,
@@ -362,15 +363,15 @@ const Pages = () => {
     };
     getHistory();
   }, [isUserInfo?.data]);
-  useFocusEffect(
-    useCallback(() => {
-      try {
-        orderMealRefetch();
-      } catch (e) {
-        Alert.alert(e.toString()?.replace('error:'));
-      }
-    }, [isCancelSpot, appState]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     try {
+  //       orderMealRefetch();
+  //     } catch (e) {
+  //       Alert.alert(e.toString()?.replace('error:'));
+  //     }
+  //   }, [isCancelSpot, appState]),
+  // );
   const checkPermission = () => {
     messaging()
       .hasPermission()
