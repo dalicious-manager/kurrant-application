@@ -28,12 +28,12 @@ import {
 import styled from 'styled-components';
 
 import MealDetailReview from './Review/MealDetailReview';
-import {isCloseToBottomOfScrollView} from './Review/MealDetailReview/logic';
+
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
-import {useMainInfiniteScrollQuery} from '../../../../../biz/useReview/useMealDetailReview/useGetMealDetailReview';
+
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
@@ -57,8 +57,7 @@ import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
 import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
-import {useQueryClient} from 'react-query';
-import {LabelWrap} from '../../../../../components/Button/component';
+import useMainReviewHook from './Review/MealDetailReview/useMainMealDetailReviewHook';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -71,7 +70,6 @@ const Pages = ({route}) => {
   const disableAddCartFromReview = route.params.disableAddCartFromReview;
   const reviewIdFromWrittenReview = route.params.reviewIdFromWrittenReview;
 
-  const queryClient = useQueryClient();
   const bodyRef = useRef();
   const navigation = useNavigation();
   const {balloonEvent, BalloonWrap} = Balloon();
@@ -79,17 +77,22 @@ const Pages = ({route}) => {
   const [focus, setFocus] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
 
-  ////
-  const [scroll, setScroll] = useState(0);
   const [isScrollOver60, setIsScrollOver60] = useState(false);
-
-  ////
 
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   const headerTitle = foodDetailData?.name;
   const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
   const {isFoodDetails, isFoodDetailLoading, foodDetail} = useFoodDetail();
+  const {
+    readableAtom: {userRole},
+  } = useAuth();
+  const {loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
+  const {mutateAsync: addMeal} = useAddShoppingBasket();
+  const {
+    data: {data: isUserInfo},
+  } = useGetUserInfo();
+
   const {
     data: isFoodDetail,
     isFetching: detailFetching,
@@ -99,7 +102,6 @@ const Pages = ({route}) => {
   ////
 
   const indicatorAnim = useRef(new Animated.Value(0)).current;
-
   const scrollViewRef = useRef(null);
   const flatListRef = useRef(null);
 
@@ -112,46 +114,35 @@ const Pages = ({route}) => {
     flatListRef.current.scrollToOffset({offset: 0});
   }, [isLabelOnMainDetail]);
 
-  const heightOfImage = 300;
-
-  const [starAverage, setStarAverage] = useState(1);
-  const [totalReview, setTotalReview] = useState(0);
-  const [initialLoading, setInitialLoading] = useState(false);
-
-  const [url, setUrl] = useState(`/dailyfoods/${dailyFoodId}/review?sort=0`);
+  const handleLabelEachPress = (isLabelOnMainDetail, toValue, scrollToX) => {
+    setIsLabelOnMainDetail(isLabelOnMainDetail);
+    Animated.timing(indicatorAnim, {
+      toValue,
+      duration: 500,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+    scrollViewRef.current.scrollTo({
+      x: scrollToX,
+      y: 0,
+      animated: true,
+    });
+  };
   const {
+    starAverage,
+    setStarAverage,
+    totalReview,
+    setTotalReview,
+    initialLoading,
+    setInitialLoading,
+    url,
+    setUrl,
     getBoard,
-    getBoardIsFetching: isFetching,
+    isFetching,
     getNextPage,
     getNextPageIsPossible,
     getBoardRefetch,
-  } = useMainReviewInfiniteQuery(url, dailyFoodId);
-
-  useEffect(() => {
-    // const review =
-    //   getBoard?.pages.flatMap(page => page.items?.reviewList) ?? [];
-    if (getBoard?.pages) {
-      const {
-        items: {totalReview, starAverage},
-      } = getBoard?.pages[0];
-      setStarAverage(starAverage);
-
-      setTotalReview(totalReview);
-    }
-  }, [getBoard?.pages]);
-
-  useEffect(() => {
-    getBoardRefetch();
-  }, [url]);
-
-  const {
-    readableAtom: {userRole},
-  } = useAuth();
-  const {loadMeal, updateMeal, isLoadMeal} = useShoppingBasket();
-  const {mutateAsync: addMeal} = useAddShoppingBasket();
-  const {
-    data: {data: isUserInfo},
-  } = useGetUserInfo();
+  } = useMainReviewHook(dailyFoodId);
 
   const [count, setCount] = useState(1);
 
@@ -315,22 +306,7 @@ const Pages = ({route}) => {
     setCount(prev => (prev <= 1 ? 1 : prev - 1));
   };
 
-  // const scrollY = useRef(new Animated.Value(0)).current;
-
-  // const stickyTop = scrollY.interpolate({
-  //   outputRange: [0, 1],
-  //   inputRange: [200, 6000],
-  //   extrapolate: 'clamp',
-  // });
-
-  // useEffect(() => {
-  //   console.log('stickyTop 확인');
-  //   console.log(stickyTop);
-  // }, [stickyTop]);
-
   const handleScroll = e => {
-    // setScroll(e.nativeEvent.contentOffset.y);
-
     if (e.nativeEvent.contentOffset.y > 60) {
       setIsScrollOver60(true);
     } else {
@@ -342,10 +318,6 @@ const Pages = ({route}) => {
     } else {
       setShowLabel(false);
     }
-
-    // Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
-    //   useNativeDriver: false,
-    // })(e);
   };
 
   const focusPress = () => {
@@ -380,21 +352,6 @@ const Pages = ({route}) => {
   useEffect(() => {
     if (isFoodDetail?.data) setFoodDetailData(isFoodDetail?.data);
   }, [isFoodDetail?.data, setFoodDetailData]);
-
-  const handleLabelEachPress = (isLabelOnMainDetail, toValue, scrollToX) => {
-    setIsLabelOnMainDetail(isLabelOnMainDetail);
-    Animated.timing(indicatorAnim, {
-      toValue,
-      duration: 500,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    }).start();
-    scrollViewRef.current.scrollTo({
-      x: scrollToX,
-      y: 0,
-      animated: true,
-    });
-  };
 
   return (
     <>
@@ -490,7 +447,6 @@ const Pages = ({route}) => {
                 </LabelView>
               )}
 
-              {/* <View style={{width: screenWidth, height: 600}} /> */}
               <ScrollView
                 ref={scrollViewRef}
                 scrollEnabled={true}
