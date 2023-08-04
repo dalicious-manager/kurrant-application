@@ -379,6 +379,21 @@ const Pages = ({route}) => {
     if (isFoodDetail?.data) setFoodDetailData(isFoodDetail?.data);
   }, [isFoodDetail?.data, setFoodDetailData]);
 
+  const handleLabelEachPress = (isLabelOnMainDetail, toValue, scrollToX) => {
+    setIsLabelOnMainDetail(isLabelOnMainDetail);
+    Animated.timing(indicatorAnim, {
+      toValue,
+      duration: 500,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+    scrollViewRef.current.scrollTo({
+      x: scrollToX,
+      y: 0,
+      animated: true,
+    });
+  };
+
   return (
     <>
       <Wrap>
@@ -387,18 +402,7 @@ const Pages = ({route}) => {
             <LabelsWrap>
               <LabelEachPressable
                 onPress={() => {
-                  setIsLabelOnMainDetail(true);
-                  Animated.timing(indicatorAnim, {
-                    toValue: 0,
-                    duration: 500,
-                    easing: Easing.out(Easing.cubic),
-                    useNativeDriver: true,
-                  }).start();
-                  scrollViewRef.current.scrollTo({
-                    x: 0,
-                    y: 0,
-                    animated: true,
-                  });
+                  handleLabelEachPress(true, 0, 0);
                 }}>
                 <LabelEachText focused={isLabelOnMainDetail}>
                   상세정보
@@ -406,18 +410,7 @@ const Pages = ({route}) => {
               </LabelEachPressable>
               <LabelEachPressable
                 onPress={() => {
-                  setIsLabelOnMainDetail(false);
-                  Animated.timing(indicatorAnim, {
-                    toValue: screenWidth / 2,
-                    duration: 500,
-                    easing: Easing.out(Easing.cubic),
-                    useNativeDriver: true,
-                  }).start();
-                  scrollViewRef.current.scrollTo({
-                    x: screenWidth,
-                    y: 0,
-                    animated: true,
-                  });
+                  handleLabelEachPress(false, screenWidth / 2, screenWidth);
                 }}>
                 <LabelEachText focused={!isLabelOnMainDetail}>
                   리뷰(132)
@@ -465,18 +458,7 @@ const Pages = ({route}) => {
                   <LabelsWrap>
                     <LabelEachPressable
                       onPress={() => {
-                        setIsLabelOnMainDetail(true);
-                        Animated.timing(indicatorAnim, {
-                          toValue: 0,
-                          duration: 500,
-                          easing: Easing.out(Easing.cubic),
-                          useNativeDriver: true,
-                        }).start();
-                        scrollViewRef.current.scrollTo({
-                          x: 0,
-                          y: 0,
-                          animated: true,
-                        });
+                        handleLabelEachPress(true, 0, 0);
                       }}>
                       <LabelEachText focused={isLabelOnMainDetail}>
                         상세정보
@@ -484,18 +466,11 @@ const Pages = ({route}) => {
                     </LabelEachPressable>
                     <LabelEachPressable
                       onPress={() => {
-                        setIsLabelOnMainDetail(false);
-                        Animated.timing(indicatorAnim, {
-                          toValue: screenWidth / 2,
-                          duration: 500,
-                          easing: Easing.out(Easing.cubic),
-                          useNativeDriver: true,
-                        }).start();
-                        scrollViewRef.current.scrollTo({
-                          x: screenWidth,
-                          y: 0,
-                          animated: true,
-                        });
+                        handleLabelEachPress(
+                          false,
+                          screenWidth / 2,
+                          screenWidth,
+                        );
                       }}>
                       <LabelEachText focused={!isLabelOnMainDetail}>
                         리뷰(132)
