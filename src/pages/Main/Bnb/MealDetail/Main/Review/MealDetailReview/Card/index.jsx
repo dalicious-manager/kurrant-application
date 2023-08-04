@@ -276,6 +276,8 @@ const Container = styled.View`
       `;
     }
   }}
+  /* padding: 16px 24px; */
+  padding: 0 24px;
 
   margin-bottom: 40px;
 `;

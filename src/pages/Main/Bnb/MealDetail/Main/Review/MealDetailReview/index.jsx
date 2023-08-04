@@ -1,7 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {useEffect, useRef, useState} from 'react';
-import {ActivityIndicator, Dimensions, FlatList, Platform} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Platform,
+  Text,
+} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import {useQueryClient} from 'react-query';
 import styled, {useTheme} from 'styled-components';
@@ -247,47 +253,6 @@ const Component = ({
             <ActivityIndicator size={'large'} />
           </LoadingPage1>
         )}
-
-        {allReviewList && !initialLoading && (
-          <FlatList
-            ref={flatListRef}
-            data={allReviewList}
-            keyExtractor={item => item.reviewId.toString()}
-            renderItem={({item}) => (
-              <Card
-                key={item.reviewId}
-                dailyFoodId={dailyFoodId}
-                id={item.reviewId}
-                userName={item.userName}
-                item={item}
-                good={item.good}
-                isGood={item.isGood}
-                createDate={item.createDate}
-                updateDate={item.updateDate}
-                writtenDate={convertDateFormat1(item.createDate)}
-                option={item.option}
-                rating={item.satisfaction}
-                reviewText={item.content}
-                imageLocation={item.imageLocation}
-                forMakers={item.forMakers}
-                commentList={item.commentList}
-                isFetching={isFetching}
-              />
-            )}
-            onEndReached={() => {
-              if (getNextPageIsPossible) {
-                getNextPage();
-              }
-            }}
-            onEndReachedThreshold={0.1}
-          />
-        )}
-
-        {isFetchingBottom && (
-          <LoadingPage>
-            <ActivityIndicator size={'large'} />
-          </LoadingPage>
-        )}
       </ReviewListWrap>
 
       <BottomModalMultipleSelect
@@ -310,7 +275,7 @@ const Container = styled.View`
   width: 100%;
 
   padding: 16px 24px;
-  width: 100%;
+
   position: relative;
 `;
 

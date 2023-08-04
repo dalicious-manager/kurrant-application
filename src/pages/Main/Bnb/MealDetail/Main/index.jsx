@@ -58,6 +58,12 @@ import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
 import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import useMainReviewHook from './Review/MealDetailReview/useMainReviewHook';
+import BottomModalMultipleSelect from '../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
+import {modifyStarRatingCount} from './Review/MealDetailReview/logic';
+
+import Card from './Review/MealDetailReview/Card/index';
+import {convertDateFormat1} from '../../../../../utils/dateFormatter';
+import {ActivityIndicator} from 'react-native';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -184,6 +190,33 @@ const Pages = ({route}) => {
     isFetchingBottom,
     setIsFetchingBottom,
   } = useMainReviewHook(dailyFoodId, reviewIdFromWrittenReview);
+
+  // const [isMount, setIsMount] = useState(true);
+  // const [isMoveOn, setIsMoveOn] = useState(false);
+
+  // useEffect(() => {
+  //   if (!isMoveOn) return;
+
+  //   if (flatListRef.current && idx !== -1) {
+  //     console.log('과연 잘 들어왔을까??? ' + idx);
+
+  //     setIsLabelOnMainDetail(false);
+
+  //     flatListRef?.current?.scrollToIndex({
+  //       animated: true,
+  //       index: idx,
+  //       viewPosition: 100,
+  //     });
+  //   }
+  // }, [idx, isMoveOn]);
+
+  // useEffect(() => {
+  //   if (isMount) {
+  //     setIsLabelOnMainDetail(false);
+  //   }
+
+  //   setIsMount(false);
+  // }, [isLabelOnMainDetail]);
 
   const [count, setCount] = useState(1);
 
@@ -434,7 +467,7 @@ const Pages = ({route}) => {
           onScroll={e => handleScroll(e)}
           scrollEventThrottle={16}
           ListHeaderComponent={
-            <View style={{marginBottom: 150}}>
+            <View style={{marginBottom: isLabelOnMainDetail ? 150 : 0}}>
               {isScrollOver60 ? (
                 <StatusBar />
               ) : (
@@ -487,14 +520,6 @@ const Pages = ({route}) => {
                   />
                 </LabelView>
               )}
-
-              {/* <ScrollView
-                ref={scrollViewRef}
-                scrollEnabled={true}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-             
-              </ScrollView> */}
 
               <TextView>
                 {isLabelOnMainDetail && (
@@ -825,7 +850,69 @@ const Pages = ({route}) => {
               </TextView>
             </View>
           }
+          data={[
+            ...allReviewList,
+            {
+              reviewId: 'filler',
+              isFiller: 'filler',
+            },
+          ]}
+          keyExtractor={item => item.reviewId.toString()}
+          renderItem={
+            isLabelOnMainDetail
+              ? undefined
+              : ({item}) => {
+                  if (item.reviewId === 'filler') {
+                    return (
+                      <Filler
+                        isReviewIdFromWrittenReview={
+                          !!reviewIdFromWrittenReview
+                        }
+                      />
+                    );
+                  } else {
+                    return (
+                      <Card
+                        key={item.reviewId}
+                        dailyFoodId={dailyFoodId}
+                        id={item.reviewId}
+                        userName={item.userName}
+                        item={item}
+                        good={item.good}
+                        isGood={item.isGood}
+                        createDate={item.createDate}
+                        updateDate={item.updateDate}
+                        writtenDate={convertDateFormat1(item.createDate)}
+                        option={item.option}
+                        rating={item.satisfaction}
+                        reviewText={item.content}
+                        imageLocation={item.imageLocation}
+                        forMakers={item.forMakers}
+                        commentList={item.commentList}
+                        isFetching={isFetching}
+                      />
+                    );
+                  }
+                }
+          }
+          onEndReached={() => {
+            if (getNextPageIsPossible) {
+              getNextPage();
+            }
+          }}
+          onEndReachedThreshold={0.1}
         />
+        {!isLabelOnMainDetail && (
+          <>
+            <ReviewListWrap>
+              {isFetchingBottom && (
+                <LoadingPage>
+                  <ActivityIndicator size={'large'} />
+                </LoadingPage>
+              )}
+            </ReviewListWrap>
+          </>
+        )}
 
         <KeyboardAvoiding
           mealDetail
@@ -1126,4 +1213,32 @@ const EachPage = styled.View`
   /* height: 100%; */
   flex: 1;
   width: ${() => `${screenWidth}px`};
+  /* border: 1px solid black; */
+`;
+
+const ReviewListWrap = styled.View`
+  width: 100%;
+  background-color: #ffffff;
+`;
+
+const LoadingPage = styled.View`
+  background-color: white;
+  opacity: 0.5;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  width: 100%;
+  flex: 1;
+  padding-bottom: 150px;
+`;
+
+const Filler = styled.View`
+  width: 100%;
+  height: ${({reviewIdFromWrittenReview}) => {
+    if (reviewIdFromWrittenReview) {
+      return 60;
+    } else {
+      return 100;
+    }
+  }}px;
 `;
