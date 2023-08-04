@@ -70,10 +70,20 @@ const Component = ({
   //   console.log(reviewIdFromWrittenReview);
   // }, [reviewIdFromWrittenReview]);
 
+  // useEffect(() => {
+  //   console.log('idx 확인');
+  //   console.log(idx);
+  // }, [idx]);
+
   useEffect(() => {
-    console.log('idx 확인');
-    console.log(idx);
-  }, [idx]);
+    if (flatListRef.current && idx !== -1) {
+      flatListRef?.current?.scrollToIndex({
+        animated: true,
+        index: idx,
+        viewPosition: 0,
+      });
+    }
+  }, [flatListRef, idx]);
 
   const theme = useTheme();
   const queryClient = useQueryClient();
