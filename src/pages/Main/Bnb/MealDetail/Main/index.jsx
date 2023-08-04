@@ -57,7 +57,7 @@ import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
 import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
-import useMainReviewHook from './Review/MealDetailReview/useMainMealDetailReviewHook';
+import useMainReviewHook from './Review/MealDetailReview/useMainReviewHook';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -142,7 +142,48 @@ const Pages = ({route}) => {
     getNextPage,
     getNextPageIsPossible,
     getBoardRefetch,
-  } = useMainReviewHook(dailyFoodId);
+
+    //////////////////
+    allReviewList,
+    setAllReviewList,
+    flatListRef2,
+    idx,
+    setIdx,
+    theme,
+    // navigation,
+    keyword,
+    setKeyword,
+    stars,
+    setStars,
+    isLast,
+    setIsLast,
+    foodId,
+    setFoodId,
+    reviewWrite,
+    setReviewWrite,
+    orderFilter,
+    setOrderFilter,
+    isOnlyPhoto,
+    setIsOnlyPhoto,
+    rateSelected,
+    setRateSelected,
+    selectedKeyword,
+    setSelectedKeyword,
+    dailyFoodIdFromAtom,
+    setDailyFoodIdFromAtom,
+    starRatingCounts,
+    showSelectList,
+    setShowSelectList,
+    bottomModalOpen,
+    setBottomModalOpen,
+    handleSelectBottomModal,
+    showSelectedOrderFilter,
+    handleConfirmPress,
+    isFetchingTop,
+    setIsFetchingTop,
+    isFetchingBottom,
+    setIsFetchingBottom,
+  } = useMainReviewHook(dailyFoodId, reviewIdFromWrittenReview);
 
   const [count, setCount] = useState(1);
 
@@ -736,6 +777,45 @@ const Pages = ({route}) => {
                         getNextPageIsPossible={getNextPageIsPossible}
                         getBoardRefetch={getBoardRefetch}
                         reviewIdFromWrittenReview={reviewIdFromWrittenReview}
+                        allReviewList={allReviewList}
+                        setAllReviewList={setAllReviewList}
+                        flatListRef={flatListRef}
+                        idx={idx}
+                        setIdx={setIdx}
+                        theme={theme}
+                        navigation={navigation}
+                        keyword={keyword}
+                        setKeyword={setKeyword}
+                        stars={stars}
+                        setStars={setStars}
+                        isLast={isLast}
+                        setIsLast={setIsLast}
+                        foodId={foodId}
+                        setFoodId={setFoodId}
+                        reviewWrite={reviewWrite}
+                        setReviewWrite={setReviewWrite}
+                        orderFilter={orderFilter}
+                        setOrderFilter={setOrderFilter}
+                        isOnlyPhoto={isOnlyPhoto}
+                        setIsOnlyPhoto={setIsOnlyPhoto}
+                        rateSelected={rateSelected}
+                        setRateSelected={setRateSelected}
+                        selectedKeyword={selectedKeyword}
+                        setSelectedKeyword={setSelectedKeyword}
+                        dailyFoodIdFromAtom={dailyFoodIdFromAtom}
+                        setDailyFoodIdFromAtom={setDailyFoodIdFromAtom}
+                        starRatingCounts={starRatingCounts}
+                        showSelectList={showSelectList}
+                        setShowSelectList={setShowSelectList}
+                        bottomModalOpen={bottomModalOpen}
+                        setBottomModalOpen={setBottomModalOpen}
+                        handleSelectBottomModal={handleSelectBottomModal}
+                        showSelectedOrderFilter={showSelectedOrderFilter}
+                        handleConfirmPress={handleConfirmPress}
+                        isFetchingTop={isFetchingTop}
+                        setIsFetchingTop={setIsFetchingTop}
+                        isFetchingBottom={isFetchingBottom}
+                        setIsFetchingBottom={setIsFetchingBottom}
                       />
                     ) : (
                       <Skeleton />

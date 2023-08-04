@@ -42,207 +42,49 @@ const Component = ({
   getNextPage,
   getNextPageIsPossible,
   getBoardRefetch,
+
+  ////////////
+
+  allReviewList,
+  setAllReviewList,
+  flatListRef,
+  idx,
+  setIdx,
+  theme,
+  navigation,
+  keyword,
+  setKeyword,
+  stars,
+  setStars,
+  isLast,
+  setIsLast,
+  foodId,
+  setFoodId,
+  reviewWrite,
+  setReviewWrite,
+  orderFilter,
+  setOrderFilter,
+  isOnlyPhoto,
+  setIsOnlyPhoto,
+  rateSelected,
+  setRateSelected,
+  selectedKeyword,
+  setSelectedKeyword,
+  dailyFoodIdFromAtom,
+  setDailyFoodIdFromAtom,
+  starRatingCounts,
+  showSelectList,
+  setShowSelectList,
+  bottomModalOpen,
+  setBottomModalOpen,
+  handleSelectBottomModal,
+  showSelectedOrderFilter,
+  handleConfirmPress,
+  isFetchingTop,
+  setIsFetchingTop,
+  isFetchingBottom,
+  setIsFetchingBottom,
 }) => {
-  const flatListRef = useRef(null);
-
-  // 해당 리뷰로 가기
-
-  const [idx, setIdx] = useState(-1);
-
-  const [allReviewList, setAllReviewList] = useState([]);
-
-  useEffect(() => {
-    if (allReviewList.length > 0 && reviewIdFromWrittenReview) {
-      const data = allReviewList?.findIndex(
-        el => el.reviewId === reviewIdFromWrittenReview,
-      );
-      setIdx(data);
-    }
-  }, [allReviewList, reviewIdFromWrittenReview]);
-
-  // useEffect(() => {
-  //   console.log('allReviewList 확인');
-  //   console.log(allReviewList.map(v => v.reviewId));
-  // }, [allReviewList]);
-
-  // useEffect(() => {
-  //   console.log('reviewIdFromWrittenReview 확인');
-  //   console.log(reviewIdFromWrittenReview);
-  // }, [reviewIdFromWrittenReview]);
-
-  // useEffect(() => {
-  //   console.log('idx 확인');
-  //   console.log(idx);
-  // }, [idx]);
-
-  useEffect(() => {
-    if (flatListRef.current && idx !== -1) {
-      flatListRef?.current?.scrollToIndex({
-        animated: true,
-        index: idx,
-        viewPosition: 0,
-      });
-    }
-  }, [flatListRef, idx]);
-
-  const theme = useTheme();
-  const queryClient = useQueryClient();
-  const navigation = useNavigation();
-
-  const [keyword, setKeyword] = useState([]);
-  // const [starAverage, setStarAverage] = useState(1);
-  const [stars, setStars] = useState({});
-  const [isLast, setIsLast] = useState(false);
-  const [foodId, setFoodId] = useState(0);
-
-  const [reviewWrite, setReviewWrite] = useState(0);
-
-  // 베스트순,최신순,리뷰순 (sort)
-  // sort : 베스트순(default) -> 0 , 최신순 -> 1, 리뷰순 -> 2
-
-  const [orderFilter, setOrderFilter] = useState(0);
-
-  // 포토리뷰만(photo)
-  // photo : 둘다 -> 값 없음,  포토리뷰 없음 -> 0, 포토리뷰만 -> 1
-
-  const [isOnlyPhoto, setIsOnlyPhoto] = useState(false);
-
-  // 별점 필터(starFilter)
-
-  const [rateSelected, setRateSelected] = useState([]);
-
-  // 상품 상세 리뷰 키워드
-  const [selectedKeyword, setSelectedKeyword] = useState('');
-
-  const [dailyFoodIdFromAtom, setDailyFoodIdFromAtom] = useAtom(
-    reviewDetailDailyFoodIdAtom,
-  );
-
-  useEffect(() => {
-    if (dailyFoodIdFromAtom === 0) {
-      setDailyFoodIdFromAtom(dailyFoodId);
-      return;
-    }
-
-    if (dailyFoodIdFromAtom !== dailyFoodId) {
-      setInitialLoading(true);
-    } else {
-      setInitialLoading(false);
-    }
-
-    setDailyFoodIdFromAtom(dailyFoodId);
-  }, [dailyFoodId, isFetching]);
-
-  const {starRatingCounts} = useGetMealDetailReview(dailyFoodId);
-
-  useEffect(() => {
-    setUrl(
-      buildCustomUrl(
-        dailyFoodId,
-        orderFilter,
-        isOnlyPhoto,
-        selectedKeyword,
-        rateSelected,
-      ),
-    );
-  }, [dailyFoodId, orderFilter, isOnlyPhoto, selectedKeyword, setUrl]);
-
-  useEffect(() => {
-    const review =
-      getBoard?.pages.flatMap(page => page.items?.reviewList) ?? [];
-    if (getBoard?.pages) {
-      const {
-        items: {
-          starAverage,
-          stars,
-          isLast,
-          foodId,
-          totalReview,
-          reviewWrite,
-          keywords,
-        },
-      } = getBoard?.pages[0];
-      setAllReviewList(review);
-      setStarAverage(starAverage);
-      setStars(stars);
-      setKeyword(keywords);
-      setIsLast(isLast);
-      setFoodId(foodId);
-      setTotalReview(totalReview);
-      setReviewWrite(reviewWrite);
-    }
-  }, [getBoard?.pages]);
-
-  const [showSelectList, setShowSelectList] = useState(false);
-
-  const [bottomModalOpen, setBottomModalOpen] = useState(false);
-
-  const handleSelectBottomModal = id => {
-    if (rateSelected.includes(id)) {
-      setRateSelected([...rateSelected.filter(v => v !== id)]);
-    } else {
-      setRateSelected([...rateSelected, id]);
-    }
-  };
-
-  const showSelectedOrderFilter = orderFilter => {
-    if (orderFilter === 0) {
-      return '베스트 순';
-    } else if (orderFilter === 1) {
-      return '최신순';
-    } else if (orderFilter === 2) {
-      return '리뷰 추천순';
-    }
-  };
-
-  const handleConfirmPress = () => {
-    setUrl(
-      buildCustomUrl(
-        dailyFoodId,
-        orderFilter,
-        isOnlyPhoto,
-        selectedKeyword,
-        rateSelected,
-      ),
-    );
-  };
-
-  const [isFetchingTop, setIsFetchingTop] = useState(false);
-  const [isFetchingBottom, setIsFetchingBottom] = useState(false);
-
-  useEffect(() => {
-    setIsFetchingTop(true);
-  }, [url]);
-
-  useEffect(() => {
-    if (isFetching && isFetchingTop) {
-      setIsFetchingTop(true);
-      setIsFetchingBottom(false);
-    } else {
-      setIsFetchingTop(false);
-    }
-  }, [isFetching]);
-
-  useEffect(() => {
-    if (isFetching) {
-      setIsFetchingBottom(true);
-    } else {
-      setIsFetchingBottom(false);
-    }
-  }, [isFetching]);
-
-  useEffect(() => {
-    if (isFetchingBottom && isFetchingTop) {
-      setIsFetchingBottom(false);
-    }
-  }, [isFetchingBottom, isFetchingTop]);
-
-  useEffect(() => {
-    return () => {
-      setAllReviewList([]);
-    };
-  }, [setAllReviewList]);
-
   return (
     <Container>
       <Wrap1>
