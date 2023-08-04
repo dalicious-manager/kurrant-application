@@ -127,6 +127,19 @@ const Pages = ({route}) => {
   } = useMainReviewInfiniteQuery(url, dailyFoodId);
 
   useEffect(() => {
+    // const review =
+    //   getBoard?.pages.flatMap(page => page.items?.reviewList) ?? [];
+    if (getBoard?.pages) {
+      const {
+        items: {totalReview, starAverage},
+      } = getBoard?.pages[0];
+      setStarAverage(starAverage);
+
+      setTotalReview(totalReview);
+    }
+  }, [getBoard?.pages]);
+
+  useEffect(() => {
     getBoardRefetch();
   }, [url]);
 
@@ -401,7 +414,7 @@ const Pages = ({route}) => {
                   handleLabelEachPress(false, screenWidth / 2, screenWidth);
                 }}>
                 <LabelEachText focused={!isLabelOnMainDetail}>
-                  리뷰(132)
+                  리뷰({totalReview})
                 </LabelEachText>
               </LabelEachPressable>
             </LabelsWrap>
@@ -463,7 +476,7 @@ const Pages = ({route}) => {
                         );
                       }}>
                       <LabelEachText focused={!isLabelOnMainDetail}>
-                        리뷰(132)
+                        리뷰({totalReview})
                       </LabelEachText>
                     </LabelEachPressable>
                   </LabelsWrap>
