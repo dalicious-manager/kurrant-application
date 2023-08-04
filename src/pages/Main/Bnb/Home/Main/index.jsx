@@ -199,7 +199,7 @@ const Pages = () => {
   } = useGetDailyfoodList(
     selected !== undefined ? selected : isUserInfo?.data?.spotId,
     formattedWeekDate(weekly[0][0]),
-    formattedWeekDate(weekly[0][weekly[0].length - 1]),
+    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
     userRole,
   );
   const {data: isUserGroupSpotCheck} = useGroupSpotList();

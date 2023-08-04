@@ -1,22 +1,21 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable import/order */
 import {Slider} from '@miblanchard/react-native-slider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {format} from 'date-fns';
-import {da, ko} from 'date-fns/locale';
 import {useAtom} from 'jotai';
 import React, {useRef, useState, useEffect, useCallback} from 'react';
-import {View, StyleSheet, Platform, Text, Alert, Animated} from 'react-native';
-import Swiper from 'react-native-swiper';
 import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-} from 'react-native-gesture-handler';
+  View,
+  StyleSheet,
+  Platform,
+  ActivityIndicator,
+  Alert,
+  Animated,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import PagerView from 'react-native-pager-view';
 import Animateds from 'react-native-reanimated';
-import {useQueryClient} from 'react-query';
-import {useTheme} from 'styled-components';
 import styled, {css} from 'styled-components/native';
 
 import QuestionCircleMonoIcon from '../../../../../assets/icons/QuestionCircleMonoIcon.svg';
@@ -27,7 +26,6 @@ import {
   weekServiceAtom,
 } from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import {diningTimeFoodAtom} from '../../../../../biz/useDailyFood/store';
 import Balloon from '../../../../../components/Balloon';
 import BottomModal from '../../../../../components/BottomModal';
 import Button from '../../../../../components/Button';
@@ -38,26 +36,33 @@ import {
   useGetDailyfoodDetail,
   useGetDailyfoodList,
 } from '../../../../../hook/useDailyfood';
-import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {
   useAddShoppingBasket,
   useGetShoppingBasket,
 } from '../../../../../hook/useShoppingBasket';
-import {useGetUserInfo} from '../../../../../hook/useUserInfo';
-import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
-import withCommas from '../../../../../utils/withCommas';
-import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
+import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 // import TossPayment from 'react-native-toss-payments';
 
-import BuyMealPage from '../components/BuyMealPage';
 import Modal from '../components/Modal';
-
+import {useTheme} from 'styled-components';
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
+import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {diningTimeFoodAtom} from '../../../../../biz/useDailyFood/store';
+import BuyMealPage from '../components/BuyMealPage';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from 'react-native-gesture-handler';
+import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {goNextPage, goPrevPage} from '../util/movePage';
 import {foodDeliveryTimeFilter, getTime} from '../util/time';
-import {inflate} from 'zlib';
+import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import withCommas from '../../../../../utils/withCommas';
+import {useQueryClient} from 'react-query';
 
 export const PAGE_NAME = 'BUY_MEAL_PAGE';
 
@@ -72,7 +77,6 @@ const Pages = ({route}) => {
   const LunchRef = useRef();
   const DinnerRef = useRef();
   const pager = useRef();
-
   const themeApp = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -83,8 +87,6 @@ const Pages = ({route}) => {
   const [modalVisible4, setModalVisible4] = useState(false);
   const [diningDisabled, setDiningDisabled] = useState(false);
   const [nowPage, setNowPage] = useState();
-
-  const [userinfo, setUserInfo] = useState(false);
   const [selectFood, setSelectFood] = useState();
   const [show, setShow] = useState(false);
   const [scrollDir, setScrollDir] = useState(true);
@@ -100,14 +102,11 @@ const Pages = ({route}) => {
   const [weekly] = useAtom(weekAtom);
   const [weeklyService, setWeeklyService] = useAtom(weekServiceAtom);
   const [diningTime, setDiningTime] = useAtom(diningTimeFoodAtom);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handleIndexChanged = index => {
-    // setCurrentIndex(index);
-  };
   const {data: isOrderMeal} = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
-    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(
+      weekly[weekly.length - 1][weekly[weekly.length - 1].length - 1],
+    ),
   );
   const {
     readableAtom: {userRole},
@@ -135,15 +134,12 @@ const Pages = ({route}) => {
   const {data: isLoadMeal} = useGetShoppingBasket();
   const {mutateAsync: addMeal, isLoading: isAddMeal} = useAddShoppingBasket();
   const {balloonEvent, BalloonWrap} = Balloon();
-  const {data: isUserInfo, refetch: userRefetch} = useGetUserInfo();
+  const {data: isUserInfo} = useGetUserInfo();
   const timeRef = useRef(null);
 
   const DININGTYPE = ['아침', '점심', '저녁'];
 
   const [date, setDate] = useState(
-    params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
-  );
-  const [date2, setDate2] = useState(
     params?.refundDate ? params?.refundDate : formattedWeekDate(new Date()),
   );
   // useEffect(() => {
@@ -225,7 +221,7 @@ const Pages = ({route}) => {
   } = useGetDailyfoodList(
     spotId,
     formattedWeekDate(weekly[0][0]),
-    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
     userRole,
   );
 
@@ -250,6 +246,116 @@ const Pages = ({route}) => {
       useNativeDriver: false,
     }).start();
     setScrollDir(prev => !prev);
+  };
+
+  const onPageScroll2 = e => {
+    const {position, offset} = e.nativeEvent;
+    navigation.setParams({
+      date: null,
+    });
+    if (isDiningTypes?.length > 0 && isDiningTypes[0]) {
+      if (Platform.OS === 'ios') {
+        if (refreshTimer2) {
+          clearTimeout(refreshTimer2);
+        }
+        refreshTimer2 = setTimeout(() => {
+          if (offset !== 0) {
+            if (
+              isDiningTypes[position] === 3 ||
+              (isDiningTypes?.length === 1 && position === 0)
+            ) {
+              setDiningDisabled(true);
+              setNowPage(isDiningTypes[0]);
+              goNextPage(
+                weekly,
+                weeklyService,
+                date,
+                setDate,
+                pager,
+                setNowPage,
+                dailyfoodDataList?.data?.diningTypes.map(
+                  dining => dining.diningType,
+                ),
+              );
+              diningRef.current?.setPage(0);
+              setTimeout(() => {
+                setDiningDisabled(false);
+              }, 500);
+            }
+            if (position === -1) {
+              setDiningDisabled(true);
+              setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
+              diningRef.current?.setPage(isDiningTypes?.length - 1);
+              goPrevPage(
+                weekly,
+                weeklyService,
+                date,
+                setDate,
+                pager,
+                setNowPage,
+                dailyfoodDataList?.data?.diningTypes.map(
+                  dining => dining.diningType,
+                ),
+              );
+
+              setTimeout(() => {
+                setDiningDisabled(false);
+              }, 500);
+            }
+          }
+        }, 500);
+      }
+    }
+  };
+
+  const onPageScroll = e => {
+    navigation.setParams({
+      date: null,
+    });
+    const {position} = e.nativeEvent;
+    if (isDiningTypes[position] !== nowPage)
+      setNowPage(isDiningTypes[position]);
+    if (
+      isDiningTypes?.length === 1 &&
+      isDiningTypes[0] &&
+      ((isMorningFood.length === 0 && isDiningTypes[position] === 1) ||
+        (isLunchFood.length === 0 && isDiningTypes[position] === 2) ||
+        (isDinnerFood.length === 0 && isDiningTypes[position] === 3))
+    ) {
+      const page =
+        position === 0
+          ? isDiningTypes?.includes(1)
+            ? 1
+            : isDiningTypes?.includes(2)
+            ? 2
+            : isDiningTypes?.includes(3)
+            ? 3
+            : 1
+          : position === 1
+          ? isDiningTypes?.includes(2)
+            ? 2
+            : isDiningTypes?.includes(3)
+            ? 3
+            : isDiningTypes?.includes(1)
+            ? 1
+            : 2
+          : position === 2 && isDiningTypes?.includes(3)
+          ? 3
+          : isDiningTypes?.includes(2)
+          ? 2
+          : isDiningTypes?.includes(1)
+          ? 1
+          : 3;
+
+      setNowPage(page);
+    } else {
+      setNowPage(isDiningTypes[position]);
+    }
+    MorningRef?.current?.scrollTo({x: 0, y: 0, animated: false});
+    LunchRef?.current?.scrollTo({x: 0, y: 0, animated: false});
+    DinnerRef?.current?.scrollTo({x: 0, y: 0, animated: false});
+    setScrollDir(true);
+    handlePress(true);
   };
 
   const dayPress = async selectedDate => {
@@ -366,7 +472,6 @@ const Pages = ({route}) => {
     dailyfoodData,
   ]);
   useEffect(() => {
-    console.log(dailyfoodDataList?.data);
     if (dailyfoodDataList?.data?.diningTypes?.length > 0) {
       diningRef.current?.setPage(
         dailyfoodDataList?.data?.diningTypes[0].diningType - 1,
@@ -454,7 +559,6 @@ const Pages = ({route}) => {
     const dinnerData = dailyfoodData?.dailyFoodDtos.filter(
       x => x.diningType === 3,
     );
-    console.log(lunchData);
     foodDeliveryTimeFilter(lunchData, time, setLunch);
     foodDeliveryTimeFilter(morningData, time, setMorning);
     foodDeliveryTimeFilter(dinnerData, time, setDinner);
@@ -549,46 +653,116 @@ const Pages = ({route}) => {
     handlePress: handlePress,
     time: time,
   };
-  useEffect(() => {
-    if (isUserInfo) {
-      setUserInfo(isUserInfo?.data);
-    } else {
-      if (!userinfo) userRefetch();
-    }
-  }, [isUserInfo]);
-  const OuterViewPager = () => {
-    return (
-      <Swiper
-        loop={false}
-        index={currentIndex}
-        onIndexChanged={handleIndexChanged}>
-        {weeklyService?.length > 0 &&
-          weeklyService?.map(week => {
-            console.log(week);
-            return (
-              <PagerView key={week} style={{flex: 1}}>
-                <View style={{flex: 1}}>
-                  <Typography>test {formattedWeekDate(week)}</Typography>
-                </View>
+  const handleDrag = event => {
+    if (
+      Platform.OS === 'android' &&
+      event.nativeEvent.translationY < 20 &&
+      event.nativeEvent.translationY > -20
+    ) {
+      if (isDiningTypes?.length > 1) {
+        if (event.nativeEvent.translationX < 0) {
+          if (refreshTimer) {
+            clearTimeout(refreshTimer);
+          }
+          return (refreshTimer = setTimeout(() => {
+            const nowIndex = isDiningTypes.findIndex(v => v === nowPage);
+            const nextIndex = isDiningTypes.findIndex(v => v === nowPage + 1);
+            if (nextIndex === -1) {
+              setDiningDisabled(true);
 
-                <GestureHandlerRootView style={{flex: 1}}>
-                  <BuyMealPage diningFood={isLunchFood} mealData={mealData} />
-                </GestureHandlerRootView>
-              </PagerView>
+              setNowPage(isDiningTypes[0]);
+              goNextPage(
+                weekly,
+                weeklyService,
+                date,
+                setDate,
+                pager,
+                setNowPage,
+                isDiningTypes,
+              );
+              setDiningDisabled(false);
+              diningRef.current?.setPage(0);
+              return;
+            }
+            return diningRef.current?.setPage(nextIndex);
+          }, REFRESH_DELAY));
+        }
+        if (event.nativeEvent.translationX > 0) {
+          if (refreshTimer) {
+            clearTimeout(refreshTimer);
+          }
+          return (refreshTimer = setTimeout(() => {
+            const nowIndex = isDiningTypes.findIndex(v => v === nowPage);
+            const prevIndex = isDiningTypes.findIndex(v => v === nowPage - 1);
+            if (prevIndex === -1) {
+              setDiningDisabled(true);
+
+              setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
+              goPrevPage(
+                weekly,
+                weeklyService,
+                date,
+                setDate,
+                pager,
+                setNowPage,
+                dailyfoodDataList?.data?.diningTypes.map(
+                  dining => dining.diningType,
+                ),
+              );
+              diningRef.current?.setPage(isDiningTypes?.length - 1);
+              setDiningDisabled(false);
+              return;
+            }
+            return diningRef.current?.setPage(prevIndex);
+          }, REFRESH_DELAY));
+        }
+      }
+      if (isDiningTypes?.length === 1) {
+        if (event.nativeEvent.translationX < 0) {
+          if (refreshTimer) {
+            clearTimeout(refreshTimer);
+          }
+          setDiningDisabled(true);
+          return (refreshTimer = setTimeout(() => {
+            setNowPage(isDiningTypes[0]);
+            goNextPage(
+              weekly,
+              weeklyService,
+              date,
+              setDate,
+              pager,
+              setNowPage,
+              isDiningTypes,
             );
-          })}
-      </Swiper>
-    );
-  };
-
-  const InnerViewPager = () => {
-    return (
-      <Pager>
-        <GestureHandlerRootView>
-          <BuyMealPage diningFood={isDinnerFood} mealData={mealData} />
-        </GestureHandlerRootView>
-      </Pager>
-    );
+            setDiningDisabled(false);
+            diningRef.current?.setPage(0);
+            setDiningDisabled(false);
+          }, REFRESH_DELAY));
+        }
+        if (event.nativeEvent.translationX > 0) {
+          if (refreshTimer) {
+            clearTimeout(refreshTimer);
+          }
+          setDiningDisabled(true);
+          return (refreshTimer = setTimeout(() => {
+            setNowPage(isDiningTypes[isDiningTypes?.length - 1]);
+            goPrevPage(
+              weekly,
+              weeklyService,
+              date,
+              setDate,
+              pager,
+              setNowPage,
+              dailyfoodDataList?.data?.diningTypes.map(
+                dining => dining.diningType,
+              ),
+            );
+            diningRef.current?.setPage(isDiningTypes?.length - 1);
+            setDiningDisabled(false);
+          }, REFRESH_DELAY));
+        }
+      }
+    }
   };
   return (
     <SafeView>
@@ -763,7 +937,37 @@ const Pages = ({route}) => {
             <ActivityIndicator size={'large'} />
           </LoadingPage>
         ) : ( */}
-        <OuterViewPager />
+        <GestureHandlerRootView style={{flex: 1}}>
+          <PanGestureHandler onGestureEvent={handleDrag}>
+            <Pager
+              ref={diningRef}
+              overdrag={true}
+              overScrollMode={'always'}
+              onPageScroll={onPageScroll2}
+              onPageSelected={e => {
+                onPageScroll(e);
+              }}>
+              {isDiningTypes?.map(dining => {
+                console.log('test', dining);
+                return (
+                  <GestureHandlerRootView key={dining}>
+                    <BuyMealPage
+                      diningFood={
+                        dining === 1
+                          ? isMorningFood
+                          : dining === 2
+                          ? isLunchFood
+                          : isDinnerFood
+                      }
+                      mealData={mealData}
+                      setDailyfoodId={setDailyfoodId}
+                    />
+                  </GestureHandlerRootView>
+                );
+              })}
+            </Pager>
+          </PanGestureHandler>
+        </GestureHandlerRootView>
         {/* )} */}
       </PagerViewWrap>
 
@@ -832,9 +1036,6 @@ const Pages = ({route}) => {
     </SafeView>
   );
 };
-
-export default Pages;
-
 const styles = StyleSheet.create({
   trackStyle: {
     backgroundColor: 'white',
@@ -847,20 +1048,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#343337',
   },
-  pagerViewContainer: {
-    flex: 1,
-  },
-  pageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  pageText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
 });
+
+export default Pages;
+
 const SafeView = styled.View`
   background-color: ${props => props.theme.colors.grey[0]};
   flex: 1;
