@@ -100,30 +100,18 @@ const Pages = ({route}) => {
   const indicatorAnim = useRef(new Animated.Value(0)).current;
 
   const scrollViewRef = useRef(null);
+  const flatListRef = useRef(null);
 
   const [isLabelOnMainDetail, setIsLabelOnMainDetail] = useState(true);
   const [showLabel, setShowLabel] = useState(false);
 
+  useEffect(() => {
+    if (!flatListRef.current) return;
+    // flatListRef.current.scrollToOffset({animated: true, offset: 0});
+    flatListRef.current.scrollToOffset({offset: 0});
+  }, [isLabelOnMainDetail]);
+
   const heightOfImage = 300;
-
-  yo = yo + 1;
-  console.log('스크롤시 리렌더링 체크하기 ' + yo);
-
-  // const heightOfLabel = 43;
-
-  // useEffect(() => {
-  //   // console.log('scroll 확인');
-  //   // console.log(scroll);
-  //   if (scroll > heightOfImage) {
-  //     // console.log('이때 true로 바뀜 ' + scroll);
-  //     setShowLabel(true);
-  //   } else {
-  //     setShowLabel(false);
-  //   }
-  //   // 300 되면 sticky
-  // }, [scroll]);
-
-  ////
 
   const [starAverage, setStarAverage] = useState(1);
   const [totalReview, setTotalReview] = useState(0);
@@ -427,8 +415,10 @@ const Pages = ({route}) => {
         )}
 
         <FlatList
+          ref={flatListRef}
           scrollEnabled={Platform.OS === 'android' ? imgScroll : true}
           // showsVerticalScrollIndicator={false}
+
           onScroll={e => handleScroll(e)}
           scrollEventThrottle={16}
           ListHeaderComponent={
