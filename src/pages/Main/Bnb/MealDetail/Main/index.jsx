@@ -69,6 +69,7 @@ const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
   const disableAddCartFromReview = route.params.disableAddCartFromReview;
+  const reviewIdFromWrittenReview = route.params.reviewIdFromWrittenReview;
 
   const queryClient = useQueryClient();
   const bodyRef = useRef();
@@ -781,6 +782,7 @@ const Pages = ({route}) => {
                           getNextPage={getNextPage}
                           getNextPageIsPossible={getNextPageIsPossible}
                           getBoardRefetch={getBoardRefetch}
+                          reviewIdFromWrittenReview={reviewIdFromWrittenReview}
                         />
                       ) : (
                         <Skeleton />

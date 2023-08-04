@@ -164,6 +164,7 @@ const Component = ({
             navigation.navigate(mealDetailPageName, {
               dailyFoodId,
               disableAddCartFromReview: true,
+              reviewIdFromWrittenReview: !forMakers && id,
             });
           }}>
           <RestaurentNameText numberOfLines={1} ellipsizeMode="tail">

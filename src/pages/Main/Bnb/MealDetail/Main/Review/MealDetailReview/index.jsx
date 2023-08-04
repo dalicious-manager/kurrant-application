@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Dimensions, FlatList, Platform} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import {useQueryClient} from 'react-query';
@@ -34,7 +34,7 @@ const Component = ({
   setTotalReview,
   initialLoading,
   setInitialLoading,
-
+  reviewIdFromWrittenReview,
   url,
   setUrl,
   getBoard,
@@ -43,7 +43,38 @@ const Component = ({
   getNextPageIsPossible,
   getBoardRefetch,
 }) => {
+  const flatListRef = useRef(null);
+
+  // 해당 리뷰로 가기
+
+  const [idx, setIdx] = useState(-1);
+
   const [allReviewList, setAllReviewList] = useState([]);
+
+  useEffect(() => {
+    if (allReviewList.length > 0 && reviewIdFromWrittenReview) {
+      const data = allReviewList?.findIndex(
+        el => el.reviewId === reviewIdFromWrittenReview,
+      );
+      setIdx(data);
+    }
+  }, [allReviewList, reviewIdFromWrittenReview]);
+
+  // useEffect(() => {
+  //   console.log('allReviewList 확인');
+  //   console.log(allReviewList.map(v => v.reviewId));
+  // }, [allReviewList]);
+
+  // useEffect(() => {
+  //   console.log('reviewIdFromWrittenReview 확인');
+  //   console.log(reviewIdFromWrittenReview);
+  // }, [reviewIdFromWrittenReview]);
+
+  useEffect(() => {
+    console.log('idx 확인');
+    console.log(idx);
+  }, [idx]);
+
   const theme = useTheme();
   const queryClient = useQueryClient();
   const navigation = useNavigation();
@@ -113,11 +144,11 @@ const Component = ({
       const {
         items: {
           starAverage,
+          stars,
           isLast,
           foodId,
           totalReview,
           reviewWrite,
-          stars,
           keywords,
         },
       } = getBoard?.pages[0];
@@ -367,6 +398,7 @@ const Component = ({
 
         {allReviewList && !initialLoading && (
           <FlatList
+            ref={flatListRef}
             data={allReviewList}
             keyExtractor={item => item.reviewId.toString()}
             renderItem={({item}) => (
