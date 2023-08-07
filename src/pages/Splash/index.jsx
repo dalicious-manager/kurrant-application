@@ -12,7 +12,7 @@ import useAuth from '../../biz/useAuth/hook';
 import {SCREEN_NAME as MainScreenName} from '../../screens/Main/Bnb';
 import {getStorage} from '../../utils/asyncStorage';
 import {PAGE_NAME as LoginPageName} from '../Main/Login/Login';
-
+import {PAGE_NAME as nicknameSettingPageName} from '../Main/MyPage/Nickname/index';
 export const PAGE_NAME = 'P__SPLASH';
 
 export const YesYes = 'yes';
@@ -163,15 +163,29 @@ const Page = () => {
 
             if (res?.statusCode === 200) {
               // await isTester();
-
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: MainScreenName,
-                  },
-                ],
-              });
+              console.log(res.data.hasNickname, 'dd');
+              if (res.data.hasNickname) {
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: MainScreenName,
+                    },
+                  ],
+                });
+              } else {
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: nicknameSettingPageName,
+                      params: {
+                        from: 'auto',
+                      },
+                    },
+                  ],
+                });
+              }
             }
           }
         } else {

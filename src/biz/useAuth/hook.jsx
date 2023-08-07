@@ -129,6 +129,7 @@ const useAuth = () => {
         },
         option,
       );
+
       queryClient.invalidateQueries('userInfo');
       return res;
     } catch (err) {
@@ -179,6 +180,7 @@ const useAuth = () => {
         },
         option,
       );
+
       if (res?.data?.isActive) {
         await setStorage('token', JSON.stringify(res.data));
         await setStorage('isLogin', body.autoLogin.toString());
