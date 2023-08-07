@@ -77,6 +77,7 @@ const Pages = () => {
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
+
   const getData = async () => {
     await userMe();
     await userMePersonal();

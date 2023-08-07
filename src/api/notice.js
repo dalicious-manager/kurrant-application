@@ -15,4 +15,5 @@ export const noticeApis = {
     const {items, isLast} = res.data;
     return {items, currentPage: pageParam, isLast};
   },
+  noticeDetail: async id => await fetchJson(`/boards/notices/${id}`),
 };

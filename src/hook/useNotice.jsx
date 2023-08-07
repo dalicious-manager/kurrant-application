@@ -30,3 +30,17 @@ export function useGetSpotNoticeList() {
     },
   );
 }
+
+export function useGetNoticeDetail(id) {
+  return useQuery(
+    'noticeDetail',
+    () => {
+      if (id) {
+        return noticeApis.noticeDetail(id);
+      }
+    },
+    {
+      cacheTime: 0,
+    },
+  );
+}

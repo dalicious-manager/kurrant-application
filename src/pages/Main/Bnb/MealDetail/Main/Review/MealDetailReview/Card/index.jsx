@@ -106,8 +106,7 @@ const Component = ({
           </PostDateText>
         </RowWrap>
 
-        <EditWrap>
-          {/* <LikePressable
+        {/* <LikePressable
             onPress={() => {
               if (isFetching) return;
 

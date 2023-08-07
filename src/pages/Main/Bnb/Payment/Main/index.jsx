@@ -54,7 +54,6 @@ import {
   ButtonWrap,
   ContentWrap,
   DiningName,
-  MealName,
   PaymentText,
   PaymentView,
   PressableView,
@@ -1097,4 +1096,9 @@ const TotalPriceWrap = styled.View`
 
 const PointInfoText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.red[500]};
+`;
+
+const MealName = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${({theme, status}) => theme.colors.grey[2]};
+  margin-bottom: 2px;
 `;

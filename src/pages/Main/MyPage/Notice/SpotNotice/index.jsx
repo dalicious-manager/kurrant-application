@@ -27,7 +27,7 @@ const Pages = () => {
 
   const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
     useGetSpotNoticeList();
-  const dataList = data?.pages[0].items;
+  const dataList = data?.pages;
 
   const onEndReached = () => {
     if (hasNextPage) {
@@ -73,18 +73,22 @@ const Pages = () => {
           //ref={flatListRef}
           onEndReached={onEndReached}
           data={dataList}
-          renderItem={({item}) => (
-            <ListBox
-              key={item.id}
-              title={item.title}
-              description={item.updated}
-              onPressEvent={() =>
-                navigation.navigate(NoticeDetailPageName, {
-                  noticeData: item,
-                })
-              }
-            />
-          )}
+          renderItem={({item}) =>
+            item?.items?.map(el => {
+              return (
+                <ListBox
+                  key={el.id}
+                  title={el.title}
+                  description={el.updated}
+                  onPressEvent={() =>
+                    navigation.navigate(NoticeDetailPageName, {
+                      noticeData: el,
+                    })
+                  }
+                />
+              );
+            })
+          }
         />
       )}
     </Wrapper>
