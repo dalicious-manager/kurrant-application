@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import {useAtom} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions, Image, Platform, Text} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
@@ -14,6 +15,7 @@ import {changeSeperator} from '~utils/dateFormatter';
 
 import {ThumbsUp} from '../../../../../../../../components/Icon';
 import {isOverThreeLines} from '../../../../../../../../components/Review/WrittenReviewCard/logic';
+import {isGoodLoadingAtom} from '../store';
 
 // 상세페이지 카드
 
@@ -33,12 +35,13 @@ const Component = ({
   createDate,
   updateDate,
   commentList,
+  allReviewList,
+  setAllReviewList,
   isFetching,
 }) => {
   const navigation = useNavigation();
 
   const theme = useTheme();
-
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
   const {pressLike} = useMealDetailReviewMutation();
@@ -59,7 +62,7 @@ const Component = ({
   }
 
   const [numLines, setNumLines] = useState(1);
-
+  const [isLoading, setLoading] = useState(false);
   const handlePressReviewText = () => {
     setElaborateComment(!elaborateComment);
   };
@@ -71,9 +74,6 @@ const Component = ({
 
     setCalcFontSize(width * 0.052279);
   };
-
-  const [goodLocal, setGoodLocal] = useState(good ? good : 0);
-  const [isGoodLocal, setIsGoodLocal] = useState(isGood ? isGood : false);
 
   return (
     <Container focusId={focusId} id={id}>
@@ -132,25 +132,51 @@ const Component = ({
               }
             />
             <LikeNumber isGood={isGoodLocal}>{goodLocal}</LikeNumber>
-          </LikePressable>
-        </EditWrap> */}
-        <LikePressable
-          onPress={() => {
-            if (isFetching) return;
+          </LikePressable> */}
+        <EditWrap>
+          {isGood !== undefined && (
+            <LikePressable
+              disabled={isLoading}
+              onPress={async () => {
+                setLoading(true);
+                try {
+                  await pressLike({
+                    dailyFoodId,
+                    reviewId: id,
+                  });
+                  const nowData = allReviewList.map(v => {
+                    if (v.reviewId === id) {
+                      return {
+                        ...v,
+                        isGood: !v.isGood,
+                        good: v.isGood ? good - 1 : good + 1,
+                      };
+                    }
+                    return v;
+                  });
 
-            pressLike({
-              dailyFoodId,
-              reviewId: id,
-            });
-          }}>
-          <EditText isGood={isGood}>도움이 돼요</EditText>
-          <ThumbsUp
-            width="14px"
-            height="15px"
-            color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
-          />
-          <LikeNumber isGood={isGood}>{good}</LikeNumber>
-        </LikePressable>
+                  setAllReviewList(nowData);
+                } catch (error) {
+                  Alert.alert(
+                    '도움이됐어요',
+                    error.toString().replace('error:', ''),
+                  );
+                } finally {
+                  setTimeout(() => {
+                    setLoading(false);
+                  }, 300);
+                }
+              }}>
+              <EditText isGood={isGood}>도움이 돼요</EditText>
+              <ThumbsUp
+                width="14px"
+                height="15px"
+                color={isGood ? theme.colors.green[500] : theme.colors.grey[5]}
+              />
+              <LikeNumber isGood={isGood}>{good}</LikeNumber>
+            </LikePressable>
+          )}
+        </EditWrap>
       </Wrap3>
 
       {imageLocation && imageLocation.length > 0 && (
@@ -332,6 +358,8 @@ const Wrap3 = styled.View`
   ${({isMarginOn}) => {
     if (!isMarginOn) {
       return `margin-bottom: 8px;`;
+    } else {
+      return `margin-bottom: 11px;`;
     }
   }}
 `;
@@ -364,7 +392,7 @@ const LikePressable = styled.Pressable`
 
 const ImagesWrapper = styled.Pressable`
   flex-direction: row;
-  padding-top: 11px;
+  /* padding-top: 11px; */
   padding-bottom: 4px;
   /* border: 1px solid black; */
   margin-bottom: 8px;

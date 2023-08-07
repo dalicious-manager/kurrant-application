@@ -21,6 +21,7 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
+import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
 import MealDetailReview from './Review/MealDetailReview';
@@ -29,7 +30,6 @@ import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
-
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
@@ -83,8 +83,8 @@ const Pages = ({route}) => {
   const [imgScroll, setImgScroll] = useState(true);
   const [foodDetailData, setFoodDetailData] = useAtom(foodDetailDataAtom);
   const headerTitle = foodDetailData?.name;
-  const {foodDetailDiscount, isfoodDetailDiscount} = useFoodDetail(); // 할인정보
-  const {isFoodDetails, isFoodDetailLoading, foodDetail} = useFoodDetail();
+  const {isfoodDetailDiscount} = useFoodDetail(); // 할인정보
+  const {foodDetail} = useFoodDetail();
   const {
     readableAtom: {userRole},
   } = useAuth();

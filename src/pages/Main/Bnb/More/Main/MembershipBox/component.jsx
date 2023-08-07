@@ -37,7 +37,7 @@ const Component = ({
   } = useGetUserInfo();
   return (
     <>
-      {isMembership ? (
+      {!isMembership ? (
         <MembershipJoinPage
           onPress={() => {
             console.log(isUserInfo?.leftFoundersNumber > 0);

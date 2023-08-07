@@ -59,7 +59,6 @@ const Component = ({
   const selectedPress = day => {
     setCurrentPress(day);
   };
-  //console.log(sliderValue, '슬라이드');
 
   const onPageScroll = e => {
     const {position} = e.nativeEvent;
@@ -76,7 +75,9 @@ const Component = ({
     // '첫 렌더시 해당 날짜로 위치하게 하기'
     if (selectDate && isMount) {
       setTimeout(() => {
-        pager.current.setPage(calculateSelectDatePosition(selectDate, weekly));
+        pager?.current?.setPage(
+          calculateSelectDatePosition(selectDate, weekly),
+        );
       }, 100);
       setChk(calculateSelectDatePosition(selectDate, weekly));
       setIsMount(false);
