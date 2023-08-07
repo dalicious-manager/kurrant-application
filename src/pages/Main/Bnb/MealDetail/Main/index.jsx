@@ -151,6 +151,8 @@ const Pages = ({route}) => {
     handleConfirmPress,
     isFetchingTop,
     isFetchingBottom,
+
+    setAllReviewList,
   } = useMainReviewHook(dailyFoodId, reviewIdFromWrittenReview);
 
   const [count, setCount] = useState(1);
@@ -828,6 +830,8 @@ const Pages = ({route}) => {
                               forMakers={item.forMakers}
                               commentList={item.commentList}
                               isFetching={isFetching}
+                              allReviewList={allReviewList}
+                              setAllReviewList={setAllReviewList}
                             />
                           );
                         }

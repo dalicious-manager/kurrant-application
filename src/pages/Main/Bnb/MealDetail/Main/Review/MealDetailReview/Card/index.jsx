@@ -75,6 +75,11 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
+  // useEffect(() => {
+  //   console.log('allReviewList 확인');
+  //   console.log(allReviewList);
+  // }, [allReviewList]);
+
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>

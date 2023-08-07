@@ -247,6 +247,8 @@ const useMainReviewHook = (dailyFoodId, reviewIdFromWrittenReview) => {
     handleConfirmPress,
     isFetchingTop,
     isFetchingBottom,
+    allReviewList,
+    setAllReviewList,
   };
 };
 
