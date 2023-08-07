@@ -684,7 +684,7 @@ const Pages = ({route}) => {
                                   </InfoTextView>
                                 </InfoWrap>
                               </Content>
-
+                              {/* 식단레포트 */}
                               {/* <Content>
                                 <InfoWrap>
                                   <InfoTitleView>
@@ -834,27 +834,24 @@ const Pages = ({route}) => {
                       }
                 }
                 onEndReached={() => {
-                  if (getNextPageIsPossible) {
+                  if (!isLabelOnMainDetail && getNextPageIsPossible) {
                     getNextPage();
                   }
                 }}
                 onEndReachedThreshold={0.1}
               />
+              {!isLabelOnMainDetail && isFetchingBottom && (
+                <>
+                  <ReviewListWrap>
+                    <LoadingPage>
+                      <ActivityIndicator size={'large'} />
+                    </LoadingPage>
+                  </ReviewListWrap>
+                </>
+              )}
             </View>
           }
         />
-
-        {!isLabelOnMainDetail && (
-          <>
-            <ReviewListWrap>
-              {isFetchingBottom && (
-                <LoadingPage>
-                  <ActivityIndicator size={'large'} />
-                </LoadingPage>
-              )}
-            </ReviewListWrap>
-          </>
-        )}
 
         <KeyboardAvoiding
           mealDetail
@@ -1086,7 +1083,7 @@ const LabelViewSticky = styled(Animated.View)`
   height: 43px;
   border-bottom-width: 1px;
   border-bottom-color: ${props => props.theme.colors.grey[8]};
-  /* position: fixed; */
+
   position: absolute;
   top: ${() => {
     if (Platform.OS === 'ios') {
@@ -1099,14 +1096,12 @@ const LabelViewSticky = styled(Animated.View)`
   right: 0;
   z-index: 1;
   background-color: white;
-  /* display: none; */
 `;
 const LabelView = styled.View`
   width: 100%;
   height: 43px;
   border-bottom-width: 1px;
   border-bottom-color: ${props => props.theme.colors.grey[8]};
-  /* position: fixed; */
 `;
 
 const LabelsWrap = styled.View`
@@ -1125,7 +1120,6 @@ const Indicator = styled(Animated.View)`
 const LabelEachPressable = styled.Pressable`
   width: 50%;
   height: 100%;
-  /* border: 1px solid black; */
 
   align-items: center;
   justify-content: center;
@@ -1138,40 +1132,34 @@ const LabelEachText = styled(Typography).attrs({text: 'Button09SB'})`
   }};
 `;
 
-const DetailView = styled.View`
-  /* border: 1px solid black; */
-`;
+const DetailView = styled.View``;
 
 const TextView = styled.View`
-  /* width: ${() => `${screenWidth * 2}px`}; */
   width: ${() => `${screenWidth}px`};
-  /* height: 100px; */
-  /* border: 1px solid black; */
+
   flex-direction: row;
 `;
 
 const EachPage = styled.View`
-  /* border: 1px solid black; */
-  /* height: 100%; */
   flex: 1;
   width: ${() => `${screenWidth}px`};
-  /* border: 1px solid black; */
 `;
 
 const ReviewListWrap = styled.View`
   width: 100%;
-  background-color: #ffffff;
 `;
 
 const LoadingPage = styled.View`
-  background-color: white;
+  position: relative;
+  top: -80px;
+
+  background-color: transparent;
   opacity: 0.5;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+
   width: 100%;
-  flex: 1;
-  padding-bottom: 150px;
+  padding-top: 10px;
 `;
 
 const Filler = styled.View`
