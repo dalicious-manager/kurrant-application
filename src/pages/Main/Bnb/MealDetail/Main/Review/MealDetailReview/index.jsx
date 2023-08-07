@@ -35,49 +35,20 @@ const Component = ({
   foodName,
   dailyFoodId,
   starAverage,
-  setStarAverage,
   totalReview,
-  setTotalReview,
   initialLoading,
-  setInitialLoading,
-  reviewIdFromWrittenReview,
-  url,
-  setUrl,
-  getBoard,
-  isFetching,
-  getNextPage,
-  getNextPageIsPossible,
-  getBoardRefetch,
-
   ////////////
-
-  allReviewList,
-  setAllReviewList,
-  flatListRef,
-  idx,
-  setIdx,
   theme,
   navigation,
   keyword,
-  setKeyword,
-  stars,
-  setStars,
-  isLast,
-  setIsLast,
-  foodId,
-  setFoodId,
   reviewWrite,
-  setReviewWrite,
   orderFilter,
   setOrderFilter,
   isOnlyPhoto,
   setIsOnlyPhoto,
   rateSelected,
-  setRateSelected,
   selectedKeyword,
   setSelectedKeyword,
-  dailyFoodIdFromAtom,
-  setDailyFoodIdFromAtom,
   starRatingCounts,
   showSelectList,
   setShowSelectList,
@@ -87,9 +58,6 @@ const Component = ({
   showSelectedOrderFilter,
   handleConfirmPress,
   isFetchingTop,
-  setIsFetchingTop,
-  isFetchingBottom,
-  setIsFetchingBottom,
 }) => {
   return (
     <Container>
@@ -388,7 +356,7 @@ const WrapWrapView = styled.View`
   /* top: 215px; */
   top: ${({isOn}) => (isOn ? '215px' : '175px')};
   left: 30px;
-  z-index: 1;
+  z-index: 3;
   /* border: 1px solid black; */
 `;
 

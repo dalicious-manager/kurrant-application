@@ -64,6 +64,7 @@ import {modifyStarRatingCount} from './Review/MealDetailReview/logic';
 import Card from './Review/MealDetailReview/Card/index';
 import {convertDateFormat1} from '../../../../../utils/dateFormatter';
 import {ActivityIndicator} from 'react-native';
+import OrderSelectController from './Review/MealDetailReview/OrderSelectController/OrderSelectController';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -246,6 +247,7 @@ const Pages = ({route}) => {
   const quantity = quantityArr.reduce((acc, val) => [...acc, ...val], []);
   const modifyQty = quantity.reduce((acc, cur) => [...acc, ...cur], []);
   const req = {updateCartList: modifyQty};
+
   useEffect(() => {
     async function loadFoodDetail() {
       const foodData = await foodDetail(dailyFoodId);
@@ -789,46 +791,20 @@ const Pages = ({route}) => {
                         imageLocation={foodDetailData?.imageList}
                         dailyFoodId={dailyFoodId}
                         starAverage={starAverage}
-                        setStarAverage={setStarAverage}
                         totalReview={totalReview}
-                        setTotalReview={setTotalReview}
                         initialLoading={initialLoading}
-                        setInitialLoading={setInitialLoading}
-                        url={url}
-                        setUrl={setUrl}
-                        getBoard={getBoard}
-                        isFetching={isFetching}
-                        getNextPage={getNextPage}
-                        getNextPageIsPossible={getNextPageIsPossible}
-                        getBoardRefetch={getBoardRefetch}
                         reviewIdFromWrittenReview={reviewIdFromWrittenReview}
-                        allReviewList={allReviewList}
-                        setAllReviewList={setAllReviewList}
-                        flatListRef={flatListRef}
-                        idx={idx}
-                        setIdx={setIdx}
                         theme={theme}
                         navigation={navigation}
                         keyword={keyword}
-                        setKeyword={setKeyword}
-                        stars={stars}
-                        setStars={setStars}
-                        isLast={isLast}
-                        setIsLast={setIsLast}
-                        foodId={foodId}
-                        setFoodId={setFoodId}
                         reviewWrite={reviewWrite}
-                        setReviewWrite={setReviewWrite}
                         orderFilter={orderFilter}
                         setOrderFilter={setOrderFilter}
                         isOnlyPhoto={isOnlyPhoto}
                         setIsOnlyPhoto={setIsOnlyPhoto}
                         rateSelected={rateSelected}
-                        setRateSelected={setRateSelected}
                         selectedKeyword={selectedKeyword}
                         setSelectedKeyword={setSelectedKeyword}
-                        dailyFoodIdFromAtom={dailyFoodIdFromAtom}
-                        setDailyFoodIdFromAtom={setDailyFoodIdFromAtom}
                         starRatingCounts={starRatingCounts}
                         showSelectList={showSelectList}
                         setShowSelectList={setShowSelectList}
@@ -838,9 +814,6 @@ const Pages = ({route}) => {
                         showSelectedOrderFilter={showSelectedOrderFilter}
                         handleConfirmPress={handleConfirmPress}
                         isFetchingTop={isFetchingTop}
-                        setIsFetchingTop={setIsFetchingTop}
-                        isFetchingBottom={isFetchingBottom}
-                        setIsFetchingBottom={setIsFetchingBottom}
                       />
                     ) : (
                       <Skeleton />
@@ -848,6 +821,10 @@ const Pages = ({route}) => {
                   </EachPage>
                 )}
               </TextView>
+              <OrderSelectController
+                keyword={keyword}
+                orderFilter={orderFilter}
+              />
             </View>
           }
           data={[
@@ -902,6 +879,7 @@ const Pages = ({route}) => {
           }}
           onEndReachedThreshold={0.1}
         />
+
         {!isLabelOnMainDetail && (
           <>
             <ReviewListWrap>
