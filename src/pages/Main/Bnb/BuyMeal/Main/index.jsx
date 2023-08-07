@@ -103,7 +103,8 @@ const Pages = ({route}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleIndexChanged = index => {
-    // setCurrentIndex(index);
+    console.log(index, 'index');
+    setCurrentIndex(index);
   };
   const {data: isOrderMeal} = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
@@ -229,20 +230,6 @@ const Pages = ({route}) => {
     userRole,
   );
 
-  useEffect(() => {
-    if (dailyfoodDataList?.data?.dailyFoodsByDate) {
-      setMorning([]);
-      setLunch([]);
-      setDinner([]);
-      const getDailyfoodData = dailyfoodDataList?.data?.dailyFoodsByDate.filter(
-        v => v.serviceDate === formattedWeekDate(date),
-      );
-      //console.log(getDailyfoodData);
-      setDailyfoodData(
-        getDailyfoodData?.length > 0 ? getDailyfoodData[0] : null,
-      );
-    }
-  }, [dailyfoodDataList?.data?.dailyFoodsByDate, date]);
   const handlePress = anim => {
     Animated.timing(fadeAnim, {
       toValue: !anim ? 0 : 32,
@@ -365,15 +352,7 @@ const Pages = ({route}) => {
     date,
     dailyfoodData,
   ]);
-  useEffect(() => {
-    console.log(dailyfoodDataList?.data);
-    if (dailyfoodDataList?.data?.diningTypes?.length > 0) {
-      diningRef.current?.setPage(
-        dailyfoodDataList?.data?.diningTypes[0].diningType - 1,
-      );
-      setNowPage(dailyfoodDataList?.data?.diningTypes[0].diningType);
-    }
-  }, [dailyfoodDataList?.data]);
+
   useEffect(() => {
     if (userRole === 'ROLE_GUEST') {
       return setWeeklyService(
@@ -445,22 +424,26 @@ const Pages = ({route}) => {
     const diningTimes = dailyfoodDataList?.data?.diningTypes.filter(
       v => v.diningType === nowPage,
     );
-    const lunchData = dailyfoodData?.dailyFoodDtos.filter(
-      x => x.diningType === 2,
+    const getDailyfoodData = dailyfoodDataList?.data?.dailyFoodsByDate.filter(
+      v => v.serviceDate === formattedWeekDate(date),
     );
-    const morningData = dailyfoodData?.dailyFoodDtos.filter(
-      x => x.diningType === 1,
-    );
-    const dinnerData = dailyfoodData?.dailyFoodDtos.filter(
-      x => x.diningType === 3,
-    );
-    console.log(lunchData);
-    foodDeliveryTimeFilter(lunchData, time, setLunch);
-    foodDeliveryTimeFilter(morningData, time, setMorning);
-    foodDeliveryTimeFilter(dinnerData, time, setDinner);
-    setDiningTypes(
-      dailyfoodDataList?.data?.diningTypes.map(dining => dining.diningType),
-    );
+    if (getDailyfoodData?.dailyFoodDtos?.length > 0) {
+      const lunchData = getDailyfoodData?.dailyFoodDtos.filter(
+        x => x.diningType === 2,
+      );
+      const morningData = getDailyfoodData?.dailyFoodDtos.filter(
+        x => x.diningType === 1,
+      );
+      const dinnerData = getDailyfoodData?.dailyFoodDtos.filter(
+        x => x.diningType === 3,
+      );
+      foodDeliveryTimeFilter(lunchData, time, setLunch);
+      foodDeliveryTimeFilter(morningData, time, setMorning);
+      foodDeliveryTimeFilter(dinnerData, time, setDinner);
+      setDiningTypes(
+        dailyfoodDataList?.data?.diningTypes.map(dining => dining.diningType),
+      );
+    }
   }, [
     diningTime,
     dailyfoodData?.dailyFoodDtos,
@@ -557,37 +540,71 @@ const Pages = ({route}) => {
     }
   }, [isUserInfo]);
   const OuterViewPager = () => {
-    return (
-      <Swiper
-        loop={false}
-        index={currentIndex}
-        onIndexChanged={handleIndexChanged}>
-        {weeklyService?.length > 0 &&
-          weeklyService?.map(week => {
-            console.log(week);
-            return (
-              <PagerView key={week} style={{flex: 1}}>
-                <View style={{flex: 1}}>
+    if (weeklyService?.length > 0)
+      return (
+        <PagerView
+          style={{flex: 1}}
+          onPageSelected={e => {
+            const {position} = e.nativeEvent;
+            console.log(position, '1');
+          }}>
+          {weeklyService?.length > 0 &&
+            weeklyService?.map(week => {
+              return (
+                <View key={week} style={{flex: 1}}>
                   <Typography>test {formattedWeekDate(week)}</Typography>
+                  <InnerViewPager />
                 </View>
-
-                <GestureHandlerRootView style={{flex: 1}}>
-                  <BuyMealPage diningFood={isLunchFood} mealData={mealData} />
-                </GestureHandlerRootView>
-              </PagerView>
-            );
-          })}
-      </Swiper>
-    );
+              );
+            })}
+        </PagerView>
+      );
   };
 
+  const OuterViewPage2 = () => {
+    return (
+      <PagerView style={{flex: 1}}>
+        {/* Page 1 */}
+        <View style={{flex: 1}}>
+          <Text>Outer ViewPager - Page 1</Text>
+        </View>
+
+        {/* Page 2 with Inner ViewPager */}
+
+        {/* Page 3 */}
+        <View style={{flex: 1}}>
+          <Text>Outer ViewPager - Page 3</Text>
+        </View>
+      </PagerView>
+    );
+  };
   const InnerViewPager = () => {
     return (
-      <Pager>
-        <GestureHandlerRootView>
-          <BuyMealPage diningFood={isDinnerFood} mealData={mealData} />
-        </GestureHandlerRootView>
-      </Pager>
+      <PagerView
+        style={{flex: 1}}
+        onPageSelected={e => {
+          const {position} = e.nativeEvent;
+          console.log(position, '2');
+        }}>
+        {isDiningTypes?.map(dining => {
+          console.log('test', dining);
+          return (
+            <GestureHandlerRootView key={dining}>
+              <BuyMealPage
+                diningFood={
+                  dining === 1
+                    ? isMorningFood
+                    : dining === 2
+                    ? isLunchFood
+                    : isDinnerFood
+                }
+                mealData={mealData}
+                setDailyfoodId={setDailyfoodId}
+              />
+            </GestureHandlerRootView>
+          );
+        })}
+      </PagerView>
     );
   };
   return (
@@ -833,7 +850,7 @@ const Pages = ({route}) => {
   );
 };
 
-export default Pages;
+export default React.memo(Pages);
 
 const styles = StyleSheet.create({
   trackStyle: {
