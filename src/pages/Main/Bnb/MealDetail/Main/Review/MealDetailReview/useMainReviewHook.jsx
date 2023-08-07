@@ -21,8 +21,6 @@ const useMainReviewHook = (dailyFoodId, reviewIdFromWrittenReview) => {
   } = useMainReviewInfiniteQuery(url, dailyFoodId);
 
   useEffect(() => {
-    // const review =
-    //   getBoard?.pages.flatMap(page => page.items?.reviewList) ?? [];
     if (getBoard?.pages) {
       const {
         items: {totalReview, starAverage},
@@ -36,8 +34,6 @@ const useMainReviewHook = (dailyFoodId, reviewIdFromWrittenReview) => {
   useEffect(() => {
     getBoardRefetch();
   }, [url]);
-
-  //////////////////////////////////////////////////////////////
 
   const [allReviewList, setAllReviewList] = useState([]);
 
@@ -69,7 +65,7 @@ const useMainReviewHook = (dailyFoodId, reviewIdFromWrittenReview) => {
   const navigation = useNavigation();
 
   const [keyword, setKeyword] = useState([]);
-  // const [starAverage, setStarAverage] = useState(1);
+
   const [stars, setStars] = useState({});
   const [isLast, setIsLast] = useState(false);
   const [foodId, setFoodId] = useState(0);
@@ -224,48 +220,23 @@ const useMainReviewHook = (dailyFoodId, reviewIdFromWrittenReview) => {
 
   return {
     starAverage,
-    setStarAverage,
     totalReview,
     setTotalReview,
     initialLoading,
-    setInitialLoading,
-    url,
-    setUrl,
-    getBoard,
     isFetching,
     getNextPage,
     getNextPageIsPossible,
-    getBoardRefetch,
-
-    /////////////////////
-
     allReviewList,
-    setAllReviewList,
-    flatListRef2,
-    idx,
-    setIdx,
     theme,
-    navigation,
     keyword,
-    setKeyword,
-    stars,
-    setStars,
-    isLast,
-    setIsLast,
-    foodId,
-    setFoodId,
     reviewWrite,
-    setReviewWrite,
     orderFilter,
     setOrderFilter,
     isOnlyPhoto,
     setIsOnlyPhoto,
     rateSelected,
-    setRateSelected,
     selectedKeyword,
     setSelectedKeyword,
-    dailyFoodIdFromAtom,
-    setDailyFoodIdFromAtom,
     starRatingCounts,
     showSelectList,
     setShowSelectList,
@@ -275,9 +246,7 @@ const useMainReviewHook = (dailyFoodId, reviewIdFromWrittenReview) => {
     showSelectedOrderFilter,
     handleConfirmPress,
     isFetchingTop,
-    setIsFetchingTop,
     isFetchingBottom,
-    setIsFetchingBottom,
   };
 };
 

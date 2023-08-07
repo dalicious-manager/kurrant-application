@@ -1,9 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {
   useState,
@@ -68,8 +64,6 @@ import OrderSelectController from './Review/MealDetailReview/OrderSelectControll
 
 const screenWidth = Dimensions.get('screen').width;
 
-let yo = 0;
-
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
@@ -127,55 +121,26 @@ const Pages = ({route}) => {
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
-    // scrollViewRef.current.scrollTo({
-    //   x: scrollToX,
-    //   y: 0,
-    //   animated: true,
-    // });
   };
   const {
     starAverage,
-    setStarAverage,
     totalReview,
-    setTotalReview,
     initialLoading,
-    setInitialLoading,
-    url,
-    setUrl,
-    getBoard,
     isFetching,
+
     getNextPage,
     getNextPageIsPossible,
-    getBoardRefetch,
-
-    //////////////////
     allReviewList,
-    setAllReviewList,
-    flatListRef2,
-    idx,
-    setIdx,
     theme,
-    // navigation,
     keyword,
-    setKeyword,
-    stars,
-    setStars,
-    isLast,
-    setIsLast,
-    foodId,
-    setFoodId,
     reviewWrite,
-    setReviewWrite,
     orderFilter,
     setOrderFilter,
     isOnlyPhoto,
     setIsOnlyPhoto,
     rateSelected,
-    setRateSelected,
     selectedKeyword,
     setSelectedKeyword,
-    dailyFoodIdFromAtom,
-    setDailyFoodIdFromAtom,
     starRatingCounts,
     showSelectList,
     setShowSelectList,
@@ -185,37 +150,8 @@ const Pages = ({route}) => {
     showSelectedOrderFilter,
     handleConfirmPress,
     isFetchingTop,
-    setIsFetchingTop,
     isFetchingBottom,
-    setIsFetchingBottom,
   } = useMainReviewHook(dailyFoodId, reviewIdFromWrittenReview);
-
-  // const [isMount, setIsMount] = useState(true);
-  // const [isMoveOn, setIsMoveOn] = useState(false);
-
-  // useEffect(() => {
-  //   if (!isMoveOn) return;
-
-  //   if (flatListRef.current && idx !== -1) {
-  //     console.log('과연 잘 들어왔을까??? ' + idx);
-
-  //     setIsLabelOnMainDetail(false);
-
-  //     flatListRef?.current?.scrollToIndex({
-  //       animated: true,
-  //       index: idx,
-  //       viewPosition: 100,
-  //     });
-  //   }
-  // }, [idx, isMoveOn]);
-
-  // useEffect(() => {
-  //   if (isMount) {
-  //     setIsLabelOnMainDetail(false);
-  //   }
-
-  //   setIsMount(false);
-  // }, [isLabelOnMainDetail]);
 
   const [count, setCount] = useState(1);
 
@@ -749,7 +685,7 @@ const Pages = ({route}) => {
                                 </InfoWrap>
                               </Content>
 
-                              <Content>
+                              {/* <Content>
                                 <InfoWrap>
                                   <InfoTitleView>
                                     <InfoTitle>영양 정보</InfoTitle>
@@ -802,7 +738,7 @@ const Pages = ({route}) => {
                                     </InfoTextWrap>
                                   </InfoTextView>
                                 </InfoWrap>
-                              </Content>
+                              </Content> */}
                             </DetailView>
                           ) : (
                             <Skeleton />

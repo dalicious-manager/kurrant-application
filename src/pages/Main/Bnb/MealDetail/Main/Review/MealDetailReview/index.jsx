@@ -37,7 +37,7 @@ const Component = ({
   starAverage,
   totalReview,
   initialLoading,
-  ////////////
+
   theme,
   navigation,
   keyword,
