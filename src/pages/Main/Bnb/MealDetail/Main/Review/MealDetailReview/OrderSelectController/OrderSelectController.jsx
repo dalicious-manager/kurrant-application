@@ -2,7 +2,12 @@ import styled from 'styled-components';
 import {Shadow} from 'react-native-shadow-2';
 import Typography from '~components/Typography';
 
-const OrderSelectController = ({keyword, orderFilter}) => {
+const OrderSelectController = ({
+  keyword,
+  orderFilter,
+  setOrderFilter,
+  setShowSelectList,
+}) => {
   return (
     <WrapWrapView isOn={Array.isArray(keyword) && keyword.length > 0}>
       <ShadowWrap startColor="rgba(0, 0, 0, 0.03)" distance={14}>
