@@ -132,6 +132,7 @@ const MealInfoComponent = ({
                       queryClient.invalidateQueries({
                         queryKey: ['dietRepo', 'main'],
                       });
+                      queryClient.invalidateQueries('userInfo');
                       // dietRepoMainRefetch();
                     },
                   ]);

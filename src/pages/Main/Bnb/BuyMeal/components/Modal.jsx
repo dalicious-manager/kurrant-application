@@ -3,23 +3,29 @@ import {useAtomValue} from 'jotai';
 import React, {useEffect, useState} from 'react';
 import {View, Text, Pressable} from 'react-native';
 import styled from 'styled-components';
+import BottomModal from '~components/BottomModal';
 
 import CloseIcon from '../../../../../assets/icons/BuyMeal/close.svg';
 import AIicon from '../../../../../assets/icons/BuyMeal/modalAI.svg';
 import XIcon from '../../../../../assets/icons/BuyMeal/modalX.svg';
 import Typography from '../../../../../components/Typography';
-import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {
+  useGetPrivateMembership,
+  useGetUserInfo,
+} from '../../../../../hook/useUserInfo';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedDate} from '../../../../../utils/dateFormatter';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 
-const Modal = ({hideModal, setHideModal}) => {
+const Modal = ({hideModal, setHideModal, setModalVisible2}) => {
   const navigation = useNavigation();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
   // const [hideModal, setHideModal] = useState(true);
-
+  const {data: isPrivateMembership, refetch: privateMembershipRefetch} =
+    useGetPrivateMembership();
+  // const [modalVisible2, setModalVisible2] = useState(false);
   const today = new Date();
   const now = new Date();
   const oneMonthLater = new Date(now.setMonth(now.getMonth() + 1));
@@ -72,9 +78,14 @@ const Modal = ({hideModal, setHideModal}) => {
               </ContentsText>
               <MembershipButton
                 onPress={() => {
-                  navigation.navigate(MembershipIntro, {
-                    isFounders: isUserInfo?.leftFoundersNumber > 0,
-                  });
+                  if (isPrivateMembership?.data) {
+                    console.log('tests');
+                    setModalVisible2(true);
+                  } else {
+                    navigation.navigate(MembershipIntro, {
+                      isFounders: isUserInfo?.leftFoundersNumber > 0,
+                    });
+                  }
                 }}>
                 <ButtonText>멤버십 가입하기</ButtonText>
               </MembershipButton>

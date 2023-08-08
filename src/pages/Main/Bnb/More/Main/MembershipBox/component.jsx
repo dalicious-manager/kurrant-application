@@ -8,7 +8,10 @@ import Typography from '~components/Typography';
 
 import {MembershipJoin, NewMembers} from '../../../../../../assets';
 import {ArrowRightBoxIcon} from '../../../../../../components/Icon';
-import {useGetUserInfo} from '../../../../../../hook/useUserInfo';
+import {
+  useGetPrivateMembership,
+  useGetUserInfo,
+} from '../../../../../../hook/useUserInfo';
 import withCommas from '../../../../../../utils/withCommas';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../../../Membership/MembershipIntro';
@@ -19,8 +22,15 @@ import {PAGE_NAME as MembershipIntroPageName} from '../../../../../Membership/Me
  * @returns
  */
 
-const Component = ({point, isMembership, membershipPeriod = 0}) => {
+const Component = ({
+  point,
+  isMembership,
+  membershipPeriod = 0,
+  setModalVisible2,
+}) => {
   const themeApp = useTheme();
+  const {data: isPrivateMembership, refetch: privateMembershipRefetch} =
+    useGetPrivateMembership();
   const navigation = useNavigation();
   const {
     data: {data: isUserInfo},
@@ -29,11 +39,16 @@ const Component = ({point, isMembership, membershipPeriod = 0}) => {
     <>
       {!isMembership ? (
         <MembershipJoinPage
-          onPress={() =>
-            navigation.navigate(MembershipIntroPageName, {
-              isFounders: isUserInfo?.leftFoundersNumber > 0,
-            })
-          }>
+          onPress={() => {
+            console.log(isUserInfo?.leftFoundersNumber > 0);
+            if (isPrivateMembership?.data) {
+              setModalVisible2(true);
+            } else {
+              navigation.navigate(MembershipIntroPageName, {
+                isFounders: isUserInfo?.leftFoundersNumber > 0,
+              });
+            }
+          }}>
           {!(isUserInfo?.leftFoundersNumber > 0) ? (
             <MembershipBox source={MembershipJoin} resizeMode={'stretch'}>
               <MembershipText

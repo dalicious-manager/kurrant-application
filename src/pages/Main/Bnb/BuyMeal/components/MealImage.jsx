@@ -9,6 +9,7 @@ import CartIcon from '../../../../../assets/icons/BuyMeal/cartBlur.svg';
 import CheckCart from '../../../../../assets/icons/MealCart/checkCart.svg';
 import Typography from '../../../../../components/Typography';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+
 const MealImage = ({
   status,
   image,

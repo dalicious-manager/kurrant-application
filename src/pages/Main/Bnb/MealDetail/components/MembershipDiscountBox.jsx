@@ -8,24 +8,37 @@ import {
   ArrowRightBoxIcon2,
   MembershipDiscountBadge,
 } from '../../../../../components/Icon';
-import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {
+  useGetPrivateMembership,
+  useGetUserInfo,
+} from '../../../../../hook/useUserInfo';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
 
-const MembershipDiscountBox = ({isFoodDetail}) => {
+const MembershipDiscountBox = ({
+  isFoodDetail,
+  modalVisible2,
+  setModalVisible2,
+}) => {
   const themeApp = useTheme();
+
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
-
+  const {data: isPrivateMembership, refetch: privateMembershipRefetch} =
+    useGetPrivateMembership();
   const navigation = useNavigation();
 
   return (
     <Container
       onPress={() => {
-        navigation.navigate(MembershipIntroPageName, {
-          isFounders: isUserInfo?.leftFoundersNumber > 0,
-        });
+        if (isPrivateMembership?.data) {
+          setModalVisible2(true);
+        } else {
+          navigation.navigate(MembershipIntroPageName, {
+            isFounders: isUserInfo?.leftFoundersNumber > 0,
+          });
+        }
       }}>
       <MembershipDiscountContainer>
         <View>
