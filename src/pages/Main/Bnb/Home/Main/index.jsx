@@ -414,6 +414,7 @@ const Pages = () => {
     // Check whether an initial notification is available
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       if (remoteMessage) {
+        console.log(remoteMessage.data.page, '백그라운드');
         if (remoteMessage.data.page !== 'Home') {
           if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
             return navigation.navigate(remoteMessage.data.page, {
@@ -447,6 +448,7 @@ const Pages = () => {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
+          console.log(remoteMessage.data.page, '종료');
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
@@ -687,7 +689,7 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>
           {isUserInfo?.data?.nickname ?? userName}님{' '}
-          {isUserInfo?.data?.nickname?.length === 12 && `\n`}안녕하세요!
+          {isUserInfo?.data?.nickname?.length > 5 && `\n`}안녕하세요!
         </LargeTitle>
         <MainWrap>
           {orderMealList?.data?.filter(order => order.serviceDate === date)

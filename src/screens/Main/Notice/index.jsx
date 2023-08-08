@@ -9,12 +9,16 @@ import SpotNotice, {
   PAGE_NAME as SpotNoticePageName,
 } from '~pages/Main/MyPage/Notice/SpotNotice';
 
+import {useGetNoticeDetail} from '../../../hook/useNotice';
+
 export const SCREEN_NAME = 'S_MAIN__NOTICE';
 
 const Tab = createMaterialTopTabNavigator();
 
 const Screen = ({route}) => {
   const from = route?.params?.from;
+  const noticeId = route?.params?.id;
+
   const theme = useTheme();
   const navigation = useNavigation();
 
@@ -33,6 +37,7 @@ const Screen = ({route}) => {
         tabBarStyle: {backgroundColor: '#ffffff'},
       }}>
       <Tab.Screen
+        initialParams={{id: noticeId, from: from}}
         name={PublicNoticePageName}
         component={PublicNotice}
         options={{

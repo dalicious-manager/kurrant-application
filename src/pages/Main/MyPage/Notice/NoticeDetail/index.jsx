@@ -9,6 +9,7 @@ export const PAGE_NAME = 'P__MY_PAGE__NOTICE_DETAIL';
 
 const Pages = ({route}) => {
   const {noticeData} = route.params;
+
   const systemFonts = [
     ...defaultSystemFonts,
     'Pretendard-Regular',

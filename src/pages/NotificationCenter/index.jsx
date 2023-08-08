@@ -7,7 +7,10 @@ import useBoard from '../../biz/useBoard';
 import {NotificationIcon} from '../../components/Icon';
 import Typography from '../../components/Typography';
 import Wrapper from '../../components/Wrapper';
+import {SCREEN_NAME as NoticePageName} from '../../screens/Main/Notice';
 import {PAGE_NAME as MainPageName} from '../Main/Bnb/Home/Main';
+import {PAGE_NAME as PublicNoticePageName} from '../Main/MyPage/Notice/PublicNotice';
+
 export const PAGE_NAME = 'P__NOTIFICATION_CENTER';
 
 const alramData = [
@@ -55,6 +58,15 @@ const Pages = () => {
     readableAtom: {alarm},
   } = useBoard();
   const navigation = useNavigation();
+
+  const goToPage = id => {
+    if (id) {
+      navigation.navigate(NoticePageName, {
+        id: id,
+        from: 'public',
+      });
+    }
+  };
   useEffect(() => {
     const getUseAlarm = async () => {
       await getAlarm();
@@ -73,7 +85,7 @@ const Pages = () => {
         <ScrollView>
           {alarm?.map(v => {
             return (
-              <NotificationBox key={v.id}>
+              <NotificationBox key={v.id} onPress={() => goToPage(v.noticeId)}>
                 <TitleBox>
                   <TitleBoxFront>
                     <IconBox>
