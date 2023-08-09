@@ -2208,11 +2208,8 @@ const Screen = () => {
                       {
                         text: '수정종료',
                         onPress: () => {
-                          navigation.navigate(WrittenReviewPageName, {
-                            screen: ReviewScreenName,
-                            params: {
-                              tabIndex: 1,
-                            },
+                          navigation.navigate(ReviewScreenName, {
+                            screen: WrittenReviewPageName,
                           });
 
                           return;

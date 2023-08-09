@@ -15,7 +15,8 @@ import CheckedIcon from '~assets/icons/BottomSheet/Checked.svg';
 import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
-import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
+// import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
+import {PAGE_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
