@@ -1099,6 +1099,8 @@ const PointInfoText = styled(Typography).attrs({text: 'CaptionR'})`
 `;
 
 const MealName = styled(Typography).attrs({text: 'Body05SB'})`
+
   color: ${({theme}) => theme.colors.grey[2]};
+
   margin-bottom: 2px;
 `;

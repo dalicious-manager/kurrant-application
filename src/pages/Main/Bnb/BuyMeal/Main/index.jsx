@@ -472,6 +472,12 @@ const Pages = ({route}) => {
     dailyfoodData,
   ]);
   useEffect(() => {
+    // console.log('sliderValue 확인하기 ');
+    // console.log(dailyfoodDataList?.data);
+    // console.log(dailyfoodDataList?.data?.diningTypes);
+    // console.log(dailyfoodDataList?.data?.diningTypes[0]);
+    // console.log(dailyfoodDataList?.data?.diningTypes[0].diningType);
+
     if (dailyfoodDataList?.data?.diningTypes?.length > 0) {
       diningRef.current?.setPage(
         dailyfoodDataList?.data?.diningTypes[0].diningType - 1,

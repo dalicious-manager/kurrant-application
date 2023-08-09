@@ -50,7 +50,7 @@ export function useMainReviewInfiniteQuery(url, dailyFoodId) {
       return undefined;
     },
   });
-
+  //
   return {
     getBoard,
     getNextPage,

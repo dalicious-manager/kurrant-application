@@ -75,6 +75,11 @@ const Component = ({
     setCalcFontSize(width * 0.052279);
   };
 
+  // useEffect(() => {
+  //   console.log('allReviewList 확인');
+  //   console.log(allReviewList);
+  // }, [allReviewList]);
+
   return (
     <Container focusId={focusId} id={id}>
       <TopWrap>
@@ -106,8 +111,7 @@ const Component = ({
           </PostDateText>
         </RowWrap>
 
-        {/* <EditWrap>
-          <LikePressable
+        {/* <LikePressable
             onPress={() => {
               if (isFetching) return;
 
@@ -302,6 +306,8 @@ const Container = styled.View`
       `;
     }
   }}
+  /* padding: 16px 24px; */
+  padding: 0 24px;
 
   margin-bottom: 40px;
 `;

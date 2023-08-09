@@ -3,7 +3,6 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
-
 import {PointBadge} from '~components/Icon';
 import Typography from '~components/Typography';
 
