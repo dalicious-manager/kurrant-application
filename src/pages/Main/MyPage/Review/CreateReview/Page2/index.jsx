@@ -76,7 +76,7 @@ const Screen = ({route}) => {
 
   const id = route?.params?.id;
   const status = route?.params?.status;
-  const test = route?.params?.test;
+  const resetNavigate = route?.params?.resetNavigate;
   const editItem = route?.params?.editItem;
 
   const theme = useTheme();
@@ -282,7 +282,11 @@ const Screen = ({route}) => {
                   //   from: 'home',
                   // });
 
-                  if (test) {
+                  if (resetNavigate) {
+                    console.log('테스트1 ');
+
+                    console.log(resetNavigate);
+
                     // navigation.navigate(WrittenReviewPageName);
                     navigation.reset({
                       index: 1,
@@ -306,6 +310,9 @@ const Screen = ({route}) => {
                     //   },
                     // });
                   } else {
+                    console.log('테스트2 ');
+
+                    console.log(resetNavigate);
                     navigation.navigate(ReviewScreenName, {
                       screen: WrittenReviewPageName,
                     });

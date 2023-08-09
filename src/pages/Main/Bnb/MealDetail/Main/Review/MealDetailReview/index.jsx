@@ -16,7 +16,7 @@ import RateStars from '~components//RateStars';
 import {RightSkinnyArrow} from '~components/Icon';
 import Typography from '~components/Typography';
 // import {SCREEN_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
-import {PAGE_NAME as CreateReviewScreenName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
+import {PAGE_NAME as CreateReviewPage1PageName} from '~pages/Main/MyPage/Review/CreateReview/Page1';
 
 import Card from './Card';
 import {buildCustomUrl, modifyStarRatingCount} from './logic';
@@ -157,10 +157,11 @@ const Component = ({
           <Wrap5>
             <GoToWriteReviewPressable
               onPress={() => {
-                navigation.navigate(CreateReviewScreenName, {
+                navigation.navigate(CreateReviewPage1PageName, {
                   orderItemId: reviewWrite,
                   imageLocation: imageLocation[0],
                   foodName,
+                  resetNavigate: true,
                 });
               }}>
               <GoToWriteReviewText>리뷰작성 </GoToWriteReviewText>

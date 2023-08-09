@@ -1096,6 +1096,7 @@ const Screen = () => {
               lineHeight: 22,
             },
             headerShadowVisible: false,
+            // 리뷰 page2에서 올떄는 그냥 백버튼이면 안됨
             headerLeft: () => <BackButton margin={[10, 0]} />,
           }}
         />
