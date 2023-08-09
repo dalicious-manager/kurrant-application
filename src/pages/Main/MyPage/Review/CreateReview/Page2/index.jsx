@@ -283,10 +283,6 @@ const Screen = ({route}) => {
                   // });
 
                   if (resetNavigate) {
-                    console.log('테스트1 ');
-
-                    console.log(resetNavigate);
-
                     // navigation.navigate(WrittenReviewPageName);
                     navigation.reset({
                       index: 1,
@@ -310,9 +306,6 @@ const Screen = ({route}) => {
                     //   },
                     // });
                   } else {
-                    console.log('테스트2 ');
-
-                    console.log(resetNavigate);
                     navigation.navigate(ReviewScreenName, {
                       screen: WrittenReviewPageName,
                     });
