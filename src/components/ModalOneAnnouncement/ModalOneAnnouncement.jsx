@@ -12,9 +12,21 @@ const Component = ({modalVisible, data, setModalVisible}) => {
   const systemFonts = [...defaultSystemFonts, 'Pretendard'];
 
   const source = {
-    html: `<div style="  padding-left:24px; padding-right:20px; "> 
+    html: `<div style="padding-left:24px; padding-right:24px; "> 
         ${data.content}
         </div>`,
+  };
+
+  const tagsStyles = {
+    img: {
+      width: 280,
+      marginVertical: 0,
+      marginHorizontal: 0,
+    },
+    p: {
+      margin: 0,
+      padding: 0,
+    },
   };
 
   const handleMessageRead = async () => {
@@ -60,6 +72,7 @@ const Component = ({modalVisible, data, setModalVisible}) => {
                   contentWidth={Dimensions.get('window').width}
                   source={source}
                   systemFonts={systemFonts}
+                  tagsStyles={tagsStyles}
                   // tagsStyles={{
                   //   div: {
                   //     color: '#1e1e96',
@@ -100,7 +113,7 @@ const ModalView = styled.View`
   margin: 20px;
   background-color: white;
   /* border-radius: 20px; */
-  padding: 10px;
+  //padding: 10px;
   padding-top: 20px;
   padding-bottom: 24px;
 
@@ -113,18 +126,20 @@ const ModalView = styled.View`
 `;
 
 const TitleView = styled.View`
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  background-color: white;
+  /* border-top-left-radius: 10px;
+  border-top-right-radius: 10px; */
+
   display: flex;
   flex-direction: column;
   width: 100%;
-
   padding: 0 24px;
   padding-bottom: 24px;
   position: relative;
   top: 0;
   /* border: 1px solid black; */
+  border-bottom-color: ${({theme}) => theme.colors.grey[8]};
+  border-bottom-width: 1px;
+  margin-bottom: 22px;
 `;
 
 const TitleText = styled(Typography).attrs({text: 'Title04SB'})`
@@ -160,6 +175,7 @@ const ModalText = styled.Text`
 const ContenContainerScrollView = styled(ScrollView)`
   padding-bottom: 24px;
   position: relative;
+  width: 100%;
 `;
 
 const ConfirmPressable = styled.Pressable`
