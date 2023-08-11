@@ -9,6 +9,7 @@ import {FormProvider, useForm} from 'react-hook-form';
 import Typography from '~components/Typography';
 // import BottomSheet from '~components/BottomSheet';
 import BottomSheetRegisterInfo from '~components/BottomSheetRegisterInfo';
+import BottomSheetRegisterInfo2 from '~components/BottomSheetRegisterInfo2';
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
@@ -263,7 +264,18 @@ const Pages = () => {
         // setValue={onSelectEvent2}
         height={200}
       />
-      <BottomSheetRegisterInfo
+      {/* <BottomSheetRegisterInfo
+        modalVisible={countryModal}
+        setModalVisible={setCountryModal}
+        title="국적"
+        data={countryList}
+        selected={country}
+        setSelected={setCountry}
+        // setValue={onSelectEvent2}
+        height={200}
+      /> */}
+
+      <BottomSheetRegisterInfo2
         modalVisible={countryModal}
         setModalVisible={setCountryModal}
         title="국적"
@@ -273,6 +285,7 @@ const Pages = () => {
         // setValue={onSelectEvent2}
         height={200}
       />
+
       <BottomSheetRegisterInfo
         modalVisible={jobTypeModal}
         setModalVisible={setJobTypeModal}
