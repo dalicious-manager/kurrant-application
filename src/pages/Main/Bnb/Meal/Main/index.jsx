@@ -212,7 +212,7 @@ const Pages = ({route}) => {
     useCallback(() => {
       if (isToday) {
         pressDay(formattedWeekDate(new Date()));
-        pagerRef.current.setPage(0);
+        pagerRef.current?.setPage(0);
       }
       setTouchDate(data);
     }, [isToday, data]),
@@ -240,17 +240,17 @@ const Pages = ({route}) => {
         <MealWrap>
           {touchDate ? (
             <>
-              {selectDate?.map((s, index) => {
-                return s.orderItemDtoList?.map((sm, idx) => {
+              {selectDate?.map(s => {
+                return s.orderItemDtoList?.map(sm => {
                   return (
-                    <View key={index}>
+                    <View key={sm.dailyFoodId}>
                       <DiningTimeWrap>
                         <DiningTime>
                           {formattedMonthDay(s.serviceDate)} {s.diningType}{' '}
                           {sm.deliveryTime}
                         </DiningTime>
                       </DiningTimeWrap>
-                      <MealContentWrap key={idx}>
+                      <MealContentWrap>
                         {sm.dailyFoodStatus === 6 && <BlurView />}
                         {sm.dailyFoodStatus === 6 && (
                           <SoldOut soldOut={sm.dailyFoodStatus}>

@@ -20,6 +20,7 @@ export const PAGE_NAME = 'P__MEMBERSHIP__INTRO';
 const {width} = Dimensions.get('screen');
 const Pages = ({route}) => {
   const params = route.params;
+  console.log(params);
   const [height, setHeight] = useState(0);
   const [isImageLoading, setImageLoading] = useState(false);
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
@@ -37,8 +38,8 @@ const Pages = ({route}) => {
       setImageLoading(true);
       await Image.getSize(
         params.isFounders
-          ? 'https://asset.kurrant.co/img/common/foundersmembership.png'
-          : 'https://asset.kurrant.co/img/common/kurrantmembership.png',
+          ? 'https://admin.dalicious.co/img/foundersmembership.png'
+          : 'https://admin.dalicious.co/img/kurrantmembership.png',
         (w, h) => {
           setHeight(h * (width / w));
         },

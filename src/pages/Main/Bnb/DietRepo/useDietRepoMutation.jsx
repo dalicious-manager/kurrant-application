@@ -50,7 +50,6 @@ const useDietRepoMutation = date => {
         ]);
       },
       onError: err => {
-        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
         console.log(err);
       },
     },
@@ -80,7 +79,6 @@ const useDietRepoMutation = date => {
         ]);
       },
       onError: err => {
-        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
         console.log(err);
       },
     },
@@ -103,7 +101,6 @@ const useDietRepoMutation = date => {
         }
       },
       onError: err => {
-        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
         console.log(err);
       },
     },
@@ -131,9 +128,6 @@ const useDietRepoMutation = date => {
         }
       },
       onError: err => {
-        console.log(
-          '특정기간 주문내역 이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요',
-        );
         console.log(err);
       },
     },
