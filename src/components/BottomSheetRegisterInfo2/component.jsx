@@ -54,7 +54,8 @@ const BottomSheetRegisterInfo2 = ({
   /////////////
 
   const bottomDepthRef = useRef(new Animated.Value(-height)).current;
-  const backgroundOpacityRef = useRef(new Animated.Value(0.6)).current;
+
+  const backgroundOpacityRef = useRef(new Animated.Value(0.68)).current;
 
   const moveBottomSheetWithAnimationTo = useCallback(toValue => {
     return Animated.timing(bottomDepthRef, {
@@ -74,12 +75,12 @@ const BottomSheetRegisterInfo2 = ({
   }, []);
 
   const [open, setOpen] = useState(show);
-  //   BackgroundOpacity
+
   useEffect(() => {
     if (show) {
       setOpen(show);
-
       moveBottomSheetWithAnimationTo(-bottomDepth).start();
+
       changeBottomSheetBackgroundTo(BackgroundOpacity).start();
     } else {
       changeBottomSheetBackgroundTo(0).start();
@@ -95,13 +96,16 @@ const BottomSheetRegisterInfo2 = ({
     } else {
       // console.log('위로 pan(drag)');
     }
+
     bottomDepthRef.setValue(-e.nativeEvent.translationY - bottomDepth);
   };
 
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    moveBottomSheetWithAnimationTo(-bottomDepth).start();
+    if (count > 0) {
+      moveBottomSheetWithAnimationTo(-bottomDepth).start();
+    }
   }, [count]);
 
   const onGestureEnd = e => {

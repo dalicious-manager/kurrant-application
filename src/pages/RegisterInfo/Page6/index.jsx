@@ -1,4 +1,4 @@
-import {Alert, Platform, ScrollView, Text} from 'react-native';
+import {Alert, FlatList, Platform, ScrollView, Text} from 'react-native';
 import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -23,6 +23,9 @@ import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import LinearGradient from 'react-native-linear-gradient';
 import BottomSheetRegisterInfo2 from '../../../components/BottomSheetRegisterInfo2/component';
+// import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
+import CheckedIcon from '../../../assets/icons/BottomSheet/Checked.svg';
+import {Dimensions} from 'react-native';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
@@ -265,16 +268,6 @@ const Pages = () => {
         // setValue={onSelectEvent2}
         height={200}
       />
-      {/* <BottomSheetRegisterInfo
-        modalVisible={countryModal}
-        setModalVisible={setCountryModal}
-        title="국적"
-        data={countryList}
-        selected={country}
-        setSelected={setCountry}
-        // setValue={onSelectEvent2}
-        height={200}
-      /> */}
 
       {/* <BottomSheetRegisterInfo
         modalVisible={countryModal}
@@ -290,17 +283,16 @@ const Pages = () => {
       <BottomSheetRegisterInfo2
         show={countryModal}
         onDismiss={() => {
-          // console.log('골골골');
           setCountryModal(false);
         }}
         enableBackDropDismiss>
-        <>
-          <BottomSheetTitleView>
-            <BottomSheetTitle>텍스트</BottomSheetTitle>
-            {false && <BottomSheetDecs>랄랄라</BottomSheetDecs>}
-          </BottomSheetTitleView>
-          <ScrollView contentContainerStyle={{marginBottom: 50}}></ScrollView>
-        </>
+        <BottomSheetChildrenComponent
+          title={'국적'}
+          countryList={countryList}
+          setSelected={setCountry}
+          setModalVisible={setCountryModal}
+          selected={country}
+        />
       </BottomSheetRegisterInfo2>
 
       <BottomSheetRegisterInfo
@@ -401,6 +393,52 @@ const Wrap2 = styled.View`
   flex-direction: column-reverse;
 `;
 
+const BottomSheetChildrenComponent = ({
+  title,
+  countryList,
+  setSelected,
+  setModalVisible,
+  selected,
+}) => {
+  return (
+    <>
+      <>
+        <BottomSheetTitleView>
+          <BottomSheetTitle>{title}</BottomSheetTitle>
+          {/* {false && <BottomSheetDecs>랄랄라</BottomSheetDecs>} */}
+        </BottomSheetTitleView>
+
+        <FlatList
+          data={countryList}
+          scrollEnabled={true}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => (
+            <ContentItemContainer
+              onPress={() => {
+                // setCountry(item.id);
+                setSelected(item.id);
+
+                setTimeout(() => {
+                  // setCountryModal(false);
+                  setModalVisible(false);
+                }, 250);
+              }}>
+              {selected === item.id ? (
+                <ContentItemBox>
+                  <ContentItemText>{item.text}</ContentItemText>
+                  <CheckedIcon />
+                </ContentItemBox>
+              ) : (
+                <ContentItemText>{item.text}</ContentItemText>
+              )}
+            </ContentItemContainer>
+          )}
+        />
+      </>
+    </>
+  );
+};
+
 const BottomSheetTitleView = styled.View`
   width: 100%;
   padding: 0px 24px;
@@ -412,3 +450,18 @@ const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
 const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
   color: ${({theme}) => theme.colors.grey[4]};
 `;
+
+const ContentItemContainer = styled.Pressable`
+  width: ${Dimensions.get('screen').width}px;
+  height: 60px;
+  padding: 19px 24px;
+  padding-left: 40px;
+`;
+
+const ContentItemBox = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
