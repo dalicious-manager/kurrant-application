@@ -30,7 +30,7 @@ const Pages = () => {
       // 아니오거나
       setClickAvaliable(true);
     } else {
-      // 예 이고 beganLeve이 있을떄 열림
+      // 예 이고 veganLeve이 있을떄 열림
 
       if (proteinFrequency) {
         setClickAvaliable(true);

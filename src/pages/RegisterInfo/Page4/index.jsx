@@ -37,7 +37,7 @@ const Pages = () => {
 
   const [yesOrNo, setYesOrNo] = useState(0);
 
-  const [beganLevel, setBeganLevel] = useState(undefined);
+  const [veganLevel, setBeganLevel] = useState(undefined);
 
   const [bottomModalOpen, setBottomModalOpen] = useState(false);
 
@@ -57,13 +57,13 @@ const Pages = () => {
     if (yesOrNo === 2) {
       setClickAvaliable(true);
     } else {
-      if (beganLevel) {
+      if (veganLevel) {
         setClickAvaliable(true);
       } else {
         setClickAvaliable(false);
       }
     }
-  }, [yesOrNo, setClickAvaliable, beganLevel]);
+  }, [yesOrNo, setClickAvaliable, veganLevel]);
 
   const handleSelectBottomModal = id => {
     setBeganLevel(id);
@@ -73,14 +73,14 @@ const Pages = () => {
     if (yesOrNo === 2) {
       setFinalRegister({
         ...finalRegister,
-        isBegan: false,
-        beganLevel: 0,
+        isVegan: false,
+        veganLevel: 0,
       });
     } else {
       setFinalRegister({
         ...finalRegister,
-        isBegan: yesOrNo === 1 ? true : false,
-        beganLevel: beganLevel,
+        isVegan: yesOrNo === 1 ? true : false,
+        veganLevel: veganLevel,
       });
     }
 
@@ -121,7 +121,7 @@ const Pages = () => {
           <Wrap3>
             <SelectInputBox
               placeholder={'채식 정보 입력'}
-              value={beganLevel}
+              value={veganLevel}
               convertData={dataList}
               setValue={setBeganLevel}
               buttonOnClickCallback={() => {
@@ -167,7 +167,7 @@ const Pages = () => {
         <BottomSheetChildrenComponent
           title={'채식 정보 입력'}
           data={dataList}
-          selected={beganLevel}
+          selected={veganLevel}
           setSelected={handleSelectBottomModal}
           setModalVisible={setBottomModalOpen}
         />
