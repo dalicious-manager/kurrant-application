@@ -31,18 +31,12 @@ const Pages = () => {
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
 
-  // const {getFoodImageList, foodImageList} = useGetRegisterInfo();
   const {getFoodImageList, foodImageListPage7, isGetFoodImageLoading} =
     useGetRegisterInfo();
 
   const [selectedFoodIdPage7, setSelectedFoodIdPage7] = useAtom(
     selectedFoodIdPage7Atom,
   );
-
-  // useEffect(() => {
-  //   console.log(' foodImageListPage7 확인');
-  //   console.log(foodImageListPage7);
-  // }, [foodImageListPage7]);
 
   useEffect(() => {
     getFoodImageList();
@@ -101,10 +95,6 @@ const Pages = () => {
             num={1}
             title={`아래 음식 중 마음에 드는 \n음식 3개를 선택해 주세요`}
           />
-
-          {/* foodImageLIstPage가 undefined일 경우 */}
-
-          {/* 로딩중일때 처리해야됨 */}
 
           {isGetFoodImageLoading ? (
             <SkeletonWrap>
@@ -262,16 +252,6 @@ const Pages = () => {
         />
       </ButtonWrapper>
 
-      {/* <ButtonNext2
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      /> */}
-
       <BottomModalWithHalfButton
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -288,8 +268,7 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  /* padding: 35px 20px; */
-  /* padding: 15px 20px; */
+
   align-items: center;
   background-color: #ffffff;
   position: relative;
@@ -301,10 +280,8 @@ const ScrollViewWrapper = styled.View`
 
 const ScrollViewContainer = styled.ScrollView`
   width: 100%;
-  /* height: 90%; */
-  /* height: 1000px; */
+
   background-color: #ffffff;
-  /* border: 1px solid black; */
 `;
 
 const SkeletonWrap = styled.View``;

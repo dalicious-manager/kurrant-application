@@ -32,16 +32,13 @@ const Container = styled.View`
   display: flex;
   flex-direction: row;
   margin-bottom: 24px;
-  /* border: 1px solid black; */
 `;
 
 const NumWrap = styled.View`
   margin-right: 4px;
   margin-top: 4px;
-  /* border: 1px solid black; */
 `;
 
 const TitleText = styled(Typography).attrs({text: 'Title04SB'})`
   color: ${({theme}) => theme.colors.grey[2]};
-  /* border: 1px solid black; */
 `;

@@ -7,7 +7,6 @@ import {useEffect, useState} from 'react';
 
 import ProgressBar from '~components/ProgressBar7';
 
-import {PAGE_NAME as RegisterInfoFinishPageName} from '../../Finish';
 import {PAGE_NAME as RegisterInfoPage9PageName} from '../Page9';
 
 import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/hook';
@@ -79,8 +78,6 @@ const Pages = () => {
     navigation.navigate(RegisterInfoPage9PageName);
   };
 
-  // ui가 없을 경우 3초정도 skieleton을 보여주고 없다고 얘기해야 된다
-
   const [isDataListNull, setIsDataListNull] = useState(false);
 
   useEffect(() => {
@@ -88,8 +85,6 @@ const Pages = () => {
       setIsDataListNull(true);
     }, 3000);
   }, []);
-
-  // skeleton ui 네모
 
   const skeletonUIImageWidth =
     (Dimensions.get('screen').width - 2 * 24 - 26) / 3;
@@ -260,16 +255,6 @@ const Pages = () => {
           }}
         />
       </ButtonWrapper>
-      {/* 
-      <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      /> */}
 
       <BottomModalWithHalfButton
         modalVisible={modalVisible}

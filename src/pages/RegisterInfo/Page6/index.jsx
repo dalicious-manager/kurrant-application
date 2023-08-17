@@ -1,18 +1,16 @@
-import {Alert, Platform, Text} from 'react-native';
+import {Alert, FlatList, Platform, ScrollView, Text} from 'react-native';
 import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
-import {FormProvider, useForm} from 'react-hook-form';
 
 import Typography from '~components/Typography';
-import BottomSheet from '~components/BottomSheet';
+
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 
-import RefTextInput from '~components/RefTextInput';
 import SelectInputBox from '../components/SelectInputBox/SelectInputBox';
 import ModalCalendar from '../../../components/ModalCalendar/ModalCalendar';
 import {toStringByFormatting} from '../../../utils/dateFormatter';
@@ -20,18 +18,12 @@ import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hoo
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import LinearGradient from 'react-native-linear-gradient';
+import BottomSheetRegisterInfo2 from '../../../components/BottomSheetRegisterInfo2/component';
+
+import CheckedIcon from '../../../assets/icons/BottomSheet/Checked.svg';
+import {Dimensions} from 'react-native';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
-
-const sampleData = [
-  {id: 1, text: '비건'},
-  {id: 2, text: '락토 베지터리언'},
-  {id: 3, text: '오보 베지테리언'},
-  {id: 4, text: '락토 오보 베지테리언'},
-  {id: 5, text: '페스코 베지테리언'},
-  {id: 6, text: '폴로 베지테리언'},
-  {id: 7, text: '플렉시테리언'},
-];
 
 const Pages = () => {
   const [clickAvaliable, setClickAvaliable] = useState(false);
@@ -47,16 +39,15 @@ const Pages = () => {
   const [jobTypeModal, setJobTypeModal] = useState(false);
   const [detailJobTypeModal, setDetailJobTypeModal] = useState(false);
 
-  // const [birthday, setBirthday] = useState('');
   const [birthday, setBirthday] = useState(undefined);
   const [birthdayDateFormat, setBirthdayDateFormat] = useState(new Date());
-  // const [gender, setGender] = useState('');
+
   const [gender, setGender] = useState(undefined);
-  // const [country, setCountry] = useState('');
+
   const [country, setCountry] = useState(undefined);
-  // const [jobType, setJobType] = useState('');
+
   const [jobType, setJobType] = useState(undefined);
-  // const [detailJobType, setDetailJobType] = useState('');
+
   const [detailJobType, setDetailJobType] = useState(undefined);
 
   const navigation = useNavigation();
@@ -76,8 +67,6 @@ const Pages = () => {
     getJobList();
   }, []);
 
-  // jobType이 정해지면 getDetailJobList 받아오기
-  // jobList 가 변하면 기존에 있던 detailJobList는 초기화 되어야한다
   useEffect(() => {
     getDetailJobList(jobType);
     setDetailJobType(undefined);
@@ -97,7 +86,6 @@ const Pages = () => {
     }
   }, [birthdayDateFormat, birthdayModal]);
 
-  // 다음 버튼 열기
   useEffect(() => {
     if (birthday && gender && country && jobType && detailJobType) {
       setClickAvaliable(true);
@@ -113,8 +101,6 @@ const Pages = () => {
   };
 
   const handleOnChangeDate = (event, date, setModal, setSelected) => {
-    // 안드로이드하고 ios하고 behavior가 다름
-
     if (Platform.OS === 'android') {
       setModal(false);
 
@@ -247,62 +233,71 @@ const Pages = () => {
           }}
         />
       </ButtonWrapper>
-      {/* 
-      <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      /> */}
 
       {/* <Bottom */}
-      <BottomSheet
-        modalVisible={genderModal}
-        setModalVisible={setGenderModal}
-        title="성별"
-        data={[
-          {id: '남자', text: '남자'},
-          {id: '여자', text: '여자'},
-        ]}
-        selected={gender}
-        setSelected={setGender}
-        // setValue={onSelectEvent2}
-        height={200}
-      />
-      <BottomSheet
-        modalVisible={countryModal}
-        setModalVisible={setCountryModal}
-        title="국적"
-        data={countryList}
-        selected={country}
-        setSelected={setCountry}
-        // setValue={onSelectEvent2}
-        height={200}
-      />
-      <BottomSheet
-        modalVisible={jobTypeModal}
-        setModalVisible={setJobTypeModal}
-        title="직종 분류"
-        data={jobList}
-        selected={jobType}
-        // setSelected={setJobType}
-        setSelected={handleSelectJobType}
-        // setValue={onSelectEvent2}
-        height={200}
-      />
-      <BottomSheet
-        modalVisible={detailJobTypeModal}
-        setModalVisible={setDetailJobTypeModal}
-        title="상세 직종"
-        data={detailJobList}
-        selected={detailJobType}
-        setSelected={setDetailJobType}
-        // setValue={onSelectEvent2}
-        height={200}
-      />
+
+      <BottomSheetRegisterInfo2
+        show={genderModal}
+        onDismiss={() => {
+          setGenderModal(false);
+        }}
+        enableBackDropDismiss>
+        <BottomSheetChildrenComponent
+          title={'성별'}
+          data={[
+            {id: '남자', text: '남자'},
+            {id: '여자', text: '여자'},
+          ]}
+          selected={gender}
+          setSelected={setGender}
+          setModalVisible={setGenderModal}
+        />
+      </BottomSheetRegisterInfo2>
+
+      <BottomSheetRegisterInfo2
+        show={countryModal}
+        onDismiss={() => {
+          setCountryModal(false);
+        }}
+        enableBackDropDismiss>
+        <BottomSheetChildrenComponent
+          title={'국적'}
+          data={countryList}
+          selected={country}
+          setSelected={setCountry}
+          setModalVisible={setCountryModal}
+        />
+      </BottomSheetRegisterInfo2>
+
+      <BottomSheetRegisterInfo2
+        show={jobTypeModal}
+        onDismiss={() => {
+          setJobTypeModal(false);
+        }}
+        enableBackDropDismiss>
+        <BottomSheetChildrenComponent
+          title={'직종 분류'}
+          data={jobList}
+          selected={jobType}
+          setSelected={handleSelectJobType}
+          setModalVisible={setJobTypeModal}
+        />
+      </BottomSheetRegisterInfo2>
+
+      <BottomSheetRegisterInfo2
+        show={detailJobTypeModal}
+        onDismiss={() => {
+          setDetailJobTypeModal(false);
+        }}
+        enableBackDropDismiss>
+        <BottomSheetChildrenComponent
+          title={'상세 직종'}
+          data={detailJobList}
+          selected={detailJobType}
+          setSelected={setDetailJobType}
+          setModalVisible={setDetailJobTypeModal}
+        />
+      </BottomSheetRegisterInfo2>
       <ModalCalendar
         modalVisible={birthdayModal}
         setModalVisible={setBirthdayModal}
@@ -356,7 +351,6 @@ const ButtonWrapper = styled(LinearGradient)`
     } else {
       return css`
         bottom: 24px;
-        /* bottom: 1px; */
       `;
     }
   }}
@@ -379,3 +373,74 @@ const Wrap2 = styled.View`
   display: flex;
   flex-direction: column-reverse;
 `;
+
+const BottomSheetChildrenComponent = ({
+  title,
+  data,
+  setSelected,
+  setModalVisible,
+  selected,
+}) => {
+  return (
+    <>
+      <>
+        <BottomSheetTitleView>
+          <BottomSheetTitle>{title}</BottomSheetTitle>
+          {/* {false && <BottomSheetDecs>랄랄라</BottomSheetDecs>} */}
+        </BottomSheetTitleView>
+
+        <FlatList
+          data={data}
+          scrollEnabled={true}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => (
+            <ContentItemContainer
+              onPress={() => {
+                setSelected(item.id);
+
+                setTimeout(() => {
+                  setModalVisible(false);
+                }, 250);
+              }}>
+              {selected === item.id ? (
+                <ContentItemBox>
+                  <ContentItemText>{item.text}</ContentItemText>
+                  <CheckedIcon />
+                </ContentItemBox>
+              ) : (
+                <ContentItemText>{item.text}</ContentItemText>
+              )}
+            </ContentItemContainer>
+          )}
+        />
+      </>
+    </>
+  );
+};
+
+const BottomSheetTitleView = styled.View`
+  width: 100%;
+  padding: 0px 24px;
+`;
+const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
+  margin-bottom: 6px;
+`;
+
+const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+`;
+
+const ContentItemContainer = styled.Pressable`
+  width: ${Dimensions.get('screen').width}px;
+  height: 60px;
+  padding: 19px 24px;
+  padding-left: 40px;
+`;
+
+const ContentItemBox = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;

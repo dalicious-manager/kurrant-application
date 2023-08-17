@@ -15,8 +15,8 @@ const useUpdateRegisterInfo = () => {
   //     "favoriteCountryFood": "한국,일본",
   //     "allergyInfo":"새우,대두,밀,아황산류",
   //     "allergyInfoEtc":"감성돔",
-  //     "isBegan": false,
-  //     "beganLevel": 0,
+  //     "isVegan": false,
+  //     "veganLevel": 0,
   //     "isProtein" : true,
   //     "proteinFrequency":0,
   //     "userDefaultInfo":{
@@ -44,8 +44,8 @@ const useUpdateRegisterInfo = () => {
   //     drinkCount: 1,
   //     favoriteCountryFood: "중국,멕시코,프랑스,인도",
   //     allergyInfo: "우유,호두",
-  //     isBegan: true,
-  //     beganLevel: 3,
+  //     isVegan: true,
+  //     veganLevel: 3,
   //     isProtein: true,
   //     proteinFrequency: 2,
   //     userDefaultInfo: {

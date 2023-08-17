@@ -110,13 +110,7 @@ const Container = styled.Pressable`
 
 const AbsoluteView = styled.View`
   position: absolute;
-  /* top: 0; */
-  /* right: 0; */
 `;
-
-// const PhotoImage = styled.Image`
-
-// `;
 
 const PhotoImage = styled.Image`
   width: 100%;

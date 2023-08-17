@@ -17,27 +17,20 @@ import LinearGradient from 'react-native-linear-gradient';
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE5';
 
 const Pages = () => {
-  //   const [clickAvaliable, setClickAvaliable] = useState(false);
-
   const navigation = useNavigation();
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
   const [clickAvaliable, setClickAvaliable] = useState(false);
   // yes: 1 no: 2
   const [yesOrNo, setYesOrNo] = useState(0);
-  // 두번째 아이디
+
   const [proteinFrequency, setProteinFrequency] = useState(undefined);
-  // const [secondQuestionOpen, setSecondQuestionOpen] = useState(false)
-
-  // yesOrNo값이 1이면 secondQu
-
-  ///
 
   useEffect(() => {
     if (yesOrNo === 2) {
       // 아니오거나
       setClickAvaliable(true);
     } else {
-      // 예 이고 beganLeve이 있을떄 열림
+      // 예 이고 veganLeve이 있을떄 열림
 
       if (proteinFrequency) {
         setClickAvaliable(true);
@@ -45,33 +38,16 @@ const Pages = () => {
         setClickAvaliable(false);
       }
     }
-
-    // if(){
-
-    // }
   }, [yesOrNo, setClickAvaliable, proteinFrequency]);
 
   const handlePress = () => {
     if (yesOrNo === 2) {
-      // began
-
-      console.log({
-        ...finalRegister,
-        isProtein: false,
-        proteinFrequency: 0,
-      });
       setFinalRegister({
         ...finalRegister,
         isProtein: false,
         proteinFrequency: 0,
       });
     } else {
-      console.log({
-        ...finalRegister,
-        isProtein: true,
-        proteinFrequency: proteinFrequency,
-      });
-
       setFinalRegister({
         ...finalRegister,
         isProtein: yesOrNo === 1 ? true : false,
@@ -159,16 +135,6 @@ const Pages = () => {
           }}
         />
       </ButtonWrapper>
-
-      {/* <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      /> */}
     </Container>
   );
 };
@@ -176,7 +142,7 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  /* padding: 35px 20px; */
+
   padding: 0px 24px;
   align-items: center;
   background-color: #ffffff;
@@ -184,7 +150,7 @@ const Container = styled.View`
 
 const ScrollViewContainer = styled.ScrollView`
   width: 100%;
-  /* height: 90%; */
+
   background-color: #ffffff;
 `;
 
@@ -207,11 +173,6 @@ const ButtonContainer = styled.View`
   align-items: center;
 `;
 
-// const ButtonNext = styled(Button)`
-//   position: relative;
-//   bottom: 35px;
-// `;
-
 const ButtonWrapper = styled(LinearGradient)`
   position: relative;
   ${() => {
@@ -222,7 +183,6 @@ const ButtonWrapper = styled(LinearGradient)`
     } else {
       return css`
         bottom: 24px;
-        /* bottom: 1px; */
       `;
     }
   }}
@@ -232,7 +192,4 @@ const ButtonWrapper = styled(LinearGradient)`
   align-items: center;
 `;
 
-const ButtonNext = styled(Button)`
-  /* position: relative;
-  bottom: 35px; */
-`;
+const ButtonNext = styled(Button)``;

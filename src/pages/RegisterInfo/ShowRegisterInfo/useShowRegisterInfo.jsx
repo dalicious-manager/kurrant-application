@@ -4,6 +4,7 @@ import {getStorage, removeItemFromStorage} from '../../../utils/asyncStorage';
 import {isTimeNumberDifferenceLarger} from '../../../utils/dateFormatter';
 import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
+import {PAGE_NAME as RegisterInfoPage6PageName} from '~pages/RegisterInfo/Page6';
 
 const useShowRegisterInfo = () => {
   // 회원 정보 입력 홈 화면
@@ -46,6 +47,7 @@ const useShowRegisterInfo = () => {
   useEffect(() => {
     if (shouldOpenRegister) {
       navigation.navigate(RegisterInfoStartPageName);
+      // navigation.navigate(RegisterInfoPage6PageName);
     }
   }, [shouldOpenRegister]);
 

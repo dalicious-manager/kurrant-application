@@ -7,12 +7,10 @@ import {useEffect, useState} from 'react';
 
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
-import Image from '~components/Image';
+
 import Typography from '~components/Typography';
 
 import {PAGE_NAME as HomeMainPageName} from '~pages/Main/Bnb/Home/Main';
-
-import {RegisterComplete} from '~assets/images/RegisterInfo/RegisterComplete.png';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_FINISH';
 
@@ -71,19 +69,17 @@ const Container = styled.View`
   align-items: center;
 
   background-color: #ffffff;
-  /* background-color: #ba4444; */
+
   flex-direction: column;
 `;
 
 const FlexFiller = styled.View`
   flex: ${({flex}) => flex};
-  /* background-color: ${({bgColor}) => bgColor}; */
+
   background-color: '#ffffff';
 `;
 
 const Wrap2 = styled.View`
-  /* height: ${() => `${Dimensions.get('screen').height * (315 * 812)}px`}; */
-
   flex: 315;
 
   display: flex;
@@ -94,7 +90,7 @@ const Wrap2 = styled.View`
 
 const ButtonNext = styled(Button)`
   position: absolute;
-  /* position: relative; */
+
   bottom: 35px;
 `;
 

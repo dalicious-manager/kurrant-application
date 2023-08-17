@@ -38,8 +38,8 @@ const Pages = ({route}) => {
       setImageLoading(true);
       await Image.getSize(
         params.isFounders
-          ? 'https://asset.kurrant.co/img/common/foundersmembership.png'
-          : 'https://asset.kurrant.co/img/common/kurrantmembership.png',
+          ? 'https://admin.dalicious.co/img/foundersmembership.png'
+          : 'https://admin.dalicious.co/img/kurrantmembership.png',
         (w, h) => {
           setHeight(h * (width / w));
         },
