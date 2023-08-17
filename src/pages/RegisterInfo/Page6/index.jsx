@@ -124,8 +124,7 @@ const Pages = () => {
     const birthDay = birthday.split('. ')[2];
 
     const pickJob = jobType => {
-      jobList.filter(v => v.id === jobType);
-      return jobList[0].text;
+      return jobList.find(v => v.id === jobType)?.text;
     };
 
     setFinalRegister({
@@ -280,6 +279,7 @@ const Pages = () => {
           data={jobList}
           selected={jobType}
           setSelected={handleSelectJobType}
+          jobList={jobList}
           setModalVisible={setJobTypeModal}
         />
       </BottomSheetRegisterInfo2>
