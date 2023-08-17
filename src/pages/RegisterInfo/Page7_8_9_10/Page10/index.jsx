@@ -8,7 +8,6 @@ import {useEffect, useState} from 'react';
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoFinishPageName} from '../../Finish';
-// import {PAGE_NAME as RegisterInfoPage10PageName} from '../Page10';
 
 import useGetRegisterInfo from '../../../../biz/useRegisterInfo/getRegisterIist/hook';
 
@@ -70,8 +69,6 @@ const Pages = () => {
 
     // 최종 제출
 
-    console.log('최종 제출 확인하기');
-
     await updateRegisterInfo({
       ...finalRegister,
 
@@ -130,10 +127,102 @@ const Pages = () => {
     //   {},
     // );
 
+    //
+    const succeeded = {
+      allergyInfo: '우유,복숭아',
+      allergyInfoEtc: '나 까다로운 사람이야~!',
+      beganLevel: 3,
+      breakfastCount: 3,
+      drinkCount: 1,
+      exerciseCount: 1,
+      favoriteCountryFood: '중국',
+      isBegan: true,
+      isProtein: true,
+      midnightSnackCount: 1,
+      proteinFrequency: 2,
+      userDefaultInfo: {
+        birthDay: '17',
+        birthMonth: '08',
+        birthYear: '1993',
+        country: '대한민국',
+        detailJobType: '경영',
+        gender: 1,
+        jobType: '경영·사무·금융·보험직',
+      },
+      userSelectTestDataList: [
+        {
+          selectedFoodId: '1,2,4',
+          unselectedFoodId: '3,5,6,7,8,9,10,11,12,13,14',
+        },
+        {selectedFoodId: '6,11,24', unselectedFoodId: '5,10'},
+        {selectedFoodId: '3,8,6', unselectedFoodId: '4,5,9'},
+      ],
+    };
+    //
+    const failed = {
+      allergyInfo: '',
+      beganLevel: 0,
+      breakfastCount: 0,
+      drinkCount: 1,
+      exerciseCount: 1,
+      favoriteCountryFood: '한국',
+      isBegan: false,
+      isProtein: false,
+      midnightSnackCount: 1,
+      proteinFrequency: 0,
+      userDefaultInfo: {
+        birthDay: '17',
+        birthMonth: '08',
+        birthYear: '1998',
+        country: '대한민국',
+        detailJobType: '공학기술',
+        gender: 1,
+        jobType: '경영·사무·금융·보험직',
+      },
+      userSelectTestDataList: [
+        {
+          selectedFoodId: '1,2,4',
+          unselectedFoodId: '3,5,6,7,8,9,10,11,12,13,14',
+        },
+        {selectedFoodId: '5,11,6', unselectedFoodId: '10,24'},
+        {selectedFoodId: '4,6,8', unselectedFoodId: '3,5,9'},
+        {selectedFoodId: '9,10,11', unselectedFoodId: '8,19'},
+      ],
+    };
+
+    const failed2 = {
+      allergyInfo: '',
+      beganLevel: 0,
+      breakfastCount: 1,
+      drinkCount: 1,
+      exerciseCount: 1,
+      favoriteCountryFood: '중국',
+      isBegan: false,
+      isProtein: false,
+      midnightSnackCount: 0,
+      proteinFrequency: 0,
+      userDefaultInfo: {
+        birthDay: '17',
+        birthMonth: '08',
+        birthYear: '2007',
+        country: '대한민국',
+        detailJobType: '공학기술',
+        gender: 1,
+        jobType: '경영·사무·금융·보험직',
+      },
+      userSelectTestDataList: [
+        {
+          selectedFoodId: '1,5,7',
+          unselectedFoodId: '2,3,4,6,8,9,10,11,12,13,14',
+        },
+        {selectedFoodId: '5,10,24', unselectedFoodId: '6,11'},
+        {selectedFoodId: '3,4,8', unselectedFoodId: '5,6,9'},
+        {selectedFoodId: '8,9,11', unselectedFoodId: '10,19'},
+      ],
+    };
+
     navigation.navigate(RegisterInfoFinishPageName);
   };
-
-  // ui가 없을 경우 3초정도 skieleton을 보여주고 없다고 얘기해야 된다
 
   const [isDataListNull, setIsDataListNull] = useState(false);
 

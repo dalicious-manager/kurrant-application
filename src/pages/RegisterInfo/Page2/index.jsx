@@ -48,10 +48,6 @@ const Pages = () => {
   }, [page2Input]);
 
   const handlePress = () => {
-    console.log({
-      ...finalRegister,
-      favoriteCountryFood: page2Input.join(','),
-    });
     setFinalRegister({
       ...finalRegister,
       favoriteCountryFood: page2Input.join(','),
@@ -249,7 +245,6 @@ const Pages = () => {
         halfButtonTitle="확인"
         halfButtonType="yellow"
         onPressEventHalf={() => setModalVisible(false)}
-        // onPressEvent2={() => {}}
       />
 
       <ButtonWrapper
@@ -278,7 +273,7 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  /* padding: 35px 20px; */
+
   padding: 15px 20px;
   padding-bottom: 0px;
   position: relative;
@@ -288,7 +283,7 @@ const Container = styled.View`
 
 const ScrollViewContainer = styled.ScrollView`
   width: 100%;
-  /* height: 90%; */
+
   background-color: #ffffff;
 `;
 
@@ -302,7 +297,6 @@ const ButtonWrapper = styled(LinearGradient)`
     } else {
       return css`
         bottom: 24px;
-        /* bottom: 1px; */
       `;
     }
   }}
@@ -312,10 +306,7 @@ const ButtonWrapper = styled(LinearGradient)`
   align-items: center;
 `;
 
-const ButtonNext = styled(Button)`
-  /* position: relative;
-  bottom: 35px; */
-`;
+const ButtonNext = styled(Button)``;
 
 const SkeletonWrap = styled.View``;
 

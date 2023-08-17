@@ -41,8 +41,6 @@ const Pages = () => {
     getFoodImageList();
   }, []);
 
-  // 뒤로 돌아올떄 체크된 그림들 다시 보이게 하기
-
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -54,10 +52,6 @@ const Pages = () => {
   }, [selectedFoodIdPage9]);
 
   const navigation = useNavigation();
-
-  // useEffect(() => {
-  //   console.log(finalRegister);
-  // }, [finalRegister]);
 
   const handlePress = () => {
     const unselectedList = makeUnselectedFoodIdList(
@@ -80,8 +74,6 @@ const Pages = () => {
     navigation.navigate(RegisterInfoPage10PageName);
   };
 
-  // ui가 없을 경우 3초정도 skieleton을 보여주고 없다고 얘기해야 된다
-
   const [isDataListNull, setIsDataListNull] = useState(false);
 
   useEffect(() => {
@@ -89,8 +81,6 @@ const Pages = () => {
       setIsDataListNull(true);
     }, 3000);
   }, []);
-
-  // skeleton ui 네모
 
   const skeletonUIImageWidth =
     (Dimensions.get('screen').width - 2 * 24 - 26) / 3;
@@ -277,15 +267,14 @@ export default Pages;
 
 const Container = styled.View`
   flex: 1;
-  /* padding: 35px 20px; */
-  /* padding: 15px 20px; */
+
   align-items: center;
   background-color: #ffffff;
 `;
 
 const ScrollViewContainer = styled.ScrollView`
   width: 100%;
-  /* height: 90%; */
+
   background-color: #ffffff;
 `;
 
@@ -314,10 +303,5 @@ const ButtonWrapper = styled(LinearGradient)`
 `;
 
 const ButtonNext = styled(Button)``;
-
-// const ButtonNext = styled(Button)`
-//   position: relative;
-//   bottom: 35px;
-// `;
 
 const SkeletonWrap = styled.View``;

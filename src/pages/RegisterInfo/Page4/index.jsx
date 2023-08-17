@@ -1,4 +1,4 @@
-import {Dimensions, Text} from 'react-native';
+import {Dimensions, FlatList, Text} from 'react-native';
 import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -10,12 +10,13 @@ import Typography from '~components/Typography';
 
 import {PAGE_NAME as RegisterInfoPage5PageName} from '../Page5';
 
-import BottomSheet from '~components/BottomSheet';
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import YesOrNoButton from '../components/button/Page4_5/YesOrNoButton';
 import SelectInputBox from '../components/SelectInputBox/SelectInputBox';
 import LinearGradient from 'react-native-linear-gradient';
+import BottomSheetRegisterInfo2 from '../../../components/BottomSheetRegisterInfo2/component';
+import CheckedIcon from '../../../assets/icons/BottomSheet/Checked.svg';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
 
@@ -44,28 +45,18 @@ const Pages = () => {
 
   const navigation = useNavigation();
 
-  // 예: 일떄는 채식주의자 유형 필요함, 아니오:
-
-  //모달 열기
   useEffect(() => {
     if (yesOrNo === 1) {
-      // setBottomModalOpen(true);
       setShowVeganSelect(true);
     } else {
       setShowVeganSelect(false);
-      // setBottomModalOpen(false);
     }
   }, [yesOrNo, setBottomModalOpen, setShowVeganSelect]);
 
-  // 버튼 열리기
-
   useEffect(() => {
     if (yesOrNo === 2) {
-      // 아니오거나
       setClickAvaliable(true);
     } else {
-      // 예 이고 beganLeve이 있을떄 열림
-
       if (beganLevel) {
         setClickAvaliable(true);
       } else {
@@ -74,38 +65,18 @@ const Pages = () => {
     }
   }, [yesOrNo, setClickAvaliable, beganLevel]);
 
-  // useEffect(() => {
-  //   console.log('페이지 4 ');
-  //   console.log(finalRegister);
-  // }, [finalRegister]);
-
   const handleSelectBottomModal = id => {
     setBeganLevel(id);
   };
 
   const handlePress = () => {
-    // 예 일때 아니오일떄
-
     if (yesOrNo === 2) {
-      // began
-
-      console.log({
-        ...finalRegister,
-        isBegan: false,
-        beganLevel: 0,
-      });
       setFinalRegister({
         ...finalRegister,
         isBegan: false,
         beganLevel: 0,
       });
     } else {
-      console.log({
-        ...finalRegister,
-        isBegan: true,
-        beganLevel: beganLevel,
-      });
-
       setFinalRegister({
         ...finalRegister,
         isBegan: yesOrNo === 1 ? true : false,
@@ -146,7 +117,6 @@ const Pages = () => {
           })}
         </ButtonContainer>
 
-        {/* 예일떄 여기 보이게 하기 */}
         {showVeganSelect && (
           <Wrap3>
             <SelectInputBox
@@ -186,26 +156,22 @@ const Pages = () => {
         />
       </ButtonWrapper>
 
-      {/* <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      /> */}
       {/* <Bottom */}
-      <BottomSheet
-        modalVisible={bottomModalOpen}
-        setModalVisible={setBottomModalOpen}
-        title="채식 정보 입력"
-        data={dataList}
-        selected={beganLevel}
-        setSelected={handleSelectBottomModal}
-        // setValue={onSelectEvent2}
-        height={200}
-      />
+
+      <BottomSheetRegisterInfo2
+        show={bottomModalOpen}
+        onDismiss={() => {
+          setBottomModalOpen(false);
+        }}
+        enableBackDropDismiss>
+        <BottomSheetChildrenComponent
+          title={'채식 정보 입력'}
+          data={dataList}
+          selected={beganLevel}
+          setSelected={handleSelectBottomModal}
+          setModalVisible={setBottomModalOpen}
+        />
+      </BottomSheetRegisterInfo2>
     </Container>
   );
 };
@@ -221,7 +187,7 @@ const Container = styled.View`
 
 const ScrollViewContainer = styled.ScrollView`
   width: 100%;
-  /* height: 90%; */
+
   background-color: #ffffff;
 `;
 
@@ -253,7 +219,6 @@ const ButtonWrapper = styled(LinearGradient)`
     } else {
       return css`
         bottom: 24px;
-        /* bottom: 1px; */
       `;
     }
   }}
@@ -263,15 +228,7 @@ const ButtonWrapper = styled(LinearGradient)`
   align-items: center;
 `;
 
-const ButtonNext = styled(Button)`
-  /* position: relative;
-  bottom: 35px; */
-`;
-
-// const ButtonNext = styled(Button)`
-//   position: relative;
-//   bottom: 35px;
-// `;
+const ButtonNext = styled(Button)``;
 
 const TitleWrap = styled.View`
   width: 100%;
@@ -292,3 +249,74 @@ const ButtonContainer = styled.View`
   align-items: center;
   margin-bottom: 45px;
 `;
+
+const BottomSheetChildrenComponent = ({
+  title,
+  data,
+  setSelected,
+  setModalVisible,
+  selected,
+}) => {
+  return (
+    <>
+      <>
+        <BottomSheetTitleView>
+          <BottomSheetTitle>{title}</BottomSheetTitle>
+          {/* {false && <BottomSheetDecs>랄랄라</BottomSheetDecs>} */}
+        </BottomSheetTitleView>
+
+        <FlatList
+          data={data}
+          scrollEnabled={true}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => (
+            <ContentItemContainer
+              onPress={() => {
+                setSelected(item.id);
+
+                setTimeout(() => {
+                  setModalVisible(false);
+                }, 250);
+              }}>
+              {selected === item.id ? (
+                <ContentItemBox>
+                  <ContentItemText>{item.text}</ContentItemText>
+                  <CheckedIcon />
+                </ContentItemBox>
+              ) : (
+                <ContentItemText>{item.text}</ContentItemText>
+              )}
+            </ContentItemContainer>
+          )}
+        />
+      </>
+    </>
+  );
+};
+
+const BottomSheetTitleView = styled.View`
+  width: 100%;
+  padding: 0px 24px;
+`;
+const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
+  margin-bottom: 6px;
+`;
+
+const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
+`;
+
+const ContentItemContainer = styled.Pressable`
+  width: ${Dimensions.get('screen').width}px;
+  height: 60px;
+  padding: 19px 24px;
+  padding-left: 40px;
+`;
+
+const ContentItemBox = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;

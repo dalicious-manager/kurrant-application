@@ -22,8 +22,6 @@ import LinearGradient from 'react-native-linear-gradient';
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE3';
 
 const Pages = () => {
-  // const [clickAvaliable, setClickAvaliable] = useState(false);
-
   const [finalRegister, setFinalRegister] = useAtom(finalRegisterAtom);
 
   const [value, setValue] = useState(undefined);
@@ -39,14 +37,6 @@ const Pages = () => {
   }, []);
 
   const [page3Input, setPage2Input] = useState([]);
-
-  // useEffect(() => {
-  //   if (page3Input.length > 0) {
-  //     setClickAvaliable(true);
-  //   } else {
-  //     setClickAvaliable(false);
-  //   }
-  // }, [page3Input]);
 
   const handlePress = () => {
     // 기타 내용이 있을경우 없을 경우
@@ -73,12 +63,7 @@ const Pages = () => {
 
   return (
     <Container>
-      {/* <ScrollViewContainer showsVerticalScrollIndicator={false}> */}
-
-      <KeyboardViewContainer
-        showsVerticalScrollIndicator={false}
-        // extraHeight={120}
-      >
+      <KeyboardViewContainer showsVerticalScrollIndicator={false}>
         <ViewContainer>
           <ProgressBar progress={3} />
 
@@ -104,7 +89,6 @@ const Pages = () => {
                       marginTop={6}
                       marginBottom={6}
                       marginRight={4}
-                      // marginLeft={4}
                     />
                     <SkeletonPlaceholder.Item
                       width={100}
@@ -281,15 +265,6 @@ const Pages = () => {
           }}
         />
       </ButtonWrapper>
-
-      {/* <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      /> */}
     </Container>
   );
 };
@@ -300,36 +275,22 @@ const Container = styled.View`
   padding: 0px 12px;
   align-items: center;
   background-color: #ffffff;
-  /* border: 1px solid black; */
 `;
 
 const KeyboardViewContainer = styled(KeyboardAwareScrollView)`
-  /* flex: 1; */
-  /* padding: 0px 12px; */
   background-color: #ffffff;
   position: relative;
-  /* border: 1px solid black; */
 `;
 
 const ViewContainer = styled.View`
-  /* padding: 0 14px; */
   width: 100%;
-  /* height: 90%; */
+
   background-color: #ffffff;
 
   margin-bottom: 70px;
 `;
 
 const SkeletonWrap = styled.View``;
-
-// const ButtonNext = styled(Button)`
-//   width: ${() => {
-//     return `${Dimensions.get('screen').width - 48}px`;
-//   }};
-
-//   position: relative;
-//   bottom: 35px;
-// `;
 
 const ButtonWrapper = styled(LinearGradient)`
   position: relative;
@@ -341,7 +302,6 @@ const ButtonWrapper = styled(LinearGradient)`
     } else {
       return css`
         bottom: 24px;
-        /* bottom: 1px; */
       `;
     }
   }}
@@ -351,10 +311,7 @@ const ButtonWrapper = styled(LinearGradient)`
   align-items: center;
 `;
 
-const ButtonNext = styled(Button)`
-  /* position: relative;
-  bottom: 35px; */
-`;
+const ButtonNext = styled(Button)``;
 
 const TitleWrap = styled.View`
   margin-left: 5px;

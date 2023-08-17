@@ -38,8 +38,6 @@ const Pages = () => {
   }, [page1Input]);
 
   const handlePress = () => {
-    console.log('go to page2');
-    console.log({...finalRegister, ...page1Input});
     setFinalRegister({...finalRegister, ...page1Input});
 
     navigation.navigate(RegisterInfoPage2PageName);
@@ -142,7 +140,7 @@ const Container = styled.View`
   flex: 1;
   padding: 15px 20px;
   padding-bottom: 0px;
-  /* padding-bottom: 35px; */
+
   align-items: center;
 
   position: relative;
@@ -152,7 +150,7 @@ const Container = styled.View`
 
 const ScrollViewContainer = styled.ScrollView`
   width: 100%;
-  /* height: 90%; */
+
   background-color: #ffffff;
 `;
 
@@ -171,7 +169,6 @@ const ButtonWrapper = styled(LinearGradient)`
     } else {
       return css`
         bottom: 24px;
-        /* bottom: 1px; */
       `;
     }
   }}
@@ -181,10 +178,7 @@ const ButtonWrapper = styled(LinearGradient)`
   align-items: center;
 `;
 
-const ButtonNext = styled(Button)`
-  /* position: relative;
-  bottom: 35px; */
-`;
+const ButtonNext = styled(Button)``;
 
 const TitleWrap = styled.View`
   width: 100%;

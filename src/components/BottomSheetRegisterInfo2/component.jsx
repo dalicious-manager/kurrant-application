@@ -1,13 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  Easing,
-  Modal,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import {Easing, Pressable} from 'react-native';
 import {Animated, StyleSheet} from 'react-native';
 import {Dimensions} from 'react-native';
 import {
@@ -19,13 +11,14 @@ import styled, {useTheme} from 'styled-components';
 
 import {percentStringToNum} from '../../utils/stringFormatter';
 import {Portal} from 'react-native-paper';
+import {Platform} from 'react-native';
 
-const headerHeight = 28;
+const headerHeight = Platform.OS === 'android' ? 34 : 28;
 const BottomSheetHandleWidth = 30;
 const BackgroundOpacity = 0.68;
+const pageY = 91;
 
 const BottomSheetRegisterInfo2 = ({
-  pageY = 91,
   show,
   onDismiss,
   children,
@@ -41,7 +34,7 @@ const BottomSheetRegisterInfo2 = ({
 
   const deviceWidth = Dimensions.get('window').width;
 
-  const snapPoints = useMemo(() => ['35%', '85%'], []);
+  const snapPoints = useMemo(() => ['40%', '85%'], []);
 
   const [snapPoint, setSnapPoint] = useState(
     snapPoints.map(v => percentStringToNum(v))[0],
@@ -239,7 +232,9 @@ const BackPressable = styled.View`
   /* border: 1px solid black; */
 `;
 
-const HeaderView = styled.View``;
+const HeaderView = styled.View`
+  /* border: 1px solid black; */
+`;
 
 const BottomSheetHandle = styled.View``;
 

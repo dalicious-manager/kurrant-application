@@ -4,17 +4,13 @@ import styled, {css} from 'styled-components';
 import Button from '../../../components/Button';
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
-import {FormProvider, useForm} from 'react-hook-form';
 
 import Typography from '~components/Typography';
-// import BottomSheet from '~components/BottomSheet';
-import BottomSheetRegisterInfo from '~components/BottomSheetRegisterInfo';
 
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
 
-import RefTextInput from '~components/RefTextInput';
 import SelectInputBox from '../components/SelectInputBox/SelectInputBox';
 import ModalCalendar from '../../../components/ModalCalendar/ModalCalendar';
 import {toStringByFormatting} from '../../../utils/dateFormatter';
@@ -23,7 +19,7 @@ import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import LinearGradient from 'react-native-linear-gradient';
 import BottomSheetRegisterInfo2 from '../../../components/BottomSheetRegisterInfo2/component';
-// import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
+
 import CheckedIcon from '../../../assets/icons/BottomSheet/Checked.svg';
 import {Dimensions} from 'react-native';
 
@@ -43,16 +39,15 @@ const Pages = () => {
   const [jobTypeModal, setJobTypeModal] = useState(false);
   const [detailJobTypeModal, setDetailJobTypeModal] = useState(false);
 
-  // const [birthday, setBirthday] = useState('');
   const [birthday, setBirthday] = useState(undefined);
   const [birthdayDateFormat, setBirthdayDateFormat] = useState(new Date());
-  // const [gender, setGender] = useState('');
+
   const [gender, setGender] = useState(undefined);
-  // const [country, setCountry] = useState('');
+
   const [country, setCountry] = useState(undefined);
-  // const [jobType, setJobType] = useState('');
+
   const [jobType, setJobType] = useState(undefined);
-  // const [detailJobType, setDetailJobType] = useState('');
+
   const [detailJobType, setDetailJobType] = useState(undefined);
 
   const navigation = useNavigation();
@@ -72,8 +67,6 @@ const Pages = () => {
     getJobList();
   }, []);
 
-  // jobType이 정해지면 getDetailJobList 받아오기
-  // jobList 가 변하면 기존에 있던 detailJobList는 초기화 되어야한다
   useEffect(() => {
     getDetailJobList(jobType);
     setDetailJobType(undefined);
@@ -93,7 +86,6 @@ const Pages = () => {
     }
   }, [birthdayDateFormat, birthdayModal]);
 
-  // 다음 버튼 열기
   useEffect(() => {
     if (birthday && gender && country && jobType && detailJobType) {
       setClickAvaliable(true);
@@ -109,8 +101,6 @@ const Pages = () => {
   };
 
   const handleOnChangeDate = (event, date, setModal, setSelected) => {
-    // 안드로이드하고 ios하고 behavior가 다름
-
     if (Platform.OS === 'android') {
       setModal(false);
 
@@ -243,42 +233,26 @@ const Pages = () => {
           }}
         />
       </ButtonWrapper>
-      {/* 
-      <ButtonNext
-        size="full"
-        label="다음"
-        text={'BottomButtonSB'}
-        disabled={!clickAvaliable}
-        onPressEvent={() => {
-          handlePress();
-        }}
-      /> */}
 
       {/* <Bottom */}
-      <BottomSheetRegisterInfo
-        modalVisible={genderModal}
-        setModalVisible={setGenderModal}
-        title="성별"
-        data={[
-          {id: '남자', text: '남자'},
-          {id: '여자', text: '여자'},
-        ]}
-        selected={gender}
-        setSelected={setGender}
-        // setValue={onSelectEvent2}
-        height={200}
-      />
 
-      {/* <BottomSheetRegisterInfo
-        modalVisible={countryModal}
-        setModalVisible={setCountryModal}
-        title="국적"
-        data={countryList}
-        selected={country}
-        setSelected={setCountry}
-        // setValue={onSelectEvent2}
-        height={200}
-      /> */}
+      <BottomSheetRegisterInfo2
+        show={genderModal}
+        onDismiss={() => {
+          setGenderModal(false);
+        }}
+        enableBackDropDismiss>
+        <BottomSheetChildrenComponent
+          title={'성별'}
+          data={[
+            {id: '남자', text: '남자'},
+            {id: '여자', text: '여자'},
+          ]}
+          selected={gender}
+          setSelected={setGender}
+          setModalVisible={setGenderModal}
+        />
+      </BottomSheetRegisterInfo2>
 
       <BottomSheetRegisterInfo2
         show={countryModal}
@@ -288,34 +262,42 @@ const Pages = () => {
         enableBackDropDismiss>
         <BottomSheetChildrenComponent
           title={'국적'}
-          countryList={countryList}
+          data={countryList}
+          selected={country}
           setSelected={setCountry}
           setModalVisible={setCountryModal}
-          selected={country}
         />
       </BottomSheetRegisterInfo2>
 
-      <BottomSheetRegisterInfo
-        modalVisible={jobTypeModal}
-        setModalVisible={setJobTypeModal}
-        title="직종 분류"
-        data={jobList}
-        selected={jobType}
-        // setSelected={setJobType}
-        setSelected={handleSelectJobType}
-        // setValue={onSelectEvent2}
-        height={200}
-      />
-      <BottomSheetRegisterInfo
-        modalVisible={detailJobTypeModal}
-        setModalVisible={setDetailJobTypeModal}
-        title="상세 직종"
-        data={detailJobList}
-        selected={detailJobType}
-        setSelected={setDetailJobType}
-        // setValue={onSelectEvent2}
-        height={200}
-      />
+      <BottomSheetRegisterInfo2
+        show={jobTypeModal}
+        onDismiss={() => {
+          setJobTypeModal(false);
+        }}
+        enableBackDropDismiss>
+        <BottomSheetChildrenComponent
+          title={'직종 분류'}
+          data={jobList}
+          selected={jobType}
+          setSelected={handleSelectJobType}
+          setModalVisible={setJobTypeModal}
+        />
+      </BottomSheetRegisterInfo2>
+
+      <BottomSheetRegisterInfo2
+        show={detailJobTypeModal}
+        onDismiss={() => {
+          setDetailJobTypeModal(false);
+        }}
+        enableBackDropDismiss>
+        <BottomSheetChildrenComponent
+          title={'상세 직종'}
+          data={detailJobList}
+          selected={detailJobType}
+          setSelected={setDetailJobType}
+          setModalVisible={setDetailJobTypeModal}
+        />
+      </BottomSheetRegisterInfo2>
       <ModalCalendar
         modalVisible={birthdayModal}
         setModalVisible={setBirthdayModal}
@@ -369,7 +351,6 @@ const ButtonWrapper = styled(LinearGradient)`
     } else {
       return css`
         bottom: 24px;
-        /* bottom: 1px; */
       `;
     }
   }}
@@ -395,7 +376,7 @@ const Wrap2 = styled.View`
 
 const BottomSheetChildrenComponent = ({
   title,
-  countryList,
+  data,
   setSelected,
   setModalVisible,
   selected,
@@ -409,17 +390,15 @@ const BottomSheetChildrenComponent = ({
         </BottomSheetTitleView>
 
         <FlatList
-          data={countryList}
+          data={data}
           scrollEnabled={true}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
             <ContentItemContainer
               onPress={() => {
-                // setCountry(item.id);
                 setSelected(item.id);
 
                 setTimeout(() => {
-                  // setCountryModal(false);
                   setModalVisible(false);
                 }, 250);
               }}>
