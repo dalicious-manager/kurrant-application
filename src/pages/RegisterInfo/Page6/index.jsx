@@ -1,4 +1,4 @@
-import {Alert, Platform, Text} from 'react-native';
+import {Alert, Platform, ScrollView, Text} from 'react-native';
 import styled, {css} from 'styled-components';
 
 import Button from '../../../components/Button';
@@ -9,7 +9,7 @@ import {FormProvider, useForm} from 'react-hook-form';
 import Typography from '~components/Typography';
 // import BottomSheet from '~components/BottomSheet';
 import BottomSheetRegisterInfo from '~components/BottomSheetRegisterInfo';
-import BottomSheetRegisterInfo2 from '~components/BottomSheetRegisterInfo2';
+
 import ProgressBar from '~components/ProgressBar7';
 
 import {PAGE_NAME as RegisterInfoPage7PageName} from '../Page7_8_9_10/Page7';
@@ -22,6 +22,7 @@ import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hoo
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import LinearGradient from 'react-native-linear-gradient';
+import BottomSheetRegisterInfo2 from '../../../components/BottomSheetRegisterInfo2/component';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
@@ -275,7 +276,7 @@ const Pages = () => {
         height={200}
       /> */}
 
-      <BottomSheetRegisterInfo2
+      {/* <BottomSheetRegisterInfo
         modalVisible={countryModal}
         setModalVisible={setCountryModal}
         title="국적"
@@ -284,7 +285,23 @@ const Pages = () => {
         setSelected={setCountry}
         // setValue={onSelectEvent2}
         height={200}
-      />
+      /> */}
+
+      <BottomSheetRegisterInfo2
+        show={countryModal}
+        onDismiss={() => {
+          // console.log('골골골');
+          setCountryModal(false);
+        }}
+        enableBackDropDismiss>
+        <>
+          <BottomSheetTitleView>
+            <BottomSheetTitle>텍스트</BottomSheetTitle>
+            {false && <BottomSheetDecs>랄랄라</BottomSheetDecs>}
+          </BottomSheetTitleView>
+          <ScrollView contentContainerStyle={{marginBottom: 50}}></ScrollView>
+        </>
+      </BottomSheetRegisterInfo2>
 
       <BottomSheetRegisterInfo
         modalVisible={jobTypeModal}
@@ -382,4 +399,16 @@ const Wrap2 = styled.View`
   width: 50%;
   display: flex;
   flex-direction: column-reverse;
+`;
+
+const BottomSheetTitleView = styled.View`
+  width: 100%;
+  padding: 0px 24px;
+`;
+const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
+  margin-bottom: 6px;
+`;
+
+const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${({theme}) => theme.colors.grey[4]};
 `;

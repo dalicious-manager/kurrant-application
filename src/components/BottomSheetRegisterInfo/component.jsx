@@ -190,14 +190,14 @@ const BottomSheetRegisterInfo = props => {
                       onSelect(item.id, item.text);
                       onPressEvent(item.id);
                     }}>
-                    {selected === item.id ? (
+                    {/* {selected === item.id ? (
                       <ContentItemBox>
                         <ContentItemText>{item.text}</ContentItemText>
                         <CheckedIcon />
                       </ContentItemBox>
                     ) : (
                       <ContentItemText>{item.text}</ContentItemText>
-                    )}
+                    )} */}
                   </ContentItemContainer>
                 )}
                 keyExtractor={item => item.id.toString()}

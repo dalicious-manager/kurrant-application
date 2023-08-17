@@ -9,6 +9,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {ThemeProvider} from 'styled-components';
 import styled from 'styled-components/native';
+import {PaperProvider} from 'react-native-paper';
 
 import Screen from './screens';
 import Theme from './theme';
@@ -38,32 +39,36 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={Theme}>
-        <SafeAreaProvider>
-          <StatusBar />
-          {Config.NODE_ENV === 'dev' && <IsDevelop>개발서버 입니다.</IsDevelop>}
-          {Config.NODE_ENV === 'rel' && <IsDevelop>QA 서버입니다.</IsDevelop>}
-          <NavigationContainer
-            ref={navigationRef}
-            onReady={() => {
-              routeNameRef.current =
-                navigationRef.current.getCurrentRoute().name;
-            }}
-            onStateChange={async () => {
-              const previousRouteName = routeNameRef.current;
-              const currentRouteName =
-                navigationRef.current.getCurrentRoute().name;
+        <PaperProvider>
+          <SafeAreaProvider>
+            <StatusBar />
+            {Config.NODE_ENV === 'dev' && (
+              <IsDevelop>개발서버 입니다.</IsDevelop>
+            )}
+            {Config.NODE_ENV === 'rel' && <IsDevelop>QA 서버입니다.</IsDevelop>}
+            <NavigationContainer
+              ref={navigationRef}
+              onReady={() => {
+                routeNameRef.current =
+                  navigationRef.current.getCurrentRoute().name;
+              }}
+              onStateChange={async () => {
+                const previousRouteName = routeNameRef.current;
+                const currentRouteName =
+                  navigationRef.current.getCurrentRoute().name;
 
-              if (previousRouteName !== currentRouteName) {
-                await analytics().logScreenView({
-                  screen_name: currentRouteName,
-                  screen_class: currentRouteName,
-                });
-              }
-              routeNameRef.current = currentRouteName;
-            }}>
-            <Screen />
-          </NavigationContainer>
-        </SafeAreaProvider>
+                if (previousRouteName !== currentRouteName) {
+                  await analytics().logScreenView({
+                    screen_name: currentRouteName,
+                    screen_class: currentRouteName,
+                  });
+                }
+                routeNameRef.current = currentRouteName;
+              }}>
+              <Screen />
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </PaperProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

@@ -1,263 +1,232 @@
-import BottomSheet, {
-  BottomSheetFlatList,
-  BottomSheetModal,
-} from '@gorhom/bottom-sheet';
-import {useNavigation} from '@react-navigation/native';
-import {useAtom} from 'jotai';
-import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
+  Easing,
   Modal,
-  Animated,
-  TouchableWithoutFeedback,
-  Dimensions,
-  View,
-  PanResponder,
+  Pressable,
   Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import styled from 'styled-components/native';
+import {Animated, StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from 'react-native-gesture-handler';
 
-import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
-import {mainDimAtom} from '../../utils/store';
-import BalloonMessage from '../BalloonMessage';
-import Label from '../Label';
-import Typography from '../Typography';
+import styled, {useTheme} from 'styled-components';
 
-const screenHeight = Dimensions.get('screen').height;
+import {percentStringToNum} from '../../utils/stringFormatter';
+import {Portal} from 'react-native-paper';
 
-const BottomSheetSpot = props => {
-  const {
-    modalVisible,
-    setModalVisible,
-    title = '옵션 선택',
-    description = '',
-    data = {},
-    selected,
+const headerHeight = 28;
+const BottomSheetHandleWidth = 30;
 
-    setSelected,
-    onPressEvent = () => {},
+const BottomSheetRegisterInfo2 = ({
+  pageY = 91,
+  show,
+  onDismiss,
+  children,
+  enableBackDropDismiss,
+}) => {
+  const appTheme = useTheme();
 
-    booleanValue,
-    onPressEvent2 = () => {},
-  } = props;
-  //멀티 셀렉터시 이용
-  // const [selected, setSelected] = useState(new Map());
-  const [showDim, setShowDim] = useAtom(mainDimAtom);
+  const height = Dimensions.get('window').height - pageY;
 
-  const onSelect = useCallback(
-    async (id, text) => {
-      //멀티 셀렉터시 이용
-      // const newSelected = new Map(selected);
-      // newSelected.set(id, !selected.get(id));
-      if (setSelected) setSelected(id);
-      if (setValue) setValue(text);
+  const contentHeightMin = height * 0.16;
 
-      setTimeout(() => {
-        setModalVisible(false);
-      }, 400);
-    },
-    [setModalVisible, setSelected],
+  const offPoint = height * 0.18;
+
+  const deviceWidth = Dimensions.get('window').width;
+
+  const snapPoints = useMemo(() => ['35%', '85%'], []);
+
+  const [snapPoint, setSnapPoint] = useState(
+    snapPoints.map(v => percentStringToNum(v))[0],
   );
 
-  const panY = useRef(new Animated.Value(screenHeight)).current;
-  const [snap, setSnap] = useState(0);
-  const [y, setY] = useState(0);
-  const snapPoints = useMemo(() => ['40%', '70%', '90%'], []);
-  const [contentScroll, setContentScroll] = useState(true);
-  const [scrollStart, setScrollStart] = useState(0);
-  const [scrollEnd, setScrollEnd] = useState(10);
-  const [parentHeight, setParentHeight] = useState(0);
+  const bottomDepth = (height - contentHeightMin) * (1 - snapPoint);
 
-  const resetBottomSheet = Animated.timing(panY, {
-    toValue: 0,
-    duration: 50,
-    useNativeDriver: true,
-  });
-  const closeBottomSheet = Animated.timing(panY, {
-    toValue: screenHeight,
-    duration: 50,
-    useNativeDriver: true,
-  });
+  const contentHeight = (height - contentHeightMin) * snapPoint + headerHeight;
 
-  const handleSheetChange = useCallback(index => {
-    setSnap(index);
-  }, []);
-  const handleSnapPress = useCallback(index => {
-    setSnap(index);
-  }, []);
+  /////////////
 
-  useEffect(() => {
-    if (props.modalVisible) {
-      resetBottomSheet.start();
-    }
-  }, [props.modalVisible, resetBottomSheet]);
+  const bottomDepthRef = useRef(new Animated.Value(-height)).current;
+  const backgroundOpacityRef = useRef(new Animated.Value(0)).current;
 
-  const closeModal = () => {
-    closeBottomSheet.start(() => {
-      setModalVisible(false);
+  const moveBottomSheetWithAnimationTo = useCallback(toValue => {
+    return Animated.timing(bottomDepthRef, {
+      toValue: toValue,
+      duration: 400,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
     });
-  };
+  }, []);
 
-  const onLayout = event => {
-    const {height} = event.nativeEvent.layout;
-    setParentHeight(height);
-  };
+  const [open, setOpen] = useState(show);
 
   useEffect(() => {
-    console.log('data 확인');
-    console.log(data);
-  }, [data]);
+    if (show) {
+      setOpen(show);
+
+      moveBottomSheetWithAnimationTo(-bottomDepth).start();
+    } else {
+      moveBottomSheetWithAnimationTo(-height).start(() => {
+        setOpen(false);
+      });
+    }
+  }, [show]);
+
+  const onGesture = e => {
+    if (e.nativeEvent.translationY > 0) {
+      // console.log('아래로 pan(drag)');
+    } else {
+      // console.log('위로 pan(drag)');
+    }
+    bottomDepthRef.setValue(-e.nativeEvent.translationY - bottomDepth);
+  };
+
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    moveBottomSheetWithAnimationTo(-bottomDepth).start();
+  }, [count]);
+
+  const onGestureEnd = e => {
+    const y = e.nativeEvent.translationY;
+
+    if (bottomDepth + y > height - offPoint) {
+      moveBottomSheetWithAnimationTo(-height).start(() => {
+        onDismiss();
+      });
+    } else {
+      const yValue = height - bottomDepth - contentHeightMin - y;
+
+      const snapPointsPoints = snapPoints
+        .map(v => percentStringToNum(v))
+        .map(v => Math.abs(yValue - (height - contentHeightMin) * v));
+
+      const result = snapPointsPoints.reduce(
+        (a, c) => (a > c ? c : a),
+        snapPointsPoints[0],
+      );
+
+      let index = snapPointsPoints.findIndex(v => v === result);
+
+      setCount(prev => prev + 1);
+      setSnapPoint(snapPoints.map(v => percentStringToNum(v))[index]);
+    }
+  };
+
+  if (!open) {
+    return null;
+  }
 
   return (
-    <Modal visible={modalVisible} animationType={'fade'} transparent>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <Overlay>
-          <TouchableWithoutFeedback onPress={closeModal}>
-            <Background />
-          </TouchableWithoutFeedback>
+    <Portal>
+      <Pressable
+        onPress={enableBackDropDismiss ? onDismiss : undefined}
+        style={[styles.backDrop]}>
+        <Animated.View
+          style={[
+            {
+              flex: 1,
+              backgroundColor: `rgba(0,0,0,0.68)`,
+            },
+          ]}></Animated.View>
+      </Pressable>
 
-          <BottomSheet snapPoints={snapPoints} onChange={handleSheetChange}>
-            <BottomSheetTitleView>
-              <Text>타이틀이여</Text>
-            </BottomSheetTitleView>
-            <BottomSheetFlatList
-              data={data}
-              scrollEnabled={snap === 1}
-              onScrollBeginDrag={e => {
-                setScrollStart(e.nativeEvent.contentOffset.y);
-              }}
-              onMomentumScrollBegin={() => {
-                if (scrollEnd === 0) {
-                  handleSnapPress(0);
-                }
-              }}
-              onScrollEndDrag={e => {
-                setContentScroll(e.nativeEvent.contentOffset.y === 0);
-                setScrollEnd(e.nativeEvent.contentOffset.y);
-                if (e.nativeEvent.contentOffset.y === 0) {
-                  if (contentScroll) {
-                    handleSnapPress(0);
-                  }
-                }
-              }}
-              renderItem={({item}) => (
-                <ContentItemContainer
-                  // onPressIn={pressInUp}
-                  // onPressOut={pressOutUp}
-                  onPress={() => {
-                    onSelect(item.id, item.text);
-                    onPressEvent(item.id);
-                  }}>
-                  {selected === item.id ? (
-                    <ContentItemBox>
-                      <ContentItemText>{item.text}</ContentItemText>
-                      <CheckedIcon />
-                    </ContentItemBox>
-                  ) : (
-                    <ContentItemText>{item.text}</ContentItemText>
-                  )}
-                </ContentItemContainer>
-              )}
-              // keyExtractor={item => item.clientId.toString()}
-            />
-          </BottomSheet>
-        </Overlay>
-      </GestureHandlerRootView>
-    </Modal>
+      <Animated.View
+        style={[
+          styles.root,
+          {
+            height: height,
+
+            bottom: bottomDepthRef,
+            shadowOffset: {height: -3},
+          },
+          styles.common,
+        ]}>
+        <GestureHandlerRootView>
+          <PanGestureHandler onGestureEvent={onGesture} onEnded={onGestureEnd}>
+            <HeaderView
+              style={[
+                styles.header,
+                // styles.common,
+                // {shadowOffset: {height: 3}},
+              ]}>
+              <BottomSheetHandle
+                style={{
+                  width: BottomSheetHandleWidth,
+                  height: 4,
+                  borderRadius: 2.5,
+                  position: 'absolute',
+                  top: 9,
+
+                  left: (deviceWidth - BottomSheetHandleWidth) / 2,
+                  zIndex: 1,
+                  backgroundColor: appTheme.colors.grey[2],
+                }}
+              />
+            </HeaderView>
+          </PanGestureHandler>
+        </GestureHandlerRootView>
+        <Content style={[{height: contentHeight}]}>{children}</Content>
+      </Animated.View>
+    </Portal>
   );
 };
+export default BottomSheetRegisterInfo2;
 
-const Overlay = styled.Pressable`
-  position: relative;
-  flex: 1;
-  justify-content: flex-end;
-  background-color: rgba(0, 0, 0, 0.7);
+const styles = StyleSheet.create({
+  root: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    zIndex: 2,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
+    overflow: 'hidden',
+  },
+  header: {
+    height: headerHeight,
+    backgroundColor: '#fff',
+  },
+  common: {
+    shadowColor: '000',
+    shadowOffset: {
+      //   height: -3,
+      width: 0,
+    },
+    shadowOpacity: 0.24,
+
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  backDrop: {
+    ...StyleSheet.absoluteFillObject,
+    // flex: 1,
+    zIndex: 1,
+    // backgroundColor: 'rgba(0,0,0,0.68)',
+  },
+});
+
+const AnimatedView = styled(Animated.View)`
+  /* border: 1px solid black; */
+  background-color: azure;
 `;
 
-const Background = styled.View`
-  flex: 1;
+const BackPressable = styled.View`
+  /* border: 1px solid black; */
 `;
 
-const BottomSheetTitleView = styled.View`
-  width: 100%;
-  padding: 0px 24px;
-`;
+const HeaderView = styled.View``;
 
-const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
-  margin-bottom: 12px;
-`;
+const BottomSheetHandle = styled.View``;
 
-const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[4]};
-`;
-
-const ContentItemContainer = styled.Pressable`
-  width: ${Dimensions.get('screen').width}px;
-  height: 60px;
-  padding: 19px 24px;
-  padding-left: 40px;
-  //margin-bottom: ${({lastArr}) => (lastArr ? '50px' : '0px')};
-`;
-
-const ItemContainer = styled.View`
-  width: ${Dimensions.get('screen').width}px;
-  height: 60px;
-  padding: 19px 24px;
-`;
-
-const ContentItemBox = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ContentItemText = styled(Typography).attrs({text: 'Body05SB'})`
-  color: ${({theme}) => theme.colors.grey[2]};
-`;
-const ManageText = styled(Typography).attrs({text: 'Button09R'})`
-  color: ${({theme}) => theme.colors.grey[3]};
-`;
-
-const GroupName = styled(Typography).attrs({text: 'Body06SB'})`
-  color: ${({theme}) => theme.colors.grey[4]};
-`;
-
-const Border = styled.View`
-  width: 100%;
-  height: 1px;
-  margin-top: 12px;
-  background-color: ${({theme}) => theme.colors.grey[8]};
-`;
-
-const ManagePressView = styled.Pressable`
-  /* width: ${Dimensions.get('screen').width}px;
-    padding: 19px 24px 55px 24px;
-    background-color: white; */
-`;
-
-const GroupView = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-export default BottomSheetSpot;
-
-const MessageWrap = styled.View`
-  position: absolute;
-`;
-
-const TitleWrap = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const Restriction = styled(Typography).attrs({text: 'SmallLabel'})`
-  color: ${({theme}) => theme.colors.grey[5]};
-  margin-left: 8px;
-`;
-
-const TextView = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+const Content = styled.View`
+  /* border: 1px solid black; */
+  /* padding-bottom: 61px; */
 `;
