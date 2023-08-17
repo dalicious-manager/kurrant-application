@@ -22,6 +22,7 @@ import {Portal} from 'react-native-paper';
 
 const headerHeight = 28;
 const BottomSheetHandleWidth = 30;
+const BackgroundOpacity = 0.68;
 
 const BottomSheetRegisterInfo2 = ({
   pageY = 91,
@@ -53,7 +54,7 @@ const BottomSheetRegisterInfo2 = ({
   /////////////
 
   const bottomDepthRef = useRef(new Animated.Value(-height)).current;
-  const backgroundOpacityRef = useRef(new Animated.Value(0)).current;
+  const backgroundOpacityRef = useRef(new Animated.Value(0.6)).current;
 
   const moveBottomSheetWithAnimationTo = useCallback(toValue => {
     return Animated.timing(bottomDepthRef, {
@@ -63,15 +64,25 @@ const BottomSheetRegisterInfo2 = ({
       useNativeDriver: false,
     });
   }, []);
+  const changeBottomSheetBackgroundTo = useCallback(toValue => {
+    return Animated.timing(backgroundOpacityRef, {
+      toValue: toValue,
+      duration: 400,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    });
+  }, []);
 
   const [open, setOpen] = useState(show);
-
+  //   BackgroundOpacity
   useEffect(() => {
     if (show) {
       setOpen(show);
 
       moveBottomSheetWithAnimationTo(-bottomDepth).start();
+      changeBottomSheetBackgroundTo(BackgroundOpacity).start();
     } else {
+      changeBottomSheetBackgroundTo(0).start();
       moveBottomSheetWithAnimationTo(-height).start(() => {
         setOpen(false);
       });
@@ -132,7 +143,9 @@ const BottomSheetRegisterInfo2 = ({
           style={[
             {
               flex: 1,
-              backgroundColor: `rgba(0,0,0,0.68)`,
+              backgroundColor: `#000`,
+
+              opacity: backgroundOpacityRef,
             },
           ]}></Animated.View>
       </Pressable>
