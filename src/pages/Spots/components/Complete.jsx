@@ -43,6 +43,7 @@ const Complete = ({route}) => {
     data: {data: isUserInfo},
   } = useGetUserInfo();
   const type = route?.params?.type;
+
   const nextUseButton = () => {
     navigation.reset({
       index: 0,
@@ -104,7 +105,8 @@ const Complete = ({route}) => {
             }
             if (
               type === 'noAlarmUsedMembership' ||
-              type === 'mySpotCompleteMembership'
+              type === 'mySpotCompleteMembership' ||
+              type === 'usedMembership'
             ) {
               nextUseButton();
             }

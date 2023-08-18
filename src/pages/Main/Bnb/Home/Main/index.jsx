@@ -26,6 +26,7 @@ import {useQueryClient} from 'react-query';
 import styled, {css, useTheme} from 'styled-components/native';
 import BottomModal from '~components/BottomModal';
 import {BowlIcon} from '~components/Icon';
+import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -89,7 +90,6 @@ import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크

@@ -14,9 +14,9 @@ const useGetOneAnnouncements = () => {
   const [isOneAnnouncementModalVisible, setIsOneAnnouncementModalVisible] =
     useState(false);
 
-  const getOneAnnouncement = async (id, spotId) => {
+  const getOneAnnouncement = async () => {
     try {
-      const res = await Fetch.getAnnouncements(id, spotId);
+      const res = await Fetch.getAnnouncements();
 
       const sampleArray = [
         {
@@ -56,7 +56,7 @@ const useGetOneAnnouncements = () => {
         ) {
           // 데이터 새로 넣으면 됨
 
-          setOneAnnouncement(dataFromDb[0]);
+          setOneAnnouncement(res.data);
           setIsOneAnnouncementModalVisible(true);
         } else {
           // undefine d넣어주면 됨
@@ -65,7 +65,7 @@ const useGetOneAnnouncements = () => {
           setIsOneAnnouncementModalVisible(false);
         }
       } else {
-        setOneAnnouncement(dataFromDb[0]);
+        setOneAnnouncement(res.data);
         setIsOneAnnouncementModalVisible(true);
       }
 

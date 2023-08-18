@@ -85,6 +85,7 @@ const Pages = ({route}) => {
     );
   const {data: detailData, refetch: detailDataRefech} =
     useGroupSpotManageDetail(groupId);
+
   const navigation = useNavigation();
   const diningType = [1, 2, 3];
   const goToApplyPage = from => {
