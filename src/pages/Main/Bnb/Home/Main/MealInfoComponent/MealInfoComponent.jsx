@@ -10,7 +10,7 @@ import styled, {css} from 'styled-components';
 import Typography from '../../../../../../components/Typography';
 import {useConfirmOrderState} from '../../../../../../hook/useOrder';
 // import {PAGE_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
-import {PAGE_NAME as reviewPage} from '../../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
+import {PAGE_NAME as CreateReviewPage1PageName} from '../../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
 import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
 import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
 import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
@@ -40,11 +40,11 @@ const MealInfoComponent = ({
   // console.log(dailyFoodId);
 
   const goToReviewPage = (id, image, name) => {
-    navigation.navigate(reviewPage, {
+    navigation.navigate(CreateReviewPage1PageName, {
       orderItemId: id,
       imageLocation: image,
       foodName: name,
-      test: 'test',
+      resetNavigate: true,
     });
   };
 
@@ -132,6 +132,7 @@ const MealInfoComponent = ({
                       queryClient.invalidateQueries({
                         queryKey: ['dietRepo', 'main'],
                       });
+                      queryClient.invalidateQueries('userInfo');
                       // dietRepoMainRefetch();
                     },
                   ]);

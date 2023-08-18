@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components';
+import BottomModal from '~components/BottomModal';
 
 import {NotDeliveryIcon, SpotOpen} from '../../../assets';
 import Close from '../../../assets/icons/Map/close20.svg';
@@ -9,7 +10,10 @@ import Button from '../../../components/Button';
 import Typography from '../../../components/Typography';
 import {useSetAlramSetting} from '../../../hook/useAlram';
 import {useSettingAlarmMySpot} from '../../../hook/useSpot';
-import {useGetUserInfo} from '../../../hook/useUserInfo';
+import {
+  useGetPrivateMembership,
+  useGetUserInfo,
+} from '../../../hook/useUserInfo';
 import {PAGE_NAME as MembershipPage} from '../../../pages/Membership/MembershipIntro';
 import {SCREEN_NAME} from '../../../screens/Main/Bnb';
 import {height} from '../../../theme';
@@ -30,6 +34,9 @@ const NotDelivery = ({route}) => {
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
+  const {data: isPrivateMembership, refetch: privateMembershipRefetch} =
+    useGetPrivateMembership();
+  const [modalVisibleMembership, setModalVisibleMembership] = useState(false);
   const spot = isUserInfo?.spotId;
 
   const {mutateAsync: setAlram} = useSettingAlarmMySpot();
@@ -61,9 +68,13 @@ const NotDelivery = ({route}) => {
   };
 
   const goMembershipPage = () => {
-    navigation.navigate(MembershipPage, {
-      isFounders: isUserInfo?.leftFoundersNumber > 0,
-    });
+    if (isPrivateMembership?.data) {
+      setModalVisibleMembership(true);
+    } else {
+      navigation.navigate(MembershipPage, {
+        isFounders: isUserInfo?.leftFoundersNumber > 0,
+      });
+    }
   };
 
   const goMembershipInfoPage = () => {
@@ -145,6 +156,24 @@ const NotDelivery = ({route}) => {
           </Pressable>
         )}
       </ButtonWrap>
+      <BottomModal
+        modalVisible={modalVisibleMembership}
+        setModalVisible={setModalVisibleMembership}
+        title={`기업멤버십에 가입되어 있어요.`}
+        description={
+          '이미 멤버십 혜택이 적용 중이에요.\n개인멤버십 가입을 추가로 진행 할까요?'
+        }
+        buttonTitle1={'취소'}
+        buttonType1="grey7"
+        buttonTitle2={'확인'}
+        buttonType2="grey2"
+        onPressEvent1={() => setModalVisibleMembership(false)}
+        onPressEvent2={() => {
+          navigation.navigate(MembershipPage, {
+            isFounders: isUserInfo?.leftFoundersNumber > 0,
+          });
+        }}
+      />
     </Wrap>
   );
 };

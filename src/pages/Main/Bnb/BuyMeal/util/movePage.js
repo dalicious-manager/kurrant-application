@@ -4,7 +4,6 @@ export const goPrevPage = (
   weekly,
   weeklyService,
   date,
-  position,
   setDate,
   pager,
   setNowPage,
@@ -60,15 +59,10 @@ export const goPrevPage = (
           ),
         );
       });
-      pager.current.setPage(index);
-      return setNowPage(isDiningTypes[isDiningTypes.length - 1] - 1);
+      return pager.current?.setPage(index);
+      // console.log(index);
+      // return setNowPage(index);
     }
-  }
-
-  if (position === -1) {
-    setNowPage(0);
-  } else {
-    setNowPage(position);
   }
 };
 export const goNextPage = (
@@ -116,7 +110,7 @@ export const goNextPage = (
         ),
       );
     });
-    pager.current.setPage(index);
-    return setNowPage(isDiningTypes[0] - 1);
+    return pager.current?.setPage(index);
+    // return setNowPage(isDiningTypes[0]);
   }
 };

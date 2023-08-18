@@ -1,6 +1,6 @@
 {
   "name": "kurrant",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -59,6 +59,7 @@
     "react-native-linear-gradient": "^2.6.2",
     "react-native-nmap": "^0.0.66",
     "react-native-pager-view": "^6.0.0",
+    "react-native-paper": "^5.10.1",
     "react-native-permissions": "^3.8.0",
     "react-native-reanimated": "^2.10.0",
     "react-native-reanimated-carousel": "^3.3.0",

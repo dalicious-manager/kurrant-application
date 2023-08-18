@@ -10,7 +10,10 @@ import {DefaultProfile} from '../../../../assets';
 import {calculateTotalWrittenReviewList} from '../../../../biz/useReview/useWrittenReview/calculation';
 import useWrittenReview from '../../../../biz/useReview/useWrittenReview/hook';
 import {totalWrittenReview} from '../../../../biz/useReview/useWrittenReview/store';
-import {convertDateFormat1} from '../../../../utils/dateFormatter';
+import {
+  convertDateFormat1,
+  formattedWeekDate,
+} from '../../../../utils/dateFormatter';
 import NoOrder from '../NoOrder';
 
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
@@ -29,18 +32,12 @@ const Pages = ({route}) => {
   const [idx, setIdx] = useState(-1);
   const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
 
-  const isFocused = useIsFocused();
-
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const toast = Toast();
 
   useEffect(() => {
     getWrittenReview();
   }, []);
-
-  // useEffect(() => {
-  //   setTotalWrittenReviewList(writtenReviewCount);
-  // }, [writtenReviewCount]);
 
   useEffect(() => {
     if (reviewList) {
@@ -100,6 +97,7 @@ const Pages = ({route}) => {
               option: item.option,
               forMakers: item.forMakers,
               commentList: item.commentList,
+              dailyFoodId: item.dailyFoodId,
             };
 
             return (
@@ -120,6 +118,7 @@ const Pages = ({route}) => {
                   forMakers={item2.forMakers}
                   commentList={item2.commentList}
                   toast={toast}
+                  dailyFoodId={item2.dailyFoodId}
                 />
               </View>
             );

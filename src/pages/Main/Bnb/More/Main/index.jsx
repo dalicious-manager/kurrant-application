@@ -10,6 +10,7 @@ import VersionCheck from 'react-native-version-check';
 import styled, {useTheme} from 'styled-components/native';
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import useUserMe from '~biz/useUserMe';
+import BottomModal from '~components/BottomModal';
 import {SettingIcon} from '~components/Icon';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
@@ -69,6 +70,7 @@ const Pages = ({route}) => {
     readableAtom: {myInfo, isMyInfoLoading},
   } = useUserMe();
   const {isApplicationList, applicationList} = useGroupSpots();
+  const [modalVisible2, setModalVisible2] = useState(false);
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -94,6 +96,7 @@ const Pages = ({route}) => {
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
+
   const getData = async () => {
     await userMe();
     await userMePersonal();
@@ -139,13 +142,6 @@ const Pages = ({route}) => {
     }, []),
   );
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     // Do something when the screen is focused
-  //     userInfo();
-  //   }, []),
-  // );
-
   useEffect(() => {
     if (userRole !== 'ROLE_GUEST') {
       if (applicationList) {
@@ -162,16 +158,9 @@ const Pages = ({route}) => {
     <Container>
       <Wrapper paddingTop={24}>
         <ScrollView>
-          {/* <GourmetTestButton>
-            <Typography text='CaptionSB' textColor={themeApp.colors.blue[500]}>나의 미식타입 테스트 </Typography>
-            <ArrowRight/>
-          </GourmetTestButton> */}
           {isUserInfo ? (
             <LoginBox>
               <LoginIdBox>
-                {/* <AvatarBackground source={AvatarNon} resizeMode={'stretch'}>
-                  {myInfo.gourmetType !== null && <Image imagePath={{uri:'https://asset.kurrant.co/img/common/soup.png'}} scale={1.0} styles={{width:25,height:22}}/>}
-                </AvatarBackground> */}
                 <Typography
                   text="Title02SB"
                   textColor={themeApp.colors.grey[2]}>
@@ -206,6 +195,7 @@ const Pages = ({route}) => {
           <MembershipBox
             isMembership={isUserInfo?.isMembership}
             membershipPeriod={isUserInfo?.membershipUsingPeriod}
+            setModalVisible2={setModalVisible2}
           />
           <PointBox point={isUserInfo?.point} />
 
@@ -304,7 +294,7 @@ const Pages = ({route}) => {
                 routeName={GroupApplicationCheckPageName}
               />
             )}
-            <ListBox title="식단 리포트" routeName={DietRepoMainPageName} />
+            {/* <ListBox title="식단 리포트" routeName={DietRepoMainPageName} /> */}
           </ListContainer>
           <ListContainer title="알림">
             <ListBox
@@ -337,6 +327,24 @@ const Pages = ({route}) => {
           </ListContainer>
         </ScrollView>
       </Wrapper>
+      <BottomModal
+        modalVisible={modalVisible2}
+        setModalVisible={setModalVisible2}
+        title={`기업멤버십에 가입되어 있어요.`}
+        description={
+          '이미 멤버십 혜택이 적용 중이에요.\n개인멤버십 가입을 추가로 진행 할까요?'
+        }
+        buttonTitle1={'취소'}
+        buttonType1="grey7"
+        buttonTitle2={'확인'}
+        buttonType2="grey2"
+        onPressEvent1={() => setModalVisible2(false)}
+        onPressEvent2={() => {
+          navigation.navigate(MembershipIntroPageName, {
+            isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+          });
+        }}
+      />
     </Container>
   );
 };

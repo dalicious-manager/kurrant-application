@@ -15,7 +15,7 @@ import {totalWrittenReview} from '~biz/useReview/useWrittenReview/store';
 import BackButton from '~components/BackButton';
 import Typography from '~components/Typography';
 import Popup from '~pages/Main/MyPage/Review/Popup';
-export const SCREEN_NAME = 'S_MAIN__REVIEW';
+
 import Review, {PAGE_NAME as ReviewPageName} from '~pages/Main/MyPage/Review';
 import WrittenReview, {
   PAGE_NAME as WrittenReviewPageName,
@@ -28,8 +28,10 @@ import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 const Tab = createMaterialTopTabNavigator();
 
+export const SCREEN_NAME = 'S_MAIN__REVIEW';
+
 const Screen = ({route}) => {
-  const point = route?.params?.from;
+  const from = route?.params?.from;
   const pointId = route?.params?.id;
 
   const [popupShow, setPopupShow] = useAtom(modalStatusAtom);
@@ -40,7 +42,7 @@ const Screen = ({route}) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () =>
-        point !== 'home' ? (
+        from !== 'home' ? (
           <BackButton margin={[10, 0]} />
         ) : (
           <Pressable
@@ -63,7 +65,7 @@ const Screen = ({route}) => {
     <>
       {popupShow && <Popup setPopupShow={setPopupShow} />}
       <Tab.Navigator
-        initialRouteName={point === 'point' && WrittenReviewPageName}
+        initialRouteName={from === 'point' && WrittenReviewPageName}
         screenOptions={{
           tabBarIndicatorStyle: {
             backgroundColor: theme.colors.grey[1],

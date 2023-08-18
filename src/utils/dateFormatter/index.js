@@ -289,6 +289,13 @@ export const isTimeDifferenceLarger = (date1, date2, dateLength) => {
   return date2GetTime - date1GetTime > dateLength * 1000 * 60 * 60 * 24;
 };
 
+// 두 날짜의 차이가 해당 일수 보다 더 크다 -> true, 더 작다 -> false 숫자날짜버젼
+// (숫자날짜란 Date.now(), 1681401239648 같은 걸 의미한다)
+
+export const isTimeNumberDifferenceLarger = (date1, date2, dateLength) => {
+  return Math.abs(date2 - date1) > dateLength * 1000 * 60 * 60 * 24;
+};
+
 // 2024-02-12 -> 2024. 01. 11
 export const changeSeperator = (dateInput, inputSeperator, outputSeperator) => {
   const process1 = dateInput.trim();
