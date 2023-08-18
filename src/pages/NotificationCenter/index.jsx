@@ -1,15 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {ScrollView} from 'react-native';
+import {Alert, ScrollView} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 
 import useBoard from '../../biz/useBoard';
 import {NotificationIcon} from '../../components/Icon';
 import Typography from '../../components/Typography';
 import Wrapper from '../../components/Wrapper';
-import {SCREEN_NAME as NoticePageName} from '../../screens/Main/Notice';
-import {PAGE_NAME as MainPageName} from '../Main/Bnb/Home/Main';
-import {PAGE_NAME as PublicNoticePageName} from '../Main/MyPage/Notice/PublicNotice';
+import {fetchJson} from '../../utils/fetch';
+import {PAGE_NAME as NoticeDetailPageName} from '../Main/MyPage/Notice/NoticeDetail';
 
 export const PAGE_NAME = 'P__NOTIFICATION_CENTER';
 
@@ -59,12 +58,24 @@ const Pages = () => {
   } = useBoard();
   const navigation = useNavigation();
 
-  const goToPage = id => {
-    if (id) {
-      navigation.navigate(NoticePageName, {
-        id: id,
-        from: 'public',
-      });
+  const goToPage = async id => {
+    try {
+      if (id) {
+        const res = await fetchJson(`/boards/notices/${id}`);
+
+        navigation.navigate(NoticeDetailPageName, {
+          id: id,
+          from: 'public',
+          noticeData: res.data,
+        });
+      }
+    } catch (err) {
+      Alert.alert('', '삭제된 게시물입니다.', [
+        {
+          text: '확인',
+          onPress: () => {},
+        },
+      ]);
     }
   };
   useEffect(() => {
@@ -73,6 +84,7 @@ const Pages = () => {
     };
     getUseAlarm();
   }, []);
+
   return (
     <Wrapper>
       {!alarm?.length > 0 ? (

@@ -8,8 +8,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useQueryClient} from 'react-query';
 import RNFetchBlob from 'rn-fetch-blob';
 import styled, {useTheme} from 'styled-components/native';
-
-import ReviewInput from './ReviewInput';
 // import {starRatingAtom} from './store';
 import {starRatingAtom} from '~biz/useReview/useCreateAndEditReview/store';
 import useReviewWait from '~biz/useReview/useReviewWait/hook';
@@ -22,6 +20,8 @@ import UploadPhoto from '~components/UploadPhoto';
 import useKeyboardEvent from '~hook/useKeyboardEvent';
 import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
 import {getStorage} from '~utils/asyncStorage';
+
+import ReviewInput from './ReviewInput';
 // import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
 import {SCREEN_NAME as MainScreenName} from '../../../../../../screens/Main/Bnb';
 // import {SCREEN_NAME as ReviewScreenName} from '../../../../Review';
@@ -272,6 +272,7 @@ const Screen = ({route}) => {
         .then(data => {
           setIsLoading(true);
           if (data.statusCode === 200) {
+            queryClient.invalidateQueries('userInfo');
             Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
               {
                 text: '확인',
