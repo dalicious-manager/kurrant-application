@@ -5,6 +5,7 @@ import HTML, {defaultSystemFonts} from 'react-native-render-html';
 import styled, {useTheme} from 'styled-components/native';
 import Wrapper from '~components/Wrapper';
 
+import {useGetNoticeDetail} from '../../../../../hook/useNotice';
 import {width} from '../../../../../theme';
 
 export const PAGE_NAME = 'P__MY_PAGE__NOTICE_DETAIL';
