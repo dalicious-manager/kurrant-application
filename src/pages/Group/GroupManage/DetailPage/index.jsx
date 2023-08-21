@@ -97,7 +97,7 @@ const Pages = ({route}) => {
       roadAddress: detailData?.data?.address,
       groupId: detailData?.data?.id,
       name: detailData?.data?.name,
-      from: from,
+      from: 'manage',
     });
   };
   const withdrawPress = () => {
