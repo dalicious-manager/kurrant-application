@@ -79,6 +79,7 @@ const ApplySpot = ({route}) => {
       navigation.navigate(ShareSpotMapPage, {
         location: center,
         id: id,
+        from: from,
       });
     }
   };
