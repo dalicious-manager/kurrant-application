@@ -124,10 +124,12 @@ const OuterPagerView = ({
   };
 
   useEffect(() => {
-    scrollViewRef.current.scrollTo({
-      x: width,
-      animated: false,
-    });
+    setTimeout(() => {
+      scrollViewRef.current.scrollTo({
+        x: width,
+        animated: false,
+      });
+    }, 100);
   }, [scrollViewRef]);
   return (
     <Container>
@@ -136,6 +138,7 @@ const OuterPagerView = ({
           ref={scrollViewRef}
           horizontal
           pagingEnabled
+          scrollEventThrottle={16}
           showsHorizontalScrollIndicator={false}
           onScroll={handleScroll}>
           <Slide>
