@@ -948,7 +948,6 @@ const Pages = ({route}) => {
                 onPageScroll(e);
               }}>
               {isDiningTypes?.map(dining => {
-                console.log('test', dining);
                 return (
                   <GestureHandlerRootView key={dining}>
                     <BuyMealPage

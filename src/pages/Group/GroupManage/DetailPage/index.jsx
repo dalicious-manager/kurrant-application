@@ -157,9 +157,7 @@ const Pages = ({route}) => {
       }
     }, [navigation, groupId, detailDataRefech]),
   );
-  useEffect(() => {
-    console.log(detailData?.data, 'testest');
-  }, [detailData?.data]);
+
   return (
     <Wrap>
       <Contents>

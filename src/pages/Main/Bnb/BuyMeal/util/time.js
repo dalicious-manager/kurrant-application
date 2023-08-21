@@ -1,28 +1,22 @@
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 
-export const getTime = async (
-  isUserInfo,
-  dailyfoodData,
-  nowPage,
-  time = '',
-) => {
+export const getTime = async (spotId, dailyfoodData, nowPage, time = '') => {
   const localTime = JSON.parse(await getStorage('diningTime'));
-  const diningTimesData = dailyfoodData.filter(v => v.diningType === nowPage);
-  if (diningTimesData?.length <= 0) return;
+  const diningTimesData = dailyfoodData?.filter(v => v.diningType === nowPage);
+  if (!diningTimesData || diningTimesData?.length <= 0) return;
+
   if (localTime?.length > 0) {
     const isSpotId = localTime.find(v => {
       return (
-        v.spotId === isUserInfo?.spotId &&
-        v.diningType === diningTimesData[0].diningType
+        v.spotId === spotId && v.diningType === diningTimesData[0]?.diningType
       );
     });
-
     if (isSpotId) {
       if (time !== '') {
         const times = localTime.map(v => {
           if (
-            v.spotId === isUserInfo?.spotId &&
-            v.diningType === diningTimesData[0].diningType
+            v.spotId === spotId &&
+            v.diningType === diningTimesData[0]?.diningType
           ) {
             return {
               spotId: v.spotId,
@@ -38,15 +32,15 @@ export const getTime = async (
       return isSpotId.time;
     }
     const times = {
-      spotId: isUserInfo?.spotId,
-      diningType: diningTimesData[0].diningType,
+      spotId: spotId,
+      diningType: diningTimesData[0]?.diningType,
       time: diningTimesData[0].times[0],
     };
     await setStorage('diningTime', JSON.stringify([...localTime, times]));
     return diningTimesData[0].times[0];
   }
   const times = {
-    spotId: isUserInfo?.spotId,
+    spotId: spotId,
     diningType: diningTimesData[0].diningType,
     time: diningTimesData[0].times[0],
   };
