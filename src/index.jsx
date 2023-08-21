@@ -13,7 +13,6 @@ import {PaperProvider} from 'react-native-paper';
 
 import Screen from './screens';
 import Theme from './theme';
-import useSseStart from './utils/sse/sseLogics/useSseStart';
 
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 Text.defaultProps = Text.defaultProps || {};
@@ -25,10 +24,6 @@ const App = () => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
   const queryClient = new QueryClient();
-
-  // sse
-
-  useSseStart();
 
   useEffect(() => {
     async function requestUserPermission() {

@@ -12,7 +12,7 @@ const useSse = () => {
   const [sseType6, setSseType6] = useAtom(sseAtoms.sseType6Atom);
   const [sseType7, setSseType7] = useAtom(sseAtoms.sseType7Atom);
   const [sseType8, setSseType8] = useAtom(sseAtoms.sseType8Atom);
-
+  //
   // sse 전체 이력 조회
   const [sseHistory, setSseHistory] = useState([]);
 

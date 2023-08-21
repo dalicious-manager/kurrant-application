@@ -1,8 +1,5 @@
 import {atomWithReset} from 'jotai/utils';
 
-// export const eventSourceMsgAtom = atomWithReset('');
-// export const eventSourceMsgBundleAtom = atomWithReset({});
-
 // type: 1 전체공지
 export const sseType1Atom = atomWithReset({});
 // type: 2 스팟공지

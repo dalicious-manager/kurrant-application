@@ -8,6 +8,7 @@ import {Alert} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import Main from './Main';
+import useSseStart from '../utils/sse/sseLogics/useSseStart';
 
 const Root = createNativeStackNavigator();
 
@@ -19,6 +20,8 @@ const Screen = () => {
       Platform.OS === 'android' && StatusBar.setTranslucent(true);
     }, []),
   );
+
+  useSseStart();
 
   return (
     <SafeAreaProvider>
