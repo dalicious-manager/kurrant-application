@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, Platform} from 'react-native';
-import Animated from 'react-native-reanimated';
+
 import styled, {css} from 'styled-components';
 import {
   calcDate,

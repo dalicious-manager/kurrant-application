@@ -43,7 +43,7 @@ const getReissue = async (headers, reqUrl, token, method, options) => {
     body: JSON.stringify(bodyData),
   });
   const result = await reissue.json();
-  console.log(result, '리이슈');
+
   if (result.error === 'E4030002') {
     await AsyncStorage.clear();
     throw new Error(result.statusCode.toString());
@@ -122,8 +122,8 @@ async function json(url, method, options = {}) {
   //   }
 
   console.log('fetching to:', reqUrl);
-  console.log('fetching method:', method);
-  console.log('fetching option:', options.body);
+  //console.log('fetching method:', method);
+  //console.log('fetching option:', options.body);
 
   // console.log('fetching token:', headers.Authorization);
   // throw new Error('rul : ' + reqUrl);

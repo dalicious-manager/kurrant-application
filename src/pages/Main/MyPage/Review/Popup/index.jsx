@@ -33,7 +33,7 @@ const Pages = ({setPopupShow}) => {
 
 export default Pages;
 const Wrap = styled.Pressable`
-  background-color: #000000b2;
+  /* background-color: #000000b2; */
   position: absolute;
   z-index: 1;
   top: 0px;
@@ -45,14 +45,15 @@ const Container = styled.View`
   align-self: center;
   justify-content: center;
   background-color: white;
-  margin-top: 158px;
-  width: 95%;
+  margin-top: 166px;
+  /* width: 95%; */
+  width: 311px;
   height: 62px;
 
   padding: 0 5%;
   border-radius: 7px;
 
-  box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
 `;
 
 const ClosePopup = styled.Pressable`

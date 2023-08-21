@@ -25,7 +25,6 @@ import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css, useTheme} from 'styled-components/native';
 import BottomModal from '~components/BottomModal';
-import {BowlIcon} from '~components/Icon';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -78,7 +77,7 @@ import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/Member
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
 import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
-import MainDim from '../../../../Spots/spotGuide/MainDim';
+
 import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
@@ -87,9 +86,15 @@ import {PAGE_NAME as nicknameSettingPageName} from '../../../MyPage/Nickname/ind
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
 import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
-import useGetDietRepo from '../../DietRepo/useGetDietRepo';
+
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
+import {BowlIcon} from '~components/Icon';
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
+
+import useShowRegisterInfo from '../../../../RegisterInfo/ShowRegisterInfo/useShowRegisterInfo';
+import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
+
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
 const GOOGLE_PLAY_STORE_WEB_LINK =
@@ -311,11 +316,9 @@ const Pages = () => {
   //   removeItemFromStorage('announcementsClickedOneDate');
   // }, []);
 
-  // useEffect(() => {
-  //   navigation.navigate(DietRepoMainPageName);
-  // }, []);
+  // // 회원 정보 입력
 
-  // 로컬스토리지 확인하기
+  useShowRegisterInfo();
 
   useEffect(() => {
     const handleShowModal = async () => {
@@ -413,6 +416,7 @@ const Pages = () => {
     // Check whether an initial notification is available
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       if (remoteMessage) {
+        console.log(remoteMessage.data.page, '백그라운드');
         if (remoteMessage.data.page !== 'Home') {
           if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
             return navigation.navigate(remoteMessage.data.page, {
@@ -446,6 +450,7 @@ const Pages = () => {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
+          console.log(remoteMessage.data.page, '종료');
           if (remoteMessage.data.page !== 'Home') {
             if (remoteMessage.data.page === 'BUY_MEAL_PAGE') {
               return navigation.navigate(remoteMessage.data.page, {
@@ -685,7 +690,7 @@ const Pages = () => {
         showsVerticalScrollIndicator={false}>
         <LargeTitle>
           {isUserInfo?.data?.nickname ?? userName}님{' '}
-          {isUserInfo?.data?.nickname?.length === 12 && `\n`}안녕하세요!
+          {isUserInfo?.data?.nickname?.length > 5 && `\n`}안녕하세요!
         </LargeTitle>
         <MainWrap>
           {orderMealList?.data?.filter(order => order.serviceDate === date)

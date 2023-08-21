@@ -120,6 +120,7 @@ export default () => {
         },
         'GOOGLE',
       );
+
       if (res.data.hasNickname) {
         navigation.reset({
           index: 0,

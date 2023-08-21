@@ -274,6 +274,7 @@ const Pages = ({route}) => {
         // null일떄
         setShowSupportPrice(false);
       }
+
     }
   }, [supportPrice]);
   useEffect(() => {

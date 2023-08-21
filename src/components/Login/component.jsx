@@ -15,6 +15,7 @@ import Toast from '~components/Toast';
 import useAuth from '../../biz/useAuth';
 import useKeyboardEvent from '../../hook/useKeyboardEvent';
 import {PAGE_NAME as FindUserPageName} from '../../pages/Main/Login/FindUser';
+import {PAGE_NAME as nicknameSettingPageName} from '../../pages/Main/MyPage/Nickname/index';
 import {SCREEN_NAME} from '../../screens/Main/Bnb';
 import {getStorage, setStorage} from '../../utils/asyncStorage';
 import Button from '../Button';
@@ -22,7 +23,6 @@ import Check from '../Check';
 import KeyboardButton from '../KeyboardButton';
 import RefTextInput from '../RefTextInput';
 import Typography from '../Typography';
-
 const {StatusBarManager} = NativeModules;
 
 const Component = ({userId, isPassword, setPassword}) => {
@@ -49,16 +49,30 @@ const Component = ({userId, isPassword, setPassword}) => {
   };
   const onSubmit = async datas => {
     try {
-      await login(datas);
+      const res = await login(datas);
       setStorage('userId', datas.email);
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: SCREEN_NAME,
-          },
-        ],
-      });
+      if (res.data.hasNickname) {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SCREEN_NAME,
+            },
+          ],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: nicknameSettingPageName,
+              params: {
+                from: 'email',
+              },
+            },
+          ],
+        });
+      }
       //navigation.reset({routes:[{ name:GroupCreateMainPageName}]});
       //await userInfo();
     } catch (err) {
