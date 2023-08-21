@@ -31,6 +31,7 @@ const BuyMealPage = props => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
       scrollEnabled={
         !(item?.dailyFoodDtos?.length === 0 && userinfo?.spotId !== null) ||
         !userinfo?.spotId === null
