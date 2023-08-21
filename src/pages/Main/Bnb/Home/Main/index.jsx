@@ -111,17 +111,7 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   //
-  const {
-    sseType1,
-    sseType2,
-    sseType3,
-    sseType4,
-    sseType5,
-    confirmSseIsRead,
-    sseHistory,
-  } = useSse();
-
-  useSseType3(confirmSseIsRead);
+  const {sseType5, confirmSseIsRead, sseHistory} = useSse();
 
   const navigation = useNavigation();
   const themeApp = useTheme();
@@ -689,7 +679,7 @@ const Pages = () => {
           </SpotName>
           <Icons>
             <SseRedDotType6
-              isSse={!!sseHistory.find(v => v.type === 6)}
+              isSse={!!sseHistory?.find(v => v.type === 6)}
               position={'absolute'}
               right={'10px'}
               top={'4px'}>

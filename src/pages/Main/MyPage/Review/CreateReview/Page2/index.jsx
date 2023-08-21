@@ -27,6 +27,7 @@ import {SCREEN_NAME as MainScreenName} from '../../../../../../screens/Main/Bnb'
 // import {SCREEN_NAME as ReviewScreenName} from '../../../../Review';
 import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
 import {checkSseType3Atom} from '../../../../../../utils/sse/sseLogics/store';
+import useSse from '../../../../../../utils/sse/sseLogics/useSse';
 // 수정후 여기로 오게 하기
 // import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
@@ -58,6 +59,7 @@ const Screen = ({route}) => {
   const [photosArrayForFlatList, setPhotosArrayForFlatList] = useState([]);
   const [charLength, setCharLength] = useState(0);
 
+  // sseType3
   const [, setCheckSseType3] = useAtom(checkSseType3Atom);
 
   useEffect(() => {
@@ -274,6 +276,7 @@ const Screen = ({route}) => {
                   //   from: 'home',
                   // });
                   setCheckSseType3(true);
+
                   if (resetNavigate) {
                     // navigation.navigate(WrittenReviewPageName);
                     navigation.reset({

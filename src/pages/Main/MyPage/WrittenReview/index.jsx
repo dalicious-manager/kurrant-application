@@ -15,6 +15,8 @@ import {
   formattedWeekDate,
 } from '../../../../utils/dateFormatter';
 import NoOrder from '../NoOrder';
+import useSse from '../../../../utils/sse/sseLogics/useSse';
+import useSseType3 from '../../../../utils/sse/sseHooks/useSseType3';
 
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
 const sampleAdminReview = {
@@ -31,6 +33,10 @@ const Pages = ({route}) => {
 
   const [idx, setIdx] = useState(-1);
   const {getWrittenReview, reviewList, writtenReviewCount} = useWrittenReview();
+
+  // 홈에서 checkSseType3가 true일때 리뷰 total이 0 이상인지 판단하기
+
+  useSseType3();
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const toast = Toast();

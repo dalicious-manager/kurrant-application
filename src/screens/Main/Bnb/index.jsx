@@ -24,6 +24,8 @@ import MainDim from '../../../pages/Spots/spotGuide/MainDim';
 import {mainDimAtom} from '../../../utils/store';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {sseType3Atom} from '../../../utils/sse/sseLogics/store';
+import useSse from '../../../utils/sse/sseLogics/useSse';
+import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
 
 export const SCREEN_NAME = 'S_MAIN__BNB';
 
@@ -32,6 +34,11 @@ const BottomTab = createBottomTabNavigator();
 const Screen = () => {
   const theme = useTheme();
   const [showDim, setShowDim] = useAtom(mainDimAtom);
+
+  const [total] = useAtom(totalReviewWaitListAtom);
+
+  // sseType3
+  const {sseHistory, sseHistoryRefetch} = useSse();
 
   const [sseType3] = useAtom(sseType3Atom);
 
@@ -125,9 +132,14 @@ const Screen = () => {
             tabBarIcon: ({focused}) => (
               <TabBarIconWrap>
                 <SseRedDotMyPage
-                  // 여기에 로직 여러개 들어감
-                  //
-                  isSse={!!sseType3.type && !sseType3.read}
+                  // sseType3 마이페이지 sse 확인
+                  // 여기는 sse 로직을 여러개 병렬로 묶을 것임
+                  // sseHistory에 type3가 없을 경우 추가하기
+
+                  isSse={
+                    (!!sseType3.type && !sseType3.read) ||
+                    !!sseHistory?.find(v => v.type === 3)
+                  }
                   position="absolute"
                   right="-6px"
                   top="-3px">

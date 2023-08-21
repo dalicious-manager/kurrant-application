@@ -259,10 +259,6 @@ const Pages = ({route}) => {
 
             <ListBox
               title="리뷰 관리"
-              // sseRedDot 로직
-              // total>0일때
-              //
-              // isSse={!sseType3.read}
               isSse={total > 0}
               description={redeemablePoints > 0 && `모두 작성시 최대 `}
               effect={
