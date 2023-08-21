@@ -1,3 +1,4 @@
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
@@ -10,7 +11,6 @@ import {
   PanResponder,
 } from 'react-native';
 import styled from 'styled-components/native';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
 import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
 import Typography from '../Typography';
@@ -182,7 +182,7 @@ const BottomModalMultipleSample = props => {
             )}
             keyExtractor={item => item.id.toString()}
           />
-          <ManagePressView></ManagePressView>
+          <ManagePressView />
         </BottomSheet>
 
         {booleanValue && (

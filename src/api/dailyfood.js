@@ -62,6 +62,30 @@ export const dailyfoodApis = {
       'GET',
     );
   },
+  dailyfoodDateList: async (spotId, startDate, endDate, userRole) => {
+    if (userRole === 'ROLE_GUEST') {
+      const txt = format(new Date(startDate), 'EEE', {locale: ko});
+      await mSleep(100);
+      switch (txt) {
+        case '월':
+          return monday;
+        case '화':
+          return tuesday;
+        case '수':
+          return wendsday;
+        case '목':
+          return thursday;
+        case '금':
+          return friday;
+        default:
+          break;
+      }
+    }
+    return await fetchJson(
+      `/dailyfoods/period/by/date?spotId=${spotId}&startDate=${startDate}&endDate=${endDate}`,
+      'GET',
+    );
+  },
   dailyfoodDetail: foodDetail,
 };
 async function foodDetail(foodId, userRole) {
