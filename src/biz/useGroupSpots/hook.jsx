@@ -106,6 +106,7 @@ const useGroupSpots = () => {
       });
       queryClient.invalidateQueries('userInfo');
       queryClient.invalidateQueries('groupSpotList');
+      queryClient.invalidateQueries('groupSpotDetail');
       queryClient.invalidateQueries('groupSpotManageLists');
       return res;
     } catch (err) {

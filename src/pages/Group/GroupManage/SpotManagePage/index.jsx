@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Dimensions} from 'react-native';
 import styled from 'styled-components/native';
@@ -32,6 +32,7 @@ const Pages = ({route}) => {
 
   const {
     data: {data: isUserInfo},
+    refetch: userInfoRefetch,
   } = useGetUserInfo();
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState();
@@ -62,6 +63,13 @@ const Pages = ({route}) => {
       setModalVisible(true);
     }
   }, [from]);
+  useFocusEffect(
+    useCallback(() => {
+      if (spotId === null) {
+        setModalVisible(true);
+      }
+    }, [spotId]),
+  );
 
   const renderItem = useCallback(({item}) => {
     return <SpotListBox item={item} />;
@@ -91,7 +99,9 @@ const Pages = ({route}) => {
         </Typography>
         <SpotView onPress={modalOpen}>
           <SpotName>
-            {userGroupSpotDetail?.data?.spotName || '스팟을 선택해 주세요'}
+            {isUserInfo?.spotId !== null
+              ? userGroupSpotDetail?.data?.spotName || '스팟을 선택해 주세요'
+              : '스팟을 선택해 주세요'}
           </SpotName>
           <Arrow />
         </SpotView>
