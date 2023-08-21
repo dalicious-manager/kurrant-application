@@ -32,25 +32,30 @@ export function useGetDailyfood(spotId, selectedDate, userRole) {
   );
 }
 export function useGetDailyfoodList(spotId, startDate, endDate, userRole) {
-  const [isTokenValid, setIsTokenValid] = useState(false);
-
-  useEffect(() => {
-    const getTokenData = async () => {
-      const storage = JSON.parse(await getStorage('token'));
-      return jwtUtils.isAuth(storage?.accessToken);
-    };
-
-    getTokenData().then(result => {
-      setIsTokenValid(result);
-    });
-  }, []);
   return useQuery(
     'dailyfood',
     () => {
       return dailyfoodApis.dailyfoodList(spotId, startDate, endDate, userRole);
     },
     {
-      enabled: !!spotId && isTokenValid,
+      enabled: !!spotId,
+      retry: false,
+    },
+  );
+}
+export function useGetDailyfoodDateList(spotId, startDate, endDate, userRole) {
+  return useQuery(
+    'dailyfooddate',
+    () => {
+      return dailyfoodApis.dailyfoodDateList(
+        spotId,
+        startDate,
+        endDate,
+        userRole,
+      );
+    },
+    {
+      enabled: !!spotId,
       retry: false,
     },
   );

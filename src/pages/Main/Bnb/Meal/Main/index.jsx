@@ -86,13 +86,7 @@ const Pages = ({route}) => {
       );
     }
   }, [dailyfoodDataList?.data?.dailyFoodsByDate, date]);
-  // const {
-  //   data: dailyfoodData,
-  //   refetch: dailyfoodRefetch,
-  //   isLoading: dailyLoading,
-  //   isFetching: dailyFetching,
-  // } = useGetDailyfood(userSpotId, data ? data : date);
-  // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
+
   const selectDate = isOrderMeal?.data?.filter(
     m => m.serviceDate === touchDate,
   );
@@ -101,9 +95,7 @@ const Pages = ({route}) => {
     setTouchDate(day ?? data);
   };
 
-  // console.log(isOrderMeal, '밀정보');
   const cancelMealPress = id => {
-    // console.log(id, '밀 취소');
     const list = isOrderMeal?.data.map(el => {
       return {
         ...el,
@@ -438,6 +430,7 @@ const Pages = ({route}) => {
       <ButtonWrap>
         <PlusButton
           onPress={() => {
+            console.log(touchDate, 'touchDate');
             navigation.navigate(BuyMealPageName, {
               date: touchDate ? touchDate : formattedDate(new Date()),
             });
