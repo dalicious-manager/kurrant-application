@@ -37,7 +37,6 @@ const Screen = () => {
 
   const [total] = useAtom(totalReviewWaitListAtom);
 
-  // sseType3
   const {sseHistory, sseHistoryRefetch} = useSse();
 
   const [sseType3] = useAtom(sseType3Atom);
@@ -136,9 +135,13 @@ const Screen = () => {
                   // 여기는 sse 로직을 여러개 병렬로 묶을 것임
                   // sseHistory에 type3가 없을 경우 추가하기
 
+                  // sseType8
+                  //
+
                   isSse={
                     (!!sseType3.type && !sseType3.read) ||
-                    !!sseHistory?.find(v => v.type === 3)
+                    !!sseHistory?.find(v => v.type === 3) ||
+                    !!sseHistory?.find(v => v.type === 8)
                   }
                   position="absolute"
                   right="-6px"

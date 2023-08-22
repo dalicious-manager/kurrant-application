@@ -15,17 +15,11 @@ import {
   formattedWeekDate,
 } from '../../../../utils/dateFormatter';
 import NoOrder from '../NoOrder';
-import useSse from '../../../../utils/sse/sseLogics/useSse';
+
 import useSseType3 from '../../../../utils/sse/sseHooks/useSseType3';
+import useSse from '../../../../utils/sse/sseLogics/useSse';
 
 export const PAGE_NAME = 'P_MAIN__MYPAGE__WRITTENREVIEW';
-const sampleAdminReview = {
-  pngLink: DefaultProfile,
-  adminName: '일품만찬',
-  writtenDate: '2022.02.19 작성',
-  message:
-    '다음에는 더 맛있는 메뉴를준비해보겠습니다. 이용해주셔서 다시한번 감사드리고 새해에는 더더더더더복 많이 받으세요 사랑합니다.',
-};
 
 const Pages = ({route}) => {
   const pointId = route?.params?.id;
@@ -36,7 +30,34 @@ const Pages = ({route}) => {
 
   // 홈에서 checkSseType3가 true일때 리뷰 total이 0 이상인지 판단하기
 
+  const {confirmSseIsRead} = useSse();
+
   useSseType3();
+
+  const {sseHistory, sseHistoryRefetch} = useSse();
+  const [sseType8List, setSseType8List] = useState([]);
+
+  useEffect(() => {
+    if (
+      Array.isArray(
+        sseHistory?.filter(v => v.type === 8)?.map(v => v.commentId),
+      ) &&
+      sseHistory?.filter(v => v.type === 8)?.map(v => v.commentId).length > 0
+    ) {
+      setSseType8List(
+        sseHistory?.filter(v => v.type === 8)?.map(v => v.commentId),
+      );
+    }
+  }, [sseHistory]);
+
+  useEffect(() => {
+    return () => {
+      const list = sseHistory?.filter(v => v.type === 8)?.map(v => v.commentId);
+      if (Array.isArray(list) && list.length > 0) {
+        confirmSseIsRead(8);
+      }
+    };
+  }, []);
 
   // 포인트 연결 리뷰 id & 리뷰 id 일치하는 index 찾기
   const toast = Toast();
@@ -104,6 +125,7 @@ const Pages = ({route}) => {
               forMakers: item.forMakers,
               commentList: item.commentList,
               dailyFoodId: item.dailyFoodId,
+              sseType8List,
             };
 
             return (
@@ -125,6 +147,7 @@ const Pages = ({route}) => {
                   commentList={item2.commentList}
                   toast={toast}
                   dailyFoodId={item2.dailyFoodId}
+                  sseType8List={item2.sseType8List}
                 />
               </View>
             );

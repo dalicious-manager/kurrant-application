@@ -25,6 +25,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {PAGE_NAME as MoreMainPageName} from '~pages/Main/Bnb/More/Main';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
+import useSse from '../../../utils/sse/sseLogics/useSse';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -59,7 +60,7 @@ const Screen = ({route}) => {
     });
   }, []);
 
-  // 구매후기가 0 으로 돌아가면 sseType3
+  const {sseHistory, sseHistoryRefetch} = useSse();
 
   return (
     <>
@@ -106,7 +107,7 @@ const Screen = ({route}) => {
             tabBarLabel: ({focused}) => (
               <SseRedDot
                 // isSse={total > 0}
-                isSse={false}
+                isSse={!!sseHistory?.find(v => v.type === 8)}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>

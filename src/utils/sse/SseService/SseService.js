@@ -14,7 +14,7 @@ class SseService {
       return SseServiceOnlyOneInstance;
     } else {
       instanceCount += 1;
-      console.log('인스턴스 만든 횟수 ' + instanceCount);
+      console.log('SseService 인스턴스 만든 횟수 ' + instanceCount);
     }
 
     this.baseUrl = baseUrl;
@@ -48,7 +48,7 @@ class SseService {
     if (typeof e.data === 'string') {
       if (e.data.includes('EventStream')) {
         console.log('-----');
-        console.log('EventStream 연결 되었답니다');
+        console.log('Sse 연결을 성공하였습니다');
         console.log(e.data);
         // sseType12345 전부 초기화
         // setSseType1({});
@@ -105,15 +105,16 @@ class SseService {
           case 7:
             // type: 7 그룹
 
-            console.log('type: 6 Sse 확인');
+            console.log('type: 7 Sse 확인');
             console.log({...JSON.parse(e.data)});
             this.callbackForAtoms[6]({...JSON.parse(e.data)});
 
             break;
           case 8:
             // type: 8 댓글
+            // 발동 조건:
 
-            console.log('type: 6 Sse 확인');
+            console.log('type: 8 Sse 확인');
             console.log({...JSON.parse(e.data)});
             this.callbackForAtoms[7]({...JSON.parse(e.data)});
 
