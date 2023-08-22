@@ -95,12 +95,14 @@ const useBoard = () => {
     }
   };
 
-  const readAlarm = async data => {
+  const readAlarm = async (data, isRerenderNeeded = false) => {
     try {
       const response = await Fetch.readAlarm(data);
 
       if (response.statusCode === 200) {
-        getAlarm();
+        if (isRerenderNeeded) {
+          getAlarm();
+        }
         console.log('리뷰 댓글을 읽었습니다 ');
       }
     } catch (err) {
