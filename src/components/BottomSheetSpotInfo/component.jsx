@@ -58,12 +58,7 @@ const Component = props => {
   const {data: detailData, refetch: detailDataRefech} = useGetShareSpotDetail(
     data[0]?.id,
   );
-  // const {
-  //   userGroupSpotCheck,
-  //   isUserGroupSpotCheck,
-  //   userSpotRegister,
-  //   groupSpotDetail,
-  // } = useGroupSpots();
+
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
   const {mutateAsync: selectSpot} = useSelectShareSpot();
 

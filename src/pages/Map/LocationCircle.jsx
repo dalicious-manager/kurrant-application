@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import Icon from '../../assets/icons/Map/locationCircle.svg';
 import Typography from '../../components/Typography';
 
-const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
+const Location = ({setInitCenter, setMyLocation, setShow, toast, from}) => {
   const openAppSettings = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:root');
@@ -95,12 +95,14 @@ const Location = ({setInitCenter, setMyLocation, setShow, toast}) => {
     }
   };
   useEffect(() => {
-    if (Platform.OS === 'ios') {
-      requestLocationIosPermission();
-    } else {
-      requestLocationAndroidPermission();
+    if (from !== 'manage') {
+      if (Platform.OS === 'ios') {
+        requestLocationIosPermission();
+      } else {
+        requestLocationAndroidPermission();
+      }
     }
-  }, []);
+  }, [from]);
 
   return (
     <Wrap onPress={userLocation}>

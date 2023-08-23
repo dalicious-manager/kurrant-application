@@ -104,31 +104,31 @@ const Component = ({
                   const order = meal?.filter(x => x.serviceDate === propsDay);
                   const set = new Set(order?.map(x => x.diningType));
                   const orderCount = [...set].length;
-                  const morningServiceDays = isServiceDays?.filter(v => {
-                    return v.diningType === 1;
-                  });
-                  const lunchServiceDays = isServiceDays?.filter(v => {
-                    return v.diningType === 2;
-                  });
-                  const dinnerServiceDays = isServiceDays?.filter(v => {
-                    return v.diningType === 3;
-                  });
-                  // 서비스일
-                  const morning =
-                    (morningServiceDays &&
-                      morningServiceDays?.length > 1 &&
-                      morningServiceDays[0]?.serviceDays?.includes(txt)) ||
-                    false;
-                  const lunch =
-                    (lunchServiceDays &&
-                      lunchServiceDays?.length > 0 &&
-                      lunchServiceDays[0]?.serviceDays?.includes(txt)) ||
-                    false;
-                  const dinner =
-                    (dinnerServiceDays &&
-                      dinnerServiceDays?.length > 0 &&
-                      dinnerServiceDays[0]?.serviceDays?.includes(txt)) ||
-                    false;
+                  // const morningServiceDays = isServiceDays?.filter(v => {
+                  //   return v.diningType === 1;
+                  // });
+                  // const lunchServiceDays = isServiceDays?.filter(v => {
+                  //   return v.diningType === 2;
+                  // });
+                  // const dinnerServiceDays = isServiceDays?.filter(v => {
+                  //   return v.diningType === 3;
+                  // });
+                  // // 서비스일
+                  // const morning =
+                  //   (morningServiceDays &&
+                  //     morningServiceDays?.length > 1 &&
+                  //     morningServiceDays[0]?.serviceDays?.includes(txt)) ||
+                  //   false;
+                  // const lunch =
+                  //   (lunchServiceDays &&
+                  //     lunchServiceDays?.length > 0 &&
+                  //     lunchServiceDays[0]?.serviceDays?.includes(txt)) ||
+                  //   false;
+                  // const dinner =
+                  //   (dinnerServiceDays &&
+                  //     dinnerServiceDays?.length > 0 &&
+                  //     dinnerServiceDays[0]?.serviceDays?.includes(txt)) ||
+                  //   false;
 
                   const events = () => {
                     selectedPress(day);
@@ -138,12 +138,7 @@ const Component = ({
                     <DaysWrap
                       key={day}
                       idx={idx}
-                      disabled={
-                        (lastDay && true) ||
-                        (morning === false &&
-                          lunch === false &&
-                          dinner === false)
-                      }
+                      disabled={lastDay && true}
                       onPress={() => {
                         onPressEvent
                           ? navigation.reset({
@@ -156,13 +151,7 @@ const Component = ({
                             })
                           : onPressEvent2 && events();
                       }}>
-                      <Day
-                        lastDay={lastDay}
-                        color={color}
-                        size={size}
-                        morning={morning}
-                        lunch={lunch}
-                        dinner={dinner}>
+                      <Day lastDay={lastDay} color={color} size={size}>
                         {txt}
                       </Day>
                       <TodayCircle
@@ -171,9 +160,6 @@ const Component = ({
                         currentPress={currentPress}
                         day={day}>
                         <Day
-                          morning={morning}
-                          lunch={lunch}
-                          dinner={dinner}
                           color={color}
                           lastDay={lastDay}
                           now={now}
@@ -253,7 +239,7 @@ const Day = styled(Typography).attrs({text: 'Body06R'})`
       ? theme.colors.grey[5]
       : morning || lunch || dinner
       ? theme.colors.grey[2]
-      : theme.colors.grey[5]};
+      : theme.colors.grey[2]};
   ${({color, now}) => now && getTodayColor(color)};
   ${({size}) => getFontStyle(size)};
 `;

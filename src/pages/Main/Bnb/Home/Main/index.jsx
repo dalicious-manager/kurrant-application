@@ -44,6 +44,7 @@ import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJus
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useMembership from '../../../../../biz/useMembership';
+import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
@@ -312,12 +313,12 @@ const Pages = () => {
 
   // 홈 공지사항 하나만 넣기
 
-  const {
-    getOneAnnouncement,
-    oneAnnouncement,
-    isOneAnnouncementModalVisible,
-    setIsOneAnnouncementModalVisible,
-  } = useGetOneAnnouncements();
+  // const {
+  //   getOneAnnouncement,
+  //   oneAnnouncement,
+  //   isOneAnnouncementModalVisible,
+  //   setIsOneAnnouncementModalVisible,
+  // } = useGetOneAnnouncements();
 
   // useEffect(() => {
   //   removeItemFromStorage('announcementsClickedOneDate');
@@ -349,7 +350,7 @@ const Pages = () => {
       }
     };
     handleShowModal();
-    getOneAnnouncement(2);
+    // getOneAnnouncement(2);
     if (coinSound === null) loadCoinSound();
   }, []);
 
@@ -553,7 +554,6 @@ const Pages = () => {
     setModalVisible2(false);
   };
   const groupManagePress = async () => {
-    console.log(userSpotId);
     if (isUserInfo?.data?.spotId) {
       try {
         // await groupSpotDetail(userSpotId);
@@ -639,13 +639,13 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
-        {!!oneAnnouncement && (
+        {/* {!!oneAnnouncement && (
           <ModalOneAnnouncement
             data={oneAnnouncement}
             modalVisible={isOneAnnouncementModalVisible}
             setModalVisible={setIsOneAnnouncementModalVisible}
           />
-        )}
+        )} */}
 
         {/* 홈 강제 공지사항 띄우기 */}
         {/* {Array.isArray(announcements) &&

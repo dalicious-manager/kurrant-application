@@ -51,7 +51,7 @@ const useFoodDaily = () => {
       if (res.data === null) {
         throw new Error('없음');
       }
-      // console.log(res.data.diningTypes)
+
       setServiceDays(res.data.serviceDays);
       setDiningTypes(res.data.diningTypes);
       setMorning(res.data.dailyFoodDtos.filter(x => x.diningType === 1));
