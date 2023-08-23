@@ -39,6 +39,9 @@ const useSseStart = () => {
     const tokenYo = await getToken();
 
     if (forOnlyOneSseService) return forOnlyOneSseService; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
+
+    if (!tokenYo) return;
+
     forOnlyOneSseService = new SseService(apiHostUrl, tokenYo, [
       data => {
         setSseType1(data);

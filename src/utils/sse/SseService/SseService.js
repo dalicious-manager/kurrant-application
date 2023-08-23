@@ -30,7 +30,7 @@ class SseService {
         },
         // withCredentials: true,
         pollingInterval: 1000 * 60 * 15,
-        // retry: 3000,
+        retry: 1000 * 1000,
       },
     );
 
