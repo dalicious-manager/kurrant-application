@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/native';
 import {el} from 'date-fns/locale';
 import {useAtom, useAtomValue} from 'jotai';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -112,26 +112,6 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   //
-  const {sseType5, confirmSseIsRead, sseHistory} = useSse();
-  const [sseType7List, setSseType7List] = useState([]);
-
-  useEffect(() => {
-    const result = [
-      ...new Set(
-        sseHistory
-          ?.filter(v => v.type === 7)
-          .map(v => v.groupId)
-          .filter(v => (!!v ? v : undefined)),
-      ),
-    ];
-
-    setSseType7List(result);
-  }, [sseHistory]);
-
-  useEffect(() => {
-    console.log('sseType7List 확인');
-    console.log(sseType7List);
-  }, [sseType7List]);
 
   const navigation = useNavigation();
   const themeApp = useTheme();
@@ -167,9 +147,50 @@ const Pages = () => {
 
   const [appState, setAppState] = useState();
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
-
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
+
+  const {sseType5, confirmSseIsRead, sseHistory} = useSse();
+  const [sseType7List, setSseType7List] = useState([]);
+  const isModalOpenAtLeastOnce = useRef(false);
+
+  useEffect(() => {
+    const result = [
+      ...new Set(
+        sseHistory
+          ?.filter(v => v.type === 7)
+          .map(v => v.groupId)
+          .filter(v => (!!v ? v : undefined)),
+      ),
+    ];
+
+    setSseType7List(result);
+  }, [sseHistory]);
+
+  useEffect(() => {
+    console.log('sseType7List 확인');
+    console.log(sseType7List);
+  }, [sseType7List]);
+
+  useEffect(() => {
+    if (!isModalOpenAtLeastOnce.current) {
+      if (modalVisible) {
+        console.log('공룡');
+        isModalOpenAtLeastOnce.current = true;
+      }
+    } else {
+      // 이제 한번 열린거임
+
+      if (!modalVisible) {
+        // 여기서 부터 코드 작성시작
+        console.log('읽었습니다~~ ');
+        if (Array.isArray(sseType7List) && sseType7List.length > 0) {
+          confirmSseIsRead(7);
+        }
+      }
+    }
+  }, [modalVisible]);
+
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
   const {data: isPrivateMembership, refetch: privateMembershipRefetch} =
@@ -647,11 +668,6 @@ const Pages = () => {
       getData();
     }, []),
   );
-
-  useEffect(() => {
-    console.log('isUserGroupSpotCheck?.data.spotListResponseDtoList 확인');
-    console.log(isUserGroupSpotCheck?.data.spotListResponseDtoList);
-  }, [isUserGroupSpotCheck?.data.spotListResponseDtoList]);
 
   if (!isUserInfo?.data) {
     return <SkeletonUI />;

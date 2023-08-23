@@ -41,15 +41,6 @@ const BottomSheetSpot = props => {
     sseType7List,
   } = props;
   //멀티 셀렉터시 이용
-  useEffect(() => {
-    console.log('data 확인');
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    console.log('sseType7List 확인');
-    console.log(sseType7List);
-  }, [sseType7List]);
 
   // const [selected, setSelected] = useState(new Map());
   const [showDim, setShowDim] = useAtom(mainDimAtom);
@@ -167,7 +158,7 @@ const BottomSheetSpot = props => {
                       isSse={sseType7List.includes(item.clientId)}
                       position={'absolute'}
                       top={'4px'}
-                      right={'0px'}
+                      right={'3px'}
                     />
 
                     <GroupView>
