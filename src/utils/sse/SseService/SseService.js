@@ -28,9 +28,8 @@ class SseService {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
-        // withCredentials: true,
+
         pollingInterval: 1000 * 60 * 15,
-        retry: 1000 * 1000,
       },
     );
 
