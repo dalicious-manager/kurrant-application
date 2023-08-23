@@ -113,6 +113,25 @@ export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
   //
   const {sseType5, confirmSseIsRead, sseHistory} = useSse();
+  const [sseType7List, setSseType7List] = useState([]);
+
+  useEffect(() => {
+    const result = [
+      ...new Set(
+        sseHistory
+          ?.filter(v => v.type === 7)
+          .map(v => v.groupId)
+          .filter(v => (!!v ? v : undefined)),
+      ),
+    ];
+
+    setSseType7List(result);
+  }, [sseHistory]);
+
+  useEffect(() => {
+    console.log('sseType7List 확인');
+    console.log(sseType7List);
+  }, [sseType7List]);
 
   const navigation = useNavigation();
   const themeApp = useTheme();
@@ -629,6 +648,11 @@ const Pages = () => {
     }, []),
   );
 
+  useEffect(() => {
+    console.log('isUserGroupSpotCheck?.data.spotListResponseDtoList 확인');
+    console.log(isUserGroupSpotCheck?.data.spotListResponseDtoList);
+  }, [isUserGroupSpotCheck?.data.spotListResponseDtoList]);
+
   if (!isUserInfo?.data) {
     return <SkeletonUI />;
   }
@@ -937,6 +961,7 @@ const Pages = () => {
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
         // data={userGroupSpot?.spotListResponseDtoList}
+        sseType7List={sseType7List}
         data={isUserGroupSpotCheck?.data.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}

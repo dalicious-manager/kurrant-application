@@ -55,7 +55,7 @@ const useSse = () => {
             sseHistoryRefetch();
             break;
           case 2:
-            // type: 2 스팟공지 (여긴 아직하면 안 됨)
+            // type: 2 스팟공지 (프론트 구현중)
             console.log('sse 알림읽기 성공 message type 2 (스팟공지)');
             setSseType2({});
             sseHistoryRefetch();
@@ -83,7 +83,7 @@ const useSse = () => {
             sseHistoryRefetch();
             break;
           case 6:
-            // type: 6 알림관련 (테스트 남음)
+            // type: 6 알림관련 (완료)
             console.log('sse 알림읽기 성공 message type 6 (알림관련)');
             // console.log({});
             setSseType6({});
@@ -97,7 +97,7 @@ const useSse = () => {
             sseHistoryRefetch();
             break;
           case 8:
-            // type: 8 댓글 (구현중)
+            // type: 8 댓글 (완료)
             console.log('sse 알림읽기 성공 message type 8 (댓글)');
             // console.log({});
             setSseType8({});

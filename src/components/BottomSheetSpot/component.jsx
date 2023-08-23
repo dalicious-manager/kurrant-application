@@ -22,6 +22,7 @@ import {mainDimAtom} from '../../utils/store';
 import BalloonMessage from '../BalloonMessage';
 import Label from '../Label';
 import Typography from '../Typography';
+import SseRedDot from '../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -37,8 +38,19 @@ const BottomSheetSpot = props => {
     userSpotId,
     booleanValue,
     onPressEvent2 = () => {},
+    sseType7List,
   } = props;
   //멀티 셀렉터시 이용
+  useEffect(() => {
+    console.log('data 확인');
+    console.log(data);
+  }, [data]);
+
+  useEffect(() => {
+    console.log('sseType7List 확인');
+    console.log(sseType7List);
+  }, [sseType7List]);
+
   // const [selected, setSelected] = useState(new Map());
   const [showDim, setShowDim] = useAtom(mainDimAtom);
   const onSelect = useCallback(
@@ -151,6 +163,13 @@ const BottomSheetSpot = props => {
               renderItem={({item}) => (
                 <View onLayout={onLayout}>
                   <ItemContainer>
+                    <SseRedDot
+                      isSse={sseType7List.includes(item.clientId)}
+                      position={'absolute'}
+                      top={'4px'}
+                      right={'0px'}
+                    />
+
                     <GroupView>
                       <View style={{marginRight: 8}}>
                         <Label
