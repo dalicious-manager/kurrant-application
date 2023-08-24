@@ -55,8 +55,7 @@ const Screen = ({route}) => {
           ({navigation}) => ({
             tabBarLabel: ({focused}) => (
               <SseRedDotType1
-                // isSse={total > 0}
-                isSse={true}
+                isSse={false}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>
@@ -78,8 +77,7 @@ const Screen = ({route}) => {
           ({navigation}) => ({
             tabBarLabel: ({focused}) => (
               <SseRedDotType2
-                // isSse={total > 0}
-                isSse={true}
+                isSse={false}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>

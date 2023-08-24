@@ -155,7 +155,7 @@ const BottomSheetSpot = props => {
                 <View onLayout={onLayout}>
                   <ItemContainer>
                     <SseRedDot
-                      isSse={sseType7List.includes(item.clientId)}
+                      isSse={sseType7List?.includes(item.clientId)}
                       position={'absolute'}
                       top={'4px'}
                       right={'3px'}

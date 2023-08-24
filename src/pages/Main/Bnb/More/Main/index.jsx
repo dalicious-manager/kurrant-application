@@ -297,14 +297,11 @@ const Pages = ({route}) => {
           </ListContainer>
           <ListContainer title="알림">
             <ListBox
-              isSse={true}
+              isSse={false}
               title="공지사항"
               routeName={NoticeScreenName}
             />
-            {/* <ListBox
-              title="조재신 업무파악용(테스트)"
-              routeName={testPageName}
-            /> */}
+
             <ListBox
               title="약관 및 개인 정보"
               routeName={TermOfServicePageName}

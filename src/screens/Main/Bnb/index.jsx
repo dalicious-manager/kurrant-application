@@ -136,7 +136,6 @@ const Screen = () => {
                   // sseHistory에 type3가 없을 경우 추가하기
 
                   // sseType8
-                  //
 
                   isSse={
                     (!!sseType3.type && !sseType3.read) ||

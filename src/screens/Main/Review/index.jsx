@@ -83,7 +83,6 @@ const Screen = ({route}) => {
             tabBarLabel: ({focused}) => (
               <SseRedDotReview
                 isSse={total > 0}
-                // isSse={true}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>
@@ -106,7 +105,6 @@ const Screen = ({route}) => {
           options={({navigation}) => ({
             tabBarLabel: ({focused}) => (
               <SseRedDot
-                // isSse={total > 0}
                 isSse={!!sseHistory?.find(v => v.type === 8)}
                 position={'absolute'}
                 top={'0px'}

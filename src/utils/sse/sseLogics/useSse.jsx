@@ -90,7 +90,7 @@ const useSse = () => {
             sseHistoryRefetch();
             break;
           case 7:
-            // type: 7 그룹
+            // type: 7 그룹 (확인 완료)
             console.log('sse 알림읽기 성공 message type 7 (그룹)');
             // console.log({});
             setSseType7({});

@@ -164,26 +164,16 @@ const Pages = () => {
       ),
     ];
 
-    setSseType7List(result);
+    setSseType7List(result ? result : []);
   }, [sseHistory]);
-
-  useEffect(() => {
-    console.log('sseType7List 확인');
-    console.log(sseType7List);
-  }, [sseType7List]);
 
   useEffect(() => {
     if (!isModalOpenAtLeastOnce.current) {
       if (modalVisible) {
-        console.log('공룡');
         isModalOpenAtLeastOnce.current = true;
       }
     } else {
-      // 이제 한번 열린거임
-
       if (!modalVisible) {
-        // 여기서 부터 코드 작성시작
-        console.log('읽었습니다~~ ');
         if (Array.isArray(sseType7List) && sseType7List.length > 0) {
           confirmSseIsRead(7);
         }
@@ -716,6 +706,12 @@ const Pages = () => {
                 : spotName}
             </SpotNameText>
             <ArrowIcon />
+            <SseRedDotType6
+              isSse={sseType7List?.length > 0}
+              position={'absolute'}
+              right={'-6px'}
+              top={'-11px'}
+            />
           </SpotName>
           <Icons>
             <SseRedDotType6
