@@ -253,9 +253,16 @@ const Pages = () => {
           return {
             ...v,
             cartDailyFoods: [
-              ...v.cartDailyFoods.filter(food => {
-                return food.status !== 6;
-              }),
+              ...v.cartDailyFoods
+                .filter(food => {
+                  return food.status !== 6;
+                })
+                .map(t => {
+                  return {
+                    ...t,
+                    supportPercent: v.supportPercent,
+                  };
+                }),
             ],
           };
         }),
@@ -266,14 +273,20 @@ const Pages = () => {
   const newArrs = newArr?.reduce((acc, cur) => {
     return acc.concat(cur);
   }, []);
-
   const lastArr =
     newArrs?.length > 0
       ? newArrs[0]?.cartDailyFoodDtoList?.filter(
           el => el.cartDailyFoods.length !== 0,
         )
       : [];
-
+  const medtronicSupportPrice = lastArr
+    ?.map(el => {
+      return el.cartDailyFoods.map(v => {
+        return v.supportPercent;
+      });
+    })
+    .flat(2);
+  console.log(arr?.length, 'arr');
   // 총 개수 (주문 마감 미포함)
   const totalCount = arr
     ?.map(p => p.count)
@@ -317,20 +330,26 @@ const Pages = () => {
 
   // 할인가 계산
   const discountPrice = arr
-    ?.map(p => p.discountedPrice * p.count)
+    ?.map((p, i) => {
+      return p.discountedPrice * p.count;
+    })
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
-
-  // 메드트로닉 지원금 유
-  const medtronicSupportPrice = lastArr?.map(el => el.supportPrice);
-  const set = new Set(medtronicSupportPrice);
-  const medtronicSupportArr = [...set];
-
-  // 메드트로닉 식사가격
-  const medtronicPrice =
-    medtronicSupportArr?.includes(62471004) &&
-    Math.round(discountPrice / 20) * 10;
+  const totalMealPersentPrice = arr
+    ?.map((p, i) => {
+      console.log(medtronicSupportPrice[i]);
+      return (
+        (p.count * p.price -
+          (p.count * p.price - p.discountedPrice * p.count)) *
+        medtronicSupportPrice[i]
+      );
+    })
+    .reduce((acc, cur) => {
+      return acc + cur;
+    }, 0);
+  console.log(totalMealPersentPrice, 'totalMealPersentPrice');
+  // 퍼센트 지원금 유
 
   // 총 할인금액
   const totalDiscountPrice = totalMealPrice - discountPrice;
@@ -435,7 +454,7 @@ const Pages = () => {
 
   // 메드트로닉 총 결제금액
   const medtronicTotalPrice =
-    totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
+    totalMealPrice - totalMealPersentPrice - totalDiscountPrice + deliveryFee;
 
   // 품절
   const soldout = arr?.filter(el => el.status === 2);
@@ -851,8 +870,8 @@ const Pages = () => {
                       <QuestionIcon />
                     </PressableView>
                     <PaymentText>
-                      {medtronicSupportArr.includes(62471004)
-                        ? `-${withCommas(medtronicPrice)}`
+                      {totalMealPersentPrice
+                        ? `-${withCommas(totalMealPersentPrice)}`
                         : usedSupportPrice === 0
                         ? 0
                         : discountPrice < usedSupportPrice
@@ -880,7 +899,7 @@ const Pages = () => {
               <PaymentView>
                 <TotalPriceTitle>총 결제금액</TotalPriceTitle>
                 <TotalPrice>
-                  {medtronicSupportArr.includes(62471004)
+                  {totalMealPersentPrice
                     ? withCommas(medtronicTotalPrice)
                     : withCommas(totalPrice)}
                   원
@@ -963,7 +982,9 @@ const Pages = () => {
                   makersDiscountPrice,
                   periodDiscountPrice,
                   totalDiscountPrice,
-                  totalPrice,
+                  totalPrice: totalMealPersentPrice
+                    ? medtronicTotalPrice
+                    : totalPrice,
                   deliveryFee,
                   selected,
                   name,
@@ -972,9 +993,9 @@ const Pages = () => {
                   clientType,
                   arr,
                   usedSupportPrice,
-                  medtronicSupportArr,
-                  medtronicTotalPrice,
-                  medtronicPrice,
+                  // medtronicSupportArr,
+                  // medtronicTotalPrice,
+                  totalMealPersentPrice,
                 });
             }}
           />

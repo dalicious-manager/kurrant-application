@@ -1,12 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {el} from 'date-fns/locale';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
@@ -16,8 +11,6 @@ import {
   AppState,
   Platform,
   Linking,
-  Pressable,
-  Text,
   ActivityIndicator,
 } from 'react-native';
 import Sound from 'react-native-sound';
@@ -32,43 +25,29 @@ import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
-import DisabledPlusIcon from '../../../../../assets/icons/Home/disalbedplus.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useMembership from '../../../../../biz/useMembership';
-import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
-import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
-import {
-  useGetDailyfood,
-  useGetDailyfoodList,
-} from '../../../../../hook/useDailyfood';
+import {useGetDailyfoodList} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
-import {
-  useGetPrivateSpots,
-  useGroupSpotList,
-} from '../../../../../hook/useSpot';
+import {useGroupSpotList} from '../../../../../hook/useSpot';
 import {
   useGetPrivateMembership,
   useGetUserInfo,
 } from '../../../../../hook/useUserInfo';
-import {SCREEN_NAME} from '../../../../../screens/Main/Bnb';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
-import {
-  formattedWeekDate,
-  toStringByFormatting,
-} from '../../../../../utils/dateFormatter';
+import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import jwtUtils from '../../../../../utils/fetch/jwtUtill';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
@@ -76,24 +55,16 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/Sp
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import useShowRegisterInfo from '../../../../RegisterInfo/ShowRegisterInfo/useShowRegisterInfo';
 import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
-
 import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
-import {PAGE_NAME as nicknameSettingPageName} from '../../../MyPage/Nickname/index';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
-import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
-import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
-
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {BowlIcon} from '~components/Icon';
-import useGetDietRepo from '../../DietRepo/useGetDietRepo';
-
-import useShowRegisterInfo from '../../../../RegisterInfo/ShowRegisterInfo/useShowRegisterInfo';
-import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크

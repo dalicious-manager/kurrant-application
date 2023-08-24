@@ -121,11 +121,8 @@ const MealInfoComponent = ({
               startAni={startAni}
               onPress={() => {
                 if (meal.orderStatus === 10) {
-                  // 주문상태변경 - 수령완료 api보내야함
-                  // console.log('000');
                   setStartAni(true);
                   deliveryConfirmPress();
-                  // 식단 리포트 추가하기
                   addMeal([
                     {dailyFoodId},
                     () => {
@@ -133,12 +130,9 @@ const MealInfoComponent = ({
                         queryKey: ['dietRepo', 'main'],
                       });
                       queryClient.invalidateQueries('userInfo');
-                      // dietRepoMainRefetch();
                     },
                   ]);
                 } else {
-                  // console.log('00011');
-                  // 리뷰로 가기
                   goToReviewPage(meal.id, meal.image, meal.name);
                 }
               }}>
