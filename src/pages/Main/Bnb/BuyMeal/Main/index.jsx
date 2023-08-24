@@ -252,7 +252,9 @@ const Pages = ({route}) => {
     date,
     isUserInfo?.data,
     nowDiningType,
+    nowPage,
     setDiningTime,
+    weeklyService,
   ]);
   useEffect(() => {
     console.log(supportPrice, 'supportPrice');
