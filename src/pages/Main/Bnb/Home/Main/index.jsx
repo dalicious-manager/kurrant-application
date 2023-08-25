@@ -71,9 +71,7 @@ import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 import useSseType3 from '../../../../../utils/sse/sseHooks/useSseType3';
 import {BowlIcon} from '~components/Icon';
-import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 
-import useShowRegisterInfo from '../../../../RegisterInfo/ShowRegisterInfo/useShowRegisterInfo';
 import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
