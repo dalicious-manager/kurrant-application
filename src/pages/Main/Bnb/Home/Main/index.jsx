@@ -330,7 +330,7 @@ const Pages = () => {
 
   // // 회원 정보 입력
 
-  useShowRegisterInfo();
+  // useShowRegisterInfo();
 
   useEffect(() => {
     const handleShowModal = async () => {
