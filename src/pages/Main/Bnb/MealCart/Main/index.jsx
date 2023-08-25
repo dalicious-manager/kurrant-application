@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {cos} from 'react-native-reanimated';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
@@ -212,9 +213,17 @@ const Pages = () => {
   const arrs = spotCartData
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
-      el.cartDailyFoodDtoList?.map(v =>
-        v.cartDailyFoods.filter(c => c.status !== 6),
-      ),
+      el.cartDailyFoodDtoList?.map(v => {
+        return v.cartDailyFoods
+          .filter(c => c.status !== 6)
+          .map(food => {
+            return {
+              ...food,
+              serviceDate: v.serviceDate,
+              diningType: v.diningType,
+            };
+          });
+      }),
     )
     .flat();
   const arr = arrs?.reduce((acc, val) => [...acc, ...val], []);
@@ -253,9 +262,15 @@ const Pages = () => {
           return {
             ...v,
             cartDailyFoods: [
-              ...v.cartDailyFoods.filter(food => {
-                return food.status !== 6;
-              }),
+              ...v.cartDailyFoods
+                .filter(food => {
+                  return food.status !== 6;
+                })
+                .map(t => {
+                  return {
+                    ...t,
+                  };
+                }),
             ],
           };
         }),
@@ -266,14 +281,19 @@ const Pages = () => {
   const newArrs = newArr?.reduce((acc, cur) => {
     return acc.concat(cur);
   }, []);
-
   const lastArr =
     newArrs?.length > 0
       ? newArrs[0]?.cartDailyFoodDtoList?.filter(
           el => el.cartDailyFoods.length !== 0,
         )
       : [];
-
+  const medtronicSupportPrice = lastArr?.map(el => {
+    return {
+      support: el.supportPercent || el.supportPrice,
+      serviceDate: el.serviceDate,
+      diningType: el.diningType,
+    };
+  });
   // 총 개수 (주문 마감 미포함)
   const totalCount = arr
     ?.map(p => p.count)
@@ -317,20 +337,54 @@ const Pages = () => {
 
   // 할인가 계산
   const discountPrice = arr
-    ?.map(p => p.discountedPrice * p.count)
+    ?.map((p, i) => {
+      return p.discountedPrice * p.count;
+    })
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
 
-  // 메드트로닉 지원금 유
-  const medtronicSupportPrice = lastArr?.map(el => el.supportPrice);
-  const set = new Set(medtronicSupportPrice);
-  const medtronicSupportArr = [...set];
+  const sumValuesByKeys = inputArray => {
+    const resultMap = new Map();
 
-  // 메드트로닉 식사가격
-  const medtronicPrice =
-    medtronicSupportArr?.includes(62471004) &&
-    Math.round(discountPrice / 20) * 10;
+    inputArray?.forEach(obj => {
+      const {serviceDate, diningType, count, price, discountedPrice} = obj;
+      const key = `${serviceDate}-${diningType}`;
+
+      if (resultMap.has(key)) {
+        resultMap.get(key).totalValue +=
+          count * price - (count * price - discountedPrice * count);
+      } else {
+        resultMap.set(key, {
+          serviceDate,
+          diningType,
+          totalValue: count * price - (count * price - discountedPrice * count),
+        });
+      }
+    });
+
+    const resultArray = Array.from(resultMap.values());
+
+    return resultArray;
+  };
+  const isSupportPrice = sumValuesByKeys(arr);
+  const totalMealPersentPrice = isSupportPrice
+    ?.map((p, i) => {
+      const support = medtronicSupportPrice.find(
+        v =>
+          `${v.serviceDate}-${v.diningType}` ===
+          `${p.serviceDate}-${p.diningType}`,
+      );
+      if (support.support < 1.1) return p.totalValue * support.support;
+      return p.totalValue - support.support < 0
+        ? p.totalValue
+        : support.support;
+    })
+    .reduce((acc, cur) => {
+      return acc + cur;
+    }, 0);
+
+  // 퍼센트 지원금 유
 
   // 총 할인금액
   const totalDiscountPrice = totalMealPrice - discountPrice;
@@ -435,7 +489,7 @@ const Pages = () => {
 
   // 메드트로닉 총 결제금액
   const medtronicTotalPrice =
-    totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
+    totalMealPrice - totalMealPersentPrice - totalDiscountPrice + deliveryFee;
 
   // 품절
   const soldout = arr?.filter(el => el.status === 2);
@@ -851,8 +905,8 @@ const Pages = () => {
                       <QuestionIcon />
                     </PressableView>
                     <PaymentText>
-                      {medtronicSupportArr.includes(62471004)
-                        ? `-${withCommas(medtronicPrice)}`
+                      {totalMealPersentPrice
+                        ? `-${withCommas(totalMealPersentPrice)}`
                         : usedSupportPrice === 0
                         ? 0
                         : discountPrice < usedSupportPrice
@@ -880,7 +934,7 @@ const Pages = () => {
               <PaymentView>
                 <TotalPriceTitle>총 결제금액</TotalPriceTitle>
                 <TotalPrice>
-                  {medtronicSupportArr.includes(62471004)
+                  {totalMealPersentPrice
                     ? withCommas(medtronicTotalPrice)
                     : withCommas(totalPrice)}
                   원
@@ -963,7 +1017,9 @@ const Pages = () => {
                   makersDiscountPrice,
                   periodDiscountPrice,
                   totalDiscountPrice,
-                  totalPrice,
+                  totalPrice: totalMealPersentPrice
+                    ? medtronicTotalPrice
+                    : totalPrice,
                   deliveryFee,
                   selected,
                   name,
@@ -972,9 +1028,9 @@ const Pages = () => {
                   clientType,
                   arr,
                   usedSupportPrice,
-                  medtronicSupportArr,
-                  medtronicTotalPrice,
-                  medtronicPrice,
+                  // medtronicSupportArr,
+                  // medtronicTotalPrice,
+                  totalMealPersentPrice,
                 });
             }}
           />
