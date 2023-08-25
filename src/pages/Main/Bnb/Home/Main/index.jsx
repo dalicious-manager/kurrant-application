@@ -873,6 +873,7 @@ const Pages = () => {
         buttonType2="grey2"
         onPressEvent1={closeModal}
         onPressEvent2={() => {
+          closeModal();
           navigation.navigate(MembershipIntro, {
             isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
           });
