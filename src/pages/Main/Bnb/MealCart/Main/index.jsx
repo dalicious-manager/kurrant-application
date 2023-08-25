@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {cos} from 'react-native-reanimated';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
@@ -212,9 +213,17 @@ const Pages = () => {
   const arrs = spotCartData
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
-      el.cartDailyFoodDtoList?.map(v =>
-        v.cartDailyFoods.filter(c => c.status !== 6),
-      ),
+      el.cartDailyFoodDtoList?.map(v => {
+        return v.cartDailyFoods
+          .filter(c => c.status !== 6)
+          .map(food => {
+            return {
+              ...food,
+              serviceDate: v.serviceDate,
+              diningType: v.diningType,
+            };
+          });
+      }),
     )
     .flat();
   const arr = arrs?.reduce((acc, val) => [...acc, ...val], []);
@@ -260,7 +269,6 @@ const Pages = () => {
                 .map(t => {
                   return {
                     ...t,
-                    supportPercent: v.supportPercent,
                   };
                 }),
             ],
@@ -279,14 +287,13 @@ const Pages = () => {
           el => el.cartDailyFoods.length !== 0,
         )
       : [];
-  const medtronicSupportPrice = lastArr
-    ?.map(el => {
-      return el.cartDailyFoods.map(v => {
-        return v.supportPercent;
-      });
-    })
-    .flat(2);
-  console.log(arr?.length, 'arr');
+  const medtronicSupportPrice = lastArr?.map(el => {
+    return {
+      support: el.supportPercent || el.supportPrice,
+      serviceDate: el.serviceDate,
+      diningType: el.diningType,
+    };
+  });
   // 총 개수 (주문 마감 미포함)
   const totalCount = arr
     ?.map(p => p.count)
@@ -336,19 +343,52 @@ const Pages = () => {
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
-  const totalMealPersentPrice = arr
+
+  function sumValuesByKeys(inputArray) {
+    const resultMap = new Map();
+
+    inputArray?.forEach(obj => {
+      const {serviceDate, diningType, count, price, discountedPrice} = obj;
+      const key = `${serviceDate}-${diningType}`;
+
+      if (resultMap.has(key)) {
+        resultMap.get(key).totalValue +=
+          count * price - (count * price - discountedPrice * count);
+      } else {
+        resultMap.set(key, {
+          serviceDate,
+          diningType,
+          totalValue: count * price - (count * price - discountedPrice * count),
+        });
+      }
+    });
+
+    const resultArray = Array.from(resultMap.values());
+
+    return resultArray;
+  }
+  const isSupportPrice = sumValuesByKeys(arr);
+  const totalMealPersentPrice = isSupportPrice
     ?.map((p, i) => {
-      console.log(medtronicSupportPrice[i]);
-      return (
-        (p.count * p.price -
-          (p.count * p.price - p.discountedPrice * p.count)) *
-        medtronicSupportPrice[i]
+      const support = medtronicSupportPrice.find(
+        v =>
+          `${v.serviceDate}-${v.diningType}` ===
+          `${p.serviceDate}-${p.diningType}`,
       );
+      if (support.support < 1.1) return p.totalValue * support.support;
+      return p.totalValue - support.support < 0
+        ? p.totalValue
+        : support.support;
+      // return (
+      //   (p.count * p.price -
+      //     (p.count * p.price - p.discountedPrice * p.count)) *
+      //   medtronicSupportPrice[i]
+      // );
     })
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
-  console.log(totalMealPersentPrice, 'totalMealPersentPrice');
+
   // 퍼센트 지원금 유
 
   // 총 할인금액
