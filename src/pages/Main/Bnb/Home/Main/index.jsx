@@ -39,7 +39,10 @@ import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
-import {useGetDailyfoodList} from '../../../../../hook/useDailyfood';
+import {
+  useGetDailyfoodDateList,
+  useGetDailyfoodList,
+} from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
 import {useGroupSpotList} from '../../../../../hook/useSpot';
 import {
@@ -171,11 +174,21 @@ const Pages = () => {
     userSpotRegister,
     groupSpotDetail,
   } = useGroupSpots();
+  // const {
+  //   data: dailyfoodDataList,
+  //   refetch: dailyfoodListRefetch,
+  //   isFetching: dailyfoodListIsFetching,
+  // } = useGetDailyfoodList(
+  //   selected !== undefined ? selected : isUserInfo?.data?.spotId,
+  //   formattedWeekDate(weekly[0][0]),
+  //   formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+  //   userRole,
+  // );
   const {
     data: dailyfoodDataList,
     refetch: dailyfoodListRefetch,
     isFetching: dailyfoodListIsFetching,
-  } = useGetDailyfoodList(
+  } = useGetDailyfoodDateList(
     selected !== undefined ? selected : isUserInfo?.data?.spotId,
     formattedWeekDate(weekly[0][0]),
     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),

@@ -18,7 +18,7 @@ import BuyCalendar from '../../../../../components/BuyCalendar';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {
-  useGetDailyfood,
+  useGetDailyfoodDateList,
   useGetDailyfoodList,
 } from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
@@ -65,13 +65,23 @@ const Pages = ({route}) => {
     ),
   );
   const [dailyfoodData, setDailyfoodData] = useState();
-  const {data: dailyfoodDataList, refetch: dailyfoodListRefetch} =
-    useGetDailyfoodList(
-      userSpotId,
-      formattedWeekDate(weekly[0][0]),
-      formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
-      userRole,
-    );
+  // const {data: dailyfoodDataList, refetch: dailyfoodListRefetch} =
+  //   useGetDailyfoodList(
+  //     userSpotId,
+  //     formattedWeekDate(weekly[0][0]),
+  //     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+  //     userRole,
+  //   );
+  const {
+    data: dailyfoodDataList,
+    refetch: dailyfoodListRefetch,
+    isFetching: dailyfoodListIsFetching,
+  } = useGetDailyfoodDateList(
+    userSpotId,
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+    userRole,
+  );
   useEffect(() => {
     if (dailyfoodDataList?.data?.dailyFoodsByDate) {
       setMorning([]);
