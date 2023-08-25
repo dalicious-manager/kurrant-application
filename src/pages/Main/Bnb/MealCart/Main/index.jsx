@@ -344,7 +344,7 @@ const Pages = () => {
       return acc + cur;
     }, 0);
 
-  function sumValuesByKeys(inputArray) {
+  const sumValuesByKeys = inputArray => {
     const resultMap = new Map();
 
     inputArray?.forEach(obj => {
@@ -366,7 +366,7 @@ const Pages = () => {
     const resultArray = Array.from(resultMap.values());
 
     return resultArray;
-  }
+  };
   const isSupportPrice = sumValuesByKeys(arr);
   const totalMealPersentPrice = isSupportPrice
     ?.map((p, i) => {
@@ -379,11 +379,6 @@ const Pages = () => {
       return p.totalValue - support.support < 0
         ? p.totalValue
         : support.support;
-      // return (
-      //   (p.count * p.price -
-      //     (p.count * p.price - p.discountedPrice * p.count)) *
-      //   medtronicSupportPrice[i]
-      // );
     })
     .reduce((acc, cur) => {
       return acc + cur;
