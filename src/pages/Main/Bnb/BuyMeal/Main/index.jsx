@@ -73,7 +73,6 @@ const Pages = ({route}) => {
   const [hideModal, setHideModal] = useState(true);
   const [cartDailyFoodId, setCartDailyFoodId] = useState();
   const [orderDailyFoodId, setOrderDailyFoodId] = useState();
-  const [dailyfoodData, setDailyfoodData] = useState();
   const [dailyfoodId, setDailyfoodId] = useState();
   const [weekly] = useAtom(weekAtom);
   const [weeklyService, setWeeklyService] = useAtom(weekServiceAtom);
@@ -109,12 +108,12 @@ const Pages = ({route}) => {
 
   const spotId = userRole === 'ROLE_GUEST' ? 1 : isUserInfo?.data?.spotId;
 
-  const {data: dailyfoodDataList} = useGetDailyfoodList(
-    spotId,
-    formattedWeekDate(new Date()),
-    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
-    userRole,
-  );
+  // const {data: dailyfoodDataList} = useGetDailyfoodList(
+  //   spotId,
+  //   formattedWeekDate(new Date()),
+  //   formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+  //   userRole,
+  // );
   const {isFetching: detailFetching} = useGetDailyfoodDetail(
     dailyfoodId,
     userRole,
@@ -206,29 +205,34 @@ const Pages = ({route}) => {
     if (dateIndex !== -1) {
       setNowPage(dateIndex);
     }
-    const nowDining = dailyfoodDataList?.data?.diningTypes.filter(
+    const nowDining = dailyfoodDataDateList?.data?.diningTypes.find(
       v => v.diningType === nowDiningType,
     );
-    if (nowDining?.length > 0) {
-      const supportPrices = nowDining[0]?.supportPriceByDays?.filter(
+    if (nowDining) {
+      const supportPrices = nowDining?.supportPriceByDays?.filter(
         v => v.day === selectDay,
       );
       if (supportPrices?.length > 0) {
+        const dailyFoodDtos = dailyfoodDataDateList?.data?.dailyFoodGroupByDate[
+          nowPage
+        ].dailyFoodDtos.find(v => {
+          return v.diningType === nowDiningType;
+        });
         setSupportPrice(
-          dailyfoodData?.supportPrice || dailyfoodData?.supportPrice === 0
-            ? dailyfoodData?.supportPrice
+          dailyFoodDtos.supportPrice || dailyFoodDtos.supportPrice === 0
+            ? dailyFoodDtos.supportPrice
             : supportPrices[0].supportPrice,
         );
       }
     }
-    const diningTimes = dailyfoodDataList?.data?.diningTypes.filter(
+    const diningTimes = dailyfoodDataDateList?.data?.diningTypes.filter(
       v => v.diningType === nowDiningType,
     );
     const timeSetting = async () => {
-      if (!dailyfoodDataList) return;
+      if (!dailyfoodDataDateList) return;
       const times = await getTime(
         isUserInfo?.data.spotId,
-        dailyfoodDataList?.data?.diningTypes,
+        dailyfoodDataDateList?.data?.diningTypes,
         nowDiningType,
       );
       setTime(times);
@@ -244,14 +248,16 @@ const Pages = ({route}) => {
       );
     }
   }, [
-    dailyfoodData?.supportPrice,
-    dailyfoodDataList,
+    dailyfoodDataDateList,
     date,
     isUserInfo?.data,
     nowDiningType,
+    nowPage,
     setDiningTime,
+    weeklyService,
   ]);
   useEffect(() => {
+    console.log(supportPrice, 'supportPrice');
     if (
       parseInt(supportPrice, 10) ||
       supportPrice === '0' ||
@@ -274,7 +280,6 @@ const Pages = ({route}) => {
         // null일떄
         setShowSupportPrice(false);
       }
-
     }
   }, [supportPrice]);
   useEffect(() => {
@@ -303,16 +308,18 @@ const Pages = ({route}) => {
         weekly
           .map(week => {
             const data = week.filter(day => {
-              const dailyfood = dailyfoodDataList?.data?.diningTypes.map(v => {
-                if (
-                  v.serviceDays?.length > 0 &&
-                  v.serviceDays.includes(format(day, 'EEE', {locale: ko}))
-                ) {
-                  return true;
-                } else {
-                  return false;
-                }
-              });
+              const dailyfood = dailyfoodDataDateList?.data?.diningTypes.map(
+                v => {
+                  if (
+                    v.serviceDays?.length > 0 &&
+                    v.serviceDays.includes(format(day, 'EEE', {locale: ko}))
+                  ) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                },
+              );
               return dailyfood?.length > 0 ? dailyfood[0] : false;
             });
             // console.log(data);
@@ -328,7 +335,7 @@ const Pages = ({route}) => {
           }),
       );
     }
-  }, [dailyfoodDataList?.data, setWeeklyService, userRole, weekly]);
+  }, [dailyfoodDataDateList?.data, setWeeklyService, userRole, weekly]);
 
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
@@ -389,10 +396,8 @@ const Pages = ({route}) => {
           margin={'0px 28px'}
           scrollDir={scrollDir}
           pagerRef={pager}
-          nowPage={
-            dailyfoodDataList?.data?.dailyFoodsByDate[nowPage].diningType
-          }
-          isServiceDays={dailyfoodDataList?.data?.diningTypes}
+          nowPage={nowDiningType}
+          isServiceDays={dailyfoodDataDateList?.data?.diningTypes}
         />
       </CalendarWrap>
       <PagerViewWrap isMembership={isUserInfo?.data?.isMembership}>
@@ -401,7 +406,7 @@ const Pages = ({route}) => {
             <Progress>
               {DININGTYPE.map((btn, i) => {
                 const type = btn === '아침' ? 1 : btn === '점심' ? 2 : 3;
-                const typeBoolean = dailyfoodDataList?.data?.diningTypes
+                const typeBoolean = dailyfoodDataDateList?.data?.diningTypes
                   .map(dining => dining.diningType)
                   ?.includes(type);
                 return (
@@ -466,9 +471,8 @@ const Pages = ({route}) => {
                       onPress={async () => {
                         const selectTime = await getTime(
                           isUserInfo?.data.spotId,
-                          dailyfoodDataList?.data?.diningTypes,
-                          dailyfoodDataList?.data?.dailyFoodsByDate[nowPage]
-                            .diningType,
+                          dailyfoodDataDateList?.data?.diningTypes,
+                          nowDiningType,
                           item.value,
                         );
                         // console.log(selectTime);
@@ -496,9 +500,8 @@ const Pages = ({route}) => {
                     onPress={async () => {
                       const selectTime = await getTime(
                         isUserInfo?.data.spotId,
-                        dailyfoodDataList?.data?.diningTypes,
-                        dailyfoodDataList?.data?.dailyFoodsByDate[nowPage]
-                          .diningType,
+                        dailyfoodDataDateList?.data?.diningTypes,
+                        nowDiningType,
                         item.value,
                       );
                       setTime(selectTime);

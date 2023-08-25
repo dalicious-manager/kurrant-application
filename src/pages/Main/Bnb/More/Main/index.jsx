@@ -143,9 +143,8 @@ const Pages = () => {
         <ScrollView>
           {isUserInfo ? (
             <View>
-              <RegisterInfoPressable
+              {/* <RegisterInfoPressable
                 onPress={() => {
-                  console.log('하이');
                   navigation.navigate(RegisterInfoStartPageName);
                 }}
                 style={{marginLeft: 24}}>
@@ -155,7 +154,7 @@ const Pages = () => {
                   height={'9px'}
                   color={themeApp.colors.grey[4]}
                 />
-              </RegisterInfoPressable>
+              </RegisterInfoPressable> */}
               <LoginBox>
                 <LoginIdBox>
                   <Typography
