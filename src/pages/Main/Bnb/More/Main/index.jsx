@@ -45,6 +45,9 @@ import {PAGE_NAME as FAQPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
+import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
+import {View} from 'react-native';
+import {RightSkinnyArrow} from '../../../../../components/Icon';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -136,22 +139,37 @@ const Pages = () => {
   }
   return (
     <Container>
-      <Wrapper paddingTop={24}>
+      <Wrapper paddingTop={40}>
         <ScrollView>
           {isUserInfo ? (
-            <LoginBox>
-              <LoginIdBox>
-                <Typography
-                  text="Title02SB"
-                  textColor={themeApp.colors.grey[2]}>
-                  {isUserInfo?.nickname ?? isUserInfo?.name}님
-                </Typography>
-              </LoginIdBox>
-              <Pressable
-                onPress={() => navigation.navigate(PersonalInfoPageName)}>
-                <SettingIcon height={16} width={8} />
-              </Pressable>
-            </LoginBox>
+            <View>
+              <RegisterInfoPressable
+                onPress={() => {
+                  console.log('하이');
+                  navigation.navigate(RegisterInfoStartPageName);
+                }}
+                style={{marginLeft: 24}}>
+                <ToRegisterInfoText>회원 정보 입력하기 </ToRegisterInfoText>
+                <RightSkinnyArrow
+                  width={'5px'}
+                  height={'9px'}
+                  color={themeApp.colors.grey[4]}
+                />
+              </RegisterInfoPressable>
+              <LoginBox>
+                <LoginIdBox>
+                  <Typography
+                    text="Title02SB"
+                    textColor={themeApp.colors.grey[2]}>
+                    {isUserInfo?.nickname ?? isUserInfo?.name}님
+                  </Typography>
+                </LoginIdBox>
+                <Pressable
+                  onPress={() => navigation.navigate(PersonalInfoPageName)}>
+                  <SettingIcon height={16} width={8} />
+                </Pressable>
+              </LoginBox>
+            </View>
           ) : (
             <LoginBox
               onPress={async () => {
@@ -320,6 +338,7 @@ const Container = styled.SafeAreaView`
   padding-top: ${Math.round(StatusBar.currentHeight)}px;
   background-color: white;
 `;
+
 const LoginBox = styled.Pressable`
   flex-direction: row;
   align-items: center;
@@ -380,4 +399,13 @@ const InfomationLabel = styled(Typography)``;
 const InfomationCaption = styled(Typography)`
   font-size: 10px;
   font-family: 'Pretendard-Regular';
+`;
+
+const RegisterInfoPressable = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ToRegisterInfoText = styled(Typography).attrs({text: 'Body07CaptionSB'})`
+  color: ${({theme}) => theme.colors.grey[4]};
 `;
