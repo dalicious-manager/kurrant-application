@@ -133,7 +133,7 @@ class SseService {
   };
 
   onError = e => {
-    console.log('error occured closing connection');
+    console.log('sse 에러가 뜹니다. error occured closing connection');
     console.log(e);
   };
 
@@ -143,7 +143,9 @@ class SseService {
   };
 
   onDisconnect = () => {
-    console.log('onDisconnect! closing connection');
+    console.log(
+      'Sse를 Disconnect 하겠습니다. onDisconnect! closing connection',
+    );
     this.eventSource.removeAllListeners();
     this.eventSource.close();
   };
