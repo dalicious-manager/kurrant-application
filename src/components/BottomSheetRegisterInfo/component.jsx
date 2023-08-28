@@ -1,305 +1,243 @@
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {Easing, PanResponder, Pressable} from 'react-native';
+import {Animated, StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
 import {
-  Modal,
-  Animated,
-  TouchableWithoutFeedback,
-  Dimensions,
-  FlatList,
-  Pressable,
-  PanResponder,
-} from 'react-native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import styled from 'styled-components/native';
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from 'react-native-gesture-handler';
 
-import CheckedIcon from '../../assets/icons/BottomSheet/Checked.svg';
-import Typography from '../Typography';
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
+import styled, {useTheme} from 'styled-components';
 
-const BottomSheetRegisterInfo = props => {
-  const {
-    firstSnap = '35%',
-    modalVisible,
-    setModalVisible,
-    title = '옵션 선택',
-    description = '',
-    data = {},
-    selected,
-    setSelected,
-    onPressEvent = () => {},
-    userSpotId,
-    booleanValue,
-    onPressEvent2 = () => {},
-    setValue = () => {},
-  } = props;
-  //멀티 셀렉터시 이용
-  // const [selected, setSelected] = useState(new Map());
+import {percentStringToNum} from '../../utils/stringFormatter';
+import {Portal} from 'react-native-paper';
+import {Platform} from 'react-native';
 
-  const navigation = useNavigation();
+// const headerHeight = Platform.OS === 'android' ? 34 : 28;
+const headerHeight = 28;
+const BottomSheetHandleWidth = 30;
+const BackgroundOpacity = 0.68;
+const pageY = 91;
 
-  const onSelect = useCallback(
-    async (id, text) => {
-      //멀티 셀렉터시 이용
-      // const newSelected = new Map(selected);
-      // newSelected.set(id, !selected.get(id));
-      if (setSelected) setSelected(id);
-      if (setValue) setValue(text);
+const BottomSheetRegisterInfo = ({
+  show,
+  onDismiss,
+  children,
+  enableBackDropDismiss,
+}) => {
+  const appTheme = useTheme();
 
-      setTimeout(() => {
-        setModalVisible(false);
-      }, 400);
-    },
-    [setModalVisible, setSelected],
+  const height = Dimensions.get('window').height - pageY;
+
+  const contentHeightMin = height * 0.16;
+
+  const offPoint = height * 0.18;
+
+  const deviceWidth = Dimensions.get('window').width;
+
+  const snapPoints = useMemo(() => ['40%', '85%'], []);
+
+  const [snapPoint, setSnapPoint] = useState(
+    snapPoints.map(v => percentStringToNum(v))[0],
   );
 
-  // const panY = useRef(new Animated.Value(screenHeight)).current;
-  // const [snap, setSnap] = useState(0);
-  // const [y, setY] = useState(0);
-  // const snapPoints = useMemo(() => [firstSnap, '90%'], [firstSnap]);
-  const snapPoints = useMemo(() => [firstSnap, '70%', '100%'], [firstSnap]);
-  // const snapPoints = useMemo(() => ['100%', '100%'], [firstSnap]);
-  const [contentScroll, setContentScroll] = useState(true);
-  const [scrollStart, setScrollStart] = useState(0);
-  const [scrollEnd, setScrollEnd] = useState(10);
+  const bottomDepth = (height - contentHeightMin) * (1 - snapPoint);
 
-  // const resetBottomSheet = Animated.timing(panY, {
-  //   toValue: 0,
-  //   duration: 50,
-  //   useNativeDriver: true,
-  // });
-  // const closeBottomSheet = Animated.timing(panY, {
-  //   toValue: screenHeight,
-  //   duration: 50,
-  //   useNativeDriver: true,
-  // });
-  const list = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => false,
-      onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > 0 && gestureState.vy > 1.5) {
-          closeModal();
-        } else {
-          resetBottomSheet.start();
-        }
-      },
-    }),
+  const contentHeight = (height - contentHeightMin) * snapPoint + headerHeight;
+
+  const bottomDepthRef = useRef(new Animated.Value(-height)).current;
+
+  const backgroundOpacityRef = useRef(new Animated.Value(0.68)).current;
+
+  const moveBottomSheetWithAnimationTo = useCallback(toValue => {
+    return Animated.timing(bottomDepthRef, {
+      toValue: toValue,
+      duration: 400,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    });
+  }, []);
+  const changeBottomSheetBackgroundTo = useCallback(toValue => {
+    return Animated.timing(backgroundOpacityRef, {
+      toValue: toValue,
+      duration: 400,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    });
+  }, []);
+
+  const [open, setOpen] = useState(show);
+
+  useEffect(() => {
+    if (show) {
+      setOpen(show);
+      moveBottomSheetWithAnimationTo(-bottomDepth).start();
+
+      changeBottomSheetBackgroundTo(BackgroundOpacity).start();
+    } else {
+      changeBottomSheetBackgroundTo(0).start();
+      moveBottomSheetWithAnimationTo(-height).start(() => {
+        setOpen(false);
+      });
+    }
+  }, [show]);
+
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (count > 0) {
+      moveBottomSheetWithAnimationTo(-bottomDepth).start();
+    }
+  }, [count, bottomDepth]);
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (e, gestureState) => {
+          bottomDepthRef.setValue(-gestureState.dy - bottomDepth);
+        },
+
+        onPanResponderRelease: (e, gestureState) => {
+          const y = gestureState.dy;
+
+          if (bottomDepth + y > height - offPoint) {
+            moveBottomSheetWithAnimationTo(-height).start(() => {
+              onDismiss();
+            });
+          } else {
+            const yValue = height - bottomDepth - contentHeightMin - y;
+
+            const snapPointsPoints = snapPoints
+              .map(v => percentStringToNum(v))
+              .map(v => Math.abs(yValue - (height - contentHeightMin) * v));
+
+            const result = snapPointsPoints.reduce(
+              (a, c) => (a > c ? c : a),
+              snapPointsPoints[0],
+            );
+
+            let index = snapPointsPoints.findIndex(v => v === result);
+
+            setCount(prev => prev + 1);
+            setSnapPoint(snapPoints.map(v => percentStringToNum(v))[index]);
+          }
+        },
+      }),
+    [count, snapPoint],
   );
-  // const handleSheetChange = useCallback(index => {
-  //   setSnap(index);
-  // }, []);
-  // const handleSnapPress = useCallback(index => {
-  //   list.current?.snapToIndex(index);
-  // }, []);
-  // const pressOutUp = e => {
-  //   e.stopPropagation();
-  //   const {pageY} = e.nativeEvent;
-  //   if (pageY > y + 50) {
-  //     if (snap === 0) {
-  //       closeModal();
-  //     } else {
-  //       if (contentScroll && scrollStart == 0) {
-  //         handleSnapPress(0);
-  //       }
-  //     }
-  //   } else if (pageY < y - 50) {
-  //     handleSnapPress(1);
-  //   } else {
-  //     if (contentScroll && scrollStart == 0) {
-  //       handleSnapPress(0);
-  //     }
-  //   }
-  // };
-  // const pressInUp = e => {
-  //   e.stopPropagation();
-  //   const {pageY} = e.nativeEvent;
-  //   setY(pageY);
-  // };
 
-  // useEffect(() => {
-  //   if (props.modalVisible) {
-  //     resetBottomSheet.start();
-  //   }
-  // }, [props.modalVisible, resetBottomSheet]);
-
-  const closeModal = () => {
-    // closeBottomSheet.start(() => {
-    //   setModalVisible(false);
-    // });
-    setModalVisible(false);
-  };
+  if (!open) {
+    return null;
+  }
 
   return (
-    <Modal visible={modalVisible} animationType={'fade'} transparent>
-      <Overlay
-      // onPressIn={pressInUp} onPressOut={pressOutUp}
-      >
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <Background />
-        </TouchableWithoutFeedback>
-        <GestureHandlerRootView style={{flex: 1}}>
-          <Pressable style={{flex: 1}} onPress={closeModal}>
-            <BottomSheet
-              ref={list}
-              snapPoints={snapPoints}
-              // onChange={handleSheetChange}
+    <Portal>
+      <Pressable
+        onPress={enableBackDropDismiss ? onDismiss : undefined}
+        style={[styles.backDrop]}>
+        <Animated.View
+          style={[
+            {
+              flex: 1,
+              backgroundColor: `#000`,
+
+              opacity: backgroundOpacityRef,
+            },
+          ]}></Animated.View>
+      </Pressable>
+
+      <Animated.View
+        style={[
+          styles.root,
+          {
+            height: height,
+
+            bottom: bottomDepthRef,
+            shadowOffset: {height: -3},
+          },
+          styles.common,
+        ]}>
+        <Animated.View {...panResponder.panHandlers}>
+          <HeaderView
+            style={[
+              styles.header,
+              // styles.common,
+              // {shadowOffset: {height: 3}},
+            ]}>
+            <BottomSheetHandle
               style={{
-                marginBottom: 50,
-              }}>
-              <BottomSheetTitleView>
-                <BottomSheetTitle>{title}</BottomSheetTitle>
-                {description !== '' && (
-                  <BottomSheetDecs>{description}</BottomSheetDecs>
-                )}
-              </BottomSheetTitleView>
-              <BottomSheetFlatList
-                data={data}
-                // data={[
-                //   {id: '2', text: '2'},
-                //   {id: '3', text: '3'},
-                //   {id: '4', text: '4'},
-                //   {id: '5', text: '5'},
-                //   {id: '1', text: '1'},
-                // ]}
-                // scrollEnabled={snap === 1}
-                scrollEnabled={true}
-                onScrollBeginDrag={e => {
-                  // setScrollStart(e.nativeEvent.contentOffset.y);
-                }}
-                onMomentumScrollBegin={e => {
-                  // if (scrollEnd === 0) {
-                  //   handleSnapPress(0);
-                  // }
-                }}
-                // onScrollEndDrag={e => {
-                //   setContentScroll(e.nativeEvent.contentOffset.y === 0);
-                //   setScrollEnd(e.nativeEvent.contentOffset.y);
-                //   if (e.nativeEvent.contentOffset.y === 0) {
-                //     if (contentScroll) {
-                //       handleSnapPress(0);
-                //     }
-                //   }
-                // }}
-                renderItem={({item}) => (
-                  <ContentItemContainer
-                    // onPressIn={pressInUp}
-                    // onPressOut={pressOutUp}
-                    onPress={() => {
-                      onSelect(item.id, item.text);
-                      onPressEvent(item.id);
-                    }}>
-                    {selected === item.id ? (
-                      <ContentItemBox>
-                        <ContentItemText>{item.text}</ContentItemText>
-                        <CheckedIcon />
-                      </ContentItemBox>
-                    ) : (
-                      <ContentItemText>{item.text}</ContentItemText>
-                    )}
-                  </ContentItemContainer>
-                )}
-                keyExtractor={item => item.id.toString()}
-              />
-              <ManagePressView />
-            </BottomSheet>
-          </Pressable>
-        </GestureHandlerRootView>
-        {/* {booleanValue && (
-          <ManagePressView
-            onPress={() => {
-              onPressEvent2(setModalVisible(false));
-            }}>
-            <ContentItemText>스팟 관리하기</ContentItemText>
-          </ManagePressView>
-        )} */}
-      </Overlay>
-    </Modal>
+                width: BottomSheetHandleWidth,
+                height: 4,
+                borderRadius: 2.5,
+                position: 'absolute',
+                top: 9,
+
+                left: (deviceWidth - BottomSheetHandleWidth) / 2,
+                zIndex: 1,
+                backgroundColor: appTheme.colors.grey[2],
+              }}
+            />
+          </HeaderView>
+        </Animated.View>
+
+        <Content style={[{height: contentHeight}]}>{children}</Content>
+      </Animated.View>
+    </Portal>
   );
 };
+export default BottomSheetRegisterInfo;
 
-const Overlay = styled.Pressable`
-  position: relative;
-  flex: 1;
-  justify-content: flex-end;
-  background-color: rgba(0, 0, 0, 0.7);
-`;
+const styles = StyleSheet.create({
+  root: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    zIndex: 2,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
+    overflow: 'hidden',
+  },
+  header: {
+    height: headerHeight,
+    backgroundColor: '#fff',
+  },
+  common: {
+    shadowColor: '000',
+    shadowOffset: {
+      //   height: -3,
+      width: 0,
+    },
+    shadowOpacity: 0.24,
 
-const Background = styled.View`
-  flex: 1;
-`;
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  backDrop: {
+    ...StyleSheet.absoluteFillObject,
+    // flex: 1,
+    zIndex: 1,
+    // backgroundColor: 'rgba(0,0,0,0.68)',
+  },
+});
 
 const AnimatedView = styled(Animated.View)`
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  padding-top: 20px;
+  /* border: 1px solid black; */
+  background-color: azure;
 `;
 
-const DragButton = styled.TouchableOpacity`
-  flex: 1;
+const BackPressable = styled.View`
+  /* border: 1px solid black; */
 `;
 
-const DragButtonView = styled.View`
-  background-color: white;
-  width: 40px;
-  height: 5px;
-  border-radius: 10px;
+const HeaderView = styled.View`
+  /* border: 1px solid black; */
 `;
 
-const BottomSheetTitleView = styled.View`
-  width: 100%;
-  padding: 0px 24px;
+const BottomSheetHandle = styled.View``;
+
+const Content = styled.View`
+  /* border: 1px solid black; */
+  /* padding-bottom: 61px; */
 `;
-
-const BottomSheetTitle = styled(Typography).attrs({text: 'Title03SB'})`
-  margin-bottom: 6px;
-`;
-
-const BottomSheetDecs = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[4]};
-`;
-
-const ContentItemContainer = styled.Pressable`
-  width: ${Dimensions.get('screen').width}px;
-  height: 60px;
-  padding: 19px 24px;
-  padding-left: 40px;
-`;
-
-const ItemContainer = styled.View`
-  width: ${Dimensions.get('screen').width}px;
-  height: 60px;
-  padding: 19px 24px;
-`;
-
-const ContentItemBox = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ContentItemText = styled(Typography).attrs({text: 'Body05R'})``;
-
-const GroupName = styled(Typography).attrs({text: 'Body06R'})`
-  color: ${({theme}) => theme.colors.grey[4]};
-`;
-
-const Border = styled.View`
-  width: 100%;
-  height: 1px;
-  margin-top: 12px;
-  background-color: ${({theme}) => theme.colors.grey[8]};
-`;
-
-const ManagePressView = styled.Pressable`
-  width: ${Dimensions.get('screen').width}px;
-  height: 60px;
-  padding: 19px 24px;
-  background-color: white;
-`;
-
-export default BottomSheetRegisterInfo;

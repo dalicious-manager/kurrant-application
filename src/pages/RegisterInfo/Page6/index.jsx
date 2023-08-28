@@ -18,11 +18,11 @@ import useGetRegisterInfo from '../../../biz/useRegisterInfo/getRegisterIist/hoo
 import {finalRegisterAtom} from '../store';
 import {useAtom} from 'jotai';
 import LinearGradient from 'react-native-linear-gradient';
-import BottomSheetRegisterInfo2 from '../../../components/BottomSheetRegisterInfo2/component';
 
 import CheckedIcon from '../../../assets/icons/BottomSheet/Checked.svg';
 import {Dimensions} from 'react-native';
 import ModalCalendarAndroid from '../../../components/ModalCalendar/ModalCalendarAndroid';
+import BottomSheetRegisterInfo from '../../../components/BottomSheetRegisterInfo/component';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
@@ -235,7 +235,29 @@ const Pages = () => {
 
       {/* <Bottom */}
 
-      <BottomSheetRegisterInfo2
+      {/* {Platform.OS === 'ios' ? ( */}
+      {/* {false ? (
+        <BottomSheetRegisterInfo2
+          show={genderModal}
+          onDismiss={() => {
+            setGenderModal(false);
+          }}
+          enableBackDropDismiss>
+          <BottomSheetChildrenComponent
+            title={'성별'}
+            data={[
+              {id: '남자', text: '남자'},
+              {id: '여자', text: '여자'},
+            ]}
+            selected={gender}
+            setSelected={setGender}
+            setModalVisible={setGenderModal}
+          />
+        </BottomSheetRegisterInfo2>
+      ) : (
+       
+      )} */}
+      <BottomSheetRegisterInfo
         show={genderModal}
         onDismiss={() => {
           setGenderModal(false);
@@ -251,9 +273,9 @@ const Pages = () => {
           setSelected={setGender}
           setModalVisible={setGenderModal}
         />
-      </BottomSheetRegisterInfo2>
+      </BottomSheetRegisterInfo>
 
-      <BottomSheetRegisterInfo2
+      <BottomSheetRegisterInfo
         show={countryModal}
         onDismiss={() => {
           setCountryModal(false);
@@ -266,9 +288,9 @@ const Pages = () => {
           setSelected={setCountry}
           setModalVisible={setCountryModal}
         />
-      </BottomSheetRegisterInfo2>
+      </BottomSheetRegisterInfo>
 
-      <BottomSheetRegisterInfo2
+      <BottomSheetRegisterInfo
         show={jobTypeModal}
         onDismiss={() => {
           setJobTypeModal(false);
@@ -282,9 +304,9 @@ const Pages = () => {
           jobList={jobList}
           setModalVisible={setJobTypeModal}
         />
-      </BottomSheetRegisterInfo2>
+      </BottomSheetRegisterInfo>
 
-      <BottomSheetRegisterInfo2
+      <BottomSheetRegisterInfo
         show={detailJobTypeModal}
         onDismiss={() => {
           setDetailJobTypeModal(false);
@@ -297,7 +319,7 @@ const Pages = () => {
           setSelected={setDetailJobType}
           setModalVisible={setDetailJobTypeModal}
         />
-      </BottomSheetRegisterInfo2>
+      </BottomSheetRegisterInfo>
 
       {Platform.OS === 'ios' ? (
         <ModalCalendar

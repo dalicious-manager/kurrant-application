@@ -13,7 +13,8 @@ import {percentStringToNum} from '../../utils/stringFormatter';
 import {Portal} from 'react-native-paper';
 import {Platform} from 'react-native';
 
-const headerHeight = Platform.OS === 'android' ? 34 : 28;
+// const headerHeight = Platform.OS === 'android' ? 34 : 28;
+const headerHeight = 28;
 const BottomSheetHandleWidth = 30;
 const BackgroundOpacity = 0.68;
 const pageY = 91;
@@ -24,6 +25,8 @@ const BottomSheetRegisterInfo2 = ({
   children,
   enableBackDropDismiss,
 }) => {
+  console.log('리렌더링');
+
   const appTheme = useTheme();
 
   const height = Dimensions.get('window').height - pageY;
@@ -90,6 +93,15 @@ const BottomSheetRegisterInfo2 = ({
       // console.log('위로 pan(drag)');
     }
 
+    // if (Platform.OS === 'android') {
+    //   console.log('안드로이드 height값 ');
+    //   console.log(-e.nativeEvent.translationY - bottomDepth);
+    // } else if (Platform.OS === 'ios') {
+    //   console.log('ios height값' + -e.nativeEvent.translationY - bottomDepth);
+    // }
+    console.log('ios 값 확인');
+    console.log(-e.nativeEvent.translationY);
+
     bottomDepthRef.setValue(-e.nativeEvent.translationY - bottomDepth);
   };
 
@@ -100,6 +112,12 @@ const BottomSheetRegisterInfo2 = ({
       moveBottomSheetWithAnimationTo(-bottomDepth).start();
     }
   }, [count]);
+
+  useEffect(() => {
+    console.log('snapPoint 확인');
+    console.log(snapPoint);
+    console.log(bottomDepth);
+  }, [snapPoint]);
 
   const onGestureEnd = e => {
     const y = e.nativeEvent.translationY;
@@ -126,6 +144,16 @@ const BottomSheetRegisterInfo2 = ({
       setSnapPoint(snapPoints.map(v => percentStringToNum(v))[index]);
     }
   };
+
+  // useEffect(() => {
+  //   if (Platform.OS === 'android') {
+  //     console.log('안드로이드 height값');
+  //     console.log(bottomDepthRef);
+  //   } else if (Platform.OS === 'ios') {
+  //     console.log('ios height값');
+  //     console.log(bottomDepthRef);
+  //   }
+  // }, [bottomDepthRef]);
 
   if (!open) {
     return null;

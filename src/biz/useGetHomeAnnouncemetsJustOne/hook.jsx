@@ -46,6 +46,8 @@ const useGetOneAnnouncements = () => {
         await getStorage('announcementsClickedOneDate'),
       );
 
+      console.log(res.data);
+
       if (timeObject) {
         if (
           isTimeDifferenceLarger(

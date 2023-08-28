@@ -65,6 +65,7 @@ import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
+import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -313,7 +314,7 @@ const Pages = () => {
       }
     };
     handleShowModal();
-    // getOneAnnouncement(2);
+    // getOneAnnouncement();
     if (coinSound === null) loadCoinSound();
   }, []);
 

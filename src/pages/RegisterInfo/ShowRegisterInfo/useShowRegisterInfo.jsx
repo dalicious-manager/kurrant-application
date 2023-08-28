@@ -35,8 +35,8 @@ const useShowRegisterInfo = () => {
       // console.log('회원정보입력 입력 여부받기 완료');
     }
     // 회원정보입력 작성여부 파악
-    if (isRegisterDone) {
-      // if (false) {
+    // if (isRegisterDone) {
+    if (false) {
       console.log('회원정보입력 이미 작성하셨습니다');
     } else {
       console.log('회원정보입력을 아직 작성하지 않으셨습니다');
@@ -69,6 +69,8 @@ const useShowRegisterInfo = () => {
       setShouldOpenRegister(true);
     }
   };
+
+  // 오늘 하루동안 이페이지 보지 않기 캐시 지우기
 
   // useEffect(() => {
   //   removeItemFromStorage('registerInfoClicked');

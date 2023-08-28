@@ -15,7 +15,7 @@ import {useAtom} from 'jotai';
 import YesOrNoButton from '../components/button/Page4_5/YesOrNoButton';
 import SelectInputBox from '../components/SelectInputBox/SelectInputBox';
 import LinearGradient from 'react-native-linear-gradient';
-import BottomSheetRegisterInfo2 from '../../../components/BottomSheetRegisterInfo2/component';
+import BottomSheetRegisterInfo from '../../../components/BottomSheetRegisterInfo/component';
 import CheckedIcon from '../../../assets/icons/BottomSheet/Checked.svg';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE4';
@@ -158,7 +158,7 @@ const Pages = () => {
 
       {/* <Bottom */}
 
-      <BottomSheetRegisterInfo2
+      <BottomSheetRegisterInfo
         show={bottomModalOpen}
         onDismiss={() => {
           setBottomModalOpen(false);
@@ -171,7 +171,7 @@ const Pages = () => {
           setSelected={handleSelectBottomModal}
           setModalVisible={setBottomModalOpen}
         />
-      </BottomSheetRegisterInfo2>
+      </BottomSheetRegisterInfo>
     </Container>
   );
 };
