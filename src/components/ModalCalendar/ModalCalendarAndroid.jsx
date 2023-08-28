@@ -41,36 +41,4 @@ const ModalCalendarAndroid = props => {
   );
 };
 
-// const Overlay = styled.View`
-//   position: relative;
-//   flex: 1;
-//   justify-content: flex-end;
-//   background-color: rgba(0, 0, 0, 0.4);
-// `;
-// const Background = styled.View`
-//   flex: 1;
-// `;
-
-// const AnimatedView = styled(Animated.View)`
-//   align-items: center;
-//   background-color: white;
-//   padding-bottom: 56px;
-// `;
-// export const IosButton = styled.Pressable`
-//   width: 100%;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   padding: 8px 20px;
-//   background-color: #f5f5f5;
-//   z-index: 999;
-// `;
-
-// export const Cancel = styled(Typography).attrs({text: 'Body05R'})`
-//   color: ${({theme}) => theme.colors.grey[4]};
-// `;
-
-// export const Confirm = styled(Typography).attrs({text: 'Body05R'})`
-//   color: ${({theme}) => theme.colors.blue[500]};
-// `;
-
 export default ModalCalendarAndroid;

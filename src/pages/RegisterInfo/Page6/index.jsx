@@ -109,9 +109,7 @@ const Pages = () => {
         setBirthday(toStringByFormatting(date, '. '));
         setBirthdayDateFormat(date);
       }
-    }
-
-    if (Platform.OS === 'ios') {
+    } else if (Platform.OS === 'ios') {
       setSelected(date);
     }
   };
@@ -129,18 +127,6 @@ const Pages = () => {
       return jobList.find(v => v.id === jobType)?.text;
     };
 
-    console.log('울랄라~~');
-    console.log({
-      birthYear,
-      birthMonth,
-      birthDay,
-      gender: gender === '남자' ? 1 : 2,
-      country,
-
-      jobType: pickJob(jobType),
-      detailJobType,
-    });
-
     setFinalRegister({
       ...finalRegister,
       userDefaultInfo: {
@@ -157,11 +143,6 @@ const Pages = () => {
 
     navigation.navigate(RegisterInfoPage7PageName);
   };
-
-  useEffect(() => {
-    console.log('birthdayDateFormat 확인');
-    console.log(birthdayDateFormat);
-  }, [birthdayDateFormat]);
 
   return (
     <Container
