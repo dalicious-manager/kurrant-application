@@ -22,6 +22,7 @@ import BottomSheetRegisterInfo2 from '../../../components/BottomSheetRegisterInf
 
 import CheckedIcon from '../../../assets/icons/BottomSheet/Checked.svg';
 import {Dimensions} from 'react-native';
+import ModalCalendarAndroid from '../../../components/ModalCalendar/ModalCalendarAndroid';
 
 export const PAGE_NAME = 'P__REGISTER_INFO_PAGE6';
 
@@ -106,6 +107,7 @@ const Pages = () => {
 
       if (event.type === 'set') {
         setBirthday(toStringByFormatting(date, '. '));
+        setBirthdayDateFormat(date);
       }
     }
 
@@ -127,6 +129,18 @@ const Pages = () => {
       return jobList.find(v => v.id === jobType)?.text;
     };
 
+    console.log('울랄라~~');
+    console.log({
+      birthYear,
+      birthMonth,
+      birthDay,
+      gender: gender === '남자' ? 1 : 2,
+      country,
+
+      jobType: pickJob(jobType),
+      detailJobType,
+    });
+
     setFinalRegister({
       ...finalRegister,
       userDefaultInfo: {
@@ -143,6 +157,11 @@ const Pages = () => {
 
     navigation.navigate(RegisterInfoPage7PageName);
   };
+
+  useEffect(() => {
+    console.log('birthdayDateFormat 확인');
+    console.log(birthdayDateFormat);
+  }, [birthdayDateFormat]);
 
   return (
     <Container
@@ -298,20 +317,38 @@ const Pages = () => {
           setModalVisible={setDetailJobTypeModal}
         />
       </BottomSheetRegisterInfo2>
-      <ModalCalendar
-        modalVisible={birthdayModal}
-        setModalVisible={setBirthdayModal}
-        calendarProps={{
-          selected: birthdayDateFormat,
 
-          onChange: handleOnChangeDate,
+      {Platform.OS === 'ios' ? (
+        <ModalCalendar
+          modalVisible={birthdayModal}
+          setModalVisible={setBirthdayModal}
+          calendarProps={{
+            selected: birthdayDateFormat,
 
-          confirm: handleConfirmPress,
+            onChange: handleOnChangeDate,
 
-          setModal: setBirthdayModal,
+            confirm: handleConfirmPress,
 
-          setSelected: setBirthdayDateFormat,
-        }}></ModalCalendar>
+            setModal: setBirthdayModal,
+
+            setSelected: setBirthdayDateFormat,
+          }}></ModalCalendar>
+      ) : (
+        <ModalCalendarAndroid
+          modalVisible={birthdayModal}
+          calendarProps={{
+            selected: birthdayDateFormat,
+
+            onChange: handleOnChangeDate,
+
+            confirm: handleConfirmPress,
+
+            setModal: setBirthdayModal,
+
+            setSelected: setBirthdayDateFormat,
+          }}
+        />
+      )}
     </Container>
   );
 };
