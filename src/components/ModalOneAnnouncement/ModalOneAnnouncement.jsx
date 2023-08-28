@@ -11,9 +11,10 @@ import Typography from '../Typography';
 const Component = ({modalVisible, data, setModalVisible}) => {
   const systemFonts = [...defaultSystemFonts, 'Pretendard'];
 
+  const [currentIndex, setCurrentIndex] = useState(0);
   const source = {
     html: `<div style="padding-left:24px; padding-right:24px; "> 
-        ${data.content}
+        ${data[currentIndex].content}
         </div>`,
   };
 
@@ -35,18 +36,29 @@ const Component = ({modalVisible, data, setModalVisible}) => {
     await removeItemFromStorage('announcementsClickedOneDate');
 
     const checkedTimeObject = {};
-    checkedTimeObject[data.id.toString()] = Date.now();
+    checkedTimeObject[data[currentIndex].id.toString()] = Date.now();
 
+    if (currentIndex < data?.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setModalVisible(false);
+    }
     await setStorage(
       'announcementsClickedOneDate',
       JSON.stringify(checkedTimeObject),
     );
 
     // 2. modalVisible
-    setModalVisible(false);
+    //setModalVisible(false);
   };
 
-  // 폰트 적용하기
+  const confirmPress = () => {
+    if (currentIndex < data?.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setModalVisible(false);
+    }
+  };
 
   return (
     <CenteredView>
@@ -61,9 +73,9 @@ const Component = ({modalVisible, data, setModalVisible}) => {
             </MessageReadPressable>
 
             <TitleView>
-              <TitleText>{data.title}</TitleText>
+              <TitleText>{data[currentIndex].title}</TitleText>
 
-              <DateText>{data.updated}</DateText>
+              <DateText>{data[currentIndex].updated}</DateText>
             </TitleView>
 
             <ContenContainerScrollView>
@@ -73,23 +85,12 @@ const Component = ({modalVisible, data, setModalVisible}) => {
                   source={source}
                   systemFonts={systemFonts}
                   tagsStyles={tagsStyles}
-                  // tagsStyles={{
-                  //   div: {
-                  //     color: '#1e1e96',
-                  //     textDecorationLine: 'none',
-                  //     fontFamily: 'Pretendard',
-                  //     fontWeight: 'bold',
-                  //   },
-                  // }}
                 />
               }
 
               <Filler />
             </ContenContainerScrollView>
-            <ConfirmPressable
-              onPress={() => {
-                setModalVisible(false);
-              }}>
+            <ConfirmPressable onPress={confirmPress}>
               <ConfirmText>확인</ConfirmText>
             </ConfirmPressable>
           </ModalView>

@@ -1,126 +1,45 @@
 /* eslint-disable react-native/no-inline-styles */
-import {useState} from 'react';
+import {useAtom} from 'jotai';
 import React from 'react';
-import {Dimensions, View, Text} from 'react-native';
+import {Dimensions, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import {css} from 'styled-components/native';
-import BottomModal from '~components/BottomModal';
 import Typography from '~components/Typography';
 
 import Card from './Card';
-import MealImage from './MealImage';
 import ExclamationPoint from '../../../../../assets/icons/BuyMeal/exclamationPoint.svg';
-import {Label} from '../../../../../components/Button/component';
+import {isUserInfoAtom} from '../../../../../biz/useUserInfo/store';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
-import withCommas from '../../../../../utils/withCommas';
-import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 
 const screenHeight = Dimensions.get('window').height;
 
 const BuyMealPage = props => {
   const {
-    diningFood,
-    mealData: {
-      isMorningFood,
-      setModalVisible,
-      isLunchFood,
-      setModalVisible2,
-      isDinnerFood,
-      setModalVisible3,
-      modalVisible,
-      modalVisible2,
-      modalVisible3,
-      MorningRef,
-      LunchRef,
-      DinnerRef,
-      handlePress,
-      spotId,
-      hideModal,
-      orderDailyFoodId,
-      cartDailyFoodId,
-      isAddMeal,
-      navigation,
-      addCartPress,
-      closeModal,
-      addToCart,
-      selectFood,
-      time,
-    },
-    detailFetching,
+    item,
     setDailyfoodId,
+    isAddMeal,
+    detailFetching,
+    time,
+    orderDailyFoodId,
+    cartDailyFoodId,
+    userinfo,
+    addCartPress,
+    navigation,
   } = props;
-
-  const {
-    data: {data: isUserInfo},
-  } = useGetUserInfo();
-  const [startScroll, setStartScroll] = useState(0);
-
-  const setModal = type => {
-    if (type === isMorningFood) {
-      return setModalVisible;
-    }
-    if (type === isLunchFood) {
-      return setModalVisible2;
-    }
-    if (type === isDinnerFood) {
-      return setModalVisible3;
-    }
-  };
-  const modal = type => {
-    if (type === isMorningFood) {
-      return modalVisible;
-    }
-    if (type === isLunchFood) {
-      return modalVisible2;
-    }
-    if (type === isDinnerFood) {
-      return modalVisible3;
-    }
-  };
-  const refType = type => {
-    if (type === isMorningFood) {
-      return MorningRef;
-    }
-    if (type === isLunchFood) {
-      return LunchRef;
-    }
-    if (type === isDinnerFood) {
-      return DinnerRef;
-    }
-  };
-
-  const onScrollStart = e => {
-    const {
-      contentOffset: {y},
-    } = e.nativeEvent;
-    setStartScroll(y);
-  };
-  const onScrollEnd = e => {
-    const {
-      contentOffset: {y},
-    } = e.nativeEvent;
-    if (y < 20) {
-      handlePress(true);
-    } else {
-      handlePress(startScroll > y ? true : false);
-    }
-  };
 
   return (
     <ScrollView
-      ref={refType(diningFood)}
-      onScrollBeginDrag={onScrollStart}
-      onScrollEndDrag={onScrollEnd}
       showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
       scrollEnabled={
-        !(diningFood?.length === 0 && spotId !== null) || !spotId === null
+        !(item?.dailyFoodDtos?.length === 0 && userinfo?.spotId !== null) ||
+        !userinfo?.spotId === null
       }>
-      <FoodContainer isFood={diningFood?.length === 0 && spotId !== null}>
-        {diningFood?.length === 0 && spotId !== null && (
-          <NoServieceView
-            status={hideModal}
-            isMembership={isUserInfo?.isMembership}>
+      <FoodContainer
+        isFood={item?.dailyFoodDtos?.length === 0 && userinfo?.spotId !== null}>
+        {item?.dailyFoodDtos?.length === 0 && userinfo?.spotId !== null && (
+          <NoServieceView status={false} isMembership={userinfo?.isMembership}>
             <NoServiceText>새로운 식단을 준비 중이에요</NoServiceText>
             <NoHolidayServiceView>
               <ExclamationPoint />
@@ -130,10 +49,8 @@ const BuyMealPage = props => {
             </NoHolidayServiceView>
           </NoServieceView>
         )}
-        {spotId === null && (
-          <NoSpotView
-            status={hideModal}
-            isMembership={isUserInfo?.isMembership}>
+        {userinfo?.spotId === null && (
+          <NoSpotView status={false} isMembership={userinfo?.isMembership}>
             <NoServiceText>메뉴는 스팟 선택 또는 </NoServiceText>
             <NoServiceText>
               스팟 개설 신청 승인후 확인할 수 있어요
@@ -141,7 +58,7 @@ const BuyMealPage = props => {
           </NoSpotView>
         )}
 
-        {diningFood?.map(m => {
+        {item?.dailyFoodDtos?.map(m => {
           const realToTalDiscountRate =
             100 -
             (100 - m?.membershipDiscountRate) *
@@ -162,7 +79,6 @@ const BuyMealPage = props => {
               setDailyfoodId={setDailyfoodId}
               detailFetching={detailFetching}
               realToTalDiscountRate={realToTalDiscountRate}
-              withCommas={withCommas}
               totalDiscount={totalDiscount}
               orderDailyFoodId={orderDailyFoodId}
               cartDailyFoodId={cartDailyFoodId}
@@ -172,25 +88,14 @@ const BuyMealPage = props => {
             />
           );
         })}
-        <BottomModal
-          modalVisible={modal(diningFood)}
-          setModalVisible={setModal(diningFood)}
-          title={`장바구니에 ${'\n'}동일 날짜/시간의 메뉴가 있어요.`}
-          description={'그래도 추가하시겠어요?'}
-          buttonTitle1={'아니요'}
-          buttonType1="grey7"
-          buttonTitle2={'추가'}
-          buttonType2="yellow"
-          onPressEvent1={closeModal}
-          onPressEvent2={() => addToCart(selectFood.id)}
-        />
+
         <View style={{height: 120}} />
       </FoodContainer>
     </ScrollView>
   );
 };
 
-export default BuyMealPage;
+export default React.memo(BuyMealPage);
 const FoodContainer = styled.View`
   ${({isFood}) => {
     if (isFood)

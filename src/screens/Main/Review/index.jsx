@@ -15,7 +15,7 @@ import {totalWrittenReview} from '~biz/useReview/useWrittenReview/store';
 import BackButton from '~components/BackButton';
 import Typography from '~components/Typography';
 import Popup from '~pages/Main/MyPage/Review/Popup';
-export const SCREEN_NAME = 'S_MAIN__REVIEW';
+
 import Review, {PAGE_NAME as ReviewPageName} from '~pages/Main/MyPage/Review';
 import WrittenReview, {
   PAGE_NAME as WrittenReviewPageName,
@@ -26,6 +26,8 @@ import {useNavigation} from '@react-navigation/native';
 import {PAGE_NAME as MoreMainPageName} from '~pages/Main/Bnb/More/Main';
 
 const Tab = createMaterialTopTabNavigator();
+
+export const SCREEN_NAME = 'S_MAIN__REVIEW';
 
 const Screen = ({route}) => {
   const from = route?.params?.from;

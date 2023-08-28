@@ -8,8 +8,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useQueryClient} from 'react-query';
 import RNFetchBlob from 'rn-fetch-blob';
 import styled, {useTheme} from 'styled-components/native';
-
-import ReviewInput from './ReviewInput';
 // import {starRatingAtom} from './store';
 import {starRatingAtom} from '~biz/useReview/useCreateAndEditReview/store';
 import useReviewWait from '~biz/useReview/useReviewWait/hook';
@@ -22,10 +20,12 @@ import UploadPhoto from '~components/UploadPhoto';
 import useKeyboardEvent from '~hook/useKeyboardEvent';
 import {PAGE_NAME as WrittenReviewPageName} from '~pages/Main/MyPage/WrittenReview';
 import {getStorage} from '~utils/asyncStorage';
+
+import ReviewInput from './ReviewInput';
 // import {SCREEN_NAME as MainScreenName} from '../../../Bnb';
 import {SCREEN_NAME as MainScreenName} from '../../../../../../screens/Main/Bnb';
 // import {SCREEN_NAME as ReviewScreenName} from '../../../../Review';
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../../screens/Main/Review';
+import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
 
 // 수정후 여기로 오게 하기
 // import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
@@ -76,7 +76,7 @@ const Screen = ({route}) => {
 
   const id = route?.params?.id;
   const status = route?.params?.status;
-  const test = route?.params?.test;
+  const resetNavigate = route?.params?.resetNavigate;
   const editItem = route?.params?.editItem;
 
   const theme = useTheme();
@@ -272,6 +272,7 @@ const Screen = ({route}) => {
         .then(data => {
           setIsLoading(true);
           if (data.statusCode === 200) {
+            queryClient.invalidateQueries('userInfo');
             Alert.alert('작성 완료', '리뷰가 작성되었습니다 ', [
               {
                 text: '확인',
@@ -282,7 +283,7 @@ const Screen = ({route}) => {
                   //   from: 'home',
                   // });
 
-                  if (test) {
+                  if (resetNavigate) {
                     // navigation.navigate(WrittenReviewPageName);
                     navigation.reset({
                       index: 1,
@@ -306,11 +307,8 @@ const Screen = ({route}) => {
                     //   },
                     // });
                   } else {
-                    navigation.navigate(WrittenReviewPageName, {
-                      screen: ReviewScreenName,
-                      params: {
-                        tabIndex: 1,
-                      },
+                    navigation.navigate(ReviewScreenName, {
+                      screen: WrittenReviewPageName,
                     });
                   }
                 },
@@ -345,11 +343,14 @@ const Screen = ({route}) => {
                 onPress: async () => {
                   getWrittenReview();
                   getReviewWait();
-                  navigation.navigate(WrittenReviewPageName, {
-                    screen: ReviewScreenName,
-                    params: {
-                      tabIndex: 1,
-                    },
+                  // navigation.navigate(WrittenReviewPageName, {
+                  //   screen: ReviewScreenName,
+                  //   params: {
+                  //     tabIndex: 1,
+                  //   },
+                  // });
+                  navigation.navigate(ReviewScreenName, {
+                    screen: WrittenReviewPageName,
                   });
                 },
                 style: 'cancel',

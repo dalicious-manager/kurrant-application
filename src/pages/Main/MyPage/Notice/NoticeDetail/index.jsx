@@ -5,6 +5,7 @@ import HTML, {defaultSystemFonts} from 'react-native-render-html';
 import styled, {useTheme} from 'styled-components/native';
 import Wrapper from '~components/Wrapper';
 
+import {useGetNoticeDetail} from '../../../../../hook/useNotice';
 import {width} from '../../../../../theme';
 
 export const PAGE_NAME = 'P__MY_PAGE__NOTICE_DETAIL';
@@ -20,7 +21,7 @@ const Pages = ({route}) => {
   const themeApp = useTheme();
 
   const source = {
-    html: `<div style='padding-left:24px; padding-right:20px; padding-bottom:24px '> 
+    html: `<div style='padding-left:24px; padding-right:24px; padding-bottom:24px '> 
         <div style="margin:0; padding: 0 ; width:100%; font-weight: 600; fontFamily:'Pretendard-SemiBold'; font-size:20px; line-height:26px; color:${themeApp.colors.grey[2]}">${noticeData.title}</div>
         <div style="margin:0; padding: 0 ; margin-top:4px; font-weight: 400; fontFamily:'Pretendard-Regular'; font-size:13px; line-height:19px; color:${themeApp.colors.grey[4]}">${noticeData.updated}</div>
         <div style="width:100%; height:1px; margin:24px 0px; background-color:${themeApp.colors.grey[8]}"></div>
