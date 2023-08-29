@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import messaging from '@react-native-firebase/messaging';
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useRef, useState} from 'react';
-import {Animated, Platform, View} from 'react-native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {Alert, Animated, AppState, Linking, Platform, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {requestNotifications, RESULTS} from 'react-native-permissions';
+import VersionCheck from 'react-native-version-check';
 import styled from 'styled-components/native';
 
 import {CompanyLogo, SplashLogo, Kurrant} from '../../assets';
@@ -16,7 +17,14 @@ import {PAGE_NAME as nicknameSettingPageName} from '../Main/MyPage/Nickname/inde
 export const PAGE_NAME = 'P__SPLASH';
 
 export const YesYes = 'yes';
-
+const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
+// 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
+const GOOGLE_PLAY_STORE_WEB_LINK =
+  'https://play.google.com/store/apps/details?id=com.dalicious.kurrant';
+// 애플 앱 스토어 링크
+const APPLE_APP_STORE_LINK = 'itms-apps://itunes.apple.com/us/app/id1663407738';
+// 애플 앱 스토어가 설치되어 있지 않을 때 웹 링크
+const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 const Page = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -31,7 +39,19 @@ const Page = () => {
   const [slide, setSlide] = useState(174);
   const {autoLogin} = useAuth();
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const currentVersion = VersionCheck.getCurrentVersion();
+  const [appState, setAppState] = useState();
+  const handleStatus = e => {
+    setAppState(e);
+  };
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', handleStatus);
 
+    return () => {
+      listener.remove();
+    };
+  }, []);
   useEffect(() => {
     setScale(
       scaleAnim.interpolate({
@@ -101,8 +121,21 @@ const Page = () => {
         // console.log('error getting push token ' + error);
       });
   };
+  const handlePressStore = useCallback(async (url, alterUrl) => {
+    // 만약 어플이 설치되어 있으면 true, 없으면 false
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // 설치되어 있으면
+      await Linking.openURL(url);
+    } else {
+      // 앱이 없으면
+      await Linking.openURL(alterUrl);
+    }
+  }, []);
 
   useEffect(() => {
+    console.log(isFocused, 'isFocused');
     const handlePress = async () => {
       try {
         Animated.timing(scaleAnim, {
@@ -135,7 +168,7 @@ const Page = () => {
         }, 300);
 
         await checkPermission();
-        await isAutoLogin();
+        getData();
       } catch (error) {
         setTimeout(() => {
           navigation.reset({
@@ -157,8 +190,8 @@ const Page = () => {
         const token = await getStorage('token');
 
         if (token) {
-          const getToken = JSON.parse(token);
-          if (getToken?.accessToken) {
+          const getAccessToken = JSON.parse(token);
+          if (getAccessToken?.accessToken) {
             const res = await autoLogin();
 
             if (res?.statusCode === 200) {
@@ -211,7 +244,41 @@ const Page = () => {
         });
       }
     };
+    const getData = async () => {
+      await VersionCheck.getLatestVersion().then(async latestVersion => {
+        const regex = /[^0-9]/g;
+        const result = currentVersion?.replace(regex, '');
+        const result2 = latestVersion?.replace(regex, '');
+        console.log(Number(result), Number(result2), '버전체크');
 
+        if (Number(result) < Number(result2)) {
+          return Alert.alert(
+            '앱 업데이트',
+            '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
+            [
+              {
+                text: '확인',
+                onPress: async () => {
+                  if (Platform.OS === 'android') {
+                    handlePressStore(
+                      GOOGLE_PLAY_STORE_LINK,
+                      GOOGLE_PLAY_STORE_WEB_LINK,
+                    );
+                  } else {
+                    handlePressStore(
+                      APPLE_APP_STORE_LINK,
+                      APPLE_APP_STORE_WEB_LINK,
+                    );
+                  }
+                },
+                style: 'destructive',
+              },
+            ],
+          );
+        }
+        if (Number(result) >= Number(result2)) return await isAutoLogin();
+      });
+    };
     async function requestUserPermission() {
       await messaging().deleteToken();
       const authStatus = await messaging().requestPermission();
@@ -258,7 +325,7 @@ const Page = () => {
     // 알림 권한 요청 함수 호출
     requestNotificationPermission();
     handlePress();
-  }, []);
+  }, [isFocused, appState]);
   return (
     <Container>
       <View style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
