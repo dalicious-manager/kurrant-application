@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {
@@ -61,11 +62,34 @@ import Card from './Review/MealDetailReview/Card/index';
 import {convertDateFormat1} from '../../../../../utils/dateFormatter';
 import {ActivityIndicator} from 'react-native';
 import OrderSelectController from './Review/MealDetailReview/OrderSelectController/OrderSelectController';
+import {useHeaderHeight} from '@react-navigation/elements';
 
 const screenWidth = Dimensions.get('screen').width;
 
+const StatusBarHeight =
+  Platform.OS === 'ios' ? getStatusBarHeight(true) : StatusBar.currentHeight;
+
+const LabelViewStickyHeight = StatusBarHeight + 30;
+
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
+  const yo = useHeaderHeight();
+
+  useEffect(() => {
+    console.log('yo 확인');
+    console.log(yo);
+  }, [yo]);
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      console.log('StatusBarHeight 확인 ios');
+      console.log(LabelViewStickyHeight);
+    } else {
+      console.log('StatusBarHeight 확인 android');
+      console.log(LabelViewStickyHeight);
+    }
+  }, [LabelViewStickyHeight]);
+
   const dailyFoodId = route.params.dailyFoodId;
   const time = route.params.deliveryTime;
   const disableAddCartFromReview = route.params.disableAddCartFromReview;
@@ -201,7 +225,8 @@ const Pages = ({route}) => {
     navigation.setOptions({
       headerTransparent: true,
       headerStyle: {
-        backgroundColor: `${isScrollOver60 ? 'white' : 'transparent'}`,
+        // backgroundColor: `${isScrollOver60 ? 'white' : 'transparent'}`,
+        backgroundColor: `${isScrollOver60 ? 'blue' : 'transparent'}`,
       },
       headerTitle: `${isScrollOver60 ? `${headerTitle}` : ''}`,
       headerLeft: () =>
@@ -367,9 +392,10 @@ const Pages = ({route}) => {
 
   return (
     <>
+      <InfiniteWrap StatusBarHeight={StatusBarHeight} />
       <Wrap>
         {showLabel && (
-          <LabelViewSticky>
+          <LabelViewSticky LabelViewStickyHeight={yo}>
             <LabelsWrap>
               <LabelEachPressable
                 onPress={() => {
@@ -1089,13 +1115,16 @@ const LabelViewSticky = styled(Animated.View)`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
 
   position: absolute;
-  top: ${() => {
+  /* top: ${({LabelViewStickyHeight}) => {
     if (Platform.OS === 'ios') {
-      return `74px`;
+      return `74px`; // 77px
     } else if (Platform.OS === 'android') {
-      return `94px`;
+      return `94px`; // 69px
     }
-  }};
+  }}; */
+
+  top: ${({LabelViewStickyHeight}) => `${LabelViewStickyHeight}px`};
+
   left: 0;
   right: 0;
   z-index: 1;
@@ -1175,4 +1204,16 @@ const Filler = styled.View`
       return 100;
     }
   }}px;
+`;
+
+const InfiniteWrap = styled.View`
+  width: ${() => Dimensions.get('screen').width}px;
+  height: 2px;
+  position: absolute;
+  top: ${({StatusBarHeight}) => `${StatusBarHeight}px`};
+
+  left: 0;
+  right: 0;
+  z-index: 1;
+  border: 1px solid black;
 `;

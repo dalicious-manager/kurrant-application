@@ -2,7 +2,14 @@ import analytics from '@react-native-firebase/analytics';
 import messaging from '@react-native-firebase/messaging';
 import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect} from 'react';
-import {StatusBar, LogBox, Text, TextInput} from 'react-native';
+import {
+  StatusBar,
+  LogBox,
+  Text,
+  TextInput,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import codePush from 'react-native-code-push';
 import Config from 'react-native-config';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -11,13 +18,22 @@ import {ThemeProvider} from 'styled-components';
 import styled from 'styled-components/native';
 import {PaperProvider} from 'react-native-paper';
 
+import {getStatusBarHeight} from 'react-native-status-bar-height';
+
 import Screen from './screens';
 import Theme from './theme';
+
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
 TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.allowFontScaling = false;
+
+const StatusBarHeight =
+  Platform.OS === 'ios' ? getStatusBarHeight(true) : StatusBar.currentHeight;
+
+const LabelViewStickyHeight = StatusBarHeight + 30;
+
 const App = () => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
@@ -42,6 +58,7 @@ const App = () => {
         <PaperProvider>
           <SafeAreaProvider>
             <StatusBar />
+            {/* <InfiniteWrap StatusBasrHeight={StatusBarHeight} /> */}
             {Config.NODE_ENV === 'dev' && (
               <IsDevelop>개발서버 입니다.</IsDevelop>
             )}
@@ -105,3 +122,15 @@ const IsDevelop = styled.Text`
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //          佛祖保佑           永无BUG
 //         God Bless        Never Crash
+
+const InfiniteWrap = styled.View`
+  width: ${() => Dimensions.get('screen').width}px;
+  height: 2px;
+  position: absolute;
+  top: ${({StatusBarHeight}) => `${StatusBarHeight}px`};
+
+  left: 0;
+  right: 0;
+  z-index: 1;
+  border: 1px solid black;
+`;

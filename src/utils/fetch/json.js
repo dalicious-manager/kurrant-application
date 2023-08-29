@@ -121,7 +121,7 @@ async function json(url, method, options = {}) {
   //     return await getReissue(headers, reqUrl, token, method, options);
   //   }
 
-  console.log('fetching to:', reqUrl);
+  // console.log('fetching to:', reqUrl);
   //console.log('fetching method:', method);
   //console.log('fetching option:', options.body);
 
