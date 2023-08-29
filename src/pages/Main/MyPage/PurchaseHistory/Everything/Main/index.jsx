@@ -163,15 +163,6 @@ const Pages = () => {
   }, [searchDate]);
 
   //////////
-  useEffect(() => {
-    setShowDateModal(true);
-  }, []);
-
-  useEffect(() => {
-    console.log('스타트데이트 확인 ');
-
-    console.log(startDate);
-  }, [startDate]);
 
   return (
     <Container>
