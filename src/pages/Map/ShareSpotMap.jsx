@@ -129,7 +129,7 @@ const ShareSpotMap = ({route}) => {
       refetch();
     }, [paramsLocation, paramsId, refetch, setInitCenter]),
   );
-  console.log(zoom, 'zoom');
+
   useFocusEffect(
     useCallback(() => {
       balloonEvent();
