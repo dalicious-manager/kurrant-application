@@ -336,7 +336,29 @@ const Pages = ({route}) => {
       );
     }
   }, [dailyfoodDataDateList?.data, setWeeklyService, userRole, weekly]);
+  useEffect(() => {
+    const cart = isLoadMeal?.data?.spotCarts
+      .map(data => {
+        return data.cartDailyFoodDtoList
+          .map(el => el.cartDailyFoods.map(c => c.dailyFoodId).flat())
+          .flat();
+      })
+      .flat();
 
+    setCartDailyFoodId(cart);
+  }, [isLoadMeal?.data?.spotCarts]);
+  useEffect(() => {
+    const orderMealData = isOrderMeal?.data
+      .map(meal => {
+        return meal.orderItemDtoList
+          .map(data => {
+            return data.dailyFoodId;
+          })
+          .flat();
+      })
+      .flat();
+    setOrderDailyFoodId(orderMealData);
+  }, [isOrderMeal?.data]);
   const addCartPress = async (id, day, type, m) => {
     const diningType = type;
     const duplication = isLoadMeal?.data?.spotCarts
