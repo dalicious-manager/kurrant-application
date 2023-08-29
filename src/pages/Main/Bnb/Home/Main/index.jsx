@@ -33,12 +33,14 @@ import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
+import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useMembership from '../../../../../biz/useMembership';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
+import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {
@@ -67,10 +69,8 @@ import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
-
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
 import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
-
 import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
@@ -293,8 +293,7 @@ const Pages = () => {
     }
   }, []);
 
-  // 홈 공지사항 하나만 넣기
-
+  // 팝업
   const {
     getOneAnnouncement,
     oneAnnouncement,
@@ -326,7 +325,7 @@ const Pages = () => {
       }
     };
     handleShowModal();
-    // getOneAnnouncement(2);
+    getOneAnnouncement(2);
     if (coinSound === null) loadCoinSound();
   }, []);
 
