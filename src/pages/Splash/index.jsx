@@ -168,7 +168,7 @@ const Page = () => {
         }, 300);
 
         await checkPermission();
-        getData();
+        await getData();
       } catch (error) {
         setTimeout(() => {
           navigation.reset({
@@ -244,12 +244,12 @@ const Page = () => {
         });
       }
     };
+    //버전확인후 버전이 낮을 경우 다음화면으로 넘어가지 않도록
     const getData = async () => {
       await VersionCheck.getLatestVersion().then(async latestVersion => {
         const regex = /[^0-9]/g;
         const result = currentVersion?.replace(regex, '');
         const result2 = latestVersion?.replace(regex, '');
-        console.log(Number(result), Number(result2), '버전체크');
 
         if (Number(result) < Number(result2)) {
           return Alert.alert(
