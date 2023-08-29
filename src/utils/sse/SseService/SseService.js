@@ -1,4 +1,5 @@
 import EventSource from 'react-native-sse';
+import Base64 from '../sseLogics/base64Converter';
 
 let SseServiceOnlyOneInstance;
 
@@ -49,64 +50,63 @@ class SseService {
         console.log('-----');
         console.log('Sse 연결을 성공하였습니다');
         console.log(e.data);
-        // sseType12345 전부 초기화
-        // setSseType1({});
-        // setSseType2({});
-        // setSseType3({});
-        // setSseType4({});
-        // setSseType5({});
       } else {
-        const messageType = JSON.parse(e.data).type;
+        const receiveMessage = JSON.parse(
+          Base64.decode(JSON.parse(e.data).body),
+        )[1];
+
+        const messageType = receiveMessage.type;
+
         switch (messageType) {
           case 1:
             // type: 1 전체공지
             console.log('type: 1 전체공지 Sse 확인');
-            console.log({...JSON.parse(e.data)});
+            console.log(receiveMessage);
 
-            this.callbackForAtoms[0]({...JSON.parse(e.data)});
+            this.callbackForAtoms[0]({...receiveMessage});
 
             break;
           case 2:
             // type: 2 스팟공지
             console.log('type: 2 스팟공지 Sse 확인');
-            console.log({...JSON.parse(e.data)});
-            this.callbackForAtoms[1]({...JSON.parse(e.data)});
+            console.log(receiveMessage);
+            this.callbackForAtoms[1]({...receiveMessage});
             break;
           case 3:
             // type: 3 구매후기
             // 발동조건: 새로운 리뷰작성할 상품이 올라왔을떄
             console.log('type: 3 구매후기 Sse 확인');
-            console.log({...JSON.parse(e.data)});
-            this.callbackForAtoms[2]({...JSON.parse(e.data)});
+            console.log(receiveMessage);
+            this.callbackForAtoms[2]({...receiveMessage});
             break;
           case 4:
             // type: 4 마감시간
             console.log('type: 4 마감시간 Sse 확인');
-            console.log({...JSON.parse(e.data)});
-            this.callbackForAtoms[3]({...JSON.parse(e.data)});
+            console.log(receiveMessage);
+            this.callbackForAtoms[3]({...receiveMessage});
 
             break;
           case 5:
             // type: 5 다음주 식사 구매하셨나요?
             console.log('type: 5 다음주 식사 구매하셨나요? Sse 확인');
-            console.log({...JSON.parse(e.data)});
-            this.callbackForAtoms[4]({...JSON.parse(e.data)});
+            console.log(receiveMessage);
+            this.callbackForAtoms[4]({...receiveMessage});
 
             break;
           case 6:
             // type: 6 푸시 알림 관련
             // 발동조건: 푸시알림을 받으면 뜸
             console.log('type: 6 Sse 확인');
-            console.log({...JSON.parse(e.data)});
-            this.callbackForAtoms[5]({...JSON.parse(e.data)});
+            console.log(receiveMessage);
+            this.callbackForAtoms[5]({...receiveMessage});
 
             break;
           case 7:
             // type: 7 그룹
 
             console.log('type: 7 Sse 확인');
-            console.log({...JSON.parse(e.data)});
-            this.callbackForAtoms[6]({...JSON.parse(e.data)});
+            console.log(receiveMessage);
+            this.callbackForAtoms[6]({...receiveMessage});
 
             break;
           case 8:
@@ -114,8 +114,8 @@ class SseService {
             // 발동 조건:
 
             console.log('type: 8 Sse 확인');
-            console.log({...JSON.parse(e.data)});
-            this.callbackForAtoms[7]({...JSON.parse(e.data)});
+            console.log(receiveMessage);
+            this.callbackForAtoms[7]({...receiveMessage});
 
             break;
           default:
