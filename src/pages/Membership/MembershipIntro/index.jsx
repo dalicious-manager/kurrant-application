@@ -71,8 +71,8 @@ const Pages = ({route}) => {
               ? BespinMembershipImage
               : {
                   uri: params.isFounders
-                    ? 'https://asset.kurrant.co/img/common/foundersmembership.png'
-                    : 'https://asset.kurrant.co/img/common/kurrantmembership.png',
+                    ? 'https://admin.dalicious.co/img/foundersmembership.png'
+                    : 'https://admin.dalicious.co/img/kurrantmembership.png',
                   priority: FastImage.priority.high,
                 }
           }

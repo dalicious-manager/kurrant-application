@@ -7,6 +7,7 @@ import {
 } from 'react-hook-form';
 import {View, Text} from 'react-native';
 import styled from 'styled-components';
+
 import {
   PointInput,
   PointInputWrap,
@@ -24,7 +25,7 @@ const Point = ({
   totalPrice,
   userPoint,
   medtronicTotalPrice,
-  medtronicSupportArr,
+  totalMealPersentPrice,
 }) => {
   const {control, handleSubmit, watch} = useFormContext();
 
@@ -45,7 +46,7 @@ const Point = ({
                 onFocus={onFocusInput}
                 // onBlur={onBlurInput}
                 value={
-                  medtronicSupportArr.includes(62471004)
+                  totalMealPersentPrice
                     ? userPoint > medtronicTotalPrice &&
                       Number(value) > medtronicTotalPrice
                       ? medtronicTotalPrice.toString()
