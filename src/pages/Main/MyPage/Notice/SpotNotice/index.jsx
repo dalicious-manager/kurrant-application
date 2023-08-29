@@ -63,7 +63,7 @@ const Pages = () => {
   // }, []);
   return (
     <Wrapper>
-      {!dataList ? (
+      {dataList && dataList[0]?.items?.length === 0 ? (
         <NonNotice>
           <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>
             공지사항 내역이 없어요.
