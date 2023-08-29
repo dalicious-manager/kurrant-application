@@ -61,6 +61,7 @@ import Card from './Review/MealDetailReview/Card/index';
 import {convertDateFormat1} from '../../../../../utils/dateFormatter';
 import {ActivityIndicator} from 'react-native';
 import OrderSelectController from './Review/MealDetailReview/OrderSelectController/OrderSelectController';
+import {useHeaderHeight} from '@react-navigation/elements';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -70,6 +71,8 @@ const Pages = ({route}) => {
   const time = route.params.deliveryTime;
   const disableAddCartFromReview = route.params.disableAddCartFromReview;
   const reviewIdFromWrittenReview = route.params.reviewIdFromWrittenReview;
+
+  const headerHeight = useHeaderHeight();
 
   const bodyRef = useRef();
   const navigation = useNavigation();
@@ -369,7 +372,7 @@ const Pages = ({route}) => {
     <>
       <Wrap>
         {showLabel && (
-          <LabelViewSticky>
+          <LabelViewSticky headerHeight={headerHeight}>
             <LabelsWrap>
               <LabelEachPressable
                 onPress={() => {
@@ -1089,12 +1092,13 @@ const LabelViewSticky = styled(Animated.View)`
   border-bottom-color: ${props => props.theme.colors.grey[8]};
 
   position: absolute;
-  top: ${() => {
-    if (Platform.OS === 'ios') {
-      return `74px`;
-    } else if (Platform.OS === 'android') {
-      return `94px`;
-    }
+  top: ${({headerHeight}) => {
+    // if (Platform.OS === 'ios') {
+    //   return `74px`;
+    // } else if (Platform.OS === 'android') {
+    //   return `94px`;
+    // }
+    return `${headerHeight}px`;
   }};
   left: 0;
   right: 0;
