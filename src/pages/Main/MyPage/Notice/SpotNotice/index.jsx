@@ -15,6 +15,7 @@ import {
   useGetNoticeList,
   useGetSpotNoticeList,
 } from '../../../../../hook/useNotice';
+import {formattedBoardOptionStatus} from '../../../../../utils/statusFormatter';
 import ListBox from '../ListBox';
 import {PAGE_NAME as NoticeDetailPageName} from '../NoticeDetail';
 
@@ -78,7 +79,7 @@ const Pages = () => {
               return (
                 <ListBox
                   key={el.id}
-                  title={el.title}
+                  title={formattedBoardOptionStatus(el.boardOption) + el.title}
                   description={el.updated}
                   onPressEvent={() =>
                     navigation.navigate(NoticeDetailPageName, {

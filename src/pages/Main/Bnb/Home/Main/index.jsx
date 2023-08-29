@@ -25,6 +25,8 @@ import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css, useTheme} from 'styled-components/native';
 import BottomModal from '~components/BottomModal';
+import {BowlIcon} from '~components/Icon';
+import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -76,8 +78,8 @@ import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/Sp
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
+import useShowRegisterInfo from '../../../../RegisterInfo/ShowRegisterInfo/useShowRegisterInfo';
 import {PAGE_NAME as PrivateInvitePageName} from '../../../../Spots/spotGuide/InviteSpot';
-
 import {PAGE_NAME as SpotGuidePageName} from '../../../../Spots/spotGuide/SpotGuide';
 import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
@@ -86,14 +88,9 @@ import {PAGE_NAME as nicknameSettingPageName} from '../../../MyPage/Nickname/ind
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
 import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
 import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
-
+import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import {BowlIcon} from '~components/Icon';
-import useGetDietRepo from '../../DietRepo/useGetDietRepo';
-
-import useShowRegisterInfo from '../../../../RegisterInfo/ShowRegisterInfo/useShowRegisterInfo';
-import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -305,18 +302,12 @@ const Pages = () => {
 
   // 홈 공지사항 하나만 넣기
 
-  // const {
-  //   getOneAnnouncement,
-  //   oneAnnouncement,
-  //   isOneAnnouncementModalVisible,
-  //   setIsOneAnnouncementModalVisible,
-  // } = useGetOneAnnouncements();
-
-  // useEffect(() => {
-  //   removeItemFromStorage('announcementsClickedOneDate');
-  // }, []);
-
-  // // 회원 정보 입력
+  const {
+    getOneAnnouncement,
+    oneAnnouncement,
+    isOneAnnouncementModalVisible,
+    setIsOneAnnouncementModalVisible,
+  } = useGetOneAnnouncements();
 
   useShowRegisterInfo();
 
@@ -631,32 +622,13 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
-        {/* {!!oneAnnouncement && (
+        {!!oneAnnouncement && (
           <ModalOneAnnouncement
             data={oneAnnouncement}
             modalVisible={isOneAnnouncementModalVisible}
             setModalVisible={setIsOneAnnouncementModalVisible}
           />
-        )} */}
-
-        {/* 홈 강제 공지사항 띄우기 */}
-        {/* {Array.isArray(announcements) &&
-          announcements.length > 0 &&
-          announcements.map(v => {
-            if (announcementHandle[v.id.toString()]) {
-              return (
-                <ModalAnnouncement
-                  key={v.id}
-                  data={v}
-                  modalVisible={announcementModalVisible}
-                  announcementHandle={announcementHandle}
-                  setAnnouncementHandle={setAnnouncementHandle}
-                />
-              );
-            } else {
-              return;
-            }
-          })} */}
+        )}
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
