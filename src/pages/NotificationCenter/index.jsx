@@ -54,6 +54,7 @@ const Pages = () => {
   const navigation = useNavigation();
 
   const goToPage = async id => {
+    return;
     try {
       if (id) {
         const res = await fetchJson(`/boards/notices/${id}`);
@@ -116,7 +117,6 @@ const Pages = () => {
               <NotificationBox
                 key={v.id}
                 onPress={() => {
-                  console.log('박스 누름');
                   if (!v.isRead) {
                     handleNotificationBoxPress(v.id);
                     allowReadAlarm.current = false;

@@ -103,7 +103,7 @@ const useBoard = () => {
         if (isRerenderNeeded) {
           getAlarm();
         }
-        console.log('리뷰 댓글을 읽었습니다 ');
+        console.log('알림을 모두 읽었습니다 ');
       }
     } catch (err) {
       throw err;

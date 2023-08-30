@@ -34,7 +34,7 @@ const useSse = () => {
   const {mutate: confirmSseIsRead} = useMutation(
     async data => {
       const response = await fetchJson('/notification/read', 'PUT', {
-        body: JSON.stringify(data),
+        body: JSON.stringify({type: data}),
       });
 
       return [response, data];
@@ -45,7 +45,7 @@ const useSse = () => {
 
         switch (messageType) {
           case 1:
-            // type: 1 전체공지 (여긴 아직하면 안 됨)
+            // type: 1 전체공지 (구현중)
             console.log('sse 알림읽기 성공 message type 1 (전체공지)');
             setSseType1({});
             sseHistoryRefetch();
@@ -86,7 +86,7 @@ const useSse = () => {
             sseHistoryRefetch();
             break;
           case 7:
-            // type: 7 그룹 (확인 완료)
+            // type: 7 그룹 스팟공지 (완료)
             console.log('sse 알림읽기 성공 message type 7 (그룹)');
 
             setSseType7({});

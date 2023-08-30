@@ -71,7 +71,7 @@ class SseService {
             this.callbackForAtoms[1]({...receiveMessage});
             break;
           case 3:
-            // type: 3 구매후기
+            // type: 3 구매후기 (완료)
             // 발동조건: 새로운 리뷰작성할 상품이 올라왔을떄
             console.log('type: 3 구매후기 Sse 확인');
             console.log(receiveMessage);
@@ -85,14 +85,14 @@ class SseService {
 
             break;
           case 5:
-            // type: 5 다음주 식사 구매하셨나요?
+            // type: 5 다음주 식사 구매하셨나요? (완료)
             console.log('type: 5 다음주 식사 구매하셨나요? Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[4]({...receiveMessage});
 
             break;
           case 6:
-            // type: 6 푸시 알림 관련
+            // type: 6 푸시 알림 관련 (완료)
             // 발동조건: 푸시알림을 받으면 뜸
             console.log('type: 6 Sse 확인');
             console.log(receiveMessage);
@@ -100,7 +100,7 @@ class SseService {
 
             break;
           case 7:
-            // type: 7 그룹
+            // type: 7 스팟공지 (완료)
 
             console.log('type: 7 Sse 확인');
             console.log(receiveMessage);
@@ -108,8 +108,7 @@ class SseService {
 
             break;
           case 8:
-            // type: 8 댓글
-            // 발동 조건:
+            // type: 8 사장님 댓글 (완료)
 
             console.log('type: 8 Sse 확인');
             console.log(receiveMessage);
