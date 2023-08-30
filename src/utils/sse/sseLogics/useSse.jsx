@@ -13,9 +13,6 @@ const useSse = () => {
   const [sseType6, setSseType6] = useAtom(sseAtoms.sseType6Atom);
   const [sseType7, setSseType7] = useAtom(sseAtoms.sseType7Atom);
   const [sseType8, setSseType8] = useAtom(sseAtoms.sseType8Atom);
-  //
-  // sse 전체 이력 조회
-  // const [sseHistory, setSseHistory] = useState([]);
 
   const {data: sseHistory, refetch: sseHistoryRefetch} = useQuery(
     ['sse', 'notification'],
@@ -27,8 +24,6 @@ const useSse = () => {
       );
 
       return response?.data;
-
-      // setSseHistory(response.data);
     },
     {
       // enabled: false,
@@ -38,12 +33,9 @@ const useSse = () => {
   // sse 알림 읽었다고 서버에 보내주기
   const {mutate: confirmSseIsRead} = useMutation(
     async data => {
-      console.log('리스콘스');
-
       const response = await fetchJson('/notification/read', 'PUT', {
         body: JSON.stringify(data),
       });
-      console.log(response);
 
       return [response, data];
     },
@@ -82,28 +74,28 @@ const useSse = () => {
             console.log(
               'sse 알림읽기 성공 message type 5 (다음주 식사 구매하셨나요?)',
             );
-            // console.log({});
+
             setSseType5({});
             sseHistoryRefetch();
             break;
           case 6:
             // type: 6 알림관련 (완료)
             console.log('sse 알림읽기 성공 message type 6 (알림관련)');
-            // console.log({});
+
             setSseType6({});
             sseHistoryRefetch();
             break;
           case 7:
             // type: 7 그룹 (확인 완료)
             console.log('sse 알림읽기 성공 message type 7 (그룹)');
-            // console.log({});
+
             setSseType7({});
             sseHistoryRefetch();
             break;
           case 8:
             // type: 8 댓글 (완료)
             console.log('sse 알림읽기 성공 message type 8 (댓글)');
-            // console.log({});
+
             setSseType8({});
             sseHistoryRefetch();
             break;
