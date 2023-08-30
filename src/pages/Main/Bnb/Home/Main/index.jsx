@@ -597,7 +597,7 @@ const Pages = () => {
   if (!isUserInfo?.data) {
     return <SkeletonUI />;
   }
-  console.log(popupList, '22');
+
   return (
     <SafeView
       style={{
