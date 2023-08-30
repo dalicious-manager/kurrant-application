@@ -2,6 +2,7 @@ import * as sseAtoms from './store';
 import {useAtom} from 'jotai';
 import {useQuery, useMutation} from 'react-query';
 import {fetchJson} from '../../fetch';
+import {useEffect} from 'react';
 
 const useSse = () => {
   const [sseType1, setSseType1] = useAtom(sseAtoms.sseType1Atom);
@@ -37,9 +38,12 @@ const useSse = () => {
   // sse 알림 읽었다고 서버에 보내주기
   const {mutate: confirmSseIsRead} = useMutation(
     async data => {
+      console.log('리스콘스');
+
       const response = await fetchJson('/notification/read', 'PUT', {
         body: JSON.stringify(data),
       });
+      console.log(response);
 
       return [response, data];
     },
@@ -108,7 +112,9 @@ const useSse = () => {
         }
       },
       onError: err => {
-        console.log('이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요');
+        console.log(
+          '이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요 confirmsseRead',
+        );
         console.log(err);
       },
     },

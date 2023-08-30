@@ -30,7 +30,9 @@ const useSseStart = () => {
 
     let yo;
     if (token) {
+      console.log(JSON.parse(token));
       yo = JSON.parse(token);
+      // console.log(JSON.parse(`'${token}'`));
     }
     return yo?.accessToken;
   }, []);
@@ -41,30 +43,38 @@ const useSseStart = () => {
     if (forOnlyOneSseService) return forOnlyOneSseService; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
 
     if (!tokenYo) return;
-
+    console.log(tokenYo);
     forOnlyOneSseService = new SseService(apiHostUrl, tokenYo, [
       data => {
+        console.log(data, '1');
         setSseType1(data);
       },
       data => {
+        console.log(data, '2');
         setSseType2(data);
       },
       data => {
+        console.log(data, '3');
         setSseType3(data);
       },
       data => {
+        console.log(data, '4');
         setSseType4(data);
       },
       data => {
+        console.log(data, '5');
         setSseType5(data);
       },
       data => {
+        console.log(data, '6');
         setSseType6(data);
       },
       data => {
+        console.log(data);
         setSseType7(data);
       },
       data => {
+        console.log(data);
         setSseType8(data);
       },
     ]);
