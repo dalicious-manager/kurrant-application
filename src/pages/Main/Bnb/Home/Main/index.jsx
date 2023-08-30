@@ -33,7 +33,6 @@ import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
-import useGetOneAnnouncements from '../../../../../biz/useGetHomeAnnouncemetsJustOne/hook';
 import useGroupSpots from '../../../../../biz/useGroupSpots/hook';
 import {isCancelSpotAtom} from '../../../../../biz/useGroupSpots/store';
 import useMembership from '../../../../../biz/useMembership';
@@ -48,6 +47,7 @@ import {
   useGetDailyfoodList,
 } from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {useGetPopupList} from '../../../../../hook/usePopup';
 import {useGroupSpotList} from '../../../../../hook/useSpot';
 import {
   useGetPrivateMembership,
@@ -114,6 +114,8 @@ const Pages = () => {
   // );
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+  const [isOneAnnouncementModalVisible, setIsOneAnnouncementModalVisible] =
+    useState(true);
   const [showDim, setShowDim] = useAtom(mainDimAtom);
 
   const [show, setShow] = useState(false);
@@ -130,11 +132,11 @@ const Pages = () => {
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
   const date = formattedWeekDate(new Date());
-
   const {
     totalNutrition: {totalCalorie},
     dietRepoMainRefetch,
   } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
+  const {data: popupList} = useGetPopupList();
 
   const loadCoinSound = async () => {
     try {
@@ -278,8 +280,6 @@ const Pages = () => {
     }
   }, [showDim]);
 
-  // 홈 전체 공지사항
-
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
     const supported = await Linking.canOpenURL(url);
@@ -292,16 +292,6 @@ const Pages = () => {
       await Linking.openURL(alterUrl);
     }
   }, []);
-
-  // 팝업
-  const {
-    getOneAnnouncement,
-    oneAnnouncement,
-    isOneAnnouncementModalVisible,
-    setIsOneAnnouncementModalVisible,
-  } = useGetOneAnnouncements();
-
-  // useShowRegisterInfo();
 
   useEffect(() => {
     const handleShowModal = async () => {
@@ -325,7 +315,7 @@ const Pages = () => {
       }
     };
     handleShowModal();
-    getOneAnnouncement(2);
+
     if (coinSound === null) loadCoinSound();
   }, []);
 
@@ -607,16 +597,16 @@ const Pages = () => {
   if (!isUserInfo?.data) {
     return <SkeletonUI />;
   }
-
+  console.log(popupList, '22');
   return (
     <SafeView
       style={{
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
-        {!!oneAnnouncement && (
+        {popupList && (
           <ModalOneAnnouncement
-            data={oneAnnouncement}
+            data={popupList}
             modalVisible={isOneAnnouncementModalVisible}
             setModalVisible={setIsOneAnnouncementModalVisible}
           />
