@@ -140,7 +140,7 @@ android {
         applicationId "com.dalicious.kurrant"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 53
+        versionCode 54
         versionName "1.5.4"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 

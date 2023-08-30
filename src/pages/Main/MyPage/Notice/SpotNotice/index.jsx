@@ -15,6 +15,7 @@ import {
   useGetNoticeList,
   useGetSpotNoticeList,
 } from '../../../../../hook/useNotice';
+import {formattedBoardOptionStatus} from '../../../../../utils/statusFormatter';
 import ListBox from '../ListBox';
 import {PAGE_NAME as NoticeDetailPageName} from '../NoticeDetail';
 
@@ -62,7 +63,7 @@ const Pages = () => {
   // }, []);
   return (
     <Wrapper>
-      {!dataList ? (
+      {dataList && dataList[0]?.items?.length === 0 ? (
         <NonNotice>
           <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>
             공지사항 내역이 없어요.
@@ -78,7 +79,7 @@ const Pages = () => {
               return (
                 <ListBox
                   key={el.id}
-                  title={el.title}
+                  title={formattedBoardOptionStatus(el.boardOption) + el.title}
                   description={el.updated}
                   onPressEvent={() =>
                     navigation.navigate(NoticeDetailPageName, {
