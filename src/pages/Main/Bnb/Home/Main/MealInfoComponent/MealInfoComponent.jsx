@@ -10,7 +10,7 @@ import styled, {css} from 'styled-components';
 import Typography from '../../../../../../components/Typography';
 import {useConfirmOrderState} from '../../../../../../hook/useOrder';
 // import {PAGE_NAME as reviewPage} from '../../../../../../screens/Main/Review/CreateReview/Page1';
-import {PAGE_NAME as reviewPage} from '../../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
+import {PAGE_NAME as CreateReviewPage1PageName} from '../../../../../../pages/Main/MyPage/Review/CreateReview/Page1';
 import {formattedMealFoodStatus} from '../../../../../../utils/statusFormatter';
 import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
 import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
@@ -40,11 +40,11 @@ const MealInfoComponent = ({
   // console.log(dailyFoodId);
 
   const goToReviewPage = (id, image, name) => {
-    navigation.navigate(reviewPage, {
+    navigation.navigate(CreateReviewPage1PageName, {
       orderItemId: id,
       imageLocation: image,
       foodName: name,
-      test: 'test',
+      resetNavigate: true,
     });
   };
 
@@ -121,23 +121,18 @@ const MealInfoComponent = ({
               startAni={startAni}
               onPress={() => {
                 if (meal.orderStatus === 10) {
-                  // 주문상태변경 - 수령완료 api보내야함
-                  // console.log('000');
                   setStartAni(true);
                   deliveryConfirmPress();
-                  // 식단 리포트 추가하기
                   addMeal([
                     {dailyFoodId},
                     () => {
                       queryClient.invalidateQueries({
                         queryKey: ['dietRepo', 'main'],
                       });
-                      // dietRepoMainRefetch();
+                      queryClient.invalidateQueries('userInfo');
                     },
                   ]);
                 } else {
-                  // console.log('00011');
-                  // 리뷰로 가기
                   goToReviewPage(meal.id, meal.image, meal.name);
                 }
               }}>

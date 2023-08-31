@@ -54,7 +54,6 @@ import {
   ButtonWrap,
   ContentWrap,
   DiningName,
-  MealName,
   PaymentText,
   PaymentView,
   PressableView,
@@ -117,11 +116,10 @@ const Pages = ({route}) => {
     spotName,
     clientType,
     usedSupportPrice,
-    medtronicTotalPrice,
-    medtronicPrice,
-    medtronicSupportArr,
+    // medtronicTotalPrice,
+    // medtronicPrice,
+    totalMealPersentPrice,
   } = route.params;
-
   const fundButton = () => {
     setModalVisible3(true);
   };
@@ -140,9 +138,9 @@ const Pages = ({route}) => {
       return setValue('point', '0');
     }
 
-    if (medtronicSupportArr.includes(62471004)) {
-      if (points > medtronicTotalPrice) {
-        return setValue('point', medtronicTotalPrice.toString());
+    if (totalMealPersentPrice) {
+      if (points > totalPrice) {
+        return setValue('point', totalPrice.toString());
       }
     } else {
       if (points > totalPrice) {
@@ -315,14 +313,9 @@ const Pages = ({route}) => {
 
   const orderPress2 = async spotId => {
     if (
-      !(
-        medtronicTotalPrice - Number(points) === 0 ||
-        totalPrice - Number(points) === 0
-      ) &&
+      !(totalPrice - Number(points) === 0) &&
       selectDefaultCard.length <= 0 &&
-      (medtronicSupportArr.includes(62471004)
-        ? medtronicTotalPrice > 0
-        : totalPrice > 0)
+      (totalMealPersentPrice ? totalPrice > 0 : totalPrice > 0)
     ) {
       Alert.alert(
         '카드선택',
@@ -344,11 +337,9 @@ const Pages = ({route}) => {
       spotId: spotId,
       // "cardId": selectDefaultCard[0]?.id,
       cartDailyFoodDtoList: lastArr,
-      totalPrice: medtronicSupportArr.includes(62471004)
-        ? medtronicTotalPrice - Number(points)
-        : totalPrice - Number(points),
-      supportPrice: medtronicSupportArr.includes(62471004)
-        ? medtronicPrice
+      totalPrice: totalPrice - Number(points),
+      supportPrice: totalMealPersentPrice
+        ? totalMealPersentPrice
         : discountPrice < usedSupportPrice
         ? discountPrice
         : usedSupportPrice,
@@ -369,6 +360,8 @@ const Pages = ({route}) => {
         totalCount > 1 ? `${firstName} 외 ${totalCount}건` : firstName;
       const orderId = generateOrderCode(1, isUserInfo?.userId, spotId);
       loadMeal();
+      console.log(totalPrice, Number(points), 'medtronicTotalPrice');
+      console.log(totalPrice - Number(points) > 0, 'medtronicTotalPrice');
       if (totalPrice - Number(points) > 0) {
         const orderData = {
           phone: orderPhone,
@@ -382,15 +375,13 @@ const Pages = ({route}) => {
         navigation.navigate(PayCheckPasswordPayPageName, {
           orderData: JSON.stringify(orderData),
         });
-      } else if (
-        medtronicSupportArr.includes(62471004) &&
-        medtronicTotalPrice - Number(points) > 0
-      ) {
+      } else if (totalMealPersentPrice && totalPrice - Number(points) > 0) {
+        console.log(totalPrice - Number(points));
         const orderData = {
           phone: orderPhone,
           cardId: selectDefaultCard[0]?.id,
           orderName: orderName,
-          amount: medtronicTotalPrice - Number(points),
+          amount: totalPrice - Number(points),
           orderId: orderId,
           orderItems: data,
         };
@@ -422,8 +413,8 @@ const Pages = ({route}) => {
     }
   };
   useEffect(() => {
-    console.log(clientType[0]?.groupType, 'groupType');
-  }, [clientType]);
+    console.log(isUserInfo);
+  }, [isUserInfo]);
   if (isPay) {
     return (
       <SafeArea>
@@ -618,8 +609,8 @@ const Pages = ({route}) => {
                         <QuestionIcon />
                       </PressableView>
                       <PaymentText>
-                        {medtronicSupportArr.includes(62471004)
-                          ? `-${withCommas(medtronicPrice)}`
+                        {totalMealPersentPrice
+                          ? `-${withCommas(totalMealPersentPrice)}`
                           : usedSupportPrice === 0
                           ? 0
                           : discountPrice < usedSupportPrice
@@ -691,8 +682,8 @@ const Pages = ({route}) => {
                         onFocusInput={onFocusInput}
                         //onBlurInput={onBlurInput}
                         userPoint={isUserInfo.point}
-                        medtronicTotalPrice={medtronicTotalPrice}
-                        medtronicSupportArr={medtronicSupportArr}
+                        medtronicTotalPrice={totalPrice}
+                        totalMealPersentPrice={totalMealPersentPrice}
                       />
                     </FormProvider>
                   </PaymentView>
@@ -714,21 +705,13 @@ const Pages = ({route}) => {
                     <TotalPriceWrap>
                       <TotalPriceTitle>총 결제금액</TotalPriceTitle>
                       <TotalPrice>
-                        {medtronicSupportArr.includes(62471004)
-                          ? withCommas(
-                              points > medtronicTotalPrice
-                                ? 0
-                                : points > isUserInfo.point
-                                ? medtronicTotalPrice - isUserInfo.point
-                                : medtronicTotalPrice - Number(points),
-                            )
-                          : withCommas(
-                              points > totalPrice
-                                ? 0
-                                : points > isUserInfo.point
-                                ? totalPrice - isUserInfo.point
-                                : totalPrice - Number(points),
-                            )}
+                        {withCommas(
+                          points > totalPrice
+                            ? 0
+                            : points > isUserInfo.point
+                            ? totalPrice - isUserInfo.point
+                            : totalPrice - Number(points),
+                        )}
                         원
                       </TotalPrice>
                     </TotalPriceWrap>
@@ -861,13 +844,7 @@ const Pages = ({route}) => {
             <ButtonWrap>
               <Button
                 label={`총 ${totalCount}개 결제하기`}
-                disabled={
-                  payments !== 'NOMAL' ||
-                  (medtronicSupportArr.includes(62471004)
-                    ? medtronicTotalPrice < 0
-                    : totalPrice < 0) ||
-                  isPay
-                }
+                disabled={payments !== 'NOMAL' || totalPrice < 0 || isPay}
                 onPressEvent={() => {
                   handleEventPayments();
                 }}
@@ -1097,4 +1074,9 @@ const TotalPriceWrap = styled.View`
 
 const PointInfoText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.red[500]};
+`;
+
+const MealName = styled(Typography).attrs({text: 'Body05SB'})`
+  color: ${({theme}) => theme.colors.grey[2]};
+  margin-bottom: 2px;
 `;

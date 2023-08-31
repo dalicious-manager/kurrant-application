@@ -18,7 +18,7 @@ const useJoinUser = () => {
 
       return res;
     } catch (err) {
-      return err;
+      throw err;
     } finally {
       setIsLoading(false);
     }

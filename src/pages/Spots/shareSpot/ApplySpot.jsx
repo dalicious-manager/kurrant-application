@@ -79,6 +79,7 @@ const ApplySpot = ({route}) => {
       navigation.navigate(ShareSpotMapPage, {
         location: center,
         id: id,
+        from: from,
       });
     }
   };
@@ -261,6 +262,8 @@ const SpotName = styled(Typography).attrs({text: 'Title03SB'})`
 
 const Address = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${({theme}) => theme.colors.grey[4]};
+
+  flex: 1;
 `;
 
 const Label = styled.View`
@@ -275,6 +278,7 @@ const AddressWrap = styled.View`
   flex-direction: row;
   align-items: center;
   margin-top: 8px;
+  width: 100%;
 `;
 const LabelText = styled(Typography).attrs({text: 'Button10R'})`
   color: ${({theme}) => theme.colors.grey[2]};

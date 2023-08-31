@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 
-import Typography from '../../../../../../components/Typography';
+import Typography from '~components/Typography';
 
 /**
  * @param {object} props
@@ -88,7 +88,13 @@ const ModalCalendar = props => {
                   <Cancel>취소</Cancel>
                 </Pressable>
                 <Pressable
-                  onPress={() => calendarProps.confirm(calendarProps.setModal)}>
+                  onPress={() =>
+                    calendarProps.confirm(
+                      calendarProps.setModal,
+                      calendarProps.setSelected,
+                      // selectedDate,
+                    )
+                  }>
                   <Confirm>완료</Confirm>
                 </Pressable>
               </IosButton>
@@ -96,14 +102,14 @@ const ModalCalendar = props => {
             <DatePicker
               value={calendarProps?.selected}
               display="spinner"
-              onChange={(event, date) =>
+              onChange={(event, date) => {
                 calendarProps.onChange(
                   event,
                   date,
                   calendarProps.setModal,
                   calendarProps.setSelected,
-                )
-              }
+                );
+              }}
               locale="ko-KR"
             />
           </React.Fragment>

@@ -79,12 +79,14 @@ const Pages = ({route}) => {
   const themeApp = useTheme();
   const {userWithdrawGroup} = useGroupSpots();
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
+
   const myGroupList =
     isUserGroupSpotCheck?.data?.spotListResponseDtoList?.filter(
       el => el.clientId !== groupId,
     );
   const {data: detailData, refetch: detailDataRefech} =
     useGroupSpotManageDetail(groupId);
+
   const navigation = useNavigation();
   const diningType = [1, 2, 3];
   const goToApplyPage = from => {
@@ -96,7 +98,7 @@ const Pages = ({route}) => {
       roadAddress: detailData?.data?.address,
       groupId: detailData?.data?.id,
       name: detailData?.data?.name,
-      from: from,
+      from: 'manage',
     });
   };
   const withdrawPress = () => {
@@ -121,7 +123,7 @@ const Pages = ({route}) => {
               if (myGroupList.length === 0) {
                 navigation.navigate(SpotTypePage);
               } else {
-                navigation.navigate(SelectSpotPageName);
+                navigation.goBack();
               }
             } catch (err) {
               Alert.alert('스팟 탈퇴', err?.toString()?.replace('error: ', ''));
@@ -157,9 +159,7 @@ const Pages = ({route}) => {
       }
     }, [navigation, groupId, detailDataRefech]),
   );
-  useEffect(() => {
-    console.log(detailData?.data, 'testest');
-  }, [detailData?.data]);
+
   return (
     <Wrap>
       <Contents>

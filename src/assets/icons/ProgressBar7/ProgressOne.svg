@@ -1,0 +1,48 @@
+<svg width="160" height="16" viewBox="0 0 160 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="15" y1="8" x2="152" y2="8" stroke="#D5D4D9" stroke-width="2"/>
+<g clip-path="url(#clip0_10115_138056)">
+<path d="M1.6665 8.0013C1.6665 4.50359 4.50212 1.66797 7.99984 1.66797C11.4976 1.66797 14.3332 4.50359 14.3332 8.0013C14.3332 11.499 11.4976 14.3346 7.99984 14.3346C4.50212 14.3346 1.6665 11.499 1.6665 8.0013Z" fill="white" stroke="#343337" stroke-width="2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 4.5C6.06705 4.5 4.5 6.06705 4.5 8C4.5 9.93295 6.06705 11.5 8 11.5C9.93295 11.5 11.5 9.93295 11.5 8C11.5 6.06705 9.93295 4.5 8 4.5Z" fill="#343337"/>
+</g>
+<g clip-path="url(#clip1_10115_138056)">
+<path d="M25.6665 8.0013C25.6665 4.50359 28.5021 1.66797 31.9998 1.66797C35.4976 1.66797 38.3332 4.50359 38.3332 8.0013C38.3332 11.499 35.4976 14.3346 31.9998 14.3346C28.5021 14.3346 25.6665 11.499 25.6665 8.0013Z" fill="white" stroke="#D5D4D9" stroke-width="2"/>
+</g>
+<g clip-path="url(#clip2_10115_138056)">
+<path d="M49.6665 8.0013C49.6665 4.50359 52.5021 1.66797 55.9998 1.66797C59.4976 1.66797 62.3332 4.50359 62.3332 8.0013C62.3332 11.499 59.4976 14.3346 55.9998 14.3346C52.5021 14.3346 49.6665 11.499 49.6665 8.0013Z" fill="white" stroke="#D5D4D9" stroke-width="2"/>
+</g>
+<g clip-path="url(#clip3_10115_138056)">
+<path d="M73.6665 8.0013C73.6665 4.50359 76.5021 1.66797 79.9998 1.66797C83.4976 1.66797 86.3332 4.50359 86.3332 8.0013C86.3332 11.499 83.4976 14.3346 79.9998 14.3346C76.5021 14.3346 73.6665 11.499 73.6665 8.0013Z" fill="white" stroke="#D5D4D9" stroke-width="2"/>
+</g>
+<g clip-path="url(#clip4_10115_138056)">
+<path d="M97.6665 8.0013C97.6665 4.50359 100.502 1.66797 104 1.66797C107.498 1.66797 110.333 4.50359 110.333 8.0013C110.333 11.499 107.498 14.3346 104 14.3346C100.502 14.3346 97.6665 11.499 97.6665 8.0013Z" fill="white" stroke="#D5D4D9" stroke-width="2"/>
+</g>
+<g clip-path="url(#clip5_10115_138056)">
+<path d="M121.667 8.0013C121.667 4.50359 124.502 1.66797 128 1.66797C131.498 1.66797 134.333 4.50359 134.333 8.0013C134.333 11.499 131.498 14.3346 128 14.3346C124.502 14.3346 121.667 11.499 121.667 8.0013Z" fill="white" stroke="#D5D4D9" stroke-width="2"/>
+</g>
+<g clip-path="url(#clip6_10115_138056)">
+<path d="M145.667 8.0013C145.667 4.50359 148.502 1.66797 152 1.66797C155.498 1.66797 158.333 4.50359 158.333 8.0013C158.333 11.499 155.498 14.3346 152 14.3346C148.502 14.3346 145.667 11.499 145.667 8.0013Z" fill="white" stroke="#D5D4D9" stroke-width="2"/>
+</g>
+<defs>
+<clipPath id="clip0_10115_138056">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+<clipPath id="clip1_10115_138056">
+<rect width="16" height="16" fill="white" transform="translate(24)"/>
+</clipPath>
+<clipPath id="clip2_10115_138056">
+<rect width="16" height="16" fill="white" transform="translate(48)"/>
+</clipPath>
+<clipPath id="clip3_10115_138056">
+<rect width="16" height="16" fill="white" transform="translate(72)"/>
+</clipPath>
+<clipPath id="clip4_10115_138056">
+<rect width="16" height="16" fill="white" transform="translate(96)"/>
+</clipPath>
+<clipPath id="clip5_10115_138056">
+<rect width="16" height="16" fill="white" transform="translate(120)"/>
+</clipPath>
+<clipPath id="clip6_10115_138056">
+<rect width="16" height="16" fill="white" transform="translate(144)"/>
+</clipPath>
+</defs>
+</svg>

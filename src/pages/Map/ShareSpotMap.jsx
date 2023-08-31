@@ -108,14 +108,14 @@ const ShareSpotMap = ({route}) => {
     });
   };
 
-  useEffect(() => {
-    balloonEvent();
-    setZoom(18);
-  }, []);
+  // useEffect(() => {
+  //   balloonEvent();
+  //   setZoom(18);
+  // }, []);
 
   useFocusEffect(
     useCallback(() => {
-      if (paramsLocation !== undefined) {
+      if (paramsLocation) {
         setTab(paramsId);
         setInitCenter(paramsLocation);
         setModalVisible(true);
@@ -129,9 +129,11 @@ const ShareSpotMap = ({route}) => {
       refetch();
     }, [paramsLocation, paramsId, refetch, setInitCenter]),
   );
+
   useFocusEffect(
     useCallback(() => {
       balloonEvent();
+      setZoom(18);
     }, []),
   );
 
@@ -161,6 +163,7 @@ const ShareSpotMap = ({route}) => {
               setMyLocation={setMyLocation}
               setShow={setShow}
               toast={toast}
+              from={from}
             />
           </LocationButtonWrap>
           <ListButtonWrap>
@@ -254,7 +257,7 @@ const ShareSpotMap = ({route}) => {
         </MapView>
       )}
 
-      {modalVisible && (
+      {modalVisible && isSuccess && (
         <BottomSheetSpot
           setBottomModal={setBottomModal}
           snap={snap}

@@ -10,6 +10,7 @@ import VersionCheck from 'react-native-version-check';
 import styled, {useTheme} from 'styled-components/native';
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import useUserMe from '~biz/useUserMe';
+import BottomModal from '~components/BottomModal';
 import {SettingIcon} from '~components/Icon';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
@@ -44,6 +45,9 @@ import {PAGE_NAME as FAQPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
+import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
+import {View} from 'react-native';
+import {RightSkinnyArrow} from '../../../../../components/Icon';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -56,6 +60,7 @@ const Pages = () => {
     readableAtom: {myInfo, isMyInfoLoading},
   } = useUserMe();
   const {isApplicationList, applicationList} = useGroupSpots();
+  const [modalVisible2, setModalVisible2] = useState(false);
   const {
     readableAtom: {userRole},
   } = useAuth();
@@ -70,21 +75,12 @@ const Pages = () => {
 
   const [redeemablePoints] = useAtom(redeemablePointsAtom);
 
-  // useEffect(() => {
-  //   console.log('획득 가능한 포인트 확인');
-  //   console.log(redeemablePoints);
-  // }, [redeemablePoints]);
-
-  // useEffect(() => {
-  //   console.log('토탈');
-  //   console.log(total);
-  // }, [total]);
-
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
   const {
     data: {data: isUserInfo},
   } = useGetUserInfo();
+
   const getData = async () => {
     await userMe();
     await userMePersonal();
@@ -130,13 +126,6 @@ const Pages = () => {
     }, []),
   );
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     // Do something when the screen is focused
-  //     userInfo();
-  //   }, []),
-  // );
-
   useEffect(() => {
     if (userRole !== 'ROLE_GUEST') {
       if (applicationList) {
@@ -150,29 +139,36 @@ const Pages = () => {
   }
   return (
     <Container>
-      <Wrapper paddingTop={24}>
+      <Wrapper paddingTop={40}>
         <ScrollView>
-          {/* <GourmetTestButton>
-            <Typography text='CaptionSB' textColor={themeApp.colors.blue[500]}>나의 미식타입 테스트 </Typography>
-            <ArrowRight/>
-          </GourmetTestButton> */}
           {isUserInfo ? (
-            <LoginBox>
-              <LoginIdBox>
-                {/* <AvatarBackground source={AvatarNon} resizeMode={'stretch'}>
-                  {myInfo.gourmetType !== null && <Image imagePath={{uri:'https://asset.kurrant.co/img/common/soup.png'}} scale={1.0} styles={{width:25,height:22}}/>}
-                </AvatarBackground> */}
-                <Typography
-                  text="Title02SB"
-                  textColor={themeApp.colors.grey[2]}>
-                  {isUserInfo?.nickname ?? isUserInfo?.name}님
-                </Typography>
-              </LoginIdBox>
-              <Pressable
-                onPress={() => navigation.navigate(PersonalInfoPageName)}>
-                <SettingIcon height={16} width={8} />
-              </Pressable>
-            </LoginBox>
+            <View>
+              {/* <RegisterInfoPressable
+                onPress={() => {
+                  navigation.navigate(RegisterInfoStartPageName);
+                }}
+                style={{marginLeft: 24}}>
+                <ToRegisterInfoText>회원 정보 입력하기 </ToRegisterInfoText>
+                <RightSkinnyArrow
+                  width={'5px'}
+                  height={'9px'}
+                  color={themeApp.colors.grey[4]}
+                />
+              </RegisterInfoPressable> */}
+              <LoginBox>
+                <LoginIdBox>
+                  <Typography
+                    text="Title02SB"
+                    textColor={themeApp.colors.grey[2]}>
+                    {isUserInfo?.nickname ?? isUserInfo?.name}님
+                  </Typography>
+                </LoginIdBox>
+                <Pressable
+                  onPress={() => navigation.navigate(PersonalInfoPageName)}>
+                  <SettingIcon height={16} width={8} />
+                </Pressable>
+              </LoginBox>
+            </View>
           ) : (
             <LoginBox
               onPress={async () => {
@@ -196,6 +192,7 @@ const Pages = () => {
           <MembershipBox
             isMembership={isUserInfo?.isMembership}
             membershipPeriod={isUserInfo?.membershipUsingPeriod}
+            setModalVisible2={setModalVisible2}
           />
           <PointBox point={isUserInfo?.point} />
 
@@ -305,6 +302,24 @@ const Pages = () => {
           </ListContainer>
         </ScrollView>
       </Wrapper>
+      <BottomModal
+        modalVisible={modalVisible2}
+        setModalVisible={setModalVisible2}
+        title={`기업멤버십에 가입되어 있어요.`}
+        description={
+          '이미 멤버십 혜택이 적용 중이에요.\n개인멤버십 가입을 추가로 진행 할까요?'
+        }
+        buttonTitle1={'취소'}
+        buttonType1="grey7"
+        buttonTitle2={'확인'}
+        buttonType2="grey2"
+        onPressEvent1={() => setModalVisible2(false)}
+        onPressEvent2={() => {
+          navigation.navigate(MembershipIntroPageName, {
+            isFounders: isUserInfo?.data?.leftFoundersNumber > 0,
+          });
+        }}
+      />
     </Container>
   );
 };
@@ -322,6 +337,7 @@ const Container = styled.SafeAreaView`
   padding-top: ${Math.round(StatusBar.currentHeight)}px;
   background-color: white;
 `;
+
 const LoginBox = styled.Pressable`
   flex-direction: row;
   align-items: center;
@@ -382,4 +398,13 @@ const InfomationLabel = styled(Typography)``;
 const InfomationCaption = styled(Typography)`
   font-size: 10px;
   font-family: 'Pretendard-Regular';
+`;
+
+const RegisterInfoPressable = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ToRegisterInfoText = styled(Typography).attrs({text: 'Body07CaptionSB'})`
+  color: ${({theme}) => theme.colors.grey[4]};
 `;

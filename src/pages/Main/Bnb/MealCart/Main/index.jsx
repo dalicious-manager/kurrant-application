@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {cos} from 'react-native-reanimated';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
@@ -56,8 +57,13 @@ const Pages = () => {
     soldOutMeal,
     // clientStatus,
   } = useShoppingBasket();
-  const {data: isLoadMeal, isFetching} = useGetShoppingBasket();
+  const {
+    data: isLoadMeal,
+    isFetching,
+    refetch: loadMealRefetch,
+  } = useGetShoppingBasket();
   const [spotCartData, setSpotCartData] = useState();
+  const [salesend, setSalesend] = useState();
   const [mealCartSpot, setMealCartSpot] = useState();
   const [clientStatus, setClientStatus] = useState([]);
   const [time, setTime] = useState('11:00');
@@ -103,6 +109,16 @@ const Pages = () => {
       setClientStatus(clientType);
       setMealCartSpot(spot);
       setSpotCartData(isLoadMeal?.data?.spotCarts);
+      setSalesend(
+        isLoadMeal?.data?.spotCarts
+          ?.filter(p => p.spotId === selected)
+          ?.map(el =>
+            el.cartDailyFoodDtoList?.map(v =>
+              v.cartDailyFoods.filter(c => c.status !== 1),
+            ),
+          )
+          .flat(2),
+      );
     }
 
     const getTime = async () => {
@@ -121,9 +137,6 @@ const Pages = () => {
     // getCardList();
     if (isUserInfo?.spotId) setSelected(isUserInfo?.spotId);
   }, [isUserInfo?.spotId]);
-  if (!isLoadMeal?.data) {
-    return <ActivityIndicator size={'large'} />;
-  }
 
   const addHandle = async (cartData, id) => {
     const modifyQty = cartData
@@ -159,7 +172,6 @@ const Pages = () => {
     const req = {updateCartList: modifyQty};
     updateMeal(req);
   };
-
   const substractHandle = async (cartData, id) => {
     const modifyQty = cartData
       .map(c => {
@@ -201,9 +213,17 @@ const Pages = () => {
   const arrs = spotCartData
     ?.filter(p => p.spotId === selected)
     ?.map(el =>
-      el.cartDailyFoodDtoList?.map(v =>
-        v.cartDailyFoods.filter(c => c.status !== 6),
-      ),
+      el.cartDailyFoodDtoList?.map(v => {
+        return v.cartDailyFoods
+          .filter(c => c.status !== 6)
+          .map(food => {
+            return {
+              ...food,
+              serviceDate: v.serviceDate,
+              diningType: v.diningType,
+            };
+          });
+      }),
     )
     .flat();
   const arr = arrs?.reduce((acc, val) => [...acc, ...val], []);
@@ -242,9 +262,15 @@ const Pages = () => {
           return {
             ...v,
             cartDailyFoods: [
-              ...v.cartDailyFoods.filter(food => {
-                return food.status !== 6;
-              }),
+              ...v.cartDailyFoods
+                .filter(food => {
+                  return food.status !== 6;
+                })
+                .map(t => {
+                  return {
+                    ...t,
+                  };
+                }),
             ],
           };
         }),
@@ -255,14 +281,19 @@ const Pages = () => {
   const newArrs = newArr?.reduce((acc, cur) => {
     return acc.concat(cur);
   }, []);
-
   const lastArr =
     newArrs?.length > 0
       ? newArrs[0]?.cartDailyFoodDtoList?.filter(
           el => el.cartDailyFoods.length !== 0,
         )
       : [];
-
+  const medtronicSupportPrice = lastArr?.map(el => {
+    return {
+      support: el.supportPercent || el.supportPrice,
+      serviceDate: el.serviceDate,
+      diningType: el.diningType,
+    };
+  });
   // 총 개수 (주문 마감 미포함)
   const totalCount = arr
     ?.map(p => p.count)
@@ -306,20 +337,54 @@ const Pages = () => {
 
   // 할인가 계산
   const discountPrice = arr
-    ?.map(p => p.discountedPrice * p.count)
+    ?.map((p, i) => {
+      return p.discountedPrice * p.count;
+    })
     .reduce((acc, cur) => {
       return acc + cur;
     }, 0);
 
-  // 메드트로닉 지원금 유
-  const medtronicSupportPrice = lastArr?.map(el => el.supportPrice);
-  const set = new Set(medtronicSupportPrice);
-  const medtronicSupportArr = [...set];
+  const sumValuesByKeys = inputArray => {
+    const resultMap = new Map();
 
-  // 메드트로닉 식사가격
-  const medtronicPrice =
-    medtronicSupportArr?.includes(62471004) &&
-    Math.round(discountPrice / 20) * 10;
+    inputArray?.forEach(obj => {
+      const {serviceDate, diningType, count, price, discountedPrice} = obj;
+      const key = `${serviceDate}-${diningType}`;
+
+      if (resultMap.has(key)) {
+        resultMap.get(key).totalValue +=
+          count * price - (count * price - discountedPrice * count);
+      } else {
+        resultMap.set(key, {
+          serviceDate,
+          diningType,
+          totalValue: count * price - (count * price - discountedPrice * count),
+        });
+      }
+    });
+
+    const resultArray = Array.from(resultMap.values());
+
+    return resultArray;
+  };
+  const isSupportPrice = sumValuesByKeys(arr);
+  const totalMealPersentPrice = isSupportPrice
+    ?.map((p, i) => {
+      const support = medtronicSupportPrice.find(
+        v =>
+          `${v.serviceDate}-${v.diningType}` ===
+          `${p.serviceDate}-${p.diningType}`,
+      );
+      if (support.support < 1.1) return p.totalValue * support.support;
+      return p.totalValue - support.support < 0
+        ? p.totalValue
+        : support.support;
+    })
+    .reduce((acc, cur) => {
+      return acc + cur;
+    }, 0);
+
+  // 퍼센트 지원금 유
 
   // 총 할인금액
   const totalDiscountPrice = totalMealPrice - discountPrice;
@@ -424,11 +489,10 @@ const Pages = () => {
 
   // 메드트로닉 총 결제금액
   const medtronicTotalPrice =
-    totalMealPrice - medtronicPrice - totalDiscountPrice + deliveryFee;
+    totalMealPrice - totalMealPersentPrice - totalDiscountPrice + deliveryFee;
 
   // 품절
   const soldout = arr?.filter(el => el.status === 2);
-  const salesend = arr?.filter(el => el.status !== 1);
 
   // 클라 타입
   const clientType = clientStatus?.filter(p => p.spotId === selected);
@@ -565,14 +629,18 @@ const Pages = () => {
       return;
     }
   };
-  const isSalesEnd = () => {
-    if (salesend.length !== 0) {
-      Alert.alert('판매할수 없는 상품이 있어요', '메뉴룰 변경해 주세요', [
-        {
-          text: '확인',
-          onPress: () => {},
-        },
-      ]);
+  const isSalesEnd = refetchSelesEnd => {
+    if (salesend.length !== 0 || refetchSelesEnd?.length !== 0) {
+      return Alert.alert(
+        '구매할 수 없는 상품이 있어요',
+        '메뉴룰 변경해 주세요',
+        [
+          {
+            text: '확인',
+            onPress: () => {},
+          },
+        ],
+      );
     } else {
       return;
     }
@@ -618,7 +686,12 @@ const Pages = () => {
     }
   };
   const selectSpotName = mealCartSpot?.filter(el => el.id === selected);
-
+  useEffect(() => {
+    if (clientType) console.log(clientType, 'ttest');
+  }, [clientType]);
+  if (!isLoadMeal?.data) {
+    return <ActivityIndicator size={'large'} />;
+  }
   return (
     <SafeView>
       <SpotView>
@@ -825,15 +898,15 @@ const Pages = () => {
                 <PaymentText>{withCommas(totalMealPrice)} 원</PaymentText>
               </PaymentView>
               {isLoadMeal?.data?.spotCarts &&
-                clientType[0]?.clientStatus === 0 && (
+                clientType[0]?.groupType === 0 && (
                   <PaymentView>
                     <PressableView onPress={fundButton}>
                       <PaymentText>식사 지원금 사용 금액</PaymentText>
                       <QuestionIcon />
                     </PressableView>
                     <PaymentText>
-                      {medtronicSupportArr.includes(62471004)
-                        ? `-${withCommas(medtronicPrice)}`
+                      {totalMealPersentPrice
+                        ? `-${withCommas(totalMealPersentPrice)}`
                         : usedSupportPrice === 0
                         ? 0
                         : discountPrice < usedSupportPrice
@@ -861,7 +934,7 @@ const Pages = () => {
               <PaymentView>
                 <TotalPriceTitle>총 결제금액</TotalPriceTitle>
                 <TotalPrice>
-                  {medtronicSupportArr.includes(62471004)
+                  {totalMealPersentPrice
                     ? withCommas(medtronicTotalPrice)
                     : withCommas(totalPrice)}
                   원
@@ -916,13 +989,25 @@ const Pages = () => {
           <Button
             label={`총 ${totalCount}개 결제하기`}
             type={'yellow'}
-            onPressEvent={() => {
+            onPressEvent={async () => {
+              const data = await loadMealRefetch();
+              const refetchSelesEnd = data?.data?.data?.spotCarts
+                ?.filter(p => p.spotId === selected)
+                ?.map(el =>
+                  el.cartDailyFoodDtoList?.map(v =>
+                    v.cartDailyFoods.filter(c => c.status !== 1),
+                  ),
+                )
+                .flat(2);
               deadline !== 0 && isDeadline();
               soldout.length !== 0 && isSoldOut();
-              salesend.length !== 0 && isSalesEnd();
+              if (refetchSelesEnd.length !== 0)
+                return isSalesEnd(refetchSelesEnd);
+              if (salesend.length !== 0) return isSalesEnd();
               isLack.includes(true) && isShortage();
               soldout.length === 0 &&
                 salesend.length === 0 &&
+                refetchSelesEnd.length === 0 &&
                 totalCount !== 0 &&
                 !isLack.includes(true) &&
                 navigation.navigate(PaymentPageName, {
@@ -932,7 +1017,9 @@ const Pages = () => {
                   makersDiscountPrice,
                   periodDiscountPrice,
                   totalDiscountPrice,
-                  totalPrice,
+                  totalPrice: totalMealPersentPrice
+                    ? medtronicTotalPrice
+                    : totalPrice,
                   deliveryFee,
                   selected,
                   name,
@@ -941,9 +1028,9 @@ const Pages = () => {
                   clientType,
                   arr,
                   usedSupportPrice,
-                  medtronicSupportArr,
-                  medtronicTotalPrice,
-                  medtronicPrice,
+                  // medtronicSupportArr,
+                  // medtronicTotalPrice,
+                  totalMealPersentPrice,
                 });
             }}
           />

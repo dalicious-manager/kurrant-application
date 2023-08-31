@@ -17,7 +17,7 @@ import {
 import styled, {css, useTheme} from 'styled-components/native';
 
 import DateOrderItemContainer from './components/DateOrderItemContainer';
-import ModalCalendar from './ModalCalendar';
+// import ModalCalendar from './ModalCalendar';
 import usePurchaseHistory from '../../../../../../biz/usePurchaseHistory';
 import {purchaseAtom} from '../../../../../../biz/usePurchaseHistory/store';
 import {CalendarIcon} from '../../../../../../components/Icon';
@@ -161,6 +161,9 @@ const Pages = () => {
       setEndDate(end);
     }
   }, [searchDate]);
+
+  //////////
+
   return (
     <Container>
       <Wrapper>

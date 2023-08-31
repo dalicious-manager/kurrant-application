@@ -8,13 +8,13 @@ import Typography from '~components/Typography';
 import MealImage from './MealImage';
 import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
 import {YellowStar} from '../../../../../components/Icon';
+import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MealDetailPageName} from '../../MealDetail/Main';
 
 const Card = ({
   m,
   isAddMeal,
   realToTalDiscountRate,
-  withCommas,
   totalDiscount,
   orderDailyFoodId,
   cartDailyFoodId,

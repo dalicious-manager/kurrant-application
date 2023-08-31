@@ -18,7 +18,7 @@ import BuyCalendar from '../../../../../components/BuyCalendar';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {
-  useGetDailyfood,
+  useGetDailyfoodDateList,
   useGetDailyfoodList,
 } from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
@@ -65,13 +65,23 @@ const Pages = ({route}) => {
     ),
   );
   const [dailyfoodData, setDailyfoodData] = useState();
-  const {data: dailyfoodDataList, refetch: dailyfoodListRefetch} =
-    useGetDailyfoodList(
-      userSpotId,
-      formattedWeekDate(weekly[0][0]),
-      formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
-      userRole,
-    );
+  // const {data: dailyfoodDataList, refetch: dailyfoodListRefetch} =
+  //   useGetDailyfoodList(
+  //     userSpotId,
+  //     formattedWeekDate(weekly[0][0]),
+  //     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+  //     userRole,
+  //   );
+  const {
+    data: dailyfoodDataList,
+    refetch: dailyfoodListRefetch,
+    isFetching: dailyfoodListIsFetching,
+  } = useGetDailyfoodDateList(
+    userSpotId,
+    formattedWeekDate(weekly[0][0]),
+    formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
+    userRole,
+  );
   useEffect(() => {
     if (dailyfoodDataList?.data?.dailyFoodsByDate) {
       setMorning([]);
@@ -86,13 +96,7 @@ const Pages = ({route}) => {
       );
     }
   }, [dailyfoodDataList?.data?.dailyFoodsByDate, date]);
-  // const {
-  //   data: dailyfoodData,
-  //   refetch: dailyfoodRefetch,
-  //   isLoading: dailyLoading,
-  //   isFetching: dailyFetching,
-  // } = useGetDailyfood(userSpotId, data ? data : date);
-  // const todayMeal = isOrderMeal?.filter(m => m.serviceDate === date);
+
   const selectDate = isOrderMeal?.data?.filter(
     m => m.serviceDate === touchDate,
   );
@@ -101,9 +105,7 @@ const Pages = ({route}) => {
     setTouchDate(day ?? data);
   };
 
-  // console.log(isOrderMeal, '밀정보');
   const cancelMealPress = id => {
-    // console.log(id, '밀 취소');
     const list = isOrderMeal?.data.map(el => {
       return {
         ...el,
@@ -212,7 +214,7 @@ const Pages = ({route}) => {
     useCallback(() => {
       if (isToday) {
         pressDay(formattedWeekDate(new Date()));
-        pagerRef.current.setPage(0);
+        pagerRef.current?.setPage(0);
       }
       setTouchDate(data);
     }, [isToday, data]),
@@ -240,17 +242,17 @@ const Pages = ({route}) => {
         <MealWrap>
           {touchDate ? (
             <>
-              {selectDate?.map((s, index) => {
-                return s.orderItemDtoList?.map((sm, idx) => {
+              {selectDate?.map(s => {
+                return s.orderItemDtoList?.map(sm => {
                   return (
-                    <View key={index}>
+                    <View key={sm.dailyFoodId}>
                       <DiningTimeWrap>
                         <DiningTime>
                           {formattedMonthDay(s.serviceDate)} {s.diningType}{' '}
                           {sm.deliveryTime}
                         </DiningTime>
                       </DiningTimeWrap>
-                      <MealContentWrap key={idx}>
+                      <MealContentWrap>
                         {sm.dailyFoodStatus === 6 && <BlurView />}
                         {sm.dailyFoodStatus === 6 && (
                           <SoldOut soldOut={sm.dailyFoodStatus}>
@@ -438,6 +440,7 @@ const Pages = ({route}) => {
       <ButtonWrap>
         <PlusButton
           onPress={() => {
+            console.log(touchDate, 'touchDate');
             navigation.navigate(BuyMealPageName, {
               date: touchDate ? touchDate : formattedDate(new Date()),
             });

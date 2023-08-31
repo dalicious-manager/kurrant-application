@@ -62,6 +62,14 @@ const Pages = () => {
   // navigation.navigate(SignUpComplatePageName,{
   //   useName:"장경태"
   // });
+  const validateFieldsMatch = (fieldName, errorMessage) => {
+    return {
+      validate: value => {
+        const matchingValue = form.getValues()[fieldName];
+        return value === matchingValue || errorMessage;
+      },
+    };
+  };
   const Infomation = () => {
     if (progress === 1)
       return '커런트 계정으로 사용할\n이메일 주소를 입력해 주세요.';
@@ -88,7 +96,15 @@ const Pages = () => {
       !errors.nickname) ||
     (progress === 3 &&
       password &&
+      !errors.password &&
       passwordChecked &&
+      !errors.passwordChecked &&
+      password === passwordChecked) ||
+    (progress === 3 &&
+      password &&
+      !errors.password &&
+      passwordChecked &&
+      !errors.passwordChecked &&
       password === passwordChecked &&
       phoneNumber &&
       phoneAuth &&
@@ -162,7 +178,7 @@ const Pages = () => {
         useName: data.name,
       });
     } catch (err) {
-      Alert.alert('회원가입', err.toString()?.replace('error: '));
+      Alert.alert('회원가입', err.toString()?.replace('error: ', ''));
     }
   };
 
@@ -184,7 +200,20 @@ const Pages = () => {
   }, []);
 
   const scrollViewRef = useRef(null);
-
+  useEffect(() => {
+    if (password !== passwordChecked) {
+      form.setError('passwordChecked', {
+        message: '비밀번호가 일치하지 않습니다.',
+      });
+    } else {
+      if (!errors.password) {
+        form.clearErrors('passwordChecked');
+        form.setValue('passwordChecked', passwordChecked, {
+          shouldValidate: false,
+        });
+      }
+    }
+  }, [password, !errors.passwordChecked, !errors.password]);
   useEffect(() => {
     if (keyboardStatus.isKeyboardActivate) {
       scrollViewRef.current.scrollToEnd({animated: true});
@@ -288,6 +317,7 @@ const Pages = () => {
                         placeholder="비밀번호"
                         rules={{
                           required: '필수 입력 항목 입니다.',
+
                           minLength: {
                             value: 8,
                             message: '8글자 이상 입력해주세요. ',
@@ -313,9 +343,6 @@ const Pages = () => {
                         placeholder="비밀번호 재입력"
                         rules={{
                           required: '필수 입력 항목 입니다.',
-                          validate: value =>
-                            value === password ||
-                            '비밀번호가 일치하지 않습니다.',
                           minLength: {
                             value: 8,
                             message: '8글자 이상 입력해주세요. ',

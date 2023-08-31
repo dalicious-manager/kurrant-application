@@ -95,7 +95,12 @@ const Component = ({
         <ImagePressable
           onPress={() => {
             // e.stopPropagation();
-            navigation.navigate(MealDetailPageName, {dailyFoodId: dailyFoodId});
+            navigation.navigate(
+              MealDetailPageName, //
+              {
+                dailyFoodId: dailyFoodId, //
+              },
+            );
           }}>
           <MealImage
             source={{
