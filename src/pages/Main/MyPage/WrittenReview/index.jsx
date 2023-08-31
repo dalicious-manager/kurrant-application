@@ -30,11 +30,9 @@ const Pages = ({route}) => {
 
   // 홈에서 checkSseType3가 true일때 리뷰 total이 0 이상인지 판단하기
 
-  const {confirmSseIsRead} = useSse();
-
   useSseType3();
 
-  const {sseHistory, sseHistoryRefetch} = useSse();
+  const {sseHistory, confirmSseIsRead} = useSse();
   const [sseType8List, setSseType8List] = useState([]);
 
   useEffect(() => {
@@ -54,7 +52,7 @@ const Pages = ({route}) => {
     return () => {
       const list = sseHistory?.filter(v => v.type === 8)?.map(v => v.commentId);
       if (Array.isArray(list) && list.length > 0) {
-        confirmSseIsRead(8);
+        confirmSseIsRead({type: 8});
       }
     };
   }, []);

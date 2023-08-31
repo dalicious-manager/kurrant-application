@@ -78,7 +78,9 @@ const useSseStart = () => {
   }, [apiHostUrl, getToken]);
 
   useEffect(() => {
-    getSseServiceInstance();
+    setTimeout(() => {
+      getSseServiceInstance();
+    }, 500);
   }, []);
 
   return;

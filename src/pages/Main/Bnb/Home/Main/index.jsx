@@ -156,7 +156,7 @@ const Pages = () => {
     } else {
       if (!modalVisible) {
         if (Array.isArray(sseType7List) && sseType7List.length > 0) {
-          confirmSseIsRead(7);
+          confirmSseIsRead({type: 7});
         }
       }
     }
@@ -687,7 +687,7 @@ const Pages = () => {
               {/* 홈 알림 벨모양 Sse */}
               <BellIconPress
                 onPress={() => {
-                  confirmSseIsRead(6);
+                  confirmSseIsRead({type: 6});
                   navigation.navigate(NotificationCenterName);
                 }}>
                 <BellIcon />

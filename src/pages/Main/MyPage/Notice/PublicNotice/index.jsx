@@ -8,6 +8,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useRef,
+  useState,
   View,
 } from 'react';
 import {FlatList} from 'react-native';
@@ -24,6 +25,9 @@ import {
 import {formattedBoardOptionStatus} from '../../../../../utils/statusFormatter';
 import ListBox from '../ListBox';
 import {PAGE_NAME as NoticeDetailPageName} from '../NoticeDetail';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import {sseType1Atom} from '../../../../../utils/sse/sseLogics/store';
+import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P__MY_PAGE__PUBLIC_NOTICE';
 
@@ -38,7 +42,33 @@ const Pages = ({route}) => {
     useGetNoticeDetail(noticeId);
   const {data, hasNextPage, fetchNextPage, refetch, isSuccess} =
     useGetNoticeList();
+
   const dataList = data?.pages;
+
+  const {sseHistory, sseHistoryRefetch} = useSse();
+  const [sseType1List, setSseType1List] = useState([]);
+
+  const [sseType1] = useAtom(sseType1Atom);
+
+  useEffect(() => {
+    if (!!sseType1?.id) {
+      refetch();
+      sseHistoryRefetch();
+    }
+  }, [sseType1]);
+
+  useEffect(() => {
+    if (
+      Array.isArray(
+        sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId),
+      ) &&
+      sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId).length > 0
+    ) {
+      setSseType1List(
+        sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId),
+      );
+    }
+  }, [sseHistory]);
 
   const onEndReached = () => {
     if (hasNextPage) {
@@ -93,6 +123,8 @@ const Pages = ({route}) => {
               return (
                 <ListBox
                   key={el.id}
+                  id={el.id}
+                  sseTypeList={sseType1List}
                   title={formattedBoardOptionStatus(el.boardOption) + el.title}
                   description={el.updated}
                   onPressEvent={() =>

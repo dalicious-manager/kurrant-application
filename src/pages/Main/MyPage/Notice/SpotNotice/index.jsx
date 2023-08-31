@@ -3,7 +3,7 @@ import {
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import Button from '~components/Button';
@@ -18,6 +18,9 @@ import {
 import {formattedBoardOptionStatus} from '../../../../../utils/statusFormatter';
 import ListBox from '../ListBox';
 import {PAGE_NAME as NoticeDetailPageName} from '../NoticeDetail';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import {sseType2Atom} from '../../../../../utils/sse/sseLogics/store';
+import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P__MY_PAGE__SPOT_NOTICE';
 
@@ -29,6 +32,38 @@ const Pages = () => {
   const {data, hasNextPage, fetchNextPage, refetch, isFetching} =
     useGetSpotNoticeList();
   const dataList = data?.pages;
+
+  const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
+
+  const [sseType2List, setSseType2List] = useState([]);
+
+  const [sseType2] = useAtom(sseType2Atom);
+
+  useEffect(() => {
+    if (!!sseType2?.id) {
+      refetch();
+      sseHistoryRefetch();
+    }
+  }, [sseType2]);
+
+  useEffect(() => {
+    if (
+      Array.isArray(
+        sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId),
+      ) &&
+      sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId).length > 0
+    ) {
+      setSseType2List([
+        ...new Set(
+          sseHistory
+            ?.filter(v => v.type === 2)
+            ?.map(v => {
+              return {id: v.id, noticeId: v.noticeId};
+            }),
+        ),
+      ]);
+    }
+  }, [sseHistory]);
 
   const onEndReached = () => {
     if (hasNextPage) {
@@ -55,12 +90,22 @@ const Pages = () => {
       };
     }, []),
   );
+
   // useEffect(() => {
   //   const getUseNotice = async () => {
   //     await getSpotNotice();
   //   };
   //   getUseNotice();
   // }, []);
+
+  // useEffect(() => {
+  //   console.log('dataList 확인');
+
+  //   if (Array.isArray(dataList)) {
+  //     console.log(dataList[0].items);
+  //   }
+  // }, [dataList]);
+
   return (
     <Wrapper>
       {dataList && dataList[0]?.items?.length === 0 ? (
@@ -79,13 +124,34 @@ const Pages = () => {
               return (
                 <ListBox
                   key={el.id}
+                  id={el.id}
                   title={formattedBoardOptionStatus(el.boardOption) + el.title}
                   description={el.updated}
-                  onPressEvent={() =>
-                    navigation.navigate(NoticeDetailPageName, {
-                      noticeData: el,
-                    })
-                  }
+                  onPressEvent={() => {
+                    // 읽어야 됨
+
+                    if (!!sseType2List.map(v => v.noticeId)?.includes(el.id)) {
+                      const id = sseType2List.find(
+                        v => v.noticeId === el.id,
+                      ).id;
+
+                      confirmSseIsRead({
+                        type: 2,
+                        ids: [id],
+                      });
+
+                      Promise.all([refetch, sseHistoryRefetch]).then(() => {
+                        navigation.navigate(NoticeDetailPageName, {
+                          noticeData: el,
+                        });
+                      });
+                    } else {
+                      navigation.navigate(NoticeDetailPageName, {
+                        noticeData: el,
+                      });
+                    }
+                  }}
+                  sseTypeList={sseType2List}
                 />
               );
             })

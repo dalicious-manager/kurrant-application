@@ -17,6 +17,8 @@ const useSse = () => {
   const {data: sseHistory, refetch: sseHistoryRefetch} = useQuery(
     ['sse', 'notification'],
     async ({queryKey}) => {
+      console.log('리펫치 하고있음');
+
       const response = await fetchJson(
         `/notification`,
 
@@ -32,12 +34,18 @@ const useSse = () => {
 
   // sse 알림 읽었다고 서버에 보내주기
   const {mutate: confirmSseIsRead} = useMutation(
+    // async (data, callback = () => {}) => {
     async data => {
+      console.log('data확인');
+      console.log(data);
+
+      // callback();
+
       const response = await fetchJson('/notification/read', 'PUT', {
-        body: JSON.stringify({type: data}),
+        body: JSON.stringify(data),
       });
 
-      return [response, data];
+      return [response, data?.type];
     },
     {
       onSuccess: data => {
@@ -102,6 +110,8 @@ const useSse = () => {
           default:
             break;
         }
+
+        // data[2]();
       },
       onError: err => {
         console.log(

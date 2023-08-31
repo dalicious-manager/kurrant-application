@@ -137,11 +137,7 @@ const Screen = () => {
             tabBarIcon: ({focused}) => (
               <TabBarIconWrap>
                 <SseRedDotMyPage
-                  // sseType3 마이페이지 sse 확인
                   // 여기는 sse 로직을 여러개 병렬로 묶을 것임
-                  // sseHistory에 type3가 없을 경우 추가하기
-
-                  // sseType8
 
                   isSse={
                     (!!sseType3.type && !sseType3.read) ||

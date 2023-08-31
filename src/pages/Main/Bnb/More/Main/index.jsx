@@ -59,6 +59,10 @@ import useSse from '../../../../../utils/sse/sseLogics/useSse';
 import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
 import {View} from 'react-native';
 import {RightSkinnyArrow} from '../../../../../components/Icon';
+import {
+  sseType1Atom,
+  sseType2Atom,
+} from '../../../../../utils/sse/sseLogics/store';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -82,6 +86,8 @@ const Pages = ({route}) => {
   const {getReviewWait} = useReviewWait();
 
   const {sseHistory, sseHistoryRefetch} = useSse();
+  const [sseType1] = useAtom(sseType1Atom);
+  const [sseType2] = useAtom(sseType2Atom);
 
   useEffect(() => {
     getReviewWait();
@@ -222,7 +228,6 @@ const Pages = ({route}) => {
           <InfomationContainer>
             <InfomationBox
               onPress={() => {
-                // confirmSseIsRead(3);
                 navigation.navigate(ReviewScreenName);
               }}>
               <SseRedDotType3
@@ -315,8 +320,13 @@ const Pages = ({route}) => {
           <ListContainer title="알림">
             <ListBox
               isSse={
+                (!!sseType1.type && !sseType1.read) ||
                 !!sseHistory?.find(v => v.type === 1) ||
+                (!!sseType2.type && !sseType2.read) ||
                 !!sseHistory?.find(v => v.type === 2)
+
+                // !!sseHistory?.find(v => v.type === 1) ||
+                // !!sseHistory?.find(v => v.type === 2)
               }
               title="공지사항"
               routeName={NoticeScreenName}

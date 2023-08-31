@@ -5,6 +5,8 @@ let SseServiceOnlyOneInstance;
 
 let instanceCount = 0;
 
+let reconnectionCount = 0;
+
 class SseService {
   token;
   baseUrl;
@@ -56,15 +58,12 @@ class SseService {
         const receiveMessage =
           e.data && JSON.parse(Base64.decode(JSON.parse(e.data).body))[1];
         const messageType = receiveMessage.type;
-
         switch (messageType) {
           case 1:
             // type: 1 전체공지
             console.log('type: 1 전체공지 Sse 확인');
             console.log(receiveMessage);
-
             this.callbackForAtoms[0]({...receiveMessage});
-
             break;
           case 2:
             // type: 2 스팟공지
@@ -84,14 +83,12 @@ class SseService {
             console.log('type: 4 마감시간 Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[3]({...receiveMessage});
-
             break;
           case 5:
             // type: 5 다음주 식사 구매하셨나요? (완료)
             console.log('type: 5 다음주 식사 구매하셨나요? Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[4]({...receiveMessage});
-
             break;
           case 6:
             // type: 6 푸시 알림 관련 (완료)
@@ -99,23 +96,18 @@ class SseService {
             console.log('type: 6 Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[5]({...receiveMessage});
-
             break;
           case 7:
             // type: 7 스팟공지 (완료)
-
             console.log('type: 7 Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[6]({...receiveMessage});
-
             break;
           case 8:
             // type: 8 사장님 댓글 (완료)
-
             console.log('type: 8 Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[7]({...receiveMessage});
-
             break;
           default:
             break;
@@ -134,6 +126,17 @@ class SseService {
   onError = e => {
     console.log('sse 에러가 뜹니다. error occured closing connection');
     console.log(e);
+
+    // The network connection was lost.
+
+    // "" -> 이 에러가 10번 이상이면 자동으로  sseService를 끄자
+
+    if (!e.message) reconnectionCount += 1;
+
+    if (reconnectionCount > 5) {
+      // sse를 더이상 요청하지 않게 하기
+      this.onClose();
+    }
   };
 
   onClose = e => {

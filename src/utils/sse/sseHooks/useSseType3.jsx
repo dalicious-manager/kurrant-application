@@ -23,7 +23,7 @@ const useSseType3 = () => {
         // 서버에 read했다고보내기
         // setCheckType3 false로 바꾸기
         console.log('total이 0이기 때문에 sseType3 읽었다고 올림 ');
-        await confirmSseIsRead(3);
+        await confirmSseIsRead({type: 3});
       } else {
         console.log(`total값 = ${total}, total이 0보다 큰 수라 안 보냄`);
       }
