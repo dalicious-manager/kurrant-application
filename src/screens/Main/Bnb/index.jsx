@@ -23,7 +23,11 @@ import MoreMainPage, {
 import MainDim from '../../../pages/Spots/spotGuide/MainDim';
 import {mainDimAtom} from '../../../utils/store';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
-import {sseType3Atom} from '../../../utils/sse/sseLogics/store';
+import {
+  sseType1Atom,
+  sseType2Atom,
+  sseType3Atom,
+} from '../../../utils/sse/sseLogics/store';
 import useSse from '../../../utils/sse/sseLogics/useSse';
 import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
 
@@ -40,6 +44,8 @@ const Screen = () => {
   const {sseHistory, sseHistoryRefetch} = useSse();
 
   const [sseType3] = useAtom(sseType3Atom);
+  const [sseType1] = useAtom(sseType1Atom);
+  const [sseType2] = useAtom(sseType2Atom);
 
   return (
     <React.Fragment>
@@ -140,7 +146,11 @@ const Screen = () => {
                   isSse={
                     (!!sseType3.type && !sseType3.read) ||
                     !!sseHistory?.find(v => v.type === 3) ||
-                    !!sseHistory?.find(v => v.type === 8)
+                    !!sseHistory?.find(v => v.type === 8) ||
+                    (!!sseType1.type && !sseType1.read) ||
+                    !!sseHistory?.find(v => v.type === 1) ||
+                    (!!sseType2.type && !sseType2.read) ||
+                    !!sseHistory?.find(v => v.type === 2)
                   }
                   position="absolute"
                   right="-6px"

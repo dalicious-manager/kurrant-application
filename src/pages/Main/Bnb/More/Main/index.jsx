@@ -314,7 +314,10 @@ const Pages = ({route}) => {
           </ListContainer>
           <ListContainer title="알림">
             <ListBox
-              isSse={false}
+              isSse={
+                !!sseHistory?.find(v => v.type === 1) ||
+                !!sseHistory?.find(v => v.type === 2)
+              }
               title="공지사항"
               routeName={NoticeScreenName}
             />

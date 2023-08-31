@@ -12,6 +12,7 @@ import SpotNotice, {
 import Typography from '~components/Typography';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {useGetNoticeDetail} from '../../../hook/useNotice';
+import useSse from '../../../utils/sse/sseLogics/useSse';
 
 export const SCREEN_NAME = 'S_MAIN__NOTICE';
 
@@ -23,6 +24,8 @@ const Screen = ({route}) => {
 
   const theme = useTheme();
   const navigation = useNavigation();
+
+  const {sseHistory, sseHistoryRefetch} = useSse();
 
   return (
     <Tab.Navigator
@@ -55,7 +58,7 @@ const Screen = ({route}) => {
           ({navigation}) => ({
             tabBarLabel: ({focused}) => (
               <SseRedDotType1
-                isSse={false}
+                isSse={!!sseHistory?.find(v => v.type === 1)}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>
@@ -77,7 +80,7 @@ const Screen = ({route}) => {
           ({navigation}) => ({
             tabBarLabel: ({focused}) => (
               <SseRedDotType2
-                isSse={false}
+                isSse={!!sseHistory?.find(v => v.type === 2)}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>
