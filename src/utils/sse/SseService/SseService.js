@@ -30,7 +30,9 @@ class SseService {
           Authorization: `Bearer ${this.token}`,
         },
 
-        pollingInterval: 1000 * 60 * 15,
+        // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
+        // pollingInterval: 1000 * 60 * 15,
+        pollingInterval: 1000 * 1,
       },
     );
 
