@@ -44,6 +44,7 @@ import useDietRepoMutation from '../useDietRepoMutation';
 import DietRepoCalendar2 from '../DietRepoCalendar/DietRepoCalendar2';
 import {
   useGetDailyfood,
+  useGetDailyfoodDateList,
   useGetDailyfoodList,
 } from '../../../../../hook/useDailyfood';
 import {
@@ -74,7 +75,8 @@ const Pages = ({route}) => {
     data: dailyfoodDataList,
     refetch: dailyfoodListRefetch,
     isFetching: dailyListFetching,
-  } = useGetDailyfoodList(
+    // } = useGetDailyfoodList(
+  } = useGetDailyfoodDateList(
     userSpotId,
     formattedWeekDate(weekly[0][0]),
     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
@@ -200,6 +202,16 @@ const Pages = ({route}) => {
       pastLimitDate: toStringByFormatting(pastLimitDate),
     });
   };
+
+  useEffect(() => {
+    console.log('dailyfoodDataList 확인');
+    console.log(dailyfoodDataList);
+  }, [dailyfoodDataList]);
+
+  useEffect(() => {
+    console.log('dailyfoodDataList?.data?.diningTypes 확인');
+    console.log(dailyfoodDataList?.data?.diningTypes);
+  }, [dailyfoodDataList?.data?.diningTypes]);
 
   return (
     <>

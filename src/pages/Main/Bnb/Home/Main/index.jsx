@@ -54,7 +54,10 @@ import {
   useGetUserInfo,
 } from '../../../../../hook/useUserInfo';
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
-import {formattedWeekDate} from '../../../../../utils/dateFormatter';
+import {
+  formattedWeekDate,
+  toStringByFormatting,
+} from '../../../../../utils/dateFormatter';
 import jwtUtils from '../../../../../utils/fetch/jwtUtill';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
@@ -796,7 +799,7 @@ const Pages = () => {
           </MarketWrap> */}
 
             {/* 식단 리포트 버튼 */}
-            {/* <DietRepoPressable
+            <DietRepoPressable
               onPress={() => {
                 navigation.navigate(DietRepoMainPageName);
               }}>
@@ -816,7 +819,7 @@ const Pages = () => {
                   : 0}{' '}
                 kcal
               </CalText>
-            </DietRepoPressable> */}
+            </DietRepoPressable>
           </MainWrap>
         </Wrap>
       </ScrollViewWrap>

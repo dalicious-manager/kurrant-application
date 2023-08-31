@@ -309,6 +309,7 @@ const Day = styled(Typography)`
       ? theme.colors.grey[2]
       : theme.colors.grey[5]};
 
+  /* color: blue; */
   ${({currentPress, day, size}) => {
     if (formattedDate(currentPress) === formattedDate(day)) {
       return getFontStyle('Body05SB');
@@ -320,6 +321,7 @@ const Day = styled(Typography)`
   align-items: center;
   justify-content: center;
   text-align: center;
+  /* border: 1px solid black; */
 `;
 const DayWeek = styled(Typography)`
   color: ${({theme}) => theme.colors.grey[2]};
