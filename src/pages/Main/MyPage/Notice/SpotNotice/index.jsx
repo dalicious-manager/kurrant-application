@@ -10,11 +10,7 @@ import Button from '~components/Button';
 import Typography from '~components/Typography';
 import Wrapper from '~components/Wrapper';
 
-import useBoard from '../../../../../biz/useBoard';
-import {
-  useGetNoticeList,
-  useGetSpotNoticeList,
-} from '../../../../../hook/useNotice';
+import {useGetSpotNoticeList} from '../../../../../hook/useNotice';
 import {formattedBoardOptionStatus} from '../../../../../utils/statusFormatter';
 import ListBox from '../ListBox';
 import {PAGE_NAME as NoticeDetailPageName} from '../NoticeDetail';
@@ -33,7 +29,12 @@ const Pages = () => {
     useGetSpotNoticeList();
   const dataList = data?.pages;
 
-  const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
+  const {
+    sseHistory,
+    sseHistoryRefetch,
+    confirmSseIsRead,
+    confirmSse1And2IsRead,
+  } = useSse();
 
   const [sseType2List, setSseType2List] = useState([]);
 
@@ -62,6 +63,8 @@ const Pages = () => {
             }),
         ),
       ]);
+    } else {
+      setSseType2List([]);
     }
   }, [sseHistory]);
 
@@ -90,21 +93,6 @@ const Pages = () => {
       };
     }, []),
   );
-
-  // useEffect(() => {
-  //   const getUseNotice = async () => {
-  //     await getSpotNotice();
-  //   };
-  //   getUseNotice();
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log('dataList 확인');
-
-  //   if (Array.isArray(dataList)) {
-  //     console.log(dataList[0].items);
-  //   }
-  // }, [dataList]);
 
   return (
     <Wrapper>
@@ -139,17 +127,10 @@ const Pages = () => {
                         type: 2,
                         ids: [id],
                       });
-
-                      Promise.all([refetch, sseHistoryRefetch]).then(() => {
-                        navigation.navigate(NoticeDetailPageName, {
-                          noticeData: el,
-                        });
-                      });
-                    } else {
-                      navigation.navigate(NoticeDetailPageName, {
-                        noticeData: el,
-                      });
                     }
+                    navigation.navigate(NoticeDetailPageName, {
+                      noticeData: el,
+                    });
                   }}
                   sseTypeList={sseType2List}
                 />
