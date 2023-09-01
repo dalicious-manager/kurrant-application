@@ -110,54 +110,10 @@ const useSse = () => {
           default:
             break;
         }
-
-        // data[2]();
       },
       onError: err => {
         console.log(
           '이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요 confirmsseRead',
-        );
-        console.log(err);
-      },
-    },
-  );
-  const {mutate: confirmSse1And2IsRead} = useMutation(
-    // async (data, callback = () => {}) => {
-    async data => {
-      const response = await fetchJson('/notification/read', 'PUT', {
-        body: JSON.stringify(data[0]),
-      });
-
-      return [response, data[0], data[1]];
-    },
-    {
-      onSuccess: data => {
-        const messageType = data[1].type;
-
-        switch (messageType) {
-          case 1:
-            // type: 1 전체공지 (구현중)
-            console.log('sse 알림읽기 성공 message type 1 (전체공지)');
-            setSseType1({});
-            sseHistoryRefetch();
-            break;
-          case 2:
-            // type: 2 스팟공지 (프론트 구현중)
-            console.log('sse 알림읽기 성공 message type 2 (스팟공지)');
-            setSseType2({});
-            sseHistoryRefetch();
-            break;
-
-          default:
-            break;
-        }
-        setTimeout(() => {
-          data[2]();
-        }, 1000);
-      },
-      onError: err => {
-        console.log(
-          '이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요 confirmsseRead1and2',
         );
         console.log(err);
       },
@@ -174,7 +130,7 @@ const useSse = () => {
     sseType7,
     sseType8,
     confirmSseIsRead,
-    confirmSse1And2IsRead,
+
     sseHistory,
     sseHistoryRefetch,
   };

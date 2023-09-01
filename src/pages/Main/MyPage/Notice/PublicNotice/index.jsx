@@ -45,7 +45,7 @@ const Pages = ({route}) => {
 
   const dataList = data?.pages;
 
-  const {sseHistory, sseHistoryRefetch} = useSse();
+  const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
   const [sseType1List, setSseType1List] = useState([]);
 
   const [sseType1] = useAtom(sseType1Atom);
@@ -64,9 +64,17 @@ const Pages = ({route}) => {
       ) &&
       sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId).length > 0
     ) {
-      setSseType1List(
-        sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId),
-      );
+      setSseType1List([
+        ...new Set(
+          sseHistory
+            ?.filter(v => v.type === 1)
+            ?.map(v => {
+              return {id: v.id, noticeId: v.noticeId};
+            }),
+        ),
+      ]);
+    } else {
+      setSseType1List([]);
     }
   }, [sseHistory]);
 
@@ -127,11 +135,22 @@ const Pages = ({route}) => {
                   sseTypeList={sseType1List}
                   title={formattedBoardOptionStatus(el.boardOption) + el.title}
                   description={el.updated}
-                  onPressEvent={() =>
+                  onPressEvent={() => {
+                    if (!!sseType1List.map(v => v.noticeId)?.includes(el.id)) {
+                      const id = sseType1List.find(
+                        v => v.noticeId === el.id,
+                      ).id;
+
+                      confirmSseIsRead({
+                        type: 1,
+                        ids: [id],
+                      });
+                    }
+
                     navigation.navigate(NoticeDetailPageName, {
                       noticeData: el,
-                    })
-                  }
+                    });
+                  }}
                 />
               );
             })

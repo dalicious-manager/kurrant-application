@@ -29,12 +29,7 @@ const Pages = () => {
     useGetSpotNoticeList();
   const dataList = data?.pages;
 
-  const {
-    sseHistory,
-    sseHistoryRefetch,
-    confirmSseIsRead,
-    confirmSse1And2IsRead,
-  } = useSse();
+  const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
 
   const [sseType2List, setSseType2List] = useState([]);
 
