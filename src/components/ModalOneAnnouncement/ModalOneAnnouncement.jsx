@@ -100,7 +100,7 @@ const Component = ({modalVisible, data, setModalVisible}) => {
   );
 };
 
-export default Component;
+export default React.memo(Component);
 
 const CenteredView = styled.View`
   flex: 1;

@@ -287,6 +287,7 @@ const Pages = ({route}) => {
                           onPress={() =>
                             navigation.navigate(MealDetailPageName, {
                               dailyFoodId: sm.dailyFoodId,
+                              isMeal: true,
                             })
                           }>
                           <MakersName>{sm.makers}</MakersName>
