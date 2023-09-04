@@ -115,7 +115,7 @@ const Pages = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [isOneAnnouncementModalVisible, setIsOneAnnouncementModalVisible] =
-    useState(true);
+    useState(false);
   const [showDim, setShowDim] = useAtom(mainDimAtom);
 
   const [show, setShow] = useState(false);
@@ -203,11 +203,13 @@ const Pages = () => {
     userRole,
   );
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
+
   useEffect(() => {
     if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
       setUserGroupSpot(isUserGroupSpotCheck?.data);
     }
   }, [isUserGroupSpotCheck?.data]);
+
   useEffect(() => {
     const lunchData = dailyfoodData?.dailyFoodDtos.filter(
       x => x.diningType === 2,
@@ -258,7 +260,14 @@ const Pages = () => {
         userGroupSpot?.mySpotCount === 0 &&
         userGroupSpot?.privateCount === 0
       ) {
-        navigation.navigate(SpotGuidePageName);
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SpotGuidePageName,
+            },
+          ],
+        });
       }
     }
   }, [isUserInfo?.data?.spotId, userGroupSpot]);
@@ -556,6 +565,13 @@ const Pages = () => {
       listener.remove();
     };
   }, [isUserGroupSpotCheck]);
+  console.log(userSpot);
+  // 팝업
+  useEffect(() => {
+    if (popupList !== undefined && popupList?.length !== 0 && userSpot) {
+      setIsOneAnnouncementModalVisible(true);
+    }
+  }, [popupList, userSpot]);
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
@@ -604,7 +620,7 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
-        {popupList && (
+        {popupList?.length !== 0 && popupList !== undefined && (
           <ModalOneAnnouncement
             data={popupList}
             modalVisible={isOneAnnouncementModalVisible}
