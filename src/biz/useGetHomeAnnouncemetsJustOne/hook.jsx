@@ -41,10 +41,11 @@ const useGetOneAnnouncements = () => {
       // oneAnnouncements에 하나만 넣기
 
       // 7일이 넘지 않았으면 넣어주고 넘었으면 넣어주지 말기
-
-      const timeObject = JSON.parse(
-        await getStorage('announcementsClickedOneDate'),
+      const announcementsClickedOneDate = await getStorage(
+        'announcementsClickedOneDate',
       );
+
+      const timeObject = JSON.parse(announcementsClickedOneDate);
 
       if (timeObject) {
         if (
