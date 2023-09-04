@@ -27,6 +27,7 @@ import {
   sseType1Atom,
   sseType2Atom,
   sseType3Atom,
+  sseType8Atom,
 } from '../../../utils/sse/sseLogics/store';
 import useSse from '../../../utils/sse/sseLogics/useSse';
 import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
@@ -46,6 +47,7 @@ const Screen = () => {
   const [sseType3] = useAtom(sseType3Atom);
   const [sseType1] = useAtom(sseType1Atom);
   const [sseType2] = useAtom(sseType2Atom);
+  const [sseType8] = useAtom(sseType8Atom);
 
   return (
     <React.Fragment>
@@ -140,9 +142,13 @@ const Screen = () => {
                   // 여기는 sse 로직을 여러개 병렬로 묶을 것임
 
                   isSse={
+                    // 리뷰 type 3
                     (!!sseType3.type && !sseType3.read) ||
                     !!sseHistory?.find(v => v.type === 3) ||
+                    // 사장님 댓글 type 8
+                    (!!sseType8.type && !sseType8.read) ||
                     !!sseHistory?.find(v => v.type === 8) ||
+                    // 전체공지 & 스팟공지
                     (!!sseType1.type && !sseType1.read) ||
                     !!sseHistory?.find(v => v.type === 1) ||
                     (!!sseType2.type && !sseType2.read) ||

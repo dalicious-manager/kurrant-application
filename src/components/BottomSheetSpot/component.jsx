@@ -98,6 +98,7 @@ const BottomSheetSpot = props => {
     const {height} = event.nativeEvent.layout;
     setParentHeight(height);
   };
+
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <GestureHandlerRootView style={{flex: 1}}>

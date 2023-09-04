@@ -102,8 +102,10 @@ const useBoard = () => {
       if (response.statusCode === 200) {
         if (isRerenderNeeded) {
           getAlarm();
+          console.log(`id: ${data[0]} 알림 읽었습니다 `);
+        } else {
+          console.log('알림을 모두 읽었습니다 ');
         }
-        console.log('알림을 모두 읽었습니다 ');
       }
     } catch (err) {
       throw err;

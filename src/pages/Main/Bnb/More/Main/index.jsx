@@ -62,6 +62,8 @@ import {RightSkinnyArrow} from '../../../../../components/Icon';
 import {
   sseType1Atom,
   sseType2Atom,
+  sseType3Atom,
+  sseType8Atom,
 } from '../../../../../utils/sse/sseLogics/store';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
@@ -83,15 +85,22 @@ const Pages = ({route}) => {
     readableAtom: {userRole},
   } = useAuth();
 
-  const {getReviewWait} = useReviewWait();
+  const {getReviewWait, reviewWaitCount} = useReviewWait();
+
+  useEffect(() => {
+    console.log('reviewWaitCount 확인');
+    console.log(reviewWaitCount);
+  }, [reviewWaitCount]);
 
   const {sseHistory, sseHistoryRefetch} = useSse();
   const [sseType1] = useAtom(sseType1Atom);
   const [sseType2] = useAtom(sseType2Atom);
+  const [sseType3] = useAtom(sseType3Atom);
+  const [sseType8] = useAtom(sseType8Atom);
 
   useEffect(() => {
     getReviewWait();
-  }, []);
+  }, [sseType8?.id]);
 
   // useEffect(() => {
   //   console.log('획득 가능한 포인트 확인');
@@ -284,7 +293,11 @@ const Pages = ({route}) => {
 
             <ListBox
               title="리뷰 관리"
-              isSse={total > 0 || !!sseHistory?.find(v => v.type === 8)}
+              isSse={
+                total > 0 ||
+                (!!sseType8.type && !sseType8.read) ||
+                !!sseHistory?.find(v => v.type === 8)
+              }
               description={redeemablePoints > 0 && `모두 작성시 최대 `}
               effect={
                 redeemablePoints > 0 && (

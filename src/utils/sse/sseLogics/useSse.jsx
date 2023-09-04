@@ -17,13 +17,15 @@ const useSse = () => {
   const {data: sseHistory, refetch: sseHistoryRefetch} = useQuery(
     ['sse', 'notification'],
     async ({queryKey}) => {
-      console.log('리펫치 하고있음');
-
+      // console.log('sseHistory 리펫치 됬어요');
       const response = await fetchJson(
         `/notification`,
 
         'GET',
       );
+
+      // console.log(response?.data);
+      // console.log(response?.data?.filter(v => v.type !== 4));
 
       return response?.data;
     },
@@ -34,13 +36,7 @@ const useSse = () => {
 
   // sse 알림 읽었다고 서버에 보내주기
   const {mutate: confirmSseIsRead} = useMutation(
-    // async (data, callback = () => {}) => {
     async data => {
-      console.log('data확인');
-      console.log(data);
-
-      // callback();
-
       const response = await fetchJson('/notification/read', 'PUT', {
         body: JSON.stringify(data),
       });
@@ -112,9 +108,7 @@ const useSse = () => {
         }
       },
       onError: err => {
-        console.log(
-          '이런 ㅜㅜ 에러가 떳군요, 어서 코드를 확인해보셔요 confirmsseRead',
-        );
+        console.log('confirmSseIsRead(sse읽음확인 api)에 error가 났습니다');
         console.log(err);
       },
     },

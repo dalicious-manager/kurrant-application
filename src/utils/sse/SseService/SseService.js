@@ -93,19 +93,19 @@ class SseService {
           case 6:
             // type: 6 푸시 알림 관련 (완료)
             // 발동조건: 푸시알림을 받으면 뜸
-            console.log('type: 6 Sse 확인');
+            console.log('type: 6 푸시 알림 Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[5]({...receiveMessage});
             break;
           case 7:
             // type: 7 스팟공지 (완료)
-            console.log('type: 7 Sse 확인');
+            console.log('type: 7 스팟공지 Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[6]({...receiveMessage});
             break;
           case 8:
             // type: 8 사장님 댓글 (완료)
-            console.log('type: 8 Sse 확인');
+            console.log('type: 8 사장님 댓글 Sse 확인');
             console.log(receiveMessage);
             this.callbackForAtoms[7]({...receiveMessage});
             break;
@@ -148,7 +148,12 @@ class SseService {
     console.log(
       'Sse를 Disconnect 하겠습니다. onDisconnect! closing connection',
     );
-    this.eventSource.removeAllListeners();
+    // 둘 다 일때 : 이 에러가 뜨고 있는데.. [TypeError: undefined is not a function]
+    // removeAllListeners만 열었을때
+    // close만 열었을때
+
+    // console.log(this.eventSource);
+    this.eventSource.removeAllEventListeners();
     this.eventSource.close();
   };
 }

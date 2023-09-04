@@ -80,6 +80,10 @@ import useSseType3 from '../../../../../utils/sse/sseHooks/useSseType3';
 import {BowlIcon} from '~components/Icon';
 
 import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
+import {
+  sseType6Atom,
+  sseType7Atom,
+} from '../../../../../utils/sse/sseLogics/store';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -131,9 +135,16 @@ const Pages = () => {
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
 
-  const {sseType5, confirmSseIsRead, sseHistory} = useSse();
+  const {sseType5, confirmSseIsRead, sseHistory, sseHistoryRefetch} = useSse();
+  const [sseType6] = useAtom(sseType6Atom);
   const [sseType7List, setSseType7List] = useState([]);
+  const [sseType7] = useAtom(sseType7Atom);
   const isModalOpenAtLeastOnce = useRef(false);
+
+  useEffect(() => {
+    sseHistoryRefetch();
+    refetchGroupSpotList();
+  }, [!!sseType7.id]);
 
   useEffect(() => {
     const result = [
@@ -239,7 +250,8 @@ const Pages = () => {
     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
     userRole,
   );
-  const {data: isUserGroupSpotCheck} = useGroupSpotList();
+  const {data: isUserGroupSpotCheck, refetch: refetchGroupSpotList} =
+    useGroupSpotList();
   useEffect(() => {
     if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
       setUserGroupSpot(isUserGroupSpotCheck?.data);
@@ -671,8 +683,11 @@ const Pages = () => {
                 : spotName}
             </SpotNameText>
             <ArrowIcon />
-            <SseRedDotType6
-              isSse={sseType7List?.length > 0}
+            <SseRedDotType7
+              isSse={
+                (!!sseType7.type && !sseType7.read) ||
+                !!(sseType7List?.length > 0)
+              }
               position={'absolute'}
               right={'-6px'}
               top={'-11px'}
@@ -680,7 +695,10 @@ const Pages = () => {
           </SpotName>
           <Icons>
             <SseRedDotType6
-              isSse={!!sseHistory?.find(v => v.type === 6)}
+              isSse={
+                (!!sseType6.type && !sseType6.read) ||
+                !!sseHistory?.find(v => v.type === 6)
+              }
               position={'absolute'}
               right={'10px'}
               top={'4px'}>
@@ -891,7 +909,11 @@ const Pages = () => {
           status={!dailyfoodListIsFetching || dailyfoodDataList?.data}
           onPress={async () => {
             if (isUserInfo?.data?.spotId) {
-              sseType5.userId && !sseType5.read && confirmSseIsRead(5);
+              sseType5.userId &&
+                !sseType5.read &&
+                confirmSseIsRead({
+                  type: 5,
+                });
 
               navigation.navigate(BuyMealPageName);
               closeBalloon();
@@ -1178,6 +1200,7 @@ const CsIconPress = styled.Pressable`
 `;
 
 const SseRedDotType6 = styled(SseRedDot)``;
+const SseRedDotType7 = styled(SseRedDot)``;
 const DietRepoPressable = styled.Pressable`
   flex-direction: row;
   align-items: center;
