@@ -565,7 +565,7 @@ const Pages = () => {
       listener.remove();
     };
   }, [isUserGroupSpotCheck]);
-  console.log(userSpot);
+
   // 팝업
   useEffect(() => {
     if (popupList !== undefined && popupList?.length !== 0 && userSpot) {
