@@ -121,7 +121,14 @@ const Pages = ({route}) => {
               await setStorage('spotStatus', res.data.toString());
 
               if (myGroupList.length === 0) {
-                navigation.navigate(SpotTypePage);
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: SpotTypePage,
+                    },
+                  ],
+                });
               } else {
                 navigation.goBack();
               }
