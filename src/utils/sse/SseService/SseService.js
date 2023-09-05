@@ -5,20 +5,50 @@ let SseServiceOnlyOneInstance;
 
 let instanceCount = 0;
 
-let reconnectionCount = 0;
+let blankErrorReconnectionCount = 0;
+
+//
+let hadDoneBlankErrorReconnectionProtocolAlready = false;
 
 class SseService {
   token;
   baseUrl;
   eventSource;
   callbackForAtoms;
-  constructor(baseUrl, token, callbackForAtoms) {
+  blankErrorHandler;
+
+  constructor(
+    baseUrl,
+    token,
+    blankErrorHandleObject = {},
+    // blankErrorHandler = null,
+    callbackForAtoms,
+  ) {
     if (SseServiceOnlyOneInstance) {
-      return SseServiceOnlyOneInstance;
-    } else {
-      instanceCount += 1;
-      console.log('SseService 인스턴스 만든 횟수 ' + instanceCount);
+      console.log('이비 서비스가 있다네 친구');
+
+      if (!!blankErrorHandleObject?.blankErrorPermission) {
+        console.log('오 그런가 내가 새로 만들어 주지');
+        SseServiceOnlyOneInstance = null;
+      } else {
+        console.log('뭐여 permission이 없구만 기각~!');
+        return SseServiceOnlyOneInstance;
+      }
     }
+
+    // if (
+    //   SseServiceOnlyOneInstance &&
+    //   !!blankErrorHandleObject?.blankErrorPermission
+    // ) {
+    //   console.log('오 그런가 내가 새로 만들어 주지');
+    //   SseServiceOnlyOneInstance = null;
+    // } else {
+    //   console.log('뭐여 permission이 없구만 기각~!');
+    //   return SseServiceOnlyOneInstance;
+    // }
+
+    instanceCount += 1;
+    console.log('SseService 인스턴스 만든 횟수 ' + instanceCount);
 
     this.baseUrl = baseUrl;
     this.token = token;
@@ -29,7 +59,7 @@ class SseService {
 
       this.token && {
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          // Authorization: `Bearer ${this.token}`,
         },
 
         // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
@@ -44,6 +74,10 @@ class SseService {
     this.eventSource.addEventListener('message', this.onMessage);
     this.eventSource.addEventListener('error', this.onError);
     this.eventSource.addEventListener('close', this.onClose);
+
+    // blanc error가 뜰때 대처하기 위한 eventEmitter
+
+    this.blankErrorHandler = blankErrorHandleObject.blankErrorHandler;
 
     SseServiceOnlyOneInstance = this;
   }
@@ -131,30 +165,54 @@ class SseService {
 
     // "" -> 이 에러가 10번 이상이면 자동으로  sseService를 끄자
 
-    if (!e.message) reconnectionCount += 1;
+    if (!e.message) blankErrorReconnectionCount += 1;
 
-    if (reconnectionCount > 5) {
-      // sse를 더이상 요청하지 않게 하기
-      this.onClose();
+    if (blankErrorReconnectionCount > 5) {
+      if (!hadDoneBlankErrorReconnectionProtocolAlready) {
+        // 초범이다
+
+        this.onHandleBlankError();
+        blankErrorReconnectionCount = 0;
+      } else {
+        // 두번쨰면 아예 꺼버리기
+        this.onClose();
+      }
     }
   };
 
   onClose = e => {
-    console.log('sse를 닫습니다!');
-    this.onDisconnect();
-  };
+    console.log('Sse를 Close 하겠습니다. closing connection');
 
-  onDisconnect = () => {
-    console.log(
-      'Sse를 Disconnect 하겠습니다. onDisconnect! closing connection',
-    );
-    // 둘 다 일때 : 이 에러가 뜨고 있는데.. [TypeError: undefined is not a function]
-    // removeAllListeners만 열었을때
-    // close만 열었을때
-
-    // console.log(this.eventSource);
     this.eventSource.removeAllEventListeners();
     this.eventSource.close();
+  };
+
+  onHandleBlankError = () => {
+    hadDoneBlankErrorReconnectionProtocolAlready = true;
+    console.log('블랭크 에러입니다 ');
+
+    // token확인
+
+    if (!!this.token) {
+      console.log('토큰이 없어서 에러뜨는건 아닐듯');
+    } else {
+      console.log('토큰이 없어서 그런듯요 한번 꺼보고 다시해봐야 될 듯 ');
+    }
+
+    // 1. 끄기
+
+    this.onClose();
+
+    // 2. 기존 프론트 sse를 지우기
+
+    this.blankErrorHandler.emit('blank-error-handle', {
+      es6rules: true,
+      mixinsAreLame: true,
+    });
+
+    // 3. 재요청
+
+    // 되면 그대로 쓰고 , 또 안되면 끄기
   };
 }
 

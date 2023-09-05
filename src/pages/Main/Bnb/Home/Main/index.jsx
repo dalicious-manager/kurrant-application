@@ -84,6 +84,7 @@ import {
   sseType6Atom,
   sseType7Atom,
 } from '../../../../../utils/sse/sseLogics/store';
+import useEvetnEmitterTest from '../../../../../utils/sse/sseLogics/useEventEmitterTest';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크

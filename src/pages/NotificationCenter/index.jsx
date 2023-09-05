@@ -54,7 +54,7 @@ const Pages = () => {
   const navigation = useNavigation();
 
   const goToPage = async id => {
-    return;
+    // return;
     try {
       if (id) {
         const res = await fetchJson(`/boards/notices/${id}`);

@@ -1,10 +1,11 @@
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {getStorage} from '../../asyncStorage';
 import Config from 'react-native-config';
 
 import SseService from '../SseService/SseService';
 import * as sseAtoms from './store';
 import {useAtom} from 'jotai';
+import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 
 const apiHostUrl =
   Config.NODE_ENV === 'dev'
@@ -35,51 +36,105 @@ const useSseStart = () => {
     return yo?.accessToken;
   }, []);
 
-  const getSseServiceInstance = useCallback(async () => {
-    const tokenYo = await getToken();
+  // blank Error 대처를 위한 eventEmitter
+  const blankErrorHandler = useMemo(() => new EventEmitter(), []);
 
-    if (forOnlyOneSseService) return forOnlyOneSseService; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
+  // const [openAgainPlease, setOpenAgainPlease] = useState(false)
 
-    if (!tokenYo) return;
+  useEffect(() => {
+    if (!!blankErrorHandler) {
+      blankErrorHandler.addListener('blank-error-handle', () => {
+        console.log('재 요청 시키자~');
+        // 재요청시키기
+        (async () => {
+          forOnlyOneSseService = null;
 
-    forOnlyOneSseService = new SseService(apiHostUrl, tokenYo, [
-      data => {
-        setSseType1(data);
-      },
-      data => {
-        setSseType2(data);
-      },
-      data => {
-        setSseType3(data);
-      },
-      data => {
-        setSseType4(data);
-      },
-      data => {
-        setSseType5(data);
-      },
-      data => {
-        setSseType6(data);
-      },
-      data => {
-        setSseType7(data);
-      },
-      data => {
-        setSseType8(data);
-      },
-    ]);
-
-    if (!forOnlyOneSseService) {
-      console.log('forOnlyOneSseService 가 지금 undefined에요 ');
-      console.log(forOnlyOneSseService);
+          const instance = await getSseServiceInstance(true);
+        })();
+      });
+    } else {
+      console.log('뭔가 쪼까');
     }
+  }, [blankErrorHandler]);
 
-    return forOnlyOneSseService;
-  }, [apiHostUrl, getToken]);
+  const blankErrorHandleObject = {
+    blankErrorHandler,
+    blankErrorPermission: false,
+  };
+
+  const getSseServiceInstance = useCallback(
+    async value => {
+      const tokenYo = await getToken();
+
+      if (forOnlyOneSseService) return forOnlyOneSseService; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
+
+      if (!tokenYo) return;
+
+      forOnlyOneSseService = new SseService(
+        apiHostUrl,
+        tokenYo,
+        {...blankErrorHandleObject, blankErrorPermission: value},
+        [
+          data => {
+            setSseType1(data);
+          },
+          data => {
+            setSseType2(data);
+          },
+          data => {
+            setSseType3(data);
+          },
+          data => {
+            setSseType4(data);
+          },
+          data => {
+            setSseType5(data);
+          },
+          data => {
+            setSseType6(data);
+          },
+          data => {
+            setSseType7(data);
+          },
+          data => {
+            setSseType8(data);
+          },
+        ],
+      );
+
+      if (!forOnlyOneSseService) {
+        console.log('forOnlyOneSseService 가 지금 undefined에요 ');
+        console.log(forOnlyOneSseService);
+      }
+
+      return forOnlyOneSseService;
+    },
+    [apiHostUrl, getToken, blankErrorHandler],
+  );
 
   useEffect(() => {
     setTimeout(() => {
-      getSseServiceInstance();
+      (async () => {
+        const instance = await getSseServiceInstance(false);
+
+        // if (instance.isBlankErrorReconnectionProtocol) {
+        //   console.log('sse blank 에러가 있습니다');
+        //   // 기존 프론트 sse instance 지우기
+
+        //   forOnlyOneSseService = undefined;
+
+        //   const instance2 = await getSseServiceInstance();
+
+        //   if (!!instance2) {
+        //     console.log('instance 지우고 다시 만들었습니다');
+        //     console.log(instance2);
+        //   }
+
+        //   // 만약 되면 그대로 쓰고 또 안되면 끄기
+        // } else {
+        //   console.log('문제 없이 잘 되고 있어요 ');
+        // }
+      })();
     }, 500);
   }, []);
 
