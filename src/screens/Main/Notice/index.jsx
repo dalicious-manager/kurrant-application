@@ -42,7 +42,7 @@ const Screen = ({route}) => {
   return (
     <Tab.Navigator
       initialRouteName={
-        from === 'public' ? PublicNoticePageName : SpotNoticePageName
+        from === 'public' ? SpotNoticePageName : PublicNoticePageName
       }
       screenOptions={{
         tabBarIndicatorStyle: {

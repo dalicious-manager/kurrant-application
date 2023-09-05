@@ -34,7 +34,6 @@ import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/Grou
 
 import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
 
-import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
 import useReviewWait from '../../../../../biz/useReview/useReviewWait';
 import {
   redeemablePointsAtom,
@@ -85,32 +84,17 @@ const Pages = ({route}) => {
     readableAtom: {userRole},
   } = useAuth();
 
-  const {getReviewWait, reviewWaitCount} = useReviewWait();
+  const {getReviewWait} = useReviewWait();
 
-  useEffect(() => {
-    console.log('reviewWaitCount 확인');
-    console.log(reviewWaitCount);
-  }, [reviewWaitCount]);
-
-  const {sseHistory, sseHistoryRefetch} = useSse();
+  const {sseHistory} = useSse();
   const [sseType1] = useAtom(sseType1Atom);
   const [sseType2] = useAtom(sseType2Atom);
-  const [sseType3] = useAtom(sseType3Atom);
+
   const [sseType8] = useAtom(sseType8Atom);
 
   useEffect(() => {
     getReviewWait();
   }, [sseType8?.id]);
-
-  // useEffect(() => {
-  //   console.log('획득 가능한 포인트 확인');
-  //   console.log(redeemablePoints);
-  // }, [redeemablePoints]);
-
-  // useEffect(() => {
-  //   console.log('토탈');
-  //   console.log(total);
-  // }, [total]);
 
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
