@@ -44,16 +44,13 @@ const useSseStart = () => {
   useEffect(() => {
     if (!!blankErrorHandler) {
       blankErrorHandler.addListener('blank-error-handle', () => {
-        console.log('재 요청 시키자~');
+        console.log('sse 인스턴스를 새로 만듭니다');
         // 재요청시키기
-        (async () => {
-          forOnlyOneSseService = null;
-
-          const instance = await getSseServiceInstance(true);
-        })();
+        forOnlyOneSseService = null;
+        getSseServiceInstance(true);
       });
     } else {
-      console.log('뭔가 쪼까');
+      console.log('emitter가 생성되지 않았습니다 ');
     }
   }, [blankErrorHandler]);
 
@@ -114,27 +111,7 @@ const useSseStart = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      (async () => {
-        const instance = await getSseServiceInstance(false);
-
-        // if (instance.isBlankErrorReconnectionProtocol) {
-        //   console.log('sse blank 에러가 있습니다');
-        //   // 기존 프론트 sse instance 지우기
-
-        //   forOnlyOneSseService = undefined;
-
-        //   const instance2 = await getSseServiceInstance();
-
-        //   if (!!instance2) {
-        //     console.log('instance 지우고 다시 만들었습니다');
-        //     console.log(instance2);
-        //   }
-
-        //   // 만약 되면 그대로 쓰고 또 안되면 끄기
-        // } else {
-        //   console.log('문제 없이 잘 되고 있어요 ');
-        // }
-      })();
+      getSseServiceInstance(false);
     }, 500);
   }, []);
 

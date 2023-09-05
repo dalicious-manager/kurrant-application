@@ -24,28 +24,12 @@ class SseService {
     // blankErrorHandler = null,
     callbackForAtoms,
   ) {
-    if (SseServiceOnlyOneInstance) {
-      console.log('이비 서비스가 있다네 친구');
-
+    if (SseServiceOnlyOneInstance)
       if (!!blankErrorHandleObject?.blankErrorPermission) {
-        console.log('오 그런가 내가 새로 만들어 주지');
         SseServiceOnlyOneInstance = null;
       } else {
-        console.log('뭐여 permission이 없구만 기각~!');
         return SseServiceOnlyOneInstance;
       }
-    }
-
-    // if (
-    //   SseServiceOnlyOneInstance &&
-    //   !!blankErrorHandleObject?.blankErrorPermission
-    // ) {
-    //   console.log('오 그런가 내가 새로 만들어 주지');
-    //   SseServiceOnlyOneInstance = null;
-    // } else {
-    //   console.log('뭐여 permission이 없구만 기각~!');
-    //   return SseServiceOnlyOneInstance;
-    // }
 
     instanceCount += 1;
     console.log('SseService 인스턴스 만든 횟수 ' + instanceCount);
@@ -59,7 +43,7 @@ class SseService {
 
       this.token && {
         headers: {
-          // Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${this.token}`,
         },
 
         // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
@@ -189,14 +173,14 @@ class SseService {
 
   onHandleBlankError = () => {
     hadDoneBlankErrorReconnectionProtocolAlready = true;
-    console.log('블랭크 에러입니다 ');
+    console.log('message가 비어있는 에러입니다 ');
 
     // token확인
 
     if (!!this.token) {
-      console.log('토큰이 없어서 에러뜨는건 아닐듯');
+      console.log('프론트에서 토큰을 안줘서 뜨는 에러뜨는건 아닐듯');
     } else {
-      console.log('토큰이 없어서 그런듯요 한번 꺼보고 다시해봐야 될 듯 ');
+      console.log('프론트에서 토큰을 안줘서 뜨는 에러인것 같아요');
     }
 
     // 1. 끄기
