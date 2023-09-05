@@ -1,14 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {View, Text, SafeAreaView, Image, Platform} from 'react-native';
+import {Image, Platform} from 'react-native';
 import styled from 'styled-components';
 
-import {PAGE_NAME as InviteSpotPage} from './InviteSpot';
 import {GuideSpot} from '../../../assets';
-import useGroupSpots from '../../../biz/useGroupSpots/hook';
 import Button from '../../../components/Button';
-import {useGetPrivateSpot} from '../../../hook/usePrivateSpot';
-import {useGroupSpotList} from '../../../hook/useSpot';
 import {height} from '../../../theme';
 import {PAGE_NAME as SpotTypePage} from '../SpotType';
 
@@ -19,6 +15,7 @@ const SpotGuide = () => {
   const goToPage = () => {
     navigation.navigate(SpotTypePage);
   };
+
   return (
     <Wrap>
       {/* <ImageWrap> */}
