@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useHeaderHeight} from '@react-navigation/elements';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom} from 'jotai';
 import React, {
@@ -20,16 +21,23 @@ import {
   Easing,
   Dimensions,
   ScrollView,
+  Image,
 } from 'react-native';
+import {ActivityIndicator} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {useQueryClient} from 'react-query';
 import styled from 'styled-components';
 
 import MealDetailReview from './Review/MealDetailReview';
-
+import Card from './Review/MealDetailReview/Card/index';
+import {modifyStarRatingCount} from './Review/MealDetailReview/logic';
+import OrderSelectController from './Review/MealDetailReview/OrderSelectController/OrderSelectController';
+import useMainReviewHook from './Review/MealDetailReview/useMainReviewHook';
 import BackArrow from '../../../../../assets/icons/MealDetail/backArrow.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {foodDetailDataAtom} from '../../../../../biz/useBanner/store';
 import useFoodDetail from '../../../../../biz/useFoodDetail/hook';
+import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
 import useShoppingBasket from '../../../../../biz/useShoppingBasket/hook';
 import Badge from '../../../../../components/Badge';
 import Balloon from '../../../../../components/Balloon';
@@ -40,10 +48,12 @@ import {YellowStar} from '../../../../../components/Icon';
 import KeyboardAvoiding from '../../../../../components/KeyboardAvoiding';
 import Label from '../../../../../components/Label';
 import Modal from '../../../../../components/Modal';
+import BottomModalMultipleSelect from '../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
 import Typography from '../../../../../components/Typography';
 import {useGetDailyfoodDetailNow} from '../../../../../hook/useDailyfood';
 import {useAddShoppingBasket} from '../../../../../hook/useShoppingBasket';
 import {useGetUserInfo} from '../../../../../hook/useUserInfo';
+import {convertDateFormat1} from '../../../../../utils/dateFormatter';
 import {addCommasInEveryThirdDigit} from '../../../../../utils/splitNumberAndUnit';
 import withCommas from '../../../../../utils/withCommas';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
@@ -52,28 +62,19 @@ import {PAGE_NAME as MealInformationPageName} from '../../MealDetail/Page';
 import CarouselImage from '../components/CarouselImage';
 import MembershipDiscountBox from '../components/MembershipDiscountBox';
 import Skeleton from '../Skeleton';
-import {useMainReviewInfiniteQuery} from '../../../../../biz/useReview/useMealDetailReview/useMainReviewInfiniteQuery';
-import useMainReviewHook from './Review/MealDetailReview/useMainReviewHook';
-import BottomModalMultipleSelect from '../../../../../components/Review/BottomModalMultipleSelect/BottomModalMultipleSelect';
-import {modifyStarRatingCount} from './Review/MealDetailReview/logic';
-
-import Card from './Review/MealDetailReview/Card/index';
-import {convertDateFormat1} from '../../../../../utils/dateFormatter';
-import {ActivityIndicator} from 'react-native';
-import OrderSelectController from './Review/MealDetailReview/OrderSelectController/OrderSelectController';
-import {useHeaderHeight} from '@react-navigation/elements';
 
 const screenWidth = Dimensions.get('screen').width;
 
 export const PAGE_NAME = 'MEAL_DETAIL_PAGE';
 const Pages = ({route}) => {
   const dailyFoodId = route.params.dailyFoodId;
+  const isMeal = route.params.isMeal;
   const time = route.params.deliveryTime;
   const disableAddCartFromReview = route.params.disableAddCartFromReview;
   const reviewIdFromWrittenReview = route.params.reviewIdFromWrittenReview;
-
+  const {width} = Dimensions.get('screen');
   const headerHeight = useHeaderHeight();
-
+  const [height, setHeight] = useState([]);
   const bodyRef = useRef();
   const navigation = useNavigation();
   const {balloonEvent, BalloonWrap} = Balloon();
@@ -365,9 +366,24 @@ const Pages = ({route}) => {
     }, [dailyFoodId, detailRefetch, foodDetailData.dailyFoodId]),
   );
   useEffect(() => {
+    setHeight([]);
     if (isFoodDetail?.data) setFoodDetailData(isFoodDetail?.data);
   }, [isFoodDetail?.data, setFoodDetailData]);
 
+  useEffect(() => {
+    const resizeImage = async image => {
+      await Image.getSize(image, (w, h) => {
+        const sw = Dimensions.get('window').width;
+        const scaleFactor = sw / w;
+        const scaledHeight = h * scaleFactor;
+        setHeight([...height, scaledHeight]);
+      });
+    };
+    if (foodDetailData.introImageList?.length > 0)
+      foodDetailData.introImageList.map(image => {
+        return resizeImage(image);
+      });
+  }, [foodDetailData, dailyFoodId]);
   return (
     <>
       <Wrap>
@@ -689,6 +705,27 @@ const Pages = ({route}) => {
                                   </InfoTextView>
                                 </InfoWrap>
                               </Content>
+                              <MakersIntroImageContainer>
+                                {foodDetailData.introImageList?.length > 0 &&
+                                  foodDetailData.introImageList.map(
+                                    (image, i) => {
+                                      return (
+                                        <FastImage
+                                          key={image}
+                                          source={{
+                                            uri: image,
+                                            priority: FastImage.priority.high,
+                                          }}
+                                          style={{
+                                            width: '100%',
+                                            height: height[i],
+                                          }}
+                                          resizeMode="contain"
+                                        />
+                                      );
+                                    },
+                                  )}
+                              </MakersIntroImageContainer>
                               {/* 식단레포트 */}
                               {/* <Content>
                                 <InfoWrap>
@@ -871,7 +908,7 @@ const Pages = ({route}) => {
           count={count}
           value={count.toString()}
         />
-        {!disableAddCartFromReview && !focus && (
+        {!disableAddCartFromReview && !focus && !isMeal && (
           <ButtonWrap>
             <Button
               price={foodDetailData?.price - discountPrice}
@@ -1001,7 +1038,11 @@ const ModalWrap = styled.View`
 const MakersName = styled(Typography).attrs({text: 'Body06SB'})`
   color: ${props => props.theme.colors.grey[2]};
 `;
-
+const MakersIntroImageContainer = styled.View`
+  width: 100%;
+  padding: 24px;
+  padding-top: 40px;
+`;
 const MealTitle = styled(Typography).attrs({text: 'LargeTitle'})`
   color: ${props => props.theme.colors.grey[2]};
   margin-bottom: 8px;
