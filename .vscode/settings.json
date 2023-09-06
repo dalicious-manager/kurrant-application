@@ -1,7 +1,5 @@
 {
-  "cSpell.words": [
-    "Pretendard"
-  ],
+  "cSpell.words": ["Pretendard"],
   "cSpell.enabledLanguageIds": [
     "csharp",
     "go",
@@ -13,7 +11,11 @@
     "typescript",
     "typescriptreact",
     "yml"
-],
-  "editor.codeActionsOnSave": { "source.fixAll.eslint": true },
-    "eslint.workingDirectories": [ {"mode": "auto"} ],
+  ],
+  "editor.codeActionsOnSave": {"source.fixAll.eslint": true},
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ]
 }
