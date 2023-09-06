@@ -256,7 +256,14 @@ const Pages = () => {
         userGroupSpot?.mySpotCount === 0 &&
         userGroupSpot?.privateCount === 0
       ) {
-        navigation.navigate(SpotGuidePageName);
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SpotGuidePageName,
+            },
+          ],
+        });
       }
     }
   }, [isUserInfo?.data?.spotId, userGroupSpot]);
