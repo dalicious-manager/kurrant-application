@@ -16,6 +16,7 @@ import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
 import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
 import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import CoinAnimation from '../../components/CoinAnimation';
+import useSse from '../../../../../../utils/sse/sseLogics/useSse';
 
 const MealInfoComponent = ({
   m,
@@ -31,6 +32,11 @@ const MealInfoComponent = ({
   const {addMeal} = useDietRepoMutation();
   const {mutateAsync: orderState} = useConfirmOrderState();
   const [startAni, setStartAni] = useState(false);
+
+  // sseType3
+
+  const {sseHistoryRefetch} = useSse();
+
   const deliveryConfirmPress = async () => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
@@ -130,6 +136,11 @@ const MealInfoComponent = ({
                         queryKey: ['dietRepo', 'main'],
                       });
                       queryClient.invalidateQueries('userInfo');
+
+                      // sseType3 : 홈에서 '배송완료! 메뉴 확인후... '누르면 refetch하게 하기
+                      sseHistoryRefetch();
+
+                      // dietRepoMainRefetch();
                     },
                   ]);
                 } else {

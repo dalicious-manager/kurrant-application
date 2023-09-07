@@ -55,6 +55,7 @@ const Component = ({
   commentList,
   toast,
   dailyFoodId,
+  sseType8List,
 }) => {
   // dailyFoodId
   // deliveryTime
@@ -320,6 +321,7 @@ const Component = ({
                   pngLink={v.pngLink}
                   writtenDate={v.createDate}
                   message={v.content}
+                  isSseType8={sseType8List.includes(v.commentId)}
                 />
               </CommentWrap>
             );
