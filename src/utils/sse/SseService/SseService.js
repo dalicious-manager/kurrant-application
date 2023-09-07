@@ -1,5 +1,16 @@
 import EventSource from 'react-native-sse';
 import Base64 from '../sseLogics/base64Converter';
+import {Fetch} from '../../../biz/useAuth';
+import {getStorage} from '../../asyncStorage';
+
+import Config from 'react-native-config';
+
+const apiHostUrl =
+  Config.NODE_ENV === 'dev'
+    ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
+    : Config.NODE_ENV === 'rel'
+    ? Config.API_RELEASE_URL + '/' + Config.API_VERSION
+    : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 let SseServiceOnlyOneInstance;
 
@@ -16,10 +27,11 @@ class SseService {
   eventSource;
   callbackForAtoms;
   blankErrorHandler;
-
+  // refreshToken;
   constructor(
     baseUrl,
     token,
+    // refreshToken,
     blankErrorHandleObject = {},
     // blankErrorHandler = null,
     callbackForAtoms,
@@ -36,28 +48,35 @@ class SseService {
 
     this.baseUrl = baseUrl;
     this.token = token;
+    // this.refreshToken = refreshToken;
     this.callbackForAtoms = callbackForAtoms;
 
-    this.eventSource = new EventSource(
-      `${this.baseUrl}/notification/subscribe`,
+    console.log(this.token ? `나옴 토큰${this.token}` : '몰러 아직 안나옴');
 
-      this.token && {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
+    this.eventSource =
+      this.token &&
+      new EventSource(
+        `${this.baseUrl}/notification/subscribe`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+
+          // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
+          // pollingInterval: 1000 * 60 * 30,
+          pollingInterval: 1000 * 1,
         },
-
-        // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
-        // pollingInterval: 1000 * 60 * 15,
-        pollingInterval: 1000 * 1,
-      },
-    );
+      );
 
     // 여기에다가 eventSource 받는 로직 작성
 
-    this.eventSource.addEventListener('open', this.onOpen);
-    this.eventSource.addEventListener('message', this.onMessage);
-    this.eventSource.addEventListener('error', this.onError);
-    this.eventSource.addEventListener('close', this.onClose);
+    this.eventSource?.addEventListener('open', this.onOpen);
+    this.eventSource?.addEventListener('message', this.onMessage);
+    this.eventSource?.addEventListener('error', this.onError);
+    this.eventSource?.addEventListener('close', this.onClose);
+
+    console.log('인스턴스 만든 시점 ' + new Date().toString());
 
     // blanc error가 뜰때 대처하기 위한 eventEmitter
 
@@ -69,9 +88,7 @@ class SseService {
   onMessage = e => {
     if (typeof e.data === 'string') {
       if (e.data.includes('EventStream')) {
-        console.log('-----');
         console.log('Sse 연결을 성공하였습니다');
-        // console.log(e.data);
       } else {
         const receiveMessage =
           e.data && JSON.parse(Base64.decode(JSON.parse(e.data).body))[1];
@@ -138,16 +155,63 @@ class SseService {
 
   onOpen = e => {
     console.log('sse OnOpen됬어요');
-    console.log(e.data);
   };
 
   onError = e => {
-    console.log('sse 에러가 뜹니다. error occured closing connection');
+    console.log(
+      'sse 에러가 뜹니다. error occured closing connection ' +
+        new Date().toString(),
+    );
     console.log(e);
 
-    // The network connection was lost.
+    // 이 에러가 뜨면 지금 token상태가 만료된 상태인지 확인하자
 
-    // "" -> 이 에러가 10번 이상이면 자동으로  sseService를 끄자
+    // const autoLogin = async () => {
+    //   console.log('autoLogin해서 토큰이 쓸데 있나 확인해보자 ');
+    //   try {
+    //     const res = await Fetch.autoLogin();
+    //     if (res?.data?.isActive) {
+    //       console.log('성공');
+    //       console.log(JSON.stringify(res.data));
+    //     } else {
+    //       console.log('토큰 만료여');
+    //       console.log(JSON.stringify(res.data));
+    //     }
+    //     console.log(res);
+    //     return res;
+    //   } catch (err) {
+    //     throw err;
+    //   }
+    // };
+
+    // autoLogin();
+
+    // ---------------------------------------------
+
+    (async (url, method) => {
+      let reqUrl = apiHostUrl + url;
+      // const storage = await getStorage('token');
+      // let token = JSON.parse(storage);
+
+      let headers = {
+        'content-type': 'application/json',
+        // Authorization: `Bearer ${token?.accessToken}`,
+        Authorization: `Bearer ${this.token}`,
+      };
+
+      const res = await fetch(reqUrl, {
+        headers,
+        method,
+        // body: options.body,
+      });
+      const ret = await res.json();
+      console.log('autoLogin 값 확인하기 ');
+      console.log(ret);
+    })('/users/me/autoLogin', 'GET');
+
+    // ---------------------------------------------
+
+    // 보내보기
 
     if (!e.message) blankErrorReconnectionCount += 1;
 
@@ -165,7 +229,7 @@ class SseService {
   };
 
   onClose = e => {
-    console.log('Sse를 Close 하겠습니다. closing connection');
+    console.log('Sse를 Close 하겠습니다. closing connection ' + new Date());
 
     this.eventSource.removeAllEventListeners();
     this.eventSource.close();

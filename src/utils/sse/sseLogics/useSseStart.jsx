@@ -35,6 +35,15 @@ const useSseStart = () => {
     }
     return yo?.accessToken;
   }, []);
+  // const getRefreshToken = useCallback(async () => {
+  //   const token = await getStorage('token');
+
+  //   let yo;
+  //   if (token) {
+  //     yo = JSON.parse(token);
+  //   }
+  //   return yo?.refreshToken;
+  // }, []);
 
   // blank Error 대처를 위한 eventEmitter
   const blankErrorHandler = useMemo(() => new EventEmitter(), []);
@@ -62,7 +71,7 @@ const useSseStart = () => {
   const getSseServiceInstance = useCallback(
     async value => {
       const tokenYo = await getToken();
-
+      // const refreshTokenYo = await getRefreshToken();
       if (forOnlyOneSseService) return forOnlyOneSseService; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
 
       if (!tokenYo) return;
@@ -70,6 +79,7 @@ const useSseStart = () => {
       forOnlyOneSseService = new SseService(
         apiHostUrl,
         tokenYo,
+        // refreshTokenYo,
         {...blankErrorHandleObject, blankErrorPermission: value},
         [
           data => {
