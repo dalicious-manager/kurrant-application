@@ -19,7 +19,6 @@ const Component = ({mode = 'page', color, margin = [0, 0], onPressEvent}) => {
   const theme = useTheme();
 
   const handleBackPress = () => {
-    console.log(onPressEvent);
     if (onPressEvent) return onPressEvent();
     if (navigation.canGoBack()) {
       navigation.goBack();

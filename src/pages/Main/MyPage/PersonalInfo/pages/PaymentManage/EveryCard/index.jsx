@@ -32,7 +32,6 @@ const Pages = ({route}) => {
     setIsCard(2);
     navigation.navigate(RegisterCardScreenName);
   };
-  console.log(cardList);
   const deleteCard = async id => {
     await cardDelete({
       cardId: id,

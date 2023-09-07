@@ -84,7 +84,6 @@ const Pages = ({route}) => {
         )?.length +
         ' 제외)'
       : '';
-  purchaseDetail?.data?.orderItems?.map(v => console.log(v));
 
   if (isPurchaseDetailLoading) {
     return (

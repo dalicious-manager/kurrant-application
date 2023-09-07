@@ -160,27 +160,29 @@ const BottomSheetCard = props => {
                   }
                 }
               }}
-              renderItem={({item}) => (
-                <ContentItemContainer
-                  disabled={item.id === 11}
-                  onPressIn={pressInUp}
-                  onPressOut={pressOutUp}
-                  onPress={() => onSelect(item.id, item.text)}>
-                  {selected === item.id ? (
-                    <ContentItemBox>
+              renderItem={({item}) => {
+                return (
+                  <ContentItemContainer
+                    disabled={item.id === 11}
+                    onPressIn={pressInUp}
+                    onPressOut={pressOutUp}
+                    onPress={() => onSelect(item.id, item.text)}>
+                    {selected === item.id ? (
+                      <ContentItemBox>
+                        <ContentItemText status={item.id}>
+                          {item.text}
+                        </ContentItemText>
+                        <CheckedIcon />
+                      </ContentItemBox>
+                    ) : (
                       <ContentItemText status={item.id}>
                         {item.text}
                       </ContentItemText>
-                      <CheckedIcon />
-                    </ContentItemBox>
-                  ) : (
-                    <ContentItemText status={item.id}>
-                      {item.text}
-                    </ContentItemText>
-                  )}
-                </ContentItemContainer>
-              )}
-              keyExtractor={item => item.id.toString()}
+                    )}
+                  </ContentItemContainer>
+                );
+              }}
+              keyExtractor={item => item.id}
             />
             <ManagePressView />
           </BottomSheet>

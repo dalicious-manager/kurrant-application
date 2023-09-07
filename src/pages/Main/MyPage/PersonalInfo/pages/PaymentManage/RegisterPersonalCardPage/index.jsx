@@ -14,8 +14,10 @@ import useKeyboardEvent from '~hook/useKeyboardEvent';
 
 import {PAGE_NAME as PaymentManagePage} from '..';
 import useUserMe from '../../../../../../../biz/useUserMe';
+import BottomSheetCard from '../../../../../../../components/BottomSheetCard/component';
 import {isValidCardNumber} from '../../../../../../../utils/cardFormatter';
 import {PAGE_NAME as PayCheckPasswordPageName} from '../../PayCheckPassword';
+import {corporationData} from '../RegisterCorpCardPage';
 const screenHeight = Dimensions.get('window').height;
 
 export const PAGE_NAME = 'P__MY_PAGE__PAYMENT_MANAGE__REGISTER_PERSONAL_CARD';
@@ -23,7 +25,7 @@ export const PAGE_NAME = 'P__MY_PAGE__PAYMENT_MANAGE__REGISTER_PERSONAL_CARD';
 const Pages = ({route}) => {
   const insets = useSafeAreaInsets();
   const safeAreaHeight = insets.top + insets.bottom;
-
+  const [selected, setSelected] = useState('');
   const params = route.params;
   const themeApp = useTheme();
   const form = useForm({
@@ -34,8 +36,6 @@ const Pages = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const {StatusBarManager} = NativeModules;
   const {
-    cardRegisted,
-    cardRegistedNice,
     payCheckPassword,
     readableAtom: {cardList},
   } = useUserMe();
@@ -50,6 +50,8 @@ const Pages = ({route}) => {
     const paycheck = await payCheckPassword();
     const exp = data.cardExpDate.split('/');
     const reqNice = {
+      corporationCode: data.cardCorporationCode,
+      cardType: '01',
       cardNumber: data.cardNumber?.replace(/\W/gi, ''),
       expirationYear: exp[1],
       expirationMonth: exp[0],
@@ -61,32 +63,15 @@ const Pages = ({route}) => {
       isFirst: !paycheck.data,
       cardData: JSON.stringify(reqNice),
     });
-    //
-    // const req = {
-    //   cardNumber: data.cardNumber?.replace(/\W/gi, ''),
-    //   expirationYear: exp[1],
-    //   expirationMonth: exp[0],
-    //   cardPassword: data.cardPass,
-    //   identityNumber: data.cardBirthDay,
-    //   cardVaildationCode: data.cardSecret,
-    //   defaultType: cardList.length > 0 ? 0 : params?.defaultType || 0,
-    // };
-
-    // // const result = await cardRegisted(req);
-    // try {
-    //   const resultNice = await cardRegistedNice(reqNice);
-    //   console.log(resultNice);
-    //   // navigation.navigate(PaymentManagePage)
-    //   navigation.goBack();
-    // } catch (error) {
-    //   alert(error.toString()?.replace('error:', ''));
-    // }
   };
+
+  const onPressEvent = () => {};
   const isValidate =
     watch('cardNumber') &&
     watch('cardExpDate') &&
     watch('cardSecret') &&
     watch('cardPass') &&
+    watch('cardCorporationCode') &&
     watch('cardBirthDay');
   useFocusEffect(
     useCallback(() => {
@@ -142,6 +127,24 @@ const Pages = ({route}) => {
                   카드 정보
                 </Typography>
               </RegisteredTitleBox>
+              <RegiteredView>
+                <NoClickZone
+                  onPress={() => {
+                    setModalVisible(true);
+                  }}
+                />
+                <RefTextInput
+                  label="카드사"
+                  name="cardCorporationCode"
+                  placeholder="카드사 선택"
+                  value={
+                    corporationData.find(v => v.id === selected)?.text || null
+                  }
+                  rules={{
+                    required: '필수 입력 항목 입니다.',
+                  }}
+                />
+              </RegiteredView>
               <RegiteredView>
                 <RefTextInput
                   label="카드번호"
@@ -252,12 +255,29 @@ const Pages = ({route}) => {
           </ButtonBox>
         )}
       </Wrapper>
+      <BottomSheetCard
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        title={'카드사'}
+        data={corporationData}
+        selected={selected}
+        setSelected={setSelected}
+        onPressEvent={onPressEvent}
+      />
     </KeyboardAwareScrollView>
   );
 };
 
 export default Pages;
-
+const NoClickZone = styled.Pressable`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: #00000000;
+  width: 100%;
+  height: 100%;
+`;
 const CardRegisteredBox = styled.View`
   flex: 1;
 `;

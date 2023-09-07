@@ -38,7 +38,6 @@ export default function PasswordCheck({route}) {
     setState(e.nativeEvent.text);
   };
   const onSubmit = async () => {
-    console.log(params?.cardData, '결제 비밀번호');
     try {
       if (params?.password === state) {
         await updatePayCheckPassword({payNumber: state});

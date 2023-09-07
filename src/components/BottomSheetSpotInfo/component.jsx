@@ -85,8 +85,15 @@ const Component = props => {
       };
       await selectSpot(body);
       // await userGroupSpotCheck();
-
-      navigation.navigate(HomeMainPageName);
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: HomeMainPageName,
+          },
+        ],
+      });
+      // navigation.navigate(HomeMainPageName);
     }
   };
 

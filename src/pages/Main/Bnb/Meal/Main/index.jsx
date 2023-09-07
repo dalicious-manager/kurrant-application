@@ -430,9 +430,17 @@ const Pages = ({route}) => {
               type={'white'}
               text={'Button09SB'}
               onPressEvent={() => {
-                navigation.navigate(BuyMealPageName, {
-                  date: touchDate ? touchDate : formattedDate(new Date()),
-                });
+                if (userSpotId)
+                  navigation.navigate(BuyMealPageName, {
+                    date: touchDate ? touchDate : formattedDate(new Date()),
+                  });
+                else
+                  Alert.alert('식사 구매', '스팟을 선택해 주세요', [
+                    {
+                      text: '확인',
+                      onPress: () => {},
+                    },
+                  ]);
               }}
             />
           </NoMealButtonWrap>
@@ -441,10 +449,17 @@ const Pages = ({route}) => {
       <ButtonWrap>
         <PlusButton
           onPress={() => {
-            console.log(touchDate, 'touchDate');
-            navigation.navigate(BuyMealPageName, {
-              date: touchDate ? touchDate : formattedDate(new Date()),
-            });
+            if (userSpotId)
+              navigation.navigate(BuyMealPageName, {
+                date: touchDate ? touchDate : formattedDate(new Date()),
+              });
+            else
+              Alert.alert('식사 구매', '스팟을 선택해 주세요', [
+                {
+                  text: '확인',
+                  onPress: () => {},
+                },
+              ]);
           }}>
           <PlusIcon />
         </PlusButton>

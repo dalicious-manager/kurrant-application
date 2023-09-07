@@ -37,10 +37,7 @@ const Pages = () => {
   const [endDate, setEndDate] = useState(endDate || new Date());
   const [showDateModal2, setShowDateModal2] = useState(false);
 
-  useEffect(() => {
-    console.log(showDateModal);
-    console.log(showDateModal2);
-  }, [showDateModal, showDateModal2]);
+  useEffect(() => {}, [showDateModal, showDateModal2]);
 
   const onChangeDate = (event, date, setModal, setSelected) => {
     if (Platform.OS === 'android') {

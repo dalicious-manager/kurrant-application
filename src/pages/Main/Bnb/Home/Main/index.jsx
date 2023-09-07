@@ -203,6 +203,7 @@ const Pages = () => {
   const {data: isUserGroupSpotCheck} = useGroupSpotList();
   useEffect(() => {
     if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
+      console.log(isUserGroupSpotCheck?.data, 'isUserGroupSpotCheck?.data');
       setUserGroupSpot(isUserGroupSpotCheck?.data);
     }
   }, [isUserGroupSpotCheck?.data]);
@@ -237,6 +238,7 @@ const Pages = () => {
     }
   }, [dailyfoodDataList?.data?.dailyFoodsByDate, date]);
   useEffect(() => {
+    console.log(userGroupSpot?.privateCount, 'userGroupSpot?.privateCount');
     if (isUserInfo?.data && userGroupSpot && navigation.isFocused()) {
       if (
         isUserInfo?.data?.spotId === null &&

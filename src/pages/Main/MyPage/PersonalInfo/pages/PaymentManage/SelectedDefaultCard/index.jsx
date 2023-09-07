@@ -50,7 +50,6 @@ const Pages = ({route}) => {
     await cardSetting(req);
   };
   const onSelectOpenModal = () => {
-    console.log(cardList);
     if (cardList.length > 0) {
       setModalVisible(true);
     } else {
@@ -70,7 +69,6 @@ const Pages = ({route}) => {
     }
   };
   const onSelectOpenModal2 = () => {
-    console.log(cardList);
     if (cardList.length > 0) {
       setModalVisible2(true);
     } else {
@@ -139,7 +137,6 @@ const Pages = ({route}) => {
       Number(
         cardList
           .map(card => {
-            console.log(card);
             if (card.defaultType === 2 || card.defaultType === 3)
               return `${card.id}`;
           })
