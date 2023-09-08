@@ -138,11 +138,12 @@ const Pages = () => {
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
 
+  const isModalOpenAtLeastOnce = useRef(false);
+
   const {sseType5, confirmSseIsRead, sseHistory, sseHistoryRefetch} = useSse();
   const [sseType6] = useAtom(sseType6Atom);
   const [sseType7List, setSseType7List] = useState([]);
   const [sseType7] = useAtom(sseType7Atom);
-  const isModalOpenAtLeastOnce = useRef(false);
 
   useEffect(() => {
     sseHistoryRefetch();
@@ -158,7 +159,6 @@ const Pages = () => {
           .filter(v => (!!v ? v : undefined)),
       ),
     ];
-
     setSseType7List(result ? result : []);
   }, [sseHistory]);
 
