@@ -19,6 +19,8 @@ import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css, useTheme} from 'styled-components/native';
 import BottomModal from '~components/BottomModal';
+import {BowlIcon} from '~components/Icon';
+import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -55,6 +57,14 @@ import {
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import jwtUtils from '../../../../../utils/fetch/jwtUtill';
+import useSseType3 from '../../../../../utils/sse/sseHooks/useSseType3';
+import {
+  sseType6Atom,
+  sseType7Atom,
+} from '../../../../../utils/sse/sseLogics/store';
+import useEvetnEmitterTest from '../../../../../utils/sse/sseLogics/useEventEmitterTest';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
@@ -73,18 +83,6 @@ import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
-import useSse from '../../../../../utils/sse/sseLogics/useSse';
-import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
-
-import useSseType3 from '../../../../../utils/sse/sseHooks/useSseType3';
-import {BowlIcon} from '~components/Icon';
-
-import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
-import {
-  sseType6Atom,
-  sseType7Atom,
-} from '../../../../../utils/sse/sseLogics/store';
-import useEvetnEmitterTest from '../../../../../utils/sse/sseLogics/useEventEmitterTest';
 
 const GOOGLE_PLAY_STORE_LINK = 'market://details?id=com.dalicious.kurrant';
 // 구글 플레이 스토어가 설치되어 있지 않을 때 웹 링크
@@ -156,7 +154,7 @@ const Pages = () => {
         sseHistory
           ?.filter(v => v.type === 7)
           .map(v => v.groupId)
-          .filter(v => (!!v ? v : undefined)),
+          .filter(v => (v ? v : undefined)),
       ),
     ];
     setSseType7List(result ? result : []);

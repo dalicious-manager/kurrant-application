@@ -8,17 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* kurrantTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* kurrantTests.m */; };
-		0BFFF044227836071145E7CF /* Pods_kurrant_kurrantTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B71C24A21689E30C34710F5D /* Pods_kurrant_kurrantTests.framework */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		13FC53D90FD88289BCB84212 /* Pods_kurrant.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9090D9480C404D3B8B05855 /* Pods_kurrant.framework */; };
 		2D06190E73714727B88B24AD /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 0D0B237079174AF998E87B6E /* LICENSE */; };
+		3666EB34E99DB5F190A02226 /* Pods_kurrant.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF001C9EB4C424058E958018 /* Pods_kurrant.framework */; };
 		58C6DE8A34F648238F740925 /* Pretendard-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 66B03DD34E384B649F760C33 /* Pretendard-Thin.otf */; };
 		5A89C246B1EC4F4F9EDFE5AE /* Pretendard-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = DCA932196CC34D13A6907957 /* Pretendard-ExtraLight.otf */; };
 		75A5E33A7F7249518BFAC2B4 /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = E3512BD9EB304ABE80081D2B /* Pretendard-SemiBold.otf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		87AE5B503D9A1F3175576B20 /* Pods_kurrant_kurrantTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA39A1BBA9485D8C16706377 /* Pods_kurrant_kurrantTests.framework */; };
 		94590B3B30F24F4C8152DA81 /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9AEDF384CAA848929259B0C5 /* Pretendard-Black.otf */; };
 		A6E2DF83B7D3442987129D5D /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 763A59BDFCC64FBFBFE34199 /* Pretendard-Bold.otf */; };
 		B005111A2930A11C0035F28D /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = B00511192930A11C0035F28D /* Fonts */; };
@@ -27,10 +25,10 @@
 		B4D2137514CC45B88DE9C20C /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89AB231CA7C14416B4894EA1 /* Pretendard-Regular.otf */; };
 		B7DB5E91EEE741959BCEC57C /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 027BC5742DEB44B788FDCD2A /* OFL.txt */; };
 		D3F9877D297916AE00B61198 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F9877C297916AE00B61198 /* File.swift */; };
-		DB59F4327DE1542735268693 /* Pods_kurrant.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF16D4EB586F13E158A2E94E /* Pods_kurrant.framework */; };
 		E24E198112A94BC68F5DE259 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F9589E007B8423BA705319B /* Pretendard-Medium.otf */; };
 		EB1E3C52F14B4D8597275DB8 /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = C0A217AEDFE0481FB9F3985D /* Pretendard-Light.otf */; };
 		F1AE8E106A9E4FFBB1860ED2 /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BB88AAD1C21847FB868A3C00 /* Pretendard-ExtraBold.otf */; };
+		F8AA97DE9280433E69AC2E83 /* Pods_kurrant_kurrantTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FABD8FAC95749CE37CCC839 /* Pods_kurrant_kurrantTests.framework */; };
 		FF090BE728E2ECD900666784 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF090BD728E2ECD900666784 /* Fontisto.ttf */; };
 		FF090BE828E2ECD900666784 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF090BD828E2ECD900666784 /* FontAwesome5_Solid.ttf */; };
 		FF090BE928E2ECD900666784 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF090BD928E2ECD900666784 /* FontAwesome.ttf */; };
@@ -92,18 +90,20 @@
 		2A7A75042A0E0348009F0DB7 /* coin.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = coin.wav; sourceTree = "<group>"; };
 		2ABB8D9B2A1B4A2200E8AD46 /* Permission_Notifications.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permission_Notifications.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABB8D9D2A1B4C3A00E8AD46 /* RNPermissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RNPermissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		381C781C7E31AD5EAA0929B4 /* Pods-kurrant.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant.release.xcconfig"; path = "Target Support Files/Pods-kurrant/Pods-kurrant.release.xcconfig"; sourceTree = "<group>"; };
 		45B4C38C57954B53A4EE52CC /* SpoqaHanSansNeo-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpoqaHanSansNeo-Bold.otf"; path = "../src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.otf"; sourceTree = "<group>"; };
 		4D0BC593BCB7435DA3309760 /* SpoqaHanSansNeo-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpoqaHanSansNeo-Medium.otf"; path = "../src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.otf"; sourceTree = "<group>"; };
 		5FB5307E9E4C27AECDBA071B /* Pods-kurrant.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant.staging.xcconfig"; path = "Target Support Files/Pods-kurrant/Pods-kurrant.staging.xcconfig"; sourceTree = "<group>"; };
 		66B03DD34E384B649F760C33 /* Pretendard-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Thin.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-Thin.otf"; sourceTree = "<group>"; };
+		6FABD8FAC95749CE37CCC839 /* Pods_kurrant_kurrantTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kurrant_kurrantTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		763A59BDFCC64FBFBFE34199 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Bold.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-Bold.otf"; sourceTree = "<group>"; };
-		7821BD5EB5BAF2DD1F247462 /* Pods-kurrant-kurrantTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant-kurrantTests.debug.xcconfig"; path = "Target Support Files/Pods-kurrant-kurrantTests/Pods-kurrant-kurrantTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7D05C663A8354200A0685578 /* SpoqaHanSansNeo-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpoqaHanSansNeo-Regular.otf"; path = "../src/assets/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = kurrant/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89AB231CA7C14416B4894EA1 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Regular.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		8EFB8BA498F1484783504702 /* NotoSansKR-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansKR-Black.otf"; path = "../src/assets/fonts/NotoSansKR/NotoSansKR-Black.otf"; sourceTree = "<group>"; };
 		9AEDF384CAA848929259B0C5 /* Pretendard-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Black.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-Black.otf"; sourceTree = "<group>"; };
 		A176505381824262A03659BF /* NotoSansKR-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansKR-Regular.otf"; path = "../src/assets/fonts/NotoSansKR/NotoSansKR-Regular.otf"; sourceTree = "<group>"; };
+		A2F96D6885213CB89F283EDF /* Pods-kurrant-kurrantTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant-kurrantTests.staging.xcconfig"; path = "Target Support Files/Pods-kurrant-kurrantTests/Pods-kurrant-kurrantTests.staging.xcconfig"; sourceTree = "<group>"; };
 		AC42A91A6E556732E69CCC95 /* Pods-kurrant-kurrantTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant-kurrantTests.debug.xcconfig"; path = "Target Support Files/Pods-kurrant-kurrantTests/Pods-kurrant-kurrantTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B00511192930A11C0035F28D /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		B068103A2966B4E700A4D3AB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "kurrant/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -114,11 +114,9 @@
 		D3B3EB672977DB7A000B91E6 /* kurrant.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = kurrant.entitlements; path = kurrant/kurrant.entitlements; sourceTree = "<group>"; };
 		D3F9877B297916AD00B61198 /* kurrant-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "kurrant-Bridging-Header.h"; sourceTree = "<group>"; };
 		D3F9877C297916AE00B61198 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		D9A0AB93CC0EF4E19B4F671C /* Pods-kurrant.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant.debug.xcconfig"; path = "Target Support Files/Pods-kurrant/Pods-kurrant.debug.xcconfig"; sourceTree = "<group>"; };
 		DCA932196CC34D13A6907957 /* Pretendard-ExtraLight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraLight.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-ExtraLight.otf"; sourceTree = "<group>"; };
-		DCEADAC487133FA2A3317165 /* Pods-kurrant.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant.debug.xcconfig"; path = "Target Support Files/Pods-kurrant/Pods-kurrant.debug.xcconfig"; sourceTree = "<group>"; };
+		DF001C9EB4C424058E958018 /* Pods_kurrant.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kurrant.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3512BD9EB304ABE80081D2B /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-SemiBold.otf"; path = "../src/assets/fonts/Pretendard/Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
-		E698C0ABB8CF6E6F870989CB /* Pods-kurrant.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant.release.xcconfig"; path = "Target Support Files/Pods-kurrant/Pods-kurrant.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F0A758276BF445D0B5CA0265 /* NotoSansKR-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansKR-Medium.otf"; path = "../src/assets/fonts/NotoSansKR/NotoSansKR-Medium.otf"; sourceTree = "<group>"; };
 		F606B878D5C0EDA91EB01AA5 /* Pods-kurrant-kurrantTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kurrant-kurrantTests.release.xcconfig"; path = "Target Support Files/Pods-kurrant-kurrantTests/Pods-kurrant-kurrantTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -174,7 +172,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66BDB60CB5230341F2FF466F /* Pods_kurrant_kurrantTests.framework in Frameworks */,
+				F8AA97DE9280433E69AC2E83 /* Pods_kurrant_kurrantTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,7 +180,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B66470C434E0E6D916F0F7BA /* Pods_kurrant.framework in Frameworks */,
+				3666EB34E99DB5F190A02226 /* Pods_kurrant.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,8 +234,8 @@
 				2ABB8D9D2A1B4C3A00E8AD46 /* RNPermissions.framework */,
 				2ABB8D9B2A1B4A2200E8AD46 /* Permission_Notifications.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				2F770290BAA2983FE99E71CB /* Pods_kurrant.framework */,
-				1B9D044217D32B375BDE28A0 /* Pods_kurrant_kurrantTests.framework */,
+				DF001C9EB4C424058E958018 /* Pods_kurrant.framework */,
+				6FABD8FAC95749CE37CCC839 /* Pods_kurrant_kurrantTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -301,11 +299,11 @@
 			isa = PBXGroup;
 			children = (
 				C1A04E49ED8D65CCE12CE5E8 /* Pods-kurrant.debug.xcconfig */,
-				93686135F43E2404E5058926 /* Pods-kurrant.release.xcconfig */,
 				5FB5307E9E4C27AECDBA071B /* Pods-kurrant.staging.xcconfig */,
 				AC42A91A6E556732E69CCC95 /* Pods-kurrant-kurrantTests.debug.xcconfig */,
 				F606B878D5C0EDA91EB01AA5 /* Pods-kurrant-kurrantTests.release.xcconfig */,
-				4186A137782DD913E81AD57B /* Pods-kurrant-kurrantTests.staging.xcconfig */,
+				381C781C7E31AD5EAA0929B4 /* Pods-kurrant.release.xcconfig */,
+				A2F96D6885213CB89F283EDF /* Pods-kurrant-kurrantTests.staging.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -417,8 +415,9 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				F215ADF660D07FC3B61A9307 /* [CP] Embed Pods Frameworks */,
-				9621D5293CC9BC6040EF17DE /* [CP] Copy Pods Resources */,
+				9621D5293CC9BC6040EF17DE /* [CP] Embed Pods Frameworks */,
 				121EC97551F024B9F91BC486 /* [CP-User] [RNFB] Core Configuration */,
+				72A5F8D9D32430BF9643F5A2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -595,7 +594,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9621D5293CC9BC6040EF17DE /* [CP] Copy Pods Resources */ = {
+		72A5F8D9D32430BF9643F5A2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kurrant/Pods-kurrant-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kurrant/Pods-kurrant-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kurrant/Pods-kurrant-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9621D5293CC9BC6040EF17DE /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -685,23 +701,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		FF94BE8A738E1A13321E5FBE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kurrant/Pods-kurrant-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kurrant/Pods-kurrant-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kurrant/Pods-kurrant-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -827,7 +826,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93686135F43E2404E5058926 /* Pods-kurrant.release.xcconfig */;
+			baseConfigurationReference = 381C781C7E31AD5EAA0929B4 /* Pods-kurrant.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1102,7 +1101,7 @@
 		};
 		B028EEAF2980A21000B38B92 /* Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4186A137782DD913E81AD57B /* Pods-kurrant-kurrantTests.staging.xcconfig */;
+			baseConfigurationReference = A2F96D6885213CB89F283EDF /* Pods-kurrant-kurrantTests.staging.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
