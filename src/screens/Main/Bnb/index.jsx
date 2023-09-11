@@ -23,13 +23,13 @@ import MoreMainPage, {
 import MainDim from '../../../pages/Spots/spotGuide/MainDim';
 import {mainDimAtom} from '../../../utils/store';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
-import {
-  sseType1Atom,
-  sseType2Atom,
-  sseType3Atom,
-  sseType8Atom,
-} from '../../../utils/sse/sseLogics/store';
-import useSse from '../../../utils/sse/sseLogics/useSse';
+// import {
+//   sseType1Atom,
+//   sseType2Atom,
+//   sseType3Atom,
+//   sseType8Atom,
+// } from '../../../utils/sse/sseLogics/store';
+// import useSse from '../../../utils/sse/sseLogics/useSse';
 import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
 
 export const SCREEN_NAME = 'S_MAIN__BNB';

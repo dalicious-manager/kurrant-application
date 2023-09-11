@@ -12,8 +12,8 @@ import SpotNotice, {
 import Typography from '~components/Typography';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
-import useSse from '../../../utils/sse/sseLogics/useSse';
-import {sseType1Atom, sseType2Atom} from '../../../utils/sse/sseLogics/store';
+// import useSse from '../../../utils/sse/sseLogics/useSse';
+// import {sseType1Atom, sseType2Atom} from '../../../utils/sse/sseLogics/store';
 import {useAtom} from 'jotai';
 
 export const SCREEN_NAME = 'S_MAIN__NOTICE';

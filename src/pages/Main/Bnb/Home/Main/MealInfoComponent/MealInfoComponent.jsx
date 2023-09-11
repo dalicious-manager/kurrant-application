@@ -16,7 +16,7 @@ import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
 import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
 import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import CoinAnimation from '../../components/CoinAnimation';
-import useSse from '../../../../../../utils/sse/sseLogics/useSse';
+// import useSse from '../../../../../../utils/sse/sseLogics/useSse';
 
 const MealInfoComponent = ({
   m,

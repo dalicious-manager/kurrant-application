@@ -25,8 +25,8 @@ import {
 import {formattedBoardOptionStatus} from '../../../../../utils/statusFormatter';
 import ListBox from '../ListBox';
 import {PAGE_NAME as NoticeDetailPageName} from '../NoticeDetail';
-import useSse from '../../../../../utils/sse/sseLogics/useSse';
-import {sseType1Atom} from '../../../../../utils/sse/sseLogics/store';
+// import useSse from '../../../../../utils/sse/sseLogics/useSse';
+// import {sseType1Atom} from '../../../../../utils/sse/sseLogics/store';
 import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P__MY_PAGE__PUBLIC_NOTICE';
