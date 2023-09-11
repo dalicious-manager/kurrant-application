@@ -29,7 +29,7 @@ const Component = ({
   return (
     <TitleContainer onPress={onPressEvent}>
       <SseRedDot
-        isSse={sseTypeList.map(v => v.noticeId)?.includes(id)}
+        // isSse={sseTypeList.map(v => v.noticeId)?.includes(id)}
         position={'absolute'}
         top={'23px'}
         right={'47px'}

@@ -45,38 +45,38 @@ const Pages = ({route}) => {
 
   const dataList = data?.pages;
 
-  const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
-  const [sseType1List, setSseType1List] = useState([]);
+  // const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
+  // const [sseType1List, setSseType1List] = useState([]);
 
-  const [sseType1] = useAtom(sseType1Atom);
+  // const [sseType1] = useAtom(sseType1Atom);
 
-  useEffect(() => {
-    if (!!sseType1?.id) {
-      refetch();
-      sseHistoryRefetch();
-    }
-  }, [sseType1]);
+  // useEffect(() => {
+  //   if (!!sseType1?.id) {
+  //     refetch();
+  //     sseHistoryRefetch();
+  //   }
+  // }, [sseType1]);
 
-  useEffect(() => {
-    if (
-      Array.isArray(
-        sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId),
-      ) &&
-      sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId).length > 0
-    ) {
-      setSseType1List([
-        ...new Set(
-          sseHistory
-            ?.filter(v => v.type === 1)
-            ?.map(v => {
-              return {id: v.id, noticeId: v.noticeId};
-            }),
-        ),
-      ]);
-    } else {
-      setSseType1List([]);
-    }
-  }, [sseHistory]);
+  // useEffect(() => {
+  //   if (
+  //     Array.isArray(
+  //       sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId),
+  //     ) &&
+  //     sseHistory?.filter(v => v.type === 1)?.map(v => v.noticeId).length > 0
+  //   ) {
+  //     setSseType1List([
+  //       ...new Set(
+  //         sseHistory
+  //           ?.filter(v => v.type === 1)
+  //           ?.map(v => {
+  //             return {id: v.id, noticeId: v.noticeId};
+  //           }),
+  //       ),
+  //     ]);
+  //   } else {
+  //     setSseType1List([]);
+  //   }
+  // }, [sseHistory]);
 
   const onEndReached = () => {
     if (hasNextPage) {
@@ -132,20 +132,20 @@ const Pages = ({route}) => {
                 <ListBox
                   key={el.id}
                   id={el.id}
-                  sseTypeList={sseType1List}
+                  // sseTypeList={sseType1List}
                   title={formattedBoardOptionStatus(el.boardOption) + el.title}
                   description={el.updated}
                   onPressEvent={() => {
-                    if (!!sseType1List.map(v => v.noticeId)?.includes(el.id)) {
-                      const id = sseType1List.find(
-                        v => v.noticeId === el.id,
-                      ).id;
+                    // if (!!sseType1List.map(v => v.noticeId)?.includes(el.id)) {
+                    //   const id = sseType1List.find(
+                    //     v => v.noticeId === el.id,
+                    //   ).id;
 
-                      confirmSseIsRead({
-                        type: 1,
-                        ids: [id],
-                      });
-                    }
+                    //   confirmSseIsRead({
+                    //     type: 1,
+                    //     ids: [id],
+                    //   });
+                    // }
 
                     navigation.navigate(NoticeDetailPageName, {
                       noticeData: el,
