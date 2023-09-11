@@ -25,7 +25,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {PAGE_NAME as MoreMainPageName} from '~pages/Main/Bnb/More/Main';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
-import useSse from '../../../utils/sse/sseLogics/useSse';
+// import useSse from '../../../utils/sse/sseLogics/useSse';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -60,7 +60,7 @@ const Screen = ({route}) => {
     });
   }, []);
 
-  const {sseHistory, sseHistoryRefetch} = useSse();
+  // const {sseHistory, sseHistoryRefetch} = useSse();
 
   return (
     <>
@@ -105,7 +105,8 @@ const Screen = ({route}) => {
           options={({navigation}) => ({
             tabBarLabel: ({focused}) => (
               <SseRedDot
-                isSse={!!sseHistory?.find(v => v.type === 8)}
+                // isSse={!!sseHistory?.find(v => v.type === 8)}
+                isSse={false}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>

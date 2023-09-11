@@ -35,7 +35,7 @@ const MealInfoComponent = ({
 
   // sseType3
 
-  const {sseHistoryRefetch} = useSse();
+  // const {sseHistoryRefetch} = useSse();
 
   const deliveryConfirmPress = async () => {
     await orderState({id: meal.id});
@@ -138,7 +138,7 @@ const MealInfoComponent = ({
                       queryClient.invalidateQueries('userInfo');
 
                       // sseType3 : 홈에서 '배송완료! 메뉴 확인후... '누르면 refetch하게 하기
-                      sseHistoryRefetch();
+                      // sseHistoryRefetch();
 
                       // dietRepoMainRefetch();
                     },

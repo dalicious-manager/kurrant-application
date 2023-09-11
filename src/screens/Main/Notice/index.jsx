@@ -27,17 +27,17 @@ const Screen = ({route}) => {
   const theme = useTheme();
   const navigation = useNavigation();
 
-  const {sseHistory, confirmSseIsRead, sseHistoryRefetch} = useSse();
+  // const {sseHistory, confirmSseIsRead, sseHistoryRefetch} = useSse();
 
-  const [sseType1] = useAtom(sseType1Atom);
-  const [sseType2] = useAtom(sseType2Atom);
+  // const [sseType1] = useAtom(sseType1Atom);
+  // const [sseType2] = useAtom(sseType2Atom);
 
-  useEffect(() => {
-    return () => {
-      confirmSseIsRead({type: 1});
-      confirmSseIsRead({type: 2});
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     confirmSseIsRead({type: 1});
+  //     confirmSseIsRead({type: 2});
+  //   };
+  // }, []);
 
   return (
     <Tab.Navigator
@@ -71,8 +71,10 @@ const Screen = ({route}) => {
             tabBarLabel: ({focused}) => (
               <SseRedDotType1
                 isSse={
-                  (!!sseType1.type && !sseType1.read) ||
-                  !!sseHistory?.find(v => v.type === 1)
+                  // (!!sseType1.type && !sseType1.read) ||
+                  // !!sseHistory?.find(v => v.type === 1)
+
+                  false
                 }
                 position={'absolute'}
                 top={'0px'}
@@ -96,8 +98,10 @@ const Screen = ({route}) => {
             tabBarLabel: ({focused}) => (
               <SseRedDotType2
                 isSse={
-                  (!!sseType2.type && !sseType2.read) ||
-                  !!sseHistory?.find(v => v.type === 2)
+                  // (!!sseType2.type && !sseType2.read) ||
+                  // !!sseHistory?.find(v => v.type === 2)
+
+                  false
                 }
                 position={'absolute'}
                 top={'0px'}

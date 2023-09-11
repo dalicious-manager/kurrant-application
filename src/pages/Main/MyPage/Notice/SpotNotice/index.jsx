@@ -29,39 +29,39 @@ const Pages = () => {
     useGetSpotNoticeList();
   const dataList = data?.pages;
 
-  const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
+  // const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
 
-  const [sseType2List, setSseType2List] = useState([]);
+  // const [sseType2List, setSseType2List] = useState([]);
 
-  const [sseType2] = useAtom(sseType2Atom);
+  // const [sseType2] = useAtom(sseType2Atom);
 
-  useEffect(() => {
-    if (!!sseType2?.id) {
-      refetch();
-      sseHistoryRefetch();
-    }
-  }, [sseType2]);
+  // useEffect(() => {
+  //   if (!!sseType2?.id) {
+  //     refetch();
+  //     sseHistoryRefetch();
+  //   }
+  // }, [sseType2]);
 
-  useEffect(() => {
-    if (
-      Array.isArray(
-        sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId),
-      ) &&
-      sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId).length > 0
-    ) {
-      setSseType2List([
-        ...new Set(
-          sseHistory
-            ?.filter(v => v.type === 2)
-            ?.map(v => {
-              return {id: v.id, noticeId: v.noticeId};
-            }),
-        ),
-      ]);
-    } else {
-      setSseType2List([]);
-    }
-  }, [sseHistory]);
+  // useEffect(() => {
+  //   if (
+  //     Array.isArray(
+  //       sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId),
+  //     ) &&
+  //     sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId).length > 0
+  //   ) {
+  //     setSseType2List([
+  //       ...new Set(
+  //         sseHistory
+  //           ?.filter(v => v.type === 2)
+  //           ?.map(v => {
+  //             return {id: v.id, noticeId: v.noticeId};
+  //           }),
+  //       ),
+  //     ]);
+  //   } else {
+  //     setSseType2List([]);
+  //   }
+  // }, [sseHistory]);
 
   const onEndReached = () => {
     if (hasNextPage) {
@@ -113,21 +113,21 @@ const Pages = () => {
                   onPressEvent={() => {
                     // 읽어야 됨
 
-                    if (!!sseType2List.map(v => v.noticeId)?.includes(el.id)) {
-                      const id = sseType2List.find(
-                        v => v.noticeId === el.id,
-                      ).id;
+                    // if (!!sseType2List.map(v => v.noticeId)?.includes(el.id)) {
+                    //   const id = sseType2List.find(
+                    //     v => v.noticeId === el.id,
+                    //   ).id;
 
-                      confirmSseIsRead({
-                        type: 2,
-                        ids: [id],
-                      });
-                    }
+                    //   confirmSseIsRead({
+                    //     type: 2,
+                    //     ids: [id],
+                    //   });
+                    // }
                     navigation.navigate(NoticeDetailPageName, {
                       noticeData: el,
                     });
                   }}
-                  sseTypeList={sseType2List}
+                  // sseTypeList={sseType2List}
                 />
               );
             })

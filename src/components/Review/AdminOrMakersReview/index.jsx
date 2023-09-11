@@ -46,7 +46,7 @@ const Component = ({
         ) : (
           <>
             <SseRedDot
-              isSse={isSseType8}
+              // isSse={isSseType8}
               position={'absolute'}
               top={'-1px'}
               right={'-2px'}

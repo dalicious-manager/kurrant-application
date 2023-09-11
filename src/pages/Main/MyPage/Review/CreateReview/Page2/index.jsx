@@ -27,7 +27,7 @@ import {SCREEN_NAME as MainScreenName} from '../../../../../../screens/Main/Bnb'
 // import {SCREEN_NAME as ReviewScreenName} from '../../../../Review';
 import {SCREEN_NAME as ReviewScreenName} from '~screens/Main/Review';
 import {checkSseType3Atom} from '../../../../../../utils/sse/sseLogics/store';
-import useSse from '../../../../../../utils/sse/sseLogics/useSse';
+
 // 수정후 여기로 오게 하기
 // import {PAGE_NAME as WrittenReviewPageName} from '../../../../../pages/Main/MyPage/WrittenReview';
 // } from '../../../pages/Main/MyPage/WrittenReview';
