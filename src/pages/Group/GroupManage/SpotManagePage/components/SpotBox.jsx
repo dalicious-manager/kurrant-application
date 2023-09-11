@@ -61,7 +61,7 @@ export default SpotBox;
 const Wrap = styled.View`
   flex-direction: column;
   ${({isCenter}) => {
-    console.log(isCenter);
+    // console.log(isCenter);
     if (isCenter) {
       return css`
         padding-left: 24px;

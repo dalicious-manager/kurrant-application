@@ -13,11 +13,13 @@ import styled from 'styled-components/native';
 
 import Screen from './screens';
 import Theme from './theme';
+
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
 TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.allowFontScaling = false;
+
 const App = () => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
