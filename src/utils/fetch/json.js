@@ -32,8 +32,6 @@ const buildQuery = queryObj => {
   return ret;
 };
 const getReissue = async (headers, reqUrl, token, method, options) => {
-  console.log('리이슈 합니다 ');
-
   let tokenData = token;
   const bodyData = {
     accessToken: tokenData?.accessToken,
@@ -47,8 +45,6 @@ const getReissue = async (headers, reqUrl, token, method, options) => {
   const result = await reissue.json();
 
   if (result.error === 'E4030002') {
-    // E4030002 -> refreshToken이 더 이상 유효하지 않을떄
-    console.log('E4030002에러 -> refreshToken이 더 이상 유효하지 않음');
     await AsyncStorage.clear();
     throw new Error(result.statusCode.toString());
   } else if (result.error === 'E5000014') {
@@ -61,7 +57,6 @@ const getReissue = async (headers, reqUrl, token, method, options) => {
       body: JSON.stringify(bodyDatas),
     });
   } else {
-    console.log('리이슈가 정상적으로 진행되었습니다');
     const resultData = {
       accessToken: result?.data?.accessToken,
       expiresIn: result?.data?.accessTokenExpiredIn,
@@ -126,7 +121,7 @@ async function json(url, method, options = {}) {
   //     return await getReissue(headers, reqUrl, token, method, options);
   //   }
 
-  console.log('fetching to:', reqUrl);
+  // console.log('fetching to:', reqUrl);
 
   // console.log('fetching method:', method);
   // console.log('fetching option:', options.body);
@@ -143,8 +138,6 @@ async function json(url, method, options = {}) {
   const ret = await res.json();
 
   if (ret.error === 'E4030003' || ret.error === 'E4110003') {
-    console.log('ret 확인 ' + new Date().toString());
-    console.log(ret.error);
     return await getReissue(headers, reqUrl, token, method, options);
   }
   let endTs = Date.now();

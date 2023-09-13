@@ -16,15 +16,10 @@ let SseServiceOnlyOneInstance;
 
 let instanceCount = 0;
 
-let blankErrorReconnectionCount = 0;
-
-//
-let hadDoneBlankErrorReconnectionProtocolAlready = false;
-
 class SseService {
   baseUrl;
   token;
-  everyToken;
+
   sseResetHandler;
   eventSource;
 
@@ -33,7 +28,7 @@ class SseService {
   constructor(
     baseUrl,
     token,
-    everyToken,
+
     sseResetHandler,
     resetSse,
     callbackForAtoms,
@@ -50,19 +45,19 @@ class SseService {
 
     this.baseUrl = baseUrl;
     this.token = token;
-    this.everyToken = everyToken;
 
     this.sseResetHandler = sseResetHandler;
     this.callbackForAtoms = callbackForAtoms;
 
     this.sseResetHandler = sseResetHandler;
 
-    console.log(this.token ? `나옴 토큰${this.token}` : '몰러 아직 안나옴');
+    // console.log(this.token ? `나옴 토큰${this.token}` : '몰러 아직 안나옴');
 
     this.eventSource =
       this.token &&
       new EventSource(
-        `${this.baseUrl}/notification/subscribe`,
+        // `${this.baseUrl}/notification/subscribe`,
+        `${this.baseUrl}/sse/subscribe`,
 
         {
           headers: {
@@ -81,10 +76,6 @@ class SseService {
     this.eventSource?.addEventListener('message', this.onMessage);
     this.eventSource?.addEventListener('error', this.onError);
     this.eventSource?.addEventListener('close', this.onClose);
-
-    console.log('인스턴스 만든 시점 ' + new Date().toString());
-
-    // blanc error가 뜰때 대처하기 위한 eventEmitter
 
     SseServiceOnlyOneInstance = this;
   }
@@ -171,32 +162,25 @@ class SseService {
     // 이 에러가 뜨면 지금 token상태가 만료된 상태인지 확인하자
 
     if (!e.message) {
-      blankErrorReconnectionCount += 1;
-
-      const autoLogin = async () => {
-        console.log('autoLogin해서 필요하면 토큰을 refresh해보자 ');
+      (async () => {
+        // console.log('autoLogin해서 필요하면 토큰을 refresh해보자 ');
 
         const result = await Fetch.autoLogin();
-        // if (result?.data?.isActive) {
-        //   console.log('토큰 리프레쉬 성공');
-        //   console.log(result.data?.accessToken);
-        // } else {
-        //   console.log('토큰 만료여');
-        //   console.log(JSON.stringify(result.data));
-        // }
 
-        console.log('로컬의 토큰값 확인');
-        console.log(this.token);
+        // console.log('로컬의 토큰값 확인');
+        // console.log(this.token);
 
-        console.log('받은 토큰 값 확인');
-        console.log(result?.data?.accessToken);
+        // console.log('받은 토큰 값 확인');
+        // console.log(result?.data?.accessToken);
 
         if (
           !!result?.data?.accessToken &&
           this.token !== result?.data?.accessToken
         ) {
           console.log('token이 stale합니다 ');
-
+          console.log(
+            'token을 reissue하고 새 토큰으로 새 sseInstance를 생성합니다',
+          );
           this.onReset();
 
           return;
@@ -204,106 +188,7 @@ class SseService {
           console.log('token이 최신 토큰입니다 ');
           return;
         }
-
-        // if (blankErrorReconnectionCount > 5) {
-        //   if (!hadDoneBlankErrorReconnectionProtocolAlready) {
-        //     // 초범이다
-
-        //     this.onHandleBlankError();
-        //     blankErrorReconnectionCount = 0;
-        //   } else {
-        //     // 두번쨰면 아예 꺼버리기
-        //     this.onClose();
-        //   }
-        // }
-      };
-
-      autoLogin();
-    }
-
-    // ---------------------------------------------
-
-    // (async (url, method) => {
-    //   let reqUrl = apiHostUrl + url;
-    //   // const storage = await getStorage('token');
-    //   // let token = JSON.parse(storage);
-
-    //   let headers = {
-    //     'content-type': 'application/json',
-    //     // Authorization: `Bearer ${token?.accessToken}`,
-    //     Authorization: `Bearer ${this.token}`,
-    //   };
-
-    //   const res = await fetch(reqUrl, {
-    //     headers,
-    //     method,
-    //     // body: options.body,
-    //   });
-    //   const ret = await res.json();
-
-    //   console.log('autoLogin 값 확인하기 ' + new Date());
-    //   console.log('현재 토큰 ' + this.token);
-    //   console.log(ret);
-    // })('/users/me/autoLogin', 'GET');
-
-    // ---------------------------------------------
-
-    // 보내보기
-
-    // (async () => {
-    //   let tokenData = this.everyToken;
-    //   const bodyData = {
-    //     accessToken: tokenData?.accessToken,
-    //     refreshToken: tokenData?.refreshToken,
-    //   };
-    //   const reissue = await fetch(apiHostUrl + '/auth/reissue', {
-    //     headers: {'content-type': 'application/json'},
-    //     method: 'POST',
-    //     body: JSON.stringify(bodyData),
-    //   });
-    //   const result = await reissue.json();
-
-    //   console.log('로컬의 토큰값 확인');
-    //   console.log(this.token);
-
-    //   console.log('받은 토큰 값 확인');
-    //   console.log(result?.data?.accessToken);
-
-    //   if (
-    //     !!result?.data?.accessToken &&
-    //     this.token !== result?.data?.accessToken
-    //   ) {
-    //     console.log('token이 stale합니다 ');
-    //     // 여기서 바로 token값을 새로 갈아주기
-    //     // 새로 instance만들기
-    //     this.sseResetHandler.emit('stale-token-error-handle', {
-    //       es6rules: true,
-    //       mixinsAreLame: true,
-    //     });
-    //   }
-    // if (blankErrorReconnectionCount > 5) {
-    //   if (!hadDoneBlankErrorReconnectionProtocolAlready) {
-    //     // 초범이다
-
-    //     this.onHandleBlankError();
-    //     blankErrorReconnectionCount = 0;
-    //   } else {
-    //     // 두번쨰면 아예 꺼버리기
-    //     this.onClose();
-    //   }
-    // }
-    // })();
-
-    if (blankErrorReconnectionCount > 5) {
-      if (!hadDoneBlankErrorReconnectionProtocolAlready) {
-        // 초범이다
-
-        this.onHandleBlankError();
-        blankErrorReconnectionCount = 0;
-      } else {
-        // 두번쨰면 아예 꺼버리기
-        this.onClose();
-      }
+      })();
     }
   };
 
@@ -314,16 +199,9 @@ class SseService {
     this.eventSource.close();
   };
 
-  onHandleBlankError = () => {
-    hadDoneBlankErrorReconnectionProtocolAlready = true;
-    console.log('message가 비어있는 에러입니다 ');
-
-    this.onReset();
-  };
-
   onReset = () => {
     this.onClose();
-    this.sseResetHandler.emit('stale-token-error-handle', {
+    this.sseResetHandler.emit('reset-sse-instance', {
       es6rules: true,
       mixinsAreLame: true,
     });
