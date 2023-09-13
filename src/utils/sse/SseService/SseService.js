@@ -22,22 +22,24 @@ let blankErrorReconnectionCount = 0;
 let hadDoneBlankErrorReconnectionProtocolAlready = false;
 
 class SseService {
-  token;
   baseUrl;
+  token;
+  everyToken;
+  sseResetHandler;
   eventSource;
+
   callbackForAtoms;
-  blankErrorHandler;
-  // refreshToken;
+
   constructor(
     baseUrl,
     token,
-    // refreshToken,
-    blankErrorHandleObject = {},
-    // blankErrorHandler = null,
+    everyToken,
+    sseResetHandler,
+    resetSse,
     callbackForAtoms,
   ) {
     if (SseServiceOnlyOneInstance)
-      if (!!blankErrorHandleObject?.blankErrorPermission) {
+      if (resetSse) {
         SseServiceOnlyOneInstance = null;
       } else {
         return SseServiceOnlyOneInstance;
@@ -48,8 +50,12 @@ class SseService {
 
     this.baseUrl = baseUrl;
     this.token = token;
-    // this.refreshToken = refreshToken;
+    this.everyToken = everyToken;
+
+    this.sseResetHandler = sseResetHandler;
     this.callbackForAtoms = callbackForAtoms;
+
+    this.sseResetHandler = sseResetHandler;
 
     console.log(this.token ? `나옴 토큰${this.token}` : '몰러 아직 안나옴');
 
@@ -65,7 +71,7 @@ class SseService {
 
           // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
           // pollingInterval: 1000 * 60 * 30,
-          pollingInterval: 1000 * 1,
+          pollingInterval: 1000 * 2,
         },
       );
 
@@ -79,8 +85,6 @@ class SseService {
     console.log('인스턴스 만든 시점 ' + new Date().toString());
 
     // blanc error가 뜰때 대처하기 위한 eventEmitter
-
-    this.blankErrorHandler = blankErrorHandleObject.blankErrorHandler;
 
     SseServiceOnlyOneInstance = this;
   }
@@ -166,54 +170,129 @@ class SseService {
 
     // 이 에러가 뜨면 지금 token상태가 만료된 상태인지 확인하자
 
-    // const autoLogin = async () => {
-    //   console.log('autoLogin해서 토큰이 쓸데 있나 확인해보자 ');
-    //   try {
-    //     const res = await Fetch.autoLogin();
-    //     if (res?.data?.isActive) {
-    //       console.log('성공');
-    //       console.log(JSON.stringify(res.data));
-    //     } else {
-    //       console.log('토큰 만료여');
-    //       console.log(JSON.stringify(res.data));
-    //     }
-    //     console.log(res);
-    //     return res;
-    //   } catch (err) {
-    //     throw err;
-    //   }
-    // };
+    if (!e.message) {
+      blankErrorReconnectionCount += 1;
 
-    // autoLogin();
+      const autoLogin = async () => {
+        console.log('autoLogin해서 필요하면 토큰을 refresh해보자 ');
+
+        const result = await Fetch.autoLogin();
+        // if (result?.data?.isActive) {
+        //   console.log('토큰 리프레쉬 성공');
+        //   console.log(result.data?.accessToken);
+        // } else {
+        //   console.log('토큰 만료여');
+        //   console.log(JSON.stringify(result.data));
+        // }
+
+        console.log('로컬의 토큰값 확인');
+        console.log(this.token);
+
+        console.log('받은 토큰 값 확인');
+        console.log(result?.data?.accessToken);
+
+        if (
+          !!result?.data?.accessToken &&
+          this.token !== result?.data?.accessToken
+        ) {
+          console.log('token이 stale합니다 ');
+
+          this.onReset();
+
+          return;
+        } else {
+          console.log('token이 최신 토큰입니다 ');
+          return;
+        }
+
+        // if (blankErrorReconnectionCount > 5) {
+        //   if (!hadDoneBlankErrorReconnectionProtocolAlready) {
+        //     // 초범이다
+
+        //     this.onHandleBlankError();
+        //     blankErrorReconnectionCount = 0;
+        //   } else {
+        //     // 두번쨰면 아예 꺼버리기
+        //     this.onClose();
+        //   }
+        // }
+      };
+
+      autoLogin();
+    }
 
     // ---------------------------------------------
 
-    (async (url, method) => {
-      let reqUrl = apiHostUrl + url;
-      // const storage = await getStorage('token');
-      // let token = JSON.parse(storage);
+    // (async (url, method) => {
+    //   let reqUrl = apiHostUrl + url;
+    //   // const storage = await getStorage('token');
+    //   // let token = JSON.parse(storage);
 
-      let headers = {
-        'content-type': 'application/json',
-        // Authorization: `Bearer ${token?.accessToken}`,
-        Authorization: `Bearer ${this.token}`,
-      };
+    //   let headers = {
+    //     'content-type': 'application/json',
+    //     // Authorization: `Bearer ${token?.accessToken}`,
+    //     Authorization: `Bearer ${this.token}`,
+    //   };
 
-      const res = await fetch(reqUrl, {
-        headers,
-        method,
-        // body: options.body,
-      });
-      const ret = await res.json();
-      console.log('autoLogin 값 확인하기 ');
-      console.log(ret);
-    })('/users/me/autoLogin', 'GET');
+    //   const res = await fetch(reqUrl, {
+    //     headers,
+    //     method,
+    //     // body: options.body,
+    //   });
+    //   const ret = await res.json();
+
+    //   console.log('autoLogin 값 확인하기 ' + new Date());
+    //   console.log('현재 토큰 ' + this.token);
+    //   console.log(ret);
+    // })('/users/me/autoLogin', 'GET');
 
     // ---------------------------------------------
 
     // 보내보기
 
-    if (!e.message) blankErrorReconnectionCount += 1;
+    // (async () => {
+    //   let tokenData = this.everyToken;
+    //   const bodyData = {
+    //     accessToken: tokenData?.accessToken,
+    //     refreshToken: tokenData?.refreshToken,
+    //   };
+    //   const reissue = await fetch(apiHostUrl + '/auth/reissue', {
+    //     headers: {'content-type': 'application/json'},
+    //     method: 'POST',
+    //     body: JSON.stringify(bodyData),
+    //   });
+    //   const result = await reissue.json();
+
+    //   console.log('로컬의 토큰값 확인');
+    //   console.log(this.token);
+
+    //   console.log('받은 토큰 값 확인');
+    //   console.log(result?.data?.accessToken);
+
+    //   if (
+    //     !!result?.data?.accessToken &&
+    //     this.token !== result?.data?.accessToken
+    //   ) {
+    //     console.log('token이 stale합니다 ');
+    //     // 여기서 바로 token값을 새로 갈아주기
+    //     // 새로 instance만들기
+    //     this.sseResetHandler.emit('stale-token-error-handle', {
+    //       es6rules: true,
+    //       mixinsAreLame: true,
+    //     });
+    //   }
+    // if (blankErrorReconnectionCount > 5) {
+    //   if (!hadDoneBlankErrorReconnectionProtocolAlready) {
+    //     // 초범이다
+
+    //     this.onHandleBlankError();
+    //     blankErrorReconnectionCount = 0;
+    //   } else {
+    //     // 두번쨰면 아예 꺼버리기
+    //     this.onClose();
+    //   }
+    // }
+    // })();
 
     if (blankErrorReconnectionCount > 5) {
       if (!hadDoneBlankErrorReconnectionProtocolAlready) {
@@ -239,28 +318,15 @@ class SseService {
     hadDoneBlankErrorReconnectionProtocolAlready = true;
     console.log('message가 비어있는 에러입니다 ');
 
-    // token확인
+    this.onReset();
+  };
 
-    if (!!this.token) {
-      console.log('프론트에서 토큰을 안줘서 뜨는 에러뜨는건 아닐듯');
-    } else {
-      console.log('프론트에서 토큰을 안줘서 뜨는 에러인것 같아요');
-    }
-
-    // 1. 끄기
-
+  onReset = () => {
     this.onClose();
-
-    // 2. 기존 프론트 sse를 지우기
-
-    this.blankErrorHandler.emit('blank-error-handle', {
+    this.sseResetHandler.emit('stale-token-error-handle', {
       es6rules: true,
       mixinsAreLame: true,
     });
-
-    // 3. 재요청
-
-    // 되면 그대로 쓰고 , 또 안되면 끄기
   };
 }
 

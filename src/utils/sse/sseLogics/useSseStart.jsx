@@ -35,42 +35,42 @@ const useSseStart = () => {
     }
     return yo?.accessToken;
   }, []);
-  // const getRefreshToken = useCallback(async () => {
-  //   const token = await getStorage('token');
+  const getEveryToken = useCallback(async () => {
+    const token = await getStorage('token');
 
-  //   let yo;
-  //   if (token) {
-  //     yo = JSON.parse(token);
-  //   }
-  //   return yo?.refreshToken;
-  // }, []);
+    let yo;
+    if (token) {
+      yo = JSON.parse(token);
+    }
+    return yo;
+  }, []);
 
   // blank Error 대처를 위한 eventEmitter
-  const blankErrorHandler = useMemo(() => new EventEmitter(), []);
-
-  // const [openAgainPlease, setOpenAgainPlease] = useState(false)
+  const sseResetHandler = useMemo(() => new EventEmitter(), []);
+  const resetSseInstance = () => {
+    console.log('sse 인스턴스를 새로 만듭니다');
+    // 재요청시키기
+    forOnlyOneSseService = null;
+    getSseServiceInstance(true);
+  };
 
   useEffect(() => {
-    if (!!blankErrorHandler) {
-      blankErrorHandler.addListener('blank-error-handle', () => {
-        console.log('sse 인스턴스를 새로 만듭니다');
-        // 재요청시키기
-        forOnlyOneSseService = null;
-        getSseServiceInstance(true);
+    if (!!sseResetHandler) {
+      sseResetHandler.addListener('blank-error-handle', () => {
+        resetSseInstance();
+      });
+      sseResetHandler.addListener('stale-token-error-handle', () => {
+        resetSseInstance();
       });
     } else {
       console.log('emitter가 생성되지 않았습니다 ');
     }
-  }, [blankErrorHandler]);
-
-  const blankErrorHandleObject = {
-    blankErrorHandler,
-    blankErrorPermission: false,
-  };
+  }, [sseResetHandler]);
 
   const getSseServiceInstance = useCallback(
-    async value => {
+    async resetSse => {
       const tokenYo = await getToken();
+      const everyToken = await getEveryToken();
       // const refreshTokenYo = await getRefreshToken();
       if (forOnlyOneSseService) return forOnlyOneSseService; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
 
@@ -79,8 +79,10 @@ const useSseStart = () => {
       forOnlyOneSseService = new SseService(
         apiHostUrl,
         tokenYo,
-        // refreshTokenYo,
-        {...blankErrorHandleObject, blankErrorPermission: value},
+        everyToken,
+        sseResetHandler,
+        // {...blankErrorHandleObject, blankErrorPermission},
+        resetSse,
         [
           data => {
             setSseType1(data);
@@ -109,20 +111,23 @@ const useSseStart = () => {
         ],
       );
 
-      if (!forOnlyOneSseService) {
-        console.log('forOnlyOneSseService 가 지금 undefined에요 ');
-        console.log(forOnlyOneSseService);
-      }
-
       return forOnlyOneSseService;
     },
-    [apiHostUrl, getToken, blankErrorHandler],
+    [apiHostUrl, getToken, sseResetHandler],
   );
 
   useEffect(() => {
     setTimeout(() => {
       getSseServiceInstance(false);
     }, 500);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (!!forOnlyOneSseService) {
+        forOnlyOneSseService.onClose();
+      }
+    };
   }, []);
 
   return;
