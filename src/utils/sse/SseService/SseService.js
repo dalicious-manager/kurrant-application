@@ -51,8 +51,6 @@ class SseService {
 
     this.sseResetHandler = sseResetHandler;
 
-    // console.log(this.token ? `나옴 토큰${this.token}` : '몰러 아직 안나옴');
-
     this.eventSource =
       this.token &&
       new EventSource(
@@ -66,11 +64,9 @@ class SseService {
 
           // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
           // pollingInterval: 1000 * 60 * 30,
-          pollingInterval: 1000 * 11,
+          pollingInterval: 1000 * 2,
         },
       );
-
-    // 여기에다가 eventSource 받는 로직 작성
 
     this.eventSource?.addEventListener('open', this.onOpen);
     this.eventSource?.addEventListener('message', this.onMessage);

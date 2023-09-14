@@ -36,11 +36,11 @@ const useSseStart = () => {
     return yo?.accessToken;
   }, []);
 
-  // blank Error 대처를 위한 eventEmitter
+  // sse를 리셋하기 위한 eventEmitter
   const sseResetHandler = useMemo(() => new EventEmitter(), []);
   const resetSseInstance = () => {
     console.log('sse 인스턴스 reset시키기');
-    // 재요청시키기
+
     forOnlyOneSseService = null;
     getSseServiceInstance(true);
   };
