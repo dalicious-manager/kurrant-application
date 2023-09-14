@@ -31,6 +31,7 @@ const Component = ({
   return (
     <TitleContainer onPress={onPressEvent}>
       <SseRedDot
+        // sseType1, sseType2
         isSse={sseTypeList.map(v => v.noticeId)?.includes(id)}
         position={'absolute'}
         top={'23px'}
