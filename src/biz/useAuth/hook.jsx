@@ -439,7 +439,7 @@ const useAuth = () => {
       },
       option,
     );
-    queryClient.invalidateQueries('userInfo');
+    queryClient.clear();
     resetAtom();
     return res;
   };

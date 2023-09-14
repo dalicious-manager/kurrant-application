@@ -42,6 +42,10 @@ const Page = () => {
   const isFocused = useIsFocused();
   const currentVersion = VersionCheck.getCurrentVersion();
   const [appState, setAppState] = useState();
+  const {
+    saveFcmToken,
+    readableAtom: {userRole},
+  } = useAuth();
   const handleStatus = e => {
     setAppState(e);
   };
@@ -80,19 +84,19 @@ const Page = () => {
   }, []);
 
   //3
-  const getToken = () => {
+  const getToken = async () => {
     messaging()
       .getToken()
-
       .then(token => {
-        // if (token) {
-        //   saveFcmToken({
-        //     token: token,
-        //   });
-        // }
+        if (token) {
+          console.log(token, 'fcmToken');
+          saveFcmToken({
+            token: token,
+          });
+        }
       })
-      .catch(() => {
-        // console.log('error getting push token ' + error);
+      .catch(error => {
+        console.log('error getting push token ' + error);
       });
   };
   const handlePressStore = useCallback(async (url, alterUrl) => {
@@ -168,7 +172,7 @@ const Page = () => {
           const getAccessToken = JSON.parse(token);
           if (getAccessToken?.accessToken) {
             const res = await autoLogin();
-
+            await getToken();
             if (res?.statusCode === 200) {
               // await isTester();
 

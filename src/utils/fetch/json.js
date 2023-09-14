@@ -121,9 +121,9 @@ async function json(url, method, options = {}) {
   //     return await getReissue(headers, reqUrl, token, method, options);
   //   }
 
-  // console.log('fetching to:', reqUrl);
-  //console.log('fetching method:', method);
-  //console.log('fetching option:', options.body);
+  console.log('fetching to:', reqUrl);
+  console.log('fetching method:', method);
+  console.log('fetching option:', options.body);
 
   // console.log('fetching token:', headers.Authorization);
   // throw new Error('rul : ' + reqUrl);
@@ -135,6 +135,7 @@ async function json(url, method, options = {}) {
     body: options.body,
   });
   const ret = await res.json();
+  console.log(ret);
   if (ret.error === 'E4030003' || ret.error === 'E4110003') {
     return await getReissue(headers, reqUrl, token, method, options);
   }

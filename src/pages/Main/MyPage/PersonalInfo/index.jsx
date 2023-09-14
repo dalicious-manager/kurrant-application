@@ -370,14 +370,14 @@ const Pages = ({route}) => {
                 try {
                   const token = await getStorage('token');
                   const lastLogin = await getStorage('lastLogin');
-                  console.log(lastLogin);
                   const getToken = JSON.parse(token);
-                  if (GoogleSignin.isSignedIn()) GoogleSignin.signOut();
-                  if (lastLogin === 'NAVER') NaverLogin.logout();
+                  console.log(getToken);
                   await logout({
                     accessToken: getToken?.accessToken,
                     refreshToken: getToken?.refreshToken,
                   });
+                  if (GoogleSignin.isSignedIn()) GoogleSignin.signOut();
+                  if (lastLogin === 'NAVER') NaverLogin.logout();
                   await AsyncStorage.removeItem('token');
                   await AsyncStorage.removeItem('isLogin');
                   await AsyncStorage.removeItem('spotStatus');
