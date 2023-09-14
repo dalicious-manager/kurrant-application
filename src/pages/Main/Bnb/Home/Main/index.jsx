@@ -61,12 +61,12 @@ import {
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import jwtUtils from '../../../../../utils/fetch/jwtUtill';
-import useSseType3 from '../../../../../utils/sse/sseHooks/useSseType3';
+
 import {
   sseType6Atom,
   sseType7Atom,
 } from '../../../../../utils/sse/sseLogics/store';
-import useEvetnEmitterTest from '../../../../../utils/sse/sseLogics/useEventEmitterTest';
+
 import useSse from '../../../../../utils/sse/sseLogics/useSse';
 import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {mainDimAtom} from '../../../../../utils/store';
@@ -415,44 +415,9 @@ const Pages = () => {
       }
     }, [isCancelSpot, appState]),
   );
-  const checkPermission = () => {
-    messaging()
-      .hasPermission()
-      .then(enabled => {
-        if (enabled) {
-          getToken();
-        } else {
-          requestPermission();
-        }
-      })
-      .catch(() => {});
-  };
 
-  //2
-  const requestPermission = () => {
-    messaging()
-      .requestPermission()
-      .then(() => {
-        getToken();
-      })
-      .catch(() => {});
-  };
-
-  //3
-  const getToken = () => {
-    messaging()
-      .getToken()
-      .then(token => {
-        if (token) {
-          saveFcmToken({
-            token: token,
-          });
-        }
-      })
-      .catch(() => {});
-  };
   useEffect(() => {
-    checkPermission();
+    // checkPermission();
     // Check whether an initial notification is available
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       if (remoteMessage) {
@@ -630,43 +595,6 @@ const Pages = () => {
       setIsOneAnnouncementModalVisible(true);
     }
   }, [popupList, userSpot]);
-  useFocusEffect(
-    useCallback(() => {
-      const getData = async () => {
-        await VersionCheck.getLatestVersion().then(latestVersion => {
-          const regex = /[^0-9]/g;
-          const result = currentVersion?.replace(regex, '');
-          const result2 = latestVersion?.replace(regex, '');
-          if (Number(result) < Number(result2)) {
-            Alert.alert(
-              '앱 업데이트',
-              '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
-              [
-                {
-                  text: '확인',
-                  onPress: async () => {
-                    if (Platform.OS === 'android') {
-                      handlePress(
-                        GOOGLE_PLAY_STORE_LINK,
-                        GOOGLE_PLAY_STORE_WEB_LINK,
-                      );
-                    } else {
-                      handlePress(
-                        APPLE_APP_STORE_LINK,
-                        APPLE_APP_STORE_WEB_LINK,
-                      );
-                    }
-                  },
-                  style: 'destructive',
-                },
-              ],
-            );
-          }
-        });
-      };
-      getData();
-    }, []),
-  );
 
   if (!isUserInfo?.data) {
     return <SkeletonUI />;
@@ -697,6 +625,7 @@ const Pages = () => {
             </SpotNameText>
             <ArrowIcon />
             <SseRedDotType7
+              // sseType7
               isSse={
                 (!!sseType7.type && !sseType7.read) ||
                 !!(sseType7List?.length > 0)
@@ -708,6 +637,7 @@ const Pages = () => {
           </SpotName>
           <Icons>
             <SseRedDotType6
+              // sseType6
               isSse={
                 (!!sseType6.type && !sseType6.read) ||
                 !!sseHistory?.find(v => v.type === 6)

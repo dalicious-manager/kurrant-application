@@ -11,6 +11,7 @@ import NaverLogin from '@react-native-seoul/naver-login';
 import {useNavigation} from '@react-navigation/native';
 import {el} from 'date-fns/locale';
 import jwtDecode from 'jwt-decode';
+import messaging from '@react-native-firebase/messaging';
 import {Alert, Platform} from 'react-native';
 import {
   AccessToken,
@@ -45,8 +46,54 @@ const naverData = () => {
   return data;
 };
 export default () => {
-  const {snsLogin, snsAppleLogin} = useAuth();
-
+  const {snsLogin, snsAppleLogin, saveFcmToken} = useAuth();
+  const getToken = async () => {
+    messaging()
+      .getToken()
+      .then(token => {
+        if (token) {
+          console.log(token, 'fcmToken');
+          saveFcmToken({
+            token: token,
+          });
+        }
+      })
+      .catch(error => {
+        console.log('error getting push token ' + error);
+      });
+  };
+  const loginComplatePageMove = res => {
+    console.log(res.data);
+    try {
+      if (res?.data?.accessToken) {
+        getToken();
+      }
+      if (res.data.hasNickname) {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SCREEN_NAME,
+            },
+          ],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: nicknameSettingPageName,
+              params: {
+                from: 'sns',
+              },
+            },
+          ],
+        });
+      }
+    } catch (error) {
+      Alert.alert('FCM 토큰 에러', error.toString().replace('error: ', ''));
+    }
+  };
   const navigation = useNavigation();
   const naverLogin = async () => {
     // console.log('로그인')
@@ -67,28 +114,7 @@ export default () => {
           },
           'NAVER',
         );
-        if (res.data.hasNickname) {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: SCREEN_NAME,
-              },
-            ],
-          });
-        } else {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: nicknameSettingPageName,
-                params: {
-                  from: 'sns',
-                },
-              },
-            ],
-          });
-        }
+        loginComplatePageMove(res);
       } else {
         // console.log(failureResponse);
       }
@@ -121,28 +147,7 @@ export default () => {
         'GOOGLE',
       );
 
-      if (res.data.hasNickname) {
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: SCREEN_NAME,
-            },
-          ],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: nicknameSettingPageName,
-              params: {
-                from: 'sns',
-              },
-            },
-          ],
-        });
-      }
+      loginComplatePageMove(res);
     } catch (error) {
       // console.log('err', error.toString());
     }
@@ -168,28 +173,7 @@ export default () => {
           },
           'APPLE',
         );
-        if (res.data.hasNickname) {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: SCREEN_NAME,
-              },
-            ],
-          });
-        } else {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: nicknameSettingPageName,
-                params: {
-                  from: 'sns',
-                },
-              },
-            ],
-          });
-        }
+        loginComplatePageMove(res);
       } else {
         // await appleAuth.onCredentialRevoked(async () => {
         //   console.warn('If this function executes, User Credentials have been Revoked');
@@ -228,52 +212,10 @@ export default () => {
           'APPLE',
         );
         if (!userCredential.additionalUserInfo.isNewUser) {
-          if (res.data.hasNickname) {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: SCREEN_NAME,
-                },
-              ],
-            });
-          } else {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: nicknameSettingPageName,
-                  params: {
-                    from: 'sns',
-                  },
-                },
-              ],
-            });
-          }
+          loginComplatePageMove(res);
         } else {
           if (appleAuthRequestResponse.fullName.familyName) {
-            if (res.data.hasNickname) {
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: SCREEN_NAME,
-                  },
-                ],
-              });
-            } else {
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: nicknameSettingPageName,
-                    params: {
-                      from: 'sns',
-                    },
-                  },
-                ],
-              });
-            }
+            loginComplatePageMove(res);
           } else {
             Alert.alert(
               '신규 유저',
@@ -282,28 +224,7 @@ export default () => {
                 {
                   text: '취소',
                   onPress: () => {
-                    if (res.data.hasNickname) {
-                      navigation.reset({
-                        index: 0,
-                        routes: [
-                          {
-                            name: SCREEN_NAME,
-                          },
-                        ],
-                      });
-                    } else {
-                      navigation.reset({
-                        index: 0,
-                        routes: [
-                          {
-                            name: nicknameSettingPageName,
-                            params: {
-                              from: 'sns',
-                            },
-                          },
-                        ],
-                      });
-                    }
+                    loginComplatePageMove(res);
                   },
                 },
                 {
@@ -338,28 +259,7 @@ export default () => {
       },
       'KAKAO',
     );
-    if (res.data.hasNickname) {
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: SCREEN_NAME,
-          },
-        ],
-      });
-    } else {
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: nicknameSettingPageName,
-            params: {
-              from: 'sns',
-            },
-          },
-        ],
-      });
-    }
+    loginComplatePageMove(res);
   };
   const facebookLogin = async () => {
     try {
@@ -380,28 +280,7 @@ export default () => {
           },
           'FACEBOOK',
         );
-        if (res.data.hasNickname) {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: SCREEN_NAME,
-              },
-            ],
-          });
-        } else {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: nicknameSettingPageName,
-                params: {
-                  from: 'sns',
-                },
-              },
-            ],
-          });
-        }
+        loginComplatePageMove(res);
       } else {
         const result = await AccessToken.getCurrentAccessToken();
         // Clipboard.setString(result?.accessToken);
@@ -412,28 +291,7 @@ export default () => {
           },
           'FACEBOOK',
         );
-        if (res.data.hasNickname) {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: SCREEN_NAME,
-              },
-            ],
-          });
-        } else {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: nicknameSettingPageName,
-                params: {
-                  from: 'sns',
-                },
-              },
-            ],
-          });
-        }
+        loginComplatePageMove(res);
       }
     } catch (error) {
       // console.log(error);

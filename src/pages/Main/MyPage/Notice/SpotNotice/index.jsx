@@ -14,8 +14,8 @@ import {useGetSpotNoticeList} from '../../../../../hook/useNotice';
 import {formattedBoardOptionStatus} from '../../../../../utils/statusFormatter';
 import ListBox from '../ListBox';
 import {PAGE_NAME as NoticeDetailPageName} from '../NoticeDetail';
-// import useSse from '../../../../../utils/sse/sseLogics/useSse';
-// import {sseType2Atom} from '../../../../../utils/sse/sseLogics/store';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import {sseType2Atom} from '../../../../../utils/sse/sseLogics/store';
 import {useAtom} from 'jotai';
 
 export const PAGE_NAME = 'P__MY_PAGE__SPOT_NOTICE';
@@ -29,39 +29,41 @@ const Pages = () => {
     useGetSpotNoticeList();
   const dataList = data?.pages;
 
-  // const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
+  // sseType2
 
-  // const [sseType2List, setSseType2List] = useState([]);
+  const {sseHistory, sseHistoryRefetch, confirmSseIsRead} = useSse();
 
-  // const [sseType2] = useAtom(sseType2Atom);
+  const [sseType2List, setSseType2List] = useState([]);
 
-  // useEffect(() => {
-  //   if (!!sseType2?.id) {
-  //     refetch();
-  //     sseHistoryRefetch();
-  //   }
-  // }, [sseType2]);
+  const [sseType2] = useAtom(sseType2Atom);
 
-  // useEffect(() => {
-  //   if (
-  //     Array.isArray(
-  //       sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId),
-  //     ) &&
-  //     sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId).length > 0
-  //   ) {
-  //     setSseType2List([
-  //       ...new Set(
-  //         sseHistory
-  //           ?.filter(v => v.type === 2)
-  //           ?.map(v => {
-  //             return {id: v.id, noticeId: v.noticeId};
-  //           }),
-  //       ),
-  //     ]);
-  //   } else {
-  //     setSseType2List([]);
-  //   }
-  // }, [sseHistory]);
+  useEffect(() => {
+    if (!!sseType2?.id) {
+      refetch();
+      sseHistoryRefetch();
+    }
+  }, [sseType2]);
+
+  useEffect(() => {
+    if (
+      Array.isArray(
+        sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId),
+      ) &&
+      sseHistory?.filter(v => v.type === 2)?.map(v => v.noticeId).length > 0
+    ) {
+      setSseType2List([
+        ...new Set(
+          sseHistory
+            ?.filter(v => v.type === 2)
+            ?.map(v => {
+              return {id: v.id, noticeId: v.noticeId};
+            }),
+        ),
+      ]);
+    } else {
+      setSseType2List([]);
+    }
+  }, [sseHistory]);
 
   const onEndReached = () => {
     if (hasNextPage) {
@@ -111,23 +113,22 @@ const Pages = () => {
                   title={formattedBoardOptionStatus(el.boardOption) + el.title}
                   description={el.updated}
                   onPressEvent={() => {
-                    // 읽어야 됨
+                    // sseType2
+                    if (!!sseType2List.map(v => v.noticeId)?.includes(el.id)) {
+                      const id = sseType2List.find(
+                        v => v.noticeId === el.id,
+                      ).id;
 
-                    // if (!!sseType2List.map(v => v.noticeId)?.includes(el.id)) {
-                    //   const id = sseType2List.find(
-                    //     v => v.noticeId === el.id,
-                    //   ).id;
-
-                    //   confirmSseIsRead({
-                    //     type: 2,
-                    //     ids: [id],
-                    //   });
-                    // }
+                      confirmSseIsRead({
+                        type: 2,
+                        ids: [id],
+                      });
+                    }
                     navigation.navigate(NoticeDetailPageName, {
                       noticeData: el,
                     });
                   }}
-                  // sseTypeList={sseType2List}
+                  sseTypeList={sseType2List}
                 />
               );
             })

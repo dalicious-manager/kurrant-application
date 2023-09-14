@@ -16,7 +16,7 @@ import useDietRepoMutation from '../../../DietRepo/useDietRepoMutation';
 import useGetDietRepo from '../../../DietRepo/useGetDietRepo';
 import {PAGE_NAME as MealMainPageName} from '../../../Meal/Main';
 import CoinAnimation from '../../components/CoinAnimation';
-// import useSse from '../../../../../../utils/sse/sseLogics/useSse';
+import useSse from '../../../../../../utils/sse/sseLogics/useSse';
 
 const MealInfoComponent = ({
   m,
@@ -28,22 +28,20 @@ const MealInfoComponent = ({
 }) => {
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const navigation = useNavigation();
-  const {dietRepoMainRefetch} = useGetDietRepo();
+  // const {dietRepoMainRefetch} = useGetDietRepo();
   const {addMeal} = useDietRepoMutation();
   const {mutateAsync: orderState} = useConfirmOrderState();
   const [startAni, setStartAni] = useState(false);
 
   // sseType3
 
-  // const {sseHistoryRefetch} = useSse();
+  const {sseHistoryRefetch} = useSse();
 
   const deliveryConfirmPress = async () => {
     await orderState({id: meal.id});
     setDeliveryConfirmed(true);
   };
   const queryClient = useQueryClient();
-  // console.log('확인 yo');
-  // console.log(dailyFoodId);
 
   const goToReviewPage = (id, image, name) => {
     navigation.navigate(CreateReviewPage1PageName, {
@@ -138,7 +136,7 @@ const MealInfoComponent = ({
                       queryClient.invalidateQueries('userInfo');
 
                       // sseType3 : 홈에서 '배송완료! 메뉴 확인후... '누르면 refetch하게 하기
-                      // sseHistoryRefetch();
+                      sseHistoryRefetch();
 
                       // dietRepoMainRefetch();
                     },
