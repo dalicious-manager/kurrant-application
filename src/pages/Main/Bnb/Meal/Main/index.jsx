@@ -245,7 +245,8 @@ const Pages = ({route}) => {
       </CalendarWrap>
       <ScrollView>
         <MealWrap>
-          {now && (
+          {/* qr */}
+          {/* {now && (
             <>
               <QRButton
                 onPress={() => {
@@ -255,7 +256,7 @@ const Pages = ({route}) => {
               </QRButton>
               <QRCodeComponent modal={qrOpen} setModal={setQrOpen} />
             </>
-          )}
+          )} */}
           {touchDate ? (
             <>
               {selectDate?.map(s => {

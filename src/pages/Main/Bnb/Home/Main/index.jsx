@@ -749,7 +749,8 @@ const Pages = () => {
             </NoMealInfo>
           ) : (
             <>
-              {!orderMealListIsFetching && orderMealList?.data && (
+              {/* qr */}
+              {/* {!orderMealListIsFetching && orderMealList?.data && (
                 <>
                   <QRCodeComponent modal={qrOpen} setModal={setQrOpen} />
                   <QRView>
@@ -759,7 +760,7 @@ const Pages = () => {
                     </Pressable>
                   </QRView>
                 </>
-              )}
+              )} */}
               {orderMealList?.data?.map((m, idx) => {
                 if (m.serviceDate === date)
                   return (
