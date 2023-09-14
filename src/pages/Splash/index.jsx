@@ -78,32 +78,6 @@ const Page = () => {
       }),
     );
   }, []);
-  const checkPermission = async () => {
-    messaging()
-      .hasPermission()
-      .then(enabled => {
-        if (enabled) {
-          getToken();
-        } else {
-          requestPermission();
-        }
-      })
-      .catch(error => {
-        console.log('error checking permisions ' + error);
-      });
-  };
-
-  //2
-  const requestPermission = () => {
-    messaging()
-      .requestPermission()
-      .then(() => {
-        getToken();
-      })
-      .catch(error => {
-        console.log('permission rejected ' + error);
-      });
-  };
 
   //3
   const getToken = () => {
@@ -166,9 +140,10 @@ const Page = () => {
             useNativeDriver: false,
           }).start();
         }, 300);
-
-        await checkPermission();
-        getData();
+        setTimeout(async () => {
+          await getData();
+        }, 500);
+        // await checkPermission();
       } catch (error) {
         setTimeout(() => {
           navigation.reset({
@@ -280,21 +255,22 @@ const Page = () => {
       });
     };
     async function requestUserPermission() {
-      await messaging().deleteToken();
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) await messaging().deleteToken();
       const authStatus = await messaging().requestPermission();
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-      console.log(enabled);
       if (enabled) {
         console.log('Authorization status:', authStatus);
+
         if (Platform.OS === 'ios') {
           // ios의 경우 필수가 아니라고도 하고 필수라고도 하고.. 그냥 넣어버렸다.
           messaging().registerDeviceForRemoteMessages();
         }
       }
     }
-    requestUserPermission();
+
     const requestNotificationPermission = async () => {
       await requestNotifications([
         'alert',
@@ -302,9 +278,8 @@ const Page = () => {
         'sound',
         'providesAppSettings',
       ]).then(({status, settings}) => {
-        if (status === RESULTS.BLOCKED) {
-          console.log(settings, 'notificationCenter');
-          // openSettings().catch(() => console.warn('cannot open settings'));
+        if (settings) {
+          handlePress();
         }
       });
       // if (Platform.OS === 'android') {
@@ -323,9 +298,9 @@ const Page = () => {
     };
 
     // 알림 권한 요청 함수 호출
+    requestUserPermission();
     requestNotificationPermission();
-    handlePress();
-  }, [isFocused, appState]);
+  }, []);
   return (
     <Container>
       <View style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
