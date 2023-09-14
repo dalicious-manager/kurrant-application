@@ -66,7 +66,7 @@ class SseService {
 
           // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
           // pollingInterval: 1000 * 60 * 30,
-          pollingInterval: 1000 * 2,
+          pollingInterval: 1000 * 11,
         },
       );
 
@@ -153,15 +153,12 @@ class SseService {
   };
 
   onError = e => {
-    console.log(
-      'sse 에러가 뜹니다. error occured closing connection ' +
-        new Date().toString(),
-    );
-    console.log(e);
-
     // 이 에러가 뜨면 지금 token상태가 만료된 상태인지 확인하자
 
     if (!e.message) {
+      console.log(
+        'sse 에러가 뜹니다 (message가 빈 에러)' + new Date().toString(),
+      );
       (async () => {
         // console.log('autoLogin해서 필요하면 토큰을 refresh해보자 ');
 
@@ -189,7 +186,13 @@ class SseService {
           return;
         }
       })();
+    } else {
+      console.log('sse 에러가 뜹니다 ' + new Date().toString());
+
+      this.onReset();
     }
+
+    console.log(e);
   };
 
   onClose = e => {

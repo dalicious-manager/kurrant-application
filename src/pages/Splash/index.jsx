@@ -220,6 +220,8 @@ const Page = () => {
                 });
               }
             }
+          } else {
+            console.log('[splash] accessToken이 이상합니다');
           }
         } else {
           setTimeout(() => {
