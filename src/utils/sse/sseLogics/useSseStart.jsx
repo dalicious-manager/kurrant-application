@@ -37,30 +37,24 @@ const useSseStart = () => {
   }, []);
 
   // blank Error 대처를 위한 eventEmitter
-  const blankErrorHandler = useMemo(() => new EventEmitter(), []);
-
-  // const [openAgainPlease, setOpenAgainPlease] = useState(false)
-
-  useEffect(() => {
-    if (!!blankErrorHandler) {
-      blankErrorHandler.addListener('blank-error-handle', () => {
-        console.log('sse 인스턴스를 새로 만듭니다');
-        // 재요청시키기
-        forOnlyOneSseService = null;
-        getSseServiceInstance(true);
-      });
-    } else {
-      console.log('emitter가 생성되지 않았습니다 ');
-    }
-  }, [blankErrorHandler]);
-
-  const blankErrorHandleObject = {
-    blankErrorHandler,
-    blankErrorPermission: false,
+  const sseResetHandler = useMemo(() => new EventEmitter(), []);
+  const resetSseInstance = () => {
+    console.log('sse 인스턴스 reset시키기');
+    // 재요청시키기
+    forOnlyOneSseService = null;
+    getSseServiceInstance(true);
   };
 
+  useEffect(() => {
+    if (!!sseResetHandler) {
+      sseResetHandler.addListener('reset-sse-instance', () => {
+        resetSseInstance();
+      });
+    }
+  }, [sseResetHandler]);
+
   const getSseServiceInstance = useCallback(
-    async value => {
+    async resetSse => {
       const tokenYo = await getToken();
 
       if (forOnlyOneSseService) return forOnlyOneSseService; // 이미 인스턴스가 만들어졌으면 다시 만들지 않는다
@@ -70,7 +64,10 @@ const useSseStart = () => {
       forOnlyOneSseService = new SseService(
         apiHostUrl,
         tokenYo,
-        {...blankErrorHandleObject, blankErrorPermission: value},
+
+        sseResetHandler,
+
+        resetSse,
         [
           data => {
             setSseType1(data);
@@ -99,20 +96,23 @@ const useSseStart = () => {
         ],
       );
 
-      if (!forOnlyOneSseService) {
-        console.log('forOnlyOneSseService 가 지금 undefined에요 ');
-        console.log(forOnlyOneSseService);
-      }
-
       return forOnlyOneSseService;
     },
-    [apiHostUrl, getToken, blankErrorHandler],
+    [apiHostUrl, getToken, sseResetHandler],
   );
 
   useEffect(() => {
     setTimeout(() => {
       getSseServiceInstance(false);
     }, 500);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (!!forOnlyOneSseService) {
+        forOnlyOneSseService.onClose();
+      }
+    };
   }, []);
 
   return;
