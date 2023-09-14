@@ -245,7 +245,7 @@ const Pages = ({route}) => {
       </CalendarWrap>
       <ScrollView>
         <MealWrap>
-          {/* qr */}
+          {/* qrCode */}
           {/* {now && (
             <>
               <QRButton
