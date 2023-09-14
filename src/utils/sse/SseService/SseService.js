@@ -2,16 +2,6 @@ import EventSource from 'react-native-sse';
 
 import Base64 from '../sseLogics/base64Converter';
 import {Fetch} from '../../../biz/useAuth';
-import {getStorage} from '../../asyncStorage';
-
-import Config from 'react-native-config';
-
-const apiHostUrl =
-  Config.NODE_ENV === 'dev'
-    ? Config.API_DEVELOP_URL + '/' + Config.API_VERSION
-    : Config.NODE_ENV === 'rel'
-    ? Config.API_RELEASE_URL + '/' + Config.API_VERSION
-    : Config.API_HOST_URL + '/' + Config.API_VERSION;
 
 let SseServiceOnlyOneInstance;
 
@@ -150,14 +140,12 @@ class SseService {
   };
 
   onError = e => {
-    // 이 에러가 뜨면 지금 token상태가 만료된 상태인지 확인하자
-
     if (!e.message) {
       console.log(
         'sse 에러가 뜹니다 (message가 빈 에러)' + new Date().toString(),
       );
       (async () => {
-        // console.log('autoLogin해서 필요하면 토큰을 refresh해보자 ');
+        // console.log('autoLogin해서 토큰을 reissue해보자 ');
 
         const result = await Fetch.autoLogin();
 
