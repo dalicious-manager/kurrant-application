@@ -133,7 +133,7 @@ const OuterPagerView = ({
   }, [scrollViewRef]);
   return (
     <Container>
-      {dailyFood[nowPage].dailyFoodDtos?.length > 0 ? (
+      {dailyFood[nowPage]?.dailyFoodDtos?.length > 0 ? (
         <ScrollView
           ref={scrollViewRef}
           horizontal

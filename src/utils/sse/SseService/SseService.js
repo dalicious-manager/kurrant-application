@@ -1,4 +1,5 @@
 import EventSource from 'react-native-sse';
+
 import Base64 from '../sseLogics/base64Converter';
 
 let SseServiceOnlyOneInstance;
@@ -25,7 +26,7 @@ class SseService {
     callbackForAtoms,
   ) {
     if (SseServiceOnlyOneInstance)
-      if (!!blankErrorHandleObject?.blankErrorPermission) {
+      if (blankErrorHandleObject?.blankErrorPermission) {
         SseServiceOnlyOneInstance = null;
       } else {
         return SseServiceOnlyOneInstance;
@@ -177,7 +178,7 @@ class SseService {
 
     // token확인
 
-    if (!!this.token) {
+    if (this.token) {
       console.log('프론트에서 토큰을 안줘서 뜨는 에러뜨는건 아닐듯');
     } else {
       console.log('프론트에서 토큰을 안줘서 뜨는 에러인것 같아요');
