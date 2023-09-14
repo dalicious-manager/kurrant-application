@@ -25,7 +25,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {PAGE_NAME as MoreMainPageName} from '~pages/Main/Bnb/More/Main';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
-// import useSse from '../../../utils/sse/sseLogics/useSse';
+import useSse from '../../../utils/sse/sseLogics/useSse';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -60,7 +60,7 @@ const Screen = ({route}) => {
     });
   }, []);
 
-  // const {sseHistory, sseHistoryRefetch} = useSse();
+  const {sseHistory} = useSse();
 
   return (
     <>
@@ -81,7 +81,8 @@ const Screen = ({route}) => {
           component={Review}
           options={({navigation}) => ({
             tabBarLabel: ({focused}) => (
-              <SseRedDotReview
+              <SseRedDotType3
+                // sseType3
                 isSse={total > 0}
                 position={'absolute'}
                 top={'0px'}
@@ -89,7 +90,7 @@ const Screen = ({route}) => {
                 <Titles focused={focused}>
                   리뷰 작성({total > 10 ? `9+` : total}){' '}
                 </Titles>
-              </SseRedDotReview>
+              </SseRedDotType3>
             ),
             tabBarLabelStyle: {
               fontSize: 15,
@@ -104,16 +105,16 @@ const Screen = ({route}) => {
           component={WrittenReview}
           options={({navigation}) => ({
             tabBarLabel: ({focused}) => (
-              <SseRedDot
-                // isSse={!!sseHistory?.find(v => v.type === 8)}
-                isSse={false}
+              <SseRedDotType8
+                // sseType8
+                isSse={!!sseHistory?.find(v => v.type === 8)}
                 position={'absolute'}
                 top={'0px'}
                 right={'-8px'}>
                 <Titles focused={focused}>
                   작성한 리뷰({totalWritten >= 10 ? `9+` : totalWritten})
                 </Titles>
-              </SseRedDot>
+              </SseRedDotType8>
             ),
             tabBarLabelStyle: {
               fontSize: 15,
@@ -136,4 +137,5 @@ const Titles = styled(Typography).attrs({text: 'Button09SB'})`
   }};
 `;
 
-const SseRedDotReview = styled(SseRedDot)``;
+const SseRedDotType3 = styled(SseRedDot)``;
+const SseRedDotType8 = styled(SseRedDot)``;

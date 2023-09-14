@@ -14,18 +14,15 @@ const useSse = () => {
   const [sseType7, setSseType7] = useAtom(sseAtoms.sseType7Atom);
   const [sseType8, setSseType8] = useAtom(sseAtoms.sseType8Atom);
 
+  // sse 메세지 이력 받아오기
   const {data: sseHistory, refetch: sseHistoryRefetch} = useQuery(
     ['sse', 'notification'],
     async ({queryKey}) => {
-      // console.log('sseHistory 리펫치 됬어요');
       const response = await fetchJson(
         `/notification`,
 
         'GET',
       );
-
-      // console.log(response?.data);
-      // console.log(response?.data?.filter(v => v.type !== 4));
 
       return response?.data;
     },

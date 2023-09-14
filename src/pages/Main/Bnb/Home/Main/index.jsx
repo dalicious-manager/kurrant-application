@@ -616,6 +616,7 @@ const Pages = () => {
             </SpotNameText>
             <ArrowIcon />
             <SseRedDotType7
+              // sseType7
               isSse={
                 (!!sseType7.type && !sseType7.read) ||
                 !!(sseType7List?.length > 0)
@@ -627,6 +628,7 @@ const Pages = () => {
           </SpotName>
           <Icons>
             <SseRedDotType6
+              // sseType6
               isSse={
                 (!!sseType6.type && !sseType6.read) ||
                 !!sseHistory?.find(v => v.type === 6)

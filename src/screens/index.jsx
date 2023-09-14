@@ -21,7 +21,7 @@ const Screen = () => {
     }, []),
   );
 
-  // useSseStart();
+  useSseStart();
 
   return (
     <SafeAreaProvider>

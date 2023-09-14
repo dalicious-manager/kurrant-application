@@ -25,8 +25,6 @@ import SkeletonUI from './SkeletonUI';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
 
-// import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
-
 import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
 
 import PointBox from './PointBox';
@@ -54,16 +52,15 @@ import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
 import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
-// import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
 import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
 import {View} from 'react-native';
 import {RightSkinnyArrow} from '../../../../../components/Icon';
-// import {
-//   sseType1Atom,
-//   sseType2Atom,
-//   sseType3Atom,
-//   sseType8Atom,
-// } from '../../../../../utils/sse/sseLogics/store';
+import {
+  sseType1Atom,
+  sseType2Atom,
+  sseType8Atom,
+} from '../../../../../utils/sse/sseLogics/store';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
@@ -86,15 +83,15 @@ const Pages = ({route}) => {
 
   const {getReviewWait} = useReviewWait();
 
-  // const {sseHistory} = useSse();
-  // const [sseType1] = useAtom(sseType1Atom);
-  // const [sseType2] = useAtom(sseType2Atom);
+  const {sseHistory} = useSse();
+  const [sseType1] = useAtom(sseType1Atom);
+  const [sseType2] = useAtom(sseType2Atom);
 
-  // const [sseType8] = useAtom(sseType8Atom);
+  const [sseType8] = useAtom(sseType8Atom);
 
-  // useEffect(() => {
-  //   getReviewWait();
-  // }, [sseType8?.id]);
+  useEffect(() => {
+    getReviewWait();
+  }, [sseType8?.id]);
 
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
@@ -224,6 +221,7 @@ const Pages = ({route}) => {
                 navigation.navigate(ReviewScreenName);
               }}>
               <SseRedDotType3
+                // sseType3
                 isSse={total > 0}
                 position="absolute"
                 right="-10px"
@@ -278,10 +276,10 @@ const Pages = ({route}) => {
             <ListBox
               title="리뷰 관리"
               isSse={
-                // total > 0 ||
-                // (!!sseType8.type && !sseType8.read) ||
-                // !!sseHistory?.find(v => v.type === 8)
-                false
+                // sseType8
+                total > 0 ||
+                (!!sseType8.type && !sseType8.read) ||
+                !!sseHistory?.find(v => v.type === 8)
               }
               description={redeemablePoints > 0 && `모두 작성시 최대 `}
               effect={
@@ -318,12 +316,13 @@ const Pages = ({route}) => {
           <ListContainer title="알림">
             <ListBox
               isSse={
-                // (!!sseType1.type && !sseType1.read) ||
-                // !!sseHistory?.find(v => v.type === 1) ||
-                // (!!sseType2.type && !sseType2.read) ||
-                // !!sseHistory?.find(v => v.type === 2)
+                // sseType1, sseType2
+                (!!sseType1.type && !sseType1.read) ||
+                !!sseHistory?.find(v => v.type === 1) ||
+                (!!sseType2.type && !sseType2.read) ||
+                !!sseHistory?.find(v => v.type === 2)
 
-                false
+                // false
               }
               title="공지사항"
               routeName={NoticeScreenName}
