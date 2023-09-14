@@ -124,6 +124,7 @@ const Pages = () => {
                   goToPage(v.noticeId);
                 }}>
                 <SseRedDotType6
+                  // sseType6
                   isSse={!v.isRead}
                   position={'absolute'}
                   top={'-8px'}
