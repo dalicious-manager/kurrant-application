@@ -26,10 +26,12 @@ const Component = ({
 }) => {
   const themeApp = useTheme();
 
+  console.log('여기1 sseType 적어줘야함');
+
   return (
     <TitleContainer onPress={onPressEvent}>
       <SseRedDot
-        // isSse={sseTypeList.map(v => v.noticeId)?.includes(id)}
+        isSse={sseTypeList.map(v => v.noticeId)?.includes(id)}
         position={'absolute'}
         top={'23px'}
         right={'47px'}

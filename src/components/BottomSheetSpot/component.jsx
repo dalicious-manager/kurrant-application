@@ -155,7 +155,8 @@ const BottomSheetSpot = props => {
               renderItem={({item}) => (
                 <View onLayout={onLayout}>
                   <ItemContainer>
-                    <SseRedDot
+                    <SseRedDotType7
+                      // sseType7
                       isSse={sseType7List?.includes(item.clientId)}
                       position={'absolute'}
                       top={'4px'}
@@ -331,3 +332,5 @@ const TextView = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+const SseRedDotType7 = styled(SseRedDot)``;
