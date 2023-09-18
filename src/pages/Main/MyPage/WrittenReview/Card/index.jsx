@@ -320,7 +320,7 @@ const Component = ({
                   pngLink={v.pngLink}
                   writtenDate={v.createDate}
                   message={v.content}
-                  // isSseType8={sseType8List.includes(v.commentId)}
+                  isSseType8={sseType8List.includes(v.commentId)}
                 />
               </CommentWrap>
             );

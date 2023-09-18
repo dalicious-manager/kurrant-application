@@ -23,13 +23,13 @@ import MoreMainPage, {
 import MainDim from '../../../pages/Spots/spotGuide/MainDim';
 import {mainDimAtom} from '../../../utils/store';
 import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
-// import {
-//   sseType1Atom,
-//   sseType2Atom,
-//   sseType3Atom,
-//   sseType8Atom,
-// } from '../../../utils/sse/sseLogics/store';
-// import useSse from '../../../utils/sse/sseLogics/useSse';
+import {
+  sseType1Atom,
+  sseType2Atom,
+  sseType3Atom,
+  sseType8Atom,
+} from '../../../utils/sse/sseLogics/store';
+import useSse from '../../../utils/sse/sseLogics/useSse';
 import {totalReviewWaitListAtom} from '../../../biz/useReview/useReviewWait/store';
 
 export const SCREEN_NAME = 'S_MAIN__BNB';
@@ -42,12 +42,14 @@ const Screen = () => {
 
   const [total] = useAtom(totalReviewWaitListAtom);
 
-  // const {sseHistory, sseHistoryRefetch} = useSse();
+  const {sseHistory, sseHistoryRefetch} = useSse();
 
-  // const [sseType3] = useAtom(sseType3Atom);
-  // const [sseType1] = useAtom(sseType1Atom);
-  // const [sseType2] = useAtom(sseType2Atom);
-  // const [sseType8] = useAtom(sseType8Atom);
+  // sseType1, sseType2, sseType3, sseType8
+
+  const [sseType3] = useAtom(sseType3Atom);
+  const [sseType1] = useAtom(sseType1Atom);
+  const [sseType2] = useAtom(sseType2Atom);
+  const [sseType8] = useAtom(sseType8Atom);
 
   return (
     <React.Fragment>
@@ -139,22 +141,18 @@ const Screen = () => {
             tabBarIcon: ({focused}) => (
               <TabBarIconWrap>
                 <SseRedDotMyPage
-                  // 여기는 sse 로직을 여러개 병렬로 묶을 것임
-
                   isSse={
-                    // // 리뷰 type 3
-                    // (!!sseType3.type && !sseType3.read) ||
-                    // !!sseHistory?.find(v => v.type === 3) ||
-                    // // 사장님 댓글 type 8
-                    // (!!sseType8.type && !sseType8.read) ||
-                    // !!sseHistory?.find(v => v.type === 8) ||
-                    // // 전체공지 & 스팟공지
-                    // (!!sseType1.type && !sseType1.read) ||
-                    // !!sseHistory?.find(v => v.type === 1) ||
-                    // (!!sseType2.type && !sseType2.read) ||
-                    // !!sseHistory?.find(v => v.type === 2)
-
-                    false
+                    // // 리뷰 sseType3
+                    (!!sseType3.type && !sseType3.read) ||
+                    !!sseHistory?.find(v => v.type === 3) ||
+                    // // 사장님 댓글 sseType8
+                    (!!sseType8.type && !sseType8.read) ||
+                    !!sseHistory?.find(v => v.type === 8) ||
+                    // // 전체공지 & 스팟공지 sseType1, sseType2
+                    (!!sseType1.type && !sseType1.read) ||
+                    !!sseHistory?.find(v => v.type === 1) ||
+                    (!!sseType2.type && !sseType2.read) ||
+                    !!sseHistory?.find(v => v.type === 2)
                   }
                   position="absolute"
                   right="-6px"

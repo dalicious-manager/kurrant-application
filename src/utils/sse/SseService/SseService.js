@@ -1,32 +1,30 @@
 import EventSource from 'react-native-sse';
-
 import Base64 from '../sseLogics/base64Converter';
+import {Fetch} from '../../../biz/useAuth';
 
 let SseServiceOnlyOneInstance;
 
 let instanceCount = 0;
 
-let blankErrorReconnectionCount = 0;
-
-//
-let hadDoneBlankErrorReconnectionProtocolAlready = false;
-
 class SseService {
-  token;
   baseUrl;
+  token;
+
+  sseResetHandler;
   eventSource;
+
   callbackForAtoms;
-  blankErrorHandler;
 
   constructor(
     baseUrl,
     token,
-    blankErrorHandleObject = {},
-    // blankErrorHandler = null,
+
+    sseResetHandler,
+    resetSse,
     callbackForAtoms,
   ) {
     if (SseServiceOnlyOneInstance)
-      if (blankErrorHandleObject?.blankErrorPermission) {
+      if (resetSse) {
         SseServiceOnlyOneInstance = null;
       } else {
         return SseServiceOnlyOneInstance;
@@ -37,32 +35,33 @@ class SseService {
 
     this.baseUrl = baseUrl;
     this.token = token;
+
+    this.sseResetHandler = sseResetHandler;
     this.callbackForAtoms = callbackForAtoms;
 
-    this.eventSource = new EventSource(
-      `${this.baseUrl}/notification/subscribe`,
+    this.sseResetHandler = sseResetHandler;
 
-      this.token && {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
+    this.eventSource =
+      this.token &&
+      new EventSource(
+        // `${this.baseUrl}/notification/subscribe`,
+        `${this.baseUrl}/sse/subscribe`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+
+          // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
+          // pollingInterval: 1000 * 60 * 30,
+          pollingInterval: 1000 * 2,
         },
+      );
 
-        // pollingInterval: 서버와의 Sse연결이 끊겼을때 몇초 후에 재연결을 시도할 것인가
-        // pollingInterval: 1000 * 60 * 15,
-        pollingInterval: 1000 * 1,
-      },
-    );
-
-    // 여기에다가 eventSource 받는 로직 작성
-
-    this.eventSource.addEventListener('open', this.onOpen);
-    this.eventSource.addEventListener('message', this.onMessage);
-    this.eventSource.addEventListener('error', this.onError);
-    this.eventSource.addEventListener('close', this.onClose);
-
-    // blanc error가 뜰때 대처하기 위한 eventEmitter
-
-    this.blankErrorHandler = blankErrorHandleObject.blankErrorHandler;
+    this.eventSource?.addEventListener('open', this.onOpen);
+    this.eventSource?.addEventListener('message', this.onMessage);
+    this.eventSource?.addEventListener('error', this.onError);
+    this.eventSource?.addEventListener('close', this.onClose);
 
     SseServiceOnlyOneInstance = this;
   }
@@ -70,9 +69,7 @@ class SseService {
   onMessage = e => {
     if (typeof e.data === 'string') {
       if (e.data.includes('EventStream')) {
-        console.log('-----');
         console.log('Sse 연결을 성공하였습니다');
-        // console.log(e.data);
       } else {
         const receiveMessage =
           e.data && JSON.parse(Base64.decode(JSON.parse(e.data).body))[1];
@@ -139,65 +136,62 @@ class SseService {
 
   onOpen = e => {
     console.log('sse OnOpen됬어요');
-    console.log(e.data);
   };
 
   onError = e => {
-    console.log('sse 에러가 뜹니다. error occured closing connection');
-    console.log(e);
+    if (!e.message) {
+      console.log(
+        'sse 에러가 뜹니다 (message가 빈 에러)' + new Date().toString(),
+      );
+      (async () => {
+        // console.log('autoLogin해서 토큰을 reissue해보자 ');
 
-    // The network connection was lost.
+        const result = await Fetch.autoLogin();
 
-    // "" -> 이 에러가 10번 이상이면 자동으로  sseService를 끄자
+        // console.log('로컬의 토큰값 확인');
+        // console.log(this.token);
 
-    if (!e.message) blankErrorReconnectionCount += 1;
+        // console.log('받은 토큰 값 확인');
+        // console.log(result?.data?.accessToken);
 
-    if (blankErrorReconnectionCount > 5) {
-      if (!hadDoneBlankErrorReconnectionProtocolAlready) {
-        // 초범이다
+        if (
+          !!result?.data?.accessToken &&
+          this.token !== result?.data?.accessToken
+        ) {
+          console.log('token이 stale합니다 ');
+          console.log(
+            'token을 reissue하고 새 토큰으로 새 sseInstance를 생성합니다',
+          );
+          this.onReset();
 
-        this.onHandleBlankError();
-        blankErrorReconnectionCount = 0;
-      } else {
-        // 두번쨰면 아예 꺼버리기
-        this.onClose();
-      }
+          return;
+        } else {
+          console.log('token이 최신 토큰입니다 ');
+          return;
+        }
+      })();
+    } else {
+      console.log('sse 에러가 뜹니다 ' + new Date().toString());
+
+      this.onReset();
     }
+
+    console.log(e);
   };
 
   onClose = e => {
-    console.log('Sse를 Close 하겠습니다. closing connection');
+    console.log('Sse를 Close 하겠습니다. closing connection ' + new Date());
 
     this.eventSource.removeAllEventListeners();
     this.eventSource.close();
   };
 
-  onHandleBlankError = () => {
-    hadDoneBlankErrorReconnectionProtocolAlready = true;
-    console.log('message가 비어있는 에러입니다 ');
-
-    // token확인
-
-    if (this.token) {
-      console.log('프론트에서 토큰을 안줘서 뜨는 에러뜨는건 아닐듯');
-    } else {
-      console.log('프론트에서 토큰을 안줘서 뜨는 에러인것 같아요');
-    }
-
-    // 1. 끄기
-
+  onReset = () => {
     this.onClose();
-
-    // 2. 기존 프론트 sse를 지우기
-
-    this.blankErrorHandler.emit('blank-error-handle', {
+    this.sseResetHandler.emit('reset-sse-instance', {
       es6rules: true,
       mixinsAreLame: true,
     });
-
-    // 3. 재요청
-
-    // 되면 그대로 쓰고 , 또 안되면 끄기
   };
 }
 

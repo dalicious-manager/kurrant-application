@@ -66,8 +66,9 @@ const Component = ({
           : navigation.navigate(routeName))
       }>
       <TitleBox>
-        <SseRedDot
-          // isSse={total > 0}
+        <SseRedDotType3
+          // sseType3
+
           isSse={isSse}
           position={'absolute'}
           top={'0px'}
@@ -75,7 +76,7 @@ const Component = ({
           <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>
             {title}
           </Title>
-        </SseRedDot>
+        </SseRedDotType3>
 
         {isVersion && (
           <VersionInfo textColor={themeApp.colors.grey[4]}>
@@ -139,3 +140,5 @@ const TailBox = styled.View`
   flex-direction: row;
   align-items: center;
 `;
+
+const SseRedDotType3 = styled(SseRedDot)``;

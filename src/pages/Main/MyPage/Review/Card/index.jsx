@@ -82,6 +82,7 @@ const Component = ({
   return (
     <Container>
       <SseRedDotType3
+        // sseType3
         // 여기는 무조건 true
         isSse={true}
         right={'10px'}

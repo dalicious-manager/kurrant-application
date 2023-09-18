@@ -12,7 +12,9 @@ import {
   AppState,
   Platform,
   Linking,
+  Text,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
@@ -31,6 +33,7 @@ import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
+import QRIcon from '../../../../../assets/icons/Home/qr.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -41,6 +44,7 @@ import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
 import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
+import QRCodeComponent from '../../../../../components/QRCode/QRCode';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {
@@ -57,12 +61,12 @@ import {
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import jwtUtils from '../../../../../utils/fetch/jwtUtill';
-import useSseType3 from '../../../../../utils/sse/sseHooks/useSseType3';
+
 import {
   sseType6Atom,
   sseType7Atom,
 } from '../../../../../utils/sse/sseLogics/store';
-import useEvetnEmitterTest from '../../../../../utils/sse/sseLogics/useEventEmitterTest';
+
 import useSse from '../../../../../utils/sse/sseLogics/useSse';
 import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {mainDimAtom} from '../../../../../utils/store';
@@ -123,6 +127,7 @@ const Pages = () => {
   //   userSpotId,
   //   formattedWeekDate(new Date()),
   // );
+  const [qrOpen, setQrOpen] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [isOneAnnouncementModalVisible, setIsOneAnnouncementModalVisible] =
@@ -212,7 +217,11 @@ const Pages = () => {
     getMembershipHistory,
     readableAtom: {membershipHistory},
   } = useMembership();
-  const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
+  const {
+    data: orderMealList,
+    refetch: orderMealRefetch,
+    isFetching: orderMealListIsFetching,
+  } = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
     formattedWeekDate(
       weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
@@ -616,6 +625,7 @@ const Pages = () => {
             </SpotNameText>
             <ArrowIcon />
             <SseRedDotType7
+              // sseType7
               isSse={
                 (!!sseType7.type && !sseType7.read) ||
                 !!(sseType7List?.length > 0)
@@ -627,6 +637,7 @@ const Pages = () => {
           </SpotName>
           <Icons>
             <SseRedDotType6
+              // sseType6
               isSse={
                 (!!sseType6.type && !sseType6.read) ||
                 !!sseHistory?.find(v => v.type === 6)
@@ -667,25 +678,39 @@ const Pages = () => {
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
-            orderMealList?.data?.map((m, idx) => {
-              if (m.serviceDate === date)
-                return (
-                  <React.Fragment key={`${m.id} ${idx}`}>
-                    {m.orderItemDtoList.map(meal => {
-                      return (
-                        <MealInfoComponent
-                          m={m}
-                          meal={meal}
-                          loadCoinSound={loadCoinSound}
-                          dailyFoodId={meal.dailyFoodId}
-                          coinSound={coinSound}
-                          key={`${meal.id} ${meal.dailyFoodId}`}
-                        />
-                      );
-                    })}
-                  </React.Fragment>
-                );
-            })
+            <>
+              {/* qr */}
+              {/* {!orderMealListIsFetching && orderMealList?.data && (
+                <>
+                  <QRCodeComponent modal={qrOpen} setModal={setQrOpen} />
+                  <QRView>
+                    <QRText>오늘의 식사를 스캔해주세요</QRText>
+                    <Pressable onPress={() => setQrOpen(true)}>
+                      <QRIcon />
+                    </Pressable>
+                  </QRView>
+                </>
+              )} */}
+              {orderMealList?.data?.map((m, idx) => {
+                if (m.serviceDate === date)
+                  return (
+                    <React.Fragment key={`${m.id} ${idx}`}>
+                      {m.orderItemDtoList.map(meal => {
+                        return (
+                          <MealInfoComponent
+                            m={m}
+                            meal={meal}
+                            loadCoinSound={loadCoinSound}
+                            dailyFoodId={meal.dailyFoodId}
+                            coinSound={coinSound}
+                            key={`${meal.id} ${meal.dailyFoodId}`}
+                          />
+                        );
+                      })}
+                    </React.Fragment>
+                  );
+              })}
+            </>
           )}
         </MainWrap>
 
@@ -1152,5 +1177,24 @@ const DietRepoText = styled(Typography).attrs({text: 'Body05SB'})`
   margin-left: 13px;
 `;
 const CalText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[2]};
+`;
+
+const QRView = styled.View`
+  width: 100%;
+  height: 64px;
+  margin-left: 24px;
+  margin-right: 24px;
+  margin-bottom: 16px;
+  background-color: white;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+`;
+
+const QRText = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[2]};
 `;

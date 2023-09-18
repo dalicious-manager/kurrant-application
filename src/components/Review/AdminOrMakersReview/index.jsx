@@ -45,8 +45,9 @@ const Component = ({
           </OnlyForReviewersContainer>
         ) : (
           <>
-            <SseRedDot
-              // isSse={isSseType8}
+            <SseRedDotType8
+              // sseType8
+              isSse={isSseType8}
               position={'absolute'}
               top={'-1px'}
               right={'-2px'}
@@ -152,3 +153,5 @@ const Message = styled(Typography).attrs({text: 'Body06R'})`
     }
   }}
 `;
+
+const SseRedDotType8 = styled(SseRedDot)``;
