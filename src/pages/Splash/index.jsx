@@ -261,12 +261,12 @@ const Page = () => {
     const onTokenRefreshHandler = async () => {
       try {
         const authStatus = await messaging().hasPermission();
-        console.log(authStatus, 'authStatus');
+        // console.log(authStatus, 'authStatus');
         const enabled =
           authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
           authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-        const newToken = await messaging().getToken();
-        console.log('Refreshed FCM Token:', newToken);
+        if (enabled) await messaging().getToken();
+        // console.log('Refreshed FCM Token:', newToken);
       } catch (error) {
         console.error('Error refreshing FCM Token:', error);
       }
