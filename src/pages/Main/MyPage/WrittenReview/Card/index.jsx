@@ -108,7 +108,6 @@ const Component = ({
               const response = await deleteReview2({id: id});
 
               if (response.statusCode !== 200) {
-                console.log(response);
                 Alert.alert('리뷰 삭제 실패', `${response.message}`, [
                   {
                     text: '확인',
