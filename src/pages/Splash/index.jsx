@@ -1,4 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -89,7 +91,6 @@ const Page = () => {
       .getToken()
       .then(token => {
         if (token) {
-          console.log(token, 'fcmToken');
           saveFcmToken({
             token: token,
           });
@@ -113,7 +114,6 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    console.log(isFocused, 'isFocused');
     const handlePress = async () => {
       try {
         Animated.timing(scaleAnim, {
@@ -260,10 +260,26 @@ const Page = () => {
         if (Number(result) >= Number(result2)) return await isAutoLogin();
       });
     };
+    const onTokenRefreshHandler = async () => {
+      try {
+        const authStatus = await messaging().hasPermission();
+        // console.log(authStatus, 'authStatus');
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if (enabled) await messaging().getToken();
+        // console.log('Refreshed FCM Token:', newToken);
+      } catch (error) {
+        console.error('Error refreshing FCM Token:', error);
+      }
+    };
     async function requestUserPermission() {
       const fcmToken = await messaging().getToken();
-      if (fcmToken) await messaging().deleteToken();
-      const authStatus = await messaging().requestPermission();
+      console.log(fcmToken, 'fcmToken');
+      if (fcmToken) {
+        await messaging().deleteToken();
+      }
+      const authStatus = await messaging().hasPermission();
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -272,8 +288,11 @@ const Page = () => {
 
         if (Platform.OS === 'ios') {
           // ios의 경우 필수가 아니라고도 하고 필수라고도 하고.. 그냥 넣어버렸다.
-          messaging().registerDeviceForRemoteMessages();
+          await messaging().registerDeviceForRemoteMessages();
         }
+
+        console.log('test');
+        messaging().onTokenRefresh(onTokenRefreshHandler);
       }
     }
 

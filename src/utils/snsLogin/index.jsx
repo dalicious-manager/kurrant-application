@@ -52,7 +52,6 @@ export default () => {
       .getToken()
       .then(token => {
         if (token) {
-          console.log(token, 'fcmToken');
           saveFcmToken({
             token: token,
           });
@@ -63,7 +62,6 @@ export default () => {
       });
   };
   const loginComplatePageMove = res => {
-    console.log(res.data);
     try {
       if (res?.data?.accessToken) {
         getToken();
