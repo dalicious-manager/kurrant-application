@@ -1295,7 +1295,7 @@ PODS:
     - FirebaseCoreExtension (= 10.14.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.12.1):
+  - RNGestureHandler (2.13.0):
     - React-Core
   - RNGoogleSignin (9.1.0):
     - GoogleSignIn (~> 6.2)
@@ -1303,7 +1303,7 @@ PODS:
   - RNNaverLogin (3.0.0-rc.2):
     - naveridlogin-sdk-ios (~> 4.1.5)
     - React
-  - RNPermissions (3.9.1):
+  - RNPermissions (3.9.2):
     - React-Core
   - RNReanimated (2.17.0):
     - DoubleConversion
@@ -1736,10 +1736,10 @@ SPEC CHECKSUMS:
   RNFBAuth: 1131e53d88468b275af7e7253198d6b94d4c9c89
   RNFBFirestore: 5462679c91d0057b8b32ac6ab89c417db9eb4d3c
   RNFBMessaging: d991f55546b940c4aaf73559d8590bf9a9d8620c
-  RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
+  RNGestureHandler: 6e4dc6b7ab3a385386d4e36228bd065e5a611394
   RNGoogleSignin: c15bdaa7e8a9e190b6169d9c96a4e8380a740f22
   RNNaverLogin: 01ca478665ea024e4ddaa02be38396845fcac0b6
-  RNPermissions: 9b754419e3b1efea83d4c9c3dce5a07e9d8bd15b
+  RNPermissions: 1edfc6b894c58f0de1c66eadee9cf1934af27c2b
   RNReanimated: bec7736122a268883bdede07f1bf9cf4b40158db
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
@@ -1751,4 +1751,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ad5c78d7467bee32c58370a9c203a4fb1153800f
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3
