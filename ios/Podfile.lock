@@ -661,7 +661,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
-  - BVLinearGradient (2.8.3):
+  - BVLinearGradient (2.6.2):
     - React-Core
   - CodePush (7.1.0):
     - Base64 (~> 1.1)
@@ -1643,7 +1643,7 @@ SPEC CHECKSUMS:
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
-  BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
+  BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   CodePush: dce1b253fde81078249ea9cd4b948e4ac7b761a9
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBAEMKit: d8312d8451ead46282adc7f3565ffc4965e3a4a7
@@ -1740,8 +1740,8 @@ SPEC CHECKSUMS:
   RNFBAuth: 1131e53d88468b275af7e7253198d6b94d4c9c89
   RNFBFirestore: 5462679c91d0057b8b32ac6ab89c417db9eb4d3c
   RNFBMessaging: d991f55546b940c4aaf73559d8590bf9a9d8620c
-  RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
-  RNGoogleSignin: c15bdaa7e8a9e190b6169d9c96a4e8380a740f2
+  RNGestureHandler: 42ec7c28dd02d540ed6c9159c57a98ff016492dc
+  RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNNaverLogin: 01ca478665ea024e4ddaa02be38396845fcac0b6
   RNPermissions: c662621778aacab961a623b2a986d0c078e6dc11
   RNReanimated: 716842722e1c5b0b7c56cf718e586b7f6a712879
