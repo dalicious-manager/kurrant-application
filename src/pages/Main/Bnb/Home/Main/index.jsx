@@ -61,10 +61,12 @@ import {
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import jwtUtils from '../../../../../utils/fetch/jwtUtill';
+
 import {
   sseType6Atom,
   sseType7Atom,
 } from '../../../../../utils/sse/sseLogics/store';
+
 import useSse from '../../../../../utils/sse/sseLogics/useSse';
 import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {mainDimAtom} from '../../../../../utils/store';

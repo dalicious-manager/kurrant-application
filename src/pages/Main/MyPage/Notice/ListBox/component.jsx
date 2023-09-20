@@ -4,7 +4,6 @@ import {Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import Typography from '~components/Typography';
-
 import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 /**
@@ -26,6 +25,8 @@ const Component = ({
   sseTypeList,
 }) => {
   const themeApp = useTheme();
+
+  console.log('여기1 sseType 적어줘야함');
 
   return (
     <TitleContainer onPress={onPressEvent}>
