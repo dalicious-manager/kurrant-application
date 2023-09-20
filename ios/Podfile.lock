@@ -885,7 +885,7 @@ PODS:
   - hermes-engine (0.70.1)
   - JWT (3.0.0-beta.14):
     - Base64 (~> 1.1.2)
-  - kakao-login (5.3.0):
+  - kakao-login (5.2.6):
     - KakaoSDKAuth (= 2.11.1)
     - KakaoSDKCommon (= 2.11.1)
     - KakaoSDKUser (= 2.11.1)
@@ -1149,43 +1149,47 @@ PODS:
   - React-jsinspector (0.70.1)
   - React-logger (0.70.1):
     - glog
-  - react-native-config (1.5.1):
-    - react-native-config/App (= 1.5.1)
-  - react-native-config/App (1.5.1):
+  - react-native-config (1.5.0):
+    - react-native-config/App (= 1.5.0)
+  - react-native-config/App (1.5.0):
     - React-Core
-  - react-native-document-picker (8.2.1):
+  - react-native-document-picker (8.2.0):
     - React-Core
-  - react-native-fbsdk-next (11.3.0):
+  - react-native-fbsdk-next (11.2.0):
     - React-Core
-    - react-native-fbsdk-next/Core (= 11.3.0)
-    - react-native-fbsdk-next/Login (= 11.3.0)
-    - react-native-fbsdk-next/Share (= 11.3.0)
-  - react-native-fbsdk-next/Core (11.3.0):
+    - react-native-fbsdk-next/Core (= 11.2.0)
+    - react-native-fbsdk-next/Login (= 11.2.0)
+    - react-native-fbsdk-next/Share (= 11.2.0)
+  - react-native-fbsdk-next/Core (11.2.0):
     - FBSDKCoreKit (~> 15.0.0)
     - React-Core
-  - react-native-fbsdk-next/Login (11.3.0):
+  - react-native-fbsdk-next/Login (11.2.0):
     - FBSDKLoginKit (~> 15.0.0)
     - React-Core
-  - react-native-fbsdk-next/Share (11.3.0):
+  - react-native-fbsdk-next/Share (11.2.0):
     - FBSDKGamingServicesKit (~> 15.0.0)
     - FBSDKShareKit (~> 15.0.0)
     - React-Core
   - react-native-geolocation-service (5.3.1):
     - React
-  - react-native-get-random-values (1.9.0):
+  - react-native-get-random-values (1.8.0):
     - React-Core
-  - react-native-image-picker (5.7.0):
+  - react-native-image-picker (5.3.1):
     - React-Core
   - react-native-nmap (0.0.66):
     - NMapsMap
     - React
-  - react-native-pager-view (6.2.1):
+  - react-native-pager-view (6.2.0):
     - React-Core
   - react-native-render-html (6.3.4):
     - React-Core
-  - react-native-safe-area-context (4.7.2):
+  - react-native-safe-area-context (4.5.0):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
     - React-Core
-  - react-native-slider (4.4.3):
+    - ReactCommon/turbomodule/core
+  - react-native-slider (4.4.2):
     - React-Core
   - react-native-version-check (3.4.7):
     - React-Core
@@ -1262,7 +1266,7 @@ PODS:
     - React-Core
   - RNAppleAuthentication (2.2.2):
     - React-Core
-  - RNCAsyncStorage (1.19.3):
+  - RNCAsyncStorage (1.18.1):
     - React-Core
   - RNCClipboard (1.11.2):
     - React-Core
@@ -1295,17 +1299,17 @@ PODS:
     - FirebaseCoreExtension (= 10.14.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.12.1):
+  - RNGestureHandler (2.10.1):
     - React-Core
-  - RNGoogleSignin (9.1.0):
+  - RNGoogleSignin (9.0.2):
     - GoogleSignIn (~> 6.2)
     - React-Core
   - RNNaverLogin (3.0.0-rc.2):
     - naveridlogin-sdk-ios (~> 4.1.5)
     - React
-  - RNPermissions (3.9.1):
+  - RNPermissions (3.8.0):
     - React-Core
-  - RNReanimated (2.17.0):
+  - RNReanimated (2.15.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -1332,7 +1336,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.25.0):
+  - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
   - RNSound (0.11.2):
@@ -1672,7 +1676,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   hermes-engine: 9cd393f741bfa14d1d0cd90cc373e3619c0bc7ea
   JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
-  kakao-login: 3d7afeb8d49d4fa9a3ee579edb1b68c65bf20dac
+  kakao-login: 2fbe3c549915276a44f7777036ee316e720f4738
   KakaoSDKAuth: bb2dfa7be30daa8403c9cfc8001aa6fde7a5b779
   KakaoSDKCommon: 555e1bb46595b842ded01cf7888cc17bbae4e113
   KakaoSDKUser: 08c0a4f40bebdebdf948a9e3d0e44ed5c2754f99
@@ -1698,17 +1702,17 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 47201924064085223b63ec7e3ee9fd40ad8508e8
   React-jsinspector: 1363be638eccfe1aea1b10dd42e632b0397e5ec8
   React-logger: 7bd569e3857d74ed412ce0a5c51f421ff7d4ca7f
-  react-native-config: 86038147314e2e6d10ea9972022aa171e6b1d4d8
-  react-native-document-picker: 69ca2094d8780cfc1e7e613894d15290fdc54bba
-  react-native-fbsdk-next: 16e652b5f1236492631185c58ec2ae15b029119d
+  react-native-config: 5330c8258265c1e5fdb8c009d2cabd6badd96727
+  react-native-document-picker: 495c444c0c773c6e83a5d91165890ecb1c0a399a
+  react-native-fbsdk-next: b2dd3a5cebb2507c09e3ec880e1b94a491dbaece
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
-  react-native-get-random-values: dee677497c6a740b71e5612e8dbd83e7539ed5bb
-  react-native-image-picker: 3269f75c251cdcd61ab51b911dd30d6fff8c6169
+  react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
+  react-native-image-picker: ec9b713e248760bfa0f879f0715391de4651a7cb
   react-native-nmap: cfcc5402746040494c544ea90a6062f49505acdf
-  react-native-pager-view: d211379f61895b6349bd7e571b44a26d005c2975
+  react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
-  react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
-  react-native-slider: 1cdd6ba29675df21f30544253bf7351d3c2d68c4
+  react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
+  react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
   React-perflogger: 48c6b363e867d64b682e84f80ca45636bd65e19c
@@ -1726,7 +1730,7 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   rn-fetch-blob: d469adb2e1d17f9d02ceb2b7bdd35ae5bd5db66b
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
-  RNCAsyncStorage: c913ede1fa163a71cea118ed4670bbaaa4b511bb
+  RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDateTimePicker: 65e1d202799460b286ff5e741d8baf54695e8abd
@@ -1737,11 +1741,11 @@ SPEC CHECKSUMS:
   RNFBFirestore: 5462679c91d0057b8b32ac6ab89c417db9eb4d3c
   RNFBMessaging: d991f55546b940c4aaf73559d8590bf9a9d8620c
   RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
-  RNGoogleSignin: c15bdaa7e8a9e190b6169d9c96a4e8380a740f22
+  RNGoogleSignin: c15bdaa7e8a9e190b6169d9c96a4e8380a740f2
   RNNaverLogin: 01ca478665ea024e4ddaa02be38396845fcac0b6
-  RNPermissions: 9b754419e3b1efea83d4c9c3dce5a07e9d8bd15b
-  RNReanimated: bec7736122a268883bdede07f1bf9cf4b40158db
-  RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
+  RNPermissions: c662621778aacab961a623b2a986d0c078e6dc11
+  RNReanimated: 716842722e1c5b0b7c56cf718e586b7f6a712879
+  RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   RNSVG: ed492aaf3af9ca01bc945f7a149d76d62e73ec82
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
@@ -1751,4 +1755,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ad5c78d7467bee32c58370a9c203a4fb1153800f
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3
