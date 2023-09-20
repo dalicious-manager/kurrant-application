@@ -1,3 +1,4 @@
+import messaging from '@react-native-firebase/messaging';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef} from 'react';
 import {useFormContext} from 'react-hook-form';
@@ -35,7 +36,7 @@ const Component = ({userId, isPassword, setPassword}) => {
     {label: '비밀번호 찾기'},
   ];
   const themeApp = useTheme();
-  const {login} = useAuth();
+  const {login, saveFcmToken} = useAuth();
   const passwordRef = useRef(null);
   const emailRef = useRef(null);
   const {
@@ -47,10 +48,19 @@ const Component = ({userId, isPassword, setPassword}) => {
   const handleRoutePress = () => {
     navigation.navigate(FindUserPageName ?? '');
   };
+  const getToken = async () => {
+    const fcmToken = await messaging().getToken();
+    await saveFcmToken({
+      token: fcmToken,
+    });
+  };
   const onSubmit = async datas => {
     try {
       const res = await login(datas);
       setStorage('userId', datas.email);
+      if (res?.data?.accessToken) {
+        await getToken();
+      }
       if (res.data.hasNickname) {
         navigation.reset({
           index: 0,
