@@ -374,7 +374,7 @@ const Pages = ({route}) => {
     const resizeImage = async image => {
       await Image.getSize(image, (w, h) => {
         const sw = Dimensions.get('window').width;
-        const scaleFactor = sw / w;
+        const scaleFactor = (sw - 48) / w;
         const scaledHeight = h * scaleFactor;
         setHeight([...height, scaledHeight]);
       });
@@ -719,8 +719,9 @@ const Pages = ({route}) => {
                                           style={{
                                             width: '100%',
                                             height: height[i],
+                                            backgroundColor: 'gold',
                                           }}
-                                          resizeMode="contain"
+                                          resizeMode="stretch"
                                         />
                                       );
                                     },
@@ -1041,7 +1042,6 @@ const MakersName = styled(Typography).attrs({text: 'Body06SB'})`
 const MakersIntroImageContainer = styled.View`
   width: 100%;
   padding: 24px;
-  padding-top: 40px;
 `;
 const MealTitle = styled(Typography).attrs({text: 'LargeTitle'})`
   color: ${props => props.theme.colors.grey[2]};
