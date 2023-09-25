@@ -182,6 +182,14 @@ const Component = forwardRef(
               return cardSerialNumberFormatter(value);
             } else if (name.includes('cardExpDate')) {
               return expirationDateFormatter(value);
+            } else if (name.includes('cardPass')) {
+              if (value) {
+                if (value?.length > 2) {
+                  return value.substring(0, 2);
+                }
+                return value;
+              }
+              return '';
             } else {
               if (value) {
                 return value;
