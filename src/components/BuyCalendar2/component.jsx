@@ -167,7 +167,9 @@ const Component = ({
                     <DaysWrap
                       key={day}
                       idx={idx}
-                      disabled={lastDay && true}
+                      disabled={
+                        (lastDay || !(morning || lunch || dinner)) && true
+                      }
                       onPress={() => {
                         onPressEvent
                           ? navigation.reset({

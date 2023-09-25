@@ -147,9 +147,7 @@ const BottomSheet = props => {
     });
     setSoldOutMeal(decrease);
   };
-  useEffect(() => {
-    // console.log(isUserInfo, 'tests');
-  }, [isUserInfo]);
+
   const addCart = async () => {
     console.log(time);
 

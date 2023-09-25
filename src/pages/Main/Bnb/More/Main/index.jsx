@@ -20,10 +20,18 @@ import {PAGE_NAME as TermOfServicePageName} from '~pages/Main/MyPage/TermOfServi
 import ListBox from './ListBox';
 import ListContainer from './ListContainer';
 import MembershipBox from './MembershipBox';
-import PointBox from './PointBox';
+
 import SkeletonUI from './SkeletonUI';
 import useAuth from '../../../../../biz/useAuth';
 import useGroupSpots from '../../../../../biz/useGroupSpots';
+
+import {PAGE_NAME as testPageName} from '../../../../../jaesin/test';
+
+import PointBox from './PointBox';
+import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
+
+import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
+
 import useReviewWait from '../../../../../biz/useReview/useReviewWait';
 import {
   redeemablePointsAtom,
@@ -33,9 +41,7 @@ import {useGetUserInfo} from '../../../../../hook/useUserInfo';
 import {PointMainPageName} from '../../../../../pages/Main/MyPage/Point';
 import {SCREEN_NAME as NoticeScreenName} from '../../../../../screens/Main/Notice';
 import {SCREEN_NAME as PurchaseHistoryName} from '../../../../../screens/Main/PurchaseHistory';
-import {SCREEN_NAME as ReviewScreenName} from '../../../../../screens/Main/Review';
-import {PAGE_NAME as ReportReviewPageName} from '../../../../../screens/Main/Review/ReportReview';
-import {PAGE_NAME as GroupApplicationCheckPageName} from '../../../../Group/GroupApartment/ApartmentApplicationCheck';
+
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntroPageName} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
@@ -45,13 +51,23 @@ import {PAGE_NAME as FAQPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as PersonalInfoPageName} from '../../../MyPage/PersonalInfo';
 import {PAGE_NAME as MealPageName} from '../../Meal/Main';
 import {PAGE_NAME as MealCartPageName} from '../../MealCart/Main';
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
 import {PAGE_NAME as RegisterInfoStartPageName} from '~pages/RegisterInfo/Start';
 import {View} from 'react-native';
 import {RightSkinnyArrow} from '../../../../../components/Icon';
+import {
+  sseType1Atom,
+  sseType2Atom,
+  sseType8Atom,
+} from '../../../../../utils/sse/sseLogics/store';
 
 export const PAGE_NAME = 'P_MAIN__BNB__MORE';
 
-const Pages = () => {
+const Pages = ({route}) => {
+  const [total] = useAtom(totalReviewWaitListAtom);
+  const [redeemablePoints] = useAtom(redeemablePointsAtom);
+
   const themeApp = useTheme();
   const navigation = useNavigation();
   const {
@@ -67,13 +83,15 @@ const Pages = () => {
 
   const {getReviewWait} = useReviewWait();
 
+  const {sseHistory} = useSse();
+  const [sseType1] = useAtom(sseType1Atom);
+  const [sseType2] = useAtom(sseType2Atom);
+
+  const [sseType8] = useAtom(sseType8Atom);
+
   useEffect(() => {
     getReviewWait();
-  }, []);
-
-  const [total, iAmNotUsingThis] = useAtom(totalReviewWaitListAtom);
-
-  const [redeemablePoints] = useAtom(redeemablePointsAtom);
+  }, [sseType8?.id]);
 
   const [versionChecked, setVersionChecked] = useState(false);
   const currentVersion = VersionCheck.getCurrentVersion();
@@ -134,6 +152,7 @@ const Pages = () => {
       getData();
     }
   }, []);
+
   if (!isUserInfo) {
     return <SkeletonUI />;
   }
@@ -201,17 +220,26 @@ const Pages = () => {
               onPress={() => {
                 navigation.navigate(ReviewScreenName);
               }}>
-              <InfomationText
-                text={'Title02SB'}
-                textColor={themeApp.colors.grey[2]}>
-                {total}
-              </InfomationText>
+              <SseRedDotType3
+                // sseType3
+                isSse={total > 0}
+                position="absolute"
+                right="-10px"
+                top="0px">
+                <InfomationText
+                  text={'Title02SB'}
+                  textColor={themeApp.colors.grey[2]}>
+                  {total}
+                </InfomationText>
+              </SseRedDotType3>
+
               <InfomationLabel
                 text={'CaptionR'}
                 textColor={themeApp.colors.grey[2]}>
                 구매후기
               </InfomationLabel>
             </InfomationBox>
+
             <InfomationBox>
               <InfomationText
                 text={'Title02SB'}
@@ -247,6 +275,12 @@ const Pages = () => {
 
             <ListBox
               title="리뷰 관리"
+              isSse={
+                // sseType8
+                total > 0 ||
+                (!!sseType8.type && !sseType8.read) ||
+                !!sseHistory?.find(v => v.type === 8)
+              }
               description={redeemablePoints > 0 && `모두 작성시 최대 `}
               effect={
                 redeemablePoints > 0 && (
@@ -280,7 +314,20 @@ const Pages = () => {
             {/* <ListBox title="식단 리포트" routeName={DietRepoMainPageName} /> */}
           </ListContainer>
           <ListContainer title="알림">
-            <ListBox title="공지사항" routeName={NoticeScreenName} />
+            <ListBox
+              isSse={
+                // sseType1, sseType2
+                (!!sseType1.type && !sseType1.read) ||
+                !!sseHistory?.find(v => v.type === 1) ||
+                (!!sseType2.type && !sseType2.read) ||
+                !!sseHistory?.find(v => v.type === 2)
+
+                // false
+              }
+              title="공지사항"
+              routeName={NoticeScreenName}
+            />
+
             <ListBox
               title="약관 및 개인 정보"
               routeName={TermOfServicePageName}
@@ -400,6 +447,7 @@ const InfomationCaption = styled(Typography)`
   font-family: 'Pretendard-Regular';
 `;
 
+const SseRedDotType3 = styled(SseRedDot)``;
 const RegisterInfoPressable = styled.Pressable`
   flex-direction: row;
   align-items: center;

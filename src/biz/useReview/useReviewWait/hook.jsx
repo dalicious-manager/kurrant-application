@@ -17,8 +17,11 @@ const useReviewWait = () => {
   const [redeemablePoints, setRedeemablePoints] = useAtom(redeemablePointsAtom);
   const [, setTotalReviewWaitList] = useAtom(totalReviewWaitListAtom);
   const getReviewWait = async () => {
+    // 주의! 이거 보낼떄마다 sseType3를
+
     try {
       const res = await Fetch.getReviewOrderMeal();
+
       // const res = await Fetch.orderMealMockData();
       setTotalReviewWaitList(res.data.count);
       setReviewWaitCount(res.data.count);

@@ -231,10 +231,10 @@ const Pages = ({route}) => {
                   // value={isApplicant.phone}
                   rules={{
                     required: '필수 입력 항목 입니다.',
-                    maxLength: {
-                      value: 2,
-                      message: '올바른 비밀번호를 입력해주세요',
-                    },
+                    // maxLength: {
+                    //   value: 2,
+                    //   message: '올바른 비밀번호를 입력해주세요',
+                    // },
                   }}
                 />
               </RegiteredView>

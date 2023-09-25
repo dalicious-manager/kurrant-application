@@ -439,11 +439,12 @@ const useAuth = () => {
       },
       option,
     );
-    queryClient.invalidateQueries('userInfo');
+    queryClient.clear();
     resetAtom();
     return res;
   };
   const saveFcmToken = async (body, option = {}) => {
+    console.log(body, 'saveFCM');
     const res = await Fetch.saveFcmToken(
       {
         ...body,

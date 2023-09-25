@@ -62,6 +62,8 @@ const useBoard = () => {
       const fetchRes2 = await Fetch.getNotice(2);
 
       setGetNoticeLoading(false);
+      // console.log('공지 여기여');
+      // console.log([...fetchRes1.data, ...fetchRes2.data]);
 
       setNotice([...fetchRes1.data, ...fetchRes2.data]);
     } catch (err) {
@@ -92,12 +94,32 @@ const useBoard = () => {
       setDeleteAlarmLoading(false);
     }
   };
+
+  const readAlarm = async (data, isRerenderNeeded = false) => {
+    try {
+      const response = await Fetch.readAlarm(data);
+
+      if (response.statusCode === 200) {
+        if (isRerenderNeeded) {
+          getAlarm();
+          console.log(`id: ${data[0]} 알림 읽었습니다 `);
+        } else {
+          console.log('알림을 모두 읽었습니다 ');
+        }
+      }
+    } catch (err) {
+      throw err;
+    } finally {
+    }
+  };
+
   return {
     getNotice,
     getMypageNotice,
     getSpotNotice,
     getAlarm,
     deleteAlarm,
+    readAlarm,
     readableAtom: {
       notice,
       spotNotice,

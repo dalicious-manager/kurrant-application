@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Alert, ScrollView} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 
@@ -7,6 +7,8 @@ import useBoard from '../../biz/useBoard';
 import {NotificationIcon} from '../../components/Icon';
 import Typography from '../../components/Typography';
 import Wrapper from '../../components/Wrapper';
+import {PAGE_NAME as MainPageName} from '../Main/Bnb/Home/Main';
+import SseRedDot from '../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {fetchJson} from '../../utils/fetch';
 import {PAGE_NAME as NoticeDetailPageName} from '../Main/MyPage/Notice/NoticeDetail';
 
@@ -14,51 +16,45 @@ export const PAGE_NAME = 'P__NOTIFICATION_CENTER';
 
 const alramData = [
   {
-    id: 0,
-    title: '콥샐러드 주문시 1+10',
-    type: 'promotion',
-    description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
-    dateTime: '07. 21 13:30',
+    content:
+      '조재신님, 주문하신 블루베리 크럼블 케이크 상품이 달리셔스(카페)에 도착하였습니다.',
+    dateTime: '2023-08-22 10:03',
+    id: '04424322-d6dd-4c37-ad0b-6d29b16bd851',
+    isRead: true,
+    noticeId: null,
+    reviewId: null,
+    title: '배송완료',
+    type: '주문상태',
+    userId: 23,
   },
   {
-    id: 1,
-    title: '미식가 테스트하고 경품 받아가세요!',
-    type: 'event',
-    description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
-    dateTime: '07. 21 13:30',
-  },
-  {
-    id: 2,
-    title: '생일 축하 쿠폰이 발행됐어요.',
-    type: 'coupon',
-    description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
-    dateTime: '07. 21 13:30',
-  },
-  {
-    id: 3,
-    title: '생일 축하 쿠폰이 발행됐어요.',
-    type: 'coupon',
-    description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
-    dateTime: '07. 21 13:30',
-  },
-  {
-    id: 4,
-    title: '생일 축하 쿠폰이 발행됐어요.',
-    type: 'coupon',
-    description: "커런트에 '라그릴리아'가 새로운 메이커스로 합류합니다.",
-    dateTime: '07. 21 13:30',
+    content:
+      '조재신님, 주문하신 크림라떼 상품이 달리셔스(카페)에 도착하였습니다.',
+    dateTime: '2023-08-22 10:03',
+    id: '529a2507-b6b0-4a35-ba54-5ff260c0a777',
+    isRead: true,
+    noticeId: null,
+    reviewId: null,
+    title: '배송완료',
+    type: '주문상태',
+    userId: 23,
   },
 ];
 
 const Pages = () => {
   const themeApp = useTheme();
+
+  const allowReadAlarm = useRef(true);
+
   const {
     getAlarm,
+    readAlarm,
     readableAtom: {alarm},
   } = useBoard();
   const navigation = useNavigation();
 
   const goToPage = async id => {
+    // return;
     try {
       if (id) {
         const res = await fetchJson(`/boards/notices/${id}`);
@@ -82,12 +78,33 @@ const Pages = () => {
     const getUseAlarm = async () => {
       await getAlarm();
     };
+
     getUseAlarm();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (!alarm || alarm.length < 1) return;
+
+      if (allowReadAlarm.current) {
+        readAlarm(
+          alarm.map(v => v.id),
+          false,
+        );
+      }
+
+      allowReadAlarm.current = true;
+    };
+  }, [alarm]);
+
+  const handleNotificationBoxPress = id => {
+    readAlarm([id], true);
+  };
 
   return (
     <Wrapper>
       {!alarm?.length > 0 ? (
+        // {!alramData?.length > 0 ? (
         <NonNotice>
           <Typography text="Body05R" textColor={themeApp.colors.grey[5]}>
             알림 내역이 없어요.
@@ -97,7 +114,23 @@ const Pages = () => {
         <ScrollView>
           {alarm?.map(v => {
             return (
-              <NotificationBox key={v.id} onPress={() => goToPage(v.noticeId)}>
+              <NotificationBox
+                key={v.id}
+                onPress={() => {
+                  if (!v.isRead) {
+                    handleNotificationBoxPress(v.id);
+                    allowReadAlarm.current = false;
+                  }
+                  goToPage(v.noticeId);
+                }}>
+                <SseRedDotType6
+                  // sseType6
+                  isSse={!v.isRead}
+                  position={'absolute'}
+                  top={'-8px'}
+                  right={'-1px'}
+                />
+
                 <TitleBox>
                   <TitleBoxFront>
                     <IconBox>
@@ -137,6 +170,8 @@ const Pages = () => {
 };
 
 export default Pages;
+
+const SseRedDotType6 = styled(SseRedDot)``;
 
 const NotificationBox = styled.Pressable`
   padding: 24px;

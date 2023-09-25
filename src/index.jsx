@@ -5,19 +5,21 @@ import React, {useCallback, useEffect} from 'react';
 import {StatusBar, LogBox, Text, TextInput} from 'react-native';
 import codePush from 'react-native-code-push';
 import Config from 'react-native-config';
+import {PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {ThemeProvider} from 'styled-components';
 import styled from 'styled-components/native';
-import {PaperProvider} from 'react-native-paper';
 
 import Screen from './screens';
 import Theme from './theme';
+
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
 TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.allowFontScaling = false;
+
 const App = () => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
@@ -77,7 +79,14 @@ const App = () => {
 export default codePush(App);
 
 const IsDevelop = styled.Text`
+  position: absolute;
+  background-color: #00000066;
   width: 100%;
+  color: white;
+
+  top: 0px;
+  right: 0px;
+  z-index: 1;
   text-align: center;
   align-items: center;
   justify-content: center;

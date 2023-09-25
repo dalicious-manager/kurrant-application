@@ -1,13 +1,14 @@
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useAtom} from 'jotai';
+
 import React, {useCallback, useEffect} from 'react';
-import {Platform, StatusBar, StyleSheet} from 'react-native';
+import {NativeModules, Platform, StatusBar, StyleSheet} from 'react-native';
 import {Alert} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import Main from './Main';
+import useSseStart from '../utils/sse/sseLogics/useSseStart';
 
 const Root = createNativeStackNavigator();
 
@@ -19,6 +20,8 @@ const Screen = () => {
       Platform.OS === 'android' && StatusBar.setTranslucent(true);
     }, []),
   );
+
+  useSseStart();
 
   return (
     <SafeAreaProvider>

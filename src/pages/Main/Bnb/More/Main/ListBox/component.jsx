@@ -5,6 +5,7 @@ import styled, {useTheme} from 'styled-components/native';
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 
 import Typography from '../../../../../../components/Typography';
+import SseRedDot from '../../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 /**
  * @param {object} props
@@ -29,6 +30,7 @@ const Component = ({
   effect,
   routeName,
   params,
+  isSse,
   latestVersion,
   currentVersion,
 }) => {
@@ -64,9 +66,18 @@ const Component = ({
           : navigation.navigate(routeName))
       }>
       <TitleBox>
-        <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>
-          {title}
-        </Title>
+        <SseRedDotType3
+          // sseType3
+
+          isSse={isSse}
+          position={'absolute'}
+          top={'0px'}
+          right={'-8px'}>
+          <Title text={'Body05SB'} textColor={themeApp.colors.grey[2]}>
+            {title}
+          </Title>
+        </SseRedDotType3>
+
         {isVersion && (
           <VersionInfo textColor={themeApp.colors.grey[4]}>
             {currentVersion}
@@ -129,3 +140,5 @@ const TailBox = styled.View`
   flex-direction: row;
   align-items: center;
 `;
+
+const SseRedDotType3 = styled(SseRedDot)``;

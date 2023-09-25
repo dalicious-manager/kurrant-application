@@ -17,6 +17,7 @@ import {
   timeLeftIndicator,
   timePassIndicator,
 } from '../../../../../utils/dateFormatter';
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 /**
  * @param {object} props
@@ -80,16 +81,25 @@ const Component = ({
 
   return (
     <Container>
-      <DateText>
-        {serviceDate &&
-          `${formattedMonthDay(
-            serviceDate,
-          )} ${diningType} · ${timePassIndicator(
-            new Date(Date.now()),
-
-            stringDateToJavascriptDate(serviceDate, '-'),
-          )}`}
-      </DateText>
+      <SseRedDotType3
+        // sseType3
+        // 여기는 무조건 true
+        isSse={true}
+        right={'10px'}
+        top={'5px'}
+        position={'absolute'}
+      />
+      <DateWrap>
+        <DateText>
+          {serviceDate &&
+            `${formattedMonthDay(
+              serviceDate,
+            )} ${diningType} · ${timePassIndicator(
+              new Date(Date.now()),
+              stringDateToJavascriptDate(serviceDate, '-'),
+            )}`}
+        </DateText>
+      </DateWrap>
 
       <CardContentBox>
         <ImagePressable
@@ -158,6 +168,8 @@ const Container = styled.View`
 
   padding-top: 24px;
   padding-bottom: 24px;
+  position: relative;
+  /* position: absolute; */
 `;
 
 // 보더 바텀이 안먹는다 이거 나중에 봐야됨
@@ -228,6 +240,11 @@ const OptionText = styled(Typography).attrs({text: 'CaptionR'})`
   margin: 1px 0;
 `;
 
+const DateWrap = styled.View`
+  flex-direction: row;
+  width: 100%;
+`;
+
 const DDayText = styled(Typography).attrs({text: 'CaptionR'})`
   color: ${props => {
     if (props.calculateReviewDDay === 'grey') {
@@ -266,3 +283,5 @@ const ReviewDDayExpired = styled.View`
 const TextText = styled(Typography).attrs({text: 'Button10SB'})`
   color: ${props => props.theme.colors.grey[3]};
 `;
+
+const SseRedDotType3 = styled(SseRedDot)``;

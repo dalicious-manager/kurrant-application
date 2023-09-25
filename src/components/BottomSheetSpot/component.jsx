@@ -22,6 +22,7 @@ import {mainDimAtom} from '../../utils/store';
 import BalloonMessage from '../BalloonMessage';
 import Label from '../Label';
 import Typography from '../Typography';
+import SseRedDot from '../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -37,8 +38,10 @@ const BottomSheetSpot = props => {
     userSpotId,
     booleanValue,
     onPressEvent2 = () => {},
+    sseType7List,
   } = props;
   //멀티 셀렉터시 이용
+
   // const [selected, setSelected] = useState(new Map());
   const [showDim, setShowDim] = useAtom(mainDimAtom);
   const onSelect = useCallback(
@@ -95,6 +98,7 @@ const BottomSheetSpot = props => {
     const {height} = event.nativeEvent.layout;
     setParentHeight(height);
   };
+
   return (
     <Modal visible={modalVisible} animationType={'fade'} transparent>
       <GestureHandlerRootView style={{flex: 1}}>
@@ -151,6 +155,14 @@ const BottomSheetSpot = props => {
               renderItem={({item}) => (
                 <View onLayout={onLayout}>
                   <ItemContainer>
+                    <SseRedDotType7
+                      // sseType7
+                      isSse={sseType7List?.includes(item.clientId)}
+                      position={'absolute'}
+                      top={'4px'}
+                      right={'3px'}
+                    />
+
                     <GroupView>
                       <View style={{marginRight: 8}}>
                         <Label
@@ -320,3 +332,5 @@ const TextView = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+const SseRedDotType7 = styled(SseRedDot)``;

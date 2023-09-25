@@ -4,7 +4,7 @@ import {Dimensions, ScrollView} from 'react-native';
 import HTML, {RenderHTML, defaultSystemFonts} from 'react-native-render-html';
 import styled, {useTheme} from 'styled-components';
 
-import {setStorage} from '../../utils/asyncStorage';
+import {getStorage, setStorage} from '../../utils/asyncStorage';
 import {removeItemFromStorage} from '../../utils/asyncStorage';
 import Typography from '../Typography';
 
@@ -31,25 +31,21 @@ const Component = ({modalVisible, data, setModalVisible}) => {
   };
 
   const handleMessageRead = async () => {
-    // 1. 클릭하면 localstorage에 클릭한 날짜 저장
-    // 기존거 지우고 새로운거 올리기
-    await removeItemFromStorage('announcementsClickedOneDate');
+    const clickedDates =
+      JSON.parse(await getStorage('announcementsClickedOneDate')) || [];
 
-    const checkedTimeObject = {};
-    checkedTimeObject[data[currentIndex].id.toString()] = Date.now();
+    clickedDates.push({id: data[currentIndex].id, date: Date.now()});
+
+    await setStorage(
+      'announcementsClickedOneDate',
+      JSON.stringify(clickedDates),
+    );
 
     if (currentIndex < data?.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
       setModalVisible(false);
     }
-    await setStorage(
-      'announcementsClickedOneDate',
-      JSON.stringify(checkedTimeObject),
-    );
-
-    // 2. modalVisible
-    //setModalVisible(false);
   };
 
   const confirmPress = () => {
@@ -69,7 +65,7 @@ const Component = ({modalVisible, data, setModalVisible}) => {
               onPress={() => {
                 handleMessageRead();
               }}>
-              <ModalText>일주일간 보지 않기 x</ModalText>
+              <ModalText>다시 보지 않기 x</ModalText>
             </MessageReadPressable>
 
             <TitleView>
@@ -100,7 +96,7 @@ const Component = ({modalVisible, data, setModalVisible}) => {
   );
 };
 
-export default Component;
+export default React.memo(Component);
 
 const CenteredView = styled.View`
   flex: 1;

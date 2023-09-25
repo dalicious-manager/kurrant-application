@@ -4,6 +4,7 @@ import {GreyLockerIcon} from '~components/Icon';
 import {DefaultHumanIcon} from '~components/Icon';
 
 import Typography from '~components/Typography';
+import SseRedDot from '../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 // const sampleOnlyForReviewers = true;
 const sampleOnlyForReviewers = false;
@@ -13,6 +14,7 @@ const Component = ({
   pngLink,
   writtenDate: createDate,
   message: content,
+  isSseType8,
 }) => {
   const [calcFontSize, setCalcFontSize] = useState(278 * 0.052279);
 
@@ -43,6 +45,13 @@ const Component = ({
           </OnlyForReviewersContainer>
         ) : (
           <>
+            <SseRedDotType8
+              // sseType8
+              isSse={isSseType8}
+              position={'absolute'}
+              top={'-1px'}
+              right={'-2px'}
+            />
             <TitleWrap>
               <AdminName>{makersName ? makersName : '운영자'}</AdminName>
               <WrittenDate> {createDate} 작성</WrittenDate>
@@ -144,3 +153,5 @@ const Message = styled(Typography).attrs({text: 'Body06R'})`
     }
   }}
 `;
+
+const SseRedDotType8 = styled(SseRedDot)``;

@@ -1,9 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text, View} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import ArrowRightIcon from '~assets/icons/Arrow/arrowRight.svg';
 import Typography from '~components/Typography';
+
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 
 /**
  * @param {object} props
@@ -16,14 +18,24 @@ import Typography from '~components/Typography';
 const Component = ({
   title = '',
   isVersion,
+  id,
   isArrow = true,
   description,
   effect,
   onPressEvent,
+  sseTypeList,
 }) => {
   const themeApp = useTheme();
+
   return (
     <TitleContainer onPress={onPressEvent}>
+      <SseRedDot
+        // sseType1, sseType2
+        isSse={sseTypeList.map(v => v.noticeId)?.includes(id)}
+        position={'absolute'}
+        top={'23px'}
+        right={'47px'}
+      />
       <ContentsBox>
         <TitleBox>
           <Title

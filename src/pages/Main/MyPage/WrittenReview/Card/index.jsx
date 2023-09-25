@@ -55,6 +55,7 @@ const Component = ({
   commentList,
   toast,
   dailyFoodId,
+  sseType8List,
 }) => {
   // dailyFoodId
   // deliveryTime
@@ -107,7 +108,6 @@ const Component = ({
               const response = await deleteReview2({id: id});
 
               if (response.statusCode !== 200) {
-                console.log(response);
                 Alert.alert('리뷰 삭제 실패', `${response.message}`, [
                   {
                     text: '확인',
@@ -320,6 +320,7 @@ const Component = ({
                   pngLink={v.pngLink}
                   writtenDate={v.createDate}
                   message={v.content}
+                  isSseType8={sseType8List.includes(v.commentId)}
                 />
               </CommentWrap>
             );

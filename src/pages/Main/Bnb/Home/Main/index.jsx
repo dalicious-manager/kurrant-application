@@ -3,21 +3,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAtom, useAtomValue} from 'jotai';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
+  StyleSheet,
   Alert,
   StatusBar,
   AppState,
   Platform,
   Linking,
+  Text,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import Sound from 'react-native-sound';
 import VersionCheck from 'react-native-version-check';
 import {useQueryClient} from 'react-query';
 import styled, {css, useTheme} from 'styled-components/native';
 import BottomModal from '~components/BottomModal';
+import {BowlIcon} from '~components/Icon';
+import {PAGE_NAME as mealDetailPageName} from '~pages/Main/Bnb/MealDetail/Main';
 
 import MealInfoComponent from './MealInfoComponent/MealInfoComponent';
 import {BespinMembers, FoundersMembers} from '../../../../../assets';
@@ -28,6 +33,7 @@ import CsIcon from '../../../../../assets/icons/Home/cs.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
+import QRIcon from '../../../../../assets/icons/Home/qr.svg';
 import useAuth from '../../../../../biz/useAuth';
 import {weekAtom} from '../../../../../biz/useBanner/store';
 import useFoodDaily from '../../../../../biz/useDailyFood/hook';
@@ -37,6 +43,8 @@ import useMembership from '../../../../../biz/useMembership';
 import Balloon from '../../../../../components/BalloonHome';
 import BottomSheetSpot from '../../../../../components/BottomSheetSpot';
 import Calendar from '../../../../../components/Calendar';
+import ModalOneAnnouncement from '../../../../../components/ModalOneAnnouncement/ModalOneAnnouncement';
+import QRCodeComponent from '../../../../../components/QRCode/QRCode';
 import Toast from '../../../../../components/Toast';
 import Typography from '../../../../../components/Typography';
 import {
@@ -44,6 +52,7 @@ import {
   useGetDailyfoodList,
 } from '../../../../../hook/useDailyfood';
 import {useGetOrderMeal} from '../../../../../hook/useOrder';
+import {useGetPopupList} from '../../../../../hook/usePopup';
 import {useGroupSpotList} from '../../../../../hook/useSpot';
 import {
   useGetPrivateMembership,
@@ -52,6 +61,12 @@ import {
 import {getStorage, setStorage} from '../../../../../utils/asyncStorage';
 import {formattedWeekDate} from '../../../../../utils/dateFormatter';
 import jwtUtils from '../../../../../utils/fetch/jwtUtill';
+import {
+  sseType6Atom,
+  sseType7Atom,
+} from '../../../../../utils/sse/sseLogics/store';
+import useSse from '../../../../../utils/sse/sseLogics/useSse';
+import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
@@ -65,6 +80,8 @@ import {PAGE_NAME as SpotTypePageName} from '../../../../Spots/SpotType';
 import {PAGE_NAME as LoginPageName} from '../../../Login/Login';
 import {PAGE_NAME as FAQListDetailPageName} from '../../../MyPage/FAQ';
 import {PAGE_NAME as BuyMealPageName} from '../../BuyMeal/Main';
+import {foodDeliveryTimeFilter} from '../../BuyMeal/util/time';
+import {PAGE_NAME as DietRepoMainPageName} from '../../DietRepo/Main';
 import useGetDietRepo from '../../DietRepo/useGetDietRepo';
 import SkeletonUI from '../../Home/Skeleton';
 import {PAGE_NAME as MealMainPageName} from '../../Meal/Main';
@@ -80,6 +97,8 @@ const APPLE_APP_STORE_WEB_LINK = 'https://apps.apple.com/us/app/id1663407738';
 
 export const PAGE_NAME = 'P_MAIN__BNB__HOME';
 const Pages = () => {
+  //
+
   const navigation = useNavigation();
   const themeApp = useTheme();
   const {setMorning, setLunch, setDinner, setDiningTypes} = useFoodDaily();
@@ -106,17 +125,58 @@ const Pages = () => {
   //   userSpotId,
   //   formattedWeekDate(new Date()),
   // );
+  const [qrOpen, setQrOpen] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+  const [isOneAnnouncementModalVisible, setIsOneAnnouncementModalVisible] =
+    useState(false);
   const [showDim, setShowDim] = useAtom(mainDimAtom);
 
   const [show, setShow] = useState(false);
 
   const [appState, setAppState] = useState();
   const [eventSpotLoading, setEventSpotLoading] = useState(false);
-
   const [isCancelSpot, setIsCancelSpot] = useAtom(isCancelSpotAtom);
   const toast = Toast();
+
+  const isModalOpenAtLeastOnce = useRef(false);
+
+  const {sseType5, confirmSseIsRead, sseHistory, sseHistoryRefetch} = useSse();
+  const [sseType6] = useAtom(sseType6Atom);
+  const [sseType7List, setSseType7List] = useState([]);
+  const [sseType7] = useAtom(sseType7Atom);
+
+  useEffect(() => {
+    sseHistoryRefetch();
+    refetchGroupSpotList();
+  }, [!!sseType7.id]);
+
+  useEffect(() => {
+    const result = [
+      ...new Set(
+        sseHistory
+          ?.filter(v => v.type === 7)
+          .map(v => v.groupId)
+          .filter(v => (v ? v : undefined)),
+      ),
+    ];
+    setSseType7List(result ? result : []);
+  }, [sseHistory]);
+
+  useEffect(() => {
+    if (!isModalOpenAtLeastOnce.current) {
+      if (modalVisible) {
+        isModalOpenAtLeastOnce.current = true;
+      }
+    } else {
+      if (!modalVisible) {
+        if (Array.isArray(sseType7List) && sseType7List.length > 0) {
+          confirmSseIsRead({type: 7});
+        }
+      }
+    }
+  }, [modalVisible]);
+
   const VISITED_NOW_DATE = Math.floor(new Date().getDate());
   const nextWeek = weekly[1].map(el => formattedWeekDate(el));
   const {data: isPrivateMembership, refetch: privateMembershipRefetch} =
@@ -124,11 +184,11 @@ const Pages = () => {
   const intersection = nextWeek.filter(x => mealCheck?.includes(x));
 
   const date = formattedWeekDate(new Date());
-
   const {
     totalNutrition: {totalCalorie},
     dietRepoMainRefetch,
   } = useGetDietRepo(formattedWeekDate(new Date()), undefined, undefined);
+  const {data: popupList} = useGetPopupList();
 
   const loadCoinSound = async () => {
     try {
@@ -155,7 +215,11 @@ const Pages = () => {
     getMembershipHistory,
     readableAtom: {membershipHistory},
   } = useMembership();
-  const {data: orderMealList, refetch: orderMealRefetch} = useGetOrderMeal(
+  const {
+    data: orderMealList,
+    refetch: orderMealRefetch,
+    isFetching: orderMealListIsFetching,
+  } = useGetOrderMeal(
     formattedWeekDate(weekly[0][0]),
     formattedWeekDate(
       weekly[weekly?.length - 1][weekly[weekly?.length - 1].length - 1],
@@ -194,12 +258,14 @@ const Pages = () => {
     formattedWeekDate(weekly[weekly.length - 1][weekly[0].length - 1]),
     userRole,
   );
-  const {data: isUserGroupSpotCheck} = useGroupSpotList();
+  const {data: isUserGroupSpotCheck, refetch: refetchGroupSpotList} =
+    useGroupSpotList();
   useEffect(() => {
     if (isUserGroupSpotCheck?.data && navigation.isFocused()) {
       setUserGroupSpot(isUserGroupSpotCheck?.data);
     }
   }, [isUserGroupSpotCheck?.data]);
+
   useEffect(() => {
     const lunchData = dailyfoodData?.dailyFoodDtos.filter(
       x => x.diningType === 2,
@@ -250,7 +316,14 @@ const Pages = () => {
         userGroupSpot?.mySpotCount === 0 &&
         userGroupSpot?.privateCount === 0
       ) {
-        navigation.navigate(SpotGuidePageName);
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: SpotGuidePageName,
+            },
+          ],
+        });
       }
     }
   }, [isUserInfo?.data?.spotId, userGroupSpot]);
@@ -272,8 +345,6 @@ const Pages = () => {
     }
   }, [showDim]);
 
-  // 홈 전체 공지사항
-
   const handlePress = useCallback(async (url, alterUrl) => {
     // 만약 어플이 설치되어 있으면 true, 없으면 false
     const supported = await Linking.canOpenURL(url);
@@ -287,46 +358,29 @@ const Pages = () => {
     }
   }, []);
 
-  // 홈 공지사항 하나만 넣기
-
-  // const {
-  //   getOneAnnouncement,
-  //   oneAnnouncement,
-  //   isOneAnnouncementModalVisible,
-  //   setIsOneAnnouncementModalVisible,
-  // } = useGetOneAnnouncements();
-
-  // useEffect(() => {
-  //   removeItemFromStorage('announcementsClickedOneDate');
-  // }, []);
-
-  // // 회원 정보 입력
-
-  // useShowRegisterInfo();
-
   useEffect(() => {
     const handleShowModal = async () => {
       const VISITED_BEFORE_DATE = await getStorage('balloonTime');
 
       if (intersection.length === 0) {
-        setIsVisible(true);
+        // setIsVisible(true);
       }
       if (
         intersection.length === 0 &&
         VISITED_BEFORE_DATE === VISITED_NOW_DATE
       ) {
-        setIsVisible(true);
+        // setIsVisible(true);
       }
       if (
         intersection.length === 0 &&
         VISITED_BEFORE_DATE !== null &&
         VISITED_BEFORE_DATE !== VISITED_NOW_DATE
       ) {
-        setIsVisible(false);
+        // setIsVisible(false);
       }
     };
     handleShowModal();
-    // getOneAnnouncement(2);
+
     if (coinSound === null) loadCoinSound();
   }, []);
 
@@ -359,44 +413,9 @@ const Pages = () => {
       }
     }, [isCancelSpot, appState]),
   );
-  const checkPermission = () => {
-    messaging()
-      .hasPermission()
-      .then(enabled => {
-        if (enabled) {
-          getToken();
-        } else {
-          requestPermission();
-        }
-      })
-      .catch(() => {});
-  };
 
-  //2
-  const requestPermission = () => {
-    messaging()
-      .requestPermission()
-      .then(() => {
-        getToken();
-      })
-      .catch(() => {});
-  };
-
-  //3
-  const getToken = () => {
-    messaging()
-      .getToken()
-      .then(token => {
-        if (token) {
-          saveFcmToken({
-            token: token,
-          });
-        }
-      })
-      .catch(() => {});
-  };
   useEffect(() => {
-    checkPermission();
+    // checkPermission();
     // Check whether an initial notification is available
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       if (remoteMessage) {
@@ -567,43 +586,13 @@ const Pages = () => {
       listener.remove();
     };
   }, [isUserGroupSpotCheck]);
-  useFocusEffect(
-    useCallback(() => {
-      const getData = async () => {
-        await VersionCheck.getLatestVersion().then(latestVersion => {
-          const regex = /[^0-9]/g;
-          const result = currentVersion?.replace(regex, '');
-          const result2 = latestVersion?.replace(regex, '');
-          if (Number(result) < Number(result2)) {
-            Alert.alert(
-              '앱 업데이트',
-              '최신버전으로 업데이트 되었습니다.\n새로운 버전으로 업데이트 해주세요',
-              [
-                {
-                  text: '확인',
-                  onPress: async () => {
-                    if (Platform.OS === 'android') {
-                      handlePress(
-                        GOOGLE_PLAY_STORE_LINK,
-                        GOOGLE_PLAY_STORE_WEB_LINK,
-                      );
-                    } else {
-                      handlePress(
-                        APPLE_APP_STORE_LINK,
-                        APPLE_APP_STORE_WEB_LINK,
-                      );
-                    }
-                  },
-                  style: 'destructive',
-                },
-              ],
-            );
-          }
-        });
-      };
-      getData();
-    }, []),
-  );
+
+  // 팝업
+  useEffect(() => {
+    if (popupList !== undefined && popupList?.length !== 0 && userSpot) {
+      setIsOneAnnouncementModalVisible(true);
+    }
+  }, [popupList, userSpot]);
 
   if (!isUserInfo?.data) {
     return <SkeletonUI />;
@@ -615,32 +604,13 @@ const Pages = () => {
         paddingTop: Math.round(StatusBar.currentHeight),
       }}>
       <View>
-        {/* {!!oneAnnouncement && (
+        {popupList?.length !== 0 && popupList !== undefined && (
           <ModalOneAnnouncement
-            data={oneAnnouncement}
+            data={popupList}
             modalVisible={isOneAnnouncementModalVisible}
             setModalVisible={setIsOneAnnouncementModalVisible}
           />
-        )} */}
-
-        {/* 홈 강제 공지사항 띄우기 */}
-        {/* {Array.isArray(announcements) &&
-          announcements.length > 0 &&
-          announcements.map(v => {
-            if (announcementHandle[v.id.toString()]) {
-              return (
-                <ModalAnnouncement
-                  key={v.id}
-                  data={v}
-                  modalVisible={announcementModalVisible}
-                  announcementHandle={announcementHandle}
-                  setAnnouncementHandle={setAnnouncementHandle}
-                />
-              );
-            } else {
-              return;
-            }
-          })} */}
+        )}
 
         <BarWrap>
           <SpotName onPress={PressSpotButton}>
@@ -652,14 +622,37 @@ const Pages = () => {
                 : spotName}
             </SpotNameText>
             <ArrowIcon />
+            <SseRedDotType7
+              // sseType7
+              isSse={
+                (!!sseType7.type && !sseType7.read) ||
+                !!(sseType7List?.length > 0)
+              }
+              position={'absolute'}
+              right={'-6px'}
+              top={'-11px'}
+            />
           </SpotName>
           <Icons>
-            <BellIconPress
-              onPress={() => {
-                navigation.navigate(NotificationCenterName);
-              }}>
-              <BellIcon />
-            </BellIconPress>
+            <SseRedDotType6
+              // sseType6
+              isSse={
+                (!!sseType6.type && !sseType6.read) ||
+                !!sseHistory?.find(v => v.type === 6)
+              }
+              position={'absolute'}
+              right={'10px'}
+              top={'4px'}>
+              {/* 홈 알림 벨모양 Sse */}
+              <BellIconPress
+                onPress={() => {
+                  confirmSseIsRead({type: 6});
+                  navigation.navigate(NotificationCenterName);
+                }}>
+                <BellIcon />
+              </BellIconPress>
+            </SseRedDotType6>
+
             <CsIconPress
               onPress={() => {
                 navigation.navigate(FAQListDetailPageName);
@@ -683,25 +676,39 @@ const Pages = () => {
               <GreyTxt>오늘은 배송되는 식사가 없어요</GreyTxt>
             </NoMealInfo>
           ) : (
-            orderMealList?.data?.map((m, idx) => {
-              if (m.serviceDate === date)
-                return (
-                  <React.Fragment key={`${m.id} ${idx}`}>
-                    {m.orderItemDtoList.map(meal => {
-                      return (
-                        <MealInfoComponent
-                          m={m}
-                          meal={meal}
-                          loadCoinSound={loadCoinSound}
-                          dailyFoodId={meal.dailyFoodId}
-                          coinSound={coinSound}
-                          key={`${meal.id} ${meal.dailyFoodId}`}
-                        />
-                      );
-                    })}
-                  </React.Fragment>
-                );
-            })
+            <>
+              {/* qr */}
+              {/* {!orderMealListIsFetching && orderMealList?.data && (
+                <>
+                  <QRCodeComponent modal={qrOpen} setModal={setQrOpen} />
+                  <QRView>
+                    <QRText>오늘의 식사를 스캔해주세요</QRText>
+                    <Pressable onPress={() => setQrOpen(true)}>
+                      <QRIcon />
+                    </Pressable>
+                  </QRView>
+                </>
+              )} */}
+              {orderMealList?.data?.map((m, idx) => {
+                if (m.serviceDate === date)
+                  return (
+                    <React.Fragment key={`${m.id} ${idx}`}>
+                      {m.orderItemDtoList.map(meal => {
+                        return (
+                          <MealInfoComponent
+                            m={m}
+                            meal={meal}
+                            loadCoinSound={loadCoinSound}
+                            dailyFoodId={meal.dailyFoodId}
+                            coinSound={coinSound}
+                            key={`${meal.id} ${meal.dailyFoodId}`}
+                          />
+                        );
+                      })}
+                    </React.Fragment>
+                  );
+              })}
+            </>
           )}
         </MainWrap>
 
@@ -841,10 +848,14 @@ const Pages = () => {
         </Wrap>
       </ScrollViewWrap>
 
-      {isVisible && (
-        <BalloonWrap>
-          <Balloon label="다음주 식사 구매하셨나요?" />
-        </BalloonWrap>
+      {!!sseType5.userId && !sseType5.read && !!sseType5.content && (
+        //다음주 식사는 구매하셨나요
+        <BalloonPressable
+          onPress={() => {
+            // confirmBalloonClicked();
+          }}>
+          <Balloon label={sseType5.content} />
+        </BalloonPressable>
       )}
 
       <ButtonWrap>
@@ -853,11 +864,19 @@ const Pages = () => {
           status={!dailyfoodListIsFetching || dailyfoodDataList?.data}
           onPress={async () => {
             if (isUserInfo?.data?.spotId) {
+              sseType5.userId &&
+                !sseType5.read &&
+                confirmSseIsRead({
+                  type: 5,
+                });
+
               navigation.navigate(BuyMealPageName);
               closeBalloon();
             } else {
               Alert.alert('식사구매', '스팟선택 후 식사를 구매해주세요');
             }
+
+            // disconnectSse();
           }}>
           {(!dailyfoodListIsFetching || dailyfoodDataList?.data) && (
             <PlusIcon />
@@ -897,6 +916,7 @@ const Pages = () => {
         setModalVisible={setModalVisible}
         title="배송 스팟 선택"
         // data={userGroupSpot?.spotListResponseDtoList}
+        sseType7List={sseType7List}
         data={isUserGroupSpotCheck?.data.spotListResponseDtoList}
         selected={selected}
         setSelected={setSelected}
@@ -1098,7 +1118,7 @@ const ButtonText = styled(Typography).attrs({text: 'BottomButtonSB'})`
   margin-left: 8px;
 `;
 
-const BalloonWrap = styled.View`
+const BalloonPressable = styled.Pressable`
   position: absolute;
   bottom: 80px;
   left: 28%;
@@ -1134,6 +1154,8 @@ const CsIconPress = styled.Pressable`
   align-items: center;
 `;
 
+const SseRedDotType6 = styled(SseRedDot)``;
+const SseRedDotType7 = styled(SseRedDot)``;
 const DietRepoPressable = styled.Pressable`
   flex-direction: row;
   align-items: center;
@@ -1153,5 +1175,24 @@ const DietRepoText = styled(Typography).attrs({text: 'Body05SB'})`
   margin-left: 13px;
 `;
 const CalText = styled(Typography).attrs({text: 'Body06R'})`
+  color: ${props => props.theme.colors.grey[2]};
+`;
+
+const QRView = styled.View`
+  width: 100%;
+  height: 64px;
+  margin-left: 24px;
+  margin-right: 24px;
+  margin-bottom: 16px;
+  background-color: white;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+`;
+
+const QRText = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[2]};
 `;

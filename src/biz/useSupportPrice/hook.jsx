@@ -14,6 +14,7 @@ const useSupportPrices = () => {
       setSupportPrices(res.data.supportPrice);
     } catch (err) {
       // Alert.alert('일일 지원금', err?.toString()?.replace('error: ', ''));
+      console.log(err.toString()?.replace('error: ', ''));
     }
   };
 
