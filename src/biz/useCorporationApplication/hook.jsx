@@ -33,13 +33,14 @@ const useCorporationApplication = () => {
 
       setCorpCheck(res.data);
     } catch (err) {
-      Alert.alert('신청 내역 조회', err.toString()?.replace('error: ', ''), [
-        {
-          text: '확인',
-          onPress: () => {},
-          style: 'cancel',
-        },
-      ]);
+      // Alert.alert('신청 내역 조회', err.toString()?.replace('error: ', ''), [
+      //   {
+      //     text: '확인',
+      //     onPress: () => {},
+      //     style: 'cancel',
+      //   },
+      // ]);
+      console.log(err.toString()?.replace('error: ', ''));
     } finally {
       setCorpLoading(false);
     }

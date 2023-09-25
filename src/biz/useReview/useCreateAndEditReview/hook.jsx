@@ -19,13 +19,14 @@ const useReviewWait = () => {
       setReviewWaitList(res.data.orderFoodList);
       // setReviewWaitList([]);
     } catch (err) {
-      Alert.alert('작성 리뷰 조회', err.toString()?.replace('error: ', ''), [
-        {
-          text: '확인',
-          onPress: () => {},
-          style: 'cancel',
-        },
-      ]);
+      // Alert.alert('작성 리뷰 조회', err.toString()?.replace('error: ', ''), [
+      //   {
+      //     text: '확인',
+      //     onPress: () => {},
+      //     style: 'cancel',
+      //   },
+      // ]);
+      console.log(err.toString()?.replace('error: ', ''));
     }
   };
 
