@@ -382,6 +382,9 @@ import NotificationCenter, {
 import SplashPage, {PAGE_NAME as SplashPageName} from '../../pages/Splash';
 
 // map
+import RecommendMakersMap, {
+  PAGE_NAME as RecommendMakersMapPage,
+} from '../../pages/Map/RecommendMakersMap';
 import SpotType, {PAGE_NAME as SpotTypePage} from '../../pages/Spots/SpotType';
 import MySpotMap, {PAGE_NAME as MySpotMapPage} from '../../pages/Map/MySpotMap';
 import ShareSpotMap, {
@@ -2584,6 +2587,23 @@ const Screen = () => {
             headerShadowVisible: false,
             //headerTransparent: true,
             title: '공유 스팟 찾기',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: 'Pretendard-SemiBold',
+              fontSize: 14,
+              lineHeight: 22,
+            },
+          }}
+        />
+        <MainRoot.Screen
+          name={RecommendMakersMapPage}
+          component={RecommendMakersMap}
+          options={{
+            headerLeft: () => <BackButton margin={[10, 0]} />,
+            headerShown: true,
+            headerShadowVisible: false,
+            //headerTransparent: true,
+            title: '맛집 추천하기',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'Pretendard-SemiBold',

@@ -30,6 +30,7 @@ import ArrowIcon from '../../../../../assets/icons/Home/arrowDown.svg';
 import BellIcon from '../../../../../assets/icons/Home/bell.svg';
 import CalendarIcon from '../../../../../assets/icons/Home/calendar.svg';
 import CsIcon from '../../../../../assets/icons/Home/cs.svg';
+import MakerRecommendIcon from '../../../../../assets/icons/Home/makers.svg';
 import MembershipIcon from '../../../../../assets/icons/Home/membership.svg';
 import MembersIcon from '../../../../../assets/icons/Home/membersIcon.svg';
 import PlusIcon from '../../../../../assets/icons/Home/plus.svg';
@@ -70,6 +71,7 @@ import SseRedDot from '../../../../../utils/sse/SseService/SseRedDot/SseRedDot';
 import {mainDimAtom} from '../../../../../utils/store';
 import {PAGE_NAME as ApartRegisterSpotPageName} from '../../../../Group/GroupApartment/SearchApartment/AddApartment/DetailAddress';
 import {PAGE_NAME as GroupManagePageName} from '../../../../Group/GroupManage/SpotManagePage';
+import {PAGE_NAME as RecommendMakersMapPageName} from '../../../../Map/RecommendMakersMap';
 import {PAGE_NAME as MembershipInfoPageName} from '../../../../Membership/MembershipInfo';
 import {PAGE_NAME as MembershipIntro} from '../../../../Membership/MembershipIntro';
 import {PAGE_NAME as NotificationCenterName} from '../../../../NotificationCenter';
@@ -809,7 +811,18 @@ const Pages = () => {
                 </MembershipText>
               </MenbershipBanner>
             )}
-
+            {/* 메이커스 추천 */}
+            <MakerRecommendView
+              onPress={() => navigation.navigate(RecommendMakersMapPageName)}>
+              <MakersRecommendInnerView>
+                <RecommendText>내가 아는 맛집</RecommendText>
+                <RecommendBoldText>
+                  <RecommendBoldText bold>메이커스</RecommendBoldText>로
+                  추천하기
+                </RecommendBoldText>
+              </MakersRecommendInnerView>
+              <MakerRecommendIcon />
+            </MakerRecommendView>
             {/* 아래주석 마켓 추가시 사용 */}
             {/* <MarketWrap>
             <Market>
@@ -1195,4 +1208,28 @@ const QRView = styled.View`
 
 const QRText = styled(Typography).attrs({text: 'Body05SB'})`
   color: ${props => props.theme.colors.grey[2]};
+`;
+
+const MakerRecommendView = styled.Pressable`
+  background-color: white;
+  width: 100%;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0px 16px;
+`;
+
+const MakersRecommendInnerView = styled.View`
+  padding-top: 17px;
+  //padding-bottom: 18px;
+`;
+
+const RecommendText = styled(Typography).attrs({text: 'CaptionR'})`
+  color: ${props => props.theme.colors.grey[2]};
+`;
+
+const RecommendBoldText = styled(Typography).attrs({text: 'Title03SB'})`
+  color: ${props =>
+    props.bold ? props.theme.colors.purple[500] : props.theme.colors.grey[2]};
 `;

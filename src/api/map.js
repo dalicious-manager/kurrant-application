@@ -1,6 +1,11 @@
+import {
+  findClosestCoordinate,
+  findClosestLocation,
+} from '../pages/Map/components/location';
+
 const id = 'frbi51gn4o';
 const key = 'QwC8dsoAGD8XBDYV1ykHflWQp0b7KbIRd1Hzr97P';
-
+const kakaoKey = 'ecca029eb4635c04980ca7e0906fd87c';
 export const mapApis = {
   // 네이버 지도 도로명 주소 , 우편 번호
   getRoadAddress: async (longitude, latitude) => {
@@ -69,7 +74,6 @@ export const mapApis = {
   },
   // 카카오 주소 검색
   searchObject: async query => {
-    const key = 'ecca029eb4635c04980ca7e0906fd87c';
     const lat = 37.49703;
     const lng = 127.028191;
     const sort = 'accuracy';
@@ -79,7 +83,7 @@ export const mapApis = {
     const res = await fetch(apiUrl, {
       method: 'GET',
       headers: {
-        Authorization: `KakaoAK ${key}`,
+        Authorization: `KakaoAK ${kakaoKey}`,
       },
     });
     const result = await res.json();
@@ -92,11 +96,52 @@ export const mapApis = {
     const addrRes = await fetch(addrApiUrl, {
       method: 'GET',
       headers: {
-        Authorization: `KakaoAK ${key}`,
+        Authorization: `KakaoAK ${kakaoKey}`,
       },
     });
     const addrResult = await addrRes.json();
 
     return addrResult.documents;
+  },
+  getMakersAddress: async (longitude, latitude) => {
+    const baseLocation = {latitude: latitude, longitude: longitude};
+
+    const apiUrl = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
+
+    const apiRes = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `KakaoAK ${kakaoKey}`,
+      },
+    });
+    const apiResult = await apiRes.json();
+    const query = apiResult?.documents[0]?.address?.address_name;
+
+    //return result;
+
+    const addrApiUrl = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${query}&x=${longitude}&y=${latitude}&category_group_code=FD6&sort=distance`;
+
+    const addrRes = await fetch(addrApiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `KakaoAK ${kakaoKey}`,
+      },
+    });
+    const addrResult = await addrRes.json();
+    console.log(addrResult, '11');
+    const test = addrResult.documents.map(x => {
+      return {
+        longitude: x.x,
+        latitude: x.y,
+      };
+    });
+
+    const closestLocation = findClosestCoordinate(test, baseLocation);
+    console.log(closestLocation, 'rkRKdns');
+    if (closestLocation !== null) {
+      console.log('가장 가까운 위치 정보:', closestLocation);
+    } else {
+      console.log('배열이 비어있습니다.');
+    }
   },
 };

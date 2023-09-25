@@ -34,6 +34,7 @@ const SearchResult = ({route}) => {
   const searchPress = async () => {
     if (type === 'mySpot' || type === 'registerSpot') {
       const res = await mapApis.searchObject(text);
+      console.log(res, 'res');
       setScreen(false);
       setData(res);
     } else {

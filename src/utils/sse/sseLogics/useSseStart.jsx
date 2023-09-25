@@ -1,11 +1,11 @@
+import {useAtom} from 'jotai';
 import {useCallback, useEffect, useMemo} from 'react';
-import {getStorage} from '../../asyncStorage';
+import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 import Config from 'react-native-config';
 
-import SseService from '../SseService/SseService';
 import * as sseAtoms from './store';
-import {useAtom} from 'jotai';
-import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
+import {getStorage} from '../../asyncStorage';
+import SseService from '../SseService/SseService';
 
 const apiHostUrl =
   Config.NODE_ENV === 'dev'
@@ -39,14 +39,14 @@ const useSseStart = () => {
   // sse를 리셋하기 위한 eventEmitter
   const sseResetHandler = useMemo(() => new EventEmitter(), []);
   const resetSseInstance = () => {
-    console.log('sse 인스턴스 reset시키기');
+    //console.log('sse 인스턴스 reset시키기');
 
     forOnlyOneSseService = null;
     getSseServiceInstance(true);
   };
 
   useEffect(() => {
-    if (!!sseResetHandler) {
+    if (sseResetHandler) {
       sseResetHandler.addListener('reset-sse-instance', () => {
         resetSseInstance();
       });
@@ -109,7 +109,7 @@ const useSseStart = () => {
 
   useEffect(() => {
     return () => {
-      if (!!forOnlyOneSseService) {
+      if (forOnlyOneSseService) {
         forOnlyOneSseService.onClose();
       }
     };
